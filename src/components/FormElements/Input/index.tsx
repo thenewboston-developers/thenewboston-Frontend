@@ -6,7 +6,7 @@ export interface InputProps {
   label: string;
   name: string;
   touched: {[field: string]: boolean};
-  type?: 'text' | 'number';
+  type?: 'text' | 'number' | 'password';
 }
 
 const Input: SFC<InputProps> = ({className, errors, label, name, touched, type = 'text'}) => {

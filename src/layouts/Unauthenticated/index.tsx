@@ -1,13 +1,14 @@
 import {useMemo} from 'react';
 import {Form, Formik} from 'formik';
 
-import Button, {ButtonType} from 'components/Button';
+import {ButtonType} from 'components/Button';
 import {SFC} from 'types';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
 const Unauthenticated: SFC = ({className}) => {
   const initialValues = {
+    password: '',
     username: '',
   };
 
@@ -23,6 +24,7 @@ const Unauthenticated: SFC = ({className}) => {
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
+      password: yup.string().required(),
       username: yup.string().required(),
     });
   }, []);
@@ -40,7 +42,8 @@ const Unauthenticated: SFC = ({className}) => {
           {({dirty, errors, isSubmitting, touched, isValid}) => (
             <Form>
               <S.Input errors={errors} label="Username" name="username" touched={touched} />
-              <Button
+              <S.Input errors={errors} label="Password" name="password" touched={touched} type="password" />
+              <S.Button
                 dirty={dirty}
                 disabled={isSubmitting}
                 isSubmitting={isSubmitting}
