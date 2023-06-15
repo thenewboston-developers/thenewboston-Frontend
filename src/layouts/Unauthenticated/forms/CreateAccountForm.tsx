@@ -67,6 +67,9 @@ const CreateAccountForm: SFC = () => {
           )}
         </Formik>
       </S.Panel>
+      <S.QuestionText>
+        Already have an account? <S.Link to="/signIn">Sign In</S.Link>
+      </S.QuestionText>
     </>
   );
 };

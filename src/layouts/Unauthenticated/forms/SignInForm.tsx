@@ -31,7 +31,7 @@ const SignInForm: SFC = () => {
 
   return (
     <>
-      <S.Heading>Sign in</S.Heading>
+      <S.Heading>Sign In</S.Heading>
       <S.Panel>
         <Formik
           initialValues={initialValues}
@@ -55,6 +55,9 @@ const SignInForm: SFC = () => {
           )}
         </Formik>
       </S.Panel>
+      <S.QuestionText>
+        New user? <S.Link to="/createAccount">Create an Account</S.Link>
+      </S.QuestionText>
     </>
   );
 };
