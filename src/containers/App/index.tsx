@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Layout from 'containers/Layout';
+import Unauthenticated from 'layouts/Unauthenticated';
 
 const App = () => {
-  return <Layout />;
+  return <Unauthenticated />;
 };
 
 export default App;
