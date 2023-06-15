@@ -1,11 +1,17 @@
+import {Route, Routes} from 'react-router-dom';
+
 import {SFC} from 'types';
 import CreateAccountForm from './forms/CreateAccountForm';
+import SignInForm from './forms/SignInForm';
 import * as S from './Styles';
 
 const Unauthenticated: SFC = ({className}) => {
   return (
     <S.Container className={className}>
-      <CreateAccountForm />
+      <Routes>
+        <Route path="/createAccount" element={<CreateAccountForm />} />
+        <Route path="/signIn" element={<SignInForm />} />
+      </Routes>
     </S.Container>
   );
 };

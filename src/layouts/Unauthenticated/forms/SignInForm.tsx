@@ -48,7 +48,7 @@ const SignInForm: SFC = () => {
                 disabled={isSubmitting}
                 isSubmitting={isSubmitting}
                 isValid={isValid}
-                text="Submit"
+                text="Sign In"
                 type={ButtonType.submit}
               />
             </Form>
