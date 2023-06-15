@@ -1,16 +1,23 @@
 import {createGlobalStyle} from 'styled-components';
 
+import {colors, fonts} from 'styles';
+
 const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box;
   }
 
   body {
+    background: ${colors.background};
+    color: ${colors.primary};
+    font-family: ${fonts.family.default};
     font-size: 14px;
+    font-weight: ${fonts.weight.regular};
     margin: 0;
   }
 
   a {
+    color: ${colors.primary};
     text-decoration: none;
 
     &:hover {

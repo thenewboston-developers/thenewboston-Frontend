@@ -1,11 +1,57 @@
+import {useMemo} from 'react';
+import {Form, Formik} from 'formik';
+
+import Button, {ButtonType} from 'components/Button';
 import {SFC} from 'types';
+import yup from 'utils/yup';
 import * as S from './Styles';
 
 const Unauthenticated: SFC = ({className}) => {
+  const initialValues = {
+    username: '',
+  };
+
+  type FormValues = typeof initialValues;
+
+  const handleSubmit = async (values: FormValues): Promise<void> => {
+    try {
+      console.log(values);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const validationSchema = useMemo(() => {
+    return yup.object().shape({
+      username: yup.string().required(),
+    });
+  }, []);
+
   return (
     <S.Container className={className}>
       <S.Heading>Sign in</S.Heading>
-      <S.Panel>Hey</S.Panel>
+      <S.Panel>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validateOnMount={false}
+          validationSchema={validationSchema}
+        >
+          {({dirty, errors, isSubmitting, touched, isValid}) => (
+            <Form>
+              <S.Input errors={errors} label="Username" name="username" touched={touched} />
+              <Button
+                dirty={dirty}
+                disabled={isSubmitting}
+                isSubmitting={isSubmitting}
+                isValid={isValid}
+                text="Submit"
+                type={ButtonType.submit}
+              />
+            </Form>
+          )}
+        </Formik>
+      </S.Panel>
     </S.Container>
   );
 };

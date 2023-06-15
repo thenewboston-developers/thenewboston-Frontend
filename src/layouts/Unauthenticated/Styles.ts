@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import {Input as UInput} from 'components/FormElements';
+
 export const Container = styled.div`
   align-items: center;
   background: #24292f;
@@ -12,6 +14,10 @@ export const Container = styled.div`
 export const Heading = styled.h2`
   color: #fff;
   margin-bottom: 12px;
+`;
+
+export const Input = styled(UInput)`
+  width: 100%;
 `;
 
 export const Panel = styled.div`
