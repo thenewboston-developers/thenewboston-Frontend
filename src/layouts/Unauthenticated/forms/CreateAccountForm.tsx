@@ -4,6 +4,7 @@ import {Form, Formik} from 'formik';
 import {createUser} from 'api/users';
 import {ButtonType} from 'components/Button';
 import {SFC} from 'types';
+import {displayErrorToast} from 'utils/toast';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
@@ -22,6 +23,7 @@ const CreateAccountForm: SFC = () => {
       console.log(data);
     } catch (error) {
       console.error(error);
+      displayErrorToast('Error creating account');
     }
   };
 
