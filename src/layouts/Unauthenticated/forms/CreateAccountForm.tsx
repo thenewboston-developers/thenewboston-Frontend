@@ -1,5 +1,6 @@
 import {useMemo} from 'react';
 import {useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
 import {ButtonType} from 'components/Button';
@@ -11,6 +12,7 @@ import * as S from './Styles';
 
 const CreateAccountForm: SFC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const initialValues = {
     confirmPassword: '',
@@ -23,7 +25,7 @@ const CreateAccountForm: SFC = () => {
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
       await dispatch(createUser(values));
-      // TODO: Redirect to /feed or /profile page
+      navigate('/');
     } catch (error) {
       console.error(error);
       displayErrorToast('Error creating account');
