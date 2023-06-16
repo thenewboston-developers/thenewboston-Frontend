@@ -1,14 +1,17 @@
 import {useMemo} from 'react';
+import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
-import {login} from 'api/authentication';
 import {ButtonType} from 'components/Button';
-import {SFC} from 'types';
+import {login} from 'dispatchers/authentication';
+import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
 const SignInForm: SFC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const initialValues = {
     password: '',
     username: '',
@@ -18,8 +21,7 @@ const SignInForm: SFC = () => {
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
-      const data = await login(values);
-      console.log(data);
+      await dispatch(login(values));
     } catch (error) {
       console.error(error);
       displayErrorToast('Error logging in');
