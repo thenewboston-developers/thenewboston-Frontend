@@ -1,9 +1,9 @@
-import LeftNav from 'containers/LeftNav';
-import MainArea from 'containers/MainArea';
 import {SFC} from 'types';
+import LeftNav from './LeftNav';
+import MainArea from './MainArea';
 import * as S from './Styles';
 
-const Layout: SFC = ({className}) => {
+const Authenticated: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <LeftNav />
@@ -12,4 +12,4 @@ const Layout: SFC = ({className}) => {
   );
 };
 
-export default Layout;
+export default Authenticated;

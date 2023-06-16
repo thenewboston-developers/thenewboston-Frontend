@@ -1,5 +1,6 @@
 import breakpoints from 'styles/breakpoints';
 import colors from 'styles/colors';
-import {hiddenScroll} from 'styles/mixins';
+import fonts from 'styles/fonts';
+import {hiddenScroll, inputStyle} from 'styles/mixins';
 
-export {breakpoints, colors, hiddenScroll};
+export {breakpoints, colors, fonts, hiddenScroll, inputStyle};
