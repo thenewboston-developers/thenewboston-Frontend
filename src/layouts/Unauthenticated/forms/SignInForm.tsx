@@ -4,6 +4,7 @@ import {Form, Formik} from 'formik';
 import {login} from 'api/authentication';
 import {ButtonType} from 'components/Button';
 import {SFC} from 'types';
+import {displayErrorToast} from 'utils/toast';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
@@ -21,6 +22,7 @@ const SignInForm: SFC = () => {
       console.log(data);
     } catch (error) {
       console.error(error);
+      displayErrorToast('Error logging in');
     }
   };
 
