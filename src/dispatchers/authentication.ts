@@ -1,5 +1,6 @@
 import {login as _login} from 'api/authentication';
 import {resetAuthentication, setAuthentication} from 'store/authentication';
+import {resetSelf, setSelf} from 'store/self';
 import {AppDispatch, LoginRequest} from 'types';
 
 export const login = (data: LoginRequest) => async (dispatch: AppDispatch) => {
@@ -7,6 +8,7 @@ export const login = (data: LoginRequest) => async (dispatch: AppDispatch) => {
 
   const {
     authentication: {access_token, refresh_token},
+    user: {id, username},
   } = responseData;
 
   dispatch(
@@ -15,8 +17,11 @@ export const login = (data: LoginRequest) => async (dispatch: AppDispatch) => {
       refreshToken: refresh_token,
     }),
   );
+
+  dispatch(setSelf({id, username}));
 };
 
 export const logout = () => async (dispatch: AppDispatch) => {
   dispatch(resetAuthentication());
+  dispatch(resetSelf());
 };
