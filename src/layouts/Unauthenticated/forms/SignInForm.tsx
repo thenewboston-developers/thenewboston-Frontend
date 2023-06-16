@@ -22,6 +22,7 @@ const SignInForm: SFC = () => {
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
       await dispatch(login(values));
+      // TODO: Redirect to /feed or /profile page
     } catch (error) {
       console.error(error);
       displayErrorToast('Error logging in');

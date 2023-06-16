@@ -1,14 +1,17 @@
 import {useMemo} from 'react';
+import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
-import {createUser} from 'api/users';
 import {ButtonType} from 'components/Button';
-import {SFC} from 'types';
+import {createUser} from 'dispatchers/users';
+import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
 const CreateAccountForm: SFC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const initialValues = {
     confirmPassword: '',
     password: '',
@@ -19,8 +22,8 @@ const CreateAccountForm: SFC = () => {
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
-      const data = await createUser(values);
-      console.log(data);
+      await dispatch(createUser(values));
+      // TODO: Redirect to /feed or /profile page
     } catch (error) {
       console.error(error);
       displayErrorToast('Error creating account');
