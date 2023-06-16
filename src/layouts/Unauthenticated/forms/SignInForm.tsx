@@ -1,6 +1,7 @@
 import {useMemo} from 'react';
 import {Form, Formik} from 'formik';
 
+import {login} from 'api/authentication';
 import {ButtonType} from 'components/Button';
 import {SFC} from 'types';
 import yup from 'utils/yup';
@@ -16,7 +17,8 @@ const SignInForm: SFC = () => {
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
-      console.log(values);
+      const data = await login(values);
+      console.log(data);
     } catch (error) {
       console.error(error);
     }
