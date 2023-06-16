@@ -21,7 +21,7 @@ export const login = (data: LoginRequest) => async (dispatch: AppDispatch) => {
   dispatch(setSelf({id, username}));
 };
 
-export const logout = () => async (dispatch: AppDispatch) => {
+export const logout = () => (dispatch: AppDispatch) => {
   dispatch(resetAuthentication());
   dispatch(resetSelf());
 };

@@ -1,5 +1,6 @@
 import {useMemo} from 'react';
 import {useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
 import {ButtonType} from 'components/Button';
@@ -11,6 +12,7 @@ import * as S from './Styles';
 
 const SignInForm: SFC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const initialValues = {
     password: '',
@@ -22,6 +24,7 @@ const SignInForm: SFC = () => {
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
       await dispatch(login(values));
+      navigate('/');
     } catch (error) {
       console.error(error);
       displayErrorToast('Error logging in');
