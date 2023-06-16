@@ -11,6 +11,7 @@ const Unauthenticated: SFC = ({className}) => {
       <Routes>
         <Route path="/createAccount" element={<CreateAccountForm />} />
         <Route path="/signIn" element={<SignInForm />} />
+        <Route path="*" element={<SignInForm />} />
       </Routes>
     </S.Container>
   );
