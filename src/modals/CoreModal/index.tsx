@@ -1,8 +1,10 @@
 import {useMemo} from 'react';
+import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
-import {SFC} from 'types';
+import {createCore} from 'dispatchers/cores';
+import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import yup from 'utils/yup';
 import * as S from './Styles';
@@ -12,6 +14,8 @@ export interface CoreModalProps {
 }
 
 const CoreModal: SFC<CoreModalProps> = ({className, close}) => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const initialValues = {
     domain: '',
     ticker: '',
@@ -21,7 +25,10 @@ const CoreModal: SFC<CoreModalProps> = ({className, close}) => {
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
-      console.log(values);
+      const formData = new FormData();
+      formData.append('domain', values.domain);
+      formData.append('ticker', values.ticker);
+      await dispatch(createCore(values));
       close();
     } catch (error) {
       console.error(error);
