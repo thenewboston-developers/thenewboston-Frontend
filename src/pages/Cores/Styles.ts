@@ -6,7 +6,7 @@ export const CardsContainer = styled.div`
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(4, 1fr);
-  padding: 24px 16px;
+  padding: 16px 16px 24px;
 
   @media (max-width: ${breakpoints.desktop}) {
     grid-template-columns: repeat(3, 1fr);
@@ -22,3 +22,9 @@ export const CardsContainer = styled.div`
 `;
 
 export const Container = styled.div``;
+
+export const Toolbar = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 24px 16px 0;
+`;
