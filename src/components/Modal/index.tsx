@@ -11,11 +11,10 @@ export interface ModalProps {
   children: ReactNode;
   close(): void;
   disableOverlayClick?: boolean;
-  footer?: ReactNode;
   header: string;
 }
 
-const Modal: SFC<ModalProps> = ({children, className, close, disableOverlayClick = false, footer, header}) => {
+const Modal: SFC<ModalProps> = ({children, className, close, disableOverlayClick = false, header}) => {
   return createPortal(
     <>
       <S.Overlay onClick={disableOverlayClick ? noop : close} />
@@ -25,7 +24,6 @@ const Modal: SFC<ModalProps> = ({children, className, close, disableOverlayClick
           <Icon icon={mdiClose} onClick={close} size={16} />
         </S.Header>
         <S.Content>{children}</S.Content>
-        {footer}
       </S.Modal>
     </>,
     document.getElementById('modal-root') as HTMLElement,

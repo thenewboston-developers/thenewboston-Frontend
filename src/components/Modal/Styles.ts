@@ -17,7 +17,6 @@ export const Content = styled.div`
 
 export const Header = styled.div`
   align-items: center;
-  color: #697386;
   display: flex;
   font-weight: ${fonts.weight.bold};
   justify-content: space-between;
