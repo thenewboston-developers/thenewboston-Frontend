@@ -51,7 +51,7 @@ const CoreModal: SFC<CoreModalProps> = ({className, close, core}) => {
   }, []);
 
   return (
-    <S.Modal className={className} close={close} header={core ? 'Update Core' : 'Add Core'}>
+    <S.Modal className={className} close={close} header={core ? 'Edit Core' : 'Add Core'}>
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}

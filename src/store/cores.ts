@@ -16,8 +16,11 @@ const cores = createSlice({
     setCores: (state: Cores, {payload}: PayloadAction<Core[]>) => {
       return payload.reduce((acc: Cores, obj) => ({...acc, [obj.id]: obj}), {});
     },
+    unsetCore: (state: Cores, {payload: id}: PayloadAction<number>) => {
+      delete state[id];
+    },
   },
 });
 
-export const {setCore, setCores} = cores.actions;
+export const {setCore, setCores, unsetCore} = cores.actions;
 export default cores.reducer;

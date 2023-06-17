@@ -15,6 +15,15 @@ export const createCore = async (data: FormData): Promise<Core> => {
   }
 };
 
+export const deleteCore = async (id: number): Promise<void> => {
+  try {
+    await axios.delete(`${BASE_URL}/${id}`, authorizationHeaders());
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const getCores = async (): Promise<Core[]> => {
   try {
     const response = await axios.get<Core[]>(BASE_URL, authorizationHeaders());
