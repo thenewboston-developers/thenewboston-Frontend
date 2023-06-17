@@ -4,6 +4,10 @@ export interface ClassName {
   className?: string;
 }
 
+export interface Dict<T> {
+  [key: string]: T;
+}
+
 export type GenericFunction = GenericFunctionConstructor<any>;
 
 type GenericFunctionConstructor<T> = (...args: any[]) => T;

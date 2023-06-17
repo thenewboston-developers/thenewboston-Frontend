@@ -7,12 +7,12 @@ import {ButtonColor} from './types';
 const BUTTON_HEIGHT = 36;
 
 const disabledMixin = css`
-  background-color: ${colors.palette.red['300']};
+  background: ${colors.palette.red['300']};
   cursor: not-allowed;
   opacity: 0.65;
 
   &:hover {
-    background-color: ${colors.palette.red['300']};
+    background: ${colors.palette.red['300']};
   }
 `;
 
@@ -24,7 +24,7 @@ const hasIconMixin = css`
 `;
 
 const secondaryMixin = css`
-  background-color: transparent;
+  background: transparent;
   border-color: rgb(207, 217, 222);
   color: ${colors.primary};
 
@@ -34,7 +34,7 @@ const secondaryMixin = css`
 `;
 
 const successMixin = css`
-  background-color: ${colors.palette.green['300']};
+  background: ${colors.palette.green['300']};
 
   &:hover {
     background: ${colors.palette.green['400']};
@@ -56,7 +56,7 @@ export const Button = styled.button<{$color: ButtonColor; $hasIcon: boolean}>`
   transition: all 0.1s;
 
   &:hover {
-    background-color: ${colors.palette.red['500']};
+    background: ${colors.palette.red['500']};
   }
 
   ${({$color}) => {
