@@ -19,7 +19,7 @@ const Cores: SFC = ({className}) => {
   }, [dispatch]);
 
   const renderCoreCards = () => {
-    const orderedCores = orderBy(Object.values(cores), ['VNX']);
+    const orderedCores = orderBy(Object.values(cores), ['ticker']);
     return orderedCores.map((core) => <CoreCard core={core} key={core.id} />);
   };
 
