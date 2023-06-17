@@ -3,6 +3,7 @@ import storage from 'redux-persist/lib/storage';
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
 
 import authenticationReducer from 'store/authentication';
+import coresReducer from 'store/cores';
 import selfReducer from 'store/self';
 
 const persistConfig = {
@@ -14,6 +15,7 @@ const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
     authentication: authenticationReducer,
+    cores: coresReducer,
     self: selfReducer,
   }),
 );
