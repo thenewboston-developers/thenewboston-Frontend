@@ -5,6 +5,7 @@ import {Core, Cores} from 'types/cores';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
+import {Wallet, Wallets} from 'types/wallets';
 
 export {
   AppDispatch,
@@ -22,4 +23,6 @@ export {
   RootState,
   SFC,
   Self,
+  Wallet,
+  Wallets,
 };

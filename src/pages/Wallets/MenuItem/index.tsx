@@ -1,15 +1,19 @@
 import CoreLogo from 'components/CoreLogo';
-import {SFC} from 'types';
+import {SFC, Wallet} from 'types';
 import * as S from './Styles';
 
-const MenuItem: SFC = ({className}) => {
+export interface MenuItemProps {
+  wallet: Wallet;
+}
+
+const MenuItem: SFC<MenuItemProps> = ({className, wallet}) => {
   return (
     <S.Container className={className}>
-      <CoreLogo logo="https://avatars.githubusercontent.com/u/12706692?s=200&v=4" />
+      <CoreLogo logo={wallet.core.logo} />
       <S.Text>
-        <S.Ticker>TNB</S.Ticker>
-        <S.Domain>thenewboston.com</S.Domain>
-        <S.Balance>Balance: 1,000</S.Balance>
+        <S.Ticker>{wallet.core.ticker}</S.Ticker>
+        <S.Domain>{wallet.core.domain}</S.Domain>
+        <S.Balance>Balance: {wallet.balance.toLocaleString()}</S.Balance>
       </S.Text>
     </S.Container>
   );
