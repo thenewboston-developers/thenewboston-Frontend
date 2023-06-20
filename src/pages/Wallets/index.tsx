@@ -1,13 +1,22 @@
 import {SFC} from 'types';
+import MenuItem from './MenuItem';
 import * as S from './Styles';
 
 const Wallets: SFC = ({className}) => {
   return (
     <S.Container className={className}>
-      <div>Wallets</div>
-      <div>Wallets</div>
-      <div>Wallets</div>
-      <div>Wallets</div>
+      <S.LeftMenu>
+        <MenuItem />
+        <MenuItem />
+        <MenuItem />
+        <MenuItem />
+      </S.LeftMenu>
+      <div>
+        <div>right</div>
+        <div>right</div>
+        <div>right</div>
+        <div>right</div>
+      </div>
     </S.Container>
   );
 };
