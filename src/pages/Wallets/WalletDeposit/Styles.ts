@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import UCopyContainer from 'components/CopyContainer';
-
 import {colors} from 'styles';
 
 export const Container = styled.div``;
