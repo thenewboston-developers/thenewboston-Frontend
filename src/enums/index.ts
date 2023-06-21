@@ -1,4 +1,4 @@
-import {ActiveWalletTab} from 'enums/manager';
+import {WalletTab} from 'enums/manager';
 import {ToastType} from 'enums/toast';
 
-export {ActiveWalletTab, ToastType};
+export {ToastType, WalletTab};

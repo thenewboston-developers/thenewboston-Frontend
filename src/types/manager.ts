@@ -1,6 +1,6 @@
-import {ActiveWalletTab} from 'enums';
+import {WalletTab} from 'enums';
 
 export interface Manager {
   activeWallet: number | null;
-  activeWalletTab: ActiveWalletTab | null;
+  activeWalletTab: WalletTab | null;
 }

@@ -13,3 +13,7 @@ export const LeftMenu = styled.div`
   overflow-y: auto;
   padding: 24px 0;
 `;
+
+export const Right = styled.div`
+  padding: 24px 16px;
+`;
