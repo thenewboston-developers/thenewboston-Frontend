@@ -7,7 +7,8 @@ export const Balance = styled.div`
   font-size: 12px;
 `;
 
-export const Container = styled.div`
+export const Container = styled.div<{$isActive: boolean}>`
+  background: ${({$isActive}) => ($isActive ? 'rgba(208, 215, 222, 0.32)' : 'transparent')};
   display: flex;
   padding: 8px 12px;
   transition: background 0.3s ease;

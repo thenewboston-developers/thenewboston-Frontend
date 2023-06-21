@@ -1,5 +1,9 @@
+import {useDispatch, useSelector} from 'react-redux';
+
 import CoreLogo from 'components/CoreLogo';
-import {SFC, Wallet} from 'types';
+import {getManager} from 'selectors/state';
+import {updateManager} from 'store/manager';
+import {AppDispatch, SFC, Wallet} from 'types';
 import * as S from './Styles';
 
 export interface MenuItemProps {
@@ -7,8 +11,15 @@ export interface MenuItemProps {
 }
 
 const MenuItem: SFC<MenuItemProps> = ({className, wallet}) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const manager = useSelector(getManager);
+
+  const handleClick = () => {
+    dispatch(updateManager({activeWallet: wallet.id}));
+  };
+
   return (
-    <S.Container className={className}>
+    <S.Container $isActive={manager.activeWallet === wallet.id} className={className} onClick={handleClick}>
       <CoreLogo logo={wallet.core.logo} />
       <S.Text>
         <S.Ticker>{wallet.core.ticker}</S.Ticker>
