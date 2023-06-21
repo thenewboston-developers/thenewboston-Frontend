@@ -4,7 +4,9 @@ import {combineReducers, configureStore} from '@reduxjs/toolkit';
 
 import authenticationReducer from 'store/authentication';
 import coresReducer from 'store/cores';
+import managerReducer from 'store/manager';
 import selfReducer from 'store/self';
+import walletsReducer from 'store/wallets';
 
 const persistConfig = {
   key: 'thenewboston',
@@ -16,7 +18,9 @@ const persistedReducer = persistReducer(
   combineReducers({
     authentication: authenticationReducer,
     cores: coresReducer,
+    manager: managerReducer,
     self: selfReducer,
+    wallets: walletsReducer,
   }),
 );
 

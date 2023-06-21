@@ -8,6 +8,9 @@ export interface CreateUserResponse {
     access_token: string;
     refresh_token: string;
   };
+  deposit_account: {
+    account_number: string;
+  };
   user: {
     id: number;
     username: string;

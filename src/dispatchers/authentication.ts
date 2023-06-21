@@ -8,6 +8,7 @@ export const login = (data: LoginRequest) => async (dispatch: AppDispatch) => {
 
   const {
     authentication: {access_token, refresh_token},
+    deposit_account: {account_number},
     user: {id, username},
   } = responseData;
 
@@ -18,7 +19,7 @@ export const login = (data: LoginRequest) => async (dispatch: AppDispatch) => {
     }),
   );
 
-  dispatch(setSelf({id, username}));
+  dispatch(setSelf({deposit_account_number: account_number, id, username}));
 };
 
 export const logout = () => (dispatch: AppDispatch) => {

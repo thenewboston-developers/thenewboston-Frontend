@@ -12,10 +12,8 @@ export interface MenuLinkProps {
 const MenuLink: SFC<MenuLinkProps> = ({className, icon, text, to}) => {
   const location = useLocation();
 
-  const isActive = location.pathname === to;
-
   return (
-    <S.MenuLink $isActive={isActive} className={className} to={to}>
+    <S.MenuLink $isActive={location.pathname === to} className={className} to={to}>
       <S.Icon path={icon} size="26px" />
       <S.Text>{text}</S.Text>
     </S.MenuLink>
