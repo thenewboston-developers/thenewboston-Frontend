@@ -14,5 +14,4 @@ export const RadioCardContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  margin-bottom: 24px;
 `;

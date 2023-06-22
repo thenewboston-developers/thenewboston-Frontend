@@ -16,8 +16,7 @@ const SelectAssetPairModal: SFC<SelectAssetPairModalProps> = ({className, close}
   const manager = useSelector(getManager);
 
   const handleRadioCardClick = (assetPairId: number) => {
-    const results = assetPairId === manager.activeAssetPairId ? null : assetPairId;
-    dispatch(updateManager({activeAssetPairId: results}));
+    dispatch(updateManager({activeAssetPairId: assetPairId === manager.activeAssetPairId ? null : assetPairId}));
   };
 
   const renderRadioCards = () => {

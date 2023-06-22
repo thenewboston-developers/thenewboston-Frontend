@@ -3,11 +3,14 @@ import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
 import {LogoInput} from 'components/FormElements';
+import {useActiveAssetPair} from 'hooks';
 import {SFC} from 'types';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
 const Buy: SFC = ({className}) => {
+  const activeAssetPair = useActiveAssetPair();
+
   const initialValues = {
     price: '',
     quantity: '',
@@ -43,14 +46,14 @@ const Buy: SFC = ({className}) => {
             <LogoInput
               errors={errors}
               label="Quantity"
-              logo="http://127.0.0.1:8000/media/images/letter-v_13Q0QBt.png"
+              logo={activeAssetPair!.primary_currency.logo}
               name="quantity"
               touched={touched}
             />
             <LogoInput
               errors={errors}
               label="Price"
-              logo="https://avatars.githubusercontent.com/u/12706692?s=200&v=4"
+              logo={activeAssetPair!.secondary_currency.logo}
               name="price"
               touched={touched}
             />
@@ -59,7 +62,7 @@ const Buy: SFC = ({className}) => {
               disabled={isSubmitting}
               isSubmitting={isSubmitting}
               isValid={isValid}
-              text="Buy ABC"
+              text={`Buy ${activeAssetPair!.primary_currency.ticker}`}
               type={ButtonType.submit}
             />
           </Form>

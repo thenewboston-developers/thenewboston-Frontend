@@ -1,5 +1,6 @@
 import {useState} from 'react';
 
+import {useActiveAssetPair} from 'hooks';
 import {SFC} from 'types';
 import AssetPairSelector from './AssetPairSelector';
 import Buy from './Buy';
@@ -12,8 +13,11 @@ enum Tab {
 
 const Exchange: SFC = ({className}) => {
   const [activeTab, setActiveTab] = useState(Tab.buy);
+  const activeAssetPair = useActiveAssetPair();
 
   const renderTabContent = () => {
+    if (!activeAssetPair) return null;
+
     const tabContent = {
       [Tab.buy]: <Buy />,
       [Tab.sell]: <h4>Sell</h4>,
@@ -22,9 +26,10 @@ const Exchange: SFC = ({className}) => {
     return <S.TabContent>{tabContent[activeTab]}</S.TabContent>;
   };
 
-  return (
-    <S.Container className={className}>
-      <AssetPairSelector />
+  const renderTabs = () => {
+    if (!activeAssetPair) return null;
+
+    return (
       <S.Tabs>
         <S.Tab $isActive={activeTab === Tab.buy} onClick={() => setActiveTab(Tab.buy)}>
           Buy
@@ -33,6 +38,13 @@ const Exchange: SFC = ({className}) => {
           Sell
         </S.Tab>
       </S.Tabs>
+    );
+  };
+
+  return (
+    <S.Container className={className}>
+      <AssetPairSelector />
+      {renderTabs()}
       {renderTabContent()}
     </S.Container>
   );

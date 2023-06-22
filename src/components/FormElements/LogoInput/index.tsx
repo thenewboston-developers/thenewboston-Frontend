@@ -4,7 +4,7 @@ import * as S from './Styles';
 export interface LogoInputProps {
   errors: {[field: string]: string};
   label: string;
-  logo: string;
+  logo: string | null;
   name: string;
   touched: {[field: string]: boolean};
 }
