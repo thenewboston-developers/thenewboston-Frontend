@@ -7,7 +7,7 @@ const useActiveWallet = (): Wallet | null => {
   const manager = useSelector(getManager);
   const wallets = useSelector(getWallets);
 
-  return manager.activeWallet && wallets[manager.activeWallet] ? wallets[manager.activeWallet] : null;
+  return manager.activeWalletId && wallets[manager.activeWalletId] ? wallets[manager.activeWalletId] : null;
 };
 
 export default useActiveWallet;

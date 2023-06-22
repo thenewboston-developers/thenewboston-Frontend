@@ -15,11 +15,11 @@ const MenuItem: SFC<MenuItemProps> = ({className, wallet}) => {
   const manager = useSelector(getManager);
 
   const handleClick = () => {
-    dispatch(updateManager({activeWallet: wallet.id}));
+    dispatch(updateManager({activeWalletId: wallet.id}));
   };
 
   return (
-    <S.Container $isActive={manager.activeWallet === wallet.id} className={className} onClick={handleClick}>
+    <S.Container $isActive={manager.activeWalletId === wallet.id} className={className} onClick={handleClick}>
       <CoreLogo logo={wallet.core.logo} />
       <S.Text>
         <S.Ticker>{wallet.core.ticker}</S.Ticker>
