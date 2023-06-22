@@ -12,7 +12,7 @@ import {displayErrorToast, displayToast} from 'utils/toast';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
-const Buy: SFC = ({className}) => {
+const Sell: SFC = ({className}) => {
   const activeAssetPair = useActiveAssetPair();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -26,14 +26,14 @@ const Buy: SFC = ({className}) => {
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
       const requestData = {
-        order_type: OrderType.BUY,
+        order_type: OrderType.SELL,
         price: parseInt(values.price, 10),
         primary_currency: activeAssetPair!.primary_currency.id,
         quantity: parseInt(values.quantity, 10),
         secondary_currency: activeAssetPair!.secondary_currency.id,
       };
       await dispatch(createOrder(requestData));
-      displayToast('Buy order created!', ToastType.success);
+      displayToast('Sell order created!', ToastType.success);
       resetForm();
     } catch (error) {
       console.error(error);
@@ -77,7 +77,7 @@ const Buy: SFC = ({className}) => {
               disabled={isSubmitting}
               isSubmitting={isSubmitting}
               isValid={isValid}
-              text={`Buy ${activeAssetPair!.primary_currency.ticker}`}
+              text={`Sell ${activeAssetPair!.primary_currency.ticker}`}
               type={ButtonType.submit}
             />
           </Form>
@@ -87,4 +87,4 @@ const Buy: SFC = ({className}) => {
   );
 };
 
-export default Buy;
+export default Sell;

@@ -4,6 +4,7 @@ import {useActiveAssetPair} from 'hooks';
 import {SFC} from 'types';
 import AssetPairSelector from './AssetPairSelector';
 import Buy from './Buy';
+import Sell from './Sell';
 import * as S from './Styles';
 
 enum Tab {
@@ -20,7 +21,7 @@ const Exchange: SFC = ({className}) => {
 
     const tabContent = {
       [Tab.buy]: <Buy />,
-      [Tab.sell]: <h4>Sell</h4>,
+      [Tab.sell]: <Sell />,
     };
 
     return <S.TabContent>{tabContent[activeTab]}</S.TabContent>;
