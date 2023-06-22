@@ -6,6 +6,7 @@ import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
 import coresReducer from 'store/cores';
 import managerReducer from 'store/manager';
+import ordersReducer from 'store/orders';
 import selfReducer from 'store/self';
 import walletsReducer from 'store/wallets';
 
@@ -21,6 +22,7 @@ const persistedReducer = persistReducer(
     authentication: authenticationReducer,
     cores: coresReducer,
     manager: managerReducer,
+    orders: ordersReducer,
     self: selfReducer,
     wallets: walletsReducer,
   }),
