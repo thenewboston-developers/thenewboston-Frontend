@@ -1,6 +1,7 @@
 import {useState} from 'react';
 
 import {SFC} from 'types';
+import Buy from './Buy';
 import * as S from './Styles';
 
 enum Tab {
@@ -13,7 +14,7 @@ const Exchange: SFC = ({className}) => {
 
   const renderTabContent = () => {
     const tabContent = {
-      [Tab.buy]: <h4>Buy</h4>,
+      [Tab.buy]: <Buy />,
       [Tab.sell]: <h4>Sell</h4>,
     };
 
