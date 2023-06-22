@@ -1,6 +1,9 @@
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
+import {getAssetPairs, getManager} from 'selectors/state';
+import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
+import RadioCard from './RadioCard';
 import * as S from './Styles';
 
 export interface SelectAssetPairModalProps {
@@ -8,12 +11,29 @@ export interface SelectAssetPairModalProps {
 }
 
 const SelectAssetPairModal: SFC<SelectAssetPairModalProps> = ({className, close}) => {
+  const assetPairs = useSelector(getAssetPairs);
   const dispatch = useDispatch<AppDispatch>();
-  console.log(dispatch);
+  const manager = useSelector(getManager);
+
+  const handleRadioCardClick = (assetPairId: number) => {
+    const results = assetPairId === manager.activeAssetPairId ? null : assetPairId;
+    dispatch(updateManager({activeAssetPairId: results}));
+  };
+
+  const renderRadioCards = () => {
+    return Object.values(assetPairs).map((assetPair) => (
+      <RadioCard
+        activeAssetPairId={manager.activeAssetPairId}
+        assetPair={assetPair}
+        handleRadioCardClick={() => handleRadioCardClick(assetPair.id)}
+        key={assetPair.id}
+      />
+    ));
+  };
 
   return (
     <S.Modal className={className} close={close} header="Select Asset Pair">
-      <h1>hey</h1>
+      <S.RadioCardContainer>{renderRadioCards()}</S.RadioCardContainer>
     </S.Modal>
   );
 };
