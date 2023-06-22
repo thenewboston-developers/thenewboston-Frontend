@@ -1,6 +1,7 @@
 import {useState} from 'react';
 
 import {SFC} from 'types';
+import AssetPairSelector from './AssetPairSelector';
 import Buy from './Buy';
 import * as S from './Styles';
 
@@ -23,7 +24,7 @@ const Exchange: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <S.AssetPairButton>VTX-TNB</S.AssetPairButton>
+      <AssetPairSelector />
       <S.Tabs>
         <S.Tab $isActive={activeTab === Tab.buy} onClick={() => setActiveTab(Tab.buy)}>
           Buy

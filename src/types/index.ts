@@ -1,5 +1,6 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateUserRequest, CreateUserResponse} from 'types/api/users';
+import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Core, Cores} from 'types/cores';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
@@ -10,6 +11,8 @@ import {Wallet, Wallets} from 'types/wallets';
 
 export {
   AppDispatch,
+  AssetPair,
+  AssetPairs,
   Authentication,
   ClassName,
   Core,
