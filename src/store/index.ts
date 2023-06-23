@@ -2,9 +2,11 @@ import {FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, RE
 import storage from 'redux-persist/lib/storage';
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
 
+import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
 import coresReducer from 'store/cores';
 import managerReducer from 'store/manager';
+import ordersReducer from 'store/orders';
 import selfReducer from 'store/self';
 import walletsReducer from 'store/wallets';
 
@@ -16,9 +18,11 @@ const persistConfig = {
 const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
+    assetPairs: assetPairsReducer,
     authentication: authenticationReducer,
     cores: coresReducer,
     manager: managerReducer,
+    orders: ordersReducer,
     self: selfReducer,
     wallets: walletsReducer,
   }),

@@ -4,7 +4,8 @@ import {MANAGER} from 'store/constants';
 import {Manager} from 'types';
 
 const initialState: Manager = {
-  activeWallet: null,
+  activeAssetPairId: null,
+  activeWalletId: null,
   activeWalletTab: null,
 };
 

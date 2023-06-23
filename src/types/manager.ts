@@ -1,6 +1,7 @@
 import {WalletTab} from 'enums';
 
 export interface Manager {
-  activeWallet: number | null;
+  activeAssetPairId: number | null;
+  activeWalletId: number | null;
   activeWalletTab: WalletTab | null;
 }
