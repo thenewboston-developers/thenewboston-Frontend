@@ -1,9 +1,20 @@
 import styled from 'styled-components';
 
-import {colors} from 'styles';
+import {breakpoints, colors} from 'styles';
 
 export const Container = styled.div`
   padding: 24px 16px;
+`;
+
+export const Grid = styled.div`
+  display: grid;
+  gap: 12px;
+  grid-template-columns: min-content auto;
+  margin-top: 12px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    grid-template-columns: auto;
+  }
 `;
 
 export const Tab = styled.div<{$isActive?: boolean}>`

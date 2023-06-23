@@ -4,6 +4,7 @@ import {useActiveAssetPair} from 'hooks';
 import {SFC} from 'types';
 import AssetPairSelector from './AssetPairSelector';
 import Buy from './Buy';
+import OrderBook from './OrderBook';
 import Sell from './Sell';
 import * as S from './Styles';
 
@@ -46,7 +47,10 @@ const Exchange: SFC = ({className}) => {
     <S.Container className={className}>
       <AssetPairSelector />
       {renderTabs()}
-      {renderTabContent()}
+      <S.Grid>
+        {renderTabContent()}
+        <OrderBook />
+      </S.Grid>
     </S.Container>
   );
 };
