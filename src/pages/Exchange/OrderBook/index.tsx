@@ -1,41 +1,58 @@
+import {useMemo} from 'react';
+import {useSelector} from 'react-redux';
+import orderBy from 'lodash/orderBy';
+
 import {OrderType} from 'enums';
+import {useActiveAssetPair} from 'hooks';
+import {getOrders} from 'selectors/state';
 import {SFC} from 'types';
 import * as S from './Styles';
 
 const OrderBook: SFC = ({className}) => {
-  return (
-    <S.Container className={className}>
-      <h3>Order Book</h3>
+  const activeAssetPair = useActiveAssetPair();
+  const orders = useSelector(getOrders);
+
+  const filteredOrders = useMemo(() => {
+    if (!activeAssetPair) return [];
+
+    const orderedOrders = orderBy(Object.values(orders), ['price'], ['desc']);
+
+    return orderedOrders.filter(
+      (order) =>
+        order.primary_currency === activeAssetPair.primary_currency.id &&
+        order.secondary_currency === activeAssetPair.secondary_currency.id,
+    );
+  }, [activeAssetPair, orders]);
+
+  const renderTable = () => {
+    if (!activeAssetPair) return null;
+
+    return (
       <S.Table>
         <thead>
           <S.Tr>
-            <th>Quantity (VTX)</th>
-            <th>Price (TNB)</th>
+            <th>Quantity ({activeAssetPair.primary_currency.ticker})</th>
+            <th>Price ({activeAssetPair.secondary_currency.ticker})</th>
           </S.Tr>
         </thead>
         <tbody>
-          <S.Tr>
-            <S.Td>500</S.Td>
-            <S.Td $orderType={OrderType.SELL}>6</S.Td>
-          </S.Tr>
-          <S.Tr>
-            <S.Td>120</S.Td>
-            <S.Td $orderType={OrderType.SELL}>5</S.Td>
-          </S.Tr>
-          <S.Tr>
-            <S.Td>100</S.Td>
-            <S.Td $orderType={OrderType.SELL}>5</S.Td>
-          </S.Tr>
-          <S.Tr>
-            <S.Td>200</S.Td>
-            <S.Td $orderType={OrderType.BUY}>4</S.Td>
-          </S.Tr>
-          <S.Tr>
-            <S.Td>280</S.Td>
-            <S.Td $orderType={OrderType.BUY}>3</S.Td>
-          </S.Tr>
+          {filteredOrders.map((order) => (
+            <S.Tr key={order.id}>
+              <S.Td>{order.quantity.toLocaleString()}</S.Td>
+              <S.Td $orderType={OrderType[order.order_type as keyof typeof OrderType]}>
+                {order.price.toLocaleString()}
+              </S.Td>
+            </S.Tr>
+          ))}
         </tbody>
       </S.Table>
+    );
+  };
+
+  return (
+    <S.Container className={className}>
+      <h3>Order Book</h3>
+      {renderTable()}
     </S.Container>
   );
 };
