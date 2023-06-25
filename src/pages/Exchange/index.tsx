@@ -1,7 +1,9 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {getOrders} from 'dispatchers/orders';
 import {useActiveAssetPair} from 'hooks';
-import {SFC} from 'types';
+import {AppDispatch, SFC} from 'types';
 import AssetPairSelector from './AssetPairSelector';
 import Buy from './Buy';
 import OrderBook from './OrderBook';
@@ -16,6 +18,14 @@ enum Tab {
 const Exchange: SFC = ({className}) => {
   const [activeTab, setActiveTab] = useState(Tab.buy);
   const activeAssetPair = useActiveAssetPair();
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    (async () => {
+      // TODO: Filter by open and partially filled only
+      await dispatch(getOrders());
+    })();
+  }, [dispatch]);
 
   const renderTabContent = () => {
     if (!activeAssetPair) return null;

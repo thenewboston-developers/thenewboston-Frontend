@@ -14,3 +14,13 @@ export const createOrder = async (data: CreateOrderRequest): Promise<Order> => {
     throw error;
   }
 };
+
+export const getOrders = async (): Promise<Order[]> => {
+  try {
+    const response = await axios.get<Order[]>(BASE_URL, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
