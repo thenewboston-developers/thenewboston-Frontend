@@ -59,9 +59,7 @@ const Buy: SFC = ({className}) => {
     return paymentWallet?.balance || 0;
   }, [activeAssetPair, wallets]);
 
-  const isTotalValid = useMemo(() => {
-    return total <= paymentWalletBalance;
-  }, [paymentWalletBalance, total]);
+  const isTotalValid = useMemo(() => total <= paymentWalletBalance, [paymentWalletBalance, total]);
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
@@ -72,12 +70,7 @@ const Buy: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validateOnMount={false}
-        validationSchema={validationSchema}
-      >
+      <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, handleChange, isSubmitting, isValid, touched, values}) => (
           <Form>
             {(errors as any)['is-more-than-100'] && <div>{(errors as any)['is-more-than-100']}</div>}

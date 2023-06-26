@@ -50,12 +50,7 @@ const Sell: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validateOnMount={false}
-        validationSchema={validationSchema}
-      >
+      <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid}) => (
           <Form>
             <LogoInput
