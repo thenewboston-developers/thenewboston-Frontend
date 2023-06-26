@@ -52,14 +52,12 @@ const Buy: SFC = ({className}) => {
     }
   };
 
-  const paymentWalletBalance = useMemo(() => {
-    const paymentWallet = Object.values(wallets).find(
-      (wallet) => wallet.core.id === activeAssetPair!.secondary_currency.id,
-    );
-    return paymentWallet?.balance || 0;
+  const secondaryCurrencyBalance = useMemo(() => {
+    const wallet = Object.values(wallets).find((_wallet) => _wallet.core.id === activeAssetPair!.secondary_currency.id);
+    return wallet?.balance || 0;
   }, [activeAssetPair, wallets]);
 
-  const isTotalValid = useMemo(() => total <= paymentWalletBalance, [paymentWalletBalance, total]);
+  const isTotalValid = useMemo(() => total <= secondaryCurrencyBalance, [secondaryCurrencyBalance, total]);
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
@@ -78,26 +76,26 @@ const Buy: SFC = ({className}) => {
               errors={errors}
               label="Quantity"
               logo={activeAssetPair!.primary_currency.logo}
+              name="quantity"
               onChange={(e) => {
                 handleChange(e);
                 calculateTotal(e.target.value, values.price);
               }}
-              name="quantity"
               touched={touched}
             />
             <LogoInput
               errors={errors}
               label="Price"
               logo={activeAssetPair!.secondary_currency.logo}
+              name="price"
               onChange={(e) => {
                 handleChange(e);
                 calculateTotal(values.quantity, e.target.value);
               }}
-              name="price"
               touched={touched}
             />
             <AvailableTotal
-              available={paymentWalletBalance}
+              available={secondaryCurrencyBalance}
               availableTicker={activeAssetPair!.secondary_currency.ticker}
               isTotalValid={isTotalValid}
               total={total}
