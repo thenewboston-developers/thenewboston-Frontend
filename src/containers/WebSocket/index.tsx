@@ -2,6 +2,7 @@ import {FC, useEffect, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
+import rootRouter from 'routers/rootRouter';
 import {AppDispatch} from 'types';
 
 const WebSocket: FC = () => {
@@ -17,24 +18,13 @@ const WebSocket: FC = () => {
     socket.onclose = () => {};
 
     socket.onmessage = (event) => {
-      console.log(dispatch, event);
+      rootRouter(dispatch, event);
     };
 
-    socket.onopen = () => {
-      console.log('WS opened');
-    };
-
-    // interval to send a message every 5 seconds
-    const interval = setInterval(() => {
-      if (socket.readyState === ReconnectingWebSocket.OPEN) {
-        const message = {text: 'Hello every 5 seconds!'};
-        socket.send(JSON.stringify(message));
-      }
-    }, 5000);
+    socket.onopen = () => {};
 
     return () => {
       socket.close();
-      clearInterval(interval); // clear the interval to stop sending messages
     };
   }, [dispatch, socket]);
 
