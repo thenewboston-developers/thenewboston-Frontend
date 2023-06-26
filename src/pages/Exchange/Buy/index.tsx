@@ -2,6 +2,7 @@ import {useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Form, Formik, FormikHelpers} from 'formik';
 
+import AvailableTotal from 'components/AvailableTotal';
 import Button, {ButtonType} from 'components/Button';
 import {LogoInput} from 'components/FormElements';
 import {createOrder} from 'dispatchers/orders';
@@ -27,8 +28,8 @@ const Buy: SFC = ({className}) => {
   type FormValues = typeof initialValues;
 
   const calculateTotal = (quantityStr: string, priceStr: string) => {
-    const quantity = parseInt(quantityStr || '0', 10);
-    const price = parseInt(priceStr || '0', 10);
+    const quantity = parseFloat(quantityStr || '0');
+    const price = parseFloat(priceStr || '0');
     setTotal(quantity * price);
   };
 
@@ -58,31 +59,14 @@ const Buy: SFC = ({className}) => {
     return paymentWallet?.balance || 0;
   }, [activeAssetPair, wallets]);
 
-  const renderAvailableTotal = () => {
-    const ticker = activeAssetPair!.secondary_currency.ticker;
-
-    return (
-      <S.AvailableTotal>
-        <S.AvailableRow>
-          <span>Available</span>
-          <span>
-            {paymentWalletBalance.toLocaleString()} {ticker}
-          </span>
-        </S.AvailableRow>
-        <S.TotalRow>
-          <span>Total</span>
-          <span>
-            {total.toLocaleString()} {ticker}
-          </span>
-        </S.TotalRow>
-      </S.AvailableTotal>
-    );
-  };
+  const isTotalValid = useMemo(() => {
+    return total <= paymentWalletBalance;
+  }, [paymentWalletBalance, total]);
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
-      price: yup.number().moreThan(0).required(),
-      quantity: yup.number().moreThan(0).required(),
+      price: yup.number().integer('Price must be an integer').moreThan(0).required(),
+      quantity: yup.number().integer('Quantity must be an integer').moreThan(0).required(),
     });
   }, []);
 
@@ -96,6 +80,7 @@ const Buy: SFC = ({className}) => {
       >
         {({dirty, errors, handleChange, isSubmitting, isValid, touched, values}) => (
           <Form>
+            {(errors as any)['is-more-than-100'] && <div>{(errors as any)['is-more-than-100']}</div>}
             <LogoInput
               errors={errors}
               label="Quantity"
@@ -118,10 +103,16 @@ const Buy: SFC = ({className}) => {
               name="price"
               touched={touched}
             />
-            {renderAvailableTotal()}
+            <AvailableTotal
+              available={paymentWalletBalance}
+              availableTicker={activeAssetPair!.secondary_currency.ticker}
+              isTotalValid={isTotalValid}
+              total={total}
+              totalTicker={activeAssetPair!.secondary_currency.ticker}
+            />
             <Button
               dirty={dirty}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !isTotalValid}
               isSubmitting={isSubmitting}
               isValid={isValid}
               text={`Buy ${activeAssetPair!.primary_currency.ticker}`}
