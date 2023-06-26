@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {getOrders} from 'dispatchers/orders';
+import {getWallets} from 'dispatchers/wallets';
 import {useActiveAssetPair} from 'hooks';
 import {AppDispatch, SFC} from 'types';
 import AssetPairSelector from './AssetPairSelector';
@@ -22,8 +23,8 @@ const Exchange: SFC = ({className}) => {
 
   useEffect(() => {
     (async () => {
-      // TODO: Filter by open and partially filled only
       await dispatch(getOrders());
+      await dispatch(getWallets());
     })();
   }, [dispatch]);
 
