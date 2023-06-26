@@ -2,6 +2,7 @@ import React from 'react';
 import {Flip, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import WebSocket from 'containers/WebSocket';
 import {useIsAuthenticated} from 'hooks';
 import Authenticated from 'layouts/Authenticated';
 import Unauthenticated from 'layouts/Unauthenticated';
@@ -12,6 +13,11 @@ const App = () => {
   const renderLayout = () => {
     if (isAuthenticated) return <Authenticated />;
     return <Unauthenticated />;
+  };
+
+  const renderWebSocket = () => {
+    if (!isAuthenticated) return null;
+    return <WebSocket />;
   };
 
   return (
@@ -29,6 +35,7 @@ const App = () => {
         rtl={false}
         transition={Flip}
       />
+      {renderWebSocket()}
     </>
   );
 };
