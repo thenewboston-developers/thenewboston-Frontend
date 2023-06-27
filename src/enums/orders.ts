@@ -3,7 +3,6 @@ export enum FillStatus {
   PARTIALLY_FILLED = 'PARTIALLY_FILLED',
   FILLED = 'FILLED',
   CANCELLED = 'CANCELLED',
-  FAILED = 'FAILED',
 }
 
 export enum OrderType {
