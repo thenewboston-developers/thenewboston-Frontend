@@ -39,7 +39,7 @@ const OrderBook: SFC = ({className}) => {
         <tbody>
           {filteredOrders.map((order) => (
             <S.Tr key={order.id}>
-              <S.Td>{order.quantity.toLocaleString()}</S.Td>
+              <S.Td>{(order.quantity - order.filled_amount).toLocaleString()}</S.Td>
               <S.Td $orderType={OrderType[order.order_type as keyof typeof OrderType]}>
                 {order.price.toLocaleString()}
               </S.Td>
