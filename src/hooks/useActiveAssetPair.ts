@@ -1,6 +1,6 @@
 import {useSelector} from 'react-redux';
 
-import {getManager, getAssetPairs} from 'selectors/state';
+import {getAssetPairs, getManager} from 'selectors/state';
 import {AssetPair} from 'types';
 
 const useActiveAssetPair = (): AssetPair | null => {
