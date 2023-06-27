@@ -9,11 +9,15 @@ const wallets = createSlice({
   initialState,
   name: WALLETS,
   reducers: {
+    setWallet: (state: Wallets, {payload}: PayloadAction<Wallet>) => {
+      const {id} = payload;
+      state[id] = payload;
+    },
     setWallets: (state: Wallets, {payload}: PayloadAction<Wallet[]>) => {
       return payload.reduce((acc: Wallets, obj) => ({...acc, [obj.id]: obj}), {});
     },
   },
 });
 
-export const {setWallets} = wallets.actions;
+export const {setWallet, setWallets} = wallets.actions;
 export default wallets.reducer;

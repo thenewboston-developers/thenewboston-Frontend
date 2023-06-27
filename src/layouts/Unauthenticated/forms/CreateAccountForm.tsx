@@ -47,12 +47,7 @@ const CreateAccountForm: SFC = () => {
     <>
       <S.Heading>Create Account</S.Heading>
       <S.Panel>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-          validateOnMount={false}
-          validationSchema={validationSchema}
-        >
+        <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
           {({dirty, errors, isSubmitting, touched, isValid}) => (
             <Form>
               <S.Input errors={errors} label="Username" name="username" touched={touched} />

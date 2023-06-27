@@ -1,8 +1,9 @@
+import {FillStatus} from 'enums';
 import {Dict} from 'types/generic';
 
 export interface Order {
   created_date: string;
-  fill_status: string;
+  fill_status: FillStatus;
   filled_amount: number;
   id: number;
   modified_date: string;

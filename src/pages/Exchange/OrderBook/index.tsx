@@ -2,7 +2,7 @@ import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
-import {OrderType} from 'enums';
+import {FillStatus, OrderType} from 'enums';
 import {useActiveAssetPair} from 'hooks';
 import {getOrders} from 'selectors/state';
 import {SFC} from 'types';
@@ -20,7 +20,8 @@ const OrderBook: SFC = ({className}) => {
     return orderedOrders.filter(
       (order) =>
         order.primary_currency === activeAssetPair.primary_currency.id &&
-        order.secondary_currency === activeAssetPair.secondary_currency.id,
+        order.secondary_currency === activeAssetPair.secondary_currency.id &&
+        [FillStatus.OPEN, FillStatus.PARTIALLY_FILLED].includes(order.fill_status),
     );
   }, [activeAssetPair, orders]);
 
@@ -38,7 +39,7 @@ const OrderBook: SFC = ({className}) => {
         <tbody>
           {filteredOrders.map((order) => (
             <S.Tr key={order.id}>
-              <S.Td>{order.quantity.toLocaleString()}</S.Td>
+              <S.Td>{(order.quantity - order.filled_amount).toLocaleString()}</S.Td>
               <S.Td $orderType={OrderType[order.order_type as keyof typeof OrderType]}>
                 {order.price.toLocaleString()}
               </S.Td>
