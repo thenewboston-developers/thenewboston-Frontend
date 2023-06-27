@@ -1,20 +1,22 @@
 import {useCallback, useMemo, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 import {mdiDotsVertical} from '@mdi/js';
 
 import DropdownMenu from 'components/DropdownMenu';
+import {updateOrder} from 'dispatchers/orders';
 import {FillStatus} from 'enums';
 import {useToggle} from 'hooks';
 import TradesModal from 'modals/TradesModal';
 import {getCores, getOrders, getSelf} from 'selectors/state';
-import {Order, SFC} from 'types';
+import {AppDispatch, Order, SFC} from 'types';
 import * as S from './Styles';
 
 const Orders: SFC = ({className}) => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [tradesModalIsOpen, toggleTradesModal] = useToggle(false);
   const cores = useSelector(getCores);
+  const dispatch = useDispatch<AppDispatch>();
   const orders = useSelector(getOrders);
   const self = useSelector(getSelf);
 
@@ -40,15 +42,15 @@ const Orders: SFC = ({className}) => {
       if ([FillStatus.OPEN, FillStatus.PARTIALLY_FILLED].includes(order.fill_status)) {
         menuOptions.unshift({
           label: 'Cancel Order',
-          onClick: () => {
-            console.log('Cancel Order');
+          onClick: async () => {
+            await dispatch(updateOrder(order.id, {fill_status: FillStatus.CANCELLED}));
           },
         });
       }
 
       return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
     },
-    [toggleTradesModal],
+    [dispatch, toggleTradesModal],
   );
 
   const renderRows = useCallback(() => {

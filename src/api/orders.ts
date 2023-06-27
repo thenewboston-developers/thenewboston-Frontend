@@ -24,3 +24,13 @@ export const getOrders = async (): Promise<Order[]> => {
     throw error;
   }
 };
+
+export const updateOrder = async (id: number, data: Partial<Order>): Promise<Order> => {
+  try {
+    const response = await axios.patch<Order>(`${BASE_URL}/${id}`, data, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
