@@ -9,6 +9,7 @@ import {Manager} from 'types/manager';
 import {Order, Orders} from 'types/orders';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
+import {Trade, Trades} from 'types/trades';
 import {Wallet, Wallets} from 'types/wallets';
 
 export {
@@ -33,6 +34,8 @@ export {
   RootState,
   SFC,
   Self,
+  Trade,
+  Trades,
   Wallet,
   Wallets,
 };

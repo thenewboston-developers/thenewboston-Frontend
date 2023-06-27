@@ -9,6 +9,7 @@ import coresReducer from 'store/cores';
 import managerReducer from 'store/manager';
 import ordersReducer from 'store/orders';
 import selfReducer from 'store/self';
+import tradesReducer from 'store/trades';
 import walletsReducer from 'store/wallets';
 
 const rootReducer = combineReducers({
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   manager: managerReducer,
   orders: ordersReducer,
   self: selfReducer,
+  trades: tradesReducer,
   wallets: walletsReducer,
 });
 
