@@ -1,7 +1,8 @@
 import {FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import {combineReducers, configureStore} from '@reduxjs/toolkit';
+import {AnyAction, combineReducers, configureStore} from '@reduxjs/toolkit';
 
+import {LOGOUT_USER} from 'store/actions';
 import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
 import coresReducer from 'store/cores';
@@ -10,23 +11,27 @@ import ordersReducer from 'store/orders';
 import selfReducer from 'store/self';
 import walletsReducer from 'store/wallets';
 
+const rootReducer = combineReducers({
+  assetPairs: assetPairsReducer,
+  authentication: authenticationReducer,
+  cores: coresReducer,
+  manager: managerReducer,
+  orders: ordersReducer,
+  self: selfReducer,
+  wallets: walletsReducer,
+});
+
+const appReducer = (state: any, action: AnyAction) => {
+  if (action.type === LOGOUT_USER) state = undefined;
+  return rootReducer(state, action);
+};
+
 const persistConfig = {
   key: 'thenewboston',
   storage,
 };
 
-const persistedReducer = persistReducer(
-  persistConfig,
-  combineReducers({
-    assetPairs: assetPairsReducer,
-    authentication: authenticationReducer,
-    cores: coresReducer,
-    manager: managerReducer,
-    orders: ordersReducer,
-    self: selfReducer,
-    wallets: walletsReducer,
-  }),
-);
+const persistedReducer = persistReducer(persistConfig, appReducer);
 
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
