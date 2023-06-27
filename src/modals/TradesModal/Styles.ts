@@ -5,6 +5,9 @@ import UModal from 'components/Modal';
 export const Modal = styled(UModal)`
   display: flex;
   flex-direction: column;
-  max-width: 500px;
-  min-width: 480px;
+  width: 640px;
+`;
+
+export const Table = styled.table`
+  width: 100%;
 `;
