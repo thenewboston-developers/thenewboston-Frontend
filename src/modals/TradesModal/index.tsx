@@ -31,12 +31,9 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
     if (!order) return [];
 
     const orderedTrades = orderBy(Object.values(trades), ['created_date'], ['desc']);
-
-    if (order.order_type === OrderType.BUY) {
-      return orderedTrades.filter((trade) => trade.buy_order === order.id);
-    } else {
-      return orderedTrades.filter((trade) => trade.sell_order === order.id);
-    }
+    return orderedTrades.filter(
+      (trade) => (order.order_type === OrderType.BUY ? trade.buy_order : trade.sell_order) === order.id,
+    );
   }, [order, trades]);
 
   const getCurrencyTicker = useCallback((coreId: number) => cores[coreId]?.ticker || '-', [cores]);
