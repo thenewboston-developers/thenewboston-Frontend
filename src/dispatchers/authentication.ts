@@ -1,6 +1,8 @@
 import {login as _login} from 'api/authentication';
-import {resetAuthentication, setAuthentication} from 'store/authentication';
-import {resetSelf, setSelf} from 'store/self';
+import {persistor} from 'store';
+import {logoutUser} from 'store/actions';
+import {setAuthentication} from 'store/authentication';
+import {setSelf} from 'store/self';
 import {AppDispatch, LoginRequest} from 'types';
 
 export const login = (data: LoginRequest) => async (dispatch: AppDispatch) => {
@@ -23,6 +25,6 @@ export const login = (data: LoginRequest) => async (dispatch: AppDispatch) => {
 };
 
 export const logout = () => (dispatch: AppDispatch) => {
-  dispatch(resetAuthentication());
-  dispatch(resetSelf());
+  dispatch(logoutUser());
+  persistor.purge();
 };
