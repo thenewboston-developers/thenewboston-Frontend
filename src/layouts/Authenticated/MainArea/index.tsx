@@ -1,8 +1,9 @@
 import {Route, Routes} from 'react-router-dom';
 
 import Cores from 'pages/Cores';
-import Exchange from 'pages/Exchange';
 import Home from 'pages/Home';
+import Orders from 'pages/Orders';
+import Trade from 'pages/Trade';
 import Wallets from 'pages/Wallets';
 import {SFC} from 'types';
 import * as S from './Styles';
@@ -13,7 +14,8 @@ const MainArea: SFC = ({className}) => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cores" element={<Cores />} />
-        <Route path="/exchange" element={<Exchange />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/trade" element={<Trade />} />
         <Route path="/wallets" element={<Wallets />} />
       </Routes>
     </S.Container>

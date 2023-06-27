@@ -4,6 +4,7 @@ import {
   mdiExitToApp,
   mdiHomeOutline,
   mdiLanConnect,
+  mdiListBoxOutline,
   mdiSwapHorizontalCircleOutline,
   mdiWalletBifoldOutline,
 } from '@mdi/js';
@@ -28,7 +29,8 @@ const LeftNav: SFC = ({className}) => {
       <S.Top>
         <MenuLink icon={mdiHomeOutline} text="Home" to="/" />
         <MenuLink icon={mdiLanConnect} text="Cores" to="/cores" />
-        <MenuLink icon={mdiSwapHorizontalCircleOutline} text="Exchange" to="/exchange" />
+        <MenuLink icon={mdiSwapHorizontalCircleOutline} text="Trade" to="/trade" />
+        <MenuLink icon={mdiListBoxOutline} text="Orders" to="/orders" />
         <MenuLink icon={mdiWalletBifoldOutline} text="Wallets" to="/wallets" />
       </S.Top>
       <S.Bottom>

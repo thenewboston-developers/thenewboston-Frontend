@@ -16,7 +16,7 @@ enum Tab {
   sell = 'sell',
 }
 
-const Exchange: SFC = ({className}) => {
+const Trade: SFC = ({className}) => {
   const [activeTab, setActiveTab] = useState(Tab.buy);
   const activeAssetPair = useActiveAssetPair();
   const dispatch = useDispatch<AppDispatch>();
@@ -66,4 +66,4 @@ const Exchange: SFC = ({className}) => {
   );
 };
 
-export default Exchange;
+export default Trade;
