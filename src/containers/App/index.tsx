@@ -1,4 +1,5 @@
 import React from 'react';
+import {useSelector} from 'react-redux';
 import {Flip, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -6,18 +7,25 @@ import WebSocket from 'containers/WebSocket';
 import {useIsAuthenticated} from 'hooks';
 import Authenticated from 'layouts/Authenticated';
 import Unauthenticated from 'layouts/Unauthenticated';
+import {getSelf} from 'selectors/state';
 
 const App = () => {
   const isAuthenticated = useIsAuthenticated();
+  const self = useSelector(getSelf);
 
   const renderLayout = () => {
     if (isAuthenticated) return <Authenticated />;
     return <Unauthenticated />;
   };
 
-  const renderWebSocket = () => {
+  const renderWebSockets = () => {
     if (!isAuthenticated) return null;
-    return <WebSocket />;
+    return (
+      <>
+        <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/orders`} />
+        <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/wallet/${self.id}`} />
+      </>
+    );
   };
 
   return (
@@ -35,7 +43,7 @@ const App = () => {
         rtl={false}
         transition={Flip}
       />
-      {renderWebSocket()}
+      {renderWebSockets()}
     </>
   );
 };

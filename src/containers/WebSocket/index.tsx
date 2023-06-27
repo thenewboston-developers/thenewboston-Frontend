@@ -5,12 +5,16 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 import rootRouter from 'routers/rootRouter';
 import {AppDispatch} from 'types';
 
-const WebSocket: FC = () => {
+export interface WebSocketProps {
+  url: string;
+}
+
+const WebSocket: FC<WebSocketProps> = ({url}) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const socket = useMemo((): ReconnectingWebSocket => {
-    return new ReconnectingWebSocket(`${process.env.REACT_APP_WS_URL}/ws/orders`);
-  }, []);
+    return new ReconnectingWebSocket(url);
+  }, [url]);
 
   useEffect(() => {
     if (!socket) return;
