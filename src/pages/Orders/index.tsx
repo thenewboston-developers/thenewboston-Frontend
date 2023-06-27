@@ -1,15 +1,19 @@
-import {useCallback, useMemo} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 import {mdiDotsVertical} from '@mdi/js';
 
 import DropdownMenu from 'components/DropdownMenu';
 import {FillStatus} from 'enums';
+import {useToggle} from 'hooks';
+import TradesModal from 'modals/TradesModal';
 import {getCores, getOrders, getSelf} from 'selectors/state';
-import {SFC} from 'types';
+import {Order, SFC} from 'types';
 import * as S from './Styles';
 
 const Orders: SFC = ({className}) => {
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [tradesModalIsOpen, toggleTradesModal] = useToggle(false);
   const cores = useSelector(getCores);
   const orders = useSelector(getOrders);
   const self = useSelector(getSelf);
@@ -21,27 +25,31 @@ const Orders: SFC = ({className}) => {
 
   const getCurrencyTicker = useCallback((coreId: number) => cores[coreId]?.ticker || '-', [cores]);
 
-  const renderDropdownMenu = useCallback((fill_status: FillStatus) => {
-    const menuOptions = [
-      {
-        label: 'View Trades',
-        onClick: () => {
-          console.log('View Trades');
+  const renderDropdownMenu = useCallback(
+    (order: Order) => {
+      const menuOptions = [
+        {
+          label: 'View Trades',
+          onClick: () => {
+            setSelectedOrder(order);
+            toggleTradesModal();
+          },
         },
-      },
-    ];
+      ];
 
-    if ([FillStatus.OPEN, FillStatus.PARTIALLY_FILLED].includes(fill_status)) {
-      menuOptions.unshift({
-        label: 'Cancel Order',
-        onClick: () => {
-          console.log('Cancel Order');
-        },
-      });
-    }
+      if ([FillStatus.OPEN, FillStatus.PARTIALLY_FILLED].includes(order.fill_status)) {
+        menuOptions.unshift({
+          label: 'Cancel Order',
+          onClick: () => {
+            console.log('Cancel Order');
+          },
+        });
+      }
 
-    return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
-  }, []);
+      return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
+    },
+    [toggleTradesModal],
+  );
 
   const renderRows = useCallback(() => {
     return filteredOrders.map((order) => {
@@ -74,30 +82,33 @@ const Orders: SFC = ({className}) => {
             {filled_amount} {primaryCurrencyTicker}
           </td>
           <td>{fill_status}</td>
-          <td>{renderDropdownMenu(fill_status)}</td>
+          <td>{renderDropdownMenu(order)}</td>
         </tr>
       );
     });
   }, [filteredOrders, getCurrencyTicker, renderDropdownMenu]);
 
   return (
-    <S.Container className={className}>
-      <h1>Orders</h1>
-      <S.Table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Order Type</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Filled Amount</th>
-            <th>Fill Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>{renderRows()}</tbody>
-      </S.Table>
-    </S.Container>
+    <>
+      <S.Container className={className}>
+        <h1>Orders</h1>
+        <S.Table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Order Type</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Filled Amount</th>
+              <th>Fill Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>{renderRows()}</tbody>
+        </S.Table>
+      </S.Container>
+      {tradesModalIsOpen ? <TradesModal close={toggleTradesModal} order={selectedOrder} /> : null}
+    </>
   );
 };
 
