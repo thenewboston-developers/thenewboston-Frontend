@@ -4,7 +4,6 @@ import {SELF} from 'store/constants';
 import {Self} from 'types';
 
 const initialState: Self = {
-  deposit_account_number: null,
   id: null,
   username: null,
 };

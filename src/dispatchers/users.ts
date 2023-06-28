@@ -8,8 +8,7 @@ export const createUser = (data: CreateUserRequest) => async (dispatch: AppDispa
 
   const {
     authentication: {access_token, refresh_token},
-    deposit_account: {account_number},
-    user: {id, username},
+    user,
   } = responseData;
 
   dispatch(
@@ -19,5 +18,5 @@ export const createUser = (data: CreateUserRequest) => async (dispatch: AppDispa
     }),
   );
 
-  dispatch(setSelf({deposit_account_number: account_number, id, username}));
+  dispatch(setSelf(user));
 };
