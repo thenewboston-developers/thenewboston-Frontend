@@ -4,7 +4,8 @@ import orderBy from 'lodash/orderBy';
 
 import {getWallets as _getWallets} from 'dispatchers/wallets';
 import {WalletTab} from 'enums';
-import {useAvailableWalletCores} from 'hooks';
+import {useAvailableWalletCores, useToggle} from 'hooks';
+import CreateWalletModal from 'modals/CreateWalletModal';
 import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
@@ -16,6 +17,7 @@ import WalletWithdraw from './WalletWithdraw';
 import * as S from './Styles';
 
 const Wallets: SFC = ({className}) => {
+  const [createWalletModalIsOpen, toggleCreateWalletModal] = useToggle(false);
   const availableWalletCores = useAvailableWalletCores();
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
@@ -41,7 +43,7 @@ const Wallets: SFC = ({className}) => {
 
     return (
       <S.ButtonContainer>
-        <S.Button text="Create Wallet" />
+        <S.Button onClick={toggleCreateWalletModal} text="Create Wallet" />
       </S.ButtonContainer>
     );
   };
@@ -73,16 +75,19 @@ const Wallets: SFC = ({className}) => {
   );
 
   return (
-    <S.Container className={className}>
-      <S.LeftMenu>
-        {renderButtonContainer()}
-        {renderMenuItems()}
-      </S.LeftMenu>
-      <S.Right>
-        {renderTabs()}
-        {renderTabContent()}
-      </S.Right>
-    </S.Container>
+    <>
+      <S.Container className={className}>
+        <S.LeftMenu>
+          {renderButtonContainer()}
+          {renderMenuItems()}
+        </S.LeftMenu>
+        <S.Right>
+          {renderTabs()}
+          {renderTabContent()}
+        </S.Right>
+      </S.Container>
+      {createWalletModalIsOpen ? <CreateWalletModal close={toggleCreateWalletModal} /> : null}
+    </>
   );
 };
 
