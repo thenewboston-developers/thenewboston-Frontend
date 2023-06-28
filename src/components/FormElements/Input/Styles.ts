@@ -14,6 +14,12 @@ export const Field = styled(UField)`
   border: 1px solid ${({$error}) => ($error ? colors.palette.red['400'] : colors.border)};
   display: block;
   width: 260px;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 `;
 
 export const Label = styled.div`

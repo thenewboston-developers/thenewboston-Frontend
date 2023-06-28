@@ -16,6 +16,7 @@ export const DepositAccountRow = styled.div`
   justify-content: space-between;
 `;
 
+// TODO: Standardize
 export const Panel = styled.div`
   border-radius: 4px;
   border: 1px solid ${colors.border};

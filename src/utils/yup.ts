@@ -1,5 +1,10 @@
 import * as yup from 'yup';
 
+export const accountNumberSchema = yup
+  .string()
+  .length(64, 'Account number must be 64 characters long')
+  .matches(/^[0-9a-fA-F]+$/, 'Invalid account number');
+
 function callbackWithRef(ref: any, cb: (thisValue: any, refValue: any) => boolean, message: string) {
   return yup.number().test({
     exclusive: false,
