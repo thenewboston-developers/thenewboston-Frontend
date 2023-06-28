@@ -16,6 +16,17 @@ export const DepositAccountRow = styled.div`
   justify-content: space-between;
 `;
 
+export const DepositLeft = styled.div`
+  align-items: center;
+  display: flex;
+`;
+
+export const IconWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  margin-left: 6px;
+`;
+
 // TODO: Standardize
 export const Panel = styled.div`
   border-radius: 4px;
@@ -26,6 +37,12 @@ export const Panel = styled.div`
 
 export const QrWrapper = styled.div`
   margin-top: 16px;
+`;
+
+export const RefreshIconContainer = styled.div`
+  align-items: center;
+  cursor: pointer;
+  display: flex;
 `;
 
 export const Top = styled.div`

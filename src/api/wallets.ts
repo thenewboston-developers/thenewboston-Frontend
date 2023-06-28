@@ -15,6 +15,16 @@ export const createWallet = async (data: CreateWalletRequest): Promise<Wallet> =
   }
 };
 
+export const getWalletBalance = async (walletId: number): Promise<Wallet> => {
+  try {
+    const response = await axios.get<Wallet>(`${BASE_URL}/${walletId}/balance`, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const getWallets = async (): Promise<Wallet[]> => {
   try {
     const response = await axios.get<Wallet[]>(BASE_URL, authorizationHeaders());
