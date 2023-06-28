@@ -1,6 +1,7 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateOrderRequest} from 'types/api/orders';
 import {CreateUserRequest, CreateUserResponse} from 'types/api/users';
+import {CreateWalletRequest} from 'types/api/wallets';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Core, Cores} from 'types/cores';
@@ -23,6 +24,7 @@ export {
   CreateOrderRequest,
   CreateUserRequest,
   CreateUserResponse,
+  CreateWalletRequest,
   Dict,
   GenericFunction,
   GenericVoidFunction,
