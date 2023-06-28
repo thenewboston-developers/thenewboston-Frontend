@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import {colors} from 'styles';
 
-// TODO: Unify styling
+// TODO: Unify styling (or create separate component)
 export const Container = styled.div<{$isActive: boolean}>`
   align-items: center;
   border-radius: 4px;

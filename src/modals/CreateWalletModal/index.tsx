@@ -21,6 +21,7 @@ const CreateWalletModal: SFC<CreateWalletModalProps> = ({className, close}) => {
 
   const handleButtonClick = async () => {
     try {
+      // TODO: Add loading state for the button
       await dispatch(
         createWallet({
           core: selectedCoreId!,
