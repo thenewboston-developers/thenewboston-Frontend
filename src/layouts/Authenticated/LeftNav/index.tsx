@@ -2,7 +2,6 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {
   mdiExitToApp,
-  mdiHomeOutline,
   mdiLanConnect,
   mdiListBoxOutline,
   mdiSwapHorizontalCircleOutline,
@@ -27,7 +26,6 @@ const LeftNav: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Top>
-        <MenuLink icon={mdiHomeOutline} text="Home" to="/" />
         <MenuLink icon={mdiLanConnect} text="Cores" to="/cores" />
         <MenuLink icon={mdiSwapHorizontalCircleOutline} text="Trade" to="/trade" />
         <MenuLink icon={mdiListBoxOutline} text="Orders" to="/orders" />

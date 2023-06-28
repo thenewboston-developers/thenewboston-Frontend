@@ -1,7 +1,6 @@
 import {Route, Routes} from 'react-router-dom';
 
 import Cores from 'pages/Cores';
-import Home from 'pages/Home';
 import Orders from 'pages/Orders';
 import Trade from 'pages/Trade';
 import Wallets from 'pages/Wallets';
@@ -12,7 +11,6 @@ const MainArea: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/cores" element={<Cores />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/trade" element={<Trade />} />

@@ -25,7 +25,7 @@ const CreateAccountForm: SFC = () => {
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
       await dispatch(createUser(values));
-      navigate('/');
+      navigate('/cores');
     } catch (error) {
       console.error(error);
       displayErrorToast('Error creating account');
