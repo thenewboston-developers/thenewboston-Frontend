@@ -7,7 +7,7 @@ export const Container = styled.div``;
 
 export const CopyContainer = styled(UCopyContainer)`
   margin-top: 8px;
-  width: 280px;
+  width: 300px;
 `;
 
 export const DepositAccountRow = styled.div`
