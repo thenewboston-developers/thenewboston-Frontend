@@ -6,29 +6,43 @@ import MdiIcon from '@mdi/react';
 import Button, {ButtonColor} from 'components/Button';
 import Loader from 'components/Loader';
 import Qr from 'components/Qr';
-import {getWalletBalance} from 'dispatchers/wallets';
+import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
 import {useActiveWallet} from 'hooks';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import * as S from './Styles';
 
 const WalletDeposit: SFC = ({className}) => {
-  const [requestPending, setRequestPending] = useState(false);
+  const [createDepositRequestPending, setCreateDepositRequestPending] = useState(false);
+  const [getBalanceRequestPending, setGetBalanceRequestPending] = useState(false);
   const activeWallet = useActiveWallet();
   const dispatch = useDispatch<AppDispatch>();
 
   if (!activeWallet) return null;
 
-  const handleIconClick = async () => {
-    setRequestPending(true);
+  const handleButtonClick = async () => {
+    setCreateDepositRequestPending(true);
 
     try {
-      await dispatch(getWalletBalance(activeWallet.id));
+      await dispatch(createWalletDeposit(activeWallet.id));
     } catch (error) {
       console.error(error);
-      displayErrorToast('Error fetching balance');
+      displayErrorToast('Error depositing funds');
     } finally {
-      setRequestPending(false);
+      setCreateDepositRequestPending(false);
+    }
+  };
+
+  const handleIconClick = async () => {
+    setGetBalanceRequestPending(true);
+
+    try {
+      await dispatch(getWalletDepositBalance(activeWallet.id));
+    } catch (error) {
+      console.error(error);
+      displayErrorToast('Error fetching deposit balance');
+    } finally {
+      setGetBalanceRequestPending(false);
     }
   };
 
@@ -39,7 +53,7 @@ const WalletDeposit: SFC = ({className}) => {
       </S.RefreshIconContainer>
     );
 
-    if (requestPending) content = <Loader size={16} />;
+    if (getBalanceRequestPending) content = <Loader size={16} />;
 
     return <S.IconWrapper>{content}</S.IconWrapper>;
   };
@@ -61,7 +75,13 @@ const WalletDeposit: SFC = ({className}) => {
             <h4>Deposit Account Balance: {activeWallet.deposit_balance}</h4>
             {renderIcon()}
           </S.DepositLeft>
-          <Button color={ButtonColor.success} text="Transfer to Main Account" />
+          <Button
+            color={ButtonColor.success}
+            disabled={createDepositRequestPending}
+            isSubmitting={createDepositRequestPending}
+            onClick={handleButtonClick}
+            text="Transfer to Main Account"
+          />
         </S.DepositAccountRow>
       </S.Panel>
       <S.Panel>

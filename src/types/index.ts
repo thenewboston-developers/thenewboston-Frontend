@@ -1,9 +1,10 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateOrderRequest} from 'types/api/orders';
 import {CreateUserRequest, CreateUserResponse} from 'types/api/users';
-import {CreateWalletRequest} from 'types/api/wallets';
+import {CreateWalletRequest, DepositResponse} from 'types/api/wallets';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
+import {Block, Blocks} from 'types/blocks';
 import {Core, Cores} from 'types/cores';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {Manager} from 'types/manager';
@@ -18,6 +19,8 @@ export {
   AssetPair,
   AssetPairs,
   Authentication,
+  Block,
+  Blocks,
   ClassName,
   Core,
   Cores,
@@ -25,6 +28,7 @@ export {
   CreateUserRequest,
   CreateUserResponse,
   CreateWalletRequest,
+  DepositResponse,
   Dict,
   GenericFunction,
   GenericVoidFunction,

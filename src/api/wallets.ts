@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {CreateWalletRequest, Wallet} from 'types';
+import {CreateWalletRequest, DepositResponse, Wallet} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/wallets`;
@@ -15,9 +15,19 @@ export const createWallet = async (data: CreateWalletRequest): Promise<Wallet> =
   }
 };
 
-export const getWalletBalance = async (walletId: number): Promise<Wallet> => {
+export const createWalletDeposit = async (walletId: number): Promise<DepositResponse> => {
   try {
-    const response = await axios.get<Wallet>(`${BASE_URL}/${walletId}/balance`, authorizationHeaders());
+    const response = await axios.post<DepositResponse>(`${BASE_URL}/${walletId}/deposit`, {}, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getWalletDepositBalance = async (walletId: number): Promise<Wallet> => {
+  try {
+    const response = await axios.get<Wallet>(`${BASE_URL}/${walletId}/deposit_balance`, authorizationHeaders());
     return response.data;
   } catch (error) {
     console.error(error);
