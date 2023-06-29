@@ -2,6 +2,7 @@ import {Dict} from 'types/generic';
 
 export interface Block {
   amount: number;
+  created_date: string;
   id: string;
   payload: any;
   recipient: string;

@@ -1,9 +1,10 @@
-import {ReactNode} from 'react';
+import {ReactNode, useMemo} from 'react';
 
 import Table from 'components/Table';
 import {useToggle} from 'hooks';
 import {Block, Dict, SFC} from 'types';
-import {camelToTitle} from 'utils/strings';
+import {longDate} from 'utils/dates';
+import {snakeToTitle} from 'utils/strings';
 import * as S from './Styles';
 
 export interface ExpandableBlockProps {
@@ -13,22 +14,38 @@ export interface ExpandableBlockProps {
 const ExpandableBlock: SFC<ExpandableBlockProps> = ({block, className}) => {
   const [isExpanded, toggleIsExpanded] = useToggle(false);
 
-  const renderBottom = () => {
-    if (!isExpanded) return null;
-
+  const rows = useMemo(() => {
     const keyOverrides: Dict<string> = {
       id: 'Block ID',
-      transaction_fee: 'Transaction Fee',
     };
 
     const valueOverrides: {[key: string]: (value?: any) => ReactNode} = {
       payload: (value) => JSON.stringify(value, null, 4),
     };
 
-    const rows = Object.entries(block).map(([key, value]) => ({
-      key: keyOverrides[key] || camelToTitle(key),
-      value: valueOverrides[key] ? valueOverrides[key](value) : value,
-    }));
+    /* eslint-disable sort-keys */
+    const orderedBlock: Block = {
+      id: block.id,
+      amount: block.amount,
+      transaction_fee: block.transaction_fee,
+      sender: block.sender,
+      recipient: block.recipient,
+      signature: block.signature,
+      payload: block.payload,
+      created_date: block.created_date,
+    };
+    /* eslint-enable sort-keys */
+
+    return Object.entries(orderedBlock)
+      .filter(([key]) => key !== 'created_date')
+      .map(([key, value]) => ({
+        key: keyOverrides[key] || snakeToTitle(key),
+        value: valueOverrides[key] ? valueOverrides[key](value) : value,
+      }));
+  }, [block]);
+
+  const renderBottom = () => {
+    if (!isExpanded) return null;
 
     return (
       <S.Bottom>
@@ -40,7 +57,7 @@ const ExpandableBlock: SFC<ExpandableBlockProps> = ({block, className}) => {
   return (
     <S.Container className={className}>
       <S.Top onClick={toggleIsExpanded}>
-        <S.Date>12/12/12</S.Date>
+        <S.Date>{longDate(block.created_date)}</S.Date>
         <S.Amount>{block.amount}</S.Amount>
       </S.Top>
       {renderBottom()}

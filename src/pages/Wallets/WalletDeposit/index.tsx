@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import orderBy from 'lodash/orderBy';
 import {mdiRefresh} from '@mdi/js';
 import MdiIcon from '@mdi/react';
 
@@ -50,7 +51,8 @@ const WalletDeposit: SFC = ({className}) => {
   };
 
   const renderDepositBlocks = () => {
-    return Object.values(blocks).map((block) => <ExpandableBlock block={block} key={block.id} />);
+    const orderedBlocks = orderBy(Object.values(blocks), ['created_date'], ['desc']);
+    return orderedBlocks.map((block) => <ExpandableBlock block={block} key={block.id} />);
   };
 
   const renderIcon = () => {
