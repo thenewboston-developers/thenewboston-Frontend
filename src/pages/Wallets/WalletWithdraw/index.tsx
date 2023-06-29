@@ -1,14 +1,20 @@
 import {useMemo} from 'react';
-import {Form, Formik} from 'formik';
+import {useDispatch} from 'react-redux';
+import {Form, Formik, FormikHelpers} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
 import {Input} from 'components/FormElements';
-import {SFC} from 'types';
+import {createWalletWithdraw} from 'dispatchers/wallets';
+import {useActiveWallet} from 'hooks';
+import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import yup, {accountNumberSchema} from 'utils/yup';
 import * as S from './Styles';
 
 const WalletWithdraw: SFC = ({className}) => {
+  const activeWallet = useActiveWallet();
+  const dispatch = useDispatch<AppDispatch>();
+
   const initialValues = {
     accountNumber: '',
     amount: '',
@@ -16,13 +22,14 @@ const WalletWithdraw: SFC = ({className}) => {
 
   type FormValues = typeof initialValues;
 
-  const handleSubmit = async (values: FormValues): Promise<void> => {
+  const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
       const requestData = {
         account_number: values.accountNumber,
         amount: parseInt(values.amount, 10),
       };
-      console.log(requestData);
+      await dispatch(createWalletWithdraw(activeWallet!.id, requestData));
+      resetForm();
     } catch (error) {
       console.error(error);
       displayErrorToast('Error withdrawing funds');
@@ -35,6 +42,8 @@ const WalletWithdraw: SFC = ({className}) => {
       amount: yup.number().integer('Amount must be an integer').moreThan(1).required(),
     });
   }, []);
+
+  if (!activeWallet) return null;
 
   return (
     <S.Container className={className}>
