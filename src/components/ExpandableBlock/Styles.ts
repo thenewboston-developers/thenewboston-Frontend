@@ -5,7 +5,7 @@ import {colors} from 'styles';
 export const Amount = styled.div``;
 
 export const Bottom = styled.div`
-  margin: 4px 0 12px;
+  margin: 8px 0 12px;
 `;
 
 export const Container = styled.div``;
