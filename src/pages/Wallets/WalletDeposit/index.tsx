@@ -9,6 +9,7 @@ import ExpandableTransfer from 'components/ExpandableTransfer';
 import Loader from 'components/Loader';
 import Qr from 'components/Qr';
 import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
+import {TransferType} from 'enums';
 import {useActiveWallet} from 'hooks';
 import {getTransfers} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
@@ -51,9 +52,8 @@ const WalletDeposit: SFC = ({className}) => {
   };
 
   const renderDeposits = () => {
-    const orderedTransfers = orderBy(Object.values(transfers), ['created_date'], ['desc']);
-    return orderedTransfers
-      .filter((transfer) => transfer.sender === activeWallet.deposit_account_number)
+    return orderBy(Object.values(transfers), ['created_date'], ['desc'])
+      .filter((transfer) => transfer.core === activeWallet.core.id && transfer.transfer_type === TransferType.DEPOSIT)
       .map((transfer) => <ExpandableTransfer key={transfer.id} transfer={transfer} />);
   };
 
