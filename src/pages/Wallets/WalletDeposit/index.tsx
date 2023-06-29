@@ -52,7 +52,9 @@ const WalletDeposit: SFC = ({className}) => {
 
   const renderDepositBlocks = () => {
     const orderedBlocks = orderBy(Object.values(blocks), ['created_date'], ['desc']);
-    return orderedBlocks.map((block) => <ExpandableBlock block={block} key={block.id} />);
+    return orderedBlocks
+      .filter((block) => block.sender === activeWallet.deposit_account_number)
+      .map((block) => <ExpandableBlock block={block} key={block.id} />);
   };
 
   const renderIcon = () => {
