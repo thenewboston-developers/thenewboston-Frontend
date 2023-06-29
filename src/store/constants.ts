@@ -1,9 +1,9 @@
 export const ASSET_PAIRS = 'assetPairs';
 export const AUTHENTICATION = 'authentication';
-export const BLOCKS = 'blocks';
 export const CORES = 'cores';
 export const MANAGER = 'manager';
 export const ORDERS = 'orders';
 export const SELF = 'self';
 export const TRADES = 'trades';
+export const TRANSFERS = 'transfers';
 export const WALLETS = 'wallets';
