@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {mdiRefresh} from '@mdi/js';
 import MdiIcon from '@mdi/react';
 
 import Button, {ButtonColor} from 'components/Button';
+import ExpandableBlock from 'components/ExpandableBlock';
 import Loader from 'components/Loader';
 import Qr from 'components/Qr';
 import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
 import {useActiveWallet} from 'hooks';
+import {getBlocks} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import * as S from './Styles';
@@ -16,6 +18,7 @@ const WalletDeposit: SFC = ({className}) => {
   const [createDepositRequestPending, setCreateDepositRequestPending] = useState(false);
   const [getBalanceRequestPending, setGetBalanceRequestPending] = useState(false);
   const activeWallet = useActiveWallet();
+  const blocks = useSelector(getBlocks);
   const dispatch = useDispatch<AppDispatch>();
 
   if (!activeWallet) return null;
@@ -44,6 +47,10 @@ const WalletDeposit: SFC = ({className}) => {
     } finally {
       setGetBalanceRequestPending(false);
     }
+  };
+
+  const renderDepositBlocks = () => {
+    return Object.values(blocks).map((block) => <ExpandableBlock block={block} key={block.id} />);
   };
 
   const renderIcon = () => {
@@ -86,6 +93,7 @@ const WalletDeposit: SFC = ({className}) => {
       </S.Panel>
       <S.Panel>
         <h4>Deposits</h4>
+        {renderDepositBlocks()}
       </S.Panel>
     </S.Container>
   );
