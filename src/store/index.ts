@@ -5,23 +5,23 @@ import {AnyAction, combineReducers, configureStore} from '@reduxjs/toolkit';
 import {LOGOUT_USER} from 'store/actions';
 import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
-import blocksReducer from 'store/blocks';
 import coresReducer from 'store/cores';
 import managerReducer from 'store/manager';
 import ordersReducer from 'store/orders';
 import selfReducer from 'store/self';
 import tradesReducer from 'store/trades';
+import transfersReducer from 'store/transfers';
 import walletsReducer from 'store/wallets';
 
 const rootReducer = combineReducers({
   assetPairs: assetPairsReducer,
   authentication: authenticationReducer,
-  blocks: blocksReducer,
   cores: coresReducer,
   manager: managerReducer,
   orders: ordersReducer,
   self: selfReducer,
   trades: tradesReducer,
+  transfers: transfersReducer,
   wallets: walletsReducer,
 });
 

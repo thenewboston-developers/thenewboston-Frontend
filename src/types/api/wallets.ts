@@ -1,4 +1,4 @@
-import {Block} from 'types/blocks';
+import {Transfer} from 'types/transfers';
 import {Wallet} from 'types/wallets';
 
 export interface CreateWalletRequest {
@@ -7,7 +7,7 @@ export interface CreateWalletRequest {
 }
 
 export interface DepositResponse {
-  block: Block;
+  transfer: Transfer;
   wallet: Wallet;
 }
 
@@ -17,6 +17,6 @@ export interface WithdrawRequest {
 }
 
 export interface WithdrawResponse {
-  block: Block;
+  transfer: Transfer;
   wallet: Wallet;
 }

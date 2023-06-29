@@ -1,11 +1,15 @@
-import {useMemo} from 'react';
-import {useDispatch} from 'react-redux';
+import React, {useMemo} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {Form, Formik, FormikHelpers} from 'formik';
+import orderBy from 'lodash/orderBy';
 
 import Button, {ButtonType} from 'components/Button';
+import ExpandableTransfer from 'components/ExpandableTransfer';
 import {Input} from 'components/FormElements';
 import {createWalletWithdraw} from 'dispatchers/wallets';
+import {TransferType} from 'enums';
 import {useActiveWallet} from 'hooks';
+import {getTransfers} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import yup, {accountNumberSchema} from 'utils/yup';
@@ -14,6 +18,7 @@ import * as S from './Styles';
 const WalletWithdraw: SFC = ({className}) => {
   const activeWallet = useActiveWallet();
   const dispatch = useDispatch<AppDispatch>();
+  const transfers = useSelector(getTransfers);
 
   const initialValues = {
     accountNumber: '',
@@ -34,6 +39,14 @@ const WalletWithdraw: SFC = ({className}) => {
       console.error(error);
       displayErrorToast('Error withdrawing funds');
     }
+  };
+
+  const renderWithdraws = () => {
+    if (!activeWallet) return [];
+
+    return orderBy(Object.values(transfers), ['created_date'], ['desc'])
+      .filter((transfer) => transfer.core === activeWallet.core.id && transfer.transfer_type === TransferType.WITHDRAW)
+      .map((transfer) => <ExpandableTransfer key={transfer.id} transfer={transfer} />);
   };
 
   const validationSchema = useMemo(() => {
@@ -67,6 +80,7 @@ const WalletWithdraw: SFC = ({className}) => {
       </S.Panel>
       <S.Panel>
         <h4>Withdraws</h4>
+        {renderWithdraws()}
       </S.Panel>
     </S.Container>
   );

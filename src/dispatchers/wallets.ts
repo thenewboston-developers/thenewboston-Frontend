@@ -5,7 +5,7 @@ import {
   getWalletDepositBalance as _getWalletDepositBalance,
   getWallets as _getWallets,
 } from 'api/wallets';
-import {setBlock} from 'store/blocks';
+import {setTransfer} from 'store/transfers';
 import {setWallet, setWallets} from 'store/wallets';
 import {AppDispatch, CreateWalletRequest, WithdrawRequest} from 'types';
 
@@ -16,15 +16,15 @@ export const createWallet = (data: CreateWalletRequest) => async (dispatch: AppD
 
 export const createWalletDeposit = (walletId: number) => async (dispatch: AppDispatch) => {
   const responseData = await _createWalletDeposit(walletId);
-  const {block, wallet} = responseData;
-  dispatch(setBlock(block));
+  const {transfer, wallet} = responseData;
+  dispatch(setTransfer(transfer));
   dispatch(setWallet(wallet));
 };
 
 export const createWalletWithdraw = (walletId: number, data: WithdrawRequest) => async (dispatch: AppDispatch) => {
   const responseData = await _createWalletWithdraw(walletId, data);
-  const {block, wallet} = responseData;
-  dispatch(setBlock(block));
+  const {transfer, wallet} = responseData;
+  dispatch(setTransfer(transfer));
   dispatch(setWallet(wallet));
 };
 

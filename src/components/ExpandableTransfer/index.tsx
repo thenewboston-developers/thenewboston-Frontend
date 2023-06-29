@@ -2,16 +2,16 @@ import {ReactNode, useMemo} from 'react';
 
 import Table from 'components/Table';
 import {useToggle} from 'hooks';
-import {Block, Dict, SFC} from 'types';
+import {Block, Dict, SFC, Transfer} from 'types';
 import {longDate} from 'utils/dates';
 import {snakeToTitle} from 'utils/strings';
 import * as S from './Styles';
 
-export interface ExpandableBlockProps {
-  block: Block;
+export interface ExpandableTransferProps {
+  transfer: Transfer;
 }
 
-const ExpandableBlock: SFC<ExpandableBlockProps> = ({block, className}) => {
+const ExpandableTransfer: SFC<ExpandableTransferProps> = ({className, transfer}) => {
   const [isExpanded, toggleIsExpanded] = useToggle(false);
 
   const rows = useMemo(() => {
@@ -25,14 +25,13 @@ const ExpandableBlock: SFC<ExpandableBlockProps> = ({block, className}) => {
 
     /* eslint-disable sort-keys */
     const orderedBlock: Block = {
-      id: block.id,
-      amount: block.amount,
-      transaction_fee: block.transaction_fee,
-      sender: block.sender,
-      recipient: block.recipient,
-      signature: block.signature,
-      payload: block.payload,
-      created_date: block.created_date,
+      id: transfer.id,
+      amount: transfer.amount,
+      transaction_fee: transfer.transaction_fee,
+      sender: transfer.sender,
+      recipient: transfer.recipient,
+      signature: transfer.signature,
+      payload: transfer.payload,
     };
     /* eslint-enable sort-keys */
 
@@ -42,7 +41,7 @@ const ExpandableBlock: SFC<ExpandableBlockProps> = ({block, className}) => {
         key: keyOverrides[key] || snakeToTitle(key),
         value: valueOverrides[key] ? valueOverrides[key](value) : value,
       }));
-  }, [block]);
+  }, [transfer]);
 
   const renderBottom = () => {
     if (!isExpanded) return null;
@@ -57,12 +56,12 @@ const ExpandableBlock: SFC<ExpandableBlockProps> = ({block, className}) => {
   return (
     <S.Container className={className}>
       <S.Top onClick={toggleIsExpanded}>
-        <S.Date>{longDate(block.created_date)}</S.Date>
-        <S.Amount>{block.amount}</S.Amount>
+        <S.Date>{longDate(transfer.created_date)}</S.Date>
+        <S.Amount>{transfer.amount}</S.Amount>
       </S.Top>
       {renderBottom()}
     </S.Container>
   );
 };
 
-export default ExpandableBlock;
+export default ExpandableTransfer;
