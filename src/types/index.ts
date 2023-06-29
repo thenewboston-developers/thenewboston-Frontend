@@ -1,7 +1,7 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateOrderRequest} from 'types/api/orders';
 import {CreateUserRequest, CreateUserResponse} from 'types/api/users';
-import {CreateWalletRequest, DepositResponse} from 'types/api/wallets';
+import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block, Blocks} from 'types/blocks';
@@ -44,4 +44,6 @@ export {
   Trades,
   Wallet,
   Wallets,
+  WithdrawRequest,
+  WithdrawResponse,
 };

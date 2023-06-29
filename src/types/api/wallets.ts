@@ -10,3 +10,13 @@ export interface DepositResponse {
   block: Block;
   wallet: Wallet;
 }
+
+export interface WithdrawRequest {
+  account_number: string;
+  amount: number;
+}
+
+export interface WithdrawResponse {
+  block: Block;
+  wallet: Wallet;
+}
