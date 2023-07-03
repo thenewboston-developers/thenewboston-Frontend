@@ -1,6 +1,11 @@
-# Getting Started with Create React App
+## Project setup
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Create a `.env.development` file.
+
+```
+REACT_APP_API_URL=http://127.0.0.1:8000
+REACT_APP_WS_URL=ws://127.0.0.1:8000
+```
 
 ## Available Scripts
 
