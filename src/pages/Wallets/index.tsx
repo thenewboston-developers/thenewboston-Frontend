@@ -56,8 +56,8 @@ const Wallets: SFC = ({className}) => {
     if (!manager.activeWalletTab) return null;
 
     const tabContent = {
-      [WalletTab.deposit]: <WalletDeposit />,
-      [WalletTab.withdraw]: <WalletWithdraw />,
+      [WalletTab.DEPOSIT]: <WalletDeposit />,
+      [WalletTab.WITHDRAW]: <WalletWithdraw />,
     };
 
     return tabContent[manager.activeWalletTab];
@@ -65,10 +65,10 @@ const Wallets: SFC = ({className}) => {
 
   const renderTabs = () => (
     <Tabs>
-      <Tab onClick={handleTabClick} walletTab={WalletTab.deposit}>
+      <Tab onClick={handleTabClick} walletTab={WalletTab.DEPOSIT}>
         Deposit
       </Tab>
-      <Tab onClick={handleTabClick} walletTab={WalletTab.withdraw}>
+      <Tab onClick={handleTabClick} walletTab={WalletTab.WITHDRAW}>
         Withdraw
       </Tab>
     </Tabs>

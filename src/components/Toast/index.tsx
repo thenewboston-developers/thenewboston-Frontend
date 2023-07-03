@@ -9,10 +9,10 @@ export interface ToastProps {
   type: ToastType;
 }
 
-const Toast: SFC<ToastProps> = ({children, className, type = ToastType.error}) => {
+const Toast: SFC<ToastProps> = ({children, className, type = ToastType.ERROR}) => {
   const renderIcon = useCallback((): ReactNode => {
     switch (type) {
-      case ToastType.success:
+      case ToastType.SUCCESS:
         return <S.CheckCircleIcon />;
       default:
         return <S.AlertCircleOutlineIcon />;

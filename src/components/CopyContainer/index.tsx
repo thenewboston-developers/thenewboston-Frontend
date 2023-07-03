@@ -11,7 +11,7 @@ export interface CopyContainerProps {
 
 const CopyContainer: SFC<CopyContainerProps> = ({className, text}) => {
   const handleCopy = (): void => {
-    displayToast('Copied to the clipboard', ToastType.success);
+    displayToast('Copied to the clipboard', ToastType.SUCCESS);
   };
 
   return (

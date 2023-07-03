@@ -17,7 +17,7 @@ export const displayErrorToast = (error: any) => {
     errorStr = JSON.stringify(error);
   }
 
-  displayToast(errorStr, ToastType.error);
+  displayToast(errorStr, ToastType.ERROR);
 };
 
 export const displayToast = (message: ReactNode, type: ToastType, className?: string): void => {
