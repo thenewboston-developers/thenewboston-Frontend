@@ -20,8 +20,8 @@ export const CheckCircleIcon = styled(Icon).attrs(() => ({icon: mdiCheckCircle})
 
 export const Container = styled.div<{type: ToastType}>`
   background-color: ${({type}) => {
-    if (type === ToastType.success) return colors.palette.green['500'];
-    if (type === ToastType.warning) return colors.palette.orange['500'];
+    if (type === ToastType.SUCCESS) return colors.palette.green['500'];
+    if (type === ToastType.WARNING) return colors.palette.orange['500'];
     return colors.palette.red['400'];
   }};
   display: flex;

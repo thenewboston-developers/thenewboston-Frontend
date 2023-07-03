@@ -1,4 +1,4 @@
 export enum WalletTab {
-  deposit = 'deposit',
-  withdraw = 'withdraw',
+  DEPOSIT = 'DEPOSIT',
+  WITHDRAW = 'WITHDRAW',
 }

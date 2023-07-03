@@ -43,7 +43,7 @@ const Buy: SFC = ({className}) => {
         secondary_currency: activeAssetPair!.secondary_currency.id,
       };
       await dispatch(createOrder(requestData));
-      displayToast('Buy order created!', ToastType.success);
+      displayToast('Buy order created!', ToastType.SUCCESS);
       resetForm();
       setTotal(0);
     } catch (error) {
