@@ -5,8 +5,8 @@ import {Dict} from 'types/generic';
 export interface Transfer extends Block {
   core: number;
   created_date: string;
+  owner: number;
   transfer_type: TransferType;
-  user: number;
 }
 
 export type Transfers = Dict<Transfer>;
