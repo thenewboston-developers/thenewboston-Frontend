@@ -3,6 +3,7 @@ import {useDispatch} from 'react-redux';
 
 import {getCores} from 'dispatchers/cores';
 import {getOrders} from 'dispatchers/orders';
+import {getTransfers} from 'dispatchers/transfers';
 import {getWallets} from 'dispatchers/wallets';
 import {AppDispatch, SFC} from 'types';
 import LeftNav from './LeftNav';
@@ -16,6 +17,7 @@ const Authenticated: SFC = ({className}) => {
     (async () => {
       await dispatch(getCores());
       await dispatch(getOrders());
+      await dispatch(getTransfers());
       await dispatch(getWallets());
     })();
   }, [dispatch]);
