@@ -20,15 +20,16 @@ export const Container = styled.div`
 export const Table = styled.table`
   margin-top: 16px;
   width: 100%;
+
+  th,
+  td {
+    text-align: right;
+  }
 `;
 
 export const Tr = styled.tr``;
 
 export const Td = styled.td<{$orderType?: OrderType}>`
-  &:nth-child(2) {
-    text-align: right;
-  }
-
   ${({$orderType}) => {
     if ($orderType === OrderType.BUY) return buyMixin;
     if ($orderType === OrderType.SELL) return sellMixin;
