@@ -9,6 +9,11 @@ export const DropdownMenuWrapper = styled.div`
   justify-content: flex-end;
 `;
 
+export const FillStatusBadgeWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 export const Table = styled.table`
   margin-top: 16px;
   width: 100%;

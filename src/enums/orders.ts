@@ -1,8 +1,8 @@
 export enum FillStatus {
+  CANCELLED = 'CANCELLED',
+  FILLED = 'FILLED',
   OPEN = 'OPEN',
   PARTIALLY_FILLED = 'PARTIALLY_FILLED',
-  FILLED = 'FILLED',
-  CANCELLED = 'CANCELLED',
 }
 
 export enum OrderType {

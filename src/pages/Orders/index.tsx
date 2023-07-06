@@ -4,6 +4,7 @@ import orderBy from 'lodash/orderBy';
 import {mdiDotsVertical} from '@mdi/js';
 
 import DropdownMenu from 'components/DropdownMenu';
+import FillStatusBadge from 'components/FillStatusBadge';
 import {updateOrder} from 'dispatchers/orders';
 import {FillStatus} from 'enums';
 import {useToggle} from 'hooks';
@@ -88,7 +89,11 @@ const Orders: SFC = ({className}) => {
           <td>
             {filled_amount} {primaryCurrencyTicker}
           </td>
-          <td>{fill_status}</td>
+          <td>
+            <S.FillStatusBadgeWrapper>
+              <FillStatusBadge fillStatus={fill_status} />
+            </S.FillStatusBadgeWrapper>
+          </td>
           <td>{renderDropdownMenu(order)}</td>
         </tr>
       );
