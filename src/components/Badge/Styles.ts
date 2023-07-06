@@ -1,6 +1,6 @@
 import styled, {css} from 'styled-components';
 
-import {colors} from 'styles';
+import {colors, fonts} from 'styles';
 import {BadgeStyle} from '.';
 
 const dangerMixin = css`
@@ -23,7 +23,7 @@ export const Container = styled.div<{badgeStyle: BadgeStyle}>`
   border-radius: 4px;
   color: #fff;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: ${fonts.weight.semiBold};
   padding: 2px 4px;
   white-space: nowrap;
   width: fit-content;
