@@ -16,6 +16,7 @@ const CreateAccountForm: SFC = () => {
 
   const initialValues = {
     confirmPassword: '',
+    invitationCode: '',
     password: '',
     username: '',
   };
@@ -24,7 +25,12 @@ const CreateAccountForm: SFC = () => {
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
-      await dispatch(createUser(values));
+      const requestData = {
+        invitation_code: values.invitationCode,
+        password: values.password,
+        username: values.username,
+      };
+      await dispatch(createUser(requestData));
       navigate('/cores');
     } catch (error) {
       console.error(error);
@@ -38,6 +44,7 @@ const CreateAccountForm: SFC = () => {
         .string()
         .oneOf([yup.ref('password'), undefined], 'Passwords must match')
         .required('Confirm Password is required'),
+      invitationCode: yup.string().required('Invitation code is required'),
       password: yup.string().required(),
       username: yup.string().required(),
     });
@@ -59,6 +66,7 @@ const CreateAccountForm: SFC = () => {
                 touched={touched}
                 type="password"
               />
+              <S.Input errors={errors} label="Invitation Code" name="invitationCode" touched={touched} />
               <S.Button
                 dirty={dirty}
                 disabled={isSubmitting}
