@@ -27,9 +27,9 @@ const LeftNav: SFC = ({className}) => {
     <S.Container className={className}>
       <S.Top>
         <MenuLink icon={mdiLanConnect} text="Cores" to="/cores" />
+        <MenuLink icon={mdiWalletBifoldOutline} text="Wallets" to="/wallets" />
         <MenuLink icon={mdiSwapHorizontalCircleOutline} text="Trade" to="/trade" />
         <MenuLink icon={mdiListBoxOutline} text="Orders" to="/orders" />
-        <MenuLink icon={mdiWalletBifoldOutline} text="Wallets" to="/wallets" />
       </S.Top>
       <S.Bottom>
         <MenuButton icon={mdiExitToApp} onClick={handleLogout} text="Log out" />

@@ -6,6 +6,7 @@ import {getOrders} from 'dispatchers/orders';
 import {getTransfers} from 'dispatchers/transfers';
 import {getWallets} from 'dispatchers/wallets';
 import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toast';
 import LeftNav from './LeftNav';
 import MainArea from './MainArea';
 import * as S from './Styles';
@@ -15,10 +16,15 @@ const Authenticated: SFC = ({className}) => {
 
   useEffect(() => {
     (async () => {
-      await dispatch(getCores());
-      await dispatch(getOrders());
-      await dispatch(getTransfers());
-      await dispatch(getWallets());
+      try {
+        await dispatch(getCores());
+        await dispatch(getOrders());
+        await dispatch(getTransfers());
+        await dispatch(getWallets());
+      } catch (error) {
+        console.error(error);
+        displayErrorToast('Error fetching initial data');
+      }
     })();
   }, [dispatch]);
 

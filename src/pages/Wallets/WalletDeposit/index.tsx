@@ -83,7 +83,7 @@ const WalletDeposit: SFC = ({className}) => {
       <S.Panel>
         <S.DepositAccountRow>
           <S.DepositLeft>
-            <h4>Deposit Account Balance: {activeWallet.deposit_balance}</h4>
+            <h4>Deposit Account Balance: {activeWallet.deposit_balance.toLocaleString()}</h4>
             {renderIcon()}
           </S.DepositLeft>
           <Button
