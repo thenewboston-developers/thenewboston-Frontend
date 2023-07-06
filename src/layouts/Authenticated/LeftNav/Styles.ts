@@ -5,7 +5,7 @@ import {colors} from 'styles';
 export const Bottom = styled.div``;
 
 export const Container = styled.div`
-  border-right: 1px solid ${colors.border};
+  background: ${colors.backgroundDark};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
