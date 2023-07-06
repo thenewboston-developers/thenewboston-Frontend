@@ -10,4 +10,18 @@ export const Modal = styled(UModal)`
 
 export const Table = styled.table`
   width: 100%;
+
+  th,
+  td {
+    text-align: left;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2),
+  th:nth-child(3),
+  td:nth-child(3),
+  th:nth-child(4),
+  td:nth-child(4) {
+    text-align: right;
+  }
 `;

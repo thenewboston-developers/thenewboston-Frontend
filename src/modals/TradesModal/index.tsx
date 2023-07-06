@@ -6,6 +6,7 @@ import {getTrades as _getTrades} from 'dispatchers/trades';
 import {OrderType} from 'enums';
 import {getCores, getTrades} from 'selectors/state';
 import {AppDispatch, Order, SFC} from 'types';
+import {longDate} from 'utils/dates';
 import * as S from './Styles';
 
 export interface TradesModalProps {
@@ -46,7 +47,7 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
 
     return filteredTrades.map(({created_date, fill_quantity, id, overpayment_amount, trade_price}) => (
       <tr key={id}>
-        <td>{created_date}</td>
+        <td>{longDate(created_date)}</td>
         <td>
           {fill_quantity} {primaryCurrencyTicker}
         </td>
