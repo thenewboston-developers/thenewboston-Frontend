@@ -10,6 +10,7 @@ import {useToggle} from 'hooks';
 import TradesModal from 'modals/TradesModal';
 import {getCores, getOrders, getSelf} from 'selectors/state';
 import {AppDispatch, Order, SFC} from 'types';
+import {longDate} from 'utils/dates';
 import * as S from './Styles';
 
 const Orders: SFC = ({className}) => {
@@ -48,7 +49,11 @@ const Orders: SFC = ({className}) => {
         });
       }
 
-      return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
+      return (
+        <S.DropdownMenuWrapper>
+          <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />
+        </S.DropdownMenuWrapper>
+      );
     },
     [dispatch, toggleTradesModal],
   );
@@ -72,7 +77,7 @@ const Orders: SFC = ({className}) => {
 
       return (
         <tr key={id}>
-          <td>{created_date}</td>
+          <td>{longDate(created_date)}</td>
           <td>{order_type}</td>
           <td>
             {quantity} {primaryCurrencyTicker}
