@@ -81,13 +81,13 @@ const Orders: SFC = ({className}) => {
           <td>{longDate(created_date)}</td>
           <td>{order_type}</td>
           <td>
-            {quantity} {primaryCurrencyTicker}
+            {quantity.toLocaleString()} {primaryCurrencyTicker}
           </td>
           <td>
-            {price} {secondaryCurrencyTicker}
+            {price.toLocaleString()} {secondaryCurrencyTicker}
           </td>
           <td>
-            {filled_amount} {primaryCurrencyTicker}
+            {filled_amount.toLocaleString()} {primaryCurrencyTicker}
           </td>
           <td>
             <S.FillStatusBadgeWrapper>

@@ -49,13 +49,13 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
       <tr key={id}>
         <td>{longDate(created_date)}</td>
         <td>
-          {fill_quantity} {primaryCurrencyTicker}
+          {fill_quantity.toLocaleString()} {primaryCurrencyTicker}
         </td>
         <td>
-          {trade_price} {secondaryCurrencyTicker}
+          {trade_price.toLocaleString()} {secondaryCurrencyTicker}
         </td>
         <td>
-          {overpayment_amount} {secondaryCurrencyTicker}
+          {overpayment_amount.toLocaleString()} {secondaryCurrencyTicker}
         </td>
       </tr>
     ));
