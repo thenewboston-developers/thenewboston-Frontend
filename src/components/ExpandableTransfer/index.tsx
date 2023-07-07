@@ -20,7 +20,9 @@ const ExpandableTransfer: SFC<ExpandableTransferProps> = ({className, transfer})
     };
 
     const valueOverrides: {[key: string]: (value?: any) => ReactNode} = {
+      amount: (value) => value.toLocaleString(),
       payload: (value) => JSON.stringify(value, null, 4),
+      transaction_fee: (value) => value.toLocaleString(),
     };
 
     /* eslint-disable sort-keys */
@@ -57,7 +59,7 @@ const ExpandableTransfer: SFC<ExpandableTransferProps> = ({className, transfer})
     <S.Container className={className}>
       <S.Top onClick={toggleIsExpanded}>
         <S.Date>{longDate(transfer.created_date)}</S.Date>
-        <S.Amount>{transfer.amount}</S.Amount>
+        <S.Amount>{transfer.amount.toLocaleString()}</S.Amount>
       </S.Top>
       {renderBottom()}
     </S.Container>
