@@ -10,8 +10,8 @@ const orders = createSlice({
   name: ORDERS,
   reducers: {
     setOrder: (state: Orders, {payload}: PayloadAction<Order>) => {
-      const {id} = payload;
-      state[id] = payload;
+      const {id, modified_date} = payload;
+      if (!state[id] || new Date(modified_date) > new Date(state[id].modified_date)) state[id] = payload;
     },
     setOrders: (state: Orders, {payload}: PayloadAction<Order[]>) => {
       return payload.reduce((acc: Orders, obj) => ({...acc, [obj.id]: obj}), {});
