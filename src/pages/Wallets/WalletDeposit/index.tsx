@@ -51,6 +51,20 @@ const WalletDeposit: SFC = ({className}) => {
     }
   };
 
+  const renderButton = () => {
+    if (activeWallet.deposit_balance <= 1) return null;
+
+    return (
+      <Button
+        color={ButtonColor.success}
+        disabled={createDepositRequestPending}
+        isSubmitting={createDepositRequestPending}
+        onClick={handleButtonClick}
+        text="Transfer to Main Account"
+      />
+    );
+  };
+
   const renderDeposits = () => {
     return orderBy(Object.values(transfers), ['created_date'], ['desc'])
       .filter((transfer) => transfer.core === activeWallet.core.id && transfer.transfer_type === TransferType.DEPOSIT)
@@ -86,13 +100,7 @@ const WalletDeposit: SFC = ({className}) => {
             <h4>Deposit Account Balance: {activeWallet.deposit_balance.toLocaleString()}</h4>
             {renderIcon()}
           </S.DepositLeft>
-          <Button
-            color={ButtonColor.success}
-            disabled={createDepositRequestPending}
-            isSubmitting={createDepositRequestPending}
-            onClick={handleButtonClick}
-            text="Transfer to Main Account"
-          />
+          {renderButton()}
         </S.DepositAccountRow>
       </S.Panel>
       <S.Panel>
