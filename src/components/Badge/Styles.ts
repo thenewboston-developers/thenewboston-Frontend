@@ -19,7 +19,7 @@ const warningMixin = css`
   background-color: ${colors.palette.orange['300']};
 `;
 
-export const Container = styled.div<{badgeStyle: BadgeStyle}>`
+export const Container = styled.div<{$badgeStyle: BadgeStyle}>`
   border-radius: 4px;
   color: #fff;
   font-size: 10px;
@@ -28,11 +28,11 @@ export const Container = styled.div<{badgeStyle: BadgeStyle}>`
   white-space: nowrap;
   width: fit-content;
 
-  ${({badgeStyle}) => {
-    if (badgeStyle === BadgeStyle.danger) return dangerMixin;
-    if (badgeStyle === BadgeStyle.primary) return primaryMixin;
-    if (badgeStyle === BadgeStyle.success) return successMixin;
-    if (badgeStyle === BadgeStyle.warning) return warningMixin;
+  ${({$badgeStyle}) => {
+    if ($badgeStyle === BadgeStyle.danger) return dangerMixin;
+    if ($badgeStyle === BadgeStyle.primary) return primaryMixin;
+    if ($badgeStyle === BadgeStyle.success) return successMixin;
+    if ($badgeStyle === BadgeStyle.warning) return warningMixin;
     return;
   }}
 `;

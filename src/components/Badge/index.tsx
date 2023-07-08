@@ -15,7 +15,7 @@ export enum BadgeStyle {
 
 const Badge: SFC<BadgeProps> = ({badgeStyle, className, text}) => {
   return (
-    <S.Container badgeStyle={badgeStyle} className={className}>
+    <S.Container $badgeStyle={badgeStyle} className={className}>
       {text}
     </S.Container>
   );
