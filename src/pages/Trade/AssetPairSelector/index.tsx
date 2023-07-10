@@ -5,6 +5,7 @@ import {getAssetPairs as _getAssetPairs} from 'dispatchers/assetPairs';
 import {useActiveAssetPair, useToggle} from 'hooks';
 import SelectAssetPairModal from 'modals/SelectAssetPairModal';
 import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toast';
 import * as S from './Styles';
 
 const AssetPairSelector: SFC = ({className}) => {
@@ -14,7 +15,12 @@ const AssetPairSelector: SFC = ({className}) => {
 
   useEffect(() => {
     (async () => {
-      await dispatch(_getAssetPairs());
+      try {
+        await dispatch(_getAssetPairs());
+      } catch (error) {
+        console.error(error);
+        displayErrorToast('Error fetching asset pairs');
+      }
     })();
   }, [dispatch]);
 
