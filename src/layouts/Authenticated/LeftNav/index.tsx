@@ -1,12 +1,6 @@
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {
-  mdiExitToApp,
-  mdiLanConnect,
-  mdiListBoxOutline,
-  mdiSwapHorizontalCircleOutline,
-  mdiWalletBifoldOutline,
-} from '@mdi/js';
+import {mdiExitToApp, mdiLanConnect, mdiSwapHorizontalCircleOutline, mdiWalletBifoldOutline} from '@mdi/js';
 
 import {logout} from 'dispatchers/authentication';
 import {AppDispatch, SFC} from 'types';
@@ -26,10 +20,9 @@ const LeftNav: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Top>
-        <MenuLink icon={mdiLanConnect} text="Cores" to="/cores" />
-        <MenuLink icon={mdiWalletBifoldOutline} text="Wallets" to="/wallets" />
-        <MenuLink icon={mdiSwapHorizontalCircleOutline} text="Trade" to="/trade" />
-        <MenuLink icon={mdiListBoxOutline} text="Orders" to="/orders" />
+        <MenuLink icon={mdiLanConnect} rootPath="/cores" text="Cores" to="/cores" />
+        <MenuLink icon={mdiWalletBifoldOutline} rootPath="/wallets" text="Wallets" to="/wallets" />
+        <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
       </S.Top>
       <S.Bottom>
         <MenuButton icon={mdiExitToApp} onClick={handleLogout} text="Log out" />
