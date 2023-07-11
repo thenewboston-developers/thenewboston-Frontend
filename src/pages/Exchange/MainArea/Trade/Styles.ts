@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {breakpoints, colors} from 'styles';
 
 export const Container = styled.div`
-  padding: 24px 16px;
+  padding: 16px;
 `;
 
 export const Grid = styled.div`
