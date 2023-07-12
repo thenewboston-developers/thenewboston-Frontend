@@ -15,7 +15,7 @@ export const createExchangeOrder = async (data: CreateExchangeOrderRequest): Pro
   }
 };
 
-export const getExchangeOrder = async (): Promise<ExchangeOrder[]> => {
+export const getExchangeOrders = async (): Promise<ExchangeOrder[]> => {
   try {
     const response = await axios.get<ExchangeOrder[]>(BASE_URL, authorizationHeaders());
     return response.data;

@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {getCores} from 'dispatchers/cores';
-import {getExchangeOrder} from 'dispatchers/exchangeOrders';
+import {getExchangeOrders} from 'dispatchers/exchangeOrders';
 import {getTransfers} from 'dispatchers/transfers';
 import {getWallets} from 'dispatchers/wallets';
 import {AppDispatch, SFC} from 'types';
@@ -18,7 +18,7 @@ const Authenticated: SFC = ({className}) => {
     (async () => {
       try {
         await dispatch(getCores());
-        await dispatch(getExchangeOrder());
+        await dispatch(getExchangeOrders());
         await dispatch(getTransfers());
         await dispatch(getWallets());
       } catch (error) {

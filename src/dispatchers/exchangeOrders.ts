@@ -1,6 +1,6 @@
 import {
   createExchangeOrder as _createExchangeOrder,
-  getExchangeOrder as _getExchangeOrder,
+  getExchangeOrders as _getExchangeOrders,
   updateExchangeOrder as _updateExchangeOrder,
 } from 'api/exchangeOrders';
 import {setExchangeOrder, setExchangeOrders} from 'store/exchangeOrders';
@@ -11,8 +11,8 @@ export const createExchangeOrder = (data: CreateExchangeOrderRequest) => async (
   dispatch(setExchangeOrder(responseData));
 };
 
-export const getExchangeOrder = () => async (dispatch: AppDispatch) => {
-  const responseData = await _getExchangeOrder();
+export const getExchangeOrders = () => async (dispatch: AppDispatch) => {
+  const responseData = await _getExchangeOrders();
   dispatch(setExchangeOrders(responseData));
 };
 
