@@ -1,5 +1,5 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
-import {CreateOrderRequest} from 'types/api/orders';
+import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateUserRequest, CreateUserResponse} from 'types/api/users';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
@@ -24,7 +24,7 @@ export {
   ClassName,
   Core,
   Cores,
-  CreateOrderRequest,
+  CreateExchangeOrderRequest,
   CreateUserRequest,
   CreateUserResponse,
   CreateWalletRequest,

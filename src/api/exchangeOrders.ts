@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-import {CreateOrderRequest, ExchangeOrder} from 'types';
+import {CreateExchangeOrderRequest, ExchangeOrder} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/exchange_orders`;
 
-export const createExchangeOrder = async (data: CreateOrderRequest): Promise<ExchangeOrder> => {
+export const createExchangeOrder = async (data: CreateExchangeOrderRequest): Promise<ExchangeOrder> => {
   try {
     const response = await axios.post<ExchangeOrder>(BASE_URL, data, authorizationHeaders());
     return response.data;

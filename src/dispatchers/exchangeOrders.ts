@@ -4,9 +4,9 @@ import {
   updateExchangeOrder as _updateExchangeOrder,
 } from 'api/exchangeOrders';
 import {setExchangeOrder, setExchangeOrders} from 'store/exchangeOrders';
-import {AppDispatch, CreateOrderRequest, ExchangeOrder} from 'types';
+import {AppDispatch, CreateExchangeOrderRequest, ExchangeOrder} from 'types';
 
-export const createExchangeOrder = (data: CreateOrderRequest) => async (dispatch: AppDispatch) => {
+export const createExchangeOrder = (data: CreateExchangeOrderRequest) => async (dispatch: AppDispatch) => {
   const responseData = await _createExchangeOrder(data);
   dispatch(setExchangeOrder(responseData));
 };
