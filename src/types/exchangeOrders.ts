@@ -1,7 +1,7 @@
 import {FillStatus, OrderType} from 'enums';
 import {Dict} from 'types/generic';
 
-export interface Order {
+export interface ExchangeOrder {
   created_date: string;
   fill_status: FillStatus;
   filled_amount: number;
@@ -15,4 +15,4 @@ export interface Order {
   secondary_currency: number;
 }
 
-export type Orders = Dict<Order>;
+export type ExchangeOrders = Dict<ExchangeOrder>;

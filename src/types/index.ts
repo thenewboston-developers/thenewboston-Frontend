@@ -6,9 +6,9 @@ import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {Core, Cores} from 'types/cores';
+import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {Manager} from 'types/manager';
-import {Order, Orders} from 'types/orders';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
 import {Trade, Trades} from 'types/trades';
@@ -30,13 +30,13 @@ export {
   CreateWalletRequest,
   DepositResponse,
   Dict,
+  ExchangeOrder,
+  ExchangeOrders,
   GenericFunction,
   GenericVoidFunction,
   LoginRequest,
   LoginResponse,
   Manager,
-  Order,
-  Orders,
   RootState,
   SFC,
   Self,

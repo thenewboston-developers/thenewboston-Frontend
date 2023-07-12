@@ -5,13 +5,13 @@ import orderBy from 'lodash/orderBy';
 import {getTrades as _getTrades} from 'dispatchers/trades';
 import {OrderType} from 'enums';
 import {getCores, getTrades} from 'selectors/state';
-import {AppDispatch, Order, SFC} from 'types';
+import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
 import * as S from './Styles';
 
 export interface TradesModalProps {
   close(): void;
-  order: Order | null;
+  order: ExchangeOrder | null;
 }
 
 const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
