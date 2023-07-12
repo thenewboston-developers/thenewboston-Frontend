@@ -9,7 +9,7 @@ import {updateExchangeOrder} from 'dispatchers/exchangeOrders';
 import {FillStatus} from 'enums';
 import {useToggle} from 'hooks';
 import TradesModal from 'modals/TradesModal';
-import {getCores, getExchangeOrder, getSelf} from 'selectors/state';
+import {getCores, getExchangeOrders, getSelf} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
 import * as S from './Styles';
@@ -19,7 +19,7 @@ const Orders: SFC = ({className}) => {
   const [tradesModalIsOpen, toggleTradesModal] = useToggle(false);
   const cores = useSelector(getCores);
   const dispatch = useDispatch<AppDispatch>();
-  const orders = useSelector(getExchangeOrder);
+  const orders = useSelector(getExchangeOrders);
   const self = useSelector(getSelf);
 
   const filteredOrders = useMemo(() => {
