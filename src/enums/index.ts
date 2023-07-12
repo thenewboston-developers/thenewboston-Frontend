@@ -2,6 +2,6 @@ import {ExchangeOrderType, FillStatus} from 'enums/exchangeOrders';
 import {WalletTab} from 'enums/manager';
 import {SocketDataType} from 'enums/sockets';
 import {ToastType} from 'enums/toast';
-import {TransferType} from 'enums/transfers';
+import {WireType} from 'enums/wires';
 
-export {ExchangeOrderType, FillStatus, SocketDataType, ToastType, TransferType, WalletTab};
+export {ExchangeOrderType, FillStatus, SocketDataType, ToastType, WalletTab, WireType};

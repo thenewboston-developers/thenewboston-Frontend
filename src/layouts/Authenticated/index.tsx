@@ -3,8 +3,8 @@ import {useDispatch} from 'react-redux';
 
 import {getCores} from 'dispatchers/cores';
 import {getExchangeOrders} from 'dispatchers/exchangeOrders';
-import {getTransfers} from 'dispatchers/transfers';
 import {getWallets} from 'dispatchers/wallets';
+import {getWires} from 'dispatchers/wires';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import LeftNav from './LeftNav';
@@ -19,8 +19,8 @@ const Authenticated: SFC = ({className}) => {
       try {
         await dispatch(getCores());
         await dispatch(getExchangeOrders());
-        await dispatch(getTransfers());
         await dispatch(getWallets());
+        await dispatch(getWires());
       } catch (error) {
         console.error(error);
         displayErrorToast('Error fetching initial data');

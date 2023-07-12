@@ -7,5 +7,5 @@ export const getExchangeOrders = (state: RootState) => state.exchangeOrders;
 export const getManager = (state: RootState) => state.manager;
 export const getSelf = (state: RootState) => state.self;
 export const getTrades = (state: RootState) => state.trades;
-export const getTransfers = (state: RootState) => state.transfers;
 export const getWallets = (state: RootState) => state.wallets;
+export const getWires = (state: RootState) => state.wires;

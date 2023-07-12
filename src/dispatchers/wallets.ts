@@ -5,8 +5,8 @@ import {
   getWalletDepositBalance as _getWalletDepositBalance,
   getWallets as _getWallets,
 } from 'api/wallets';
-import {setTransfer} from 'store/transfers';
 import {setWallet, setWallets} from 'store/wallets';
+import {setWire} from 'store/wires';
 import {AppDispatch, CreateWalletRequest, WithdrawRequest} from 'types';
 
 export const createWallet = (data: CreateWalletRequest) => async (dispatch: AppDispatch) => {
@@ -16,16 +16,16 @@ export const createWallet = (data: CreateWalletRequest) => async (dispatch: AppD
 
 export const createWalletDeposit = (walletId: number) => async (dispatch: AppDispatch) => {
   const responseData = await _createWalletDeposit(walletId);
-  const {transfer, wallet} = responseData;
-  dispatch(setTransfer(transfer));
+  const {wallet, wire} = responseData;
   dispatch(setWallet(wallet));
+  dispatch(setWire(wire));
 };
 
 export const createWalletWithdraw = (walletId: number, data: WithdrawRequest) => async (dispatch: AppDispatch) => {
   const responseData = await _createWalletWithdraw(walletId, data);
-  const {transfer, wallet} = responseData;
-  dispatch(setTransfer(transfer));
+  const {wallet, wire} = responseData;
   dispatch(setWallet(wallet));
+  dispatch(setWire(wire));
 };
 
 export const getWalletDepositBalance = (walletId: number) => async (dispatch: AppDispatch) => {

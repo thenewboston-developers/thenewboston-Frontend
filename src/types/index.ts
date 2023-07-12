@@ -12,8 +12,8 @@ import {Manager} from 'types/manager';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
 import {Trade, Trades} from 'types/trades';
-import {Transfer, Transfers} from 'types/transfers';
 import {Wallet, Wallets} from 'types/wallets';
+import {Wire, Wires} from 'types/wires';
 
 export {
   AppDispatch,
@@ -42,10 +42,10 @@ export {
   Self,
   Trade,
   Trades,
-  Transfer,
-  Transfers,
   Wallet,
   Wallets,
+  Wire,
+  Wires,
   WithdrawRequest,
   WithdrawResponse,
 };

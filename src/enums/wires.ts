@@ -1,4 +1,4 @@
-export enum TransferType {
+export enum WireType {
   DEPOSIT = 'DEPOSIT',
   WITHDRAW = 'WITHDRAW',
 }

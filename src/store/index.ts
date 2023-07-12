@@ -10,8 +10,8 @@ import exchangeOrdersReducer from 'store/exchangeOrders';
 import managerReducer from 'store/manager';
 import selfReducer from 'store/self';
 import tradesReducer from 'store/trades';
-import transfersReducer from 'store/transfers';
 import walletsReducer from 'store/wallets';
+import wiresReducer from 'store/wires';
 
 const rootReducer = combineReducers({
   assetPairs: assetPairsReducer,
@@ -21,8 +21,8 @@ const rootReducer = combineReducers({
   manager: managerReducer,
   self: selfReducer,
   trades: tradesReducer,
-  transfers: transfersReducer,
   wallets: walletsReducer,
+  wires: wiresReducer,
 });
 
 const appReducer = (state: any, action: AnyAction) => {
