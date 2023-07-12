@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
 import {getTrades as _getTrades} from 'dispatchers/trades';
-import {OrderType} from 'enums';
+import {ExchangeOrderType} from 'enums';
 import {getCores, getTrades} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
@@ -23,7 +23,7 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
     (async () => {
       if (!order) return;
 
-      const orderType = order.order_type === OrderType.BUY ? {buy_order: order.id} : {sell_order: order.id};
+      const orderType = order.order_type === ExchangeOrderType.BUY ? {buy_order: order.id} : {sell_order: order.id};
       await dispatch(_getTrades(orderType));
     })();
   }, [dispatch, order]);
@@ -33,7 +33,7 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
 
     const orderedTrades = orderBy(Object.values(trades), ['created_date'], ['desc']);
     return orderedTrades.filter(
-      (trade) => (order.order_type === OrderType.BUY ? trade.buy_order : trade.sell_order) === order.id,
+      (trade) => (order.order_type === ExchangeOrderType.BUY ? trade.buy_order : trade.sell_order) === order.id,
     );
   }, [order, trades]);
 

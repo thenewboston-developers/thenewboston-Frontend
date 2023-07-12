@@ -2,7 +2,7 @@ import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
-import {FillStatus, OrderType} from 'enums';
+import {ExchangeOrderType, FillStatus} from 'enums';
 import {useActiveAssetPair} from 'hooks';
 import {getExchangeOrders} from 'selectors/state';
 import {SFC} from 'types';
@@ -40,7 +40,7 @@ const OrderBook: SFC = ({className}) => {
           {filteredOrders.map((order) => (
             <S.Tr key={order.id}>
               <S.Td>{(order.quantity - order.filled_amount).toLocaleString()}</S.Td>
-              <S.Td $orderType={OrderType[order.order_type as keyof typeof OrderType]}>
+              <S.Td $orderType={ExchangeOrderType[order.order_type as keyof typeof ExchangeOrderType]}>
                 {order.price.toLocaleString()}
               </S.Td>
             </S.Tr>
