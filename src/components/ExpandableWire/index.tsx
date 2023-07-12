@@ -2,16 +2,16 @@ import {ReactNode, useMemo} from 'react';
 
 import Table from 'components/Table';
 import {useToggle} from 'hooks';
-import {Block, Dict, SFC, Transfer} from 'types';
+import {Block, Dict, SFC, Wire} from 'types';
 import {longDate} from 'utils/dates';
 import {snakeToTitle} from 'utils/strings';
 import * as S from './Styles';
 
-export interface ExpandableTransferProps {
-  transfer: Transfer;
+export interface ExpandableWireProps {
+  wire: Wire;
 }
 
-const ExpandableTransfer: SFC<ExpandableTransferProps> = ({className, transfer}) => {
+const ExpandableWire: SFC<ExpandableWireProps> = ({className, wire}) => {
   const [isExpanded, toggleIsExpanded] = useToggle(false);
 
   const rows = useMemo(() => {
@@ -27,13 +27,13 @@ const ExpandableTransfer: SFC<ExpandableTransferProps> = ({className, transfer})
 
     /* eslint-disable sort-keys */
     const orderedBlock: Block = {
-      id: transfer.id,
-      amount: transfer.amount,
-      transaction_fee: transfer.transaction_fee,
-      sender: transfer.sender,
-      recipient: transfer.recipient,
-      signature: transfer.signature,
-      payload: transfer.payload,
+      id: wire.id,
+      amount: wire.amount,
+      transaction_fee: wire.transaction_fee,
+      sender: wire.sender,
+      recipient: wire.recipient,
+      signature: wire.signature,
+      payload: wire.payload,
     };
     /* eslint-enable sort-keys */
 
@@ -43,7 +43,7 @@ const ExpandableTransfer: SFC<ExpandableTransferProps> = ({className, transfer})
         key: keyOverrides[key] || snakeToTitle(key),
         value: valueOverrides[key] ? valueOverrides[key](value) : value,
       }));
-  }, [transfer]);
+  }, [wire]);
 
   const renderBottom = () => {
     if (!isExpanded) return null;
@@ -58,12 +58,12 @@ const ExpandableTransfer: SFC<ExpandableTransferProps> = ({className, transfer})
   return (
     <S.Container className={className}>
       <S.Top onClick={toggleIsExpanded}>
-        <S.Date>{longDate(transfer.created_date)}</S.Date>
-        <S.Amount>{transfer.amount.toLocaleString()}</S.Amount>
+        <S.Date>{longDate(wire.created_date)}</S.Date>
+        <S.Amount>{wire.amount.toLocaleString()}</S.Amount>
       </S.Top>
       {renderBottom()}
     </S.Container>
   );
 };
 
-export default ExpandableTransfer;
+export default ExpandableWire;

@@ -5,13 +5,13 @@ import {mdiRefresh} from '@mdi/js';
 import MdiIcon from '@mdi/react';
 
 import Button, {ButtonColor} from 'components/Button';
-import ExpandableTransfer from 'components/ExpandableTransfer';
+import ExpandableWire from 'components/ExpandableWire';
 import Loader from 'components/Loader';
 import Qr from 'components/Qr';
 import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
-import {TransferType} from 'enums';
+import {WireType} from 'enums';
 import {useActiveWallet} from 'hooks';
-import {getTransfers} from 'selectors/state';
+import {getWires} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import * as S from './Styles';
@@ -21,7 +21,7 @@ const WalletDeposit: SFC = ({className}) => {
   const [getBalanceRequestPending, setGetBalanceRequestPending] = useState(false);
   const activeWallet = useActiveWallet();
   const dispatch = useDispatch<AppDispatch>();
-  const transfers = useSelector(getTransfers);
+  const wires = useSelector(getWires);
 
   if (!activeWallet) return null;
 
@@ -66,9 +66,9 @@ const WalletDeposit: SFC = ({className}) => {
   };
 
   const renderDeposits = () => {
-    return orderBy(Object.values(transfers), ['created_date'], ['desc'])
-      .filter((transfer) => transfer.core === activeWallet.core.id && transfer.transfer_type === TransferType.DEPOSIT)
-      .map((transfer) => <ExpandableTransfer key={transfer.id} transfer={transfer} />);
+    return orderBy(Object.values(wires), ['created_date'], ['desc'])
+      .filter((wire) => wire.core === activeWallet.core.id && wire.wire_type === WireType.DEPOSIT)
+      .map((wire) => <ExpandableWire key={wire.id} wire={wire} />);
   };
 
   const renderIcon = () => {

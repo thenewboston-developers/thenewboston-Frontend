@@ -1,5 +1,5 @@
-import {Transfer} from 'types/transfers';
 import {Wallet} from 'types/wallets';
+import {Wire} from 'types/wires';
 
 export interface CreateWalletRequest {
   core: number;
@@ -7,8 +7,8 @@ export interface CreateWalletRequest {
 }
 
 export interface DepositResponse {
-  transfer: Transfer;
   wallet: Wallet;
+  wire: Wire;
 }
 
 export interface WithdrawRequest {
@@ -17,6 +17,6 @@ export interface WithdrawRequest {
 }
 
 export interface WithdrawResponse {
-  transfer: Transfer;
   wallet: Wallet;
+  wire: Wire;
 }

@@ -5,5 +5,5 @@ export const EXCHANGE_ORDERS = 'exchangeOrders';
 export const MANAGER = 'manager';
 export const SELF = 'self';
 export const TRADES = 'trades';
-export const TRANSFERS = 'transfers';
 export const WALLETS = 'wallets';
+export const WIRES = 'wires';
