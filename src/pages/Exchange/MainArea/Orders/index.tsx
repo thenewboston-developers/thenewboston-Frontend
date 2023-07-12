@@ -5,21 +5,21 @@ import {mdiDotsVertical} from '@mdi/js';
 
 import DropdownMenu from 'components/DropdownMenu';
 import FillStatusBadge from 'components/FillStatusBadge';
-import {updateOrder} from 'dispatchers/orders';
+import {updateExchangeOrder} from 'dispatchers/exchangeOrders';
 import {FillStatus} from 'enums';
 import {useToggle} from 'hooks';
 import TradesModal from 'modals/TradesModal';
-import {getCores, getOrders, getSelf} from 'selectors/state';
-import {AppDispatch, Order, SFC} from 'types';
+import {getCores, getExchangeOrders, getSelf} from 'selectors/state';
+import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
 import * as S from './Styles';
 
 const Orders: SFC = ({className}) => {
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<ExchangeOrder | null>(null);
   const [tradesModalIsOpen, toggleTradesModal] = useToggle(false);
   const cores = useSelector(getCores);
   const dispatch = useDispatch<AppDispatch>();
-  const orders = useSelector(getOrders);
+  const orders = useSelector(getExchangeOrders);
   const self = useSelector(getSelf);
 
   const filteredOrders = useMemo(() => {
@@ -30,7 +30,7 @@ const Orders: SFC = ({className}) => {
   const getCurrencyTicker = useCallback((coreId: number) => cores[coreId]?.ticker || '-', [cores]);
 
   const renderDropdownMenu = useCallback(
-    (order: Order) => {
+    (order: ExchangeOrder) => {
       const menuOptions = [
         {
           label: 'View Trades',
@@ -45,7 +45,7 @@ const Orders: SFC = ({className}) => {
         menuOptions.unshift({
           label: 'Cancel Order',
           onClick: async () => {
-            await dispatch(updateOrder(order.id, {fill_status: FillStatus.CANCELLED}));
+            await dispatch(updateExchangeOrder(order.id, {fill_status: FillStatus.CANCELLED}));
           },
         });
       }

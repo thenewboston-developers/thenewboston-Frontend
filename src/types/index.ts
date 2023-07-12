@@ -1,14 +1,14 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
-import {CreateOrderRequest} from 'types/api/orders';
+import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateUserRequest, CreateUserResponse} from 'types/api/users';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {Core, Cores} from 'types/cores';
+import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {Manager} from 'types/manager';
-import {Order, Orders} from 'types/orders';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
 import {Trade, Trades} from 'types/trades';
@@ -24,19 +24,19 @@ export {
   ClassName,
   Core,
   Cores,
-  CreateOrderRequest,
+  CreateExchangeOrderRequest,
   CreateUserRequest,
   CreateUserResponse,
   CreateWalletRequest,
   DepositResponse,
   Dict,
+  ExchangeOrder,
+  ExchangeOrders,
   GenericFunction,
   GenericVoidFunction,
   LoginRequest,
   LoginResponse,
   Manager,
-  Order,
-  Orders,
   RootState,
   SFC,
   Self,

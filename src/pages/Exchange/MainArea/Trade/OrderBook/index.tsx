@@ -4,13 +4,13 @@ import orderBy from 'lodash/orderBy';
 
 import {FillStatus, OrderType} from 'enums';
 import {useActiveAssetPair} from 'hooks';
-import {getOrders} from 'selectors/state';
+import {getExchangeOrders} from 'selectors/state';
 import {SFC} from 'types';
 import * as S from './Styles';
 
 const OrderBook: SFC = ({className}) => {
   const activeAssetPair = useActiveAssetPair();
-  const orders = useSelector(getOrders);
+  const orders = useSelector(getExchangeOrders);
 
   const filteredOrders = useMemo(() => {
     if (!activeAssetPair) return [];

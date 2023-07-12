@@ -5,7 +5,7 @@ import {Form, Formik, FormikHelpers} from 'formik';
 import AvailableTotal from 'components/AvailableTotal';
 import Button, {ButtonType} from 'components/Button';
 import {LogoInput} from 'components/FormElements';
-import {createOrder} from 'dispatchers/orders';
+import {createExchangeOrder} from 'dispatchers/exchangeOrders';
 import {OrderType, ToastType} from 'enums';
 import {useActiveAssetPair} from 'hooks';
 import {getWallets} from 'selectors/state';
@@ -42,7 +42,7 @@ const Sell: SFC = ({className}) => {
         quantity: parseInt(values.quantity, 10),
         secondary_currency: activeAssetPair!.secondary_currency.id,
       };
-      await dispatch(createOrder(requestData));
+      await dispatch(createExchangeOrder(requestData));
       displayToast('Sell order created!', ToastType.SUCCESS);
       resetForm();
     } catch (error) {

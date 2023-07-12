@@ -6,8 +6,8 @@ import {LOGOUT_USER} from 'store/actions';
 import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
 import coresReducer from 'store/cores';
+import exchangeOrdersReducer from 'store/exchangeOrders';
 import managerReducer from 'store/manager';
-import ordersReducer from 'store/orders';
 import selfReducer from 'store/self';
 import tradesReducer from 'store/trades';
 import transfersReducer from 'store/transfers';
@@ -17,8 +17,8 @@ const rootReducer = combineReducers({
   assetPairs: assetPairsReducer,
   authentication: authenticationReducer,
   cores: coresReducer,
+  exchangeOrders: exchangeOrdersReducer,
   manager: managerReducer,
-  orders: ordersReducer,
   self: selfReducer,
   trades: tradesReducer,
   transfers: transfersReducer,
