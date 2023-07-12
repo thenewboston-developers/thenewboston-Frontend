@@ -1,4 +1,4 @@
-import {FillStatus, OrderType} from 'enums';
+import {ExchangeOrderType, FillStatus} from 'enums';
 import {Dict} from 'types/generic';
 
 export interface ExchangeOrder {
@@ -7,7 +7,7 @@ export interface ExchangeOrder {
   filled_amount: number;
   id: number;
   modified_date: string;
-  order_type: OrderType;
+  order_type: ExchangeOrderType;
   owner: number;
   price: number;
   primary_currency: number;

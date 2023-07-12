@@ -1,6 +1,6 @@
 import styled, {css} from 'styled-components';
 
-import {OrderType} from 'enums';
+import {ExchangeOrderType} from 'enums';
 import {colors} from 'styles';
 
 const buyMixin = css`
@@ -29,10 +29,10 @@ export const Table = styled.table`
 
 export const Tr = styled.tr``;
 
-export const Td = styled.td<{$orderType?: OrderType}>`
+export const Td = styled.td<{$orderType?: ExchangeOrderType}>`
   ${({$orderType}) => {
-    if ($orderType === OrderType.BUY) return buyMixin;
-    if ($orderType === OrderType.SELL) return sellMixin;
+    if ($orderType === ExchangeOrderType.BUY) return buyMixin;
+    if ($orderType === ExchangeOrderType.SELL) return sellMixin;
     return;
   }}
 `;
