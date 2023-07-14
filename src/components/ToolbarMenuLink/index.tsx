@@ -3,12 +3,12 @@ import {useLocation} from 'react-router-dom';
 import {SFC} from 'types';
 import * as S from './Styles';
 
-export interface MenuLinkProps {
+export interface ToolbarMenuLinkProps {
   text: string;
   to: string;
 }
 
-const MenuLink: SFC<MenuLinkProps> = ({className, text, to}) => {
+const ToolbarMenuLink: SFC<ToolbarMenuLinkProps> = ({className, text, to}) => {
   const location = useLocation();
 
   return (
@@ -18,4 +18,4 @@ const MenuLink: SFC<MenuLinkProps> = ({className, text, to}) => {
   );
 };
 
-export default MenuLink;
+export default ToolbarMenuLink;

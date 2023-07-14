@@ -1,12 +1,12 @@
 import {SFC} from 'types';
 import MainArea from './MainArea';
-import TopNav from './TopNav';
+import Toolbar from './Toolbar';
 import * as S from './Styles';
 
 const Exchange: SFC = ({className}) => {
   return (
     <S.Container className={className}>
-      <TopNav />
+      <Toolbar />
       <MainArea />
     </S.Container>
   );

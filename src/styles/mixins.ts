@@ -1,6 +1,7 @@
 import {css} from 'styled-components';
 
 import colors from 'styles/colors';
+import {TOOLBAR_HEIGHT} from 'styles/constants';
 import fonts from 'styles/fonts';
 
 export const hiddenScroll = css`
@@ -31,4 +32,13 @@ export const inputStyle = css`
     -webkit-appearance: none;
     margin: 0;
   }
+`;
+
+export const toolbarStyle = css`
+  background: #24292f;
+  color: #fff;
+  display: flex;
+  height: ${`${TOOLBAR_HEIGHT}px`};
+  justify-content: space-between;
+  padding: 0 16px;
 `;
