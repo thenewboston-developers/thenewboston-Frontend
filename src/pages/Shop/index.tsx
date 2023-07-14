@@ -2,7 +2,13 @@ import {Route, Routes} from 'react-router-dom';
 
 import {ShopToolbarType} from 'enums';
 import {SFC} from 'types';
+import BuyAddresses from './BuyAddresses';
+import BuyCatalog from './BuyCatalog';
+import BuyCheckout from './BuyCheckout';
+import BuyOrders from './BuyOrders';
 import Layout from './Layout';
+import SellOrders from './SellOrders';
+import SellProducts from './SellProducts';
 import * as S from './Styles';
 
 const Shop: SFC = ({className}) => {
@@ -10,10 +16,14 @@ const Shop: SFC = ({className}) => {
     <S.Container className={className}>
       <Routes>
         <Route path="/buy/*" element={<Layout toolbarType={ShopToolbarType.BUY} />}>
-          <Route path="catalog" element={<div>buyer catalog</div>} />
+          <Route path="addresses" element={<BuyAddresses />} />
+          <Route path="catalog" element={<BuyCatalog />} />
+          <Route path="checkout" element={<BuyCheckout />} />
+          <Route path="orders" element={<BuyOrders />} />
         </Route>
         <Route path="/sell/*" element={<Layout toolbarType={ShopToolbarType.SELL} />}>
-          <Route path="orders" element={<div>seller orders</div>} />
+          <Route path="orders" element={<SellOrders />} />
+          <Route path="products" element={<SellProducts />} />
         </Route>
       </Routes>
     </S.Container>

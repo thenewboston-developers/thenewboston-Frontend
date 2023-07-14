@@ -6,6 +6,7 @@ import {SFC} from 'types';
 import BuyLogo from './assets/buy-logo.png';
 import SellLogo from './assets/sell-logo.png';
 import BuyMenuItems from './BuyMenuItems';
+import SellMenuItems from './SellMenuItems';
 import * as S from './Styles';
 
 export interface ToolbarProps {
@@ -20,7 +21,7 @@ const Toolbar: SFC<ToolbarProps> = ({className, toolbarType}) => {
   };
 
   const handleSellLogoClick = () => {
-    navigate('/shop/sell/orders');
+    navigate('/shop/sell/products');
   };
 
   const renderLogo = () => {
@@ -30,8 +31,7 @@ const Toolbar: SFC<ToolbarProps> = ({className, toolbarType}) => {
   };
 
   const renderMenuItems = () => {
-    if (toolbarType === ShopToolbarType.BUY) return <BuyMenuItems />;
-    return null;
+    return toolbarType === ShopToolbarType.BUY ? <BuyMenuItems /> : <SellMenuItems />;
   };
 
   return (

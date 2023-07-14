@@ -47,7 +47,7 @@ const ShopDropdownMenu: SFC = ({className}) => {
   }, [toggleIsOpen]);
 
   const handleSellClick = () => {
-    navigate('/shop/sell/orders');
+    navigate('/shop/sell/products');
     toggleIsOpen(false);
   };
 

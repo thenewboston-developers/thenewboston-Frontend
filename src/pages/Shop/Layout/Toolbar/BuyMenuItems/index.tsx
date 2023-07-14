@@ -1,3 +1,4 @@
+import {useNavigate} from 'react-router-dom';
 import {mdiCartOutline} from '@mdi/js';
 
 import ToolbarMenuLink from 'components/ToolbarMenuLink';
@@ -5,8 +6,10 @@ import {SFC} from 'types';
 import * as S from './Styles';
 
 const BuyMenuItems: SFC = () => {
+  const navigate = useNavigate();
+
   const handleCartClick = () => {
-    console.log('cart');
+    navigate('/shop/buy/checkout');
   };
 
   return (
