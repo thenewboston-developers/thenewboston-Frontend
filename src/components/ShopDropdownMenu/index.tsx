@@ -16,7 +16,7 @@ const ShopDropdownMenu: SFC = ({className}) => {
   const navigate = useNavigate();
 
   const handleBuyClick = () => {
-    navigate('/shop/buyer/catalog');
+    navigate('/shop/buy/catalog');
     toggleIsOpen(false);
   };
 
@@ -47,7 +47,7 @@ const ShopDropdownMenu: SFC = ({className}) => {
   }, [toggleIsOpen]);
 
   const handleSellClick = () => {
-    navigate('/shop/seller/orders');
+    navigate('/shop/sell/orders');
     toggleIsOpen(false);
   };
 

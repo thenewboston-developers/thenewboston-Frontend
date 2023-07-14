@@ -11,9 +11,9 @@ const BuyMenuItems: SFC = () => {
 
   return (
     <>
-      <ToolbarMenuLink text="Home" to="/shop/buyer/catalog" />
-      <ToolbarMenuLink text="My Addresses" to="/shop/buyer/addresses" />
-      <ToolbarMenuLink text="Orders" to="/shop/buyer/orders" />
+      <ToolbarMenuLink text="Home" to="/shop/buy/catalog" />
+      <ToolbarMenuLink text="My Addresses" to="/shop/buy/addresses" />
+      <ToolbarMenuLink text="Orders" to="/shop/buy/orders" />
       <S.IconContainer onClick={handleCartClick}>
         <S.Icon path={mdiCartOutline} size="32px" />
         <S.ProductCount>12</S.ProductCount>

@@ -29,7 +29,7 @@ const LeftNav: SFC = ({className}) => {
         <MenuLink icon={mdiLanConnect} rootPath="/cores" text="Cores" to="/cores" />
         <MenuLink icon={mdiWalletBifoldOutline} rootPath="/wallets" text="Wallets" to="/wallets" />
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
-        <MenuLink icon={mdiShopping} rootPath="/shop" text="Shop" to="/shop/buyer/catalog" />
+        <MenuLink icon={mdiShopping} rootPath="/shop" text="Shop" to="/shop/buy/catalog" />
       </S.Top>
       <S.Bottom>
         <MenuButton icon={mdiExitToApp} onClick={handleLogout} text="Log out" />
