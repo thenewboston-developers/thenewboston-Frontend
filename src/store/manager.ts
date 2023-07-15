@@ -5,6 +5,7 @@ import {Manager} from 'types';
 
 const initialState: Manager = {
   activeAssetPairId: null,
+  activeProduct: null,
   activeWalletId: null,
   activeWalletTab: null,
 };

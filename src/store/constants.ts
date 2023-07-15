@@ -3,6 +3,7 @@ export const AUTHENTICATION = 'authentication';
 export const CORES = 'cores';
 export const EXCHANGE_ORDERS = 'exchangeOrders';
 export const MANAGER = 'manager';
+export const PRODUCTS = 'products';
 export const SELF = 'self';
 export const TRADES = 'trades';
 export const WALLETS = 'wallets';

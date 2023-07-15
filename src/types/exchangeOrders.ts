@@ -1,12 +1,11 @@
 import {ExchangeOrderType, FillStatus} from 'enums';
+import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
 
-export interface ExchangeOrder {
-  created_date: string;
+export interface ExchangeOrder extends CreatedModified {
   fill_status: FillStatus;
   filled_amount: number;
   id: number;
-  modified_date: string;
   order_type: ExchangeOrderType;
   owner: number;
   price: number;

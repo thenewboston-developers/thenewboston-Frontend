@@ -1,3 +1,8 @@
+export interface UserReadSerializer {
+  id: number;
+  username: string;
+}
+
 export interface CreateUserRequest {
   invitation_code: string;
   password: string;
@@ -9,8 +14,5 @@ export interface CreateUserResponse {
     access_token: string;
     refresh_token: string;
   };
-  user: {
-    id: number;
-    username: string;
-  };
+  user: UserReadSerializer;
 }
