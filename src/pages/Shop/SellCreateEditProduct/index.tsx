@@ -63,7 +63,7 @@ const SellCreateEditProduct: SFC = ({className}) => {
       navigate('/shop/sell/products');
     } catch (error) {
       console.error(error);
-      displayErrorToast('Error creating recipe');
+      displayErrorToast('Error creating product');
     }
   };
 
