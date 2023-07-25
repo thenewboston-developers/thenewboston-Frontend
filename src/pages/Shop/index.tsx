@@ -6,6 +6,7 @@ import BuyAddresses from './BuyAddresses';
 import BuyCatalog from './BuyCatalog';
 import BuyCheckout from './BuyCheckout';
 import BuyOrders from './BuyOrders';
+import BuyProductDetails from './BuyProductDetails';
 import Layout from './Layout';
 import SellCreateEditProduct from './SellCreateEditProduct';
 import SellOrders from './SellOrders';
@@ -21,6 +22,7 @@ const Shop: SFC = ({className}) => {
           <Route path="catalog" element={<BuyCatalog />} />
           <Route path="checkout" element={<BuyCheckout />} />
           <Route path="orders" element={<BuyOrders />} />
+          <Route path="products/:id" element={<BuyProductDetails />} />
         </Route>
         <Route path="/sell/*" element={<Layout toolbarType={ShopToolbarType.SELL} />}>
           <Route path="createEditProduct" element={<SellCreateEditProduct />} />

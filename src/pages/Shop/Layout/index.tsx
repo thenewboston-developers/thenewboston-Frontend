@@ -13,7 +13,9 @@ const Layout: SFC<LayoutProps> = ({className, toolbarType}) => {
   return (
     <S.Container className={className}>
       <Toolbar toolbarType={toolbarType} />
-      <Outlet />
+      <S.OutletContainer>
+        <Outlet />
+      </S.OutletContainer>
     </S.Container>
   );
 };
