@@ -34,6 +34,16 @@ export const inputStyle = css`
   }
 `;
 
+export const listItemDescription = css`
+  color: ${colors.secondary};
+  font-size: 12px;
+  margin-top: 2px;
+`;
+
+export const listItemName = css`
+  font-weight: 600;
+`;
+
 export const toolbarStyle = css`
   background: #24292f;
   color: #fff;

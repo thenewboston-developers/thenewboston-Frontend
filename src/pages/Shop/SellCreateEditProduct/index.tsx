@@ -1,5 +1,5 @@
-import React, {ChangeEvent, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {Field, Form, Formik} from 'formik';
 import MdiIcon from '@mdi/react';
@@ -7,8 +7,9 @@ import {mdiClose} from '@mdi/js';
 
 import Button, {ButtonType} from 'components/Button';
 import {Checkbox, FileInput, Input, Select} from 'components/FormElements';
-import {createProduct} from 'dispatchers/products';
+import {createProduct, updateProduct} from 'dispatchers/products';
 import {ActivationStatus, ToastType} from 'enums';
+import {getManager} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toast';
 import yup from 'utils/yup';
@@ -16,20 +17,37 @@ import * as S from './Styles';
 
 const SellCreateEditProduct: SFC = ({className}) => {
   const [preview, setPreview] = useState<string | null>(null);
+  const {activeProduct} = useSelector(getManager);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const initialValues = {
-    activation_status: '',
-    description: '',
-    image: '',
-    name: '',
-    price_amount: '',
-    price_core: '',
-    quantity: '',
-  };
+  const initialValues = useMemo(
+    () => ({
+      activation_status: activeProduct?.activation_status === ActivationStatus.ACTIVE,
+      description: activeProduct?.description || '',
+      image: activeProduct?.image || '',
+      name: activeProduct?.name || '',
+      price_amount: activeProduct?.price_amount.toString() || '',
+      price_core: activeProduct?.price_core.toString() || '',
+      quantity: activeProduct?.quantity.toString() || '',
+    }),
+    [
+      activeProduct?.activation_status,
+      activeProduct?.description,
+      activeProduct?.image,
+      activeProduct?.name,
+      activeProduct?.price_amount,
+      activeProduct?.price_core,
+      activeProduct?.quantity,
+    ],
+  );
 
   type FormValues = typeof initialValues;
+
+  useEffect(() => {
+    if (!initialValues.image) return;
+    setPreview(initialValues.image);
+  }, [initialValues]);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -44,8 +62,6 @@ const SellCreateEditProduct: SFC = ({className}) => {
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
-      console.log(values);
-
       const requestData = new FormData();
       const activationStatus = values.activation_status ? ActivationStatus.ACTIVE : ActivationStatus.DRAFT;
       requestData.append('activation_status', activationStatus);
@@ -57,13 +73,19 @@ const SellCreateEditProduct: SFC = ({className}) => {
 
       if (initialValues.image !== values.image) requestData.append('image', values.image);
 
-      await dispatch(createProduct(requestData));
+      if (activeProduct) {
+        await dispatch(updateProduct(activeProduct.id, requestData));
+        displayToast('Product updated!', ToastType.SUCCESS);
+      } else {
+        await dispatch(createProduct(requestData));
+        displayToast('Product created!', ToastType.SUCCESS);
+      }
 
-      displayToast('Product created!', ToastType.SUCCESS);
       navigate('/shop/sell/products');
     } catch (error) {
       console.error(error);
-      displayErrorToast('Error creating product');
+      const verb = activeProduct ? 'updating' : 'creating';
+      displayErrorToast(`Error ${verb} product`);
     }
   };
 
@@ -106,6 +128,7 @@ const SellCreateEditProduct: SFC = ({className}) => {
             )}
             {renderPreview(setFieldValue)}
             <S.Bumper />
+            {/* TODO: Change these from hardcoded values */}
             <Select
               errors={errors}
               label="Price Core"

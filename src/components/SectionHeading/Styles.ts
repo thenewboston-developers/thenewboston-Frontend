@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-  padding: 16px;
-`;
+export const Container = styled.div``;
 
 export const Contents = styled.div`
   align-items: flex-end;
