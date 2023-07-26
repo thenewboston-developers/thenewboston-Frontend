@@ -2,6 +2,7 @@ import {Route, Routes} from 'react-router-dom';
 
 import {ShopToolbarType} from 'enums';
 import {SFC} from 'types';
+import BuyAddressDetails from './BuyAddressDetails';
 import BuyAddresses from './BuyAddresses';
 import BuyCatalog from './BuyCatalog';
 import BuyCheckout from './BuyCheckout';
@@ -21,6 +22,7 @@ const Shop: SFC = ({className}) => {
           <Route path="addresses" element={<BuyAddresses />} />
           <Route path="catalog" element={<BuyCatalog />} />
           <Route path="checkout" element={<BuyCheckout />} />
+          <Route path="createEditAddress" element={<BuyAddressDetails />} />
           <Route path="orders" element={<BuyOrders />} />
           <Route path="products/:id" element={<BuyProductDetails />} />
         </Route>

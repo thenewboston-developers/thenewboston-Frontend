@@ -1,5 +1,6 @@
 import {RootState} from 'types';
 
+export const getAddresses = (state: RootState) => state.addresses;
 export const getAssetPairs = (state: RootState) => state.assetPairs;
 export const getAuthentication = (state: RootState) => state.authentication;
 export const getCartProducts = (state: RootState) => state.cartProducts;

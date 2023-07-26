@@ -110,6 +110,7 @@ const SellCreateEditProduct: SFC = ({className}) => {
   };
 
   const validationSchema = useMemo(() => {
+    // TODO: Proper validation
     return yup.object().shape({
       description: yup.string().required(),
       name: yup.string().required(),

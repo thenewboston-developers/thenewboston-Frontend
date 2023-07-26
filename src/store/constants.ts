@@ -1,3 +1,4 @@
+export const ADDRESSES = 'addresses';
 export const ASSET_PAIRS = 'assetPairs';
 export const AUTHENTICATION = 'authentication';
 export const CART_PRODUCTS = 'cartProducts';

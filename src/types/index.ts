@@ -1,9 +1,11 @@
+import {CreateAddressRequest} from 'types/api/addresses';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
 
+import {Address, Addresses} from 'types/addresses';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
@@ -23,6 +25,8 @@ import {Wallet, Wallets} from 'types/wallets';
 import {Wire, Wires} from 'types/wires';
 
 export {
+  Address,
+  Addresses,
   AppDispatch,
   AssetPair,
   AssetPairs,
@@ -33,6 +37,7 @@ export {
   ClassName,
   Core,
   Cores,
+  CreateAddressRequest,
   CreateCartProductRequest,
   CreateExchangeOrderRequest,
   CreateUserRequest,
@@ -52,8 +57,8 @@ export {
   Product,
   Products,
   RootState,
-  SelectOption,
   SFC,
+  SelectOption,
   Self,
   Trade,
   Trades,
