@@ -1,5 +1,6 @@
 export const ASSET_PAIRS = 'assetPairs';
 export const AUTHENTICATION = 'authentication';
+export const CART_PRODUCTS = 'cartProducts';
 export const CORES = 'cores';
 export const EXCHANGE_ORDERS = 'exchangeOrders';
 export const MANAGER = 'manager';

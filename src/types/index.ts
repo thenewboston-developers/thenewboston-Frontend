@@ -1,10 +1,13 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
+import {CreateCartProductRequest} from 'types/api/cartProducts';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
+
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
+import {CartProduct, CartProducts} from 'types/cartProducts';
 import {Core, Cores} from 'types/cores';
 import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
@@ -25,9 +28,12 @@ export {
   AssetPairs,
   Authentication,
   Block,
+  CartProduct,
+  CartProducts,
   ClassName,
   Core,
   Cores,
+  CreateCartProductRequest,
   CreateExchangeOrderRequest,
   CreateUserRequest,
   CreateUserResponse,

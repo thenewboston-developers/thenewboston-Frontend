@@ -1,20 +1,7 @@
 import styled from 'styled-components';
 import MdiIcon from '@mdi/react';
 
-export const Icon = styled(MdiIcon)``;
-
-export const IconContainer = styled.div`
-  color: #fff;
-  display: flex;
-  position: relative;
-
-  &:hover {
-    color: rgba(255, 255, 255, 0.7);
-    cursor: pointer;
-  }
-`;
-
-export const ProductCount = styled.div`
+export const CartProductCount = styled.div`
   align-items: center;
   background: red;
   border-radius: 8px;
@@ -28,4 +15,17 @@ export const ProductCount = styled.div`
   right: 0;
   top: 0;
   width: 14px;
+`;
+
+export const Icon = styled(MdiIcon)``;
+
+export const IconContainer = styled.div`
+  color: #fff;
+  display: flex;
+  position: relative;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+  }
 `;

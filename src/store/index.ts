@@ -5,6 +5,7 @@ import {AnyAction, combineReducers, configureStore} from '@reduxjs/toolkit';
 import {LOGOUT_USER} from 'store/actions';
 import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
+import cartProductsReducer from 'store/cartProducts';
 import coresReducer from 'store/cores';
 import exchangeOrdersReducer from 'store/exchangeOrders';
 import managerReducer from 'store/manager';
@@ -17,6 +18,7 @@ import wiresReducer from 'store/wires';
 const rootReducer = combineReducers({
   assetPairs: assetPairsReducer,
   authentication: authenticationReducer,
+  cartProducts: cartProductsReducer,
   cores: coresReducer,
   exchangeOrders: exchangeOrdersReducer,
   manager: managerReducer,

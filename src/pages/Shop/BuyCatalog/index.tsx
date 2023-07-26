@@ -1,17 +1,31 @@
-import {useMemo} from 'react';
-import {useSelector} from 'react-redux';
+import {useEffect, useMemo} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import ProductCard from 'components/ProductCard';
 import ProductCardsContainer from 'components/ProductCardsContainer';
+import {getProducts as _getProducts} from 'dispatchers/products';
 import {ActivationStatus} from 'enums';
 import {getProducts} from 'selectors/state';
-import {SFC} from 'types';
+import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toast';
 import * as S from './Styles';
 
 const BuyCatalog: SFC = ({className}) => {
+  const dispatch = useDispatch<AppDispatch>();
   const products = useSelector(getProducts);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await dispatch(_getProducts());
+      } catch (error) {
+        console.error(error);
+        displayErrorToast('Error fetching products');
+      }
+    })();
+  }, [dispatch]);
 
   const activeProducts = useMemo(() => {
     return Object.values(products).filter(({activation_status}) => activation_status === ActivationStatus.ACTIVE);
