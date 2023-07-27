@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
+import UEmptyText from 'components/EmptyText';
 import ULine from 'components/Line';
+import UUserLabel from 'components/UserLabel';
 
 export const Address = styled.div`
   display: flex;
@@ -15,6 +17,10 @@ export const Container = styled.div`
   height: 100%;
   padding: 24px 32px;
   width: 100%;
+`;
+
+export const EmptyText = styled(UEmptyText)`
+  padding-top: 0;
 `;
 
 export const Heading = styled.div`
@@ -47,4 +53,8 @@ export const Participants = styled.div`
 export const Right = styled.div`
   grid-column: 2 / span 1;
   overflow-y: auto;
+`;
+
+export const UserLabel = styled(UUserLabel)`
+  margin-top: 16px;
 `;

@@ -7,7 +7,7 @@ import Price from 'components/Price';
 import {createCartProduct, deleteCartProduct} from 'dispatchers/cartProducts';
 import {getProduct} from 'dispatchers/products';
 import {ToastType} from 'enums';
-import {useCartSellerId, useToggle} from 'hooks';
+import {useCartSeller, useToggle} from 'hooks';
 import CartWarningModal from 'modals/CartWarningModal';
 import {getCartProducts, getProducts} from 'selectors/state';
 import {AppDispatch, CartProduct, Product, SFC} from 'types';
@@ -18,7 +18,7 @@ const BuyProductDetails: SFC = ({className}) => {
   const [cartWarningModalIsOpen, toggleCartWarningModal] = useToggle(false);
   const {id} = useParams();
   const cartProducts = useSelector(getCartProducts);
-  const cartSellerId = useCartSellerId();
+  const cartSeller = useCartSeller();
   const dispatch = useDispatch<AppDispatch>();
   const products = useSelector(getProducts);
 
@@ -48,7 +48,7 @@ const BuyProductDetails: SFC = ({className}) => {
   const handleAddToCartClick = async () => {
     if (!product) return;
 
-    if (!!cartSellerId && cartSellerId !== product.seller.id) {
+    if (!!cartSeller && cartSeller.id !== product.seller.id) {
       toggleCartWarningModal();
       return;
     }
