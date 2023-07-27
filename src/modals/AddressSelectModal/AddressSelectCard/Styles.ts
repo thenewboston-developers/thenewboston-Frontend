@@ -9,7 +9,7 @@ const selectedMixin = css`
   }
 `;
 
-export const Container = styled.div<{isSelected: boolean}>`
+export const Container = styled.div<{$isSelected: boolean}>`
   border-radius: 4px;
   border: 1px solid #e3e8ee;
   display: flex;
@@ -22,5 +22,5 @@ export const Container = styled.div<{isSelected: boolean}>`
     cursor: pointer;
   }
 
-  ${({isSelected}) => isSelected && selectedMixin}
+  ${({$isSelected}) => $isSelected && selectedMixin}
 `;

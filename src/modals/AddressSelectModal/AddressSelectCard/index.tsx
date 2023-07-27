@@ -23,7 +23,7 @@ const AddressSelectCard: SFC<AddressSelectCardProps> = ({address, className}) =>
   };
 
   return (
-    <S.Container className={className} isSelected={isSelected} onClick={handleClick}>
+    <S.Container $isSelected={isSelected} className={className} onClick={handleClick}>
       <div>{address_1}</div>
       {address_2 ? <div>{address_2}</div> : null}
       <div>

@@ -11,6 +11,7 @@ import AddressSelectModal from 'modals/AddressSelectModal';
 import {getCartProducts, getSelf} from 'selectors/state';
 import {SFC} from 'types';
 import CartProduct from './CartProduct';
+import PaymentDetails from './PaymentDetails';
 import * as S from './Styles';
 
 const BuyCheckout: SFC = ({className}) => {
@@ -105,6 +106,7 @@ const BuyCheckout: SFC = ({className}) => {
       <S.Right>
         <S.Heading>Total</S.Heading>
         <S.Line />
+        <PaymentDetails />
       </S.Right>
     );
   };
