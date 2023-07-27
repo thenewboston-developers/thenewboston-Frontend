@@ -10,6 +10,12 @@ export const Address = styled.div`
   flex: auto;
 `;
 
+export const CartProducts = styled.div`
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 5fr 1fr;
+`;
+
 export const Container = styled.div`
   display: grid;
   gap: 32px;

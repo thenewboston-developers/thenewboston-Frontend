@@ -10,6 +10,7 @@ import {useActiveOrderAddress, useCartSeller, useToggle} from 'hooks';
 import AddressSelectModal from 'modals/AddressSelectModal';
 import {getCartProducts, getSelf} from 'selectors/state';
 import {SFC} from 'types';
+import CartProduct from './CartProduct';
 import * as S from './Styles';
 
 const BuyCheckout: SFC = ({className}) => {
@@ -45,6 +46,13 @@ const BuyCheckout: SFC = ({className}) => {
     return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
 
+  const renderCartProducts = () => {
+    const _cartProducts = cartProductList.map((cartProduct) => (
+      <CartProduct cartProduct={cartProduct} key={cartProduct.id} />
+    ));
+    return <S.CartProducts>{_cartProducts}</S.CartProducts>;
+  };
+
   const renderLeft = () => {
     return (
       <S.Left>
@@ -77,10 +85,17 @@ const BuyCheckout: SFC = ({className}) => {
   };
 
   const renderProducts = () => {
+    const content = !!cartProductList.length ? (
+      renderCartProducts()
+    ) : (
+      <S.EmptyText>No products to display.</S.EmptyText>
+    );
+
     return (
       <>
         <S.Heading>Products</S.Heading>
         <S.Line />
+        {content}
       </>
     );
   };
