@@ -1,4 +1,5 @@
 import useActiveAssetPair from 'hooks/useActiveAssetPair';
+import useActiveOrderAddress from 'hooks/useActiveOrderAddress';
 import useActiveWallet from 'hooks/useActiveWallet';
 import useAvailableWalletCores from 'hooks/useAvailableWalletCores';
 import useCartSellerId from 'hooks/useCartSellerId';
@@ -9,6 +10,7 @@ import useToggle from 'hooks/useToggle';
 
 export {
   useActiveAssetPair,
+  useActiveOrderAddress,
   useActiveWallet,
   useAvailableWalletCores,
   useCartSellerId,
