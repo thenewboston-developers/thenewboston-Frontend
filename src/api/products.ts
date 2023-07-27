@@ -24,6 +24,16 @@ export const deleteProduct = async (id: number): Promise<void> => {
   }
 };
 
+export const getProduct = async (id: number): Promise<Product> => {
+  try {
+    const response = await axios.get<Product>(`${BASE_URL}/${id}`, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const getProducts = async (): Promise<Product[]> => {
   try {
     const response = await axios.get<Product[]>(BASE_URL, authorizationHeaders());

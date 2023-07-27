@@ -24,6 +24,15 @@ export const deleteCartProduct = async (id: number): Promise<void> => {
   }
 };
 
+export const emptyCart = async (): Promise<void> => {
+  try {
+    await axios.post(`${BASE_URL}/empty_cart`, {}, authorizationHeaders());
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const getCartProducts = async (): Promise<CartProduct[]> => {
   try {
     const response = await axios.get<CartProduct[]>(BASE_URL, authorizationHeaders());

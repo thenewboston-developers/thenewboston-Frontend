@@ -1,6 +1,7 @@
 import {
   createProduct as _createProduct,
   deleteProduct as _deleteProduct,
+  getProduct as _getProduct,
   getProducts as _getProducts,
   updateProduct as _updateProduct,
 } from 'api/products';
@@ -15,6 +16,11 @@ export const createProduct = (data: FormData) => async (dispatch: AppDispatch) =
 export const deleteProduct = (id: number) => async (dispatch: AppDispatch) => {
   await _deleteProduct(id);
   dispatch(unsetProduct(id));
+};
+
+export const getProduct = (id: number) => async (dispatch: AppDispatch) => {
+  const responseData = await _getProduct(id);
+  dispatch(setProduct(responseData));
 };
 
 export const getProducts = () => async (dispatch: AppDispatch) => {

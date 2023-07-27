@@ -1,6 +1,7 @@
 import {
   createCartProduct as _createCartProduct,
   deleteCartProduct as _deleteCartProduct,
+  emptyCart as _emptyCart,
   getCartProducts as _getCartProducts,
 } from 'api/cartProducts';
 import {setCartProduct, setCartProducts, unsetCartProduct} from 'store/cartProducts';
@@ -14,6 +15,11 @@ export const createCartProduct = (data: CreateCartProductRequest) => async (disp
 export const deleteCartProduct = (id: number) => async (dispatch: AppDispatch) => {
   await _deleteCartProduct(id);
   dispatch(unsetCartProduct(id));
+};
+
+export const emptyCart = () => async (dispatch: AppDispatch) => {
+  await _emptyCart();
+  dispatch(setCartProducts([]));
 };
 
 export const getCartProducts = () => async (dispatch: AppDispatch) => {
