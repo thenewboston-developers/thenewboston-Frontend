@@ -1,17 +1,31 @@
-import {useMemo} from 'react';
-import {useSelector} from 'react-redux';
+import {useEffect, useMemo} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
 import EmptyText from 'components/EmptyText';
 import Order from 'components/Order';
 import SectionHeading from 'components/SectionHeading';
+import {getOrders as _getOrders} from 'dispatchers/orders';
 import {getOrders, getSelf} from 'selectors/state';
-import {SFC} from 'types';
+import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toast';
 import * as S from './Styles';
 
 const BuyOrders: SFC = ({className}) => {
+  const dispatch = useDispatch<AppDispatch>();
   const orders = useSelector(getOrders);
   const self = useSelector(getSelf);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await dispatch(_getOrders());
+      } catch (error) {
+        console.error(error);
+        displayErrorToast('Error fetching orders');
+      }
+    })();
+  }, [dispatch]);
 
   const orderList = useMemo(() => {
     const _orders = Object.values(orders).filter(({buyer}) => buyer.id === self.id);
