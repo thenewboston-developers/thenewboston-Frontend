@@ -57,7 +57,13 @@ const Product: SFC<ProductProps> = ({product}) => {
   return (
     <>
       <S.Thumbnail onClick={handleEditClick} thumbnailUrl={product.image} />
-      <ShopProductListDetails onClick={handleEditClick} product={product} />
+      <ShopProductListDetails
+        coreId={product.price_core}
+        description={product.description}
+        name={product.name}
+        onClick={handleEditClick}
+        price={product.price_amount}
+      />
       <S.ActivationStatus>
         <ProductActivationBadge activationStatus={product.activation_status} />
       </S.ActivationStatus>

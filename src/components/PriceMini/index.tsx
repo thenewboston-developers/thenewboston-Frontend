@@ -1,18 +1,19 @@
 import {useCoreLogo} from 'hooks';
-import {Product, SFC} from 'types';
+import {SFC} from 'types';
 import * as S from './Styles';
 
 export interface PriceMiniProps {
-  product: Product;
+  coreId: number;
+  price: number;
 }
 
-const PriceMini: SFC<PriceMiniProps> = ({className, product}) => {
-  const coreLogo = useCoreLogo(product.price_core);
+const PriceMini: SFC<PriceMiniProps> = ({className, coreId, price}) => {
+  const coreLogo = useCoreLogo(coreId);
 
   return (
     <S.Container className={className}>
       <S.CoreLogo alt="core logo" src={coreLogo} />
-      <S.Amount>{product.price_amount.toLocaleString()}</S.Amount>
+      <S.Amount>{price.toLocaleString()}</S.Amount>
     </S.Container>
   );
 };

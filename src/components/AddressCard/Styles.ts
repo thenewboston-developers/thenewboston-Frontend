@@ -9,7 +9,6 @@ export const Container = styled.div`
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
   display: flex;
   justify-content: space-between;
-  padding: 8px 2px 8px 10px;
 `;
 
 export const Left = styled.div``;

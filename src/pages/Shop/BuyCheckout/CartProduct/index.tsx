@@ -29,7 +29,12 @@ const CartProduct: SFC<CartProductProps> = ({cartProduct}) => {
   return (
     <>
       <Thumbnail thumbnailUrl={cartProduct.product.image} />
-      <ShopProductListDetails product={cartProduct.product} />
+      <ShopProductListDetails
+        coreId={cartProduct.product.price_core}
+        description={cartProduct.product.description}
+        name={cartProduct.product.name}
+        price={cartProduct.product.price_amount}
+      />
       <S.Actions>
         <ActionLink onClick={handleRemoveClick}>Remove</ActionLink>
       </S.Actions>
