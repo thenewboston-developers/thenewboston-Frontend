@@ -1,10 +1,15 @@
 import {useMemo} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 
 import UnknownCore from 'assets/unknown-core.png';
+import {createOrder} from 'dispatchers/orders';
+import {ToastType} from 'enums';
 import {useActiveOrderAddress} from 'hooks';
 import {getCartProducts, getCores, getWallets} from 'selectors/state';
-import {CartProduct, SFC} from 'types';
+import {setCartProducts} from 'store/cartProducts';
+import {AppDispatch, CartProduct, SFC} from 'types';
+import {displayErrorToast, displayToast} from 'utils/toast';
 import * as S from './Styles';
 
 interface PriceCoreTotal {
@@ -15,6 +20,8 @@ const PaymentDetails: SFC = ({className}) => {
   const activeOrderAddress = useActiveOrderAddress();
   const cartProducts = useSelector(getCartProducts);
   const cores = useSelector(getCores);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const wallets = useSelector(getWallets);
 
   const cartProductList = useMemo(() => {
@@ -54,8 +61,18 @@ const PaymentDetails: SFC = ({className}) => {
     return results;
   }, [cores, totalPrices, wallets]);
 
-  const handleButtonClick = () => {
-    console.log('Click');
+  const handleButtonClick = async () => {
+    if (!activeOrderAddress) return;
+
+    try {
+      await dispatch(createOrder({address: activeOrderAddress.id}));
+      dispatch(setCartProducts([]));
+      displayToast('Order created!', ToastType.SUCCESS);
+      navigate('/shop/buy/orders');
+    } catch (error) {
+      console.error(error);
+      displayErrorToast('Error placing order');
+    }
   };
 
   const renderPriceContainers = () => {

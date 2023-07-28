@@ -2,6 +2,7 @@ import {CreateAddressRequest} from 'types/api/addresses';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
+import {CreateOrderRequest} from 'types/api/orders';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
 
@@ -17,6 +18,8 @@ import {SelectOption} from 'types/forms';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {Item} from 'types/items';
 import {Manager} from 'types/manager';
+import {OrderProduct} from 'types/orderProducts';
+import {Order, Orders} from 'types/orders';
 import {Product, Products} from 'types/products';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
@@ -40,6 +43,7 @@ export {
   CreateAddressRequest,
   CreateCartProductRequest,
   CreateExchangeOrderRequest,
+  CreateOrderRequest,
   CreateUserRequest,
   CreateUserResponse,
   CreateWalletRequest,
@@ -54,6 +58,9 @@ export {
   LoginRequest,
   LoginResponse,
   Manager,
+  Order,
+  OrderProduct,
+  Orders,
   Product,
   Products,
   RootState,

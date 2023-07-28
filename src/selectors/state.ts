@@ -7,6 +7,7 @@ export const getCartProducts = (state: RootState) => state.cartProducts;
 export const getCores = (state: RootState) => state.cores;
 export const getExchangeOrders = (state: RootState) => state.exchangeOrders;
 export const getManager = (state: RootState) => state.manager;
+export const getOrders = (state: RootState) => state.orders;
 export const getProducts = (state: RootState) => state.products;
 export const getSelf = (state: RootState) => state.self;
 export const getTrades = (state: RootState) => state.trades;
