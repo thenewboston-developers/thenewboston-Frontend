@@ -1,11 +1,10 @@
+import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
 
-export interface Core {
-  created_date: string;
+export interface Core extends CreatedModified {
   domain: string;
   id: number;
   logo: string | null;
-  modified_date: string;
   owner: number;
   ticker: string;
 }

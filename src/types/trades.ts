@@ -1,11 +1,10 @@
+import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
 
-export interface Trade {
+export interface Trade extends CreatedModified {
   buy_order: number;
-  created_date: string;
   fill_quantity: number;
   id: number;
-  modified_date: string;
   overpayment_amount: number;
   sell_order: number;
   trade_price: number;

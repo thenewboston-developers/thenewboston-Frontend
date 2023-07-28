@@ -1,3 +1,5 @@
+import {UserReadSerializer} from 'types/api/users';
+
 export interface LoginRequest {
   password: string;
   username: string;
@@ -8,8 +10,5 @@ export interface LoginResponse {
     access_token: string;
     refresh_token: string;
   };
-  user: {
-    id: number;
-    username: string;
-  };
+  user: UserReadSerializer;
 }

@@ -1,4 +1,7 @@
+import Checkbox from './Checkbox';
+import FileInput from './FileInput';
 import Input from './Input';
 import LogoInput from './LogoInput';
+import Select from './Select';
 
-export {Input, LogoInput};
+export {Checkbox, FileInput, Input, LogoInput, Select};

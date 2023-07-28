@@ -1,6 +1,8 @@
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {getAddresses} from 'dispatchers/addresses';
+import {getCartProducts} from 'dispatchers/cartProducts';
 import {getCores} from 'dispatchers/cores';
 import {getExchangeOrders} from 'dispatchers/exchangeOrders';
 import {getWallets} from 'dispatchers/wallets';
@@ -17,10 +19,14 @@ const Authenticated: SFC = ({className}) => {
   useEffect(() => {
     (async () => {
       try {
-        await dispatch(getCores());
-        await dispatch(getExchangeOrders());
-        await dispatch(getWallets());
-        await dispatch(getWires());
+        await Promise.all([
+          dispatch(getAddresses()),
+          dispatch(getCartProducts()),
+          dispatch(getCores()),
+          dispatch(getExchangeOrders()),
+          dispatch(getWallets()),
+          dispatch(getWires()),
+        ]);
       } catch (error) {
         console.error(error);
         displayErrorToast('Error fetching initial data');
