@@ -6,7 +6,6 @@ import Button, {ButtonType} from 'components/Button';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {updateUser} from 'dispatchers/users';
-import {useSelfAvatar} from 'hooks';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
@@ -20,13 +19,12 @@ const EditProfileModal: SFC<EditProfileModalProps> = ({className, close}) => {
   const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
-  const selfAvatar = useSelfAvatar();
 
   const initialValues = useMemo(
     () => ({
-      avatar: selfAvatar,
+      avatar: self.avatar || '',
     }),
-    [selfAvatar],
+    [self.avatar],
   );
 
   type FormValues = typeof initialValues;
