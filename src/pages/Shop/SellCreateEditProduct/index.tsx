@@ -2,11 +2,10 @@ import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {Field, Form, Formik} from 'formik';
-import MdiIcon from '@mdi/react';
-import {mdiClose} from '@mdi/js';
 
 import Button, {ButtonType} from 'components/Button';
 import {Checkbox, FileInput, Input, Select} from 'components/FormElements';
+import ImagePreview from 'components/ImagePreview';
 import {createProduct, updateProduct} from 'dispatchers/products';
 import {ActivationStatus, ToastType} from 'enums';
 import {getManager} from 'selectors/state';
@@ -89,26 +88,6 @@ const SellCreateEditProduct: SFC = ({className}) => {
     }
   };
 
-  const renderPreview = (setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void) => {
-    let imgSrc;
-    if (preview) imgSrc = preview;
-    if (!imgSrc) return null;
-
-    return (
-      <S.ImgContainer
-        onClick={() => {
-          setFieldValue('image', '');
-          setPreview(null);
-        }}
-      >
-        <S.CloseButtonContainer>
-          <MdiIcon path={mdiClose} size="16px" />
-        </S.CloseButtonContainer>
-        <S.Img alt="Preview" src={imgSrc} />
-      </S.ImgContainer>
-    );
-  };
-
   const validationSchema = useMemo(() => {
     // TODO: Proper validation
     return yup.object().shape({
@@ -127,7 +106,13 @@ const SellCreateEditProduct: SFC = ({className}) => {
             {!values.image && (
               <Field component={FileInput} name="image" onChange={handleFileChange} touched={touched} />
             )}
-            {renderPreview(setFieldValue)}
+            <ImagePreview
+              src={preview}
+              onClear={async () => {
+                await setFieldValue('image', '');
+                setPreview(null);
+              }}
+            />
             <S.Bumper />
             {/* TODO: Change these from hardcoded values */}
             <Select

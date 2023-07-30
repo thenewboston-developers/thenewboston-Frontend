@@ -1,8 +1,11 @@
-import {useSelfAvatar} from 'hooks';
+import Button from 'components/Button';
+import {useSelfAvatar, useToggle} from 'hooks';
+import EditProfileModal from 'modals/EditProfileModal';
 import {SFC} from 'types';
 import * as S from './Styles';
 
 const Profile: SFC = ({className}) => {
+  const [editProfileModalIsOpen, toggleEditProfileModal] = useToggle(false);
   const selfAvatar = useSelfAvatar();
 
   const renderAvatar = () => {
@@ -14,10 +17,16 @@ const Profile: SFC = ({className}) => {
   };
 
   return (
-    <S.Container className={className}>
-      <S.Left>{renderAvatar()}</S.Left>
-      <S.Right>right</S.Right>
-    </S.Container>
+    <>
+      <S.Container className={className}>
+        <S.Left>
+          {renderAvatar()}
+          <Button onClick={toggleEditProfileModal} text="Edit Profile" />
+        </S.Left>
+        <S.Right>right</S.Right>
+      </S.Container>
+      {editProfileModalIsOpen ? <EditProfileModal close={toggleEditProfileModal} /> : null}
+    </>
   );
 };
 
