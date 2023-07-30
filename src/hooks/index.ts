@@ -6,6 +6,7 @@ import useCartSeller from 'hooks/useCartSeller';
 import useCoreLogo from 'hooks/useCoreLogo';
 import useEventListener from 'hooks/useEventListener';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
+import useSelfAvatar from 'hooks/useSelfAvatar';
 import useToggle from 'hooks/useToggle';
 
 export {
@@ -17,5 +18,6 @@ export {
   useCoreLogo,
   useEventListener,
   useIsAuthenticated,
+  useSelfAvatar,
   useToggle,
 };

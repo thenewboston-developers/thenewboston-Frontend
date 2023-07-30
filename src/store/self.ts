@@ -4,6 +4,7 @@ import {SELF} from 'store/constants';
 import {Self} from 'types';
 
 const initialState: Self = {
+  avatar: null,
   id: null,
   username: null,
 };
