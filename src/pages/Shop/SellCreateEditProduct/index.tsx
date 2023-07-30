@@ -107,11 +107,11 @@ const SellCreateEditProduct: SFC = ({className}) => {
               <Field component={FileInput} name="image" onChange={handleFileChange} touched={touched} />
             )}
             <ImagePreview
-              src={preview}
               onClear={async () => {
                 await setFieldValue('image', '');
                 setPreview(null);
               }}
+              src={preview}
             />
             <S.Bumper />
             {/* TODO: Change these from hardcoded values */}

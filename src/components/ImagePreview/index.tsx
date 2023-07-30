@@ -2,11 +2,11 @@ import React from 'react';
 import MdiIcon from '@mdi/react';
 import {mdiClose} from '@mdi/js';
 
-import {SFC} from 'types';
+import {GenericVoidFunction, SFC} from 'types';
 import * as S from './Styles';
 
 export interface ImagePreviewProps {
-  onClear: () => void;
+  onClear: GenericVoidFunction;
   src: string | null;
 }
 

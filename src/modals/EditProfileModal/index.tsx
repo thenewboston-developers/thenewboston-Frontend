@@ -65,11 +65,11 @@ const EditProfileModal: SFC<EditProfileModalProps> = ({className, close}) => {
               <Field component={FileInput} name="avatar" onChange={handleFileChange} touched={touched} />
             )}
             <ImagePreview
-              src={preview}
               onClear={async () => {
                 await setFieldValue('avatar', '');
                 setPreview(null);
               }}
+              src={preview}
             />
             <S.Bumper />
             <Button
