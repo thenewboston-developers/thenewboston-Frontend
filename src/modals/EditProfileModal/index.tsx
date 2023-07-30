@@ -1,11 +1,13 @@
 import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Field, Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
+import {updateUser} from 'dispatchers/users';
 import {useSelfAvatar} from 'hooks';
+import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import * as S from './Styles';
@@ -17,6 +19,7 @@ export interface EditProfileModalProps {
 const EditProfileModal: SFC<EditProfileModalProps> = ({className, close}) => {
   const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const self = useSelector(getSelf);
   const selfAvatar = useSelfAvatar();
 
   const initialValues = useMemo(
@@ -47,9 +50,7 @@ const EditProfileModal: SFC<EditProfileModalProps> = ({className, close}) => {
     try {
       const requestData = new FormData();
       requestData.append('avatar', values.avatar);
-      console.log(dispatch);
-      console.log(values);
-      console.log(requestData);
+      await dispatch(updateUser(self.id!, requestData));
       close();
     } catch (error) {
       console.error(error);
@@ -60,7 +61,7 @@ const EditProfileModal: SFC<EditProfileModalProps> = ({className, close}) => {
   return (
     <S.Modal className={className} close={close} header="Edit Profile">
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {({setFieldValue, touched, values}) => (
+        {({dirty, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
             {!values.avatar && (
               <Field component={FileInput} name="avatar" onChange={handleFileChange} touched={touched} />
@@ -72,7 +73,14 @@ const EditProfileModal: SFC<EditProfileModalProps> = ({className, close}) => {
                 setPreview(null);
               }}
             />
-            <Button text="Submit" type={ButtonType.submit} />
+            <Button
+              dirty={dirty}
+              disabled={isSubmitting}
+              isSubmitting={isSubmitting}
+              isValid={isValid}
+              text="Submit"
+              type={ButtonType.submit}
+            />
           </Form>
         )}
       </Formik>
