@@ -1,4 +1,3 @@
-import Button from 'components/Button';
 import {useSelfAvatar, useToggle} from 'hooks';
 import EditProfileModal from 'modals/EditProfileModal';
 import {SFC} from 'types';
@@ -21,7 +20,7 @@ const Profile: SFC = ({className}) => {
       <S.Container className={className}>
         <S.Left>
           {renderAvatar()}
-          <Button onClick={toggleEditProfileModal} text="Edit Profile" />
+          <S.Button onClick={toggleEditProfileModal} text="Edit Profile" />
         </S.Left>
         <S.Right>right</S.Right>
       </S.Container>

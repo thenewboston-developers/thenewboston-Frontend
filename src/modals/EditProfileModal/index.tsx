@@ -71,6 +71,7 @@ const EditProfileModal: SFC<EditProfileModalProps> = ({className, close}) => {
                 setPreview(null);
               }}
             />
+            <S.Bumper />
             <Button
               dirty={dirty}
               disabled={isSubmitting}

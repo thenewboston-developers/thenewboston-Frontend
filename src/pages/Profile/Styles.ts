@@ -1,5 +1,12 @@
 import styled from 'styled-components';
 
+import UButton from 'components/Button';
+
+export const Button = styled(UButton)`
+  margin-top: 24px;
+  width: 100%;
+`;
+
 export const Container = styled.div`
   display: grid;
   grid-template-columns: 260px 1fr;
