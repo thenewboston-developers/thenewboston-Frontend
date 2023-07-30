@@ -2,8 +2,7 @@ import {CSSProperties, useCallback, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
 import {useNavigate} from 'react-router-dom';
 
-import DefaultAvatar from 'assets/default-avatar.png';
-import {useEventListener, useToggle} from 'hooks';
+import {useEventListener, useSelfAvatar, useToggle} from 'hooks';
 import {Menu, Option} from 'styles/components/DropMenuStyle';
 import {SFC} from 'types';
 import * as S from './Styles';
@@ -15,6 +14,7 @@ const ShopDropdownMenu: SFC = ({className}) => {
   const [menuPosition, setMenuPosition] = useState<CSSProperties | undefined>(undefined);
   const iconRef = useRef<HTMLImageElement>(null);
   const navigate = useNavigate();
+  const selfAvatar = useSelfAvatar();
 
   const handleBuyClick = () => {
     navigate('/shop/buy/catalog');
@@ -63,7 +63,7 @@ const ShopDropdownMenu: SFC = ({className}) => {
 
   return (
     <>
-      <S.Img alt="avatar" className={className} onClick={handleImgClick} ref={iconRef} src={DefaultAvatar} />
+      <S.Img alt="avatar" className={className} onClick={handleImgClick} ref={iconRef} src={selfAvatar} />
       {isOpen && createPortal(renderMenu(), dropDown)}
     </>
   );

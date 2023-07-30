@@ -1,4 +1,4 @@
-import {createUser as _createUser} from 'api/users';
+import {createUser as _createUser, updateUser as _updateUser} from 'api/users';
 import {setAuthentication} from 'store/authentication';
 import {setSelf} from 'store/self';
 import {AppDispatch, CreateUserRequest} from 'types';
@@ -19,4 +19,9 @@ export const createUser = (data: CreateUserRequest) => async (dispatch: AppDispa
   );
 
   dispatch(setSelf(user));
+};
+
+export const updateUser = (id: number, data: FormData) => async (dispatch: AppDispatch) => {
+  const responseData = await _updateUser(id, data);
+  dispatch(setSelf(responseData));
 };

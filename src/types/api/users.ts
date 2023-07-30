@@ -1,4 +1,5 @@
 export interface UserReadSerializer {
+  avatar: string | null;
   id: number;
   username: string;
 }
