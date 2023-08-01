@@ -9,8 +9,6 @@ export const Actions = styled.div`
 
 export const ActivationStatus = styled.div``;
 
-export const Container = styled.div``;
-
 export const Thumbnail = styled(UThumbnail)`
   &:hover {
     cursor: pointer;

@@ -14,8 +14,8 @@ const Order: SFC<OrderProps> = ({className, order}) => {
       <S.DetailsRow>
         <S.AddressCard address={order.address} />
         <S.Participants>
-          <UserLabel description="Buyer" name={order.buyer.username} />
-          <UserLabel description="Seller" name={order.seller.username} />
+          <UserLabel avatar={order.buyer.avatar} description="Buyer" username={order.buyer.username} />
+          <UserLabel avatar={order.seller.avatar} description="Seller" username={order.seller.username} />
         </S.Participants>
       </S.DetailsRow>
     );

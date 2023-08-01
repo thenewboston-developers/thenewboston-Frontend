@@ -8,6 +8,7 @@ export interface BadgeProps {
 
 export enum BadgeStyle {
   danger = 'danger',
+  draft = 'draft',
   primary = 'primary',
   success = 'success',
   warning = 'warning',
