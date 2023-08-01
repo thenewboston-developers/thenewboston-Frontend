@@ -17,6 +17,7 @@ import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
 import {SelectOption} from 'types/forms';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
+import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Invitation, Invitations} from 'types/invitations';
 import {Item} from 'types/items';
 import {Manager} from 'types/manager';
@@ -58,6 +59,8 @@ export {
   GenericFunction,
   GenericVoidFunction,
   Invitation,
+  InvitationLimit,
+  InvitationLimits,
   Invitations,
   Item,
   LoginRequest,

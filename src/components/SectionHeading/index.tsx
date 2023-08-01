@@ -7,14 +7,18 @@ import * as S from './Styles';
 export interface SectionHeadingProps {
   heading: string;
   rightContent?: ReactNode;
+  subHeading?: string;
 }
 
-const SectionHeading: SFC<SectionHeadingProps> = ({className, heading, rightContent}) => {
+const SectionHeading: SFC<SectionHeadingProps> = ({className, heading, rightContent, subHeading}) => {
   return (
     <S.Container className={className}>
       <S.Contents>
-        <S.Heading>{heading}</S.Heading>
-        {rightContent ? rightContent : null}
+        <S.Left>
+          <S.Heading>{heading}</S.Heading>
+          <S.SubHeading>{subHeading ? subHeading : null}</S.SubHeading>
+        </S.Left>
+        <S.Right>{rightContent ? rightContent : null}</S.Right>
       </S.Contents>
       <Line />
     </S.Container>
