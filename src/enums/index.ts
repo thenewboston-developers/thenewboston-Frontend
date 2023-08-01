@@ -1,4 +1,5 @@
 import {ExchangeOrderType, FillStatus} from 'enums/exchangeOrders';
+import {InvitationStatus} from 'enums/invitations';
 import {WalletTab} from 'enums/manager';
 import {ActivationStatus} from 'enums/products';
 import {ShopToolbarType} from 'enums/shopToolbar';
@@ -10,6 +11,7 @@ export {
   ActivationStatus,
   ExchangeOrderType,
   FillStatus,
+  InvitationStatus,
   ShopToolbarType,
   SocketDataType,
   ToastType,

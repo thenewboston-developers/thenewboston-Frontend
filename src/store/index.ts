@@ -9,6 +9,7 @@ import authenticationReducer from 'store/authentication';
 import cartProductsReducer from 'store/cartProducts';
 import coresReducer from 'store/cores';
 import exchangeOrdersReducer from 'store/exchangeOrders';
+import invitationsReducer from 'store/invitations';
 import managerReducer from 'store/manager';
 import ordersReducer from 'store/orders';
 import productsReducer from 'store/products';
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   cartProducts: cartProductsReducer,
   cores: coresReducer,
   exchangeOrders: exchangeOrdersReducer,
+  invitations: invitationsReducer,
   manager: managerReducer,
   orders: ordersReducer,
   products: productsReducer,

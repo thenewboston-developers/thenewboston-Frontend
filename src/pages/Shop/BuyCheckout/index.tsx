@@ -69,8 +69,8 @@ const BuyCheckout: SFC = ({className}) => {
   const renderParticipants = () => {
     const content = !!cartProductList.length ? (
       <>
-        <UserLabel description="buyer" name={self.username!} />
-        {cartSeller && <S.UserLabel description="seller" name={cartSeller.username} />}
+        <UserLabel avatar={self.avatar} description="buyer" username={self.username!} />
+        {cartSeller && <S.UserLabel avatar={cartSeller.avatar} description="seller" username={cartSeller.username} />}
       </>
     ) : (
       <S.EmptyText>No buyer or seller to display.</S.EmptyText>

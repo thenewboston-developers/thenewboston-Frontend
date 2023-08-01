@@ -100,7 +100,7 @@ const BuyProductDetails: SFC = ({className}) => {
       <S.Right>
         <S.Name>{product.name}</S.Name>
         <S.Description>{product.description}</S.Description>
-        <S.UserLabel description="Seller" name={product.seller.username} />
+        <S.UserLabel avatar={product.seller.avatar} description="Seller" username={product.seller.username} />
         <S.PriceContainer>
           <Price product={product} />
           {renderCartButton()}

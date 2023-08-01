@@ -17,12 +17,12 @@ export const Description = styled.div`
   font-size: 12px;
 `;
 
-export const Name = styled.div`
-  font-size: 14px;
-  font-weight: 600;
-`;
-
 export const Right = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+export const Username = styled.div`
+  font-size: 14px;
+  font-weight: 600;
 `;

@@ -2,6 +2,7 @@ import {CreateAddressRequest} from 'types/api/addresses';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
+import {CreateInvitationRequest} from 'types/api/invitations';
 import {CreateOrderRequest} from 'types/api/orders';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
@@ -16,6 +17,7 @@ import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
 import {SelectOption} from 'types/forms';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
+import {Invitation, Invitations} from 'types/invitations';
 import {Item} from 'types/items';
 import {Manager} from 'types/manager';
 import {OrderProduct} from 'types/orderProducts';
@@ -43,6 +45,7 @@ export {
   CreateAddressRequest,
   CreateCartProductRequest,
   CreateExchangeOrderRequest,
+  CreateInvitationRequest,
   CreateOrderRequest,
   CreateUserRequest,
   CreateUserResponse,
@@ -54,6 +57,8 @@ export {
   ExchangeOrders,
   GenericFunction,
   GenericVoidFunction,
+  Invitation,
+  Invitations,
   Item,
   LoginRequest,
   LoginResponse,

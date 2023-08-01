@@ -4,6 +4,7 @@ export const AUTHENTICATION = 'authentication';
 export const CART_PRODUCTS = 'cartProducts';
 export const CORES = 'cores';
 export const EXCHANGE_ORDERS = 'exchangeOrders';
+export const INVITATIONS = 'invitations';
 export const MANAGER = 'manager';
 export const ORDERS = 'orders';
 export const PRODUCTS = 'products';
