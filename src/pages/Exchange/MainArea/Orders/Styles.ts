@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  padding: 16px;
+  padding: 24px 32px;
 `;
 
 export const DropdownMenuWrapper = styled.div`
@@ -15,7 +15,7 @@ export const FillStatusBadgeWrapper = styled.div`
 `;
 
 export const Table = styled.table`
-  margin-top: 16px;
+  margin-top: 12px;
   width: 100%;
 
   th,

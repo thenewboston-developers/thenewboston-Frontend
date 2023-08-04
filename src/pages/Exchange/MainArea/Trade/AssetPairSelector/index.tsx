@@ -1,28 +1,11 @@
-import {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
-
-import {getAssetPairs as _getAssetPairs} from 'dispatchers/assetPairs';
 import {useActiveAssetPair, useToggle} from 'hooks';
 import SelectAssetPairModal from 'modals/SelectAssetPairModal';
-import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {SFC} from 'types';
 import * as S from './Styles';
 
 const AssetPairSelector: SFC = ({className}) => {
   const [selectAssetPairModalIsOpen, toggleSelectAssetPairModal] = useToggle(false);
   const activeAssetPair = useActiveAssetPair();
-  const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        await dispatch(_getAssetPairs());
-      } catch (error) {
-        console.error(error);
-        displayErrorToast('Error fetching asset pairs');
-      }
-    })();
-  }, [dispatch]);
 
   const renderSelectorButton = () => {
     const text = activeAssetPair

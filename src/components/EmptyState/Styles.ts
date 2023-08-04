@@ -23,7 +23,7 @@ export const Img = styled.img`
 `;
 
 export const SpanBlue = styled.span`
-  color: ${colors.palette.blue['500']};
+  color: ${colors.palette.blue['400']};
   cursor: pointer;
   font-weight: 600;
 `;

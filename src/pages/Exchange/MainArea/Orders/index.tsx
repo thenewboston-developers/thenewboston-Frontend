@@ -4,7 +4,9 @@ import orderBy from 'lodash/orderBy';
 import {mdiDotsVertical} from '@mdi/js';
 
 import DropdownMenu from 'components/DropdownMenu';
+import EmptyText from 'components/EmptyText';
 import FillStatusBadge from 'components/FillStatusBadge';
+import SectionHeading from 'components/SectionHeading';
 import {updateExchangeOrder} from 'dispatchers/exchangeOrders';
 import {FillStatus} from 'enums';
 import {useToggle} from 'hooks';
@@ -22,12 +24,35 @@ const Orders: SFC = ({className}) => {
   const orders = useSelector(getExchangeOrders);
   const self = useSelector(getSelf);
 
-  const filteredOrders = useMemo(() => {
+  const getCurrencyTicker = useCallback((coreId: number) => cores[coreId]?.ticker || '-', [cores]);
+
+  const ordersList = useMemo(() => {
     const orderedOrders = orderBy(Object.values(orders), ['created_date'], ['desc']);
     return orderedOrders.filter((order) => order.owner === self.id);
   }, [orders, self.id]);
 
-  const getCurrencyTicker = useCallback((coreId: number) => cores[coreId]?.ticker || '-', [cores]);
+  const renderContent = () => {
+    if (!!ordersList.length) {
+      return (
+        <S.Table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Order Type</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Filled Amount</th>
+              <th>Fill Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>{renderRows()}</tbody>
+        </S.Table>
+      );
+    }
+
+    return <EmptyText>No orders to display.</EmptyText>;
+  };
 
   const renderDropdownMenu = useCallback(
     (order: ExchangeOrder) => {
@@ -60,7 +85,7 @@ const Orders: SFC = ({className}) => {
   );
 
   const renderRows = useCallback(() => {
-    return filteredOrders.map((order) => {
+    return ordersList.map((order) => {
       const {
         created_date,
         id,
@@ -98,26 +123,13 @@ const Orders: SFC = ({className}) => {
         </tr>
       );
     });
-  }, [filteredOrders, getCurrencyTicker, renderDropdownMenu]);
+  }, [ordersList, getCurrencyTicker, renderDropdownMenu]);
 
   return (
     <>
       <S.Container className={className}>
-        <h1>Orders</h1>
-        <S.Table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Order Type</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Filled Amount</th>
-              <th>Fill Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>{renderRows()}</tbody>
-        </S.Table>
+        <SectionHeading heading="Orders" />
+        {renderContent()}
       </S.Container>
       {tradesModalIsOpen ? <TradesModal close={toggleTradesModal} order={selectedOrder} /> : null}
     </>

@@ -2,6 +2,7 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {getAddresses} from 'dispatchers/addresses';
+import {getAssetPairs} from 'dispatchers/assetPairs';
 import {getCartProducts} from 'dispatchers/cartProducts';
 import {getCores} from 'dispatchers/cores';
 import {getExchangeOrders} from 'dispatchers/exchangeOrders';
@@ -21,6 +22,7 @@ const Authenticated: SFC = ({className}) => {
       try {
         await Promise.all([
           dispatch(getAddresses()),
+          dispatch(getAssetPairs()),
           dispatch(getCartProducts()),
           dispatch(getCores()),
           dispatch(getExchangeOrders()),

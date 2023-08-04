@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {breakpoints, colors} from 'styles';
 
 export const Container = styled.div`
+  height: 100%;
   padding: 16px;
 `;
 
