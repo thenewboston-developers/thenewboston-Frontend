@@ -16,12 +16,12 @@ import Sell from './Sell';
 import * as S from './Styles';
 
 enum Tab {
-  buy = 'buy',
-  sell = 'sell',
+  BUY = 'BUY',
+  SELL = 'SELL',
 }
 
 const Trade: SFC = ({className}) => {
-  const [activeTab, setActiveTab] = useState(Tab.buy);
+  const [activeTab, setActiveTab] = useState(Tab.BUY);
   const activeAssetPair = useActiveAssetPair();
   const assetPairs = useSelector(getAssetPairs);
   const dispatch = useDispatch<AppDispatch>();
@@ -74,8 +74,8 @@ const Trade: SFC = ({className}) => {
     if (!activeAssetPair) return null;
 
     const tabContent = {
-      [Tab.buy]: <Buy />,
-      [Tab.sell]: <Sell />,
+      [Tab.BUY]: <Buy />,
+      [Tab.SELL]: <Sell />,
     };
 
     return <S.TabContent>{tabContent[activeTab]}</S.TabContent>;
@@ -86,10 +86,10 @@ const Trade: SFC = ({className}) => {
 
     return (
       <S.Tabs>
-        <S.Tab $isActive={activeTab === Tab.buy} onClick={() => setActiveTab(Tab.buy)}>
+        <S.Tab $isActive={activeTab === Tab.BUY} onClick={() => setActiveTab(Tab.BUY)}>
           Buy
         </S.Tab>
-        <S.Tab $isActive={activeTab === Tab.sell} onClick={() => setActiveTab(Tab.sell)}>
+        <S.Tab $isActive={activeTab === Tab.SELL} onClick={() => setActiveTab(Tab.SELL)}>
           Sell
         </S.Tab>
       </S.Tabs>

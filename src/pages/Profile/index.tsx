@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {getInvitationLimit} from 'dispatchers/invitationLimits';
@@ -10,7 +10,13 @@ import {AppDispatch, SFC} from 'types';
 import Invitations from './Invitations';
 import * as S from './Styles';
 
+enum Tab {
+  POSTS = 'POSTS',
+  INVITATIONS = 'INVITATIONS',
+}
+
 const Profile: SFC = ({className}) => {
+  const [activeTab, setActiveTab] = useState(Tab.POSTS);
   const [editProfileModalIsOpen, toggleEditProfileModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
@@ -31,8 +37,26 @@ const Profile: SFC = ({className}) => {
     );
   };
 
-  const renderContent = () => {
-    return <Invitations />;
+  const renderTabContent = () => {
+    const tabContent = {
+      [Tab.POSTS]: <div>Posts here</div>,
+      [Tab.INVITATIONS]: <Invitations />,
+    };
+
+    return <S.TabContent>{tabContent[activeTab]}</S.TabContent>;
+  };
+
+  const renderTabs = () => {
+    return (
+      <S.Tabs>
+        <S.Tab $isActive={activeTab === Tab.POSTS} onClick={() => setActiveTab(Tab.POSTS)}>
+          Posts
+        </S.Tab>
+        <S.Tab $isActive={activeTab === Tab.INVITATIONS} onClick={() => setActiveTab(Tab.INVITATIONS)}>
+          Invitations
+        </S.Tab>
+      </S.Tabs>
+    );
   };
 
   return (
@@ -42,7 +66,10 @@ const Profile: SFC = ({className}) => {
           {renderAvatar()}
           <S.Button onClick={toggleEditProfileModal} text="Edit Profile" />
         </S.Left>
-        <S.Right>{renderContent()}</S.Right>
+        <S.Right>
+          {renderTabs()}
+          {renderTabContent()}
+        </S.Right>
       </S.Container>
       {editProfileModalIsOpen ? <EditProfileModal close={toggleEditProfileModal} /> : null}
     </>
