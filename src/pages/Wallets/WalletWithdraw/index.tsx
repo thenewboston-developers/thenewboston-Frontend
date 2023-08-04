@@ -1,11 +1,11 @@
 import React, {useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Form, Formik, FormikHelpers} from 'formik';
+import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
 
 import Button, {ButtonType} from 'components/Button';
 import ExpandableWire from 'components/ExpandableWire';
-import {Input} from 'components/FormElements';
+import {CORE_TRANSACTION_FEE} from 'constants/protocol';
 import {createWalletWithdraw} from 'dispatchers/wallets';
 import {WireType} from 'enums';
 import {useActiveWallet} from 'hooks';
@@ -27,11 +27,15 @@ const WalletWithdraw: SFC = ({className}) => {
 
   type FormValues = typeof initialValues;
 
+  const getTotal = (amount: string): number => {
+    return parseInt(amount, 10) + CORE_TRANSACTION_FEE;
+  };
+
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
       const requestData = {
         account_number: values.accountNumber,
-        amount: parseInt(values.amount, 10),
+        amount: getTotal(values.amount),
       };
       await dispatch(createWalletWithdraw(activeWallet!.id, requestData));
       resetForm();
@@ -62,10 +66,21 @@ const WalletWithdraw: SFC = ({className}) => {
     <S.Container className={className}>
       <S.Panel>
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
-          {({dirty, errors, isSubmitting, isValid, touched}) => (
-            <Form>
-              <Input errors={errors} label="Amount" name="amount" touched={touched} type="number" />
-              <Input errors={errors} label="Account Number" name="accountNumber" touched={touched} />
+          {({dirty, errors, isSubmitting, isValid, touched, values}) => (
+            <S.Form>
+              <S.Input errors={errors} label="Amount" name="amount" touched={touched} type="number" />
+              <S.Input errors={errors} label="Account Number" name="accountNumber" touched={touched} />
+              <S.DetailRowContainer>
+                <S.DetailRow>
+                  <S.Label>Fee</S.Label>
+                  <S.Value>{CORE_TRANSACTION_FEE}</S.Value>
+                </S.DetailRow>
+                <S.Line />
+                <S.DetailRow>
+                  <S.Label>Total</S.Label>
+                  <S.Value>{values.amount ? getTotal(values.amount).toLocaleString() : '-'}</S.Value>
+                </S.DetailRow>
+              </S.DetailRowContainer>
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}
@@ -74,7 +89,7 @@ const WalletWithdraw: SFC = ({className}) => {
                 text="Withdraw"
                 type={ButtonType.submit}
               />
-            </Form>
+            </S.Form>
           )}
         </Formik>
       </S.Panel>
