@@ -28,13 +28,6 @@ export const ImgWrapper = styled.div`
   width: 240px;
 `;
 
-export const Invitations = styled.div`
-  display: grid;
-  gap: 12px;
-  grid-template-columns: 2fr 2fr 1fr 1fr min-content;
-  padding: 12px 0;
-`;
-
 export const Left = styled.div``;
 
 export const Right = styled.div``;
