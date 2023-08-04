@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import UButton from 'components/Button';
-import {colors} from 'styles';
 
 export const Button = styled(UButton)`
   margin-top: 24px;
@@ -33,24 +32,4 @@ export const Left = styled.div``;
 
 export const Right = styled.div``;
 
-export const Tab = styled.div<{$isActive?: boolean}>`
-  background: ${({$isActive}) => ($isActive ? colors.palette.blue['400'] : 'transparent')};
-  border-radius: 4px;
-  color: ${({$isActive}) => ($isActive ? '#fff' : colors.primary)};
-  font-size: 13px;
-  font-weight: 500;
-  padding: 8px 16px;
-
-  &:hover {
-    color: ${({$isActive}) => ($isActive ? '#fff' : '#4458b8')};
-    cursor: pointer;
-  }
-`;
-
-export const TabContent = styled.div`
-  margin-top: 16px;
-`;
-
-export const Tabs = styled.div`
-  display: flex;
-`;
+export const TabContent = styled.div``;

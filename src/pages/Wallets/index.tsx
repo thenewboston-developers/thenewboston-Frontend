@@ -4,6 +4,8 @@ import orderBy from 'lodash/orderBy';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
+import Tab from 'components/Tab';
+import Tabs from 'components/Tabs';
 import {getWallets as _getWallets} from 'dispatchers/wallets';
 import {WalletTab} from 'enums';
 import {useAvailableWalletCores, useToggle} from 'hooks';
@@ -12,8 +14,6 @@ import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
 import MenuItem from './MenuItem';
-import Tab from './Tab';
-import Tabs from './Tabs';
 import WalletDeposit from './WalletDeposit';
 import WalletWithdraw from './WalletWithdraw';
 import * as S from './Styles';
@@ -104,10 +104,10 @@ const Wallets: SFC = ({className}) => {
 
   const renderTabs = () => (
     <Tabs>
-      <Tab onClick={handleTabClick} walletTab={WalletTab.DEPOSIT}>
+      <Tab isActive={manager.activeWalletTab === WalletTab.DEPOSIT} onClick={() => handleTabClick(WalletTab.DEPOSIT)}>
         Deposit
       </Tab>
-      <Tab onClick={handleTabClick} walletTab={WalletTab.WITHDRAW}>
+      <Tab isActive={manager.activeWalletTab === WalletTab.WITHDRAW} onClick={() => handleTabClick(WalletTab.WITHDRAW)}>
         Withdraw
       </Tab>
     </Tabs>

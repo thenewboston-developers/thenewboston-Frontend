@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
+import Tab from 'components/Tab';
 import {getAssetPairs as _getAssetPairs} from 'dispatchers/assetPairs';
 import {useActiveAssetPair} from 'hooks';
 import {getAssetPairs} from 'selectors/state';
@@ -15,13 +16,13 @@ import OrderBook from './OrderBook';
 import Sell from './Sell';
 import * as S from './Styles';
 
-enum Tab {
+enum TradeTab {
   BUY = 'BUY',
   SELL = 'SELL',
 }
 
 const Trade: SFC = ({className}) => {
-  const [activeTab, setActiveTab] = useState(Tab.BUY);
+  const [activeTab, setActiveTab] = useState(TradeTab.BUY);
   const activeAssetPair = useActiveAssetPair();
   const assetPairs = useSelector(getAssetPairs);
   const dispatch = useDispatch<AppDispatch>();
@@ -74,8 +75,8 @@ const Trade: SFC = ({className}) => {
     if (!activeAssetPair) return null;
 
     const tabContent = {
-      [Tab.BUY]: <Buy />,
-      [Tab.SELL]: <Sell />,
+      [TradeTab.BUY]: <Buy />,
+      [TradeTab.SELL]: <Sell />,
     };
 
     return <S.TabContent>{tabContent[activeTab]}</S.TabContent>;
@@ -86,12 +87,12 @@ const Trade: SFC = ({className}) => {
 
     return (
       <S.Tabs>
-        <S.Tab $isActive={activeTab === Tab.BUY} onClick={() => setActiveTab(Tab.BUY)}>
+        <Tab isActive={activeTab === TradeTab.BUY} onClick={() => setActiveTab(TradeTab.BUY)}>
           Buy
-        </S.Tab>
-        <S.Tab $isActive={activeTab === Tab.SELL} onClick={() => setActiveTab(Tab.SELL)}>
+        </Tab>
+        <Tab isActive={activeTab === TradeTab.SELL} onClick={() => setActiveTab(TradeTab.SELL)}>
           Sell
-        </S.Tab>
+        </Tab>
       </S.Tabs>
     );
   };

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-import {breakpoints, colors} from 'styles';
+import UTabs from 'components/Tabs';
+import {breakpoints} from 'styles';
 
 export const Container = styled.div`
   height: 100%;
@@ -18,27 +19,8 @@ export const Grid = styled.div`
   }
 `;
 
-export const Tab = styled.div<{$isActive?: boolean}>`
-  background: ${({$isActive}) => ($isActive ? colors.palette.blue['400'] : 'transparent')};
-  border-radius: 4px;
-  color: ${({$isActive}) => ($isActive ? '#fff' : colors.primary)};
-  font-size: 13px;
-  font-weight: 500;
-  padding: 8px 16px;
+export const TabContent = styled.div``;
 
-  &:hover {
-    color: ${({$isActive}) => ($isActive ? '#fff' : '#4458b8')};
-    cursor: pointer;
-  }
-`;
-
-export const TabContent = styled.div`
-  border-radius: 4px;
-  border: 1px solid ${colors.border};
-  padding: 16px;
-`;
-
-export const Tabs = styled.div`
-  display: flex;
+export const Tabs = styled(UTabs)`
   margin-top: 16px;
 `;

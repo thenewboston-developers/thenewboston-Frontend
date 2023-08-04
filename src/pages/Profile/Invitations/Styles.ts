@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  margin-top: 16px;
+`;
 
 export const InvitationContainer = styled.div`
   display: grid;

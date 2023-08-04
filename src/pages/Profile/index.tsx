@@ -1,6 +1,8 @@
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import Tab from 'components/Tab';
+import Tabs from 'components/Tabs';
 import {getInvitationLimit} from 'dispatchers/invitationLimits';
 import {getInvitations as _getInvitations} from 'dispatchers/invitations';
 import {useSelfAvatar, useToggle} from 'hooks';
@@ -10,13 +12,13 @@ import {AppDispatch, SFC} from 'types';
 import Invitations from './Invitations';
 import * as S from './Styles';
 
-enum Tab {
+enum ProfileTab {
   POSTS = 'POSTS',
   INVITATIONS = 'INVITATIONS',
 }
 
 const Profile: SFC = ({className}) => {
-  const [activeTab, setActiveTab] = useState(Tab.POSTS);
+  const [activeTab, setActiveTab] = useState(ProfileTab.POSTS);
   const [editProfileModalIsOpen, toggleEditProfileModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
@@ -39,8 +41,8 @@ const Profile: SFC = ({className}) => {
 
   const renderTabContent = () => {
     const tabContent = {
-      [Tab.POSTS]: <div>Posts here</div>,
-      [Tab.INVITATIONS]: <Invitations />,
+      [ProfileTab.POSTS]: <div>Posts here</div>,
+      [ProfileTab.INVITATIONS]: <Invitations />,
     };
 
     return <S.TabContent>{tabContent[activeTab]}</S.TabContent>;
@@ -48,14 +50,14 @@ const Profile: SFC = ({className}) => {
 
   const renderTabs = () => {
     return (
-      <S.Tabs>
-        <S.Tab $isActive={activeTab === Tab.POSTS} onClick={() => setActiveTab(Tab.POSTS)}>
+      <Tabs>
+        <Tab isActive={activeTab === ProfileTab.POSTS} onClick={() => setActiveTab(ProfileTab.POSTS)}>
           Posts
-        </S.Tab>
-        <S.Tab $isActive={activeTab === Tab.INVITATIONS} onClick={() => setActiveTab(Tab.INVITATIONS)}>
+        </Tab>
+        <Tab isActive={activeTab === ProfileTab.INVITATIONS} onClick={() => setActiveTab(ProfileTab.INVITATIONS)}>
           Invitations
-        </S.Tab>
-      </S.Tabs>
+        </Tab>
+      </Tabs>
     );
   };
 
