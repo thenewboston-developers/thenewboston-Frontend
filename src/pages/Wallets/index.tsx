@@ -2,6 +2,8 @@ import {useCallback, useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
+import LeavesEmptyState from 'assets/leaves-empty-state.png';
+import EmptyPage from 'components/EmptyPage';
 import {getWallets as _getWallets} from 'dispatchers/wallets';
 import {WalletTab} from 'enums';
 import {useAvailableWalletCores, useToggle} from 'hooks';
@@ -29,14 +31,30 @@ const Wallets: SFC = ({className}) => {
     })();
   }, [dispatch]);
 
+  const walletList = useMemo(() => orderBy(Object.values(wallets), [(wallet) => wallet.core.ticker]), [wallets]);
+
+  useEffect(() => {
+    (async () => {
+      if (!walletList.length) return;
+      if (manager.activeWalletId && manager.activeWalletTab) return;
+
+      const firstWallet = walletList[0];
+
+      dispatch(
+        updateManager({
+          activeWalletId: firstWallet.id,
+          activeWalletTab: WalletTab.DEPOSIT,
+        }),
+      );
+    })();
+  }, [dispatch, manager.activeWalletId, manager.activeWalletTab, walletList]);
+
   const handleTabClick = useCallback(
     (walletTab: WalletTab) => {
       dispatch(updateManager({activeWalletTab: walletTab}));
     },
     [dispatch],
   );
-
-  const orderedWallets = useMemo(() => orderBy(Object.values(wallets), [(wallet) => wallet.core.ticker]), [wallets]);
 
   const renderButtonContainer = () => {
     if (!availableWalletCores.length) return null;
@@ -49,7 +67,28 @@ const Wallets: SFC = ({className}) => {
   };
 
   const renderMenuItems = () => {
-    return orderedWallets.map((wallet) => <MenuItem key={wallet.id} wallet={wallet} />);
+    return walletList.map((wallet) => <MenuItem key={wallet.id} wallet={wallet} />);
+  };
+
+  const renderRightContent = () => {
+    if (manager.activeWalletId) {
+      return (
+        <>
+          {renderTabs()}
+          {renderTabContent()}
+        </>
+      );
+    }
+
+    return (
+      <EmptyPage
+        actionText="create a wallet"
+        bottomText="To deposit or withdraw coins"
+        graphic={LeavesEmptyState}
+        onActionTextClick={toggleCreateWalletModal}
+        topText="Nothing here!"
+      />
+    );
   };
 
   const renderTabContent = () => {
@@ -81,10 +120,7 @@ const Wallets: SFC = ({className}) => {
           {renderButtonContainer()}
           {renderMenuItems()}
         </S.LeftMenu>
-        <S.Right>
-          {renderTabs()}
-          {renderTabContent()}
-        </S.Right>
+        <S.Right>{renderRightContent()}</S.Right>
       </S.Container>
       {createWalletModalIsOpen ? <CreateWalletModal close={toggleCreateWalletModal} /> : null}
     </>
