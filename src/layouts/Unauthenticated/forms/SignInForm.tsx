@@ -23,8 +23,8 @@ const SignInForm: SFC = () => {
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
-      await dispatch(login(values));
-      navigate('/cores');
+      const user = await dispatch(login(values));
+      navigate(`/profile/${user.id}`);
     } catch (error) {
       console.error(error);
       displayErrorToast('Error logging in');

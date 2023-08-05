@@ -20,6 +20,8 @@ export const createUser = (data: CreateUserRequest) => async (dispatch: AppDispa
   );
 
   dispatch(setSelf(user));
+
+  return user;
 };
 
 export const getUser = (id: number) => async (dispatch: AppDispatch) => {
