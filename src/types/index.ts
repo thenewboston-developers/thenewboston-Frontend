@@ -1,9 +1,11 @@
 import {CreateAddressRequest} from 'types/api/addresses';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
+import {CommentReadSerializer} from 'types/api/comments';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateInvitationRequest} from 'types/api/invitations';
 import {CreateOrderRequest} from 'types/api/orders';
+import {PostReadSerializer} from 'types/api/posts';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
 
@@ -45,6 +47,7 @@ export {
   CartProducts,
   ClassName,
   Comment,
+  CommentReadSerializer,
   Comments,
   Core,
   Cores,
@@ -75,6 +78,7 @@ export {
   OrderProduct,
   Orders,
   Post,
+  PostReadSerializer,
   Posts,
   Product,
   Products,

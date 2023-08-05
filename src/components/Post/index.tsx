@@ -10,7 +10,7 @@ import {getSelf} from 'selectors/state';
 import {AppDispatch, Post as TPost, SFC} from 'types';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toast';
-import Comment from './Comment';
+import Comments from './Comments';
 import * as S from './Styles';
 
 export interface PostProps {
@@ -45,17 +45,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
     },
   ];
 
-  const renderComments = () => {
-    return (
-      <S.Comments>
-        <Comment />
-        <Comment />
-        <Comment />
-        <Comment />
-      </S.Comments>
-    );
-  };
-
   const renderDropdownMenu = () => {
     if (post.owner.id !== self.id) return null;
     return <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
@@ -75,7 +64,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         </S.Top>
         <S.Content>{content}</S.Content>
         {image ? <S.Img alt="image" src={image} /> : null}
-        {renderComments()}
+        <Comments postId={post.id} />
       </S.Container>
       {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
     </>
