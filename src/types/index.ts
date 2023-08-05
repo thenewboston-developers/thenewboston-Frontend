@@ -28,6 +28,7 @@ import {Product, Products} from 'types/products';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
 import {Trade, Trades} from 'types/trades';
+import {Users} from 'types/users';
 import {Wallet, Wallets} from 'types/wallets';
 import {Wire, Wires} from 'types/wires';
 
@@ -81,6 +82,7 @@ export {
   Trade,
   Trades,
   UserReadSerializer,
+  Users,
   Wallet,
   Wallets,
   Wire,

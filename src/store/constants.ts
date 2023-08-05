@@ -12,5 +12,6 @@ export const POSTS = 'posts';
 export const PRODUCTS = 'products';
 export const SELF = 'self';
 export const TRADES = 'trades';
+export const USERS = 'users';
 export const WALLETS = 'wallets';
 export const WIRES = 'wires';

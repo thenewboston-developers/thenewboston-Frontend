@@ -8,6 +8,7 @@ import useEventListener from 'hooks/useEventListener';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useSelfAvatar from 'hooks/useSelfAvatar';
 import useToggle from 'hooks/useToggle';
+import useUser from 'hooks/useUser';
 
 export {
   useActiveAssetPair,
@@ -20,4 +21,5 @@ export {
   useIsAuthenticated,
   useSelfAvatar,
   useToggle,
+  useUser,
 };

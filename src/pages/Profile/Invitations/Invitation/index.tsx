@@ -61,6 +61,7 @@ const Invitation: SFC<InvitationProps> = ({invitation}) => {
       <UserLabel
         avatar={recipient ? recipient.avatar : null}
         description={shortDate(invitation.created_date, true)}
+        id={recipient ? recipient.id : null}
         username={recipient ? recipient.username : '----'}
       />
     );
