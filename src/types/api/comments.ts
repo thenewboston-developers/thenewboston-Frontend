@@ -7,3 +7,8 @@ export interface CommentReadSerializer extends CreatedModified {
   owner: UserReadSerializer;
   post: number;
 }
+
+export interface CreateCommentRequest {
+  content: string;
+  post: number;
+}

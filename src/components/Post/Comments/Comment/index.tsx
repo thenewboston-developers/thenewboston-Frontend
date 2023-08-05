@@ -1,11 +1,14 @@
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {mdiDotsVertical} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
+import {deleteComment} from 'dispatchers/comments';
+import {ToastType} from 'enums';
 import {getSelf} from 'selectors/state';
-import {Comment as TComment, SFC} from 'types';
+import {AppDispatch, Comment as TComment, SFC} from 'types';
 import {shortDate} from 'utils/dates';
+import {displayErrorToast, displayToast} from 'utils/toast';
 import * as S from './Styles';
 
 export interface CommentProps {
@@ -13,9 +16,20 @@ export interface CommentProps {
 }
 
 const Comment: SFC<CommentProps> = ({className, comment}) => {
+  const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
-  const {content, created_date, owner} = comment;
+  const {content, created_date, id, owner} = comment;
+
+  const handleDelete = async () => {
+    try {
+      await dispatch(deleteComment(id));
+      displayToast('Comment deleted!', ToastType.SUCCESS);
+    } catch (error) {
+      console.error(error);
+      displayErrorToast('Error deleting comment');
+    }
+  };
 
   const menuOptions = [
     {
@@ -24,7 +38,7 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
     },
     {
       label: 'Delete',
-      onClick: () => {},
+      onClick: handleDelete,
     },
   ];
 

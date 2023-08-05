@@ -1,7 +1,7 @@
 import {CreateAddressRequest} from 'types/api/addresses';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
-import {CommentReadSerializer} from 'types/api/comments';
+import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateInvitationRequest} from 'types/api/invitations';
 import {CreateOrderRequest} from 'types/api/orders';
@@ -53,6 +53,7 @@ export {
   Cores,
   CreateAddressRequest,
   CreateCartProductRequest,
+  CreateCommentRequest,
   CreateExchangeOrderRequest,
   CreateInvitationRequest,
   CreateOrderRequest,
