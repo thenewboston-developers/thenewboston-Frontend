@@ -63,11 +63,17 @@ const Profile: SFC = ({className}) => {
     );
   };
 
+  const renderUsername = () => {
+    if (!self.id) return null;
+    return <S.Username>{self.username}</S.Username>;
+  };
+
   return (
     <>
       <S.Container className={className}>
         <S.Left>
           {renderAvatar()}
+          {renderUsername()}
           <S.Button onClick={toggleEditProfileModal} text="Edit Profile" />
         </S.Left>
         <S.Right>
