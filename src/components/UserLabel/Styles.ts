@@ -22,7 +22,11 @@ export const Right = styled.div`
   flex-direction: column;
 `;
 
-export const Username = styled.div`
+export const Username = styled.div<{$id: number | null}>`
   font-size: 14px;
   font-weight: 600;
+
+  &:hover {
+    cursor: ${({$id}) => ($id ? 'pointer' : 'default')};
+  }
 `;

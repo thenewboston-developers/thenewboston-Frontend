@@ -17,6 +17,7 @@ import postsReducer from 'store/posts';
 import productsReducer from 'store/products';
 import selfReducer from 'store/self';
 import tradesReducer from 'store/trades';
+import usersReducer from 'store/users';
 import walletsReducer from 'store/wallets';
 import wiresReducer from 'store/wires';
 
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   products: productsReducer,
   self: selfReducer,
   trades: tradesReducer,
+  users: usersReducer,
   wallets: walletsReducer,
   wires: wiresReducer,
 });

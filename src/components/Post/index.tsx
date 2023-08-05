@@ -53,7 +53,12 @@ const Post: SFC<PostProps> = ({className, post}) => {
     <>
       <S.Container className={className}>
         <S.Top>
-          <UserLabel description={shortDate(created_date, true)} avatar={owner.avatar} username={owner.username} />
+          <UserLabel
+            avatar={owner.avatar}
+            description={shortDate(created_date, true)}
+            id={owner.id}
+            username={owner.username}
+          />
           {renderDropdownMenu()}
         </S.Top>
         <S.Content>{content}</S.Content>

@@ -1,15 +1,19 @@
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useParams} from 'react-router-dom';
 
+import DefaultAvatar from 'assets/default-avatar.png';
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
 import {getInvitationLimit} from 'dispatchers/invitationLimits';
 import {getInvitations} from 'dispatchers/invitations';
 import {getPosts} from 'dispatchers/posts';
-import {useSelfAvatar, useToggle} from 'hooks';
+import {getUser} from 'dispatchers/users';
+import {useToggle, useUser} from 'hooks';
 import EditProfileModal from 'modals/EditProfileModal';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toast';
 import Invitations from './Invitations';
 import Posts from './Posts';
 import * as S from './Styles';
@@ -22,23 +26,43 @@ enum ProfileTab {
 const Profile: SFC = ({className}) => {
   const [activeTab, setActiveTab] = useState(ProfileTab.POSTS);
   const [editProfileModalIsOpen, toggleEditProfileModal] = useToggle(false);
+  const {id} = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
-  const selfAvatar = useSelfAvatar();
+  const user = useUser(id);
+
+  const userId = id ? parseInt(id, 10) : null;
 
   useEffect(() => {
     (async () => {
-      if (!self.id) return;
-      await Promise.all([dispatch(getInvitationLimit(self.id)), dispatch(getInvitations()), dispatch(getPosts())]);
+      if (!userId) return;
+
+      try {
+        await Promise.all([
+          dispatch(getInvitationLimit(userId)),
+          dispatch(getInvitations()),
+          dispatch(getPosts()),
+          dispatch(getUser(userId)),
+        ]);
+      } catch (error) {
+        console.error(error);
+        displayErrorToast('Error fetching profile data');
+      }
     })();
-  }, [dispatch, self.id]);
+  }, [dispatch, userId]);
 
   const renderAvatar = () => {
+    if (!user) return;
     return (
       <S.ImgWrapper>
-        <S.Img alt="image" src={selfAvatar} />
+        <S.Img alt="image" src={user.avatar || DefaultAvatar} />
       </S.ImgWrapper>
     );
+  };
+
+  const renderEditProfileButton = () => {
+    if (self.id !== userId) return null;
+    return <S.Button onClick={toggleEditProfileModal} text="Edit Profile" />;
   };
 
   const renderTabContent = () => {
@@ -64,8 +88,8 @@ const Profile: SFC = ({className}) => {
   };
 
   const renderUsername = () => {
-    if (!self.id) return null;
-    return <S.Username>{self.username}</S.Username>;
+    if (!user) return null;
+    return <S.Username>{user.username}</S.Username>;
   };
 
   return (
@@ -74,7 +98,7 @@ const Profile: SFC = ({className}) => {
         <S.Left>
           {renderAvatar()}
           {renderUsername()}
-          <S.Button onClick={toggleEditProfileModal} text="Edit Profile" />
+          {renderEditProfileButton()}
         </S.Left>
         <S.Right>
           {renderTabs()}
