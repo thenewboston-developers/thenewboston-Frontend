@@ -4,17 +4,19 @@ import {useDispatch, useSelector} from 'react-redux';
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
 import {getInvitationLimit} from 'dispatchers/invitationLimits';
-import {getInvitations as _getInvitations} from 'dispatchers/invitations';
+import {getInvitations} from 'dispatchers/invitations';
+import {getPosts} from 'dispatchers/posts';
 import {useSelfAvatar, useToggle} from 'hooks';
 import EditProfileModal from 'modals/EditProfileModal';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import Invitations from './Invitations';
+import Posts from './Posts';
 import * as S from './Styles';
 
 enum ProfileTab {
-  POSTS = 'POSTS',
   INVITATIONS = 'INVITATIONS',
+  POSTS = 'POSTS',
 }
 
 const Profile: SFC = ({className}) => {
@@ -27,7 +29,7 @@ const Profile: SFC = ({className}) => {
   useEffect(() => {
     (async () => {
       if (!self.id) return;
-      await Promise.all([dispatch(getInvitationLimit(self.id)), dispatch(_getInvitations())]);
+      await Promise.all([dispatch(getInvitationLimit(self.id)), dispatch(getInvitations()), dispatch(getPosts())]);
     })();
   }, [dispatch, self.id]);
 
@@ -41,7 +43,7 @@ const Profile: SFC = ({className}) => {
 
   const renderTabContent = () => {
     const tabContent = {
-      [ProfileTab.POSTS]: <div>Posts here</div>,
+      [ProfileTab.POSTS]: <Posts />,
       [ProfileTab.INVITATIONS]: <Invitations />,
     };
 
