@@ -10,6 +10,7 @@ export const getInvitationLimits = (state: RootState) => state.invitationLimits;
 export const getInvitations = (state: RootState) => state.invitations;
 export const getManager = (state: RootState) => state.manager;
 export const getOrders = (state: RootState) => state.orders;
+export const getPosts = (state: RootState) => state.posts;
 export const getProducts = (state: RootState) => state.products;
 export const getSelf = (state: RootState) => state.self;
 export const getTrades = (state: RootState) => state.trades;

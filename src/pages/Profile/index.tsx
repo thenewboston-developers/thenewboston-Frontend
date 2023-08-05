@@ -1,46 +1,37 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
 
-import Button from 'components/Button';
-import EmptyText from 'components/EmptyText';
-import SectionHeading from 'components/SectionHeading';
+import Tab from 'components/Tab';
+import Tabs from 'components/Tabs';
 import {getInvitationLimit} from 'dispatchers/invitationLimits';
-import {getInvitations as _getInvitations} from 'dispatchers/invitations';
+import {getInvitations} from 'dispatchers/invitations';
+import {getPosts} from 'dispatchers/posts';
 import {useSelfAvatar, useToggle} from 'hooks';
 import EditProfileModal from 'modals/EditProfileModal';
-import InvitationModal from 'modals/InvitationModal';
-import {getInvitationLimits, getInvitations, getSelf} from 'selectors/state';
+import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import Invitation from './Invitation';
+import Invitations from './Invitations';
+import Posts from './Posts';
 import * as S from './Styles';
 
+enum ProfileTab {
+  INVITATIONS = 'INVITATIONS',
+  POSTS = 'POSTS',
+}
+
 const Profile: SFC = ({className}) => {
+  const [activeTab, setActiveTab] = useState(ProfileTab.POSTS);
   const [editProfileModalIsOpen, toggleEditProfileModal] = useToggle(false);
-  const [invitationModalIsOpen, toggleInvitationModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
-  const invitationLimits = useSelector(getInvitationLimits);
-  const invitations = useSelector(getInvitations);
   const self = useSelector(getSelf);
   const selfAvatar = useSelfAvatar();
 
   useEffect(() => {
     (async () => {
       if (!self.id) return;
-      await Promise.all([dispatch(getInvitationLimit(self.id)), dispatch(_getInvitations())]);
+      await Promise.all([dispatch(getInvitationLimit(self.id)), dispatch(getInvitations()), dispatch(getPosts())]);
     })();
   }, [dispatch, self.id]);
-
-  const invitationLimitAmount = useMemo(() => {
-    const invitationLimit = Object.values(invitationLimits).find(
-      (_invitationLimit) => _invitationLimit.owner === self.id,
-    );
-    return invitationLimit?.amount || 0;
-  }, [invitationLimits, self.id]);
-
-  const invitationList = useMemo(() => {
-    return Object.values(invitations);
-  }, [invitations]);
 
   const renderAvatar = () => {
     return (
@@ -50,31 +41,25 @@ const Profile: SFC = ({className}) => {
     );
   };
 
-  const renderContent = () => {
-    if (!!invitationList.length) return renderInvitations();
-    return <EmptyText>No invitations to display.</EmptyText>;
+  const renderTabContent = () => {
+    const tabContent = {
+      [ProfileTab.POSTS]: <Posts />,
+      [ProfileTab.INVITATIONS]: <Invitations />,
+    };
+
+    return <S.TabContent>{tabContent[activeTab]}</S.TabContent>;
   };
 
-  const renderCreateInvitationButton = () => {
-    if (invitationList.length >= invitationLimitAmount) return null;
-    return <Button onClick={toggleInvitationModal} text="Create" />;
-  };
-
-  const renderInvitations = () => {
-    const orderedInvitations = orderBy(invitationList, ['created_date'], ['desc']);
-    const _invitations = orderedInvitations.map((invitation) => (
-      <Invitation invitation={invitation} key={invitation.id} />
-    ));
-    return <S.Invitations>{_invitations}</S.Invitations>;
-  };
-
-  const renderSectionHeading = () => {
+  const renderTabs = () => {
     return (
-      <SectionHeading
-        heading="Invitations"
-        rightContent={renderCreateInvitationButton()}
-        subHeading={`${invitationList.length}/${invitationLimitAmount}`}
-      />
+      <Tabs>
+        <Tab isActive={activeTab === ProfileTab.POSTS} onClick={() => setActiveTab(ProfileTab.POSTS)}>
+          Posts
+        </Tab>
+        <Tab isActive={activeTab === ProfileTab.INVITATIONS} onClick={() => setActiveTab(ProfileTab.INVITATIONS)}>
+          Invitations
+        </Tab>
+      </Tabs>
     );
   };
 
@@ -86,12 +71,11 @@ const Profile: SFC = ({className}) => {
           <S.Button onClick={toggleEditProfileModal} text="Edit Profile" />
         </S.Left>
         <S.Right>
-          {renderSectionHeading()}
-          {renderContent()}
+          {renderTabs()}
+          {renderTabContent()}
         </S.Right>
       </S.Container>
       {editProfileModalIsOpen ? <EditProfileModal close={toggleEditProfileModal} /> : null}
-      {invitationModalIsOpen ? <InvitationModal close={toggleInvitationModal} /> : null}
     </>
   );
 };

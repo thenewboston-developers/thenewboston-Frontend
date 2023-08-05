@@ -11,6 +11,7 @@ import {
 
 import {logout} from 'dispatchers/authentication';
 import {AppDispatch, SFC} from 'types';
+import CreatePostButton from './CreatePostButton';
 import MenuButton from './MenuItem/MenuButton';
 import MenuLink from './MenuItem/MenuLink';
 import * as S from './Styles';
@@ -32,6 +33,7 @@ const LeftNav: SFC = ({className}) => {
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
         <MenuLink icon={mdiShopping} rootPath="/shop" text="Shop" to="/shop/buy/catalog" />
         <MenuLink icon={mdiAccount} rootPath="/profile" text="Profile" to="/profile" />
+        <CreatePostButton />
       </S.Top>
       <S.Bottom>
         <MenuButton icon={mdiExitToApp} onClick={handleLogout} text="Log out" />

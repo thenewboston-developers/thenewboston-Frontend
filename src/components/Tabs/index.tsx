@@ -8,7 +8,7 @@ export interface TabsProps {
 }
 
 const Tabs: SFC<TabsProps> = ({children, className}) => {
-  return <S.Tabs className={className}>{children}</S.Tabs>;
+  return <S.Container className={className}>{children}</S.Container>;
 };
 
 export default Tabs;
