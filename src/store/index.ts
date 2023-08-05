@@ -13,6 +13,7 @@ import invitationLimitsReducer from 'store/invitationLimits';
 import invitationsReducer from 'store/invitations';
 import managerReducer from 'store/manager';
 import ordersReducer from 'store/orders';
+import postsReducer from 'store/posts';
 import productsReducer from 'store/products';
 import selfReducer from 'store/self';
 import tradesReducer from 'store/trades';
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   invitations: invitationsReducer,
   manager: managerReducer,
   orders: ordersReducer,
+  posts: postsReducer,
   products: productsReducer,
   self: selfReducer,
   trades: tradesReducer,

@@ -23,6 +23,7 @@ import {Item} from 'types/items';
 import {Manager} from 'types/manager';
 import {OrderProduct} from 'types/orderProducts';
 import {Order, Orders} from 'types/orders';
+import {Post, Posts} from 'types/posts';
 import {Product, Products} from 'types/products';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
@@ -69,6 +70,8 @@ export {
   Order,
   OrderProduct,
   Orders,
+  Post,
+  Posts,
   Product,
   Products,
   RootState,
