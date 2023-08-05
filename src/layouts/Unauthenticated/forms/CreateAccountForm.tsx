@@ -30,8 +30,8 @@ const CreateAccountForm: SFC = () => {
         password: values.password,
         username: values.username,
       };
-      await dispatch(createUser(requestData));
-      navigate('/cores');
+      const user = await dispatch(createUser(requestData));
+      navigate(`/profile/${user.id}`);
     } catch (error) {
       console.error(error);
       displayErrorToast('Error creating account');
