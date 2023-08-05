@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import UButton from 'components/Button';
 
 export const Button = styled(UButton)`
-  margin-top: 24px;
+  margin-top: 16px;
   width: 100%;
 `;
 
@@ -33,3 +33,7 @@ export const Left = styled.div``;
 export const Right = styled.div``;
 
 export const TabContent = styled.div``;
+
+export const Username = styled.h1`
+  margin-top: 16px;
+`;
