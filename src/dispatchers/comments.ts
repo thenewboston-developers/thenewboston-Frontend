@@ -22,7 +22,7 @@ export const getComments = () => async (dispatch: AppDispatch) => {
   dispatch(setComments(responseData));
 };
 
-export const updateComment = (id: number, data: CreateCommentRequest) => async (dispatch: AppDispatch) => {
+export const updateComment = (id: number, data: Partial<CreateCommentRequest>) => async (dispatch: AppDispatch) => {
   const responseData = await _updateComment(id, data);
   dispatch(setComment(responseData));
 };

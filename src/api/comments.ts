@@ -34,7 +34,7 @@ export const getComments = async (): Promise<Comment[]> => {
   }
 };
 
-export const updateComment = async (id: number, data: CreateCommentRequest): Promise<Comment> => {
+export const updateComment = async (id: number, data: Partial<CreateCommentRequest>): Promise<Comment> => {
   try {
     const response = await axios.patch<Comment>(`${BASE_URL}/${id}`, data, authorizationHeaders());
     return response.data;
