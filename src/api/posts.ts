@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-import {Post} from 'types';
+import {PostReadSerializer} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/posts`;
 
-export const createPost = async (data: FormData): Promise<Post> => {
+export const createPost = async (data: FormData): Promise<PostReadSerializer> => {
   try {
-    const response = await axios.post<Post>(BASE_URL, data, authorizationFormHeaders());
+    const response = await axios.post<PostReadSerializer>(BASE_URL, data, authorizationFormHeaders());
     return response.data;
   } catch (error) {
     console.error(error);
@@ -24,9 +24,9 @@ export const deletePost = async (id: number): Promise<void> => {
   }
 };
 
-export const getPosts = async (): Promise<Post[]> => {
+export const getPosts = async (): Promise<PostReadSerializer[]> => {
   try {
-    const response = await axios.get<Post[]>(BASE_URL, authorizationHeaders());
+    const response = await axios.get<PostReadSerializer[]>(BASE_URL, authorizationHeaders());
     return response.data;
   } catch (error) {
     console.error(error);
@@ -34,9 +34,9 @@ export const getPosts = async (): Promise<Post[]> => {
   }
 };
 
-export const updatePost = async (id: number, data: FormData): Promise<Post> => {
+export const updatePost = async (id: number, data: FormData): Promise<PostReadSerializer> => {
   try {
-    const response = await axios.patch<Post>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
+    const response = await axios.patch<PostReadSerializer>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
     return response.data;
   } catch (error) {
     console.error(error);

@@ -10,6 +10,7 @@ import {getSelf} from 'selectors/state';
 import {AppDispatch, Post as TPost, SFC} from 'types';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toast';
+import Comments from './Comments';
 import * as S from './Styles';
 
 export interface PostProps {
@@ -63,6 +64,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         </S.Top>
         <S.Content>{content}</S.Content>
         {image ? <S.Img alt="image" src={image} /> : null}
+        <Comments postId={post.id} />
       </S.Container>
       {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
     </>

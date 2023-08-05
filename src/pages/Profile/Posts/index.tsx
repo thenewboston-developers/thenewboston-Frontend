@@ -1,6 +1,7 @@
 import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
+import orderBy from 'lodash/orderBy';
 
 import EmptyText from 'components/EmptyText';
 import Post from 'components/Post';
@@ -15,7 +16,8 @@ const Posts: SFC = ({className}) => {
   const userId = id ? parseInt(id, 10) : null;
 
   const postList = useMemo(() => {
-    return Object.values(posts).filter(({owner}) => owner.id === userId);
+    const _posts = orderBy(Object.values(posts), ['created_date'], ['desc']);
+    return _posts.filter(({owner}) => owner.id === userId);
   }, [posts, userId]);
 
   const renderContent = () => {

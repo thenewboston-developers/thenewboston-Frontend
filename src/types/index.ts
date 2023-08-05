@@ -1,9 +1,11 @@
 import {CreateAddressRequest} from 'types/api/addresses';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
+import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateInvitationRequest} from 'types/api/invitations';
 import {CreateOrderRequest} from 'types/api/orders';
+import {PostReadSerializer} from 'types/api/posts';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
 
@@ -12,6 +14,7 @@ import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {CartProduct, CartProducts} from 'types/cartProducts';
+import {Comment, Comments} from 'types/comments';
 import {Core, Cores} from 'types/cores';
 import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
@@ -43,10 +46,14 @@ export {
   CartProduct,
   CartProducts,
   ClassName,
+  Comment,
+  CommentReadSerializer,
+  Comments,
   Core,
   Cores,
   CreateAddressRequest,
   CreateCartProductRequest,
+  CreateCommentRequest,
   CreateExchangeOrderRequest,
   CreateInvitationRequest,
   CreateOrderRequest,
@@ -72,6 +79,7 @@ export {
   OrderProduct,
   Orders,
   Post,
+  PostReadSerializer,
   Posts,
   Product,
   Products,
