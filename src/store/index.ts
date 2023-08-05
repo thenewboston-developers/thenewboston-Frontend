@@ -7,6 +7,7 @@ import addressesReducer from 'store/addresses';
 import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
 import cartProductsReducer from 'store/cartProducts';
+import commentsReducer from 'store/comments';
 import coresReducer from 'store/cores';
 import exchangeOrdersReducer from 'store/exchangeOrders';
 import invitationLimitsReducer from 'store/invitationLimits';
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   assetPairs: assetPairsReducer,
   authentication: authenticationReducer,
   cartProducts: cartProductsReducer,
+  comments: commentsReducer,
   cores: coresReducer,
   exchangeOrders: exchangeOrdersReducer,
   invitationLimits: invitationLimitsReducer,

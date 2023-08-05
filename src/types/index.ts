@@ -12,6 +12,7 @@ import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {CartProduct, CartProducts} from 'types/cartProducts';
+import {Comment, Comments} from 'types/comments';
 import {Core, Cores} from 'types/cores';
 import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
@@ -43,6 +44,8 @@ export {
   CartProduct,
   CartProducts,
   ClassName,
+  Comment,
+  Comments,
   Core,
   Cores,
   CreateAddressRequest,

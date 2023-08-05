@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import UDropdownMenu from 'components/DropdownMenu';
 import {colors} from 'styles';
 
+export const Comments = styled.div`
+  margin-top: 16px;
+`;
+
 export const Container = styled.div`
   background: #fff;
   border-radius: 4px;
