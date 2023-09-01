@@ -4,6 +4,7 @@ import {AnyAction, combineReducers, configureStore} from '@reduxjs/toolkit';
 
 import {LOGOUT_USER} from 'store/actions';
 import addressesReducer from 'store/addresses';
+import artworksReducer from 'store/artworks';
 import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
 import cartProductsReducer from 'store/cartProducts';
@@ -24,6 +25,7 @@ import wiresReducer from 'store/wires';
 
 const rootReducer = combineReducers({
   addresses: addressesReducer,
+  artworks: artworksReducer,
   assetPairs: assetPairsReducer,
   authentication: authenticationReducer,
   cartProducts: cartProductsReducer,

@@ -9,10 +9,6 @@ export const Container = styled.div`
   height: 100vh;
 `;
 
-export const Img = styled.img`
-  max-width: 100%;
-`;
-
 export const Input = styled(UInput)`
   width: 100%;
 `;

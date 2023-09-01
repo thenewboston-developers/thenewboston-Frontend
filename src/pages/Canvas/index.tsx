@@ -1,15 +1,17 @@
 import {useMemo, useState} from 'react';
-import {Form, Formik, FormikHelpers} from 'formik';
+import {Form, Formik} from 'formik';
 
 import {createOpenAIImage} from 'api/openaiImages';
 import Button, {ButtonType} from 'components/Button';
 import {CreateOpenAIImageResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import yup from 'utils/yup';
+import ImagePreview from './ImagePreview';
 import * as S from './Styles';
 
 const Canvas: SFC = ({className}) => {
   const [createOpenAIImageResponse, setCreateOpenAIImageResponse] = useState<CreateOpenAIImageResponse | null>(null);
+  const [description, setDescription] = useState('');
 
   const initialValues = {
     description: '',
@@ -17,11 +19,10 @@ const Canvas: SFC = ({className}) => {
 
   type FormValues = typeof initialValues;
 
-  const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
+  const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
       const results = await createOpenAIImage(values);
       setCreateOpenAIImageResponse(results);
-      resetForm();
     } catch (error) {
       console.error(error);
       displayErrorToast('Error generating art');
@@ -32,7 +33,7 @@ const Canvas: SFC = ({className}) => {
     if (!createOpenAIImageResponse) return null;
     return createOpenAIImageResponse.data
       .map((imageData) => imageData.url)
-      .map((imageUrl) => <S.Img key={imageUrl} src={imageUrl} />);
+      .map((imageUrl) => <ImagePreview description={description} imageUrl={imageUrl} key={imageUrl} />);
   };
 
   const validationSchema = useMemo(() => {
@@ -45,9 +46,18 @@ const Canvas: SFC = ({className}) => {
     <S.Container className={className}>
       <S.Left>
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
-          {({dirty, errors, isSubmitting, touched, isValid}) => (
+          {({dirty, errors, handleChange, isSubmitting, isValid, touched}) => (
             <Form>
-              <S.Input errors={errors} label="Description" name="description" touched={touched} />
+              <S.Input
+                errors={errors}
+                label="Description"
+                onChange={(e) => {
+                  handleChange(e);
+                  setDescription(e.target.value);
+                }}
+                name="description"
+                touched={touched}
+              />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}
