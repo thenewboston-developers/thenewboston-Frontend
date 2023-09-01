@@ -57,7 +57,7 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({artwork, className, close, descri
   }, []);
 
   return (
-    <S.Modal className={className} close={close} header={artwork ? 'Edit Artwork' : 'Add Artwork'}>
+    <S.Modal className={className} close={close} header={artwork ? 'Edit Artwork' : 'Create Artwork'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, touched}) => (
           <Form>
