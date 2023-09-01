@@ -4,6 +4,7 @@ import {
   getArtwork as _getArtwork,
   getArtworks as _getArtworks,
   updateArtwork as _updateArtwork,
+  GetArtworksParams,
 } from 'api/artworks';
 import {setArtwork, setArtworks, unsetArtwork} from 'store/artworks';
 import {AppDispatch, CreateArtworkRequest, EditArtworkRequest} from 'types';
@@ -23,8 +24,8 @@ export const getArtwork = (id: number) => async (dispatch: AppDispatch) => {
   dispatch(setArtwork(responseData));
 };
 
-export const getArtworks = () => async (dispatch: AppDispatch) => {
-  const responseData = await _getArtworks();
+export const getArtworks = (params?: GetArtworksParams) => async (dispatch: AppDispatch) => {
+  const responseData = await _getArtworks(params);
   dispatch(setArtworks(responseData));
 };
 

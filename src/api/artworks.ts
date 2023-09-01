@@ -34,9 +34,16 @@ export const getArtwork = async (id: number): Promise<Artwork> => {
   }
 };
 
-export const getArtworks = async (): Promise<Artwork[]> => {
+export interface GetArtworksParams {
+  owner?: number;
+}
+
+export const getArtworks = async (params?: GetArtworksParams): Promise<Artwork[]> => {
   try {
-    const response = await axios.get<Artwork[]>(BASE_URL, authorizationHeaders());
+    const response = await axios.get<Artwork[]>(BASE_URL, {
+      params,
+      ...authorizationHeaders(),
+    });
     return response.data;
   } catch (error) {
     console.error(error);
