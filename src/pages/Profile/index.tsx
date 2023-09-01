@@ -14,11 +14,13 @@ import EditProfileModal from 'modals/EditProfileModal';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
+import Artworks from './Artworks';
 import Invitations from './Invitations';
 import Posts from './Posts';
 import * as S from './Styles';
 
 enum ProfileTab {
+  ARTWORKS = 'ARTWORKS',
   INVITATIONS = 'INVITATIONS',
   POSTS = 'POSTS',
 }
@@ -67,6 +69,7 @@ const Profile: SFC = ({className}) => {
 
   const renderTabContent = () => {
     const tabContent = {
+      [ProfileTab.ARTWORKS]: <Artworks />,
       [ProfileTab.POSTS]: <Posts />,
       [ProfileTab.INVITATIONS]: <Invitations />,
     };
@@ -79,6 +82,9 @@ const Profile: SFC = ({className}) => {
       <Tabs>
         <Tab isActive={activeTab === ProfileTab.POSTS} onClick={() => setActiveTab(ProfileTab.POSTS)}>
           Posts
+        </Tab>
+        <Tab isActive={activeTab === ProfileTab.ARTWORKS} onClick={() => setActiveTab(ProfileTab.ARTWORKS)}>
+          Artworks
         </Tab>
         <Tab isActive={activeTab === ProfileTab.INVITATIONS} onClick={() => setActiveTab(ProfileTab.INVITATIONS)}>
           Invitations

@@ -1,15 +1,18 @@
 import {CreateAddressRequest} from 'types/api/addresses';
+import {CreateArtworkRequest, EditArtworkRequest} from 'types/api/artworks';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateInvitationRequest} from 'types/api/invitations';
+import {CreateOpenAIImageRequest, CreateOpenAIImageResponse} from 'types/api/openaiImages';
 import {CreateOrderRequest} from 'types/api/orders';
 import {PostReadSerializer} from 'types/api/posts';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
 
 import {Address, Addresses} from 'types/addresses';
+import {Artwork, Artworks} from 'types/artworks';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
@@ -39,6 +42,8 @@ export {
   Address,
   Addresses,
   AppDispatch,
+  Artwork,
+  Artworks,
   AssetPair,
   AssetPairs,
   Authentication,
@@ -52,10 +57,13 @@ export {
   Core,
   Cores,
   CreateAddressRequest,
+  CreateArtworkRequest,
   CreateCartProductRequest,
   CreateCommentRequest,
   CreateExchangeOrderRequest,
   CreateInvitationRequest,
+  CreateOpenAIImageRequest,
+  CreateOpenAIImageResponse,
   CreateOrderRequest,
   CreateUserRequest,
   CreateUserResponse,
@@ -63,6 +71,7 @@ export {
   CreatedModified,
   DepositResponse,
   Dict,
+  EditArtworkRequest,
   ExchangeOrder,
   ExchangeOrders,
   GenericFunction,
