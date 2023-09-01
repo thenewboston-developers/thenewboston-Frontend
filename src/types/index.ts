@@ -4,6 +4,7 @@ import {CreateCartProductRequest} from 'types/api/cartProducts';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateInvitationRequest} from 'types/api/invitations';
+import {CreateOpenAIImageRequest, CreateOpenAIImageResponse} from 'types/api/openaiImages';
 import {CreateOrderRequest} from 'types/api/orders';
 import {PostReadSerializer} from 'types/api/posts';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
@@ -56,6 +57,8 @@ export {
   CreateCommentRequest,
   CreateExchangeOrderRequest,
   CreateInvitationRequest,
+  CreateOpenAIImageRequest,
+  CreateOpenAIImageResponse,
   CreateOrderRequest,
   CreateUserRequest,
   CreateUserResponse,

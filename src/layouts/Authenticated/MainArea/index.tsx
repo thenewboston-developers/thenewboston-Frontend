@@ -1,5 +1,6 @@
 import {Route, Routes} from 'react-router-dom';
 
+import Canvas from 'pages/Canvas';
 import Cores from 'pages/Cores';
 import Exchange from 'pages/Exchange';
 import Profile from 'pages/Profile';
@@ -12,6 +13,7 @@ const MainArea: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <Routes>
+        <Route path="/canvas" element={<Canvas />} />
         <Route path="/cores" element={<Cores />} />
         <Route path="/exchange/*" element={<Exchange />} />
         <Route path="/profile/:id" element={<Profile />} />

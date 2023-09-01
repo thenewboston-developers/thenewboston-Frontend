@@ -2,6 +2,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {
   mdiAccount,
+  mdiBrush,
   mdiExitToApp,
   mdiLanConnect,
   mdiShopping,
@@ -30,6 +31,7 @@ const LeftNav: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Top>
+        <MenuLink icon={mdiBrush} rootPath="/canvas" text="Canvas" to="/canvas" />
         <MenuLink icon={mdiLanConnect} rootPath="/cores" text="Cores" to="/cores" />
         <MenuLink icon={mdiWalletBifoldOutline} rootPath="/wallets" text="Wallets" to="/wallets" />
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
