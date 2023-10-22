@@ -2,9 +2,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {mdiDotsVertical} from '@mdi/js';
 
 import UserLabel from 'components/UserLabel';
-import {useToggle} from 'hooks';
 import {deletePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
+import {useToggle} from 'hooks';
 import PostModal from 'modals/PostModal';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Post as TPost, SFC} from 'types';

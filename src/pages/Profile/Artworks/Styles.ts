@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import {breakpoints} from 'styles';
 
-export const Artworks = styled.div`
+export const ArtworkCards = styled.div`
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(3, 1fr);
@@ -18,7 +18,3 @@ export const Artworks = styled.div`
 `;
 
 export const Container = styled.div``;
-
-export const Img = styled.img`
-  max-width: 100%;
-`;
