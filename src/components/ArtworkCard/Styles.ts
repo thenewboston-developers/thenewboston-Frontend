@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
+import UDropdownMenu from 'components/DropdownMenu';
 import UThumbnail from 'components/Thumbnail';
 import {colors} from 'styles';
 
 export const Bottom = styled.div`
   display: flex;
-  flex-direction: column;
   padding: 12px 16px;
 `;
 
@@ -24,9 +24,17 @@ export const Description = styled.div`
   margin-top: 4px;
 `;
 
+export const DropdownMenu = styled(UDropdownMenu)`
+  margin-right: -8px;
+`;
+
 export const Name = styled.div`
   font-size: 20px;
   font-weight: 600;
+`;
+
+export const Text = styled.div`
+  flex: 1;
 `;
 
 export const Thumbnail = styled(UThumbnail)`
