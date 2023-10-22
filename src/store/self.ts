@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {SELF} from 'store/constants';
+import {SELF} from 'constants/store';
 import {Self} from 'types';
 
 const initialState: Self = {

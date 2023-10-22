@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {WALLETS} from 'store/constants';
+import {WALLETS} from 'constants/store';
 import {Wallet, Wallets} from 'types';
 
 const initialState: Wallets = {};

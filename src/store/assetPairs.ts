@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {ASSET_PAIRS} from 'store/constants';
+import {ASSET_PAIRS} from 'constants/store';
 import {AssetPair, AssetPairs} from 'types';
 
 const initialState: AssetPairs = {};

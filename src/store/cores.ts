@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {CORES} from 'store/constants';
+import {CORES} from 'constants/store';
 import {Core, Cores} from 'types';
 
 const initialState: Cores = {};

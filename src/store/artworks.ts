@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {ARTWORKS} from 'store/constants';
+import {ARTWORKS} from 'constants/store';
 import {Artwork, Artworks} from 'types';
 
 const initialState: Artworks = {};

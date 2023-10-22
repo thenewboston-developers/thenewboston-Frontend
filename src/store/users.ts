@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {USERS} from 'store/constants';
+import {USERS} from 'constants/store';
 import {UserReadSerializer, Users} from 'types';
 
 const initialState: Users = {};

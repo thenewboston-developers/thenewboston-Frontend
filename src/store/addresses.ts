@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {ADDRESSES} from 'store/constants';
+import {ADDRESSES} from 'constants/store';
 import {Address, Addresses} from 'types';
 
 const initialState: Addresses = {};
