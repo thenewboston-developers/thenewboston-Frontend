@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {MANAGER} from 'store/constants';
+import {MANAGER} from 'constants/store';
 import {Manager} from 'types';
 
 const initialState: Manager = {
