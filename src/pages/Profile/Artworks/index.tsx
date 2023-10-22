@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 
+import ArtworkCard from 'components/ArtworkCard';
 import EmptyText from 'components/EmptyText';
 import {getArtworks as _getArtworks} from 'dispatchers/artworks';
 import {getArtworks} from 'selectors/state';
@@ -28,13 +29,13 @@ const Artworks: SFC = ({className}) => {
     return _artworks.filter(({owner}) => owner.id === userId);
   }, [artworks, userId]);
 
-  const renderArtworks = () => {
-    const _artworks = artworkList.map(({image}) => <S.Img key={image} src={image} />);
-    return <S.Artworks>{_artworks}</S.Artworks>;
+  const renderArtworkCards = () => {
+    const _artworks = artworkList.map((artwork) => <ArtworkCard artwork={artwork} key={artwork.id} />);
+    return <S.ArtworkCards>{_artworks}</S.ArtworkCards>;
   };
 
   const renderContent = () => {
-    if (!!artworkList.length) return renderArtworks();
+    if (!!artworkList.length) return renderArtworkCards();
     return <EmptyText>No artwork to display.</EmptyText>;
   };
 
