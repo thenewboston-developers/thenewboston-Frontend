@@ -9,7 +9,7 @@ import yup from 'utils/yup';
 import ImagePreview from './ImagePreview';
 import * as S from './Styles';
 
-const Canvas: SFC = ({className}) => {
+const Create: SFC = ({className}) => {
   const [createOpenAIImageResponse, setCreateOpenAIImageResponse] = useState<CreateOpenAIImageResponse | null>(null);
   const [description, setDescription] = useState('');
 
@@ -75,4 +75,4 @@ const Canvas: SFC = ({className}) => {
   );
 };
 
-export default Canvas;
+export default Create;
