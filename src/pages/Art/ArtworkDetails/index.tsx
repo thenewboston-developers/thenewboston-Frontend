@@ -2,16 +2,21 @@ import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 
+import Button from 'components/Button';
 import {getArtwork} from 'dispatchers/artworks';
-import {getArtworks} from 'selectors/state';
+import {useToggle} from 'hooks';
+import ArtworkTransferModal from 'modals/ArtworkTransferModal';
+import {getArtworks, getSelf} from 'selectors/state';
 import {AppDispatch, Artwork, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import * as S from './Styles';
 
 const ArtworkDetails: SFC = ({className}) => {
+  const [artworkTransferModalIsOpen, toggleArtworkTransferModal] = useToggle(false);
   const {id} = useParams();
   const artworks = useSelector(getArtworks);
   const dispatch = useDispatch<AppDispatch>();
+  const self = useSelector(getSelf);
 
   useEffect(() => {
     if (!id) return;
@@ -54,17 +59,28 @@ const ArtworkDetails: SFC = ({className}) => {
           id={artwork.owner.id}
           username={artwork.owner.username}
         />
+        {renderTransferButton()}
       </S.Right>
     );
+  };
+
+  const renderTransferButton = () => {
+    if (!artwork || artwork.owner.id !== self.id) return null;
+    return <Button onClick={toggleArtworkTransferModal} text="Transfer Artwork" />;
   };
 
   if (!artwork) return null;
 
   return (
-    <S.Container className={className}>
-      {renderLeft()}
-      {renderRight()}
-    </S.Container>
+    <>
+      <S.Container className={className}>
+        {renderLeft()}
+        {renderRight()}
+      </S.Container>
+      {artworkTransferModalIsOpen ? (
+        <ArtworkTransferModal artwork={artwork} close={toggleArtworkTransferModal} />
+      ) : null}
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 export const ADDRESSES = 'addresses';
 export const ARTWORKS = 'artworks';
+export const ARTWORK_TRANSFERS = 'artworkTransfers';
 export const ASSET_PAIRS = 'assetPairs';
 export const AUTHENTICATION = 'authentication';
 export const CART_PRODUCTS = 'cartProducts';

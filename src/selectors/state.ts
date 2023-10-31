@@ -1,6 +1,7 @@
 import {RootState} from 'types';
 
 export const getAddresses = (state: RootState) => state.addresses;
+export const getArtworkTransfers = (state: RootState) => state.artworkTransfers;
 export const getArtworks = (state: RootState) => state.artworks;
 export const getAssetPairs = (state: RootState) => state.assetPairs;
 export const getAuthentication = (state: RootState) => state.authentication;
