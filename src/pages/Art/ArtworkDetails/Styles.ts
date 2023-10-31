@@ -15,8 +15,6 @@ export const ButtonContainer = styled.div`
 `;
 
 export const Container = styled.div`
-  display: flex;
-  gap: 24px;
   padding: 24px 32px;
 `;
 
@@ -45,6 +43,11 @@ export const Right = styled.div`
   display: flex;
   flex: auto;
   flex-direction: column;
+`;
+
+export const Top = styled.div`
+  display: flex;
+  gap: 24px;
 `;
 
 export const UserLabel = styled(UUserLabel)`

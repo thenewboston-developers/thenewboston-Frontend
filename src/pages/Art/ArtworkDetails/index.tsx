@@ -9,6 +9,7 @@ import ArtworkTransferModal from 'modals/ArtworkTransferModal';
 import {getArtworks, getSelf} from 'selectors/state';
 import {AppDispatch, Artwork, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
+import ArtworkTransferHistory from './ArtworkTransferHistory';
 import * as S from './Styles';
 
 const ArtworkDetails: SFC = ({className}) => {
@@ -78,8 +79,11 @@ const ArtworkDetails: SFC = ({className}) => {
   return (
     <>
       <S.Container className={className}>
-        {renderLeft()}
-        {renderRight()}
+        <S.Top>
+          {renderLeft()}
+          {renderRight()}
+        </S.Top>
+        <ArtworkTransferHistory />
       </S.Container>
       {artworkTransferModalIsOpen ? (
         <ArtworkTransferModal artwork={artwork} close={toggleArtworkTransferModal} />
