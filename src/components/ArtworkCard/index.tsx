@@ -1,4 +1,5 @@
 import {useDispatch, useSelector} from 'react-redux';
+import {Link} from 'react-router-dom';
 import {mdiDotsVertical} from '@mdi/js';
 
 import {deleteArtwork} from 'dispatchers/artworks';
@@ -48,10 +49,14 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
   return (
     <>
       <S.Container className={className}>
-        <S.Thumbnail thumbnailUrl={artwork.image} />
+        <Link to={`/art/artworks/${artwork.id}`}>
+          <S.Thumbnail thumbnailUrl={artwork.image} />
+        </Link>
         <S.Bottom>
           <S.Text>
-            <S.Name>{artwork.name}</S.Name>
+            <Link to={`/art/artworks/${artwork.id}`}>
+              <S.Name>{artwork.name}</S.Name>
+            </Link>
             <S.Description>{artwork.description}</S.Description>
           </S.Text>
           {renderDropdownMenu()}

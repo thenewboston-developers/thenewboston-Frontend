@@ -1,6 +1,7 @@
 import {Route, Routes} from 'react-router-dom';
 
 import {SFC} from 'types';
+import ArtworkDetails from './ArtworkDetails';
 import Create from './Create';
 import Layout from './Layout';
 import Marketplace from './Marketplace';
@@ -11,6 +12,7 @@ const Art: SFC = ({className}) => {
     <S.Container className={className}>
       <Routes>
         <Route element={<Layout />}>
+          <Route path="/artworks/:id" element={<ArtworkDetails />} />
           <Route path="/create" element={<Create />} />
           <Route path="/marketplace" element={<Marketplace />} />
         </Route>

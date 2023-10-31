@@ -1,5 +1,6 @@
 import {CreateAddressRequest} from 'types/api/addresses';
 import {CreateArtworkRequest, EditArtworkRequest} from 'types/api/artworks';
+import {CreateArtworkTransferRequest} from 'types/api/artworkTransfers';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
@@ -13,6 +14,7 @@ import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse}
 
 import {Address, Addresses} from 'types/addresses';
 import {Artwork, Artworks} from 'types/artworks';
+import {ArtworkTransfer, ArtworkTransfers} from 'types/artworkTransfers';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
@@ -43,6 +45,8 @@ export {
   Addresses,
   AppDispatch,
   Artwork,
+  ArtworkTransfer,
+  ArtworkTransfers,
   Artworks,
   AssetPair,
   AssetPairs,
@@ -58,6 +62,7 @@ export {
   Cores,
   CreateAddressRequest,
   CreateArtworkRequest,
+  CreateArtworkTransferRequest,
   CreateCartProductRequest,
   CreateCommentRequest,
   CreateExchangeOrderRequest,
