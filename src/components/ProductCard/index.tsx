@@ -1,4 +1,4 @@
-import {useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import Price from 'components/Price';
 import {Product, SFC} from 'types';
@@ -9,17 +9,15 @@ export interface ProductCardProps {
 }
 
 const ProductCard: SFC<ProductCardProps> = ({className, product}) => {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate(`/shop/buy/products/${product.id}`);
-  };
-
   return (
-    <S.Container className={className} onClick={handleClick}>
-      <S.Thumbnail thumbnailUrl={product.image} />
+    <S.Container className={className}>
+      <Link to={`/shop/buy/products/${product.id}`}>
+        <S.Thumbnail thumbnailUrl={product.image} />
+      </Link>
       <S.Bottom>
-        <S.Name>{product.name}</S.Name>
+        <Link to={`/shop/buy/products/${product.id}`}>
+          <S.Name>{product.name}</S.Name>
+        </Link>
         <S.Description>{product.description}</S.Description>
         <S.UserLabel
           avatar={product.seller.avatar}

@@ -54,7 +54,9 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
         </Link>
         <S.Bottom>
           <S.Text>
-            <S.Name>{artwork.name}</S.Name>
+            <Link to={`/art/artworks/${artwork.id}`}>
+              <S.Name>{artwork.name}</S.Name>
+            </Link>
             <S.Description>{artwork.description}</S.Description>
           </S.Text>
           {renderDropdownMenu()}
