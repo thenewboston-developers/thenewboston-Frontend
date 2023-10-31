@@ -3,6 +3,17 @@ import styled from 'styled-components';
 import UUserLabel from 'components/UserLabel';
 import {colors} from 'styles';
 
+export const ButtonContainer = styled.div`
+  align-items: center;
+  border-radius: 4px;
+  border: 1px solid ${colors.border};
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 8px;
+`;
+
 export const Container = styled.div`
   display: flex;
   gap: 24px;

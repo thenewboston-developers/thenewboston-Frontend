@@ -36,6 +36,15 @@ const ArtworkDetails: SFC = ({className}) => {
     return artworks[id];
   }, [id, artworks]);
 
+  const renderButtonContainer = () => {
+    if (!artwork || artwork.owner.id !== self.id) return null;
+    return (
+      <S.ButtonContainer>
+        <Button onClick={toggleArtworkTransferModal} text="Transfer Artwork" />
+      </S.ButtonContainer>
+    );
+  };
+
   const renderLeft = () => {
     if (!artwork) return null;
 
@@ -59,14 +68,9 @@ const ArtworkDetails: SFC = ({className}) => {
           id={artwork.owner.id}
           username={artwork.owner.username}
         />
-        {renderTransferButton()}
+        {renderButtonContainer()}
       </S.Right>
     );
-  };
-
-  const renderTransferButton = () => {
-    if (!artwork || artwork.owner.id !== self.id) return null;
-    return <Button onClick={toggleArtworkTransferModal} text="Transfer Artwork" />;
   };
 
   if (!artwork) return null;
