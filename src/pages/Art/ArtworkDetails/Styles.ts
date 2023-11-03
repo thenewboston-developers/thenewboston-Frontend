@@ -8,15 +8,14 @@ export const ButtonContainer = styled.div`
   border-radius: 4px;
   border: 1px solid ${colors.border};
   display: flex;
-  gap: 24px;
+  gap: 16px;
   justify-content: space-between;
   margin-top: 16px;
   padding: 8px;
+  width: fit-content;
 `;
 
 export const Container = styled.div`
-  display: flex;
-  gap: 24px;
   padding: 24px 32px;
 `;
 
@@ -45,6 +44,11 @@ export const Right = styled.div`
   display: flex;
   flex: auto;
   flex-direction: column;
+`;
+
+export const Top = styled.div`
+  display: flex;
+  gap: 24px;
 `;
 
 export const UserLabel = styled(UUserLabel)`

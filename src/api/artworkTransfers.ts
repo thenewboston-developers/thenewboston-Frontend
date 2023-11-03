@@ -14,3 +14,20 @@ export const createArtworkTransfer = async (data: CreateArtworkTransferRequest):
     throw error;
   }
 };
+
+export interface GetArtworkTransfersParams {
+  artwork?: number;
+}
+
+export const getArtworkTransfers = async (params?: GetArtworkTransfersParams): Promise<ArtworkTransfer[]> => {
+  try {
+    const response = await axios.get<ArtworkTransfer[]>(BASE_URL, {
+      params,
+      ...authorizationHeaders(),
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
