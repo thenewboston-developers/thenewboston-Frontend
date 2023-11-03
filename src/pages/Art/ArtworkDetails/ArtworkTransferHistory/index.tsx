@@ -32,7 +32,7 @@ const ArtworkTransferHistory: SFC = ({className}) => {
 
   const renderArtTransfers = () => {
     return artworkTransferList.map(({created_date, new_owner, previous_owner}) => (
-      <>
+      <S.ArtTransfers>
         <UserLabel
           avatar={previous_owner.avatar}
           description="Previous Owner"
@@ -41,14 +41,14 @@ const ArtworkTransferHistory: SFC = ({className}) => {
         />
         <UserLabel avatar={new_owner.avatar} description="New Owner" id={new_owner.id} username={new_owner.username} />
         <div>{longDate(created_date)}</div>
-      </>
+      </S.ArtTransfers>
     ));
   };
 
   return (
     <S.Container className={className}>
-      <h1>ArtworkTransferHistory</h1>
-      <S.Grid>{renderArtTransfers()}</S.Grid>
+      <h1>Transfer History</h1>
+      {renderArtTransfers()}
     </S.Container>
   );
 };

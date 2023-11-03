@@ -8,10 +8,11 @@ export const ButtonContainer = styled.div`
   border-radius: 4px;
   border: 1px solid ${colors.border};
   display: flex;
-  gap: 24px;
+  gap: 16px;
   justify-content: space-between;
   margin-top: 16px;
   padding: 8px;
+  width: fit-content;
 `;
 
 export const Container = styled.div`

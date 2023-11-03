@@ -1,22 +1,26 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 import Button from 'components/Button';
-import {getArtwork} from 'dispatchers/artworks';
+import {deleteArtwork, getArtwork} from 'dispatchers/artworks';
+import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
+import ArtworkModal from 'modals/ArtworkModal';
 import ArtworkTransferModal from 'modals/ArtworkTransferModal';
 import {getArtworks, getSelf} from 'selectors/state';
 import {AppDispatch, Artwork, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toast';
 import ArtworkTransferHistory from './ArtworkTransferHistory';
 import * as S from './Styles';
 
 const ArtworkDetails: SFC = ({className}) => {
+  const [artworkModalIsOpen, toggleArtworkModal] = useToggle(false);
   const [artworkTransferModalIsOpen, toggleArtworkTransferModal] = useToggle(false);
   const {id} = useParams();
   const artworks = useSelector(getArtworks);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const self = useSelector(getSelf);
 
   useEffect(() => {
@@ -37,11 +41,27 @@ const ArtworkDetails: SFC = ({className}) => {
     return artworks[id];
   }, [id, artworks]);
 
+  const handleDelete = async () => {
+    if (!artwork) return;
+
+    try {
+      await dispatch(deleteArtwork(artwork.id));
+      navigate('/art/marketplace');
+      displayToast('Artwork deleted!', ToastType.SUCCESS);
+    } catch (error) {
+      console.error(error);
+      displayErrorToast('Error deleting artwork');
+    }
+  };
+
   const renderButtonContainer = () => {
     if (!artwork || artwork.owner.id !== self.id) return null;
+
     return (
       <S.ButtonContainer>
-        <Button onClick={toggleArtworkTransferModal} text="Transfer Artwork" />
+        <Button onClick={toggleArtworkModal} text="Edit" />
+        <Button onClick={toggleArtworkTransferModal} text="Transfer" />
+        <Button onClick={handleDelete} text="Delete" />
       </S.ButtonContainer>
     );
   };
@@ -85,6 +105,9 @@ const ArtworkDetails: SFC = ({className}) => {
         </S.Top>
         <ArtworkTransferHistory />
       </S.Container>
+      {artworkModalIsOpen ? (
+        <ArtworkModal artwork={artwork} close={toggleArtworkModal} imageUrl={artwork.image} />
+      ) : null}
       {artworkTransferModalIsOpen ? (
         <ArtworkTransferModal artwork={artwork} close={toggleArtworkTransferModal} />
       ) : null}
