@@ -107,7 +107,7 @@ const BuyProductDetails: SFC = ({className}) => {
           username={product.seller.username}
         />
         <S.PriceContainer>
-          <Price product={product} />
+          <Price price_amount={product.price_amount} price_core={product.price_core} />
           {renderCartButton()}
         </S.PriceContainer>
       </S.Right>

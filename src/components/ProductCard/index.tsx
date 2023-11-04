@@ -26,7 +26,7 @@ const ProductCard: SFC<ProductCardProps> = ({className, product}) => {
           username={product.seller.username}
         />
         <S.Line />
-        <Price product={product} />
+        <Price price_amount={product.price_amount} price_core={product.price_core} />
       </S.Bottom>
     </S.Container>
   );

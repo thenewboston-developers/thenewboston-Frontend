@@ -31,16 +31,21 @@ const ArtworkTransferHistory: SFC = ({className}) => {
   }, [artworkId, artworkTransfers]);
 
   const renderArtTransfers = () => {
-    return artworkTransferList.map(({created_date, new_owner, previous_owner}) => (
-      <S.ArtTransfers>
+    return artworkTransferList.map((artworkTransfer) => (
+      <S.ArtTransfers key={artworkTransfer.id}>
         <UserLabel
-          avatar={previous_owner.avatar}
+          avatar={artworkTransfer.previous_owner.avatar}
           description="Previous Owner"
-          id={previous_owner.id}
-          username={previous_owner.username}
+          id={artworkTransfer.previous_owner.id}
+          username={artworkTransfer.previous_owner.username}
         />
-        <UserLabel avatar={new_owner.avatar} description="New Owner" id={new_owner.id} username={new_owner.username} />
-        <div>{longDate(created_date)}</div>
+        <UserLabel
+          avatar={artworkTransfer.new_owner.avatar}
+          description="New Owner"
+          id={artworkTransfer.new_owner.id}
+          username={artworkTransfer.new_owner.username}
+        />
+        <div>{longDate(artworkTransfer.created_date)}</div>
       </S.ArtTransfers>
     ));
   };
