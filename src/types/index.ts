@@ -1,4 +1,5 @@
 import {CreateAddressRequest} from 'types/api/addresses';
+import {CreateArtworkPurchaseRequest} from 'types/api/artworkPurchases';
 import {CreateArtworkRequest, EditArtworkRequest} from 'types/api/artworks';
 import {CreateArtworkTransferRequest} from 'types/api/artworkTransfers';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
@@ -61,6 +62,7 @@ export {
   Core,
   Cores,
   CreateAddressRequest,
+  CreateArtworkPurchaseRequest,
   CreateArtworkRequest,
   CreateArtworkTransferRequest,
   CreateCartProductRequest,

@@ -3,10 +3,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 
+import Price from 'components/Price';
 import UserLabel from 'components/UserLabel';
 import {getArtworkTransfers as _getArtworkTransfers} from 'dispatchers/artworkTransfers';
 import {getArtworkTransfers} from 'selectors/state';
-import {AppDispatch, SFC} from 'types';
+import {AppDispatch, ArtworkTransfer, SFC} from 'types';
 import {longDate} from 'utils/dates';
 import * as S from './Styles';
 
@@ -31,18 +32,29 @@ const ArtworkTransferHistory: SFC = ({className}) => {
   }, [artworkId, artworkTransfers]);
 
   const renderArtTransfers = () => {
-    return artworkTransferList.map(({created_date, new_owner, previous_owner}) => (
-      <S.ArtTransfers>
+    return artworkTransferList.map((artworkTransfer) => (
+      <S.ArtTransfers key={artworkTransfer.id}>
         <UserLabel
-          avatar={previous_owner.avatar}
+          avatar={artworkTransfer.previous_owner.avatar}
           description="Previous Owner"
-          id={previous_owner.id}
-          username={previous_owner.username}
+          id={artworkTransfer.previous_owner.id}
+          username={artworkTransfer.previous_owner.username}
         />
-        <UserLabel avatar={new_owner.avatar} description="New Owner" id={new_owner.id} username={new_owner.username} />
-        <div>{longDate(created_date)}</div>
+        <UserLabel
+          avatar={artworkTransfer.new_owner.avatar}
+          description="New Owner"
+          id={artworkTransfer.new_owner.id}
+          username={artworkTransfer.new_owner.username}
+        />
+        {renderPurchaseInformation(artworkTransfer)}
+        <div>{longDate(artworkTransfer.created_date)}</div>
       </S.ArtTransfers>
     ));
+  };
+
+  const renderPurchaseInformation = ({price_amount, price_core}: ArtworkTransfer) => {
+    if (!price_amount || !price_core) return <div />;
+    return <Price price_amount={price_amount} price_core={price_core} />;
   };
 
   return (

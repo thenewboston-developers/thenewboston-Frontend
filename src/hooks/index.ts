@@ -6,6 +6,7 @@ import useCartSeller from 'hooks/useCartSeller';
 import useCoreLogo from 'hooks/useCoreLogo';
 import useEventListener from 'hooks/useEventListener';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
+import usePriceCoreOptions from 'hooks/usePriceCoreOptions';
 import useSelfAvatar from 'hooks/useSelfAvatar';
 import useToggle from 'hooks/useToggle';
 import useUser from 'hooks/useUser';
@@ -19,6 +20,7 @@ export {
   useCoreLogo,
   useEventListener,
   useIsAuthenticated,
+  usePriceCoreOptions,
   useSelfAvatar,
   useToggle,
   useUser,

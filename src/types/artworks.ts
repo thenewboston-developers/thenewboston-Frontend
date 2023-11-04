@@ -9,6 +9,8 @@ export interface Artwork extends CreatedModified {
   image: string;
   name: string;
   owner: UserReadSerializer;
+  price_amount: number | null;
+  price_core: number | null;
 }
 
 export type Artworks = Dict<Artwork>;

@@ -3,6 +3,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 
 import Button from 'components/Button';
+import Price from 'components/Price';
+import {createArtworkPurchase} from 'dispatchers/artworkPurchases';
 import {deleteArtwork, getArtwork} from 'dispatchers/artworks';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
@@ -41,6 +43,23 @@ const ArtworkDetails: SFC = ({className}) => {
     return artworks[id];
   }, [id, artworks]);
 
+  const handleBuy = async () => {
+    if (!artwork) return;
+
+    try {
+      await dispatch(
+        createArtworkPurchase({
+          artwork: artwork.id,
+        }),
+      );
+      await dispatch(getArtwork(artwork.id));
+      displayToast('Artwork purchased!', ToastType.SUCCESS);
+    } catch (error) {
+      console.error(error);
+      displayErrorToast('Error purchasing artwork');
+    }
+  };
+
   const handleDelete = async () => {
     if (!artwork) return;
 
@@ -66,6 +85,11 @@ const ArtworkDetails: SFC = ({className}) => {
     );
   };
 
+  const renderBuyButton = () => {
+    if (!artwork || artwork.owner.id === self.id) return null;
+    return <Button onClick={handleBuy} text="Buy" />;
+  };
+
   const renderLeft = () => {
     if (!artwork) return null;
 
@@ -89,8 +113,20 @@ const ArtworkDetails: SFC = ({className}) => {
           id={artwork.owner.id}
           username={artwork.owner.username}
         />
+        {renderPriceContainer(artwork)}
         {renderButtonContainer()}
       </S.Right>
+    );
+  };
+
+  const renderPriceContainer = ({price_amount, price_core}: Artwork) => {
+    if (!price_amount || !price_core) return null;
+
+    return (
+      <S.PriceContainer>
+        <Price price_amount={price_amount} price_core={price_core} />
+        {renderBuyButton()}
+      </S.PriceContainer>
     );
   };
 
