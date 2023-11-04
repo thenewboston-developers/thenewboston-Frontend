@@ -3,10 +3,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 
+import Price from 'components/Price';
 import UserLabel from 'components/UserLabel';
 import {getArtworkTransfers as _getArtworkTransfers} from 'dispatchers/artworkTransfers';
 import {getArtworkTransfers} from 'selectors/state';
-import {AppDispatch, SFC} from 'types';
+import {AppDispatch, ArtworkTransfer, SFC} from 'types';
 import {longDate} from 'utils/dates';
 import * as S from './Styles';
 
@@ -45,9 +46,15 @@ const ArtworkTransferHistory: SFC = ({className}) => {
           id={artworkTransfer.new_owner.id}
           username={artworkTransfer.new_owner.username}
         />
+        {renderPurchaseInformation(artworkTransfer)}
         <div>{longDate(artworkTransfer.created_date)}</div>
       </S.ArtTransfers>
     ));
+  };
+
+  const renderPurchaseInformation = ({price_amount, price_core}: ArtworkTransfer) => {
+    if (!price_amount || !price_core) return <div />;
+    return <Price price_amount={price_amount} price_core={price_core} />;
   };
 
   return (
