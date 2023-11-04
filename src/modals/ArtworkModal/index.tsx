@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
-import {Input} from 'components/FormElements';
+import {Input, Select} from 'components/FormElements';
 import {createArtwork, updateArtwork} from 'dispatchers/artworks';
 import {ToastType} from 'enums';
 import {AppDispatch, Artwork, SFC} from 'types';
@@ -25,19 +25,27 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({artwork, className, close, descri
     () => ({
       description: artwork?.description || description || '',
       name: artwork?.name || '',
+      price_amount: artwork?.price_amount?.toString() || '',
+      price_core: artwork?.price_core?.toString() || '',
     }),
-    [artwork?.description, artwork?.name, description],
+    [artwork?.description, artwork?.name, artwork?.price_amount, artwork?.price_core, description],
   );
 
   type FormValues = typeof initialValues;
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
+      const requestData = {
+        ...values,
+        price_amount: values.price_amount === '' ? null : parseInt(values.price_amount, 10),
+        price_core: values.price_core === '0' ? null : values.price_core,
+      };
+
       if (artwork) {
-        await dispatch(updateArtwork(artwork.id, values));
+        await dispatch(updateArtwork(artwork.id, requestData));
         displayToast('Artwork updated!', ToastType.SUCCESS);
       } else {
-        await dispatch(createArtwork({image_url: imageUrl, ...values}));
+        await dispatch(createArtwork({image_url: imageUrl, ...requestData}));
         displayToast('Artwork created!', ToastType.SUCCESS);
       }
 
@@ -53,6 +61,8 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({artwork, className, close, descri
     return yup.object().shape({
       description: yup.string().required(),
       name: yup.string().required(),
+      price_amount: yup.number(),
+      price_core: yup.number(),
     });
   }, []);
 
@@ -63,6 +73,18 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({artwork, className, close, descri
           <Form>
             <Input errors={errors} label="Name" name="name" touched={touched} />
             <Input errors={errors} label="Description" name="description" touched={touched} />
+            <Select
+              errors={errors}
+              label="Price Core"
+              name="price_core"
+              options={[
+                {displayName: '-', value: 0},
+                {displayName: 'TNB', value: 4},
+                {displayName: 'VTX', value: 5},
+              ]}
+              touched={touched}
+            />
+            <Input errors={errors} label="Price Amount" name="price_amount" touched={touched} type="number" />
             <Button
               dirty={dirty}
               disabled={isSubmitting}

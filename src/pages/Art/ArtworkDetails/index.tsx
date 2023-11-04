@@ -85,6 +85,11 @@ const ArtworkDetails: SFC = ({className}) => {
     );
   };
 
+  const renderBuyButton = () => {
+    if (!artwork || artwork.owner.id === self.id) return null;
+    return <Button onClick={handleBuy} text="Buy" />;
+  };
+
   const renderLeft = () => {
     if (!artwork) return null;
 
@@ -120,7 +125,7 @@ const ArtworkDetails: SFC = ({className}) => {
     return (
       <S.PriceContainer>
         <Price price_amount={price_amount} price_core={price_core} />
-        <Button onClick={handleBuy} text="Buy" />
+        {renderBuyButton()}
       </S.PriceContainer>
     );
   };
