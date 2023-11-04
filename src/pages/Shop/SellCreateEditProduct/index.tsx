@@ -8,6 +8,7 @@ import {Checkbox, FileInput, Input, Select} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {createProduct, updateProduct} from 'dispatchers/products';
 import {ActivationStatus, ToastType} from 'enums';
+import {usePriceCoreOptions} from 'hooks';
 import {getManager} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toast';
@@ -19,6 +20,7 @@ const SellCreateEditProduct: SFC = ({className}) => {
   const {activeProduct} = useSelector(getManager);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const priceCoreOptions = usePriceCoreOptions();
 
   const initialValues = useMemo(
     () => ({
@@ -114,18 +116,7 @@ const SellCreateEditProduct: SFC = ({className}) => {
               src={preview}
             />
             <S.Bumper />
-            {/* TODO: Change these from hardcoded values */}
-            <Select
-              errors={errors}
-              label="Price Core"
-              name="price_core"
-              options={[
-                {displayName: '-', value: 0},
-                {displayName: 'TNB', value: 1},
-                {displayName: 'VTX', value: 2},
-              ]}
-              touched={touched}
-            />
+            <Select errors={errors} label="Price Core" name="price_core" options={priceCoreOptions} touched={touched} />
             <Input errors={errors} label="Price Amount" name="price_amount" touched={touched} type="number" />
             <Input errors={errors} label="Quantity" name="quantity" touched={touched} type="number" />
             <Checkbox errors={errors} label="Activate Product" name="activation_status" touched={touched} />

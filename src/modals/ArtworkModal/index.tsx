@@ -6,6 +6,7 @@ import Button, {ButtonType} from 'components/Button';
 import {Input, Select} from 'components/FormElements';
 import {createArtwork, updateArtwork} from 'dispatchers/artworks';
 import {ToastType} from 'enums';
+import {usePriceCoreOptions} from 'hooks';
 import {AppDispatch, Artwork, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toast';
 import yup from 'utils/yup';
@@ -20,6 +21,7 @@ export interface ArtworkModalProps {
 
 const ArtworkModal: SFC<ArtworkModalProps> = ({artwork, className, close, description, imageUrl}) => {
   const dispatch = useDispatch<AppDispatch>();
+  const priceCoreOptions = usePriceCoreOptions();
 
   const initialValues = useMemo(
     () => ({
@@ -73,17 +75,7 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({artwork, className, close, descri
           <Form>
             <Input errors={errors} label="Name" name="name" touched={touched} />
             <Input errors={errors} label="Description" name="description" touched={touched} />
-            <Select
-              errors={errors}
-              label="Price Core"
-              name="price_core"
-              options={[
-                {displayName: '-', value: 0},
-                {displayName: 'TNB', value: 4},
-                {displayName: 'VTX', value: 5},
-              ]}
-              touched={touched}
-            />
+            <Select errors={errors} label="Price Core" name="price_core" options={priceCoreOptions} touched={touched} />
             <Input errors={errors} label="Price Amount" name="price_amount" touched={touched} type="number" />
             <Button
               dirty={dirty}
