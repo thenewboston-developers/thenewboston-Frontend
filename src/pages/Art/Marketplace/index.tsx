@@ -15,12 +15,13 @@ const Marketplace: SFC = ({className}) => {
 
   useEffect(() => {
     (async () => {
-      await dispatch(_getArtworks());
+      await dispatch(_getArtworks({price_amount_isnull: false, price_core_isnull: false}));
     })();
   }, [dispatch]);
 
   const artworkList = useMemo(() => {
-    return orderBy(Object.values(artworks), ['created_date'], ['desc']);
+    const _artworks = orderBy(Object.values(artworks), ['created_date'], ['desc']);
+    return _artworks.filter(({price_amount, price_core}) => !!price_amount && !!price_core);
   }, [artworks]);
 
   const renderArtworkCards = () => {

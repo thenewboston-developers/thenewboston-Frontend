@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import UDropdownMenu from 'components/DropdownMenu';
+import ULine from 'components/Line';
 import UThumbnail from 'components/Thumbnail';
 import {colors} from 'styles';
 
@@ -26,6 +27,10 @@ export const Description = styled.div`
 
 export const DropdownMenu = styled(UDropdownMenu)`
   margin-right: -8px;
+`;
+
+export const Line = styled(ULine)`
+  margin: 16px 0;
 `;
 
 export const Name = styled.div`

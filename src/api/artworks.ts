@@ -36,6 +36,8 @@ export const getArtwork = async (id: number): Promise<Artwork> => {
 
 export interface GetArtworksParams {
   owner?: number;
+  price_amount_isnull?: boolean;
+  price_core_isnull?: boolean;
 }
 
 export const getArtworks = async (params?: GetArtworksParams): Promise<Artwork[]> => {
