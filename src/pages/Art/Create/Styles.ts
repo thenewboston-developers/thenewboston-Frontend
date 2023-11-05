@@ -1,16 +1,11 @@
 import styled from 'styled-components';
 
-import {Input as UInput} from 'components/FormElements';
 import {colors} from 'styles';
 
 export const Container = styled.div`
   display: grid;
   grid-template-columns: 30% 1fr;
   height: 100vh;
-`;
-
-export const Input = styled(UInput)`
-  width: 100%;
 `;
 
 export const Left = styled.div`

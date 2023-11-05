@@ -3,6 +3,7 @@ import {Form, Formik} from 'formik';
 
 import {createOpenAIImage} from 'api/openaiImages';
 import Button, {ButtonType} from 'components/Button';
+import {Textarea} from 'components/FormElements';
 import {CreateOpenAIImageResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import yup from 'utils/yup';
@@ -48,7 +49,7 @@ const Create: SFC = ({className}) => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
           {({dirty, errors, handleChange, isSubmitting, isValid, touched}) => (
             <Form>
-              <S.Input
+              <Textarea
                 errors={errors}
                 label="Description"
                 onChange={(e) => {
