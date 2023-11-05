@@ -1,20 +1,27 @@
 import styled from 'styled-components';
 
-import {colors} from 'styles';
+import {breakpoints, colors} from 'styles';
 
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: 30% 1fr;
-  height: 100vh;
+  grid-template-rows: min-content min-content;
+
+  @media (min-width: ${breakpoints.tablet}) {
+    grid-template-columns: 30% 1fr;
+    grid-template-rows: none;
+  }
 `;
 
-export const Left = styled.div`
-  border-right: 1px solid ${colors.border};
+export const FormContainer = styled.div`
+  border-bottom: 1px solid ${colors.border};
   overflow-y: auto;
   padding: 24px 16px;
+
+  @media (min-width: ${breakpoints.tablet}) {
+    border-bottom: none;
+  }
 `;
 
-export const Right = styled.div`
-  overflow-y: auto;
+export const ImagesContainer = styled.div`
   padding: 24px 16px;
 `;
