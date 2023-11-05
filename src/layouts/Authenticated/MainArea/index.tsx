@@ -20,7 +20,7 @@ const MainArea: SFC = ({className}) => {
         <Route path="/art/*" element={<Art />} />
         <Route path="/cores" element={<Cores />} />
         <Route path="/exchange/*" element={<Exchange />} />
-        <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/profile/:id/*" element={<Profile />} />
         <Route path="/shop/*" element={<Shop />} />
         <Route path="/wallets" element={<Wallets />} />
         <Route path="*" element={<Navigate to={`/profile/${self.id}`} replace />} />
