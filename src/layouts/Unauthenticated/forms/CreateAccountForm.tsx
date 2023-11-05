@@ -46,7 +46,10 @@ const CreateAccountForm: SFC = () => {
         .required('Confirm Password is required'),
       invitationCode: yup.string().required('Invitation code is required'),
       password: yup.string().required(),
-      username: yup.string().required(),
+      username: yup
+        .string()
+        .matches(/^[A-Za-z0-9]+$/, 'Username must be alphanumeric')
+        .required(),
     });
   }, []);
 
