@@ -4,5 +4,6 @@ import InlineInput from './InlineInput';
 import Input from './Input';
 import LogoInput from './LogoInput';
 import Select from './Select';
+import Textarea from './Textarea';
 
-export {Checkbox, FileInput, InlineInput, Input, LogoInput, Select};
+export {Checkbox, FileInput, InlineInput, Input, LogoInput, Select, Textarea};
