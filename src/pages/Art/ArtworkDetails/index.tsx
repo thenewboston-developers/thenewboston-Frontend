@@ -108,6 +108,12 @@ const ArtworkDetails: SFC = ({className}) => {
         <S.Name>{artwork.name}</S.Name>
         <S.Description>{artwork.description}</S.Description>
         <S.UserLabel
+          avatar={artwork.creator.avatar}
+          description="Creator"
+          id={artwork.creator.id}
+          username={artwork.creator.username}
+        />
+        <S.UserLabel
           avatar={artwork.owner.avatar}
           description="Owner"
           id={artwork.owner.id}
