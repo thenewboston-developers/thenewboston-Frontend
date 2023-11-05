@@ -45,7 +45,7 @@ const Create: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <S.Left>
+      <S.FormContainer>
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
           {({dirty, errors, handleChange, isSubmitting, isValid, touched}) => (
             <Form>
@@ -70,8 +70,8 @@ const Create: SFC = ({className}) => {
             </Form>
           )}
         </Formik>
-      </S.Left>
-      <S.Right>{renderImages()}</S.Right>
+      </S.FormContainer>
+      <S.ImagesContainer>{renderImages()}</S.ImagesContainer>
     </S.Container>
   );
 };
