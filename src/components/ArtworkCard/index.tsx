@@ -2,6 +2,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {mdiDotsVertical} from '@mdi/js';
 
+import Price from 'components/Price';
 import {deleteArtwork} from 'dispatchers/artworks';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
@@ -46,6 +47,16 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
     return <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
 
+  const renderPrice = () => {
+    if (!artwork.price_amount || !artwork.price_core) return null;
+    return (
+      <>
+        <S.Line />
+        <Price price_amount={artwork.price_amount} price_core={artwork.price_core} />
+      </>
+    );
+  };
+
   return (
     <>
       <S.Container className={className}>
@@ -58,6 +69,7 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
               <S.Name>{artwork.name}</S.Name>
             </Link>
             <S.Description>{artwork.description}</S.Description>
+            {renderPrice()}
           </S.Text>
           {renderDropdownMenu()}
         </S.Bottom>
