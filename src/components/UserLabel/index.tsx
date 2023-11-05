@@ -15,14 +15,14 @@ const UserLabel: SFC<UserLabelProps> = ({avatar, className, description, id, use
 
   const handleClick = () => {
     if (!id) return;
-    navigate(`/profile/${id}`);
+    navigate(`/profile/${id}/posts`);
   };
 
   const renderAvatar = () => {
     if (!id) return <S.Avatar src={avatar} />;
 
     return (
-      <Link to={`/profile/${id}`}>
+      <Link to={`/profile/${id}/posts`}>
         <S.Avatar src={avatar} />
       </Link>
     );
