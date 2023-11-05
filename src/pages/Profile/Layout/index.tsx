@@ -26,7 +26,7 @@ const Layout: SFC = ({className}) => {
 
     return (
       <Tabs>
-        {renderTab('Posts', `/profile/${userId}/posts`)}
+        {renderTab('Posts', `/profile/${userId}`)}
         {renderTab('Artworks', `/profile/${userId}/artworks`)}
         {renderTab('Invitations', `/profile/${userId}/invitations`)}
       </Tabs>

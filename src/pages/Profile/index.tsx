@@ -42,9 +42,9 @@ const Profile: SFC = ({className}) => {
     <S.Container className={className}>
       <Routes>
         <Route element={<Layout />}>
+          <Route index element={<Posts />} />
           <Route path="/artworks" element={<Artworks />} />
           <Route path="/invitations" element={<Invitations />} />
-          <Route path="/posts" element={<Posts />} />
         </Route>
       </Routes>
     </S.Container>
