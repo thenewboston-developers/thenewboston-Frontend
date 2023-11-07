@@ -1,5 +1,6 @@
 export interface CreateOpenAIImageRequest {
   description: string;
+  quantity: number;
 }
 
 export interface CreateOpenAIImageResponse {

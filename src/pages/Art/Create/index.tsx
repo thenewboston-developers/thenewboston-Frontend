@@ -1,13 +1,13 @@
-import {useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Form, Formik} from 'formik';
 
 import {createOpenAIImage} from 'api/openaiImages';
 import Button, {ButtonType} from 'components/Button';
-import {Textarea} from 'components/FormElements';
+import {Select, Textarea} from 'components/FormElements';
 import {CreateOpenAIImageResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import yup from 'utils/yup';
-import ImagePreview from './ImagePreview';
+import ImageCarousel from './ImageCarousel';
 import * as S from './Styles';
 
 const Create: SFC = ({className}) => {
@@ -16,6 +16,7 @@ const Create: SFC = ({className}) => {
 
   const initialValues = {
     description: '',
+    quantity: 1,
   };
 
   type FormValues = typeof initialValues;
@@ -30,16 +31,16 @@ const Create: SFC = ({className}) => {
     }
   };
 
-  const renderImages = () => {
+  const renderImageCarousel = () => {
     if (!createOpenAIImageResponse) return null;
-    return createOpenAIImageResponse.data
-      .map((imageData) => imageData.url)
-      .map((imageUrl) => <ImagePreview description={description} imageUrl={imageUrl} key={imageUrl} />);
+    const imageUrls = createOpenAIImageResponse.data.map(({url}) => url);
+    return <ImageCarousel description={description} imageUrls={imageUrls} />;
   };
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
       description: yup.string().required(),
+      quantity: yup.number().min(1).max(10).required().integer(),
     });
   }, []);
 
@@ -59,6 +60,24 @@ const Create: SFC = ({className}) => {
                 name="description"
                 touched={touched}
               />
+              <Select
+                errors={errors}
+                label="Quantity"
+                name="quantity"
+                options={[
+                  {displayName: '1 Image', value: 1},
+                  {displayName: '2 Images', value: 2},
+                  {displayName: '3 Images', value: 3},
+                  {displayName: '4 Images', value: 4},
+                  {displayName: '5 Images', value: 5},
+                  {displayName: '6 Images', value: 6},
+                  {displayName: '7 Images', value: 7},
+                  {displayName: '8 Images', value: 8},
+                  {displayName: '9 Images', value: 9},
+                  {displayName: '10 Images', value: 10},
+                ]}
+                touched={touched}
+              />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}
@@ -71,7 +90,7 @@ const Create: SFC = ({className}) => {
           )}
         </Formik>
       </S.FormContainer>
-      <S.ImagesContainer>{renderImages()}</S.ImagesContainer>
+      <S.ImageCarouselContainer>{renderImageCarousel()}</S.ImageCarouselContainer>
     </S.Container>
   );
 };

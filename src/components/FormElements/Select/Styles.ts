@@ -12,8 +12,7 @@ export const ErrorMessage = styled.div`
 
 export const Label = styled.div`
   font-size: 12px;
-  font-weight: 700;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 `;
 
 export const Option = styled.option``;
@@ -28,12 +27,12 @@ export const SecondaryContainer = styled.div`
 
 export const Select = styled.select<{$error: boolean | string}>`
   appearance: none;
-  border-radius: 4px;
-  border: 1px solid ${({$error}) => ($error ? colors.palette.red['400'] : '#ebebeb')};
+  background: ${colors.whiteHover};
+  border-radius: 3px;
+  border: 1px solid ${({$error}) => ($error ? colors.palette.red['400'] : colors.border)};
   display: block;
   height: 40px;
-  outline: 0;
-  padding: 0 12px;
+  padding: 10px 14px;
   width: 100%;
 
   &:focus {
