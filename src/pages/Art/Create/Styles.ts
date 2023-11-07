@@ -22,6 +22,6 @@ export const FormContainer = styled.div`
   }
 `;
 
-export const ImagesContainer = styled.div`
+export const ImageCarouselContainer = styled.div`
   padding: 24px 16px;
 `;
