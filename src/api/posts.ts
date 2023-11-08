@@ -24,9 +24,16 @@ export const deletePost = async (id: number): Promise<void> => {
   }
 };
 
-export const getPosts = async (): Promise<PostReadSerializer[]> => {
+export interface GetPostsParams {
+  owner?: number;
+}
+
+export const getPosts = async (params?: GetPostsParams): Promise<PostReadSerializer[]> => {
   try {
-    const response = await axios.get<PostReadSerializer[]>(BASE_URL, authorizationHeaders());
+    const response = await axios.get<PostReadSerializer[]>(BASE_URL, {
+      params,
+      ...authorizationHeaders(),
+    });
     return response.data;
   } catch (error) {
     console.error(error);
