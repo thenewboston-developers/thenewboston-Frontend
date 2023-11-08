@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import UUserLabel from 'components/UserLabel';
-import {colors} from 'styles';
+import {breakpoints, colors} from 'styles';
 
 export const ButtonContainer = styled.div`
   align-items: center;
@@ -19,19 +19,34 @@ export const Container = styled.div`
   padding: 24px 32px;
 `;
 
+export const CreatedDate = styled.div`
+  color: ${colors.secondary};
+  font-size: 12px;
+  margin-top: 16px;
+`;
+
 export const Description = styled.div`
   color: ${colors.secondary};
   margin-top: 16px;
+`;
+
+export const DetailsContainer = styled.div`
+  display: flex;
+  flex: auto;
+  flex-direction: column;
 `;
 
 export const Img = styled.img`
   border-radius: 4px;
 `;
 
-export const Left = styled.div`
+export const ImgContainer = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 50%;
+
+  @media (min-width: ${breakpoints.mobile}) {
+    max-width: 50%;
+  }
 `;
 
 export const Name = styled.div`
@@ -51,15 +66,14 @@ export const PriceContainer = styled.div`
   padding: 8px;
 `;
 
-export const Right = styled.div`
-  display: flex;
-  flex: auto;
-  flex-direction: column;
-`;
-
 export const Top = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 24px;
+
+  @media (min-width: ${breakpoints.mobile}) {
+    flex-direction: row;
+  }
 `;
 
 export const UserLabel = styled(UUserLabel)`

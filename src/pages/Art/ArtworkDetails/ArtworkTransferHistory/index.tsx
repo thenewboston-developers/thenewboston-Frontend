@@ -59,7 +59,7 @@ const ArtworkTransferHistory: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <h1>Transfer History</h1>
+      <h2>Transfer History</h2>
       {renderArtTransfers()}
     </S.Container>
   );
