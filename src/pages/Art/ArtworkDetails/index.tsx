@@ -12,6 +12,7 @@ import ArtworkModal from 'modals/ArtworkModal';
 import ArtworkTransferModal from 'modals/ArtworkTransferModal';
 import {getArtworks, getSelf} from 'selectors/state';
 import {AppDispatch, Artwork, SFC} from 'types';
+import {longDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toast';
 import ArtworkTransferHistory from './ArtworkTransferHistory';
 import * as S from './Styles';
@@ -90,21 +91,21 @@ const ArtworkDetails: SFC = ({className}) => {
     return <Button onClick={handleBuy} text="Buy" />;
   };
 
-  const renderLeft = () => {
+  const renderImgContainer = () => {
     if (!artwork) return null;
 
     return (
-      <S.Left>
+      <S.ImgContainer>
         <S.Img alt="Artwork image" src={artwork.image} />
-      </S.Left>
+      </S.ImgContainer>
     );
   };
 
-  const renderRight = () => {
+  const renderDetailsContainer = () => {
     if (!artwork) return null;
 
     return (
-      <S.Right>
+      <S.DetailsContainer>
         <S.Name>{artwork.name}</S.Name>
         <S.Description>{artwork.description}</S.Description>
         <S.UserLabel
@@ -119,9 +120,10 @@ const ArtworkDetails: SFC = ({className}) => {
           id={artwork.owner.id}
           username={artwork.owner.username}
         />
+        <S.CreatedDate>Created: {longDate(artwork.created_date)}</S.CreatedDate>
         {renderPriceContainer(artwork)}
         {renderButtonContainer()}
-      </S.Right>
+      </S.DetailsContainer>
     );
   };
 
@@ -142,8 +144,8 @@ const ArtworkDetails: SFC = ({className}) => {
     <>
       <S.Container className={className}>
         <S.Top>
-          {renderLeft()}
-          {renderRight()}
+          {renderImgContainer()}
+          {renderDetailsContainer()}
         </S.Top>
         <ArtworkTransferHistory />
       </S.Container>
