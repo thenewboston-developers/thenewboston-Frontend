@@ -3,6 +3,7 @@ import {
   deletePost as _deletePost,
   getPosts as _getPosts,
   updatePost as _updatePost,
+  GetPostsParams,
 } from 'api/posts';
 import {setComments} from 'store/comments';
 import {setPost, setPosts, unsetPost} from 'store/posts';
@@ -19,8 +20,8 @@ export const deletePost = (id: number) => async (dispatch: AppDispatch) => {
   dispatch(unsetPost(id));
 };
 
-export const getPosts = () => async (dispatch: AppDispatch) => {
-  const responseData = await _getPosts();
+export const getPosts = (params?: GetPostsParams) => async (dispatch: AppDispatch) => {
+  const responseData = await _getPosts(params);
 
   for (const post of responseData) {
     const comments = post.comments || [];
