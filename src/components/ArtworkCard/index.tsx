@@ -1,15 +1,13 @@
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {mdiDotsVertical} from '@mdi/js';
 
 import Price from 'components/Price';
-import {deleteArtwork} from 'dispatchers/artworks';
-import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
+import ArtworkDeleteModal from 'modals/ArtworkDeleteModal';
 import ArtworkModal from 'modals/ArtworkModal';
 import {getSelf} from 'selectors/state';
-import {AppDispatch, Artwork, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {Artwork, SFC} from 'types';
 import * as S from './Styles';
 
 export interface ArtworkCardProps {
@@ -17,19 +15,9 @@ export interface ArtworkCardProps {
 }
 
 const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
+  const [artworkDeleteModalIsOpen, toggleArtworkDeleteModal] = useToggle(false);
   const [artworkModalIsOpen, toggleArtworkModal] = useToggle(false);
-  const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
-
-  const handleDelete = async () => {
-    try {
-      await dispatch(deleteArtwork(artwork.id));
-      displayToast('Artwork deleted!', ToastType.SUCCESS);
-    } catch (error) {
-      console.error(error);
-      displayErrorToast('Error deleting artwork');
-    }
-  };
 
   const menuOptions = [
     {
@@ -38,7 +26,7 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
     },
     {
       label: 'Delete',
-      onClick: handleDelete,
+      onClick: toggleArtworkDeleteModal,
     },
   ];
 
@@ -74,6 +62,7 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
           {renderDropdownMenu()}
         </S.Bottom>
       </S.Container>
+      {artworkDeleteModalIsOpen ? <ArtworkDeleteModal artworkId={artwork.id} close={toggleArtworkDeleteModal} /> : null}
       {artworkModalIsOpen ? (
         <ArtworkModal artwork={artwork} close={toggleArtworkModal} imageUrl={artwork.image} />
       ) : null}
