@@ -35,6 +35,7 @@ const OrderBook: SFC = ({className}) => {
         <thead>
           <S.Tr>
             <th>Date</th>
+            <th>Order Type</th>
             <th>Order Quantity ({activeAssetPair.primary_currency.ticker})</th>
             <th>Filled Amount ({activeAssetPair.primary_currency.ticker})</th>
             <th>Remaining ({activeAssetPair.primary_currency.ticker})</th>
@@ -46,6 +47,7 @@ const OrderBook: SFC = ({className}) => {
           {filteredOrders.map((order) => (
             <S.Tr key={order.id}>
               <S.Td>{longDate(order.created_date)}</S.Td>
+              <S.Td>{order.order_type}</S.Td>
               <S.Td>{order.quantity}</S.Td>
               <S.Td>{order.filled_amount}</S.Td>
               <S.Td>{(order.quantity - order.filled_amount).toLocaleString()}</S.Td>
