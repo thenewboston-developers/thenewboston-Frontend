@@ -41,15 +41,6 @@ const Trade: SFC = ({className}) => {
     })();
   }, [activeAssetPair, assetPairList, dispatch]);
 
-  const renderOrderHistory = () => {
-    return (
-      <S.OrderHistory>
-        <Chart />
-        <OrderBook />
-      </S.OrderHistory>
-    );
-  };
-
   const renderPageContent = () => {
     if (!!assetPairList.length) {
       return (
@@ -57,8 +48,9 @@ const Trade: SFC = ({className}) => {
           <AssetPairSelector />
           <S.Grid>
             <OrderTools />
-            {renderOrderHistory()}
+            <Chart />
           </S.Grid>
+          <OrderBook />
         </>
       );
     }

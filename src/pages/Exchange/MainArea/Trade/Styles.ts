@@ -17,5 +17,3 @@ export const Grid = styled.div`
     grid-template-columns: auto;
   }
 `;
-
-export const OrderHistory = styled.div``;
