@@ -30,19 +30,19 @@ export const Table = styled.table`
     padding: 2px 0;
   }
 
-  th:nth-child(2),
-  td:nth-child(2),
   th:nth-child(3),
   td:nth-child(3),
   th:nth-child(4),
   td:nth-child(4),
   th:nth-child(5),
-  td:nth-child(5) {
+  td:nth-child(5),
+  th:nth-child(6),
+  td:nth-child(6) {
     text-align: right;
   }
 
-  th:nth-child(6),
-  td:nth-child(6) {
+  th:nth-child(7),
+  td:nth-child(7) {
     text-align: center;
   }
 `;
