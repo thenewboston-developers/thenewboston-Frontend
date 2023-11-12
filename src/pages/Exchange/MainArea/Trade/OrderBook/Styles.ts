@@ -12,9 +12,12 @@ const sellMixin = css`
 `;
 
 export const Container = styled.div`
-  border-radius: 4px;
-  border: 1px solid ${colors.border};
-  padding: 16px;
+  margin-top: 24px;
+`;
+
+export const FillStatusBadgeWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 export const Table = styled.table`
@@ -23,7 +26,24 @@ export const Table = styled.table`
 
   th,
   td {
+    text-align: left;
+    padding: 2px 0;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2),
+  th:nth-child(3),
+  td:nth-child(3),
+  th:nth-child(4),
+  td:nth-child(4),
+  th:nth-child(5),
+  td:nth-child(5) {
     text-align: right;
+  }
+
+  th:nth-child(6),
+  td:nth-child(6) {
+    text-align: center;
   }
 `;
 

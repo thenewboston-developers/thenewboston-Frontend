@@ -1,3 +1,11 @@
+export const chartDisplayDate = (date: number | string | Date): string => {
+  const customDate = new Date(date);
+  const month = String(customDate.getMonth() + 1).padStart(2, '0');
+  const day = String(customDate.getDate()).padStart(2, '0');
+  const year = String(customDate.getFullYear()).slice(-2);
+  return `${month}/${day}/${year}`;
+};
+
 const getPluralizedTime = (value: number, singularNoun: string, pluralNoun: string): string => {
   return `${value} ${value === 1 ? singularNoun : pluralNoun}`;
 };

@@ -1,9 +1,8 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
-import Tab from 'components/Tab';
 import {getAssetPairs as _getAssetPairs} from 'dispatchers/assetPairs';
 import {useActiveAssetPair} from 'hooks';
 import {getAssetPairs} from 'selectors/state';
@@ -11,18 +10,12 @@ import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import AssetPairSelector from './AssetPairSelector';
-import Buy from './Buy';
+import Chart from './Chart';
 import OrderBook from './OrderBook';
-import Sell from './Sell';
+import OrderTools from './OrderTools';
 import * as S from './Styles';
 
-enum TradeTab {
-  BUY = 'BUY',
-  SELL = 'SELL',
-}
-
 const Trade: SFC = ({className}) => {
-  const [activeTab, setActiveTab] = useState(TradeTab.BUY);
   const activeAssetPair = useActiveAssetPair();
   const assetPairs = useSelector(getAssetPairs);
   const dispatch = useDispatch<AppDispatch>();
@@ -53,11 +46,11 @@ const Trade: SFC = ({className}) => {
       return (
         <>
           <AssetPairSelector />
-          {renderTabs()}
           <S.Grid>
-            {renderTabContent()}
-            <OrderBook />
+            <OrderTools />
+            <Chart />
           </S.Grid>
+          <OrderBook />
         </>
       );
     }
@@ -68,32 +61,6 @@ const Trade: SFC = ({className}) => {
         graphic={LeavesEmptyState}
         topText="Nothing here!"
       />
-    );
-  };
-
-  const renderTabContent = () => {
-    if (!activeAssetPair) return null;
-
-    const tabContent = {
-      [TradeTab.BUY]: <Buy />,
-      [TradeTab.SELL]: <Sell />,
-    };
-
-    return <S.TabContent>{tabContent[activeTab]}</S.TabContent>;
-  };
-
-  const renderTabs = () => {
-    if (!activeAssetPair) return null;
-
-    return (
-      <S.Tabs>
-        <Tab isActive={activeTab === TradeTab.BUY} onClick={() => setActiveTab(TradeTab.BUY)}>
-          Buy
-        </Tab>
-        <Tab isActive={activeTab === TradeTab.SELL} onClick={() => setActiveTab(TradeTab.SELL)}>
-          Sell
-        </Tab>
-      </S.Tabs>
     );
   };
 
