@@ -12,12 +12,17 @@ export const Container = styled.div`
   margin-top: 16px;
 `;
 
+export const ContentInput = styled(UInlineInput)`
+  flex: 1;
+  margin-left: 12px;
+`;
+
 export const Form = styled(UForm)`
   align-items: center;
   display: flex;
 `;
 
-export const InlineInput = styled(UInlineInput)`
-  flex: 1;
+export const PriceAmountInput = styled(UInlineInput)`
   margin-left: 12px;
+  width: 80px;
 `;

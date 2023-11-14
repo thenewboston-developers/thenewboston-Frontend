@@ -24,6 +24,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
 
   const initialValues = {
     content: '',
+    price_amount: '',
   };
 
   type FormValues = typeof initialValues;
@@ -35,7 +36,12 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
 
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
-      const requestData = {...values, post: postId};
+      const requestData = {
+        ...values,
+        post: postId,
+        price_amount: values.price_amount === '' ? null : parseInt(values.price_amount, 10),
+        price_core: 4, // TODO: Change
+      };
       await dispatch(createComment(requestData));
       resetForm();
     } catch (error) {
@@ -65,7 +71,8 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
         {({dirty, errors, isSubmitting, isValid, touched}) => (
           <S.Form>
             <Avatar src={self.avatar} />
-            <S.InlineInput errors={errors} name="content" placeholder="Add a comment..." touched={touched} />
+            <S.ContentInput errors={errors} name="content" placeholder="Add a comment..." touched={touched} />
+            <S.PriceAmountInput errors={errors} name="price_amount" placeholder="Amount" touched={touched} />
             <S.Button
               dirty={dirty}
               disabled={isSubmitting}
