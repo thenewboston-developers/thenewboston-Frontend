@@ -1,5 +1,5 @@
-import {useSelector} from 'react-redux';
 import {useMemo} from 'react';
+import {useSelector} from 'react-redux';
 
 import {getCores, getWallets} from 'selectors/state';
 import {Core} from 'types';

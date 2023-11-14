@@ -4,23 +4,31 @@ import {breakpoints} from 'styles';
 
 export const Container = styled.div`
   display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(5, 1fr);
-  padding: 24px 32px;
+  gap: 12px;
+  grid-template-columns: 1fr;
+  padding: 16px;
 
-  @media (max-width: ${breakpoints.desktop}) {
-    grid-template-columns: repeat(4, 1fr);
+  @media (min-width: ${breakpoints.mini}) {
+    grid-template-columns: 1fr;
   }
 
-  @media (max-width: ${breakpoints.tablet}) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
+  @media (min-width: ${breakpoints.mobile}) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: ${breakpoints.mini}) {
-    grid-template-columns: auto;
+  @media (min-width: ${breakpoints.tablet}) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: ${breakpoints.desktop}) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (min-width: ${breakpoints.largeDesktop}) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  @media (min-width: ${breakpoints.xlDesktop}) {
+    grid-template-columns: repeat(6, 1fr);
   }
 `;

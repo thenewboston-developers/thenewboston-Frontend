@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import UDropdownMenu from 'components/DropdownMenu';
+import UPriceMini from 'components/PriceMini';
 import {colors, fonts} from 'styles';
 
 export const Container = styled.div`
@@ -34,6 +35,10 @@ export const Middle = styled.div`
   flex: 1;
   flex-direction: column;
   margin-left: 10px;
+`;
+
+export const PriceMini = styled(UPriceMini)`
+  margin-top: 2px;
 `;
 
 export const Right = styled.div`

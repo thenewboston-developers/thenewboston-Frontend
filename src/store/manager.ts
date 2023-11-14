@@ -6,6 +6,7 @@ import {Manager} from 'types';
 const initialState: Manager = {
   activeAddress: null,
   activeAssetPairId: null,
+  activeCommentCore: null,
   activeOrderAddressId: null,
   activeProduct: null,
   activeWalletId: null,
