@@ -6,6 +6,7 @@ export const ArtworkCards = styled.div`
   display: grid;
   gap: 12px;
   grid-template-columns: 1fr;
+  padding: 16px;
 
   @media (min-width: ${breakpoints.mini}) {
     grid-template-columns: 1fr;
@@ -34,5 +35,4 @@ export const ArtworkCards = styled.div`
 
 export const Container = styled.div`
   height: 100%;
-  padding: 16px;
 `;
