@@ -4,6 +4,7 @@ import {
   mdiAccount,
   mdiBrush,
   mdiExitToApp,
+  mdiHome,
   mdiLanConnect,
   mdiShopping,
   mdiSwapHorizontalCircleOutline,
@@ -31,6 +32,7 @@ const LeftNav: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Top>
+        <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
         <MenuLink icon={mdiBrush} rootPath="/art" text="Art" to="/art/marketplace" />
         <MenuLink icon={mdiLanConnect} rootPath="/cores" text="Cores" to="/cores" />
         <MenuLink icon={mdiWalletBifoldOutline} rootPath="/wallets" text="Wallets" to="/wallets" />
