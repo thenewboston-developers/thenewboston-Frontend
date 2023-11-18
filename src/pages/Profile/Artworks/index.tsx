@@ -18,8 +18,9 @@ const Artworks: SFC = ({className}) => {
   const userId = id ? parseInt(id, 10) : null;
 
   useEffect(() => {
+    if (!userId) return;
+
     (async () => {
-      if (!userId) return;
       await dispatch(_getArtworks({owner: userId}));
     })();
   }, [dispatch, userId]);

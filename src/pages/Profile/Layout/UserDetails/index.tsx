@@ -13,8 +13,8 @@ import * as S from './Styles';
 
 const UserDetails: SFC = ({className}) => {
   const [editProfileModalIsOpen, toggleEditProfileModal] = useToggle(false);
-  const {id} = useParams();
   const [follower, setFollower] = useState<FollowerReadSerializer | null>(null);
+  const {id} = useParams();
   const self = useSelector(getSelf);
   const user = useUser(id);
 

@@ -9,6 +9,8 @@ import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import Artworks from './Artworks';
+import Followers from './Followers';
+import Following from './Following';
 import Invitations from './Invitations';
 import Layout from './Layout';
 import Posts from './Posts';
@@ -47,6 +49,8 @@ const Profile: SFC = ({className}) => {
         <Route element={<Layout />}>
           <Route index element={<Posts />} />
           <Route path="/artworks" element={<Artworks />} />
+          <Route path="/following" element={<Following />} />
+          <Route path="/followers" element={<Followers />} />
           <Route path="/invitations" element={<Invitations />} />
         </Route>
       </Routes>
