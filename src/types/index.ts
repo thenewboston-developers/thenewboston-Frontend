@@ -6,6 +6,7 @@ import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
+import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/followers';
 import {CreateInvitationRequest} from 'types/api/invitations';
 import {CreateOpenAIImageRequest, CreateOpenAIImageResponse} from 'types/api/openaiImages';
 import {CreateOrderRequest} from 'types/api/orders';
@@ -68,6 +69,7 @@ export {
   CreateCartProductRequest,
   CreateCommentRequest,
   CreateExchangeOrderRequest,
+  CreateFollowerRequest,
   CreateInvitationRequest,
   CreateOpenAIImageRequest,
   CreateOpenAIImageResponse,
@@ -81,6 +83,7 @@ export {
   EditArtworkRequest,
   ExchangeOrder,
   ExchangeOrders,
+  FollowerReadSerializer,
   GenericFunction,
   GenericVoidFunction,
   Invitation,

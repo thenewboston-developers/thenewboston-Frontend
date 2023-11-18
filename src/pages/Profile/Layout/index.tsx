@@ -31,6 +31,8 @@ const Layout: SFC = ({className}) => {
       <Tabs>
         {renderTab('Posts', `/profile/${userId}`)}
         {renderTab('Artworks', `/profile/${userId}/artworks`)}
+        {renderTab('Followers', `/profile/${userId}/followers`)}
+        {renderTab('Following', `/profile/${userId}/following`)}
         {userId === self.id ? renderTab('Invitations', `/profile/${userId}/invitations`) : null}
       </Tabs>
     );
