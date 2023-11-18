@@ -5,6 +5,7 @@ import orderBy from 'lodash/orderBy';
 
 import {getFollowers} from 'api/followers';
 import EmptyText from 'components/EmptyText';
+import UserLabel from 'components/UserLabel';
 import {AppDispatch, FollowerReadSerializer, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import * as S from './Styles';
@@ -42,7 +43,14 @@ const Following: SFC = ({className}) => {
   };
 
   const renderFollowerCards = () => {
-    const _followers = followerList.map((follower) => <div>{follower.following.username}</div>);
+    const _followers = followerList.map(({following}) => (
+      <UserLabel
+        avatar={following.avatar}
+        description={`User ID: ${following.id}`}
+        id={following.id}
+        username={following.username}
+      />
+    ));
     return <S.FollowerCards>{_followers}</S.FollowerCards>;
   };
 
