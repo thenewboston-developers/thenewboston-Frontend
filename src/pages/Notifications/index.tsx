@@ -7,6 +7,7 @@ import EmptyPage from 'components/EmptyPage';
 import {getNotifications as _getNotifications} from 'dispatchers/notifications';
 import {getNotifications} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
+import Notification from './Notification';
 import * as S from './Styles';
 
 const Notifications: SFC = ({className}) => {
@@ -35,7 +36,9 @@ const Notifications: SFC = ({className}) => {
   };
 
   const renderNotificationContainer = () => {
-    const _notifications = notificationList.map((notification) => <div key={notification.id}>{notification.id}</div>);
+    const _notifications = notificationList.map((notification) => (
+      <Notification key={notification.id} notification={notification} />
+    ));
     return <S.NotificationContainer>{_notifications}</S.NotificationContainer>;
   };
 
