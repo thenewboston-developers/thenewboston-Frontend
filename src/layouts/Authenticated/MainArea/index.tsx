@@ -4,6 +4,7 @@ import Art from 'pages/Art';
 import Cores from 'pages/Cores';
 import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
+import Notifications from 'pages/Notifications';
 import Profile from 'pages/Profile';
 import Shop from 'pages/Shop';
 import Wallets from 'pages/Wallets';
@@ -18,6 +19,7 @@ const MainArea: SFC = ({className}) => {
         <Route path="/cores" element={<Cores />} />
         <Route path="/exchange/*" element={<Exchange />} />
         <Route path="/feed" element={<Feed />} />
+        <Route path="/notifications" element={<Notifications />} />
         <Route path="/profile/:id/*" element={<Profile />} />
         <Route path="/shop/*" element={<Shop />} />
         <Route path="/wallets" element={<Wallets />} />
