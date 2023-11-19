@@ -8,6 +8,7 @@ import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/followers';
 import {CreateInvitationRequest} from 'types/api/invitations';
+import {UpdateNotificationRequest} from 'types/api/notifications';
 import {CreateOpenAIImageRequest, CreateOpenAIImageResponse} from 'types/api/openaiImages';
 import {CreateOrderRequest} from 'types/api/orders';
 import {PostReadSerializer} from 'types/api/posts';
@@ -31,6 +32,7 @@ import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Invitation, Invitations} from 'types/invitations';
 import {Item} from 'types/items';
 import {Manager} from 'types/manager';
+import {Notification, Notifications} from 'types/notifications';
 import {OrderProduct} from 'types/orderProducts';
 import {Order, Orders} from 'types/orders';
 import {Post, Posts} from 'types/posts';
@@ -94,6 +96,8 @@ export {
   LoginRequest,
   LoginResponse,
   Manager,
+  Notification,
+  Notifications,
   Order,
   OrderProduct,
   Orders,
@@ -108,6 +112,7 @@ export {
   Self,
   Trade,
   Trades,
+  UpdateNotificationRequest,
   UserReadSerializer,
   Users,
   Wallet,

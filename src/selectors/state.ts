@@ -12,6 +12,7 @@ export const getExchangeOrders = (state: RootState) => state.exchangeOrders;
 export const getInvitationLimits = (state: RootState) => state.invitationLimits;
 export const getInvitations = (state: RootState) => state.invitations;
 export const getManager = (state: RootState) => state.manager;
+export const getNotifications = (state: RootState) => state.notifications;
 export const getOrders = (state: RootState) => state.orders;
 export const getPosts = (state: RootState) => state.posts;
 export const getProducts = (state: RootState) => state.products;

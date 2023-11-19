@@ -24,16 +24,6 @@ export const deleteComment = async (id: number): Promise<void> => {
   }
 };
 
-export const getComments = async (): Promise<Comment[]> => {
-  try {
-    const response = await axios.get<Comment[]>(BASE_URL, authorizationHeaders());
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
 export const updateComment = async (id: number, data: Partial<CreateCommentRequest>): Promise<Comment> => {
   try {
     const response = await axios.patch<Comment>(`${BASE_URL}/${id}`, data, authorizationHeaders());

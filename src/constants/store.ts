@@ -10,6 +10,7 @@ export const EXCHANGE_ORDERS = 'exchangeOrders';
 export const INVITATIONS = 'invitations';
 export const INVITATION_LIMITS = 'invitationLimits';
 export const MANAGER = 'manager';
+export const NOTIFICATIONS = 'notifications';
 export const ORDERS = 'orders';
 export const POSTS = 'posts';
 export const PRODUCTS = 'products';
