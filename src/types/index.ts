@@ -5,6 +5,7 @@ import {CreateArtworkTransferRequest} from 'types/api/artworkTransfers';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
+import {CreateConversationRequest} from 'types/api/conversations';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/followers';
 import {CreateInvitationRequest} from 'types/api/invitations';
@@ -23,6 +24,7 @@ import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {CartProduct, CartProducts} from 'types/cartProducts';
 import {Comment, Comments} from 'types/comments';
+import {Conversation, Conversations} from 'types/conversations';
 import {Core, Cores} from 'types/cores';
 import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
@@ -62,6 +64,8 @@ export {
   Comment,
   CommentReadSerializer,
   Comments,
+  Conversation,
+  Conversations,
   Core,
   Cores,
   CreateAddressRequest,
@@ -70,6 +74,7 @@ export {
   CreateArtworkTransferRequest,
   CreateCartProductRequest,
   CreateCommentRequest,
+  CreateConversationRequest,
   CreateExchangeOrderRequest,
   CreateFollowerRequest,
   CreateInvitationRequest,

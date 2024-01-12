@@ -10,6 +10,7 @@ import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
 import cartProductsReducer from 'store/cartProducts';
 import commentsReducer from 'store/comments';
+import conversationsReducer from 'store/conversations';
 import coresReducer from 'store/cores';
 import exchangeOrdersReducer from 'store/exchangeOrders';
 import invitationLimitsReducer from 'store/invitationLimits';
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   authentication: authenticationReducer,
   cartProducts: cartProductsReducer,
   comments: commentsReducer,
+  conversations: conversationsReducer,
   cores: coresReducer,
   exchangeOrders: exchangeOrdersReducer,
   invitationLimits: invitationLimitsReducer,
