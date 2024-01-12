@@ -5,10 +5,6 @@ import UButton from 'components/Button';
 import {InlineInput as UInlineInput} from 'components/FormElements';
 import {colors} from 'styles';
 
-export const Bottom = styled.div`
-  padding: 16px 12px;
-`;
-
 export const Button = styled(UButton)`
   display: none;
 `;
@@ -24,14 +20,42 @@ export const Form = styled(UForm)`
   display: flex;
 `;
 
+export const GreetingContainer = styled.div`
+  align-items: center;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+`;
+
+export const GreetingElements = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const GreetingText = styled.h2`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+`;
+
+export const MessagesBottom = styled.div`
+  padding: 16px 12px;
+`;
+
 export const MessagesContainer = styled.div`
+  display: grid;
+  grid-template-rows: auto min-content;
+  height: 100vh;
+`;
+
+export const MessagesTop = styled.div`
   border-bottom: 1px solid ${colors.border};
   overflow-y: auto;
 `;
 
 export const Right = styled.div`
-  display: grid;
-  grid-template-rows: auto min-content;
   height: 100vh;
 `;
 
