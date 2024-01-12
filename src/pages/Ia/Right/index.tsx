@@ -1,19 +1,22 @@
 import {useMemo} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Formik, FormikHelpers} from 'formik';
-import {isArray} from 'lodash-es';
+import orderBy from 'lodash/orderBy';
 import {mdiFaceWoman} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import {ButtonType} from 'components/Button';
 import Icon from 'components/Icon';
-import {getSelf} from 'selectors/state';
-import {SFC} from 'types';
+import {createMessage} from 'dispatchers/messages';
+import {getMessages, getSelf} from 'selectors/state';
+import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
 const Right: SFC = ({className}) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const messages = useSelector(getMessages);
   const self = useSelector(getSelf);
 
   const initialValues = {
@@ -22,9 +25,13 @@ const Right: SFC = ({className}) => {
 
   type FormValues = typeof initialValues;
 
+  const messageList = useMemo(() => {
+    return orderBy(Object.values(messages), ['created_date']);
+  }, [messages]);
+
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
-      console.log(values);
+      await dispatch(createMessage({...values, conversation: 6}));
       resetForm();
     } catch (error) {
       console.error(error);
@@ -72,16 +79,12 @@ const Right: SFC = ({className}) => {
   };
 
   const renderMessagesContainer = () => {
-    return (
-      <S.MessagesContainer>
-        <h1>message 1</h1>
-        <h1>message 2</h1>
-      </S.MessagesContainer>
-    );
+    const _messages = messageList.map(({id, text}) => <div key={id}>{text}</div>);
+    return <S.MessagesContainer>{_messages}</S.MessagesContainer>;
   };
 
   const renderTop = () => {
-    return <S.Top>{isArray(1) ? renderGreetingContainer() : renderMessagesContainer()}</S.Top>;
+    return <S.Top>{!messageList.length ? renderGreetingContainer() : renderMessagesContainer()}</S.Top>;
   };
 
   const validationSchema = useMemo(() => {

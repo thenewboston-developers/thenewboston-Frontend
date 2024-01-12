@@ -9,6 +9,7 @@ import {CreateConversationRequest} from 'types/api/conversations';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/followers';
 import {CreateInvitationRequest} from 'types/api/invitations';
+import {CreateMessageRequest} from 'types/api/messages';
 import {UpdateNotificationRequest} from 'types/api/notifications';
 import {CreateOpenAIImageRequest, CreateOpenAIImageResponse} from 'types/api/openaiImages';
 import {CreateOrderRequest} from 'types/api/orders';
@@ -34,6 +35,7 @@ import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Invitation, Invitations} from 'types/invitations';
 import {Item} from 'types/items';
 import {Manager} from 'types/manager';
+import {Message, Messages} from 'types/messages';
 import {Notification, Notifications} from 'types/notifications';
 import {OrderProduct} from 'types/orderProducts';
 import {Order, Orders} from 'types/orders';
@@ -78,6 +80,7 @@ export {
   CreateExchangeOrderRequest,
   CreateFollowerRequest,
   CreateInvitationRequest,
+  CreateMessageRequest,
   CreateOpenAIImageRequest,
   CreateOpenAIImageResponse,
   CreateOrderRequest,
@@ -101,6 +104,8 @@ export {
   LoginRequest,
   LoginResponse,
   Manager,
+  Message,
+  Messages,
   Notification,
   Notifications,
   Order,

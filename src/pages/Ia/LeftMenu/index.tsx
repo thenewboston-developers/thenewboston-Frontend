@@ -35,7 +35,7 @@ const LeftMenu: SFC = ({className}) => {
   };
 
   const renderMenuItems = () => {
-    const menuItems = conversationList.map(({name}) => <MenuItem text={name} />);
+    const menuItems = conversationList.map(({id, name}) => <MenuItem key={id} text={name} />);
     return <>{menuItems}</>;
   };
 
