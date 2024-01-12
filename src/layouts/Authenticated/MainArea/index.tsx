@@ -20,7 +20,7 @@ const MainArea: SFC = ({className}) => {
         <Route path="/cores" element={<Cores />} />
         <Route path="/exchange/*" element={<Exchange />} />
         <Route path="/feed" element={<Feed />} />
-        <Route path="/ia" element={<Ia />} />
+        <Route path="/ia/:id?" element={<Ia />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/profile/:id/*" element={<Profile />} />
         <Route path="/shop/*" element={<Shop />} />

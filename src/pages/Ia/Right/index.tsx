@@ -1,5 +1,6 @@
 import {useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useParams} from 'react-router-dom';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
 import {mdiFaceWoman} from '@mdi/js';
@@ -15,9 +16,12 @@ import yup from 'utils/yup';
 import * as S from './Styles';
 
 const Right: SFC = ({className}) => {
+  const params = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const messages = useSelector(getMessages);
   const self = useSelector(getSelf);
+
+  const conversationId = params.id ? parseInt(params.id, 10) : null;
 
   const initialValues = {
     text: '',
@@ -84,7 +88,9 @@ const Right: SFC = ({className}) => {
   };
 
   const renderTop = () => {
-    return <S.Top>{!messageList.length ? renderGreetingContainer() : renderMessagesContainer()}</S.Top>;
+    return (
+      <S.Top>{conversationId && !!messageList.length ? renderMessagesContainer() : renderGreetingContainer()}</S.Top>
+    );
   };
 
   const validationSchema = useMemo(() => {
