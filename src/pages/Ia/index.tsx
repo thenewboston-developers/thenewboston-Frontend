@@ -1,3 +1,4 @@
+import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 import {Formik, FormikHelpers} from 'formik';
 
@@ -7,8 +8,8 @@ import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import yup from 'utils/yup';
+import LeftMenu from './LeftMenu';
 import * as S from './Styles';
-import {useMemo} from 'react';
 
 const Ia: SFC = ({className}) => {
   const self = useSelector(getSelf);
@@ -74,9 +75,7 @@ const Ia: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <S.LeftMenu>
-        <h1>convo 1</h1>
-      </S.LeftMenu>
+      <LeftMenu />
       <S.Right>
         {renderMessagesContainer()}
         {renderBottom()}

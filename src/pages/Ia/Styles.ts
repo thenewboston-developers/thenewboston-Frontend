@@ -24,11 +24,6 @@ export const Form = styled(UForm)`
   display: flex;
 `;
 
-export const LeftMenu = styled.div`
-  border-right: 1px solid ${colors.border};
-  overflow-y: auto;
-`;
-
 export const MessagesContainer = styled.div`
   border-bottom: 1px solid ${colors.border};
   overflow-y: auto;
