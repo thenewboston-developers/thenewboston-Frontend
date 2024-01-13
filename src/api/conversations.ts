@@ -14,3 +14,20 @@ export const createConversation = async (data: CreateConversationRequest): Promi
     throw error;
   }
 };
+
+export interface GetConversationsParams {
+  owner?: number;
+}
+
+export const getConversations = async (params?: GetConversationsParams): Promise<Conversation[]> => {
+  try {
+    const response = await axios.get<Conversation[]>(BASE_URL, {
+      params,
+      ...authorizationHeaders(),
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

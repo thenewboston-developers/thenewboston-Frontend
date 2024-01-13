@@ -1,8 +1,8 @@
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 
 import {getManager} from 'selectors/state';
-import {updateManager} from 'store/manager';
-import {AppDispatch, SFC} from 'types';
+import {SFC} from 'types';
 import * as S from './Styles';
 
 export interface MenuItemProps {
@@ -10,12 +10,11 @@ export interface MenuItemProps {
 }
 
 const MenuItem: SFC<MenuItemProps> = ({className, text}) => {
-  const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    console.log('click');
-    dispatch(updateManager({activeWalletId: null}));
+    navigate(`/ia/1`);
   };
 
   return (
