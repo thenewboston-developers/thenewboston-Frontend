@@ -2,6 +2,7 @@ import {
   createConversation as _createConversation,
   deleteConversation as _deleteConversation,
   getConversations as _getConversations,
+  updateConversation as _updateConversation,
   GetConversationsParams,
 } from 'api/conversations';
 import {setConversation, setConversations, unsetConversation} from 'store/conversations';
@@ -22,3 +23,9 @@ export const getConversations = (params?: GetConversationsParams) => async (disp
   const responseData = await _getConversations(params);
   dispatch(setConversations(responseData));
 };
+
+export const updateConversation =
+  (id: number, data: Partial<CreateConversationRequest>) => async (dispatch: AppDispatch) => {
+    const responseData = await _updateConversation(id, data);
+    dispatch(setConversation(responseData));
+  };

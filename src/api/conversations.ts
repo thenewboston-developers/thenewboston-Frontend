@@ -40,3 +40,16 @@ export const getConversations = async (params?: GetConversationsParams): Promise
     throw error;
   }
 };
+
+export const updateConversation = async (
+  id: number,
+  data: Partial<CreateConversationRequest>,
+): Promise<Conversation> => {
+  try {
+    const response = await axios.patch<Conversation>(`${BASE_URL}/${id}`, data, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
