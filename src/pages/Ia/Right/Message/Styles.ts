@@ -8,7 +8,7 @@ export const Container = styled.div`
   padding: 8px 16px;
 
   &:hover {
-    background: #bbb;
+    background: rgba(208, 215, 222, 0.32);
   }
 `;
 
@@ -50,7 +50,6 @@ export const Right = styled.div`
 `;
 
 export const Tools = styled(UTools)`
-  margin-right: 12px;
   top: -26px;
 `;
 
