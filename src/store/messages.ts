@@ -18,8 +18,11 @@ const messages = createSlice({
         state[message.id] = message;
       });
     },
+    unsetMessage: (state: Messages, {payload: id}: PayloadAction<number>) => {
+      delete state[id];
+    },
   },
 });
 
-export const {setMessage, setMessages} = messages.actions;
+export const {setMessage, setMessages, unsetMessage} = messages.actions;
 export default messages.reducer;

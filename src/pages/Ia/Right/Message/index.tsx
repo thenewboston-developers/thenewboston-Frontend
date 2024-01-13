@@ -3,6 +3,8 @@ import {mdiDelete, mdiPencil} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import Tool from 'components/Tool';
+import {useToggle} from 'hooks';
+import MessageDeleteModal from 'modals/MessageDeleteModal';
 import {Message as TMessage, SFC} from 'types';
 import {shortDate} from 'utils/dates';
 import * as S from './Styles';
@@ -12,6 +14,7 @@ export interface MessageProps {
 }
 
 const Message: SFC<MessageProps> = ({className, message}) => {
+  const [messageDeleteModalIsOpen, toggleMessageDeleteModal] = useToggle(false);
   const [toolsVisible, setToolsVisible] = useState<boolean>(false);
 
   const {modified_date, sender, text} = message;
@@ -30,26 +33,29 @@ const Message: SFC<MessageProps> = ({className, message}) => {
       <S.ToolsContainer>
         <S.Tools>
           <Tool icon={mdiPencil} onClick={() => {}} />
-          <Tool icon={mdiDelete} onClick={() => {}} />
+          <Tool icon={mdiDelete} onClick={toggleMessageDeleteModal} />
         </S.Tools>
       </S.ToolsContainer>
     );
   };
 
   return (
-    <S.Container className={className} onMouseOut={handleMouseOut} onMouseOver={handleMouseOver}>
-      <Avatar src={sender.avatar} />
-      <S.Right>
-        <S.Header>
-          <S.HeaderLeft>
-            <S.DisplayName>{sender.username}</S.DisplayName>
-            <S.Date>{shortDate(modified_date, true)}</S.Date>
-          </S.HeaderLeft>
-          <S.HeaderRight>{renderTools()}</S.HeaderRight>
-        </S.Header>
-        <S.Content>{text}</S.Content>
-      </S.Right>
-    </S.Container>
+    <>
+      <S.Container className={className} onMouseOut={handleMouseOut} onMouseOver={handleMouseOver}>
+        <Avatar src={sender.avatar} />
+        <S.Right>
+          <S.Header>
+            <S.HeaderLeft>
+              <S.DisplayName>{sender.username}</S.DisplayName>
+              <S.Date>{shortDate(modified_date, true)}</S.Date>
+            </S.HeaderLeft>
+            <S.HeaderRight>{renderTools()}</S.HeaderRight>
+          </S.Header>
+          <S.Content>{text}</S.Content>
+        </S.Right>
+      </S.Container>
+      {messageDeleteModalIsOpen ? <MessageDeleteModal close={toggleMessageDeleteModal} messageId={message.id} /> : null}
+    </>
   );
 };
 
