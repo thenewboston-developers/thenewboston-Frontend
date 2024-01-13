@@ -45,7 +45,11 @@ export const GreetingText = styled.h2`
   margin-top: 12px;
 `;
 
-export const MessagesContainer = styled.div``;
+export const MessagesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+`;
 
 export const TextInput = styled(UInlineInput)`
   flex: 1;

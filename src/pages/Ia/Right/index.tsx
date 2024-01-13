@@ -14,6 +14,7 @@ import {getMessages, getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import yup from 'utils/yup';
+import Message from './Message';
 import * as S from './Styles';
 
 const Right: SFC = ({className}) => {
@@ -97,7 +98,7 @@ const Right: SFC = ({className}) => {
   };
 
   const renderMessagesContainer = () => {
-    const _messages = messageList.map(({id, text}) => <div key={id}>{text}</div>);
+    const _messages = messageList.map((message) => <Message key={message.id} message={message} />);
     return <S.MessagesContainer>{_messages}</S.MessagesContainer>;
   };
 
