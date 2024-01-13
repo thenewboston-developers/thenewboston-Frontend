@@ -5,9 +5,11 @@ export interface CreateOpenAIImageRequest {
 
 export interface CreateOpenAIImageResponse {
   created: number;
-  data: ImageData[];
+  data: Image[];
 }
 
-interface ImageData {
+interface Image {
+  b64_json: null;
+  revised_prompt: null;
   url: string;
 }
