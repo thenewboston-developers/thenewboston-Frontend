@@ -1,25 +1,26 @@
-import {useSelector} from 'react-redux';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
-import {getManager} from 'selectors/state';
 import {SFC} from 'types';
 import * as S from './Styles';
 
 export interface MenuItemProps {
-  text: string;
+  id: number;
+  name: string;
 }
 
-const MenuItem: SFC<MenuItemProps> = ({className, text}) => {
-  const manager = useSelector(getManager);
+const MenuItem: SFC<MenuItemProps> = ({className, id, name}) => {
   const navigate = useNavigate();
+  const params = useParams();
+
+  const conversationId = params.id ? parseInt(params.id, 10) : null;
 
   const handleClick = () => {
-    navigate(`/ia/1`);
+    navigate(`/ia/${id}`);
   };
 
   return (
-    <S.Container $isActive={manager.activeWalletId === 123} className={className} onClick={handleClick}>
-      <S.Text>{text}</S.Text>
+    <S.Container $isActive={id === conversationId} className={className} onClick={handleClick}>
+      <S.Text>{name}</S.Text>
     </S.Container>
   );
 };

@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
 import {mdiFaceWoman} from '@mdi/js';
@@ -8,6 +8,7 @@ import {mdiFaceWoman} from '@mdi/js';
 import Avatar from 'components/Avatar';
 import {ButtonType} from 'components/Button';
 import Icon from 'components/Icon';
+import {createConversation} from 'dispatchers/conversations';
 import {createMessage} from 'dispatchers/messages';
 import {getMessages, getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
@@ -16,9 +17,10 @@ import yup from 'utils/yup';
 import * as S from './Styles';
 
 const Right: SFC = ({className}) => {
-  const params = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const messages = useSelector(getMessages);
+  const navigate = useNavigate();
+  const params = useParams();
   const self = useSelector(getSelf);
 
   const conversationId = params.id ? parseInt(params.id, 10) : null;
@@ -30,13 +32,25 @@ const Right: SFC = ({className}) => {
   type FormValues = typeof initialValues;
 
   const messageList = useMemo(() => {
-    return orderBy(Object.values(messages), ['created_date']);
-  }, [messages]);
+    const _messages = Object.values(messages).filter(({conversation}) => conversation === conversationId);
+    return orderBy(_messages, ['created_date']);
+  }, [conversationId, messages]);
 
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
-      await dispatch(createMessage({...values, conversation: 6}));
+      let newConversationId: number | null = null;
+
+      if (!conversationId) {
+        const conversation = await dispatch(createConversation({name: 'beans 4'}));
+        newConversationId = conversation.id;
+      }
+
+      const activeConversationId = conversationId || newConversationId;
+
+      await dispatch(createMessage({...values, conversation: activeConversationId!}));
       resetForm();
+
+      if (newConversationId) navigate(`/ia/${newConversationId}`);
     } catch (error) {
       console.error(error);
       displayErrorToast('Error submitting the message');
