@@ -15,6 +15,15 @@ export const createConversation = async (data: CreateConversationRequest): Promi
   }
 };
 
+export const deleteConversation = async (id: number): Promise<void> => {
+  try {
+    await axios.delete(`${BASE_URL}/${id}`, authorizationHeaders());
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export interface GetConversationsParams {
   owner?: number;
 }

@@ -1,7 +1,9 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {mdiDelete, mdiPencil} from '@mdi/js';
 
+import {useToggle} from 'hooks';
+import ConversationDeleteModal from 'modals/ConversationDeleteModal';
 import {SFC} from 'types';
 import * as S from './Styles';
 
@@ -11,6 +13,7 @@ export interface MenuItemProps {
 }
 
 const MenuItem: SFC<MenuItemProps> = ({className, id, name}) => {
+  const [conversationDeleteModalIsOpen, toggleConversationDeleteModal] = useToggle(false);
   const [toolsVisible, setToolsVisible] = useState<boolean>(false);
   const navigate = useNavigate();
   const params = useParams();
@@ -21,8 +24,9 @@ const MenuItem: SFC<MenuItemProps> = ({className, id, name}) => {
     navigate(`/ia/${id}`);
   };
 
-  const handleDeleteClick = () => {
-    console.log('delete');
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleConversationDeleteModal();
   };
 
   const handleEditClick = () => {
@@ -52,16 +56,21 @@ const MenuItem: SFC<MenuItemProps> = ({className, id, name}) => {
   };
 
   return (
-    <S.Container
-      $isActive={id === conversationId}
-      className={className}
-      onClick={handleClick}
-      onMouseOut={handleMouseOut}
-      onMouseOver={handleMouseOver}
-    >
-      <S.Text>{name}</S.Text>
-      {renderTools()}
-    </S.Container>
+    <>
+      <S.Container
+        $isActive={id === conversationId}
+        className={className}
+        onClick={handleClick}
+        onMouseOut={handleMouseOut}
+        onMouseOver={handleMouseOver}
+      >
+        <S.Text>{name}</S.Text>
+        {renderTools()}
+      </S.Container>
+      {conversationDeleteModalIsOpen ? (
+        <ConversationDeleteModal close={toggleConversationDeleteModal} conversationId={id} />
+      ) : null}
+    </>
   );
 };
 

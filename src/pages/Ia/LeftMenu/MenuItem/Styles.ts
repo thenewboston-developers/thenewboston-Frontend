@@ -20,7 +20,7 @@ export const Container = styled.div<{$isActive: boolean}>`
 `;
 
 export const Icon = styled(MdiIcon)`
-  color: #777;
+  color: #888;
 `;
 
 export const IconWrapper = styled.div`
