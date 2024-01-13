@@ -1,4 +1,8 @@
-import {createMessage as _createMessage, deleteMessage as _deleteMessage} from 'api/messages';
+import {
+  createMessage as _createMessage,
+  deleteMessage as _deleteMessage,
+  updateMessage as _updateMessage,
+} from 'api/messages';
 import {setMessage, unsetMessage} from 'store/messages';
 import {AppDispatch, CreateMessageRequest} from 'types';
 
@@ -11,4 +15,9 @@ export const createMessage = (data: CreateMessageRequest) => async (dispatch: Ap
 export const deleteMessage = (id: number) => async (dispatch: AppDispatch) => {
   await _deleteMessage(id);
   dispatch(unsetMessage(id));
+};
+
+export const updateMessage = (id: number, data: Partial<CreateMessageRequest>) => async (dispatch: AppDispatch) => {
+  const responseData = await _updateMessage(id, data);
+  dispatch(setMessage(responseData));
 };

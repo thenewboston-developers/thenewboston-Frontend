@@ -5,6 +5,7 @@ import Avatar from 'components/Avatar';
 import Tool from 'components/Tool';
 import {useToggle} from 'hooks';
 import MessageDeleteModal from 'modals/MessageDeleteModal';
+import MessageEditModal from 'modals/MessageEditModal';
 import {Message as TMessage, SFC} from 'types';
 import {shortDate} from 'utils/dates';
 import * as S from './Styles';
@@ -15,6 +16,7 @@ export interface MessageProps {
 
 const Message: SFC<MessageProps> = ({className, message}) => {
   const [messageDeleteModalIsOpen, toggleMessageDeleteModal] = useToggle(false);
+  const [messageEditModalIsOpen, toggleMessageEditModal] = useToggle(false);
   const [toolsVisible, setToolsVisible] = useState<boolean>(false);
 
   const {modified_date, sender, text} = message;
@@ -32,7 +34,7 @@ const Message: SFC<MessageProps> = ({className, message}) => {
     return (
       <S.ToolsContainer>
         <S.Tools>
-          <Tool icon={mdiPencil} onClick={() => {}} />
+          <Tool icon={mdiPencil} onClick={toggleMessageEditModal} />
           <Tool icon={mdiDelete} onClick={toggleMessageDeleteModal} />
         </S.Tools>
       </S.ToolsContainer>
@@ -55,6 +57,7 @@ const Message: SFC<MessageProps> = ({className, message}) => {
         </S.Right>
       </S.Container>
       {messageDeleteModalIsOpen ? <MessageDeleteModal close={toggleMessageDeleteModal} messageId={message.id} /> : null}
+      {messageEditModalIsOpen ? <MessageEditModal close={toggleMessageEditModal} message={message} /> : null}
     </>
   );
 };
