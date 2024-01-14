@@ -24,6 +24,23 @@ export const deleteMessage = async (id: number): Promise<void> => {
   }
 };
 
+export interface GetMessagesParams {
+  sender?: number;
+}
+
+export const getMessages = async (params?: GetMessagesParams): Promise<Message[]> => {
+  try {
+    const response = await axios.get<Message[]>(BASE_URL, {
+      params,
+      ...authorizationHeaders(),
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const updateMessage = async (id: number, data: Partial<CreateMessageRequest>): Promise<Message> => {
   try {
     const response = await axios.patch<Message>(`${BASE_URL}/${id}`, data, authorizationHeaders());

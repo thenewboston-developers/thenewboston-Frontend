@@ -1,4 +1,4 @@
-import {useMemo} from 'react';
+import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Formik, FormikHelpers} from 'formik';
@@ -9,7 +9,7 @@ import Avatar from 'components/Avatar';
 import {ButtonType} from 'components/Button';
 import Icon from 'components/Icon';
 import {createConversation} from 'dispatchers/conversations';
-import {createMessage} from 'dispatchers/messages';
+import {createMessage, getMessages as _getMessages} from 'dispatchers/messages';
 import {getMessages, getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
@@ -31,6 +31,13 @@ const Right: SFC = ({className}) => {
   };
 
   type FormValues = typeof initialValues;
+
+  useEffect(() => {
+    (async () => {
+      if (!conversationId) return;
+      await dispatch(_getMessages());
+    })();
+  }, [conversationId, dispatch]);
 
   const messageList = useMemo(() => {
     const _messages = Object.values(messages).filter(({conversation}) => conversation === conversationId);
