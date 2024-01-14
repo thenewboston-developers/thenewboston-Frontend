@@ -53,7 +53,7 @@ export const MessagesContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding: 16px 0 8px;
+  padding-top: 16px;
 `;
 
 export const TextInput = styled(UInlineInput)`
