@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Formik, FormikHelpers} from 'formik';
@@ -18,8 +18,11 @@ import Message from './Message';
 import * as S from './Styles';
 
 const Right: SFC = ({className}) => {
+  const [scrollToBottom, setScrollToBottom] = useState<boolean>(true);
+  const bottomMessageRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const messages = useSelector(getMessages);
+  const messagesRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const params = useParams();
   const self = useSelector(getSelf);
@@ -39,10 +42,39 @@ const Right: SFC = ({className}) => {
     })();
   }, [conversationId, dispatch]);
 
+  useEffect(() => {
+    if (!bottomMessageRef.current || !messagesRef.current) return;
+
+    // As the app becomes visible the refs are initialized before rendering is complete
+    // This delays scrolling until painting is complete
+    const timeout = setTimeout(() => {
+      bottomMessageRef?.current?.scrollIntoView(false);
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [bottomMessageRef, conversationId, messagesRef]);
+
+  useEffect(() => {
+    if (!bottomMessageRef.current || !messagesRef.current) return;
+    bottomMessageRef?.current?.scrollIntoView(false);
+  }, [bottomMessageRef, conversationId, messagesRef]);
+
+  useEffect(() => {
+    if (!bottomMessageRef.current || !messagesRef.current || !scrollToBottom) return;
+    bottomMessageRef.current.scrollIntoView({behavior: 'smooth'});
+  }, [messages, scrollToBottom]);
+
   const messageList = useMemo(() => {
     const _messages = Object.values(messages).filter(({conversation}) => conversation === conversationId);
     return orderBy(_messages, ['created_date']);
   }, [conversationId, messages]);
+
+  const handleMessagesScroll = () => {
+    if (!bottomMessageRef.current || !messagesRef.current) return;
+    const {clientHeight, scrollHeight, scrollTop} = messagesRef.current;
+    const isScrolledToBottom = scrollHeight - scrollTop - clientHeight < 1;
+    setScrollToBottom(isScrolledToBottom);
+  };
 
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
@@ -106,13 +138,16 @@ const Right: SFC = ({className}) => {
 
   const renderMessagesContainer = () => {
     const _messages = messageList.map((message) => <Message key={message.id} message={message} />);
-    return <S.MessagesContainer>{_messages}</S.MessagesContainer>;
+    return (
+      <S.MessagesContainer onScroll={handleMessagesScroll} ref={messagesRef}>
+        {_messages}
+        <S.BottomMessage ref={bottomMessageRef} />
+      </S.MessagesContainer>
+    );
   };
 
   const renderTop = () => {
-    return (
-      <S.Top>{conversationId && !!messageList.length ? renderMessagesContainer() : renderGreetingContainer()}</S.Top>
-    );
+    return conversationId && !!messageList.length ? renderMessagesContainer() : renderGreetingContainer();
   };
 
   const validationSchema = useMemo(() => {

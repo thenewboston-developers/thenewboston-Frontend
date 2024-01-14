@@ -10,6 +10,10 @@ export const Bottom = styled.div`
   padding: 16px 12px;
 `;
 
+export const BottomMessage = styled.div`
+  height: 8px;
+`;
+
 export const Button = styled(UButton)`
   display: none;
 `;
@@ -48,14 +52,11 @@ export const GreetingText = styled.h2`
 export const MessagesContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 16px;
+  overflow-y: auto;
+  padding: 16px 0 8px;
 `;
 
 export const TextInput = styled(UInlineInput)`
   flex: 1;
   margin-left: 12px;
-`;
-
-export const Top = styled.div`
-  overflow-y: auto;
 `;
