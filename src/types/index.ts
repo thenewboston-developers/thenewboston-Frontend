@@ -5,9 +5,11 @@ import {CreateArtworkTransferRequest} from 'types/api/artworkTransfers';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
+import {CreateConversationRequest} from 'types/api/conversations';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/followers';
 import {CreateInvitationRequest} from 'types/api/invitations';
+import {CreateMessageRequest} from 'types/api/messages';
 import {UpdateNotificationRequest} from 'types/api/notifications';
 import {CreateOpenAIImageRequest, CreateOpenAIImageResponse} from 'types/api/openaiImages';
 import {CreateOrderRequest} from 'types/api/orders';
@@ -23,6 +25,7 @@ import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {CartProduct, CartProducts} from 'types/cartProducts';
 import {Comment, Comments} from 'types/comments';
+import {Conversation, Conversations} from 'types/conversations';
 import {Core, Cores} from 'types/cores';
 import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
@@ -32,6 +35,7 @@ import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Invitation, Invitations} from 'types/invitations';
 import {Item} from 'types/items';
 import {Manager} from 'types/manager';
+import {Message, Messages} from 'types/messages';
 import {Notification, Notifications} from 'types/notifications';
 import {OrderProduct} from 'types/orderProducts';
 import {Order, Orders} from 'types/orders';
@@ -62,6 +66,8 @@ export {
   Comment,
   CommentReadSerializer,
   Comments,
+  Conversation,
+  Conversations,
   Core,
   Cores,
   CreateAddressRequest,
@@ -70,9 +76,11 @@ export {
   CreateArtworkTransferRequest,
   CreateCartProductRequest,
   CreateCommentRequest,
+  CreateConversationRequest,
   CreateExchangeOrderRequest,
   CreateFollowerRequest,
   CreateInvitationRequest,
+  CreateMessageRequest,
   CreateOpenAIImageRequest,
   CreateOpenAIImageResponse,
   CreateOrderRequest,
@@ -96,6 +104,8 @@ export {
   LoginRequest,
   LoginResponse,
   Manager,
+  Message,
+  Messages,
   Notification,
   Notifications,
   Order,

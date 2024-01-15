@@ -5,6 +5,7 @@ import {
   mdiBell,
   mdiBrush,
   mdiExitToApp,
+  mdiFaceWoman,
   mdiHome,
   mdiLanConnect,
   mdiShopping,
@@ -41,6 +42,7 @@ const LeftNav: SFC = ({className}) => {
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
         <MenuLink icon={mdiShopping} rootPath="/shop" text="Shop" to="/shop/buy/catalog" />
         <MenuLink icon={mdiAccount} rootPath={`/profile/${self.id}`} text="Profile" to={`/profile/${self.id}`} />
+        <MenuLink icon={mdiFaceWoman} rootPath="/ia" text="Ia" to="/ia" />
         <CreatePostButton />
       </S.Top>
       <S.Bottom>

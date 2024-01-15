@@ -10,11 +10,13 @@ import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
 import cartProductsReducer from 'store/cartProducts';
 import commentsReducer from 'store/comments';
+import conversationsReducer from 'store/conversations';
 import coresReducer from 'store/cores';
 import exchangeOrdersReducer from 'store/exchangeOrders';
 import invitationLimitsReducer from 'store/invitationLimits';
 import invitationsReducer from 'store/invitations';
 import managerReducer from 'store/manager';
+import messagesReducer from 'store/messages';
 import notificationsReducer from 'store/notifications';
 import ordersReducer from 'store/orders';
 import postsReducer from 'store/posts';
@@ -33,11 +35,13 @@ const rootReducer = combineReducers({
   authentication: authenticationReducer,
   cartProducts: cartProductsReducer,
   comments: commentsReducer,
+  conversations: conversationsReducer,
   cores: coresReducer,
   exchangeOrders: exchangeOrdersReducer,
   invitationLimits: invitationLimitsReducer,
   invitations: invitationsReducer,
   manager: managerReducer,
+  messages: messagesReducer,
   notifications: notificationsReducer,
   orders: ordersReducer,
   posts: postsReducer,
