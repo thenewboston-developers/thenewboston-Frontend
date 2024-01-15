@@ -2,6 +2,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {
   mdiAccount,
+  mdiAccountGroup,
   mdiBell,
   mdiBrush,
   mdiExitToApp,
@@ -34,15 +35,16 @@ const LeftNav: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Top>
-        <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
-        <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications" />
         <MenuLink icon={mdiBrush} rootPath="/art" text="Art" to="/art/marketplace" />
+        <MenuLink icon={mdiAccountGroup} rootPath="/contributions" text="Contributions" to="/contributions" />
         <MenuLink icon={mdiLanConnect} rootPath="/cores" text="Cores" to="/cores" />
-        <MenuLink icon={mdiWalletBifoldOutline} rootPath="/wallets" text="Wallets" to="/wallets" />
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
-        <MenuLink icon={mdiShopping} rootPath="/shop" text="Shop" to="/shop/buy/catalog" />
-        <MenuLink icon={mdiAccount} rootPath={`/profile/${self.id}`} text="Profile" to={`/profile/${self.id}`} />
+        <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
         <MenuLink icon={mdiFaceWoman} rootPath="/ia" text="Ia" to="/ia" />
+        <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications" />
+        <MenuLink icon={mdiAccount} rootPath={`/profile/${self.id}`} text="Profile" to={`/profile/${self.id}`} />
+        <MenuLink icon={mdiShopping} rootPath="/shop" text="Shop" to="/shop/buy/catalog" />
+        <MenuLink icon={mdiWalletBifoldOutline} rootPath="/wallets" text="Wallets" to="/wallets" />
         <CreatePostButton />
       </S.Top>
       <S.Bottom>
