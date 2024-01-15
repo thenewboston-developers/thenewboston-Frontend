@@ -81,7 +81,7 @@ const Right: SFC = ({className}) => {
       let newConversationId: number | null = null;
 
       if (!conversationId) {
-        const conversation = await dispatch(createConversation({name: 'beans 4'}));
+        const conversation = await dispatch(createConversation({name: 'New Conversation'}));
         newConversationId = conversation.id;
       }
 
