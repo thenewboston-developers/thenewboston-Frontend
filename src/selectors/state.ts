@@ -7,6 +7,7 @@ export const getAssetPairs = (state: RootState) => state.assetPairs;
 export const getAuthentication = (state: RootState) => state.authentication;
 export const getCartProducts = (state: RootState) => state.cartProducts;
 export const getComments = (state: RootState) => state.comments;
+export const getContributions = (state: RootState) => state.contributions;
 export const getConversations = (state: RootState) => state.conversations;
 export const getCores = (state: RootState) => state.cores;
 export const getExchangeOrders = (state: RootState) => state.exchangeOrders;

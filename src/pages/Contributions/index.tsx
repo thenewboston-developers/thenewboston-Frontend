@@ -1,8 +1,28 @@
+import {useEffect, useMemo} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import orderBy from 'lodash/orderBy';
+
 import SectionHeading from 'components/SectionHeading';
-import {SFC} from 'types';
+import {getContributions as _getContributions} from 'dispatchers/contributions';
+import {getContributions} from 'selectors/state';
+import {AppDispatch, SFC} from 'types';
+import {longDate} from 'utils/dates';
 import * as S from './Styles';
 
 const Contributions: SFC = ({className}) => {
+  const contributions = useSelector(getContributions);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    (async () => {
+      await dispatch(_getContributions());
+    })();
+  }, [dispatch]);
+
+  const contributionList = useMemo(() => {
+    return orderBy(Object.values(contributions), ['created_date'], ['desc']);
+  }, [contributions]);
+
   const renderTable = () => {
     return (
       <S.Table>
@@ -18,15 +38,17 @@ const Contributions: SFC = ({className}) => {
           </S.Tr>
         </thead>
         <tbody>
-          {[1, 2].map((number) => (
-            <S.Tr key={number}>
-              <S.Td>November 12, 2023 at 3:00:06 PM EST</S.Td>
-              <S.Td>BUCKY</S.Td>
-              <S.Td>buckyroberts</S.Td>
-              <S.Td>TNB-BACKEND</S.Td>
-              <S.Td>ISSUE 1</S.Td>
-              <S.Td>PR 2</S.Td>
-              <S.Td>2,600 TNB</S.Td>
+          {contributionList.map((contribution) => (
+            <S.Tr key={contribution.id}>
+              <S.Td>{longDate(contribution.created_date)}</S.Td>
+              <S.Td>{contribution.user.username}</S.Td>
+              <S.Td>{contribution.github_user.github_username}</S.Td>
+              <S.Td>{contribution.repo.name}</S.Td>
+              <S.Td>{contribution.issue.title}</S.Td>
+              <S.Td>{contribution.pull.title}</S.Td>
+              <S.Td>
+                {contribution.reward_amount} {contribution.core.ticker}
+              </S.Td>
             </S.Tr>
           ))}
         </tbody>

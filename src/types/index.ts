@@ -25,14 +25,17 @@ import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {CartProduct, CartProducts} from 'types/cartProducts';
 import {Comment, Comments} from 'types/comments';
+import {Contribution, Contributions} from 'types/contributions';
 import {Conversation, Conversations} from 'types/conversations';
 import {Core, Cores} from 'types/cores';
 import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
 import {SelectOption} from 'types/forms';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
+import {GitHubUser} from 'types/githubUsers';
 import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Invitation, Invitations} from 'types/invitations';
+import {Issue} from 'types/issues';
 import {Item} from 'types/items';
 import {Manager} from 'types/manager';
 import {Message, Messages} from 'types/messages';
@@ -41,6 +44,8 @@ import {OrderProduct} from 'types/orderProducts';
 import {Order, Orders} from 'types/orders';
 import {Post, Posts} from 'types/posts';
 import {Product, Products} from 'types/products';
+import {Pull} from 'types/pulls';
+import {Repo} from 'types/repos';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
 import {Trade, Trades} from 'types/trades';
@@ -66,6 +71,8 @@ export {
   Comment,
   CommentReadSerializer,
   Comments,
+  Contribution,
+  Contributions,
   Conversation,
   Conversations,
   Core,
@@ -96,10 +103,12 @@ export {
   FollowerReadSerializer,
   GenericFunction,
   GenericVoidFunction,
+  GitHubUser,
   Invitation,
   InvitationLimit,
   InvitationLimits,
   Invitations,
+  Issue,
   Item,
   LoginRequest,
   LoginResponse,
@@ -116,6 +125,8 @@ export {
   Posts,
   Product,
   Products,
+  Pull,
+  Repo,
   RootState,
   SFC,
   SelectOption,
