@@ -1,6 +1,7 @@
 import {Navigate, Route, Routes} from 'react-router-dom';
 
 import Art from 'pages/Art';
+import Contributions from 'pages/Contributions';
 import Cores from 'pages/Cores';
 import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
@@ -17,6 +18,7 @@ const MainArea: SFC = ({className}) => {
     <S.Container className={className}>
       <Routes>
         <Route path="/art/*" element={<Art />} />
+        <Route path="/contributions" element={<Contributions />} />
         <Route path="/cores" element={<Cores />} />
         <Route path="/exchange/*" element={<Exchange />} />
         <Route path="/feed" element={<Feed />} />

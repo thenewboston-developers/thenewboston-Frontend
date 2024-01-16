@@ -26,8 +26,8 @@ export const Table = styled.table`
 
   th,
   td {
-    text-align: left;
     padding: 2px 0;
+    text-align: left;
   }
 
   th:nth-child(3),
