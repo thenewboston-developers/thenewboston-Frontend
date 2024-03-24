@@ -6,7 +6,7 @@ import Avatar from 'components/Avatar';
 import {deleteComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
-import EditCommentModal from 'modals/EditCommentModal';
+import CommentEditModal from 'modals/CommentEditModal';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Comment as TComment, SFC} from 'types';
 import {shortDate} from 'utils/dates';
@@ -18,7 +18,7 @@ export interface CommentProps {
 }
 
 const Comment: SFC<CommentProps> = ({className, comment}) => {
-  const [editCommentModalIsOpen, toggleEditCommentModal] = useToggle(false);
+  const [commentEditModalIsOpen, toggleCommentEditModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
@@ -37,7 +37,7 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
   const menuOptions = [
     {
       label: 'Edit',
-      onClick: toggleEditCommentModal,
+      onClick: toggleCommentEditModal,
     },
     {
       label: 'Delete',
@@ -80,7 +80,7 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
         </S.Middle>
         <S.Right>{renderDropdownMenu()}</S.Right>
       </S.Container>
-      {editCommentModalIsOpen ? <EditCommentModal close={toggleEditCommentModal} comment={comment} /> : null}
+      {commentEditModalIsOpen ? <CommentEditModal close={toggleCommentEditModal} comment={comment} /> : null}
     </>
   );
 };

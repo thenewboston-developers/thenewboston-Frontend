@@ -11,12 +11,12 @@ import {displayErrorToast, displayToast} from 'utils/toast';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
-export interface EditCommentModalProps {
+export interface CommentEditModalProps {
   close(): void;
   comment: Comment;
 }
 
-const EditCommentModal: SFC<EditCommentModalProps> = ({className, close, comment}) => {
+const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment}) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const initialValues = useMemo(
@@ -66,4 +66,4 @@ const EditCommentModal: SFC<EditCommentModalProps> = ({className, close, comment
   );
 };
 
-export default EditCommentModal;
+export default CommentEditModal;
