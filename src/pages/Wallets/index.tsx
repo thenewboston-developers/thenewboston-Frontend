@@ -9,7 +9,7 @@ import Tabs from 'components/Tabs';
 import {getWallets as _getWallets} from 'dispatchers/wallets';
 import {WalletTab} from 'enums';
 import {useAvailableWalletCores, useToggle} from 'hooks';
-import CreateWalletModal from 'modals/CreateWalletModal';
+import WalletCreateModal from 'modals/WalletCreateModal';
 import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
@@ -19,7 +19,7 @@ import WalletWithdraw from './WalletWithdraw';
 import * as S from './Styles';
 
 const Wallets: SFC = ({className}) => {
-  const [createWalletModalIsOpen, toggleCreateWalletModal] = useToggle(false);
+  const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
   const availableWalletCores = useAvailableWalletCores();
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
@@ -61,7 +61,7 @@ const Wallets: SFC = ({className}) => {
 
     return (
       <S.ButtonContainer>
-        <S.Button onClick={toggleCreateWalletModal} text="Create Wallet" />
+        <S.Button onClick={toggleWalletCreateModal} text="Create Wallet" />
       </S.ButtonContainer>
     );
   };
@@ -85,7 +85,7 @@ const Wallets: SFC = ({className}) => {
         actionText="create a wallet"
         bottomText="To deposit or withdraw coins"
         graphic={LeavesEmptyState}
-        onActionTextClick={toggleCreateWalletModal}
+        onActionTextClick={toggleWalletCreateModal}
         topText="Nothing here!"
       />
     );
@@ -122,7 +122,7 @@ const Wallets: SFC = ({className}) => {
         </S.LeftMenu>
         <S.Right>{renderRightContent()}</S.Right>
       </S.Container>
-      {createWalletModalIsOpen ? <CreateWalletModal close={toggleCreateWalletModal} /> : null}
+      {walletCreateModalIsOpen ? <WalletCreateModal close={toggleWalletCreateModal} /> : null}
     </>
   );
 };
