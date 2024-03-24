@@ -4,53 +4,53 @@ import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
 import {Input} from 'components/FormElements';
-import {updateConversation} from 'dispatchers/conversations';
+import {updateComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
-import {AppDispatch, Conversation, SFC} from 'types';
+import {AppDispatch, Comment, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toast';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
-export interface EditConversationModalProps {
+export interface CommentEditModalProps {
   close(): void;
-  conversation: Conversation;
+  comment: Comment;
 }
 
-const EditConversationModal: SFC<EditConversationModalProps> = ({className, close, conversation}) => {
+const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment}) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const initialValues = useMemo(
     () => ({
-      name: conversation.name,
+      content: comment.content,
     }),
-    [conversation.name],
+    [comment.content],
   );
 
   type FormValues = typeof initialValues;
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
-      await dispatch(updateConversation(conversation.id, values));
-      displayToast('Conversation updated!', ToastType.SUCCESS);
+      await dispatch(updateComment(comment.id, values));
+      displayToast('Comment updated!', ToastType.SUCCESS);
       close();
     } catch (error) {
       console.error(error);
-      displayErrorToast('Error updating conversation');
+      displayErrorToast('Error updating comment');
     }
   };
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
-      name: yup.string(),
+      content: yup.string(),
     });
   }, []);
 
   return (
-    <S.Modal className={className} close={close} header="Update Conversation">
+    <S.Modal className={className} close={close} header="Update Comment">
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, touched}) => (
           <Form>
-            <Input errors={errors} label="Name" name="name" touched={touched} />
+            <Input errors={errors} label="Content" name="content" touched={touched} />
             <Button
               dirty={dirty}
               disabled={isSubmitting}
@@ -66,4 +66,4 @@ const EditConversationModal: SFC<EditConversationModalProps> = ({className, clos
   );
 };
 
-export default EditConversationModal;
+export default CommentEditModal;

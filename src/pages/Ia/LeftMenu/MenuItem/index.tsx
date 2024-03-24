@@ -4,7 +4,7 @@ import {mdiDelete, mdiPencil} from '@mdi/js';
 
 import {useToggle} from 'hooks';
 import ConversationDeleteModal from 'modals/ConversationDeleteModal';
-import EditConversationModal from 'modals/EditConversationModal';
+import ConversationEditModal from 'modals/ConversationEditModal';
 import {Conversation, SFC} from 'types';
 import * as S from './Styles';
 
@@ -14,7 +14,7 @@ export interface MenuItemProps {
 
 const MenuItem: SFC<MenuItemProps> = ({className, conversation}) => {
   const [conversationDeleteModalIsOpen, toggleConversationDeleteModal] = useToggle(false);
-  const [editConversationModalIsOpen, toggleEditConversationModal] = useToggle(false);
+  const [conversationEditModalIsOpen, toggleConversationEditModal] = useToggle(false);
   const [toolsVisible, setToolsVisible] = useState<boolean>(false);
   const navigate = useNavigate();
   const params = useParams();
@@ -32,7 +32,7 @@ const MenuItem: SFC<MenuItemProps> = ({className, conversation}) => {
 
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toggleEditConversationModal();
+    toggleConversationEditModal();
   };
 
   const handleMouseOut = () => {
@@ -72,8 +72,8 @@ const MenuItem: SFC<MenuItemProps> = ({className, conversation}) => {
       {conversationDeleteModalIsOpen ? (
         <ConversationDeleteModal close={toggleConversationDeleteModal} conversationId={conversation.id} />
       ) : null}
-      {editConversationModalIsOpen ? (
-        <EditConversationModal close={toggleEditConversationModal} conversation={conversation} />
+      {conversationEditModalIsOpen ? (
+        <ConversationEditModal close={toggleConversationEditModal} conversation={conversation} />
       ) : null}
     </>
   );

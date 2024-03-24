@@ -9,7 +9,7 @@ import Avatar from 'components/Avatar';
 import {ButtonType} from 'components/Button';
 import {createComment} from 'dispatchers/comments';
 import {useToggle} from 'hooks';
-import SelectCoreModal from 'modals/SelectCoreModal';
+import CoreSelectModal from 'modals/CoreSelectModal';
 import {getComments, getManager, getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
@@ -22,7 +22,7 @@ export interface CommentsProps {
 }
 
 const Comments: SFC<CommentsProps> = ({className, postId}) => {
-  const [selectCoreModalIsOpen, toggleSelectCoreModal] = useToggle(false);
+  const [coreSelectModalIsOpen, toggleCoreSelectModal] = useToggle(false);
   const comments = useSelector(getComments);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
@@ -70,11 +70,11 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
 
   const renderSelectCoreElement = () => {
     if (manager.activeCommentCore) {
-      return <S.Img alt="logo" onClick={toggleSelectCoreModal} src={manager.activeCommentCore.logo || Coin} />;
+      return <S.Img alt="logo" onClick={toggleCoreSelectModal} src={manager.activeCommentCore.logo || Coin} />;
     }
 
     return (
-      <S.IconContainer onClick={toggleSelectCoreModal}>
+      <S.IconContainer onClick={toggleCoreSelectModal}>
         <S.Icon path={mdiPlusCircle} size="24px" />
       </S.IconContainer>
     );
@@ -120,7 +120,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
         </Formik>
         {renderComments()}
       </S.Container>
-      {selectCoreModalIsOpen ? <SelectCoreModal close={toggleSelectCoreModal} /> : null}
+      {coreSelectModalIsOpen ? <CoreSelectModal close={toggleCoreSelectModal} /> : null}
     </>
   );
 };

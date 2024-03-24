@@ -9,11 +9,11 @@ import {displayErrorToast} from 'utils/toast';
 import RadioCard from './RadioCard';
 import * as S from './Styles';
 
-export interface CreateWalletModalProps {
+export interface WalletCreateModalProps {
   close(): void;
 }
 
-const CreateWalletModal: SFC<CreateWalletModalProps> = ({className, close}) => {
+const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
   const [selectedCoreId, setSelectedCoreId] = useState<number | null>(null);
   const availableWalletCores = useAvailableWalletCores();
   const dispatch = useDispatch<AppDispatch>();
@@ -60,4 +60,4 @@ const CreateWalletModal: SFC<CreateWalletModalProps> = ({className, close}) => {
   );
 };
 
-export default CreateWalletModal;
+export default WalletCreateModal;

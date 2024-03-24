@@ -5,15 +5,15 @@ import {useParams} from 'react-router-dom';
 import {createFollower, deleteFollower, getFollowers} from 'api/followers';
 import DefaultAvatar from 'assets/default-avatar.png';
 import {useToggle, useUser} from 'hooks';
-import EditProfileModal from 'modals/EditProfileModal';
+import ProfileEditModal from 'modals/ProfileEditModal';
 import {getSelf} from 'selectors/state';
 import {FollowerReadSerializer, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import * as S from './Styles';
 
 const UserDetails: SFC = ({className}) => {
-  const [editProfileModalIsOpen, toggleEditProfileModal] = useToggle(false);
   const [follower, setFollower] = useState<FollowerReadSerializer | null>(null);
+  const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
   const {id} = useParams();
   const self = useSelector(getSelf);
   const user = useUser(id);
@@ -70,7 +70,7 @@ const UserDetails: SFC = ({className}) => {
 
   const renderEditProfileButton = () => {
     if (self.id !== userId) return null;
-    return <S.Button onClick={toggleEditProfileModal} text="Edit Profile" />;
+    return <S.Button onClick={toggleProfileEditModal} text="Edit Profile" />;
   };
 
   const renderFollowButton = () => {
@@ -91,7 +91,7 @@ const UserDetails: SFC = ({className}) => {
         {renderEditProfileButton()}
         {renderFollowButton()}
       </S.Container>
-      {editProfileModalIsOpen ? <EditProfileModal close={toggleEditProfileModal} /> : null}
+      {profileEditModalIsOpen ? <ProfileEditModal close={toggleProfileEditModal} /> : null}
     </>
   );
 };
