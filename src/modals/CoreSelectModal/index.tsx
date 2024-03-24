@@ -9,7 +9,7 @@ export interface CoreSelectModalProps {
   close(): void;
 }
 
-const SelectCoreModal: SFC<CoreSelectModalProps> = ({className, close}) => {
+const CoreSelectModal: SFC<CoreSelectModalProps> = ({className, close}) => {
   const cores = useSelector(getCores);
 
   const renderRadioCards = () => {
@@ -23,4 +23,4 @@ const SelectCoreModal: SFC<CoreSelectModalProps> = ({className, close}) => {
   );
 };
 
-export default SelectCoreModal;
+export default CoreSelectModal;
