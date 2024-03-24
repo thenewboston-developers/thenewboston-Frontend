@@ -11,11 +11,11 @@ import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import * as S from './Styles';
 
-export interface EditProfileModalProps {
+export interface ProfileEditModalProps {
   close(): void;
 }
 
-const EditProfileModal: SFC<EditProfileModalProps> = ({className, close}) => {
+const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
   const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
@@ -87,4 +87,4 @@ const EditProfileModal: SFC<EditProfileModalProps> = ({className, close}) => {
   );
 };
 
-export default EditProfileModal;
+export default ProfileEditModal;
