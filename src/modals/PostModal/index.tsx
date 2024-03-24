@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {Field, Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
-import {FileInput} from 'components/FormElements';
+import {FileInput, Textarea} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {createPost, updatePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
@@ -80,7 +80,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <S.Input errors={errors} label="Content" name="content" touched={touched} />
+            <Textarea errors={errors} label="Content" name="content" touched={touched} />
             {!values.image && (
               <Field component={FileInput} name="image" onChange={handleFileChange} touched={touched} />
             )}
