@@ -6,11 +6,11 @@ import {AppDispatch, SFC} from 'types';
 import RadioCard from './RadioCard';
 import * as S from './Styles';
 
-export interface SelectAssetPairModalProps {
+export interface AssetPairSelectModalProps {
   close(): void;
 }
 
-const SelectAssetPairModal: SFC<SelectAssetPairModalProps> = ({className, close}) => {
+const AssetPairSelectModal: SFC<AssetPairSelectModalProps> = ({className, close}) => {
   const assetPairs = useSelector(getAssetPairs);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
@@ -37,4 +37,4 @@ const SelectAssetPairModal: SFC<SelectAssetPairModalProps> = ({className, close}
   );
 };
 
-export default SelectAssetPairModal;
+export default AssetPairSelectModal;
