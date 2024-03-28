@@ -6,6 +6,8 @@ import UButton from 'components/Button';
 import {InlineInput as UInlineInput} from 'components/FormElements';
 import {colors} from 'styles';
 
+import {breakpoints} from 'styles';
+
 export const IMG_HEIGHT = 24;
 
 export const Button = styled(UButton)`
@@ -14,16 +16,6 @@ export const Button = styled(UButton)`
 
 export const Container = styled.div`
   margin-top: 16px;
-`;
-
-export const ContentInput = styled(UInlineInput)`
-  flex: 1;
-  margin-left: 12px;
-`;
-
-export const Form = styled(UForm)`
-  align-items: center;
-  display: flex;
 `;
 
 export const Icon = styled(UMdiIcon)`
@@ -54,7 +46,39 @@ export const Img = styled.img`
   }
 `;
 
+export const Form = styled(UForm)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  @media (max-width: ${breakpoints.mini}) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+export const ContentInput = styled(UInlineInput)`
+  margin-left: 12px;
+  flex: 1;
+
+  @media (max-width: ${breakpoints.mini}) {
+    margin: 8px 0;
+    width: 100%;
+  }
+`;
+
 export const PriceAmountInput = styled(UInlineInput)`
   margin-left: 12px;
   width: 80px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    margin: 8px 0;
+    width: 100%;
+  }
+`;
+
+export const PriceAmountInputContainer = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
 `;
