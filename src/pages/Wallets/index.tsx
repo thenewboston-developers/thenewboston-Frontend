@@ -16,6 +16,8 @@ import {AppDispatch, SFC} from 'types';
 import MenuItem from './MenuItem';
 import WalletDeposit from './WalletDeposit';
 import WalletWithdraw from './WalletWithdraw';
+import {displayErrorToast} from 'utils/toast';
+import {GET_WALLETS_ERROR_MESSAGE} from 'constants/messages';
 import * as S from './Styles';
 
 const Wallets: SFC = ({className}) => {
@@ -26,9 +28,15 @@ const Wallets: SFC = ({className}) => {
   const wallets = useSelector(getWallets);
 
   useEffect(() => {
-    (async () => {
-      await dispatch(_getWallets());
-    })();
+    const getWalletsWrapper = async () => {
+      try {
+        await dispatch(_getWallets());
+      } catch (error) {
+        displayErrorToast(GET_WALLETS_ERROR_MESSAGE);
+      }
+    };
+
+    getWalletsWrapper();
   }, [dispatch]);
 
   const walletList = useMemo(() => orderBy(Object.values(wallets), [(wallet) => wallet.core.ticker]), [wallets]);
