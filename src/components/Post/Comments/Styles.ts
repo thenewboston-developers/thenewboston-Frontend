@@ -78,7 +78,5 @@ export const PriceAmountInput = styled(UInlineInput)`
 `;
 
 export const PriceAmountInputContainer = styled.div`
-  align-items: center;
   display: flex;
-  justify-content: center;
 `;
