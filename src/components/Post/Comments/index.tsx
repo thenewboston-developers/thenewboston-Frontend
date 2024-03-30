@@ -99,14 +99,16 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
             <S.Form>
               <Avatar src={self.avatar} />
               <S.ContentInput errors={errors} name="content" placeholder="Add a comment..." touched={touched} />
-              <S.PriceAmountInput
-                errors={errors}
-                name="price_amount"
-                placeholder="Amount"
-                touched={touched}
-                type="number"
-              />
-              {renderSelectCoreElement()}
+              <S.PriceAmountInputContainer>
+                <S.PriceAmountInput
+                  errors={errors}
+                  name="price_amount"
+                  placeholder="Amount"
+                  touched={touched}
+                  type="number"
+                />
+                {renderSelectCoreElement()}
+              </S.PriceAmountInputContainer>
               <S.Button
                 dirty={dirty}
                 disabled={isSubmitting}
