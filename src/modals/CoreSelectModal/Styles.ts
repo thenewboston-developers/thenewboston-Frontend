@@ -10,8 +10,8 @@ export const Modal = styled(UModal)`
   min-width: 480px;
 
   @media (max-width: ${breakpoints.mini}) {
-    min-width: 90%;
     max-width: 100%;
+    min-width: 90%;
   }
 `;
 
