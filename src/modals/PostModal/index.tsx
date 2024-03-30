@@ -18,8 +18,8 @@ export interface PostModalProps {
 }
 
 const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
-  const [preview, setPreview] = useState<string | null>(null);
   const [isImageCleared, setIsImageCleared] = useState<boolean | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
   const initialValues = useMemo(
