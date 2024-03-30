@@ -13,11 +13,10 @@ import WalletCreateModal from 'modals/WalletCreateModal';
 import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toast';
 import MenuItem from './MenuItem';
 import WalletDeposit from './WalletDeposit';
 import WalletWithdraw from './WalletWithdraw';
-import {displayErrorToast} from 'utils/toast';
-import {GET_WALLETS_ERROR_MESSAGE} from 'constants/messages';
 import * as S from './Styles';
 
 const Wallets: SFC = ({className}) => {
@@ -28,15 +27,13 @@ const Wallets: SFC = ({className}) => {
   const wallets = useSelector(getWallets);
 
   useEffect(() => {
-    const getWalletsWrapper = async () => {
+    (async () => {
       try {
         await dispatch(_getWallets());
       } catch (error) {
-        displayErrorToast(GET_WALLETS_ERROR_MESSAGE);
+        displayErrorToast('Error fetching wallets');
       }
-    };
-
-    getWalletsWrapper();
+    })();
   }, [dispatch]);
 
   const walletList = useMemo(() => orderBy(Object.values(wallets), [(wallet) => wallet.core.ticker]), [wallets]);
