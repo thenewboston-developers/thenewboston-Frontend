@@ -18,6 +18,7 @@ export interface PostModalProps {
 }
 
 const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
+  const [isImageCleared, setIsImageCleared] = useState<boolean | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -43,6 +44,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       const reader = new FileReader();
       reader.onloadend = () => setPreview(reader.result as string);
       reader.readAsDataURL(file);
+      setIsImageCleared(false);
     }
   };
 
@@ -50,6 +52,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
     try {
       const requestData = new FormData();
       requestData.append('content', values.content);
+      requestData.append('is_image_cleared', isImageCleared ? 'True' : 'False');
 
       if (initialValues.image !== values.image) requestData.append('image', values.image);
 
@@ -88,6 +91,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
               onClear={async () => {
                 await setFieldValue('image', '');
                 setPreview(null);
+                setIsImageCleared(true);
               }}
               src={preview}
             />
