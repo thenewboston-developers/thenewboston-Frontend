@@ -13,6 +13,7 @@ import WalletCreateModal from 'modals/WalletCreateModal';
 import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toast';
 import MenuItem from './MenuItem';
 import WalletDeposit from './WalletDeposit';
 import WalletWithdraw from './WalletWithdraw';
@@ -27,7 +28,11 @@ const Wallets: SFC = ({className}) => {
 
   useEffect(() => {
     (async () => {
-      await dispatch(_getWallets());
+      try {
+        await dispatch(_getWallets());
+      } catch (error) {
+        displayErrorToast('Error fetching wallets');
+      }
     })();
   }, [dispatch]);
 
