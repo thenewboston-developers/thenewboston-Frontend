@@ -1,15 +1,16 @@
-import * as React from 'react';
-import {SFC} from 'types';
+import {ReactNode} from 'react';
 import ReactLinkify from 'react-linkify';
+
+import {SFC} from 'types';
 import * as S from './Styles';
 
 interface CustomLinkifyProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const Linkify: SFC<CustomLinkifyProps> = ({children}) => {
   const componentDecorator = (href: string, text: string, key: number) => (
-    <S.Anchor target="_blank" rel="noopener noreferrer" href={href} key={key}>
+    <S.Anchor href={href} key={key} rel="noopener noreferrer" target="_blank">
       {text}
     </S.Anchor>
   );
