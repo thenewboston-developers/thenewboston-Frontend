@@ -44,8 +44,8 @@ const Contributions: SFC = ({className}) => {
               <S.Td>{contribution.user.username}</S.Td>
               <S.Td>{contribution.github_user.github_username}</S.Td>
               <S.Td>{contribution.repo.name}</S.Td>
-              <S.Td>{contribution.issue.title}</S.Td>
-              <S.Td>{contribution.pull.title}</S.Td>
+              <S.Td>{contribution.issue?.title}</S.Td>
+              <S.Td>{contribution.pull?.title}</S.Td>
               <S.Td>
                 {contribution.reward_amount} {contribution.core.ticker}
               </S.Td>
