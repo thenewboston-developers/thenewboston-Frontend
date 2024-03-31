@@ -1,7 +1,6 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiDotsVertical} from '@mdi/js';
 
-import Linkify from 'wrappers/linkify';
 import UserLabel from 'components/UserLabel';
 import {deletePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
@@ -12,6 +11,7 @@ import {AppDispatch, Post as TPost, SFC} from 'types';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toast';
 import Comments from './Comments';
+import Linkify from 'wrappers/linkify';
 import * as S from './Styles';
 
 export interface PostProps {
