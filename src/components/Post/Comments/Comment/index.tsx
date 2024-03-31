@@ -11,6 +11,7 @@ import {getSelf} from 'selectors/state';
 import {AppDispatch, Comment as TComment, SFC} from 'types';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toast';
+import Linkify from 'wrappers/linkify';
 import * as S from './Styles';
 
 export interface CommentProps {
@@ -75,7 +76,9 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
         </Link>
         <S.Middle>
           {renderNameDateContainer()}
-          <S.Content>{content}</S.Content>
+          <S.Content>
+            <Linkify>{content}</Linkify>
+          </S.Content>
           {renderPriceMini()}
         </S.Middle>
         <S.Right>{renderDropdownMenu()}</S.Right>
