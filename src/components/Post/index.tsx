@@ -1,6 +1,7 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiDotsVertical} from '@mdi/js';
 
+import Linkify from 'components/Linkify';
 import UserLabel from 'components/UserLabel';
 import {deletePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
@@ -62,7 +63,9 @@ const Post: SFC<PostProps> = ({className, post}) => {
           />
           {renderDropdownMenu()}
         </S.Top>
-        <S.Content>{content}</S.Content>
+        <S.Content>
+          <Linkify>{content}</Linkify>
+        </S.Content>
         {image ? <S.Img alt="image" src={image} /> : null}
         <Comments postId={post.id} />
       </S.Container>

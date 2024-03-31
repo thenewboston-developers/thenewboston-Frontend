@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import {mdiDotsVertical} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
+import Linkify from 'components/Linkify';
 import {deleteComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
@@ -75,7 +76,9 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
         </Link>
         <S.Middle>
           {renderNameDateContainer()}
-          <S.Content>{content}</S.Content>
+          <S.Content>
+            <Linkify>{content}</Linkify>
+          </S.Content>
           {renderPriceMini()}
         </S.Middle>
         <S.Right>{renderDropdownMenu()}</S.Right>
