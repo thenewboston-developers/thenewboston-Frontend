@@ -23,13 +23,15 @@ export const deletePost = (id: number) => async (dispatch: AppDispatch) => {
 export const getPosts = (params?: GetPostsParams) => async (dispatch: AppDispatch) => {
   const responseData = await _getPosts(params);
 
-  for (const post of responseData) {
+  const {results} = responseData;
+
+  for (const post of results) {
     const comments = post.comments || [];
     dispatch(setComments(comments));
     delete post.comments;
   }
 
-  dispatch(setPosts(responseData));
+  dispatch(setPosts(results));
 };
 
 export const updatePost = (id: number, data: FormData) => async (dispatch: AppDispatch) => {

@@ -1,23 +1,36 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {POSTS} from 'constants/store';
-import {Post, Posts} from 'types';
+import {Post} from 'types';
+import {PostsState} from 'types/posts';
 
-const initialState: Posts = {};
+
+const initialState: PostsState = {
+  post: {},
+  posts: {
+    count: 0,
+    hasMore: false,
+    isLoading: false,
+    next: null,
+    previous: null,
+    results: [],
+  },
+};
 
 const posts = createSlice({
   initialState,
   name: POSTS,
   reducers: {
-    setPost: (state: Posts, {payload}: PayloadAction<Post>) => {
-      const {id} = payload;
-      state[id] = payload;
+    setPost: (state, {payload}: PayloadAction<Post>) => {
+      state.post = payload;
     },
-    setPosts: (state: Posts, {payload}: PayloadAction<Post[]>) => {
-      return payload.reduce((acc: Posts, obj) => ({...acc, [obj.id]: obj}), {});
+    setPosts: (state, {payload}: PayloadAction<Post[]>) => {
+      console.log('payload', payload);
+      state.posts.results = payload;
+      // Additional logic for pagination states
     },
-    unsetPost: (state: Posts, {payload: id}: PayloadAction<number>) => {
-      delete state[id];
+    unsetPost: (state, {payload: id}: PayloadAction<number>) => {
+      state.posts.results = state.posts.results.filter((post) => post.id !== id);
     },
   },
 });
