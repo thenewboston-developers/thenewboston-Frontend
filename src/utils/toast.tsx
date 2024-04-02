@@ -4,14 +4,6 @@ import {toast} from 'react-toastify';
 import Toast from 'components/Toast';
 import {ToastType} from 'enums';
 
-/**
- * Displays error toasts for each error message in the provided array.
- * @param {string[]} errors - An array of error messages to be displayed as toasts.
- */
-export const displayErrorToasts = (errors: string[]): void => {
-  errors.forEach(displayErrorToast);
-};
-
 export const displayErrorToast = (error: any) => {
   let errorStr: string;
 
@@ -26,6 +18,14 @@ export const displayErrorToast = (error: any) => {
   }
 
   displayToast(errorStr, ToastType.ERROR);
+};
+
+/**
+ * Displays error toasts for each error message in the provided array.
+ * @param {string[]} errors - An array of error messages to be displayed as toasts.
+ */
+export const displayErrorToasts = (errors: string[]): void => {
+  errors.forEach(displayErrorToast);
 };
 
 export const displayToast = (message: ReactNode, type: ToastType, className?: string): void => {
