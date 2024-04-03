@@ -7,13 +7,16 @@ import EmptyText from 'components/EmptyText';
 import Post from 'components/Post';
 import {getPosts as _getPosts} from 'dispatchers/posts';
 import {getPosts} from 'selectors/state';
-import {AppDispatch, SFC} from 'types';
+import {AppDispatch, RootState, SFC} from 'types';
 import * as S from './Styles';
 
 const Posts: SFC = ({className}) => {
   const {id} = useParams();
-  const dispatch = useDispatch<AppDispatch>();
+  // const dispatch = useDispatch<AppDispatch>();
   const posts = useSelector(getPosts);
+  console.log('posts', posts);
+  const dispatch = useDispatch<AppDispatch>();
+  // const posts = useSelector((state: RootState) => state.posts.posts.results);
 
   const userId = id ? parseInt(id, 10) : null;
 
@@ -24,22 +27,22 @@ const Posts: SFC = ({className}) => {
     })();
   }, [dispatch, userId]);
 
-  const postList = useMemo(() => {
-    const _posts = orderBy(Object.values(posts), ['created_date'], ['desc']);
-    return _posts.filter(({owner}) => owner.id === userId);
-  }, [posts, userId]);
+  // const postList = useMemo(() => {
+  //   const _posts = orderBy(Object.values(posts), ['created_date'], ['desc']);
+  //   return _posts.filter(({owner}) => owner.id === userId);
+  // }, [posts, userId]);
 
-  const renderContent = () => {
-    if (!!postList.length) return renderPostContainer();
-    return <EmptyText>No posts to display.</EmptyText>;
-  };
+  // const renderContent = () => {
+  //   if (!!postList.length) return renderPostContainer();
+  //   return <EmptyText>No posts to display.</EmptyText>;
+  // };
 
-  const renderPostContainer = () => {
-    const _posts = postList.map((post) => <Post key={post.id} post={post} />);
-    return <S.PostContainer>{_posts}</S.PostContainer>;
-  };
+  // const renderPostContainer = () => {
+  //   const _posts = postList.map((post) => <Post key={post.id} post={post} />);
+  //   return <S.PostContainer>{_posts}</S.PostContainer>;
+  // };
 
-  return <S.Container className={className}>{renderContent()}</S.Container>;
+  return <S.Container className={className}>{}</S.Container>;
 };
 
 export default Posts;

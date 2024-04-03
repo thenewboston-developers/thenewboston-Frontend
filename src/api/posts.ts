@@ -28,9 +28,12 @@ export interface GetPostsParams {
   owner?: number;
 }
 
-export const getPosts = async (params?: GetPostsParams): Promise<PaginatedResponse<PostReadSerializer>> => {
+export const getPosts = async (
+  params?: GetPostsParams,
+  url: string = BASE_URL,
+): Promise<PaginatedResponse<PostReadSerializer>> => {
   try {
-    const response = await axios.get<PaginatedResponse<PostReadSerializer>>(BASE_URL, {
+    const response = await axios.get<PaginatedResponse<PostReadSerializer>>(url, {
       params,
       ...authorizationHeaders(),
     });

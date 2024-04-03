@@ -6,7 +6,7 @@ import {
   GetPostsParams,
 } from 'api/posts';
 import {setComments} from 'store/comments';
-import {setPost, setPosts, unsetPost} from 'store/posts';
+import {setPost, setPosts, unsetPost, startLoading, resetPosts as _resetPosts} from 'store/posts';
 import {AppDispatch} from 'types';
 
 export const createPost = (data: FormData) => async (dispatch: AppDispatch) => {
@@ -20,18 +20,21 @@ export const deletePost = (id: number) => async (dispatch: AppDispatch) => {
   dispatch(unsetPost(id));
 };
 
+export const resetPosts = () => (dispatch: AppDispatch) => {
+  dispatch(_resetPosts());
+};
+
 export const getPosts = (params?: GetPostsParams) => async (dispatch: AppDispatch) => {
+  dispatch(startLoading());
+
   const responseData = await _getPosts(params);
-
-  const {results} = responseData;
-
-  for (const post of results) {
+  for (const post of responseData.results) {
     const comments = post.comments || [];
     dispatch(setComments(comments));
     delete post.comments;
   }
 
-  dispatch(setPosts(results));
+  dispatch(setPosts(responseData));
 };
 
 export const updatePost = (id: number, data: FormData) => async (dispatch: AppDispatch) => {

@@ -5,7 +5,7 @@ import orderBy from 'lodash/orderBy';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import Post from 'components/Post';
-import {getPosts as _getPosts} from 'dispatchers/posts';
+import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import {getPosts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import * as S from './Styles';
@@ -16,6 +16,7 @@ const Feed: SFC = ({className}) => {
 
   useEffect(() => {
     (async () => {
+      await dispatch(_resetPosts());
       await dispatch(_getPosts());
     })();
   }, [dispatch]);
@@ -36,7 +37,7 @@ const Feed: SFC = ({className}) => {
   };
 
   const renderPostContainer = () => {
-    const _posts = postList.map((post) => <Post key={post.id} post={post} />);
+    const _posts = postList.map((post: any) => <Post key={post.id} post={post} />);
     return <S.PostContainer>{_posts}</S.PostContainer>;
   };
 
