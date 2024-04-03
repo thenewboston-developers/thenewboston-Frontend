@@ -28,7 +28,6 @@ const posts = createSlice({
     },
     setPosts: (state, {payload}: PayloadAction<PaginatedResponse<Post>>) => {
       state.posts = [...state.posts, ...payload.results];
-      console.log(state.posts);
       state.next = payload.next;
       state.isLoading = false;
     },
