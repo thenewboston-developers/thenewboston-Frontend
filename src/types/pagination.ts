@@ -6,6 +6,7 @@ export interface PaginatedResponse<T> {
 }
 
 export interface Pagination {
+  hasMore: boolean;
   isLoading: boolean;
   next: string | null;
 }

@@ -18,6 +18,8 @@ export const getMessages = (state: RootState) => state.messages;
 export const getNotifications = (state: RootState) => state.notifications;
 export const getOrders = (state: RootState) => state.orders;
 export const getPosts = (state: RootState) => state.posts.posts;
+export const hasMorePosts = (state: RootState) => state.posts.hasMore;
+export const isLoadingPosts = (state: RootState) => state.posts.isLoading;
 export const getProducts = (state: RootState) => state.products;
 export const getSelf = (state: RootState) => state.self;
 export const getTrades = (state: RootState) => state.trades;

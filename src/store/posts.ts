@@ -4,6 +4,7 @@ import {POSTS} from 'constants/store';
 import {Post, Posts, PaginatedResponse} from 'types';
 
 const initialState: Posts = {
+  hasMore: false,
   isLoading: false,
   next: null,
   posts: [],
@@ -14,9 +15,10 @@ const posts = createSlice({
   name: POSTS,
   reducers: {
     resetPosts: (state) => {
-      state.posts = [];
-      state.next = null;
+      state.hasMore = false;
       state.isLoading = false;
+      state.next = null;
+      state.posts = [];
     },
     setPost: (state, {payload}: PayloadAction<Post>) => {
       const existingPostIndex = state.posts.findIndex((post) => post.id === payload.id);
@@ -27,9 +29,10 @@ const posts = createSlice({
       }
     },
     setPosts: (state, {payload}: PayloadAction<PaginatedResponse<Post>>) => {
-      state.posts = [...state.posts, ...payload.results];
-      state.next = payload.next;
+      state.hasMore = !!payload.next;
       state.isLoading = false;
+      state.next = payload.next;
+      state.posts = [...state.posts, ...payload.results];
     },
     startLoading: (state) => {
       state.isLoading = true;

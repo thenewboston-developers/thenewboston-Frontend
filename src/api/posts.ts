@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import {PostReadSerializer, PaginatedResponse} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
+import {getApiUrl} from 'utils/url';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/posts`;
 
@@ -29,11 +30,12 @@ export interface GetPostsParams {
 }
 
 export const getPosts = async (
+  url: string,
   params?: GetPostsParams,
-  url: string = BASE_URL,
 ): Promise<PaginatedResponse<PostReadSerializer>> => {
   try {
-    const response = await axios.get<PaginatedResponse<PostReadSerializer>>(url, {
+    const apiURL = getApiUrl(BASE_URL, url);
+    const response = await axios.get<PaginatedResponse<PostReadSerializer>>(apiURL, {
       params,
       ...authorizationHeaders(),
     });
