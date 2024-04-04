@@ -1,6 +1,5 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
@@ -16,7 +15,7 @@ const Feed: SFC = ({className}) => {
   const posts = useSelector(getPosts);
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
-  const postList = useMemo(() => orderBy(Object.values(posts), ['created_date'], ['desc']), [posts]);
+  const postList = useMemo(() => Object.values(posts), [posts]);
 
   useEffect(() => {
     dispatch(_resetPosts());

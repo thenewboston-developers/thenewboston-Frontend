@@ -1,6 +1,7 @@
 import React from 'react';
-import _InfiniteScroll from 'react-infinite-scroll-component';
+import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import Loader from 'components/Loader';
+import * as S from './Styles';
 
 import {SFC} from 'types';
 
@@ -13,15 +14,22 @@ interface InfiniteScrollProps {
 
 const InfiniteScroll: SFC<InfiniteScrollProps> = ({dataLength, next, hasMore, children}) => {
   return (
-    <_InfiniteScroll
-      dataLength={dataLength}
-      next={next}
-      hasMore={hasMore}
-      loader={<Loader size={24} />}
-      height={window.innerHeight}
-    >
-      {children}
-    </_InfiniteScroll>
+    <S.InfiniteScrollContainer>
+      <InfiniteScrollComponent
+        className="infinite-scroll-component"
+        dataLength={dataLength}
+        next={next}
+        hasMore={hasMore}
+        loader={
+          <S.LoaderContainer>
+            <Loader size={24} />
+          </S.LoaderContainer>
+        }
+        height={window.innerHeight}
+      >
+        {children}
+      </InfiniteScrollComponent>
+    </S.InfiniteScrollContainer>
   );
 };
 
