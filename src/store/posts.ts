@@ -25,7 +25,7 @@ const posts = createSlice({
       if (existingPostIndex >= 0) {
         state.posts[existingPostIndex] = payload;
       } else {
-        state.posts.push(payload);
+        state.posts.unshift(payload);
       }
     },
     setPosts: (state, {payload}: PayloadAction<PaginatedResponse<Post>>) => {
