@@ -5,6 +5,7 @@ import orderBy from 'lodash/orderBy';
 
 import {getConversations as _getConversations} from 'dispatchers/conversations';
 import {getConversations, getSelf} from 'selectors/state';
+import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
 import MenuItem from './MenuItem';
 import * as S from './Styles';
@@ -28,7 +29,17 @@ const LeftMenu: SFC = ({className}) => {
   const renderButtonContainer = () => {
     return (
       <S.ButtonContainer>
-        <S.Button onClick={() => navigate('/ia')} text="New Conversation" />
+        <S.Button
+          onClick={() => {
+            dispatch(
+              updateManager({
+                activeConversationId: null,
+              }),
+            );
+            navigate('/ia');
+          }}
+          text="New Conversation"
+        />
       </S.ButtonContainer>
     );
   };
