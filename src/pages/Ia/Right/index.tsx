@@ -10,7 +10,7 @@ import {ButtonType} from 'components/Button';
 import Icon from 'components/Icon';
 import {createConversation} from 'dispatchers/conversations';
 import {createMessage, getMessages as _getMessages} from 'dispatchers/messages';
-import {getMessages, getSelf} from 'selectors/state';
+import {getMessages, getManager, getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toast';
 import yup from 'utils/yup';
@@ -26,8 +26,9 @@ const Right: SFC = ({className}) => {
   const navigate = useNavigate();
   const params = useParams();
   const self = useSelector(getSelf);
+  const manager = useSelector(getManager);
 
-  const conversationId = params.id ? parseInt(params.id, 10) : null;
+  const conversationId = params.id ? parseInt(params.id, 10) : manager.activeConversationId || null;
 
   const initialValues = {
     text: '',

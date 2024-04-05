@@ -2,6 +2,7 @@ import {useDispatch} from 'react-redux';
 
 import {deleteConversation} from 'dispatchers/conversations';
 import {ToastType} from 'enums';
+import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toast';
 import * as S from './Styles';
@@ -18,6 +19,11 @@ const ConversationDeleteModal: SFC<ConversationDeleteModalProps> = ({className, 
     try {
       await dispatch(deleteConversation(conversationId));
       displayToast('Conversation deleted!', ToastType.SUCCESS);
+      dispatch(
+        updateManager({
+          activeConversationId: null,
+        }),
+      );
       close();
     } catch (error) {
       console.error(error);

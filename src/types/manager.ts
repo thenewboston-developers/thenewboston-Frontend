@@ -7,6 +7,7 @@ export interface Manager {
   activeAddress: Address | null;
   activeAssetPairId: number | null;
   activeCommentCore: Core | null;
+  activeConversationId: number | null;
   activeOrderAddressId: number | null;
   activeProduct: Product | null;
   activeWalletId: number | null;
