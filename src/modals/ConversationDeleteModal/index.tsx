@@ -1,4 +1,5 @@
 import {useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 
 import {deleteConversation} from 'dispatchers/conversations';
 import {ToastType} from 'enums';
@@ -14,6 +15,7 @@ export interface ConversationDeleteModalProps {
 
 const ConversationDeleteModal: SFC<ConversationDeleteModalProps> = ({className, close, conversationId}) => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const handleButtonClick = async () => {
     try {
@@ -25,6 +27,7 @@ const ConversationDeleteModal: SFC<ConversationDeleteModalProps> = ({className, 
         }),
       );
       close();
+      navigate('/ia');
     } catch (error) {
       console.error(error);
       displayErrorToast('Error deleting conversation');
