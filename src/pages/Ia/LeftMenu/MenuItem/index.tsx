@@ -6,9 +6,9 @@ import {mdiDelete, mdiPencil} from '@mdi/js';
 import {useToggle} from 'hooks';
 import ConversationDeleteModal from 'modals/ConversationDeleteModal';
 import ConversationEditModal from 'modals/ConversationEditModal';
-import {AppDispatch, Conversation, SFC} from 'types';
 import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
+import {AppDispatch, Conversation, SFC} from 'types';
 import * as S from './Styles';
 
 export interface MenuItemProps {
@@ -20,9 +20,10 @@ const MenuItem: SFC<MenuItemProps> = ({className, conversation}) => {
   const [conversationEditModalIsOpen, toggleConversationEditModal] = useToggle(false);
   const [toolsVisible, setToolsVisible] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
+  const manager = useSelector(getManager);
   const navigate = useNavigate();
   const params = useParams();
-  const manager = useSelector(getManager);
+
   const conversationId = params.id ? parseInt(params.id, 10) : manager.activeConversationId || null;
 
   const handleClick = () => {

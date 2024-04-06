@@ -10,7 +10,7 @@ import {ButtonType} from 'components/Button';
 import Icon from 'components/Icon';
 import {createConversation} from 'dispatchers/conversations';
 import {createMessage, getMessages as _getMessages} from 'dispatchers/messages';
-import {getMessages, getManager, getSelf} from 'selectors/state';
+import {getManager, getMessages, getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
@@ -21,12 +21,12 @@ const Right: SFC = ({className}) => {
   const [scrollToBottom, setScrollToBottom] = useState<boolean>(true);
   const bottomMessageRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const manager = useSelector(getManager);
   const messages = useSelector(getMessages);
   const messagesRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const params = useParams();
   const self = useSelector(getSelf);
-  const manager = useSelector(getManager);
 
   const conversationId = params.id ? parseInt(params.id, 10) : manager.activeConversationId || null;
 

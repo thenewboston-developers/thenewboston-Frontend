@@ -26,20 +26,19 @@ const LeftMenu: SFC = ({className}) => {
     return orderBy(Object.values(conversations), ['created_date'], ['desc']);
   }, [conversations]);
 
+  const handleButtonClick = () => {
+    dispatch(
+      updateManager({
+        activeConversationId: null,
+      }),
+    );
+    navigate('/ia');
+  };
+
   const renderButtonContainer = () => {
     return (
       <S.ButtonContainer>
-        <S.Button
-          onClick={() => {
-            dispatch(
-              updateManager({
-                activeConversationId: null,
-              }),
-            );
-            navigate('/ia');
-          }}
-          text="New Conversation"
-        />
+        <S.Button onClick={handleButtonClick} text="New Conversation" />
       </S.ButtonContainer>
     );
   };
