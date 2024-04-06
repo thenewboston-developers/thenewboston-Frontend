@@ -1,4 +1,5 @@
 import {ReactNode, useCallback} from 'react';
+import {mdiAlertCircleOutline, mdiCheckCircle} from '@mdi/js';
 
 import {ToastType} from 'enums';
 import {SFC} from 'types';
@@ -13,9 +14,9 @@ const Toast: SFC<ToastProps> = ({children, className, type = ToastType.ERROR}) =
   const renderIcon = useCallback((): ReactNode => {
     switch (type) {
       case ToastType.SUCCESS:
-        return <S.CheckCircleIcon />;
+        return <S.CheckCircleIcon icon={mdiCheckCircle} />;
       default:
-        return <S.AlertCircleOutlineIcon />;
+        return <S.AlertCircleOutlineIcon icon={mdiAlertCircleOutline} />;
     }
   }, [type]);
 

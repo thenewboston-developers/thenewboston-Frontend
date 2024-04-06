@@ -1,5 +1,4 @@
 import styled, {keyframes} from 'styled-components';
-import {mdiLoading} from '@mdi/js';
 
 import Icon from 'components/Icon';
 
@@ -30,7 +29,7 @@ const spin = keyframes`
   }
 `;
 
-export const LoadingIcon = styled(Icon).attrs(() => ({icon: mdiLoading}))`
+export const LoadingIcon = styled(Icon)`
   animation: ${fade} 1s linear infinite, ${spin} 1s linear infinite;
   display: inline;
 `;

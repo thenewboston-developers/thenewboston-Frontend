@@ -15,6 +15,7 @@ const Feed: SFC = ({className}) => {
   const posts = useSelector(getPosts);
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
+
   const postList = useMemo(() => Object.values(posts), [posts]);
 
   useEffect(() => {
