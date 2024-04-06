@@ -8,7 +8,7 @@ import {createArtwork, updateArtwork} from 'dispatchers/artworks';
 import {ToastType} from 'enums';
 import {usePriceCoreOptions} from 'hooks';
 import {AppDispatch, Artwork, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toasts';
+import {displayErrorToasts, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
@@ -52,10 +52,10 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({artwork, className, close, descri
       }
 
       close();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      const verb = artwork ? 'updating' : 'creating';
-      displayErrorToast(`Error ${verb} artwork`);
+      const defaultErrorMessage = `Error ${artwork ? 'updating' : 'creating'} artwork`;
+      displayErrorToasts(error?.response?.data || [defaultErrorMessage]);
     }
   };
 
