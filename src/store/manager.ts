@@ -7,6 +7,7 @@ const initialState: Manager = {
   activeAddress: null,
   activeAssetPairId: null,
   activeCommentCore: null,
+  activeConversationId: null,
   activeOrderAddressId: null,
   activeProduct: null,
   activeWalletId: null,
