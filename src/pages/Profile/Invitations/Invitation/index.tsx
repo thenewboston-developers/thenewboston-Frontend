@@ -10,7 +10,7 @@ import {useToggle} from 'hooks';
 import InvitationModal from 'modals/InvitationModal';
 import {AppDispatch, Invitation as TInvitation, SFC} from 'types';
 import {shortDate} from 'utils/dates';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import * as S from './Styles';
 
 export interface InvitationProps {

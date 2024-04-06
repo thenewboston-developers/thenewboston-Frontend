@@ -1,31 +1,55 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
+import InfiniteScroll from 'components/InfiniteScroll';
 import Post from 'components/Post';
-import {getPosts as _getPosts} from 'dispatchers/posts';
-import {getPosts} from 'selectors/state';
+import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
+import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const Feed: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
   const posts = useSelector(getPosts);
+  const hasMore = useSelector(hasMorePosts);
+  const isLoading = useSelector(isLoadingPosts);
+
+  const postList = useMemo(() => Object.values(posts), [posts]);
 
   useEffect(() => {
     (async () => {
-      await dispatch(_getPosts());
+      try {
+        dispatch(_resetPosts());
+        await dispatch(_getPosts());
+      } catch (error) {
+        console.error(error);
+        displayErrorToast('Error fetching posts');
+      }
     })();
   }, [dispatch]);
 
-  const postList = useMemo(() => {
-    return orderBy(Object.values(posts), ['created_date'], ['desc']);
-  }, [posts]);
+  const fetchMorePosts = async () => {
+    if (!isLoading) {
+      await dispatch(_getPosts());
+    }
+  };
 
   const renderContent = () => {
-    if (!!postList.length) return renderPostContainer();
+    if (postList.length) {
+      return (
+        <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts}>
+          <S.PostContainer>
+            {postList.map((post) => (
+              <Post key={post.id} post={post} />
+            ))}
+          </S.PostContainer>
+        </InfiniteScroll>
+      );
+    }
+
     return (
       <EmptyPage
         bottomText="Try following some users to see their posts here!"
@@ -33,11 +57,6 @@ const Feed: SFC = ({className}) => {
         topText="Nothing here!"
       />
     );
-  };
-
-  const renderPostContainer = () => {
-    const _posts = postList.map((post) => <Post key={post.id} post={post} />);
-    return <S.PostContainer>{_posts}</S.PostContainer>;
   };
 
   return <S.Container className={className}>{renderContent()}</S.Container>;

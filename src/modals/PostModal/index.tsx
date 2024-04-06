@@ -8,7 +8,7 @@ import ImagePreview from 'components/ImagePreview';
 import {createPost, updatePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {AppDispatch, Post, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import * as S from './Styles';
 

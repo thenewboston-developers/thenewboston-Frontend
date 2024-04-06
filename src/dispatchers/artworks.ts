@@ -3,8 +3,8 @@ import {
   deleteArtwork as _deleteArtwork,
   getArtwork as _getArtwork,
   getArtworks as _getArtworks,
-  updateArtwork as _updateArtwork,
   GetArtworksParams,
+  updateArtwork as _updateArtwork,
 } from 'api/artworks';
 import {setArtwork, setArtworks, unsetArtwork} from 'store/artworks';
 import {AppDispatch, CreateArtworkRequest, EditArtworkRequest} from 'types';

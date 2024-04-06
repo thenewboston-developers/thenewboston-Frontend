@@ -9,7 +9,7 @@ import {useActiveOrderAddress} from 'hooks';
 import {getCartProducts, getCores, getWallets} from 'selectors/state';
 import {setCartProducts} from 'store/cartProducts';
 import {AppDispatch, CartProduct, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import * as S from './Styles';
 
 interface PriceCoreTotal {

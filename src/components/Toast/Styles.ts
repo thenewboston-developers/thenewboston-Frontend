@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import {mdiAlertCircleOutline, mdiCheckCircle} from '@mdi/js';
 
 import Icon from 'components/Icon';
 import {ToastType} from 'enums';
@@ -10,11 +9,11 @@ const iconProps = `
   margin-right: 12px;
 `;
 
-export const AlertCircleOutlineIcon = styled(Icon).attrs(() => ({icon: mdiAlertCircleOutline}))`
+export const AlertCircleOutlineIcon = styled(Icon)`
   ${iconProps}
 `;
 
-export const CheckCircleIcon = styled(Icon).attrs(() => ({icon: mdiCheckCircle}))`
+export const CheckCircleIcon = styled(Icon)`
   ${iconProps}
 `;
 

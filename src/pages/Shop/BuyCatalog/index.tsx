@@ -9,7 +9,7 @@ import {getProducts as _getProducts} from 'dispatchers/products';
 import {ActivationStatus} from 'enums';
 import {getProducts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const BuyCatalog: SFC = ({className}) => {

@@ -6,7 +6,7 @@ import Thumbnail from 'components/Thumbnail';
 import {deleteCartProduct} from 'dispatchers/cartProducts';
 import {ToastType} from 'enums';
 import {AppDispatch, CartProduct as TCartProduct, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import * as S from './Styles';
 
 export interface CartProductProps {

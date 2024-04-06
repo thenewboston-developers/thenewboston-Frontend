@@ -1,13 +1,15 @@
+import {store} from 'store';
 import {
   createPost as _createPost,
   deletePost as _deletePost,
   getPosts as _getPosts,
-  updatePost as _updatePost,
   GetPostsParams,
+  updatePost as _updatePost,
 } from 'api/posts';
 import {setComments} from 'store/comments';
-import {setPost, setPosts, unsetPost} from 'store/posts';
+import {resetPosts as _resetPosts, setPost, setPosts, startLoading, unsetPost} from 'store/posts';
 import {AppDispatch} from 'types';
+import {getNextUrlFromState} from 'utils/urls';
 
 export const createPost = (data: FormData) => async (dispatch: AppDispatch) => {
   const responseData = await _createPost(data);
@@ -20,10 +22,17 @@ export const deletePost = (id: number) => async (dispatch: AppDispatch) => {
   dispatch(unsetPost(id));
 };
 
-export const getPosts = (params?: GetPostsParams) => async (dispatch: AppDispatch) => {
-  const responseData = await _getPosts(params);
+export const resetPosts = () => (dispatch: AppDispatch) => {
+  dispatch(_resetPosts());
+};
 
-  for (const post of responseData) {
+export const getPosts = (params?: GetPostsParams) => async (dispatch: AppDispatch) => {
+  dispatch(startLoading());
+
+  const nextURL = getNextUrlFromState(store.getState().posts);
+  const responseData = await _getPosts(nextURL, params);
+
+  for (const post of responseData.results) {
     const comments = post.comments || [];
     dispatch(setComments(comments));
     delete post.comments;

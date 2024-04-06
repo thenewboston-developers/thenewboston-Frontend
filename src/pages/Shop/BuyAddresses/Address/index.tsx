@@ -8,7 +8,7 @@ import {deleteAddress} from 'dispatchers/addresses';
 import {ToastType} from 'enums';
 import {updateManager} from 'store/manager';
 import {Address as TAddress, AppDispatch, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 
 export interface AddressProps {
   address: TAddress;

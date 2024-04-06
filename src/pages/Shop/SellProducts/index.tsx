@@ -10,7 +10,7 @@ import {getProducts as _getProducts} from 'dispatchers/products';
 import {getProducts, getSelf} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import Product from './Product';
 import * as S from './Styles';
 

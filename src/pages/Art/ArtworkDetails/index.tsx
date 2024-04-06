@@ -14,7 +14,7 @@ import ArtworkTransferModal from 'modals/ArtworkTransferModal';
 import {getArtworks, getSelf} from 'selectors/state';
 import {AppDispatch, Artwork, SFC} from 'types';
 import {longDate} from 'utils/dates';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import ArtworkTransferHistory from './ArtworkTransferHistory';
 import * as S from './Styles';
 

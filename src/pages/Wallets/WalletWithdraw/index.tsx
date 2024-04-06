@@ -11,7 +11,7 @@ import {WireType} from 'enums';
 import {useActiveWallet} from 'hooks';
 import {getWires} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import yup, {accountNumberSchema} from 'utils/yup';
 import * as S from './Styles';
 

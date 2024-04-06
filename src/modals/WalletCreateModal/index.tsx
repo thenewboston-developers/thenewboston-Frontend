@@ -5,7 +5,7 @@ import {createWallet} from 'dispatchers/wallets';
 import {useAvailableWalletCores} from 'hooks';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import RadioCard from './RadioCard';
 import * as S from './Styles';
 

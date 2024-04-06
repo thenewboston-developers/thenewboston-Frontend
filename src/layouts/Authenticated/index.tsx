@@ -9,7 +9,7 @@ import {getExchangeOrders} from 'dispatchers/exchangeOrders';
 import {getWallets} from 'dispatchers/wallets';
 import {getWires} from 'dispatchers/wires';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import LeftNav from './LeftNav';
 import MainArea from './MainArea';
 import * as S from './Styles';

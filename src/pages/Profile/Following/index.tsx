@@ -7,7 +7,7 @@ import {getFollowers} from 'api/followers';
 import EmptyText from 'components/EmptyText';
 import UserLabel from 'components/UserLabel';
 import {AppDispatch, FollowerReadSerializer, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const Following: SFC = ({className}) => {

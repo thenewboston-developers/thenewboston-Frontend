@@ -11,7 +11,7 @@ import {useCartSeller, useToggle} from 'hooks';
 import CartWarningModal from 'modals/CartWarningModal';
 import {getCartProducts, getProducts} from 'selectors/state';
 import {AppDispatch, CartProduct, Product, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const BuyProductDetails: SFC = ({className}) => {
