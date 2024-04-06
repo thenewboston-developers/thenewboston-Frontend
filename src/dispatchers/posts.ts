@@ -3,11 +3,11 @@ import {
   createPost as _createPost,
   deletePost as _deletePost,
   getPosts as _getPosts,
-  updatePost as _updatePost,
   GetPostsParams,
+  updatePost as _updatePost,
 } from 'api/posts';
 import {setComments} from 'store/comments';
-import {setPost, setPosts, unsetPost, startLoading, resetPosts as _resetPosts} from 'store/posts';
+import {resetPosts as _resetPosts, setPost, setPosts, startLoading, unsetPost} from 'store/posts';
 import {AppDispatch} from 'types';
 import {getNextUrlFromState} from 'utils/url';
 

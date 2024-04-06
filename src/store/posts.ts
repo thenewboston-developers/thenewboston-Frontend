@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {POSTS} from 'constants/store';
-import {Post, Posts, PaginatedResponse} from 'types';
+import {PaginatedResponse, Post, Posts} from 'types';
 
 const initialState: Posts = {
   hasMore: false,
