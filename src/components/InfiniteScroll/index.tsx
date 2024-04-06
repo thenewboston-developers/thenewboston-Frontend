@@ -1,31 +1,31 @@
 import React from 'react';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
+
 import Loader from 'components/Loader';
+import {SFC} from 'types';
 import * as S from './Styles';
 
-import {SFC} from 'types';
-
 interface InfiniteScrollProps {
-  dataLength: number;
-  next: () => void;
-  hasMore: boolean;
   children: React.ReactNode;
+  dataLength: number;
+  hasMore: boolean;
+  next: () => void;
 }
 
-const InfiniteScroll: SFC<InfiniteScrollProps> = ({dataLength, next, hasMore, children}) => {
+const InfiniteScroll: SFC<InfiniteScrollProps> = ({children, dataLength, hasMore, next}) => {
   return (
     <S.InfiniteScrollContainer>
       <InfiniteScrollComponent
         className="infinite-scroll-component"
         dataLength={dataLength}
-        next={next}
         hasMore={hasMore}
+        height={window.innerHeight}
         loader={
           <S.LoaderContainer>
             <Loader size={24} />
           </S.LoaderContainer>
         }
-        height={window.innerHeight}
+        next={next}
       >
         {children}
       </InfiniteScrollComponent>

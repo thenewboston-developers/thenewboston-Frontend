@@ -10,7 +10,7 @@ import PostModal from 'modals/PostModal';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Post as TPost, SFC} from 'types';
 import {shortDate} from 'utils/dates';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import Comments from './Comments';
 import * as S from './Styles';
 

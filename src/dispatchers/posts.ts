@@ -9,7 +9,7 @@ import {
 import {setComments} from 'store/comments';
 import {resetPosts as _resetPosts, setPost, setPosts, startLoading, unsetPost} from 'store/posts';
 import {AppDispatch} from 'types';
-import {getNextUrlFromState} from 'utils/url';
+import {getNextUrlFromState} from 'utils/urls';
 
 export const createPost = (data: FormData) => async (dispatch: AppDispatch) => {
   const responseData = await _createPost(data);
@@ -28,8 +28,10 @@ export const resetPosts = () => (dispatch: AppDispatch) => {
 
 export const getPosts = (params?: GetPostsParams) => async (dispatch: AppDispatch) => {
   dispatch(startLoading());
+
   const nextURL = getNextUrlFromState(store.getState().posts);
   const responseData = await _getPosts(nextURL, params);
+
   for (const post of responseData.results) {
     const comments = post.comments || [];
     dispatch(setComments(comments));

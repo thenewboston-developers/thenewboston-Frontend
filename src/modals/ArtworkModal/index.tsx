@@ -8,7 +8,7 @@ import {createArtwork, updateArtwork} from 'dispatchers/artworks';
 import {ToastType} from 'enums';
 import {usePriceCoreOptions} from 'hooks';
 import {AppDispatch, Artwork, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import * as S from './Styles';
 

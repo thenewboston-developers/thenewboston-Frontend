@@ -3,11 +3,12 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
-import Post from 'components/Post';
 import InfiniteScroll from 'components/InfiniteScroll';
+import Post from 'components/Post';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const Feed: SFC = ({className}) => {
@@ -19,20 +20,27 @@ const Feed: SFC = ({className}) => {
   const postList = useMemo(() => Object.values(posts), [posts]);
 
   useEffect(() => {
-    dispatch(_resetPosts());
-    dispatch(_getPosts());
+    (async () => {
+      try {
+        dispatch(_resetPosts());
+        await dispatch(_getPosts());
+      } catch (error) {
+        console.error(error);
+        displayErrorToast('Error fetching posts');
+      }
+    })();
   }, [dispatch]);
 
-  const fetchMorePosts = () => {
+  const fetchMorePosts = async () => {
     if (!isLoading) {
-      dispatch(_getPosts());
+      await dispatch(_getPosts());
     }
   };
 
   const renderContent = () => {
     if (postList.length) {
       return (
-        <InfiniteScroll dataLength={postList.length} next={fetchMorePosts} hasMore={hasMore}>
+        <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts}>
           <S.PostContainer>
             {postList.map((post) => (
               <Post key={post.id} post={post} />

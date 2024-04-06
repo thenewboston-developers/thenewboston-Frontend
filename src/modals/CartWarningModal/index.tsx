@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {createCartProduct, emptyCart} from 'dispatchers/cartProducts';
 import {ToastType} from 'enums';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import * as S from './Styles';
 
 export interface CartWarningModalProps {

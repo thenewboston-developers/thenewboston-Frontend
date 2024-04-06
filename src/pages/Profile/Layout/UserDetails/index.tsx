@@ -8,7 +8,7 @@ import {useToggle, useUser} from 'hooks';
 import ProfileEditModal from 'modals/ProfileEditModal';
 import {getSelf} from 'selectors/state';
 import {FollowerReadSerializer, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const UserDetails: SFC = ({className}) => {

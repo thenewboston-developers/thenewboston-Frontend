@@ -7,7 +7,7 @@ import {Input} from 'components/FormElements';
 import {updateConversation} from 'dispatchers/conversations';
 import {ToastType} from 'enums';
 import {AppDispatch, Conversation, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import * as S from './Styles';
 

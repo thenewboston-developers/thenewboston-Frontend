@@ -8,7 +8,7 @@ import SectionHeading from 'components/SectionHeading';
 import {getOrders as _getOrders} from 'dispatchers/orders';
 import {getOrders, getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const SellOrders: SFC = ({className}) => {

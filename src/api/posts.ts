@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import {PaginatedResponse, PostReadSerializer} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
-import {getApiUrl} from 'utils/url';
+import {getApiUrl} from 'utils/urls';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/posts`;
 

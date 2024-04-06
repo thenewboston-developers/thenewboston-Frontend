@@ -3,20 +3,21 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 
 import EmptyText from 'components/EmptyText';
-import Post from 'components/Post';
 import InfiniteScroll from 'components/InfiniteScroll';
+import Post from 'components/Post';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const Posts: SFC = ({className}) => {
+  const {id} = useParams();
   const dispatch = useDispatch<AppDispatch>();
-  const posts = useSelector(getPosts);
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
+  const posts = useSelector(getPosts);
 
-  const {id} = useParams();
   const userId = id ? parseInt(id, 10) : null;
 
   const postList = useMemo(() => {
@@ -25,22 +26,27 @@ const Posts: SFC = ({className}) => {
 
   useEffect(() => {
     (async () => {
-      if (!userId) return;
-      await dispatch(_resetPosts());
-      await dispatch(_getPosts({owner: userId}));
+      try {
+        if (!userId) return;
+        dispatch(_resetPosts());
+        await dispatch(_getPosts({owner: userId}));
+      } catch (error) {
+        console.error(error);
+        displayErrorToast('Error fetching posts');
+      }
     })();
   }, [dispatch, userId]);
 
-  const fetchMorePosts = () => {
+  const fetchMorePosts = async () => {
     if (!isLoading) {
-      dispatch(_getPosts());
+      await dispatch(_getPosts());
     }
   };
 
   const renderContent = () => {
     if (postList.length) {
       return (
-        <InfiniteScroll dataLength={postList.length} next={fetchMorePosts} hasMore={hasMore}>
+        <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts}>
           <S.PostContainer>
             {postList.map((post) => (
               <Post key={post.id} post={post} />
