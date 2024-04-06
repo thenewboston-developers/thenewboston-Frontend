@@ -1,6 +1,6 @@
 import {UserReadSerializer} from 'types/api/users';
 import {CreatedModified} from 'types/createdModified';
-import {Dict} from 'types/generic';
+import {Pagination} from 'types/pagination';
 
 export interface Post extends CreatedModified {
   content: string;
@@ -9,4 +9,6 @@ export interface Post extends CreatedModified {
   owner: UserReadSerializer;
 }
 
-export type Posts = Dict<Post>;
+export interface Posts extends Pagination {
+  posts: Post[];
+}

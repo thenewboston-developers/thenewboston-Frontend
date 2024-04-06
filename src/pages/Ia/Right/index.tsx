@@ -12,7 +12,7 @@ import {createConversation} from 'dispatchers/conversations';
 import {createMessage, getMessages as _getMessages} from 'dispatchers/messages';
 import {getMessages, getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import Message from './Message';
 import * as S from './Styles';

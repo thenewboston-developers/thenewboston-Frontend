@@ -2,8 +2,8 @@ import {
   createConversation as _createConversation,
   deleteConversation as _deleteConversation,
   getConversations as _getConversations,
-  updateConversation as _updateConversation,
   GetConversationsParams,
+  updateConversation as _updateConversation,
 } from 'api/conversations';
 import {setConversation, setConversations, unsetConversation} from 'store/conversations';
 import {AppDispatch, CreateConversationRequest} from 'types';

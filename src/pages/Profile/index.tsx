@@ -7,7 +7,7 @@ import {getInvitations} from 'dispatchers/invitations';
 import {getUser} from 'dispatchers/users';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import Artworks from './Artworks';
 import Followers from './Followers';
 import Following from './Following';

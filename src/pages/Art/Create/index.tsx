@@ -5,7 +5,7 @@ import {createOpenAIImage} from 'api/openaiImages';
 import Button, {ButtonType} from 'components/Button';
 import {Select, Textarea} from 'components/FormElements';
 import {CreateOpenAIImageResponse, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import ImageCarousel from './ImageCarousel';
 import * as S from './Styles';

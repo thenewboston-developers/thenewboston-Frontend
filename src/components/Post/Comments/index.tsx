@@ -12,7 +12,7 @@ import {useToggle} from 'hooks';
 import CoreSelectModal from 'modals/CoreSelectModal';
 import {getComments, getManager, getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import Comment from './Comment';
 import * as S from './Styles';

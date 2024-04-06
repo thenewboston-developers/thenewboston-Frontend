@@ -8,7 +8,7 @@ import ImagePreview from 'components/ImagePreview';
 import {updateUser} from 'dispatchers/users';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 export interface ProfileEditModalProps {

@@ -42,6 +42,7 @@ import {Message, Messages} from 'types/messages';
 import {Notification, Notifications} from 'types/notifications';
 import {OrderProduct} from 'types/orderProducts';
 import {Order, Orders} from 'types/orders';
+import {PaginatedResponse} from 'types/pagination';
 import {Post, Posts} from 'types/posts';
 import {Product, Products} from 'types/products';
 import {Pull} from 'types/pulls';
@@ -120,6 +121,7 @@ export {
   Order,
   OrderProduct,
   Orders,
+  PaginatedResponse,
   Post,
   PostReadSerializer,
   Posts,

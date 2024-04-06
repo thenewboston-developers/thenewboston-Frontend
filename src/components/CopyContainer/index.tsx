@@ -2,7 +2,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 
 import {ToastType} from 'enums';
 import {SFC} from 'types';
-import {displayToast} from 'utils/toast';
+import {displayToast} from 'utils/toasts';
 import * as S from './Styles';
 
 export interface CopyContainerProps {

@@ -13,7 +13,7 @@ import WalletCreateModal from 'modals/WalletCreateModal';
 import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import MenuItem from './MenuItem';
 import WalletDeposit from './WalletDeposit';
 import WalletWithdraw from './WalletWithdraw';

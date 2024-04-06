@@ -8,7 +8,7 @@ import {deleteProduct, updateProduct} from 'dispatchers/products';
 import {ActivationStatus, ToastType} from 'enums';
 import {updateManager} from 'store/manager';
 import {AppDispatch, Product as TProduct, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toast';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import * as S from './Styles';
 
 export interface ProductProps {

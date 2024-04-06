@@ -5,7 +5,7 @@ import {Form, Formik} from 'formik';
 import Button, {ButtonType} from 'components/Button';
 import {createCore, updateCore} from 'dispatchers/cores';
 import {AppDispatch, Core, SFC} from 'types';
-import {displayErrorToast} from 'utils/toast';
+import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
