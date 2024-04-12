@@ -3,6 +3,8 @@ import React, {useEffect, useState} from 'react';
 import DefaultAvatar from 'assets/default-avatar.png';
 import SectionHeading from 'components/SectionHeading';
 import {Card} from 'styles/components/CardStyle';
+import {ContributionCard, ContributionCardHeader} from 'components/Contributions/ContributionCard';
+import {ContributorInfo} from 'components/Contributions/ContributorInfo';
 import {getTopContributors} from 'utils/contributors';
 import {Contribution, Contributor} from 'types';
 import * as S from './Styles';
@@ -27,13 +29,19 @@ const TopContributors: React.FC<TopContributorsProps> = ({className, contributio
       <Card>
         <S.ContributorList>
           {topContributors.map((contributor) => (
-            <S.ContributorListItem key={contributor.user.id}>
-              <S.PositionIcon src={contributor.positionIcon || DefaultAvatar} alt={`Position ${contributor.user.id}`} />
-              <S.Avatar src={contributor.user.avatar || DefaultAvatar} alt={`${contributor.user.username} avatar`} />
-              <S.ContributorName>{contributor.user.username}</S.ContributorName>
-              {contributor.core.logo && <S.CoreLogo src={contributor.core.logo} alt="Core logo" />}
-              <S.ContributionAmount>{contributor.totalRewardAmount.toLocaleString()}</S.ContributionAmount>
-            </S.ContributorListItem>
+            <ContributionCard key={contributor.user.id}>
+              <ContributionCardHeader>
+                <S.PositionIcon
+                  src={contributor.positionIcon || DefaultAvatar}
+                  alt={`Position ${contributor.user.id}`}
+                />
+                <ContributorInfo
+                  core={contributor.core}
+                  user={contributor.user}
+                  rewardAmount={contributor.totalRewardAmount}
+                />
+              </ContributionCardHeader>
+            </ContributionCard>
           ))}
         </S.ContributorList>
       </Card>
