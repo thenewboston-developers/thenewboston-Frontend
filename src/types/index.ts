@@ -25,7 +25,7 @@ import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {CartProduct, CartProducts} from 'types/cartProducts';
 import {Comment, Comments} from 'types/comments';
-import {Contribution, Contributions} from 'types/contributions';
+import {Contribution, Contributions, Contributor} from 'types/contributions';
 import {Conversation, Conversations} from 'types/conversations';
 import {Core, Cores} from 'types/cores';
 import {CreatedModified} from 'types/createdModified';
@@ -74,6 +74,7 @@ export {
   Comments,
   Contribution,
   Contributions,
+  Contributor,
   Conversation,
   Conversations,
   Core,

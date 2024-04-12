@@ -1,25 +1,28 @@
 import styled from 'styled-components';
+import {breakpoints} from 'styles';
 
 export const Container = styled.div`
   padding: 24px 32px;
 `;
 
-export const Table = styled.table`
-  margin-top: 12px;
-  width: 100%;
+export const Row = styled.div`
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+`;
 
-  th,
-  td {
-    padding: 2px 0;
-    text-align: left;
-  }
+export const TopContributorsCard = styled.div`
+  grid-column: span 4;
 
-  th:nth-child(7),
-  td:nth-child(7) {
-    text-align: right;
+  @media (max-width: ${breakpoints.mobile}) {
+    grid-column: span 12;
   }
 `;
 
-export const Tr = styled.tr``;
+export const TotalContributionsChartCard = styled.div`
+  grid-column: span 8;
 
-export const Td = styled.td``;
+  @media (max-width: ${breakpoints.mobile}) {
+    grid-column: span 12;
+  }
+`;
