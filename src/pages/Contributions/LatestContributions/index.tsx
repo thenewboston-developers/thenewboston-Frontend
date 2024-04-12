@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useMemo} from 'react';
+import orderBy from 'lodash/orderBy';
 import {
   mdiGithub,
   mdiCodeBrackets,
@@ -29,14 +30,18 @@ interface LatestContributionsProps {
 }
 
 const LatestContributions: React.FC<LatestContributionsProps> = ({className, contributions}) => {
-  const latestContributions = contributions.slice(0, 10);
+  const latestContributions = contributions.slice(0, 20);
+
+  const latestContributionList = useMemo(() => {
+    return orderBy(Object.values(latestContributions), ['created_date'], ['desc']);
+  }, [latestContributions]);
 
   return (
     <div className={className}>
       <SectionHeading heading="Latest Contributions" />
       <Card>
         <Row verticalgap="5px" horizontalgap="15px">
-          {latestContributions.map((contribution) => (
+          {latestContributionList.map((contribution) => (
             <Col key={contribution.id} size={6}>
               <ContributionCard key={contribution.user.id}>
                 <ContributionCardHeader>
