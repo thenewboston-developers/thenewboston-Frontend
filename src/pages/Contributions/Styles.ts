@@ -14,7 +14,7 @@ export const Row = styled.div`
 export const TopContributorsCard = styled.div`
   grid-column: span 4;
 
-  @media (max-width: ${breakpoints.mobile}) {
+  @media (max-width: ${breakpoints.tablet}) {
     grid-column: span 12;
   }
 `;
@@ -22,7 +22,7 @@ export const TopContributorsCard = styled.div`
 export const TotalContributionsChartCard = styled.div`
   grid-column: span 8;
 
-  @media (max-width: ${breakpoints.mobile}) {
+  @media (max-width: ${breakpoints.tablet}) {
     grid-column: span 12;
   }
 `;
