@@ -27,7 +27,7 @@ const TotalContributionsChart: SFC<TotalContributionsChartProps> = ({className, 
     <div className={className}>
       <SectionHeading heading="Total Contributions" />
       <Card>
-        <ResponsiveContainer height={450} width="100%">
+        <ResponsiveContainer height={380} width="100%">
           <AreaChart data={contributions}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="created_date" tick={<CustomAxisTick />} />
