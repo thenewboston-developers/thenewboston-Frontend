@@ -21,7 +21,9 @@ const TopContributors: React.FC<TopContributorsProps> = ({className, contributio
 
   return (
     <div className={className}>
-      <SectionHeading heading="Top Contributors" />
+      <SectionHeading
+        heading={topContributors.length ? `Top ${topContributors.length} Contributors` : 'Top Contributors'}
+      />
       <Card>
         <S.ContributorList>
           {topContributors.map((contributor) => (
