@@ -19,3 +19,10 @@ export interface Contribution extends CreatedModified {
 }
 
 export type Contributions = Dict<Contribution>;
+
+export interface Contributor {
+  core: Core;
+  positionIcon: string;
+  totalRewardAmount: number;
+  user: UserReadSerializer;
+}

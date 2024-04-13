@@ -5,4 +5,5 @@ export interface Pull extends CreatedModified {
   issue_id: number;
   repo: number;
   title: string;
+  assessment_explanation: string;
 }
