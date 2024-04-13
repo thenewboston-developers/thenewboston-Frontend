@@ -17,6 +17,10 @@ const ReadMoreLess: React.FC<ReadMoreLessProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  if (!text) {
+    return null;
+  }
+
   if (text.length <= maxLength) {
     return <span>{text}</span>;
   }

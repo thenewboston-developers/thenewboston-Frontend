@@ -82,7 +82,7 @@ const LatestContributions: React.FC<LatestContributionsProps> = ({className, con
                       </S.DescriptionHeading>
                     </ContributionCardItem>
                     <S.Description>
-                      <ReadMoreLess text={contribution.pull.assessment_explanation} maxLength={180} />
+                      <ReadMoreLess text={contribution?.pull?.assessment_explanation} maxLength={180} />
                     </S.Description>
                   </div>
                 </ContributionCardHeader>
