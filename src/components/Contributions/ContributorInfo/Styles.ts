@@ -1,14 +1,8 @@
 import styled from 'styled-components';
 
-export const Avatar = styled.img`
-  border-radius: 50%;
-  height: 40px;
-  margin-right: 10px;
-  width: 40px;
-`;
+import UUserLabel from 'components/UserLabel';
 
-export const ContributorName = styled.span`
-  font-weight: bold;
+export const UserLabel = styled(UUserLabel)`
   flex-grow: 1;
 `;
 

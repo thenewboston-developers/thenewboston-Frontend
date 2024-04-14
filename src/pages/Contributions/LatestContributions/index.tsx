@@ -1,4 +1,5 @@
 import React, {useMemo} from 'react';
+import {Link} from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 import {
   mdiGithub,
@@ -20,6 +21,7 @@ import {ContributorInfo} from 'components/Contributions/ContributorInfo';
 import {Card} from 'styles/components/CardStyle';
 import {Row, Col} from 'styles/components/GridStyle';
 import {getTimeAgo} from 'utils/dates';
+import {getUserProfileUrl, getRepositoryUrl, getPullRequestUrl} from 'utils/github';
 import Line from 'components/Line';
 import {Contribution} from 'types';
 import * as S from './Styles';
@@ -35,6 +37,14 @@ const LatestContributions: React.FC<LatestContributionsProps> = ({className, con
   const latestContributionList = useMemo(() => {
     return orderBy(Object.values(latestContributions), ['created_date'], ['desc']);
   }, [latestContributions]);
+
+  const userProfileLink = (contribution: Contribution) => `/profile/${contribution.user.id}`;
+  const githubUserProfileLink = (contribution: Contribution) =>
+    getUserProfileUrl(contribution.github_user.github_username);
+  const githubRepositoryLink = (contribution: Contribution) =>
+    getRepositoryUrl(contribution.repo.owner_name, contribution.repo.name);
+  const githubPullRequestLink = (contribution: Contribution) =>
+    getPullRequestUrl(contribution.repo.owner_name, contribution.repo.name, contribution.pull.issue_number);
 
   return (
     <div className={className}>
@@ -54,17 +64,43 @@ const LatestContributions: React.FC<LatestContributionsProps> = ({className, con
                 <Line />
                 <ContributionCardBody>
                   <Col size={6}>
-                    <ContributionCardItem iconPath={mdiGithub}>
-                      {contribution.github_user.github_username}
+                    <ContributionCardItem
+                      iconPath={mdiGithub}
+                      iconLink={githubUserProfileLink(contribution)}
+                      isIconLinkExternal={true}
+                    >
+                      <Link to={githubUserProfileLink(contribution)} target="_blank">
+                        {contribution.github_user.github_username}
+                      </Link>
                     </ContributionCardItem>
                   </Col>
                   <Col size={6}>
-                    <ContributionCardItem iconPath={mdiCodeBrackets}>{contribution.repo.name}</ContributionCardItem>
+                    <ContributionCardItem
+                      iconPath={mdiCodeBrackets}
+                      iconLink={githubRepositoryLink(contribution)}
+                      isIconLinkExternal={true}
+                    >
+                      <Link to={githubRepositoryLink(contribution)} target="_blank">
+                        {contribution.repo.name}
+                      </Link>
+                    </ContributionCardItem>
                   </Col>
                 </ContributionCardBody>
                 <ContributionCardBody>
                   <Col size={6}>
-                    <ContributionCardItem iconPath={mdiSquareRoundedBadgeOutline}>Notifications</ContributionCardItem>
+                    <ContributionCardItem
+                      iconPath={mdiSquareRoundedBadgeOutline}
+                      iconLink={contribution?.pull ? githubPullRequestLink(contribution) : ''}
+                      isIconLinkExternal={true}
+                    >
+                      {contribution?.pull ? (
+                        <Link to={githubPullRequestLink(contribution)} target="_blank">
+                          {contribution.pull.title}
+                        </Link>
+                      ) : (
+                        'Not Found'
+                      )}
+                    </ContributionCardItem>
                   </Col>
                   <Col size={6}>
                     <ContributionCardItem iconPath={mdiCalendarOutline}>
@@ -75,9 +111,11 @@ const LatestContributions: React.FC<LatestContributionsProps> = ({className, con
                 <Line />
                 <ContributionCardHeader>
                   <div>
-                    <ContributionCardItem iconPath={mdiFaceWomanOutline}>
+                    <ContributionCardItem iconPath={mdiFaceWomanOutline} iconLink={userProfileLink(contribution)}>
                       <S.DescriptionHeading>
-                        <b>ia</b>
+                        <Link to={userProfileLink(contribution)}>
+                          <b>ia</b>
+                        </Link>
                         <small style={{marginLeft: '5px'}}>{getTimeAgo(contribution.created_date)}</small>
                       </S.DescriptionHeading>
                     </ContributionCardItem>
