@@ -1,4 +1,5 @@
 import React, {useMemo} from 'react';
+import {Link} from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 import {
   mdiGithub,
@@ -35,6 +36,8 @@ const LatestContributions: React.FC<LatestContributionsProps> = ({className, con
   const latestContributionList = useMemo(() => {
     return orderBy(Object.values(latestContributions), ['created_date'], ['desc']);
   }, [latestContributions]);
+
+  const userProfileLink = (id: number) => `/profile/${id}`;
 
   return (
     <div className={className}>
@@ -75,9 +78,14 @@ const LatestContributions: React.FC<LatestContributionsProps> = ({className, con
                 <Line />
                 <ContributionCardHeader>
                   <div>
-                    <ContributionCardItem iconPath={mdiFaceWomanOutline}>
+                    <ContributionCardItem
+                      iconPath={mdiFaceWomanOutline}
+                      iconLink={userProfileLink(contribution.user.id)}
+                    >
                       <S.DescriptionHeading>
-                        <b>ia</b>
+                        <Link to={userProfileLink(contribution.user.id)}>
+                          <b>ia</b>
+                        </Link>
                         <small style={{marginLeft: '5px'}}>{getTimeAgo(contribution.created_date)}</small>
                       </S.DescriptionHeading>
                     </ContributionCardItem>
