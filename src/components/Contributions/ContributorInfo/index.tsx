@@ -1,7 +1,7 @@
 import DefaultAvatar from 'assets/default-avatar.png';
 
-import * as S from './Styles';
 import {UserReadSerializer, Core} from 'types';
+import * as S from './Styles';
 
 interface ContributorInfoProps {
   user: UserReadSerializer;
@@ -12,8 +12,7 @@ interface ContributorInfoProps {
 export const ContributorInfo: React.FC<ContributorInfoProps> = ({core, user, rewardAmount}) => {
   return (
     <>
-      <S.Avatar src={user.avatar || DefaultAvatar} alt={`${user.username} avatar`} />
-      <S.ContributorName>{user.username}</S.ContributorName>
+      <S.UserLabel avatar={user.avatar || DefaultAvatar} description="" id={user.id} username={user.username} />
       {core.logo && <S.CoreLogo src={core.logo} alt="Core logo" />}
       <S.ContributionAmount>{rewardAmount.toLocaleString()}</S.ContributionAmount>
     </>
