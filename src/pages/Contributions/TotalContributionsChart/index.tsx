@@ -1,6 +1,7 @@
 import {CartesianGrid, AreaChart, Area, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
 import SectionHeading from 'components/SectionHeading';
+import {getCumulativeContributions} from 'utils/contributions';
 import {SFC} from 'types';
 import {Card} from 'styles/components/CardStyle';
 
@@ -10,6 +11,8 @@ interface TotalContributionsChartProps {
 }
 
 const TotalContributionsChart: SFC<TotalContributionsChartProps> = ({className, contributions}) => {
+  const cumulativeContributions = getCumulativeContributions(contributions);
+
   const formatDate = (date: string) => {
     const newDate = new Date(date);
     return `${newDate.getDate()}/${newDate.getMonth() + 1}`;
@@ -28,12 +31,12 @@ const TotalContributionsChart: SFC<TotalContributionsChartProps> = ({className, 
       <SectionHeading heading="Total Contributions" />
       <Card>
         <ResponsiveContainer height={380} width="100%">
-          <AreaChart data={contributions}>
+          <AreaChart data={cumulativeContributions}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="created_date" tick={<CustomAxisTick />} />
-            <YAxis dataKey="reward_amount" />
+            <YAxis dataKey="total_rewards" />
             <Tooltip />
-            <Area type="monotone" dataKey="reward_amount" stroke="#82ca9d" fill="#82ca9d" />
+            <Area type="monotone" dataKey="total_rewards" stroke="#82ca9d" fill="#82ca9d" />
           </AreaChart>
         </ResponsiveContainer>
       </Card>

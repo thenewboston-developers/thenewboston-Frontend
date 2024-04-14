@@ -5,7 +5,7 @@ import SectionHeading from 'components/SectionHeading';
 import {Card} from 'styles/components/CardStyle';
 import {ContributionCard, ContributionCardHeader} from 'components/Contributions/ContributionCard';
 import {ContributorInfo} from 'components/Contributions/ContributorInfo';
-import {getTopContributors} from 'utils/contributors';
+import {getTopContributors} from 'utils/contributions';
 import {Contribution, Contributor} from 'types';
 import * as S from './Styles';
 
