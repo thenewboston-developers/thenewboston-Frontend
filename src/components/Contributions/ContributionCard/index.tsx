@@ -11,6 +11,7 @@ interface ContributionProps {
 interface ContributionCardItemProps {
   iconPath: string;
   iconLink?: string;
+  isIconLinkExternal?: boolean;
   children: ReactNode;
 }
 
@@ -26,10 +27,19 @@ export const ContributionCardBody: FC<ContributionProps> = ({children}) => (
   <S.ContributionCardBody>{children}</S.ContributionCardBody>
 );
 
-export const ContributionCardItem: FC<ContributionCardItemProps> = ({iconPath, iconLink, children}) => (
+export const ContributionCardItem: FC<ContributionCardItemProps> = ({
+  iconPath,
+  iconLink,
+  isIconLinkExternal,
+  children,
+}) => (
   <S.ContributionCardItemContainer>
     {iconLink ? (
-      <Link to={iconLink}>
+      <Link
+        to={iconLink}
+        target={isIconLinkExternal ? '_blank' : undefined}
+        rel={isIconLinkExternal ? 'noopener noreferrer' : undefined}
+      >
         <S.ContributionCardItemIcon>
           <Icon path={iconPath} size={1} />
         </S.ContributionCardItemIcon>
