@@ -22,14 +22,15 @@ export const getPositionIcon = (position: number): string => {
  * Aggregates contributions by users and determines the top five contributors over the past week.
  */
 export const getTopContributors = (contributions: Contribution[]): Contributor[] => {
-  const oneWeekAgo = new Date();
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  // NOTE: Temporarily showing top 5 contributors of all time instead of only past week's.
+  // const oneWeekAgo = new Date();
+  // oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-  const filteredContributions = contributions.filter(
-    (contribution) => new Date(contribution.created_date) >= oneWeekAgo,
-  );
+  // const filteredContributions = contributions.filter(
+  //   (contribution) => new Date(contribution.created_date) >= oneWeekAgo,
+  // );
 
-  const contributionSumByUser = filteredContributions.reduce((acc: Record<number, Contributor>, contribution) => {
+  const contributionSumByUser = contributions.reduce((acc: Record<number, Contributor>, contribution) => {
     const userId = contribution.user.id;
     const rewardAmount = contribution.reward_amount || 0;
     if (!acc[userId]) {
