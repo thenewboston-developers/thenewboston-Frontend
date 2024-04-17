@@ -4,6 +4,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
+import {Row, Col} from 'styles/components/GridStyle';
+import Course from 'components/University/Courses';
 import {getCourses as _getCourses, resetCourses as _resetCourses} from 'dispatchers/courses';
 import {getCourses, hasMoreCourses, isLoadingCourses} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
@@ -40,11 +42,13 @@ const Courses: SFC = ({className}) => {
     if (courseList.length) {
       return (
         <InfiniteScroll dataLength={courseList.length} hasMore={hasMore} next={fetchMoreCourses}>
-          <S.PostContainer>
+          <Row>
             {courseList.map((course) => (
-              <div>{JSON.stringify(course)}</div>
+              <Col size={4} key={course.id}>
+                <Course course={course} />
+              </Col>
             ))}
-          </S.PostContainer>
+          </Row>
         </InfiniteScroll>
       );
     }
