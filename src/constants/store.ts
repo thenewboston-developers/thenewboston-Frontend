@@ -8,6 +8,7 @@ export const COMMENTS = 'comments';
 export const CONTRIBUTIONS = 'contributions';
 export const CONVERSATIONS = 'conversations';
 export const CORES = 'cores';
+export const COURSES = 'courses';
 export const EXCHANGE_ORDERS = 'exchangeOrders';
 export const INVITATIONS = 'invitations';
 export const INVITATION_LIMITS = 'invitationLimits';

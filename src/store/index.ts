@@ -13,6 +13,7 @@ import commentsReducer from 'store/comments';
 import contributionsReducer from 'store/contributions';
 import conversationsReducer from 'store/conversations';
 import coresReducer from 'store/cores';
+import coursesReducer from 'store/courses';
 import exchangeOrdersReducer from 'store/exchangeOrders';
 import invitationLimitsReducer from 'store/invitationLimits';
 import invitationsReducer from 'store/invitations';
@@ -39,6 +40,7 @@ const rootReducer = combineReducers({
   contributions: contributionsReducer,
   conversations: conversationsReducer,
   cores: coresReducer,
+  courses: coursesReducer,
   exchangeOrders: exchangeOrdersReducer,
   invitationLimits: invitationLimitsReducer,
   invitations: invitationsReducer,

@@ -15,6 +15,7 @@ import {CreateOpenAIImageRequest, CreateOpenAIImageResponse} from 'types/api/ope
 import {CreateOrderRequest} from 'types/api/orders';
 import {PostReadSerializer} from 'types/api/posts';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
+import {CourseReadSerializer, LectureReadSerializer} from 'types/api/university';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
 
 import {Address, Addresses} from 'types/addresses';
@@ -29,6 +30,7 @@ import {Contribution, Contributions, Contributor} from 'types/contributions';
 import {Conversation, Conversations} from 'types/conversations';
 import {Core, Cores} from 'types/cores';
 import {CreatedModified} from 'types/createdModified';
+import {Course, Courses, Lecture, Lectures} from 'types/university';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
 import {SelectOption} from 'types/forms';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
@@ -97,6 +99,12 @@ export {
   CreateUserResponse,
   CreateWalletRequest,
   CreatedModified,
+  CourseReadSerializer,
+  LectureReadSerializer,
+  Course,
+  Courses,
+  Lecture,
+  Lectures,
   DepositResponse,
   Dict,
   EditArtworkRequest,
