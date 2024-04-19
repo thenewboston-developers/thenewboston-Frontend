@@ -2,6 +2,7 @@ import {Link as ULink} from 'react-router-dom';
 import styled from 'styled-components';
 
 import {colors} from 'styles';
+import UUserLabel from 'components/UserLabel';
 
 export const Container = styled.div`
   border-radius: 4px;
@@ -14,29 +15,30 @@ export const Content = styled.div`
   padding: 10px 20px;
 `;
 
-export const Name = styled.h3``;
-
-export const Description = styled.p``;
+export const Description = styled.p`
+  margin-top: 5px;
+`;
 
 export const Footer = styled.div`
+  align-items: center;
   display: flex;
   justify-content: space-between;
-  align-items: center;
 `;
 
 export const FooterItem = styled.div`
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  display: flex;
+  font-size: 12px;
+  justify-content: space-between;
 `;
 
 export const Img = styled.img`
   border-radius: 4px;
+  display: block;
   max-height: 200px;
-  width: 100%;
   max-width: 100%;
   object-fit: cover;
-  display: block;
+  width: 100%;
 `;
 
 export const Link = styled(ULink)`
@@ -48,3 +50,7 @@ export const Link = styled(ULink)`
     text-decoration: none;
   }
 `;
+
+export const Name = styled.h3``;
+
+export const UserLabel = styled(UUserLabel)``;
