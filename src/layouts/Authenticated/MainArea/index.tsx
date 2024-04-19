@@ -7,6 +7,7 @@ import Courses from 'pages/University/Courses';
 import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
 import Ia from 'pages/Ia';
+import Lectures from 'pages/University/Lectures';
 import Notifications from 'pages/Notifications';
 import Profile from 'pages/Profile';
 import Shop from 'pages/Shop';
@@ -18,18 +19,19 @@ const MainArea: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <Routes>
+        <Route path="*" element={<Navigate to="/feed" replace />} />
         <Route path="/art/*" element={<Art />} />
         <Route path="/contributions" element={<Contributions />} />
         <Route path="/cores" element={<Cores />} />
-        <Route path="/univeristy/courses" element={<Courses />} />
         <Route path="/exchange/*" element={<Exchange />} />
         <Route path="/feed" element={<Feed />} />
         <Route path="/ia/:id?" element={<Ia />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/profile/:id/*" element={<Profile />} />
         <Route path="/shop/*" element={<Shop />} />
+        <Route path="/university/courses" element={<Courses />} />
+        <Route path="/university/lectures" element={<Lectures />} />
         <Route path="/wallets" element={<Wallets />} />
-        <Route path="*" element={<Navigate to="/feed" replace />} />
       </Routes>
     </S.Container>
   );

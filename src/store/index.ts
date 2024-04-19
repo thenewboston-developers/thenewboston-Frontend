@@ -17,6 +17,7 @@ import coursesReducer from 'store/courses';
 import exchangeOrdersReducer from 'store/exchangeOrders';
 import invitationLimitsReducer from 'store/invitationLimits';
 import invitationsReducer from 'store/invitations';
+import lecturesReducer from 'store/lectures';
 import managerReducer from 'store/manager';
 import messagesReducer from 'store/messages';
 import notificationsReducer from 'store/notifications';
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
   exchangeOrders: exchangeOrdersReducer,
   invitationLimits: invitationLimitsReducer,
   invitations: invitationsReducer,
+  lectures: lecturesReducer,
   manager: managerReducer,
   messages: messagesReducer,
   notifications: notificationsReducer,

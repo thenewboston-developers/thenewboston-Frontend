@@ -1,6 +1,5 @@
 import {Course as TCourse, SFC} from 'types';
-import {Link} from 'react-router-dom';
-import {mdiCalendarOutline, mdiAccount} from '@mdi/js';
+import {mdiCalendarOutline} from '@mdi/js';
 import Icon from '@mdi/react';
 
 import {getTimeAgo} from 'utils/dates';
@@ -26,16 +25,14 @@ const Course: SFC<CourseProps> = ({className, course}) => {
             <ReadMoreLess text={description} maxLength={100} />
           </S.Description>
           <S.Footer>
-            <Link to={`/profile/${instructor.id}`}>
-              <S.FooterItem>
-                <S.UserLabel
-                  avatar={instructor.avatar}
-                  description="Course Instructor"
-                  id={instructor.id}
-                  username={instructor.username}
-                />
-              </S.FooterItem>
-            </Link>
+            <S.FooterItem>
+              <S.UserLabel
+                avatar={instructor.avatar}
+                description="Course Instructor"
+                id={instructor.id}
+                username={instructor.username}
+              />
+            </S.FooterItem>
             <S.FooterItem>
               <Icon path={mdiCalendarOutline} size={1} />
               {getTimeAgo(created_date)}

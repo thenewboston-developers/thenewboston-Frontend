@@ -15,16 +15,16 @@ const courses = createSlice({
   name: COURSES,
   reducers: {
     resetCourses: (state) => {
+      state.courses = [];
       state.hasMore = false;
       state.isLoading = false;
       state.next = null;
-      state.courses = [];
     },
     setCourses: (state, {payload}: PayloadAction<PaginatedResponse<Course>>) => {
+      state.courses = [...state.courses, ...payload.results];
       state.hasMore = !!payload.next;
       state.isLoading = false;
       state.next = payload.next;
-      state.courses = [...state.courses, ...payload.results];
     },
     startLoading: (state) => {
       state.isLoading = true;

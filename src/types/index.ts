@@ -1,56 +1,58 @@
+import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
+import {CourseReadSerializer} from 'types/api/courses';
 import {CreateAddressRequest} from 'types/api/addresses';
 import {CreateArtworkPurchaseRequest} from 'types/api/artworkPurchases';
 import {CreateArtworkRequest, EditArtworkRequest} from 'types/api/artworks';
 import {CreateArtworkTransferRequest} from 'types/api/artworkTransfers';
-import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
-import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CreateConversationRequest} from 'types/api/conversations';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/followers';
 import {CreateInvitationRequest} from 'types/api/invitations';
 import {CreateMessageRequest} from 'types/api/messages';
-import {UpdateNotificationRequest} from 'types/api/notifications';
 import {CreateOpenAIImageRequest, CreateOpenAIImageResponse} from 'types/api/openaiImages';
 import {CreateOrderRequest} from 'types/api/orders';
-import {PostReadSerializer} from 'types/api/posts';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
-import {CourseReadSerializer, LectureReadSerializer} from 'types/api/university';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
+import {LectureReadSerializer} from 'types/api/lectures';
+import {LoginRequest, LoginResponse} from 'types/api/authentication';
+import {PostReadSerializer} from 'types/api/posts';
+import {UpdateNotificationRequest} from 'types/api/notifications';
 
 import {Address, Addresses} from 'types/addresses';
+import {AppDispatch, RootState} from 'types/store';
 import {Artwork, Artworks} from 'types/artworks';
 import {ArtworkTransfer, ArtworkTransfers} from 'types/artworkTransfers';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {CartProduct, CartProducts} from 'types/cartProducts';
+import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {Comment, Comments} from 'types/comments';
 import {Contribution, Contributions, Contributor} from 'types/contributions';
 import {Conversation, Conversations} from 'types/conversations';
 import {Core, Cores} from 'types/cores';
+import {Course, Courses} from 'types/courses';
 import {CreatedModified} from 'types/createdModified';
-import {Course, Courses, Lecture, Lectures} from 'types/university';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
-import {SelectOption} from 'types/forms';
-import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {GitHubUser} from 'types/githubUsers';
-import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Invitation, Invitations} from 'types/invitations';
+import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Issue} from 'types/issues';
 import {Item} from 'types/items';
+import {Lecture, Lectures} from 'types/lectures';
 import {Manager} from 'types/manager';
 import {Message, Messages} from 'types/messages';
 import {Notification, Notifications} from 'types/notifications';
-import {OrderProduct} from 'types/orderProducts';
 import {Order, Orders} from 'types/orders';
+import {OrderProduct} from 'types/orderProducts';
 import {PaginatedResponse} from 'types/pagination';
 import {Post, Posts} from 'types/posts';
 import {Product, Products} from 'types/products';
 import {Pull} from 'types/pulls';
 import {Repo} from 'types/repos';
+import {SelectOption} from 'types/forms';
 import {Self} from 'types/self';
-import {AppDispatch, RootState} from 'types/store';
 import {Trade, Trades} from 'types/trades';
 import {Users} from 'types/users';
 import {Wallet, Wallets} from 'types/wallets';
@@ -61,9 +63,9 @@ export {
   Addresses,
   AppDispatch,
   Artwork,
+  Artworks,
   ArtworkTransfer,
   ArtworkTransfers,
-  Artworks,
   AssetPair,
   AssetPairs,
   Authentication,
@@ -81,6 +83,9 @@ export {
   Conversations,
   Core,
   Cores,
+  Course,
+  CourseReadSerializer,
+  Courses,
   CreateAddressRequest,
   CreateArtworkPurchaseRequest,
   CreateArtworkRequest,
@@ -88,6 +93,7 @@ export {
   CreateCartProductRequest,
   CreateCommentRequest,
   CreateConversationRequest,
+  CreatedModified,
   CreateExchangeOrderRequest,
   CreateFollowerRequest,
   CreateInvitationRequest,
@@ -98,13 +104,6 @@ export {
   CreateUserRequest,
   CreateUserResponse,
   CreateWalletRequest,
-  CreatedModified,
-  CourseReadSerializer,
-  LectureReadSerializer,
-  Course,
-  Courses,
-  Lecture,
-  Lectures,
   DepositResponse,
   Dict,
   EditArtworkRequest,
@@ -120,6 +119,9 @@ export {
   Invitations,
   Issue,
   Item,
+  Lecture,
+  LectureReadSerializer,
+  Lectures,
   LoginRequest,
   LoginResponse,
   Manager,
@@ -139,9 +141,9 @@ export {
   Pull,
   Repo,
   RootState,
-  SFC,
   SelectOption,
   Self,
+  SFC,
   Trade,
   Trades,
   UpdateNotificationRequest,
