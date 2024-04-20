@@ -82,7 +82,7 @@ const Lectures: SFC = ({className}) => {
               <S.H3>Lectures</S.H3>
               <InfiniteScroll dataLength={lecturesList.length} hasMore={hasMore} next={fetchMoreLectures}>
                 {lecturesList.map((lecture, index) => (
-                  <Lecture key={index} lecture={lecture} />
+                  <Lecture key={index} index={index} lecture={lecture} />
                 ))}
               </InfiniteScroll>
             </Col>

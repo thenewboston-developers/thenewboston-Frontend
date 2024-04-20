@@ -42,6 +42,11 @@ export const Img = styled.img`
   width: 120px;
 `;
 
+export const LectureNumber = styled.div`
+  font-size: 14px;
+  margin-right: 10px;
+`;
+
 export const Name = styled.h3`
   color: ${colors.primary};
 `;

@@ -7,14 +7,16 @@ import ReadMoreLess from 'components/ReadMoreLess';
 import * as S from './Styles';
 
 export interface LectureProps {
+  index: number;
   lecture: TLecture;
 }
 
-const Lecture: React.FC<LectureProps> = ({lecture}) => {
+const Lecture: React.FC<LectureProps> = ({index, lecture}) => {
   const {name, description, thumbnail_url, created_date} = lecture;
 
   return (
     <S.Container>
+      <S.LectureNumber>{index + 1}</S.LectureNumber>
       <S.Img alt={`${name} thumbnail`} src={thumbnail_url} />
       <S.Content>
         <S.Name>{name}</S.Name>
