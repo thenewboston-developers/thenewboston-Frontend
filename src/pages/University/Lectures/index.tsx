@@ -13,18 +13,14 @@ import {PATH_COURSES} from 'constants/paths';
 import {Row, Col} from 'styles/components/GridStyle';
 import {displayErrorToast} from 'utils/toasts';
 import {getLectures as _getLectures, resetLectures} from 'dispatchers/lectures';
-import {getLectures, hasMoreLectures, isLoadingLectures} from 'selectors/state';
+import {getLectures as _getLecturesState} from 'selectors/state';
 
 import * as S from './Styles';
 
 const Lectures: SFC = ({className}) => {
-  const [selectedLecture, setSelectedLecture] = useState<TLecture | undefined>();
-
   const dispatch = useDispatch<AppDispatch>();
-
-  const hasMore = useSelector(hasMoreLectures);
-  const isLoading = useSelector(isLoadingLectures);
-  const lectures = useSelector(getLectures);
+  const [selectedLecture, setSelectedLecture] = useState<TLecture | undefined>();
+  const {hasMore, isLoading, lectures} = useSelector(_getLecturesState);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
