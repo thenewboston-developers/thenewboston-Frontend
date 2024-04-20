@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import 'styles/globalStyle.css';
@@ -16,6 +16,7 @@ import {getCourses, hasMoreCourses, isLoadingCourses} from 'selectors/state';
 import * as S from './Styles';
 
 const Courses: SFC = ({className}) => {
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const courses = useSelector(getCourses);
   const hasMore = useSelector(hasMoreCourses);
   const isLoading = useSelector(isLoadingCourses);
@@ -28,9 +29,12 @@ const Courses: SFC = ({className}) => {
     (async () => {
       try {
         dispatch(_resetCourses());
+        setIsInitialLoading(true);
         await dispatch(_getCourses());
+        setIsInitialLoading(false);
       } catch (error) {
         console.error(error);
+        setIsInitialLoading(false);
         displayErrorToast('Error fetching courses');
       }
     })();
@@ -43,7 +47,7 @@ const Courses: SFC = ({className}) => {
   };
 
   const renderContent = () => {
-    if (isLoading) {
+    if (isLoading && isInitialLoading) {
       return <Loader className="align-screen-center" size={24} />;
     }
 

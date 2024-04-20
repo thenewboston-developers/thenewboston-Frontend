@@ -21,6 +21,7 @@ import * as S from './Styles';
 
 const Lectures: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [selectedLecture, setSelectedLecture] = useState<TLecture | undefined>();
   const {hasMore, isLoading, lectures} = useSelector(_getLecturesState);
 
@@ -34,9 +35,12 @@ const Lectures: SFC = ({className}) => {
     const initFetch = async () => {
       try {
         dispatch(resetLectures());
+        setIsInitialLoading(true);
         await dispatch(_getLectures({course_id: course_id}));
+        setIsInitialLoading(false);
       } catch (error) {
         console.error(error);
+        setIsInitialLoading(false);
         displayErrorToast('Error fetching lectures');
       }
     };
@@ -66,7 +70,7 @@ const Lectures: SFC = ({className}) => {
   };
 
   const renderContent = () => {
-    if (isLoading) {
+    if (isLoading && isInitialLoading) {
       return <Loader className="align-screen-center" size={24} />;
     }
 
