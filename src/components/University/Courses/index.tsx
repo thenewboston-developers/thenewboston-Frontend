@@ -18,7 +18,7 @@ const Course: SFC<CourseProps> = ({className, course}) => {
       <S.Container className={className}>
         <S.Img alt="image" src={thumbnail} />
         <S.Content>
-          <S.Link to={`/university/courses/${course.id}`}>
+          <S.Link to={`/university/lectures?course_id=${course.id}`}>
             <S.Name>{name}</S.Name>
           </S.Link>
           <S.Description>

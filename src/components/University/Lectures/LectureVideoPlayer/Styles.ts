@@ -1,4 +1,3 @@
-import {Link as ULink} from 'react-router-dom';
 import styled from 'styled-components';
 
 import {colors} from 'styles';

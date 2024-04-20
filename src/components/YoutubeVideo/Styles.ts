@@ -2,20 +2,13 @@ import styled from 'styled-components';
 
 import {colors} from 'styles';
 
-export const Container = styled.div<{aspectRatio?: string}>`
+export const Container = styled.div`
   background-color: ${colors.black};
   overflow: hidden;
+  padding-top: 56.25%; // Default for 16:9 aspect ratio
   position: relative;
   width: 100%;
-  padding-top: ${({aspectRatio}) => {
-    const ratios = aspectRatio?.split(':');
-    if (ratios && ratios.length === 2) {
-      const width = parseInt(ratios[0]);
-      const height = parseInt(ratios[1]);
-      return `${(height / width) * 100}%`;
-    }
-    return '56.25%'; // Default for 16:9 aspect ratio
-  }};
+  z-index: 10;
 
   & iframe {
     height: 100%;

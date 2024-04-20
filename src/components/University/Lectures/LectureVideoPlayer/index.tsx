@@ -1,5 +1,4 @@
 import {Lecture as TLecture, SFC} from 'types';
-import {Link} from 'react-router-dom';
 import {mdiCalendarOutline} from '@mdi/js';
 import Icon from '@mdi/react';
 
@@ -12,7 +11,7 @@ export interface LectureVideoPlayerProps {
 }
 
 const LectureVideoPlayer: SFC<LectureVideoPlayerProps> = ({className, lecture}) => {
-  const {course, name, description, thumbnail_url, created_date, youtube_id} = lecture;
+  const {course, name, description, created_date, youtube_id} = lecture;
 
   return (
     <>

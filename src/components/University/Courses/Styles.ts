@@ -15,8 +15,8 @@ export const Content = styled.div`
   padding: 10px 20px;
 `;
 
-export const Description = styled.p`
-  margin-top: 5px;
+export const Description = styled.div`
+  margin: 5px 0px 10px 0px;
 `;
 
 export const Footer = styled.div`
