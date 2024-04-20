@@ -9,6 +9,7 @@ const Unauthenticated: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <Routes>
+        {/* TODO: replace these hardcoded paths with those in constants/paths.ts */}
         <Route path="/createAccount" element={<CreateAccountForm />} />
         <Route path="/signIn" element={<SignInForm />} />
         <Route path="*" element={<SignInForm />} />

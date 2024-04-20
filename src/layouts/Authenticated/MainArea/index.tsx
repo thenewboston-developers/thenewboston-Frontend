@@ -13,25 +13,42 @@ import Profile from 'pages/Profile';
 import Shop from 'pages/Shop';
 import Wallets from 'pages/Wallets';
 import {SFC} from 'types';
+
+import {
+  PATH_ART,
+  PATH_CONTRIBUTIONS,
+  PATH_CORES,
+  PATH_COURSES,
+  PATH_DEFAULT,
+  PATH_EXCHANGE,
+  PATH_FEED,
+  PATH_IA,
+  PATH_LECTURES,
+  PATH_NOTIFICATIONS,
+  PATH_PROFILE,
+  PATH_SHOP,
+  PATH_WALLETS,
+} from 'constants/paths';
+
 import * as S from './Styles';
 
 const MainArea: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <Routes>
-        <Route path="*" element={<Navigate to="/feed" replace />} />
-        <Route path="/art/*" element={<Art />} />
-        <Route path="/contributions" element={<Contributions />} />
-        <Route path="/cores" element={<Cores />} />
-        <Route path="/exchange/*" element={<Exchange />} />
-        <Route path="/feed" element={<Feed />} />
-        <Route path="/ia/:id?" element={<Ia />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route path="/profile/:id/*" element={<Profile />} />
-        <Route path="/shop/*" element={<Shop />} />
-        <Route path="/university/courses" element={<Courses />} />
-        <Route path="/university/lectures" element={<Lectures />} />
-        <Route path="/wallets" element={<Wallets />} />
+        <Route path="*" element={<Navigate to={PATH_DEFAULT} replace />} />
+        <Route path={PATH_ART} element={<Art />} />
+        <Route path={PATH_CONTRIBUTIONS} element={<Contributions />} />
+        <Route path={PATH_CORES} element={<Cores />} />
+        <Route path={PATH_EXCHANGE} element={<Exchange />} />
+        <Route path={PATH_FEED} element={<Feed />} />
+        <Route path={PATH_IA} element={<Ia />} />
+        <Route path={PATH_NOTIFICATIONS} element={<Notifications />} />
+        <Route path={PATH_PROFILE} element={<Profile />} />
+        <Route path={PATH_SHOP} element={<Shop />} />
+        <Route path={PATH_COURSES} element={<Courses />} />
+        <Route path={PATH_LECTURES} element={<Lectures />} />
+        <Route path={PATH_WALLETS} element={<Wallets />} />
       </Routes>
     </S.Container>
   );

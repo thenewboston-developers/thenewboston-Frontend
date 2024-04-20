@@ -1,10 +1,12 @@
-import {Course as TCourse, SFC} from 'types';
 import {mdiCalendarOutline} from '@mdi/js';
 import Icon from '@mdi/react';
 
-import {getTimeAgo} from 'utils/dates';
-import * as S from './Styles';
 import ReadMoreLess from 'components/ReadMoreLess';
+import {Course as TCourse, SFC} from 'types';
+import {PATH_LECTURES} from 'constants/paths';
+import {getTimeAgo} from 'utils/dates';
+
+import * as S from './Styles';
 
 export interface CourseProps {
   course: TCourse;
@@ -18,7 +20,7 @@ const Course: SFC<CourseProps> = ({className, course}) => {
       <S.Container className={className}>
         <S.Img alt="image" src={thumbnail} />
         <S.Content>
-          <S.Link to={`/university/lectures?course_id=${course.id}`}>
+          <S.Link to={`${PATH_LECTURES}?course_id=${course.id}`}>
             <S.Name>{name}</S.Name>
           </S.Link>
           <S.Description>

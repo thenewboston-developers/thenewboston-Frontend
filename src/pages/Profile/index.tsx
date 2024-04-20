@@ -47,6 +47,7 @@ const Profile: SFC = ({className}) => {
     <S.Container className={className}>
       <Routes>
         <Route element={<Layout />}>
+          {/* TODO: replace hardcoded paths with constants */}
           <Route index element={<Posts />} />
           <Route path="/artworks" element={<Artworks />} />
           <Route path="/following" element={<Following />} />
