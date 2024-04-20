@@ -1,9 +1,10 @@
+import Icon from '@mdi/react';
 import {Lecture as TLecture, SFC} from 'types';
 import {mdiCalendarOutline} from '@mdi/js';
-import Icon from '@mdi/react';
 
-import {longDate} from 'utils/dates';
 import YoutubeVideo from 'components/YoutubeVideo';
+import {longDate} from 'utils/dates';
+
 import * as S from './Styles';
 
 export interface LectureVideoPlayerProps {

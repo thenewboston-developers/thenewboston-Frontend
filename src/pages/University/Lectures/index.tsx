@@ -55,12 +55,16 @@ const Lectures: SFC = ({className}) => {
   const fetchMoreLectures = async () => {
     if (!isLoading && hasMore) {
       try {
-        await dispatch(_getLectures({course_id: course_id}));
+        await dispatch(_getLectures());
       } catch (error) {
         console.error(error);
         displayErrorToast('Failed to load more lectures');
       }
     }
+  };
+
+  const onLectureClick = (lecture: TLecture) => {
+    setSelectedLecture(lecture);
   };
 
   const renderContent = () => {
@@ -82,7 +86,13 @@ const Lectures: SFC = ({className}) => {
               <S.H3>Lectures</S.H3>
               <InfiniteScroll dataLength={lecturesList.length} hasMore={hasMore} next={fetchMoreLectures}>
                 {lecturesList.map((lecture, index) => (
-                  <Lecture key={index} index={index} lecture={lecture} />
+                  <Lecture
+                    key={index}
+                    index={index}
+                    lecture={lecture}
+                    isSelected={selectedLecture && lecture.id === selectedLecture.id}
+                    onClick={onLectureClick}
+                  />
                 ))}
               </InfiniteScroll>
             </Col>

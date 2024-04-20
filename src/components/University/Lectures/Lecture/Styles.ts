@@ -2,9 +2,9 @@ import styled from 'styled-components';
 
 import {colors} from 'styles';
 
-export const Container = styled.article`
+export const Container = styled.div<{selected: boolean}>`
   align-items: center;
-  background-color: white;
+  background-color: ${({selected}) => (selected ? colors.palette.blue[100] : colors.white)};
   border-radius: 4px;
   border: 1px solid ${colors.border};
   display: flex;
@@ -38,6 +38,7 @@ export const FooterItem = styled.div`
 `;
 
 export const Img = styled.img`
+  cursor: pointer;
   object-fit: cover;
   width: 120px;
 `;
@@ -49,4 +50,5 @@ export const LectureNumber = styled.div`
 
 export const Name = styled.h3`
   color: ${colors.primary};
+  cursor: pointer;
 `;
