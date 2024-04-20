@@ -1,15 +1,17 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
-import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
-import {getCourses as _getCourses, resetCourses as _resetCourses} from 'dispatchers/courses';
-import {getCourses, hasMoreCourses, isLoadingCourses} from 'selectors/state';
-import {Row, Col} from 'styles/components/GridStyle';
+import 'styles/globalStyle.css';
 import Course from 'components/University/Courses';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
+import LeavesEmptyState from 'assets/leaves-empty-state.png';
+import Loader from 'components/Loader';
+import {AppDispatch, SFC} from 'types';
+import {Row, Col} from 'styles/components/GridStyle';
+import {displayErrorToast} from 'utils/toasts';
+import {getCourses as _getCourses, resetCourses as _resetCourses} from 'dispatchers/courses';
+import {getCourses, hasMoreCourses, isLoadingCourses} from 'selectors/state';
 
 import * as S from './Styles';
 
@@ -41,6 +43,10 @@ const Courses: SFC = ({className}) => {
   };
 
   const renderContent = () => {
+    if (isLoading) {
+      return <Loader className="align-screen-center" size={24} />;
+    }
+
     if (courseList.length) {
       return (
         <InfiniteScroll dataLength={courseList.length} hasMore={hasMore} next={fetchMoreCourses}>

@@ -2,12 +2,14 @@ import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLocation} from 'react-router-dom';
 
+import 'styles/globalStyle.css';
 import Breadcrumbs from 'components/Breadcrumbs';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Lecture from 'components/University/Lectures/Lecture';
 import LectureVideoPlayer from 'components/University/Lectures/LectureVideoPlayer';
+import Loader from 'components/Loader';
 import {AppDispatch, SFC, Lecture as TLecture} from 'types';
 import {PATH_COURSES} from 'constants/paths';
 import {Row, Col} from 'styles/components/GridStyle';
@@ -64,6 +66,10 @@ const Lectures: SFC = ({className}) => {
   };
 
   const renderContent = () => {
+    if (isLoading) {
+      return <Loader className="align-screen-center" size={24} />;
+    }
+
     if (lecturesList.length > 0) {
       return (
         <>
