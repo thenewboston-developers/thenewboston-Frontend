@@ -4,10 +4,13 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {BrowserRouter} from 'react-router-dom';
 
 import App from 'containers/App';
-import {persistor, store} from 'store';
 import GlobalStyle from 'styles/components/GlobalStyle';
 import ToastifyStyle from 'styles/components/ToastifyStyle';
+import initSentry from 'config/sentry';
+import {persistor, store} from 'store';
 import 'styles/fonts.css';
+
+initSentry();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
