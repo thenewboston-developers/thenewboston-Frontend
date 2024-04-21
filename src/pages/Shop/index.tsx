@@ -18,6 +18,7 @@ const Shop: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <Routes>
+        {/* TODO: replace these hardcoded paths with those in constants/paths.ts */}
         <Route path="/buy/*" element={<Layout toolbarType={ShopToolbarType.BUY} />}>
           <Route path="addresses" element={<BuyAddresses />} />
           <Route path="catalog" element={<BuyCatalog />} />

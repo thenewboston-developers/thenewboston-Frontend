@@ -12,6 +12,7 @@ const Art: SFC = ({className}) => {
     <S.Container className={className}>
       <Routes>
         <Route element={<Layout />}>
+          {/* TODO: replace these hardcoded paths with those in constants/paths.ts */}
           <Route path="/artworks/:id" element={<ArtworkDetails />} />
           <Route path="/create" element={<Create />} />
           <Route path="/marketplace" element={<Marketplace />} />

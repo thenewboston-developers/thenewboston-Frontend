@@ -4,6 +4,7 @@ import {
   mdiAccount,
   mdiAccountGroup,
   mdiBell,
+  mdiBookEducation,
   mdiBrush,
   mdiExitToApp,
   mdiFaceWoman,
@@ -14,9 +15,10 @@ import {
   mdiWalletBifoldOutline,
 } from '@mdi/js';
 
-import {logout} from 'dispatchers/authentication';
-import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
+import {PATH_COURSES} from 'constants/paths';
+import {getSelf} from 'selectors/state';
+import {logout} from 'dispatchers/authentication';
 import CreatePostButton from './CreatePostButton';
 import MenuButton from './MenuItem/MenuButton';
 import MenuLink from './MenuItem/MenuLink';
@@ -35,6 +37,7 @@ const LeftNav: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Top>
+        {/* TODO: replace these hardcoded paths with those in constants/paths.ts */}
         <MenuLink icon={mdiBrush} rootPath="/art" text="Art" to="/art/marketplace" />
         <MenuLink icon={mdiAccountGroup} rootPath="/contributions" text="Contributions" to="/contributions" />
         <MenuLink icon={mdiLanConnect} rootPath="/cores" text="Cores" to="/cores" />
@@ -44,6 +47,7 @@ const LeftNav: SFC = ({className}) => {
         <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications" />
         <MenuLink icon={mdiAccount} rootPath={`/profile/${self.id}`} text="Profile" to={`/profile/${self.id}`} />
         <MenuLink icon={mdiShopping} rootPath="/shop" text="Shop" to="/shop/buy/catalog" />
+        <MenuLink icon={mdiBookEducation} rootPath={`${PATH_COURSES}`} text="University" to={`${PATH_COURSES}`} />
         <MenuLink icon={mdiWalletBifoldOutline} rootPath="/wallets" text="Wallets" to="/wallets" />
         <CreatePostButton />
       </S.Top>
