@@ -10,8 +10,8 @@ export const Img = styled.img`
   width: 100%;
 `;
 
-export const ImgWrapper = styled.div`
+export const ImgWrapper = styled.div<{width?: string}>`
   padding-bottom: 100%;
   position: relative;
-  width: 36px;
+  width: ${({width}) => width || '36px'};
 `;
