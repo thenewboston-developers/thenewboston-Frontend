@@ -5,15 +5,16 @@ import {fonts, TOOLBAR_HEIGHT} from 'styles';
 
 export const Container = styled(ULink)<{$isActive: boolean}>`
   align-items: center;
-  background: ${({$isActive}) => ($isActive ? 'rgba(144, 157, 171, 0.2)' : 'transparent')};
-  color: #fff;
+  background: transparent;
+  border-bottom: 2px solid ${({$isActive}) => ($isActive ? '#000' : 'transparent')};
+  color: #000;
   display: flex;
-  font-weight: ${fonts.weight.semiBold};
+  font-weight: ${({$isActive}) => ($isActive ? fonts.weight.bold : fonts.weight.regular)};
   height: ${`${TOOLBAR_HEIGHT}px`};
   padding: 0 8px;
 
   &:hover {
-    color: rgba(255, 255, 255, 0.7);
+    background: rgba(144, 157, 171, 0.1);
     cursor: pointer;
     text-decoration: none;
   }

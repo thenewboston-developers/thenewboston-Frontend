@@ -1,7 +1,7 @@
 /* eslint-disable sort-keys */
 
 const colors = {
-  background: '#ffffff',
+  background: '#f4f5f6',
   backgroundDark: '#22272e',
   black: '#000000',
   border: '#efeff4',

@@ -37,8 +37,8 @@ const Toolbar: SFC<ToolbarProps> = ({className, toolbarType}) => {
   return (
     <S.Container className={className}>
       <S.Left>{renderLogo()}</S.Left>
+      <S.Center>{renderMenuItems()}</S.Center>
       <S.Right>
-        {renderMenuItems()}
         <ShopDropdownMenu />
       </S.Right>
     </S.Container>

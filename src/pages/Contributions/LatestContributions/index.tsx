@@ -9,7 +9,8 @@ import {
   mdiFaceWomanOutline,
 } from '@mdi/js';
 
-import SectionHeading from 'components/SectionHeading';
+import Line from 'components/Line';
+import PanelHeading from 'components/PanelHeading';
 import ReadMoreLess from 'components/ReadMoreLess';
 import {
   ContributionCard,
@@ -18,12 +19,10 @@ import {
   ContributionCardItem,
 } from 'components/Contributions/ContributionCard';
 import {ContributorInfo} from 'components/Contributions/ContributorInfo';
-import {Card} from 'styles/components/CardStyle';
 import {Row, Col} from 'styles/components/GridStyle';
+import {Contribution} from 'types';
 import {getTimeAgo} from 'utils/dates';
 import {getUserProfileUrl, getRepositoryUrl, getPullRequestUrl} from 'utils/github';
-import Line from 'components/Line';
-import {Contribution} from 'types';
 import * as S from './Styles';
 
 interface LatestContributionsProps {
@@ -48,87 +47,85 @@ const LatestContributions: React.FC<LatestContributionsProps> = ({className, con
 
   return (
     <div className={className}>
-      <SectionHeading heading="Latest Contributions" />
-      <Card>
-        <Row verticalgap="5px" horizontalgap="15px">
-          {latestContributionList.map((contribution) => (
-            <Col key={contribution.id} size={6}>
-              <ContributionCard key={contribution.user.id}>
-                <ContributionCardHeader>
-                  <ContributorInfo
-                    core={contribution.core}
-                    user={contribution.user}
-                    rewardAmount={contribution.reward_amount}
-                  />
-                </ContributionCardHeader>
-                <Line />
-                <ContributionCardBody>
-                  <Col size={6}>
-                    <ContributionCardItem
-                      iconPath={mdiGithub}
-                      iconLink={githubUserProfileLink(contribution)}
-                      isIconLinkExternal={true}
-                    >
-                      <Link to={githubUserProfileLink(contribution)} target="_blank">
-                        {contribution.github_user.github_username}
+      <PanelHeading heading="Latest Contributions" />
+      <Row verticalgap="5px" horizontalgap="15px">
+        {latestContributionList.map((contribution) => (
+          <Col key={contribution.id} size={6}>
+            <ContributionCard key={contribution.user.id}>
+              <ContributionCardHeader>
+                <ContributorInfo
+                  core={contribution.core}
+                  user={contribution.user}
+                  rewardAmount={contribution.reward_amount}
+                />
+              </ContributionCardHeader>
+              <Line />
+              <ContributionCardBody>
+                <Col size={6}>
+                  <ContributionCardItem
+                    iconPath={mdiGithub}
+                    iconLink={githubUserProfileLink(contribution)}
+                    isIconLinkExternal={true}
+                  >
+                    <Link to={githubUserProfileLink(contribution)} target="_blank">
+                      {contribution.github_user.github_username}
+                    </Link>
+                  </ContributionCardItem>
+                </Col>
+                <Col size={6}>
+                  <ContributionCardItem
+                    iconPath={mdiCodeBrackets}
+                    iconLink={githubRepositoryLink(contribution)}
+                    isIconLinkExternal={true}
+                  >
+                    <Link to={githubRepositoryLink(contribution)} target="_blank">
+                      {contribution.repo.name}
+                    </Link>
+                  </ContributionCardItem>
+                </Col>
+              </ContributionCardBody>
+              <ContributionCardBody>
+                <Col size={6}>
+                  <ContributionCardItem
+                    iconPath={mdiSquareRoundedBadgeOutline}
+                    iconLink={contribution?.pull ? githubPullRequestLink(contribution) : ''}
+                    isIconLinkExternal={true}
+                  >
+                    {contribution?.pull ? (
+                      <Link to={githubPullRequestLink(contribution)} target="_blank">
+                        {contribution.pull.title}
                       </Link>
-                    </ContributionCardItem>
-                  </Col>
-                  <Col size={6}>
-                    <ContributionCardItem
-                      iconPath={mdiCodeBrackets}
-                      iconLink={githubRepositoryLink(contribution)}
-                      isIconLinkExternal={true}
-                    >
-                      <Link to={githubRepositoryLink(contribution)} target="_blank">
-                        {contribution.repo.name}
+                    ) : (
+                      'Not Found'
+                    )}
+                  </ContributionCardItem>
+                </Col>
+                <Col size={6}>
+                  <ContributionCardItem iconPath={mdiCalendarOutline}>
+                    {new Date(contribution.created_date).toLocaleDateString()}
+                  </ContributionCardItem>
+                </Col>
+              </ContributionCardBody>
+              <Line />
+              <ContributionCardHeader>
+                <div>
+                  <ContributionCardItem iconPath={mdiFaceWomanOutline} iconLink={userProfileLink(contribution)}>
+                    <S.DescriptionHeading>
+                      <Link to={userProfileLink(contribution)}>
+                        <b>ia</b>
                       </Link>
-                    </ContributionCardItem>
-                  </Col>
-                </ContributionCardBody>
-                <ContributionCardBody>
-                  <Col size={6}>
-                    <ContributionCardItem
-                      iconPath={mdiSquareRoundedBadgeOutline}
-                      iconLink={contribution?.pull ? githubPullRequestLink(contribution) : ''}
-                      isIconLinkExternal={true}
-                    >
-                      {contribution?.pull ? (
-                        <Link to={githubPullRequestLink(contribution)} target="_blank">
-                          {contribution.pull.title}
-                        </Link>
-                      ) : (
-                        'Not Found'
-                      )}
-                    </ContributionCardItem>
-                  </Col>
-                  <Col size={6}>
-                    <ContributionCardItem iconPath={mdiCalendarOutline}>
-                      {new Date(contribution.created_date).toLocaleDateString()}
-                    </ContributionCardItem>
-                  </Col>
-                </ContributionCardBody>
-                <Line />
-                <ContributionCardHeader>
-                  <div>
-                    <ContributionCardItem iconPath={mdiFaceWomanOutline} iconLink={userProfileLink(contribution)}>
-                      <S.DescriptionHeading>
-                        <Link to={userProfileLink(contribution)}>
-                          <b>ia</b>
-                        </Link>
-                        <small style={{marginLeft: '5px'}}>{getTimeAgo(contribution.created_date)}</small>
-                      </S.DescriptionHeading>
-                    </ContributionCardItem>
-                    <S.Description>
-                      <ReadMoreLess text={contribution?.pull?.assessment_explanation} maxLength={180} />
-                    </S.Description>
-                  </div>
-                </ContributionCardHeader>
-              </ContributionCard>
-            </Col>
-          ))}
-        </Row>
-      </Card>
+                      <small style={{marginLeft: '5px'}}>{getTimeAgo(contribution.created_date)}</small>
+                    </S.DescriptionHeading>
+                  </ContributionCardItem>
+                  <S.Description>
+                    <ReadMoreLess text={contribution?.pull?.assessment_explanation} maxLength={180} />
+                  </S.Description>
+                </div>
+              </ContributionCardHeader>
+            </ContributionCard>
+          </Col>
+        ))}
+      </Row>
     </div>
   );
 };

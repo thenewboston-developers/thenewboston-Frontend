@@ -1,9 +1,9 @@
 import {CartesianGrid, AreaChart, Area, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
-import SectionHeading from 'components/SectionHeading';
-import {getCumulativeContributions} from 'utils/contributions';
+import PanelHeading from 'components/PanelHeading';
 import {SFC} from 'types';
-import {Card} from 'styles/components/CardStyle';
+import {getCumulativeContributions} from 'utils/contributions';
+import * as S from './Styles';
 
 interface TotalContributionsChartProps {
   className?: string;
@@ -27,9 +27,9 @@ const TotalContributionsChart: SFC<TotalContributionsChartProps> = ({className, 
   );
 
   return (
-    <div className={className}>
-      <SectionHeading heading="Total Contributions" />
-      <Card>
+    <>
+      <PanelHeading heading="Total Contributions" />
+      <S.Container className={className}>
         <ResponsiveContainer height={380} width="100%">
           <AreaChart data={cumulativeContributions}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -39,8 +39,8 @@ const TotalContributionsChart: SFC<TotalContributionsChartProps> = ({className, 
             <Area type="monotone" dataKey="total_rewards" stroke="#82ca9d" fill="#82ca9d" />
           </AreaChart>
         </ResponsiveContainer>
-      </Card>
-    </div>
+      </S.Container>
+    </>
   );
 };
 
