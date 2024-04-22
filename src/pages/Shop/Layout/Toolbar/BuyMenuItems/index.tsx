@@ -31,7 +31,7 @@ const BuyMenuItems: SFC = () => {
       <ToolbarMenuLink text="My Addresses" to="/shop/buy/addresses" />
       <ToolbarMenuLink text="Orders" to="/shop/buy/orders" />
       <S.IconContainer onClick={handleCartClick}>
-        <S.Icon path={mdiCartOutline} size="32px" />
+        <S.Icon path={mdiCartOutline} size="24px" />
         {renderCartProductCount()}
       </S.IconContainer>
     </>

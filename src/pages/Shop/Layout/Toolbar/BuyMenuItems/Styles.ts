@@ -17,11 +17,15 @@ export const CartProductCount = styled.div`
   width: 14px;
 `;
 
-export const Icon = styled(MdiIcon)``;
+export const Icon = styled(MdiIcon)`
+  color: #939393;
+`;
 
 export const IconContainer = styled.div`
-  color: #fff;
+  background: #f4f5f6;
+  border-radius: 8px;
   display: flex;
+  padding: 9px;
   position: relative;
 
   &:hover {
