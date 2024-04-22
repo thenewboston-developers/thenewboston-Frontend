@@ -1,1 +1,1 @@
-export const TOOLBAR_HEIGHT = 48;
+export const TOOLBAR_HEIGHT = 58;

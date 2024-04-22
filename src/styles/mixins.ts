@@ -61,8 +61,8 @@ export const radioCardStyle = css<{$isActive: boolean}>`
 `;
 
 export const toolbarStyle = css`
-  background: #24292f;
-  color: #fff;
+  background: #fff;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   display: flex;
   height: ${`${TOOLBAR_HEIGHT}px`};
   justify-content: space-between;
