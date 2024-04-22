@@ -4,7 +4,7 @@ import {colors} from 'styles';
 
 export const ContributionCard = styled.div`
   background: #fff;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   margin-bottom: 12px;
 `;

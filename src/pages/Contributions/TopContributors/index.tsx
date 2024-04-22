@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
 import DefaultAvatar from 'assets/default-avatar.png';
-import {ContributionCard} from 'components/Contributions/ContributionCard';
 import CoreLogo from 'components/CoreLogo';
 import PanelHeading from 'components/PanelHeading';
 import {Contribution, Contributor} from 'types';
@@ -24,27 +23,22 @@ const TopContributors: React.FC<TopContributorsProps> = ({className, contributio
     return (
       <S.ContributorList>
         {topContributors.map((contributor) => (
-          <ContributionCard key={contributor.user.id}>
-            <S.ContributorContainer>
-              <S.UserLabelContainer>
-                <S.PositionIcon
-                  src={contributor.positionIcon || DefaultAvatar}
-                  alt={`Position ${contributor.user.id}`}
-                />
-                <S.UserLabel
-                  avatar={contributor.user.avatar}
-                  description=""
-                  id={contributor.user.id}
-                  username={contributor.user.username}
-                />
-              </S.UserLabelContainer>
-              <S.RewardAmountContainer>
-                {contributor.core.logo && <CoreLogo logo={contributor.core.logo} width="20px" />}
-                &nbsp;
-                {contributor.totalRewardAmount.toLocaleString()}
-              </S.RewardAmountContainer>
-            </S.ContributorContainer>
-          </ContributionCard>
+          <S.ContributorContainer>
+            <S.UserLabelContainer>
+              <S.PositionIcon src={contributor.positionIcon || DefaultAvatar} alt={`Position ${contributor.user.id}`} />
+              <S.UserLabel
+                avatar={contributor.user.avatar}
+                description=""
+                id={contributor.user.id}
+                username={contributor.user.username}
+              />
+            </S.UserLabelContainer>
+            <S.RewardAmountContainer>
+              {contributor.core.logo && <CoreLogo logo={contributor.core.logo} width="22px" />}
+              &nbsp;
+              {contributor.totalRewardAmount.toLocaleString()}
+            </S.RewardAmountContainer>
+          </S.ContributorContainer>
         ))}
       </S.ContributorList>
     );
