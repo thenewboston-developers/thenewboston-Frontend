@@ -48,7 +48,7 @@ const LatestContributions: FC<LatestContributionsProps> = ({className, contribut
   return (
     <div className={className}>
       <PanelHeading heading="Latest Contributions" />
-      <Row verticalgap="5px" horizontalgap="15px">
+      <Row $horizontalGap="15px" $verticalGap="5px">
         {latestContributionList.map((contribution) => (
           <Col key={contribution.id} size={6}>
             <ContributionCard key={contribution.user.id}>

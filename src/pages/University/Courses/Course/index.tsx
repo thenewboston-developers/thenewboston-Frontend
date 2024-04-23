@@ -2,8 +2,8 @@ import {mdiCalendarOutline} from '@mdi/js';
 import Icon from '@mdi/react';
 
 import ReadMoreLess from 'components/ReadMoreLess';
-import {Course as TCourse, SFC} from 'types';
 import {PATH_LECTURES} from 'constants/paths';
+import {Course as TCourse, SFC} from 'types';
 import {getTimeAgo} from 'utils/dates';
 
 import * as S from './Styles';
