@@ -2,7 +2,7 @@ import Icon from '@mdi/react';
 import {Lecture as TLecture, SFC} from 'types';
 import {mdiCalendarOutline} from '@mdi/js';
 
-import YoutubeVideo from 'components/YoutubeVideo';
+import YouTubeVideo from 'components/YouTubeVideo';
 import {longDate} from 'utils/dates';
 
 import * as S from './Styles';
@@ -17,7 +17,7 @@ const LectureVideoPlayer: SFC<LectureVideoPlayerProps> = ({className, lecture}) 
   return (
     <>
       <S.Container className={className}>
-        <YoutubeVideo title={name} youtubeID={youtube_id} />
+        <YouTubeVideo title={name} youtubeID={youtube_id} />
         <S.Content>
           <S.Name>{name}</S.Name>
           <S.Description>{description}</S.Description>

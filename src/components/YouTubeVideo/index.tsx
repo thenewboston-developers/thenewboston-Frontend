@@ -1,6 +1,6 @@
 import {FC} from 'react';
 
-import {YOUTUBE_EMBED_BASE_URL} from './constants';
+import {YOUTUBE_EMBED_BASE_URL} from 'constants/youtube';
 import * as S from './Styles';
 
 export interface YoutubeVideoProps {
@@ -9,7 +9,7 @@ export interface YoutubeVideoProps {
   youtubeID: string;
 }
 
-const YoutubeVideo: FC<YoutubeVideoProps> = ({height = 450, title, youtubeID}) => {
+const YouTubeVideo: FC<YoutubeVideoProps> = ({height = 450, title, youtubeID}) => {
   const allowSettings = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
   const videoSrc = `${YOUTUBE_EMBED_BASE_URL}${youtubeID}`;
 
@@ -28,4 +28,4 @@ const YoutubeVideo: FC<YoutubeVideoProps> = ({height = 450, title, youtubeID}) =
   );
 };
 
-export default YoutubeVideo;
+export default YouTubeVideo;

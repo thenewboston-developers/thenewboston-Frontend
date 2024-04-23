@@ -1,4 +1,4 @@
-import React from 'react';
+import {ReactNode} from 'react';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
 
 import Loader from 'components/Loader';
@@ -6,7 +6,7 @@ import {SFC} from 'types';
 import * as S from './Styles';
 
 interface InfiniteScrollProps {
-  children: React.ReactNode;
+  children: ReactNode;
   dataLength: number;
   hasMore: boolean;
   next: () => void;

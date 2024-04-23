@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import {FC, MouseEvent} from 'react';
 
 import Icon from '@mdi/react';
 import {Lecture as TLecture} from 'types';
@@ -18,7 +18,7 @@ export interface LectureProps {
 const Lecture: FC<LectureProps> = ({index, lecture, onClick, isSelected = false}) => {
   const {name, description, thumbnail_url, created_date} = lecture;
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
     event.preventDefault();
     onClick(lecture);
   };
@@ -42,4 +42,5 @@ const Lecture: FC<LectureProps> = ({index, lecture, onClick, isSelected = false}
     </S.Container>
   );
 };
+
 export default Lecture;
