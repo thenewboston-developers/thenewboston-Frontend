@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import {useMemo, FC} from 'react';
 import {Link} from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 import {
@@ -30,7 +30,7 @@ interface LatestContributionsProps {
   contributions: Contribution[];
 }
 
-const LatestContributions: React.FC<LatestContributionsProps> = ({className, contributions}) => {
+const LatestContributions: FC<LatestContributionsProps> = ({className, contributions}) => {
   const latestContributions = contributions.slice(0, 20);
 
   const latestContributionList = useMemo(() => {

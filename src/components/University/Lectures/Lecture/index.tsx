@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 
 import Icon from '@mdi/react';
 import {Lecture as TLecture} from 'types';
@@ -6,7 +6,6 @@ import {mdiCalendarOutline} from '@mdi/js';
 
 import ReadMoreLess from 'components/ReadMoreLess';
 import {getTimeAgo} from 'utils/dates';
-
 import * as S from './Styles';
 
 export interface LectureProps {
@@ -16,7 +15,7 @@ export interface LectureProps {
   onClick: (lecture: TLecture) => void;
 }
 
-const Lecture: React.FC<LectureProps> = ({index, lecture, onClick, isSelected = false}) => {
+const Lecture: FC<LectureProps> = ({index, lecture, onClick, isSelected = false}) => {
   const {name, description, thumbnail_url, created_date} = lecture;
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {

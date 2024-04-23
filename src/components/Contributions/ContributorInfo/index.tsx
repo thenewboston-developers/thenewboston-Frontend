@@ -1,6 +1,7 @@
 import CoreLogo from 'components/CoreLogo';
 import {UserReadSerializer, Core} from 'types';
 import * as S from './Styles';
+import {FC} from 'react';
 
 interface ContributorInfoProps {
   core: Core;
@@ -8,7 +9,7 @@ interface ContributorInfoProps {
   user: UserReadSerializer;
 }
 
-export const ContributorInfo: React.FC<ContributorInfoProps> = ({core, user, rewardAmount}) => {
+export const ContributorInfo: FC<ContributorInfoProps> = ({core, user, rewardAmount}) => {
   return (
     <>
       <S.UserLabel avatar={user.avatar} description="" id={user.id} username={user.username} />
