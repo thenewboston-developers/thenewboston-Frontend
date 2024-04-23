@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import UMdiIcon from '@mdi/react';
 
 import {colors, fonts} from 'styles';
 
@@ -9,6 +10,11 @@ export const Container = styled.div`
   display: flex;
   height: 38px;
   padding: 4px 5px;
+`;
+
+export const Icon = styled(UMdiIcon)<{$isActive?: boolean}>`
+  color: ${({$isActive}) => ($isActive ? colors.primary : '#747474')};
+  margin-right: 6px;
 `;
 
 export const Item = styled.div<{$isActive?: boolean}>`

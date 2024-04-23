@@ -1,4 +1,5 @@
 import {useLocation, useNavigate} from 'react-router-dom';
+import {mdiArrowLeftBoldBoxOutline, mdiArrowRightBoldBoxOutline} from '@mdi/js';
 
 import {SFC} from 'types';
 import * as S from './Styles';
@@ -15,12 +16,17 @@ const Switcher: SFC = ({className}) => {
     navigate('/shop/sell/products');
   };
 
+  const isBuyActive = location.pathname.includes('/shop/buy');
+  const isSellActive = location.pathname.includes('/shop/sell');
+
   return (
     <S.Container className={className}>
-      <S.Item $isActive={location.pathname.includes('/shop/buy')} onClick={handleBuyClick}>
+      <S.Item $isActive={isBuyActive} onClick={handleBuyClick}>
+        <S.Icon $isActive={isBuyActive} path={mdiArrowLeftBoldBoxOutline} size="14px" />
         Buy
       </S.Item>
-      <S.Item $isActive={location.pathname.includes('/shop/sell')} onClick={handleSellClick}>
+      <S.Item $isActive={isSellActive} onClick={handleSellClick}>
+        <S.Icon $isActive={isSellActive} path={mdiArrowRightBoldBoxOutline} size="14px" />
         Sell
       </S.Item>
     </S.Container>
