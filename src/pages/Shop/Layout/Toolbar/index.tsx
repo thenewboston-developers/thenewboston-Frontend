@@ -1,12 +1,14 @@
+import {useMemo} from 'react';
+import {useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import {mdiCartOutline} from '@mdi/js';
 
-import ShopDropdownMenu from 'components/ShopDropdownMenu';
 import {ShopToolbarType} from 'enums';
+import {getCartProducts} from 'selectors/state';
 import {SFC} from 'types';
-import BuyLogo from './assets/buy-logo.png';
-import SellLogo from './assets/sell-logo.png';
 import BuyMenuItems from './BuyMenuItems';
 import SellMenuItems from './SellMenuItems';
+import Switcher from './Switcher';
 import * as S from './Styles';
 
 export interface ToolbarProps {
@@ -14,20 +16,30 @@ export interface ToolbarProps {
 }
 
 const Toolbar: SFC<ToolbarProps> = ({className, toolbarType}) => {
+  const cartProducts = useSelector(getCartProducts);
   const navigate = useNavigate();
 
-  const handleBuyLogoClick = () => {
-    navigate('/shop/buy/catalog');
+  const cartProductCount = useMemo(() => {
+    return Object.values(cartProducts).length;
+  }, [cartProducts]);
+
+  const handleCartClick = () => {
+    navigate('/shop/buy/checkout');
   };
 
-  const handleSellLogoClick = () => {
-    navigate('/shop/sell/products');
+  const renderCartProductCount = () => {
+    if (!cartProductCount) return null;
+    return <S.CartProductCount>{cartProductCount}</S.CartProductCount>;
   };
 
-  const renderLogo = () => {
-    const clickHandler = toolbarType === ShopToolbarType.BUY ? handleBuyLogoClick : handleSellLogoClick;
-    const src = toolbarType === ShopToolbarType.BUY ? BuyLogo : SellLogo;
-    return <S.Logo alt="Shop Logo" onClick={clickHandler} src={src} />;
+  const renderIconContainer = () => {
+    if (toolbarType === ShopToolbarType.SELL) return null;
+    return (
+      <S.IconContainer onClick={handleCartClick}>
+        <S.Icon path={mdiCartOutline} size="20px" />
+        {renderCartProductCount()}
+      </S.IconContainer>
+    );
   };
 
   const renderMenuItems = () => {
@@ -36,11 +48,11 @@ const Toolbar: SFC<ToolbarProps> = ({className, toolbarType}) => {
 
   return (
     <S.Container className={className}>
-      <S.Left>{renderLogo()}</S.Left>
+      <S.Left>
+        <Switcher />
+      </S.Left>
       <S.Center>{renderMenuItems()}</S.Center>
-      <S.Right>
-        <ShopDropdownMenu />
-      </S.Right>
+      <S.Right>{renderIconContainer()}</S.Right>
     </S.Container>
   );
 };
