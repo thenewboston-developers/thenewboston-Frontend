@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState, FC} from 'react';
 
 import DefaultAvatar from 'assets/default-avatar.png';
 import CoreLogo from 'components/CoreLogo';
@@ -12,7 +12,7 @@ interface TopContributorsProps {
   contributions: Contribution[];
 }
 
-const TopContributors: React.FC<TopContributorsProps> = ({className, contributions}) => {
+const TopContributors: FC<TopContributorsProps> = ({className, contributions}) => {
   const [topContributors, setTopContributors] = useState<Contributor[]>([]);
 
   useEffect(() => {

@@ -1,19 +1,19 @@
-import React, {useState} from 'react';
+import {useState, FC} from 'react';
 
 import * as S from './Styles';
 
 interface ReadMoreLessProps {
-  text: string;
   maxLength: number;
-  readMoreText?: string;
   readLessText?: string;
+  readMoreText?: string;
+  text: string;
 }
 
-const ReadMoreLess: React.FC<ReadMoreLessProps> = ({
-  text,
+const ReadMoreLess: FC<ReadMoreLessProps> = ({
   maxLength,
-  readMoreText = 'Read More',
   readLessText = 'Read Less',
+  readMoreText = 'Read More',
+  text,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
