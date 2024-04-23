@@ -1,27 +1,24 @@
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
-import 'styles/globalStyle.css';
-import Course from 'components/University/Courses';
+import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Loader from 'components/Loader';
-import {AppDispatch, SFC} from 'types';
-import {Col, Row} from 'styles/components/GridStyle';
-import {displayErrorToast} from 'utils/toasts';
 import {getCourses as _getCourses, resetCourses as _resetCourses} from 'dispatchers/courses';
 import {getCourses, hasMoreCourses, isLoadingCourses} from 'selectors/state';
-
+import {Col, Row} from 'styles/components/GridStyle';
+import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
+import Course from './Course';
 import * as S from './Styles';
 
 const Courses: SFC = ({className}) => {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const courses = useSelector(getCourses);
+  const dispatch = useDispatch<AppDispatch>();
   const hasMore = useSelector(hasMoreCourses);
   const isLoading = useSelector(isLoadingCourses);
-
-  const dispatch = useDispatch<AppDispatch>();
 
   const courseList = useMemo(() => Object.values(courses), [courses]);
 
