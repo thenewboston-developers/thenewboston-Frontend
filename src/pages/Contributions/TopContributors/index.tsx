@@ -1,4 +1,4 @@
-import {useEffect, useState, FC} from 'react';
+import {FC, useEffect, useState} from 'react';
 
 import DefaultAvatar from 'assets/default-avatar.png';
 import CoreLogo from 'components/CoreLogo';

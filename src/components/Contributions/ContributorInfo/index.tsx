@@ -1,7 +1,7 @@
 import {FC} from 'react';
 
 import CoreLogo from 'components/CoreLogo';
-import {UserReadSerializer, Core} from 'types';
+import {Core, UserReadSerializer} from 'types';
 import * as S from './Styles';
 
 interface ContributorInfoProps {

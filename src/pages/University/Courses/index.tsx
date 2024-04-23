@@ -8,7 +8,7 @@ import InfiniteScroll from 'components/InfiniteScroll';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Loader from 'components/Loader';
 import {AppDispatch, SFC} from 'types';
-import {Row, Col} from 'styles/components/GridStyle';
+import {Col, Row} from 'styles/components/GridStyle';
 import {displayErrorToast} from 'utils/toasts';
 import {getCourses as _getCourses, resetCourses as _resetCourses} from 'dispatchers/courses';
 import {getCourses, hasMoreCourses, isLoadingCourses} from 'selectors/state';

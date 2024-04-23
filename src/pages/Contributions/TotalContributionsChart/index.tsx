@@ -1,4 +1,4 @@
-import {CartesianGrid, AreaChart, Area, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
+import {Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
 import PanelHeading from 'components/PanelHeading';
 import {SFC} from 'types';

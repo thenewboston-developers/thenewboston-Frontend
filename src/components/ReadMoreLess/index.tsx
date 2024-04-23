@@ -1,4 +1,4 @@
-import {useState, FC} from 'react';
+import {FC, useState} from 'react';
 
 import * as S from './Styles';
 
