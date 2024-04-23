@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {PaginatedResponse, LectureReadSerializer} from 'types';
+import {LectureReadSerializer, PaginatedResponse} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 import {getApiUrl} from 'utils/urls';
 

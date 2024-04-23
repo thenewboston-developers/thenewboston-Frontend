@@ -7,7 +7,7 @@ import TotalContributionsChart from './TotalContributionsChart';
 import LatestContributions from './LatestContributions';
 import TopContributors from './TopContributors';
 import {getContributions as _getContributions} from 'dispatchers/contributions';
-import {Row, Col} from 'styles/components/GridStyle';
+import {Col, Row} from 'styles/components/GridStyle';
 import {getContributions} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import * as S from './Styles';

@@ -1,12 +1,12 @@
-import React, {useMemo} from 'react';
+import {FC, useMemo} from 'react';
 import {Link} from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 import {
-  mdiGithub,
-  mdiCodeBrackets,
-  mdiSquareRoundedBadgeOutline,
   mdiCalendarOutline,
+  mdiCodeBrackets,
   mdiFaceWomanOutline,
+  mdiGithub,
+  mdiSquareRoundedBadgeOutline,
 } from '@mdi/js';
 
 import Line from 'components/Line';
@@ -14,15 +14,15 @@ import PanelHeading from 'components/PanelHeading';
 import ReadMoreLess from 'components/ReadMoreLess';
 import {
   ContributionCard,
-  ContributionCardHeader,
   ContributionCardBody,
+  ContributionCardHeader,
   ContributionCardItem,
 } from 'components/Contributions/ContributionCard';
 import {ContributorInfo} from 'components/Contributions/ContributorInfo';
-import {Row, Col} from 'styles/components/GridStyle';
+import {Col, Row} from 'styles/components/GridStyle';
 import {Contribution} from 'types';
 import {getTimeAgo} from 'utils/dates';
-import {getUserProfileUrl, getRepositoryUrl, getPullRequestUrl} from 'utils/github';
+import {getPullRequestUrl, getRepositoryUrl, getUserProfileUrl} from 'utils/github';
 import * as S from './Styles';
 
 interface LatestContributionsProps {
@@ -30,7 +30,7 @@ interface LatestContributionsProps {
   contributions: Contribution[];
 }
 
-const LatestContributions: React.FC<LatestContributionsProps> = ({className, contributions}) => {
+const LatestContributions: FC<LatestContributionsProps> = ({className, contributions}) => {
   const latestContributions = contributions.slice(0, 20);
 
   const latestContributionList = useMemo(() => {
