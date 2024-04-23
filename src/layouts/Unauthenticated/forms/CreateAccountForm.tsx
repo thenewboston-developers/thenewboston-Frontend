@@ -9,6 +9,7 @@ import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import * as S from './Styles';
+
 const CreateAccountForm: SFC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -31,25 +32,9 @@ const CreateAccountForm: SFC = () => {
       };
       const user = await dispatch(createUser(requestData));
       navigate(`/profile/${user.id}`);
-    } catch (error) {
-      let errorMessage = 'Error creating account';
-      if (typeof error === 'object' && error !== null) {
-        if ('response' in error) {
-          const axiosError = error as {response: {data: {message?: string; error?: string}; status: number}};
-          const errorData = axiosError.response.data;
-          const errorStatus = axiosError.response.status;
-          if (errorData) {
-            if (errorStatus === 500) {
-              errorMessage = 'Server error, please try again later';
-            } else {
-              errorMessage = Object.values(errorData)[0] as string;
-            }
-          }
-        } else {
-          errorMessage = 'Network error, please try again later';
-        }
-      }
-      displayErrorToast(errorMessage);
+    } catch (error: any) {
+      console.error(error);
+      displayErrorToast(error);
     }
   };
 
