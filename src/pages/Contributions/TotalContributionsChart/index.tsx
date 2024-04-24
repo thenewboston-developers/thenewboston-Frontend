@@ -15,7 +15,7 @@ const TotalContributionsChart: SFC<TotalContributionsChartProps> = ({className, 
 
   const formatDate = (date: string) => {
     const newDate = new Date(date);
-    return `${newDate.getDate()}/${newDate.getMonth() + 1}`;
+    return `${newDate.getMonth() + 1}/${newDate.getDate()}`;
   };
 
   const CustomAxisTick = ({x, y, payload}: any) => (
