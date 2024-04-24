@@ -26,9 +26,25 @@ const TotalContributionsChart: SFC<TotalContributionsChartProps> = ({className, 
     </g>
   );
 
+  const renderTotalReward = () => {
+    const totalReward = cumulativeContributions[cumulativeContributions.length - 1].total_rewards;
+    const logo = contributions[0].core.logo;
+
+    return (
+      <S.RewardContainer>
+        <S.CoreLogo src={logo} />
+        &nbsp;
+        <S.TotalReward>{totalReward.toLocaleString()}</S.TotalReward>
+      </S.RewardContainer>
+    );
+  };
+
   return (
     <>
-      <PanelHeading heading="Total Contributions" />
+      <S.ChartHeaderContainer>
+        <PanelHeading heading="Total Contributions" />
+        {renderTotalReward()}
+      </S.ChartHeaderContainer>
       <S.Container className={className}>
         <ResponsiveContainer height={380} width="100%">
           <AreaChart data={cumulativeContributions}>
