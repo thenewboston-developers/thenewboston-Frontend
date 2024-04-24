@@ -30,6 +30,23 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
     },
   ];
 
+  const renderDetails = () => {
+    return (
+      <S.Details>
+        <S.Top>
+          <S.TextContainer>
+            <Link to={`/art/artworks/${artwork.id}`}>
+              <S.Name>{artwork.name}</S.Name>
+            </Link>
+            <S.Description>{artwork.description}</S.Description>
+          </S.TextContainer>
+          {renderDropdownMenu()}
+        </S.Top>
+        <S.Bottom>{renderPrice()}</S.Bottom>
+      </S.Details>
+    );
+  };
+
   const renderDropdownMenu = () => {
     if (artwork.owner.id !== self.id) return null;
     return <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
@@ -37,12 +54,7 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
 
   const renderPrice = () => {
     if (!artwork.price_amount || !artwork.price_core) return null;
-    return (
-      <>
-        <S.Line />
-        <Price price_amount={artwork.price_amount} price_core={artwork.price_core} />
-      </>
-    );
+    return <Price price_amount={artwork.price_amount} price_core={artwork.price_core} />;
   };
 
   return (
@@ -51,16 +63,7 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
         <Link to={`/art/artworks/${artwork.id}`}>
           <S.Thumbnail thumbnailUrl={artwork.image} />
         </Link>
-        <S.Bottom>
-          <S.Text>
-            <Link to={`/art/artworks/${artwork.id}`}>
-              <S.Name>{artwork.name}</S.Name>
-            </Link>
-            <S.Description>{artwork.description}</S.Description>
-            {renderPrice()}
-          </S.Text>
-          {renderDropdownMenu()}
-        </S.Bottom>
+        {renderDetails()}
       </S.Container>
       {artworkDeleteModalIsOpen ? <ArtworkDeleteModal artworkId={artwork.id} close={toggleArtworkDeleteModal} /> : null}
       {artworkModalIsOpen ? (
