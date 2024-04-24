@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {breakpoints} from 'styles';
+import {breakpoints, fonts} from 'styles';
 import UBanner from './Banner';
 
 export const ArtworkCards = styled.div`
@@ -34,8 +34,14 @@ export const ArtworkCards = styled.div`
   }
 `;
 
+export const ArtworkCardsHeading = styled.div`
+  font-size: 22px;
+  font-weight: ${fonts.weight.semiBold};
+  margin: 42px 16px 0;
+`;
+
 export const Banner = styled(UBanner)`
-  margin: 16px;
+  margin: 16px 16px 0;
 `;
 
 export const Container = styled.div`
