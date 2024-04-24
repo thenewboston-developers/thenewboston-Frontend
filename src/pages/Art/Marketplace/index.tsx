@@ -34,7 +34,12 @@ const Marketplace: SFC = ({className}) => {
     return <EmptyText>No artwork to display.</EmptyText>;
   };
 
-  return <S.Container className={className}>{renderContent()}</S.Container>;
+  return (
+    <S.Container className={className}>
+      <S.Banner />
+      {renderContent()}
+    </S.Container>
+  );
 };
 
 export default Marketplace;

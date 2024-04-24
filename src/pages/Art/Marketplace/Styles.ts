@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import {breakpoints} from 'styles';
+import UBanner from './Banner';
 
 export const ArtworkCards = styled.div`
   display: grid;
@@ -31,6 +32,10 @@ export const ArtworkCards = styled.div`
   @media (min-width: ${breakpoints.xlDesktop}) {
     grid-template-columns: repeat(6, 1fr);
   }
+`;
+
+export const Banner = styled(UBanner)`
+  margin: 16px;
 `;
 
 export const Container = styled.div`
