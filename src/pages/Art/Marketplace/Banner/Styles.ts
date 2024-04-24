@@ -14,6 +14,22 @@ export const Container = styled.div`
 
 export const Img = styled.img`
   height: 100%;
+  width: auto;
+`;
+
+export const ImgOverlay = styled.div`
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.6) 0%,
+    transparent 20%,
+    transparent 80%,
+    rgba(255, 255, 255, 0.6) 100%
+  );
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 `;
 
 export const Heading = styled.div`
@@ -28,7 +44,10 @@ export const Left = styled.div`
   padding: 20px 0;
 `;
 
-export const Right = styled.div``;
+export const Right = styled.div`
+  height: 100%;
+  position: relative;
+`;
 
 export const SubHeading = styled.div`
   color: ${colors.secondary};

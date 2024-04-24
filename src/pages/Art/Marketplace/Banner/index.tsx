@@ -21,6 +21,7 @@ const Banner: SFC = ({className}) => {
       </S.Left>
       <S.Right>
         <S.Img alt="artworks" src={Artworks} />
+        <S.ImgOverlay />
       </S.Right>
     </S.Container>
   );
