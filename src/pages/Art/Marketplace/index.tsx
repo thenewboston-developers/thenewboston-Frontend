@@ -30,11 +30,24 @@ const Marketplace: SFC = ({className}) => {
   };
 
   const renderContent = () => {
-    if (!!artworkList.length) return renderArtworkCards();
+    if (!!artworkList.length) {
+      return (
+        <>
+          <S.ArtworkCardsHeading>Buy from our marketplace</S.ArtworkCardsHeading>
+          {renderArtworkCards()}
+        </>
+      );
+    }
+
     return <EmptyText>No artwork to display.</EmptyText>;
   };
 
-  return <S.Container className={className}>{renderContent()}</S.Container>;
+  return (
+    <S.Container className={className}>
+      <S.Banner />
+      {renderContent()}
+    </S.Container>
+  );
 };
 
 export default Marketplace;
