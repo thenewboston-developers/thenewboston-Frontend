@@ -23,13 +23,13 @@ export const Date = styled.div`
   margin-right: 4px;
 `;
 
-export const DisplayName = styled.div<{$id: any}>`
+export const DisplayName = styled.div`
   font-size: 14px;
   font-weight: ${fonts.weight.bold};
   margin-right: 8px;
 
   &:hover {
-    cursor: ${({$id}) => ($id ? 'pointer' : 'default')};
+    cursor: pointer;
   }
 `;
 

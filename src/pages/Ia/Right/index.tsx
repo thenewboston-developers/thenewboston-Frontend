@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useNavigate, Link, useParams} from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
 import {mdiFaceWoman} from '@mdi/js';
@@ -112,7 +112,6 @@ const Right: SFC = ({className}) => {
               <Link to={`/profile/${self.id}`}>
                 <Avatar src={self.avatar} />
               </Link>
-
               <S.TextInput errors={errors} name="text" placeholder="Send a message..." touched={touched} />
               <S.Button
                 dirty={dirty}

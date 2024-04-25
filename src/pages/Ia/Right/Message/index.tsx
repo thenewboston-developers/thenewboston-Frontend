@@ -1,6 +1,6 @@
 import {useState} from 'react';
-import {mdiDelete, mdiPencil} from '@mdi/js';
 import {Link, useNavigate} from 'react-router-dom';
+import {mdiDelete, mdiPencil} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import Tool from 'components/Tool';
@@ -23,16 +23,16 @@ const Message: SFC<MessageProps> = ({className, message}) => {
 
   const {modified_date, sender, text} = message;
 
+  const handleClick = () => {
+    navigate(`/profile/${sender.id}`);
+  };
+
   const handleMouseOut = () => {
     setToolsVisible(false);
   };
 
   const handleMouseOver = () => {
     setToolsVisible(true);
-  };
-
-  const handleClick = () => {
-    navigate(`/profile/${sender.id}`);
   };
 
   const renderTools = () => {
@@ -56,9 +56,7 @@ const Message: SFC<MessageProps> = ({className, message}) => {
         <S.Right>
           <S.Header>
             <S.HeaderLeft>
-              <S.DisplayName $id={sender.id} onClick={handleClick}>
-                {sender.username}
-              </S.DisplayName>
+              <S.DisplayName onClick={handleClick}>{sender.username}</S.DisplayName>
               <S.Date>{shortDate(modified_date, true)}</S.Date>
             </S.HeaderLeft>
             <S.HeaderRight>{renderTools()}</S.HeaderRight>
