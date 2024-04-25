@@ -1,5 +1,19 @@
 import styled from 'styled-components';
 
+export const Amount = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  margin-left: 6px;
+`;
+
+export const AmountContainer = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  line-height: 1.2;
+  margin-bottom: 10px;
+`;
+
 export const Container = styled.div`
   background: #fff;
   border-radius: 14px;
@@ -7,20 +21,9 @@ export const Container = styled.div`
   padding: 24px 32px;
 `;
 
-export const TotalReward = styled.div`
-  font-size: 20px;
-  font-weight: 700;
-`;
-
 export const ChartHeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
-`;
-
-export const RewardContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 `;
 
 export const CoreLogo = styled.img`

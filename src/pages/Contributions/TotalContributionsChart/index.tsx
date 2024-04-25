@@ -13,29 +13,30 @@ interface TotalContributionsChartProps {
 const TotalContributionsChart: SFC<TotalContributionsChartProps> = ({className, contributions}) => {
   const cumulativeContributions = getCumulativeContributions(contributions);
 
+  const CustomAxisTick = ({x, y, payload}: any) => {
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text x={0} y={0} dy={16} textAnchor="end" fill="#666" transform="rotate(-30)">
+          {formatDate(payload.value)}
+        </text>
+      </g>
+    );
+  };
+
   const formatDate = (date: string) => {
     const newDate = new Date(date);
     return `${newDate.getDate()}/${newDate.getMonth() + 1}`;
   };
 
-  const CustomAxisTick = ({x, y, payload}: any) => (
-    <g transform={`translate(${x},${y})`}>
-      <text x={0} y={0} dy={16} textAnchor="end" fill="#666" transform="rotate(-30)">
-        {formatDate(payload.value)}
-      </text>
-    </g>
-  );
-
-  const renderTotalReward = () => {
+  const renderAmountContainer = () => {
     const totalReward = cumulativeContributions[cumulativeContributions.length - 1].total_rewards;
     const logo = contributions[0].core.logo;
 
     return (
-      <S.RewardContainer>
+      <S.AmountContainer>
         <S.CoreLogo src={logo} />
-        &nbsp;
-        <S.TotalReward>{totalReward.toLocaleString()}</S.TotalReward>
-      </S.RewardContainer>
+        <S.Amount>{totalReward.toLocaleString()}</S.Amount>
+      </S.AmountContainer>
     );
   };
 
@@ -43,7 +44,7 @@ const TotalContributionsChart: SFC<TotalContributionsChartProps> = ({className, 
     <>
       <S.ChartHeaderContainer>
         <PanelHeading heading="Total Contributions" />
-        {renderTotalReward()}
+        {renderAmountContainer()}
       </S.ChartHeaderContainer>
       <S.Container className={className}>
         <ResponsiveContainer height={380} width="100%">
