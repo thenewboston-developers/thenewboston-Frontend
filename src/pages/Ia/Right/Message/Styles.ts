@@ -27,6 +27,10 @@ export const DisplayName = styled.div`
   font-size: 14px;
   font-weight: ${fonts.weight.bold};
   margin-right: 8px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const Header = styled.div`

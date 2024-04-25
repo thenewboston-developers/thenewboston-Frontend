@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
 import {mdiDelete, mdiPencil} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
@@ -18,8 +19,13 @@ const Message: SFC<MessageProps> = ({className, message}) => {
   const [messageDeleteModalIsOpen, toggleMessageDeleteModal] = useToggle(false);
   const [messageEditModalIsOpen, toggleMessageEditModal] = useToggle(false);
   const [toolsVisible, setToolsVisible] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const {modified_date, sender, text} = message;
+
+  const handleClick = () => {
+    navigate(`/profile/${sender.id}`);
+  };
 
   const handleMouseOut = () => {
     setToolsVisible(false);
@@ -44,11 +50,13 @@ const Message: SFC<MessageProps> = ({className, message}) => {
   return (
     <>
       <S.Container className={className} onMouseOut={handleMouseOut} onMouseOver={handleMouseOver}>
-        <Avatar src={sender.avatar} />
+        <Link to={`/profile/${sender.id}`}>
+          <Avatar src={sender.avatar} />
+        </Link>
         <S.Right>
           <S.Header>
             <S.HeaderLeft>
-              <S.DisplayName>{sender.username}</S.DisplayName>
+              <S.DisplayName onClick={handleClick}>{sender.username}</S.DisplayName>
               <S.Date>{shortDate(modified_date, true)}</S.Date>
             </S.HeaderLeft>
             <S.HeaderRight>{renderTools()}</S.HeaderRight>
