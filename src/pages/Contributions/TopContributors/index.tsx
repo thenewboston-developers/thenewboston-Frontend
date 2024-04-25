@@ -23,7 +23,7 @@ const TopContributors: FC<TopContributorsProps> = ({className, contributions}) =
     return (
       <S.ContributorList>
         {topContributors.map((contributor) => (
-          <S.ContributorContainer>
+          <S.ContributorContainer key={contributor.user.id}>
             <S.UserLabelContainer>
               <S.PositionIcon src={contributor.positionIcon || DefaultAvatar} alt={`Position ${contributor.user.id}`} />
               <S.UserLabel
