@@ -33,6 +33,10 @@ const secondaryMixin = css`
   }
 `;
 
+const outlineMixin = css`
+  background: transparent;
+`;
+
 const successMixin = css`
   background: ${colors.palette.green['300']};
 
@@ -41,18 +45,28 @@ const successMixin = css`
   }
 `;
 
+export const Container = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`;
+
 export const Button = styled.button<{$color: ButtonColor; $hasIcon: boolean}>`
-  background: ${colors.palette.red['400']};
+  background: ${colors.primary};
   border-radius: ${`${BUTTON_HEIGHT / 2}px`};
-  border: 1px solid transparent;
   color: ${colors.white};
   cursor: pointer;
+  text-align: center;
   display: block;
   font-family: ${fonts.family.default};
   font-size: 14px;
   font-weight: ${fonts.weight.bold};
   height: ${`${BUTTON_HEIGHT}px`};
   padding: 0 12px;
+  border: none;
+  width: fit-content;
+  line-height: 19px;
+  min-width: 130px;
   transition: all 0.1s;
 
   &:hover {
@@ -62,6 +76,7 @@ export const Button = styled.button<{$color: ButtonColor; $hasIcon: boolean}>`
   ${({$color}) => {
     if ($color === ButtonColor.secondary) return secondaryMixin;
     if ($color === ButtonColor.success) return successMixin;
+    if ($color === ButtonColor.outline) return outlineMixin;
     return;
   }}
 

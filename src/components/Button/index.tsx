@@ -9,7 +9,7 @@ export interface ButtonProps {
   color?: ButtonColor;
   dirty?: boolean;
   disabled?: boolean;
-  iconLeft?: string;
+  iconLeft?: React.ReactNode;
   iconRight?: string;
   isSubmitting?: boolean;
   isValid?: boolean;
@@ -40,13 +40,18 @@ const Button: SFC<ButtonProps> = ({
     }
   }, [dirty, disabled, isSubmitting, isValid, type]);
 
-  const renderButtonContent = () => (
-    <>
-      {iconLeft ? <S.IconLeft color="white" path={iconLeft} size="18px" /> : null}
-      {text}
-      {iconRight ? <S.IconRight color="white" path={iconRight} size="18px" /> : null}
-    </>
-  );
+  const renderButtonContent = () => {
+    if (iconLeft || iconRight)
+      return (
+        <S.Container>
+          {iconLeft ? iconLeft : null}
+          {text}
+          {iconRight ? <S.IconRight color="white" path={iconRight} size="18px" /> : null}
+        </S.Container>
+      );
+
+    return text;
+  };
 
   return (
     <S.Button

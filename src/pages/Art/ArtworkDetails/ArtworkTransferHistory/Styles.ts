@@ -1,12 +1,15 @@
 import styled from 'styled-components';
+import {fonts} from 'styles';
 
 export const ArtTransfers = styled.div`
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(4, 1fr);
-  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
 `;
 
-export const Container = styled.div`
-  margin-top: 32px;
+export const Header = styled.h2`
+  font-weight: ${fonts.weight.semiBold};
+  font-size: 24px;
+  line-height: 34px;
 `;
+
+export const Container = styled.div``;

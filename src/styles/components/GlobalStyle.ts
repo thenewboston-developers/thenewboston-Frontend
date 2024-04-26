@@ -9,7 +9,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     background: ${colors.background};
-    color: ${colors.primary};
+    color: ${colors.black};
     font-family: ${fonts.family.default};
     font-size: 14px;
     font-weight: ${fonts.weight.regular};
@@ -17,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: ${colors.primary};
+    color: ${colors.black};
     text-decoration: none;
 
     &:hover {

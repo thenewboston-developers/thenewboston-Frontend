@@ -5,10 +5,11 @@ const colors = {
   backgroundDark: '#22272e',
   black: '#000000',
   border: '#efeff4',
-  primary: '#0f1419',
+  primary: '#EA4052',
   secondary: '#536471',
   white: '#ffffff',
   whiteHover: '#f3f4f6',
+  gray: '#747474',
   palette: {
     blue: {
       '100': '#d1e9f5',
