@@ -7,6 +7,19 @@ import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
 import UserDetails from './UserDetails';
 import * as S from './Styles';
+import PostIcon from 'assets/post.svg';
+import ArtworkIcon from 'assets/artwork.svg';
+import FollowerIcon from 'assets/followers.svg';
+import FollowingIcon from 'assets/following.svg';
+import InvivationIcon from 'assets/invitation.svg';
+
+const IconMapper = {
+  Artworks: ArtworkIcon,
+  Followers: FollowerIcon,
+  Following: FollowingIcon,
+  Invitations: InvivationIcon,
+  Posts: PostIcon,
+};
 
 const Layout: SFC = ({className}) => {
   const {id} = useParams();
@@ -19,7 +32,9 @@ const Layout: SFC = ({className}) => {
   const renderTab = (displayName: string, url: string) => {
     return (
       <Tab isActive={location.pathname === url} onClick={() => navigate(url)}>
-        {displayName}
+        {/* @ts-expect-error dasd sd */}
+        {<img src={IconMapper[displayName]} height={20} width={20} />}
+        <span>{displayName}</span>
       </Tab>
     );
   };

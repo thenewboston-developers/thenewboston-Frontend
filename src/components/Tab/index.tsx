@@ -2,7 +2,7 @@ import {GenericVoidFunction, SFC} from 'types';
 import * as S from './Styles';
 
 export interface TabProps {
-  children: string;
+  children: React.ReactNode;
   isActive: boolean;
   onClick: GenericVoidFunction;
 }
