@@ -13,13 +13,12 @@ export const Container = styled.div`
 `;
 
 export const HeaderContainer = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
   gap: 8px;
 `;
 
 export const Icon = styled.img`
-  width: 40px;
   height: 20px;
 `;
 
