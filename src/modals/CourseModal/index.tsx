@@ -1,11 +1,14 @@
 import {ChangeEvent, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
-import {Course, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
+import {AppDispatch, Course, SFC} from 'types';
+import {ToastType} from 'enums';
+import {displayToast, displayErrorToast} from 'utils/toasts';
 import {Field, Form, Formik} from 'formik';
 import {FileInput} from 'components/FormElements';
 import {PublicationStatus} from 'enums/publicationStatus';
 import Button, {ButtonType} from 'components/Button';
+import {createCourse, updateCourse} from 'dispatchers/courses';
 import ImagePreview from 'components/ImagePreview';
 import yup from 'utils/yup';
 import * as S from './Styles';
@@ -17,6 +20,7 @@ export interface CourseModalProps {
 
 const CourseModal: SFC<CourseModalProps> = ({className, close, course}) => {
   const [previewThumbnail, setPreviewThumbnail] = useState<string | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   const initialValues = useMemo(
     () => ({
@@ -50,15 +54,15 @@ const CourseModal: SFC<CourseModalProps> = ({className, close, course}) => {
       const requestData = new FormData();
       requestData.append('name', values.name);
       requestData.append('description', values.description);
-      requestData.append('thumbnail', values.thumbnail);
+      if (initialValues.thumbnail !== values.thumbnail) requestData.append('thumbnail', values.thumbnail);
       requestData.append('publication_status', String(values.publication_status));
 
       if (course) {
-        alert('Update course');
-        // await dispatch(updateCourse(course.id, requestData));
+        await dispatch(updateCourse(course.id, requestData));
+        displayToast('Course updated successfully.', ToastType.SUCCESS);
       } else {
-        alert('Add course');
-        // await dispatch(createCourse(requestData));
+        await dispatch(createCourse(requestData));
+        displayToast('Course created successfully.', ToastType.SUCCESS);
       }
 
       close();

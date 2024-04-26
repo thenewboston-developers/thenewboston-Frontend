@@ -1,8 +1,23 @@
 import {store} from 'store';
-import {getCourses as _getCourses, GetCoursesParams} from 'api/courses';
-import {resetCourses as _resetCourses, setCourses, startLoading} from 'store/courses';
+import {
+  createCourse as _createCourse,
+  getCourses as _getCourses,
+  updateCourse as _updateCourse,
+  GetCoursesParams,
+} from 'api/courses';
+import {resetCourses as _resetCourses, setCourse, setCourses, startLoading} from 'store/courses';
 import {AppDispatch} from 'types';
 import {getNextUrlFromState} from 'utils/urls';
+
+export const createCourse = (data: FormData) => async (dispatch: AppDispatch) => {
+  const responseData = await _createCourse(data);
+  dispatch(setCourse(responseData));
+};
+
+export const updateCourse = (id: number, data: FormData) => async (dispatch: AppDispatch) => {
+  const responseData = await _updateCourse(id, data);
+  dispatch(setCourse(responseData));
+};
 
 export const resetCourses = () => (dispatch: AppDispatch) => {
   dispatch(_resetCourses());

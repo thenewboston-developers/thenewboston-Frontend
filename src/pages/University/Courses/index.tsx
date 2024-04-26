@@ -1,6 +1,7 @@
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {PublicationStatus} from 'enums';
 import {AppDispatch, SFC} from 'types';
 import {Col, Row} from 'styles/components/GridStyle';
 import {displayErrorToast} from 'utils/toasts';
@@ -36,7 +37,7 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
     if (selfCourses && self.id) {
       return {instructor_id: self.id};
     } else {
-      return {};
+      return {publication_status: PublicationStatus.PUBLISHED};
     }
   }, [selfCourses, self.id]);
 
@@ -80,7 +81,7 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
             <Row>
               {courseList.map((course) => (
                 <Col size={4} key={course.id}>
-                  <Course course={course} />
+                  <Course course={course} selfCourse={selfCourses} />
                 </Col>
               ))}
             </Row>
