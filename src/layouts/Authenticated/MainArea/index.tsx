@@ -19,6 +19,7 @@ import {
   PATH_CONTRIBUTIONS,
   PATH_CORES,
   PATH_COURSES,
+  PATH_COURSES_SELF,
   PATH_DEFAULT,
   PATH_EXCHANGE,
   PATH_FEED,
@@ -47,6 +48,7 @@ const MainArea: SFC = ({className}) => {
         <Route path={PATH_PROFILE} element={<Profile />} />
         <Route path={PATH_SHOP} element={<Shop />} />
         <Route path={PATH_COURSES} element={<Courses />} />
+        <Route path={PATH_COURSES_SELF} element={<Courses selfCourses={true} />} />
         <Route path={PATH_LECTURES} element={<Lectures />} />
         <Route path={PATH_WALLETS} element={<Wallets />} />
       </Routes>
