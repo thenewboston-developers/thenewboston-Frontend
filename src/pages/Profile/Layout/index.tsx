@@ -13,6 +13,8 @@ import FollowerIcon from 'assets/followers.svg';
 import FollowingIcon from 'assets/following.svg';
 import InvivationIcon from 'assets/invitation.svg';
 
+type IconName = 'Artworks' | 'Followers' | 'Following' | 'Invitations' | 'Posts';
+
 const IconMapper = {
   Artworks: ArtworkIcon,
   Followers: FollowerIcon,
@@ -29,10 +31,9 @@ const Layout: SFC = ({className}) => {
 
   const userId = id ? parseInt(id, 10) : null;
 
-  const renderTab = (displayName: string, url: string) => {
+  const renderTab = (displayName: IconName, url: string) => {
     return (
       <Tab isActive={location.pathname === url} onClick={() => navigate(url)}>
-        {/* @ts-expect-error dasd sd */}
         {<img src={IconMapper[displayName]} height={20} width={20} />}
         <span>{displayName}</span>
       </Tab>
