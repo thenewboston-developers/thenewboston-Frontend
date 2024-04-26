@@ -12,6 +12,17 @@ export const Container = styled.div`
   padding: 0 26px;
 `;
 
+export const HeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const Icon = styled.img`
+  width: 40px;
+  height: 20px;
+`;
+
 export const Img = styled.img`
   height: 100%;
   width: auto;
