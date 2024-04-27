@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import {PublicationStatus} from 'enums';
 import {CourseReadSerializer, PaginatedResponse} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 import {getApiUrl} from 'utils/urls';
@@ -16,10 +17,9 @@ export const createCourse = async (data: FormData): Promise<CourseReadSerializer
   }
 };
 
-export const updateCourse = async (id: number, data: FormData): Promise<CourseReadSerializer> => {
+export const deleteCourse = async (id: number): Promise<void> => {
   try {
-    const response = await axios.patch<CourseReadSerializer>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
-    return response.data;
+    await axios.delete(`${BASE_URL}/${id}`, authorizationHeaders());
   } catch (error) {
     console.error(error);
     throw error;
@@ -28,6 +28,7 @@ export const updateCourse = async (id: number, data: FormData): Promise<CourseRe
 
 export interface GetCoursesParams {
   instructor_id?: number | null;
+  publication_status?: PublicationStatus;
 }
 
 export const getCourses = async (
@@ -40,6 +41,16 @@ export const getCourses = async (
       params,
       ...authorizationHeaders(),
     });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const updateCourse = async (id: number, data: FormData): Promise<CourseReadSerializer> => {
+  try {
+    const response = await axios.patch<CourseReadSerializer>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
     return response.data;
   } catch (error) {
     console.error(error);

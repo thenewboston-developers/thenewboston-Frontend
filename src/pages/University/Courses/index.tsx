@@ -1,17 +1,17 @@
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {PublicationStatus} from 'enums';
 import {AppDispatch, SFC} from 'types';
 import {Col, Row} from 'styles/components/GridStyle';
 import {displayErrorToast} from 'utils/toasts';
-import {useToggle} from 'hooks';
 import {getCourses as _getCourses, resetCourses as _resetCourses} from 'dispatchers/courses';
 import {getCourses as _getCoursesState} from 'selectors/state';
 import {getSelf} from 'selectors/state';
-import CourseModal from 'modals/CourseModal';
-import Course from './Course';
+import {PublicationStatus} from 'enums';
+import {useToggle} from 'hooks';
 import Button from 'components/Button';
+import Course from './Course';
+import CourseModal from 'modals/CourseModal';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';

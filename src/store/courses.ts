@@ -37,8 +37,11 @@ const courses = createSlice({
     startLoading: (state) => {
       state.isLoading = true;
     },
+    unsetCourse: (state, {payload: id}: PayloadAction<number>) => {
+      state.courses = state.courses.filter((course) => course.id !== id);
+    },
   },
 });
 
-export const {setCourse, setCourses, startLoading, resetCourses} = courses.actions;
+export const {setCourse, setCourses, startLoading, resetCourses, unsetCourse} = courses.actions;
 export default courses.reducer;

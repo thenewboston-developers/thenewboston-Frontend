@@ -3,9 +3,10 @@ import Icon from '@mdi/react';
 
 import {Course as TCourse, SFC} from 'types';
 import {getTimeAgo} from 'utils/dates';
-import {PATH_LECTURES} from 'constants/paths';
+import {PATH_LECTURES, PATH_LECTURES_SELF} from 'constants/paths';
 import {PublicationStatus} from 'enums';
 import {useToggle} from 'hooks';
+import CourseDeleteModal from 'modals/CourseDeleteModal';
 import CourseModal from 'modals/CourseModal';
 import Badge, {BadgeStyle} from 'components/Badge';
 import ReadMoreLess from 'components/ReadMoreLess';
@@ -18,6 +19,7 @@ export interface CourseProps {
 }
 
 const Course: SFC<CourseProps> = ({className, course, selfCourse = false}) => {
+  const [courseDeleteModalIsOpen, toggleCourseDeleteModal] = useToggle(false);
   const [courseModalIsOpen, toggleCourseModal] = useToggle(false);
 
   const {created_date, description, publication_status, name, thumbnail, instructor} = course;
@@ -38,7 +40,7 @@ const Course: SFC<CourseProps> = ({className, course, selfCourse = false}) => {
             <span onClick={toggleCourseModal}>
               <S.Icon path={mdiFileEdit} size={1} color="skyblue" />
             </span>
-            <span>
+            <span onClick={toggleCourseDeleteModal}>
               <S.Icon path={mdiTrashCan} size={1} color="red" />
             </span>
           </div>
@@ -54,7 +56,7 @@ const Course: SFC<CourseProps> = ({className, course, selfCourse = false}) => {
         {renderActionButtons()}
         <S.Img alt="image" src={thumbnail} />
         <S.Content>
-          <S.Link to={`${PATH_LECTURES}?course_id=${course.id}`}>
+          <S.Link to={`${selfCourse ? PATH_LECTURES_SELF : PATH_LECTURES}?course_id=${course.id}`}>
             <S.Name>{name}</S.Name>
           </S.Link>
           <S.Description>
@@ -75,6 +77,7 @@ const Course: SFC<CourseProps> = ({className, course, selfCourse = false}) => {
             </S.FooterItem>
           </S.Footer>
         </S.Content>
+        {courseDeleteModalIsOpen ? <CourseDeleteModal courseId={course.id} close={toggleCourseDeleteModal} /> : null}
         {courseModalIsOpen ? <CourseModal course={course} close={toggleCourseModal} /> : null}
       </S.Container>
     </>

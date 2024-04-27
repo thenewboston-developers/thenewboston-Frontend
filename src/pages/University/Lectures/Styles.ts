@@ -6,6 +6,11 @@ export const Container = styled.div`
   padding: 24px 16px;
 `;
 
-export const H3 = styled.h3`
-  margin-bottom: 10px;
+export const HeadingSection = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
 `;
+
+export const H3 = styled.h3``;

@@ -7,6 +7,7 @@ export const PATH_EXCHANGE = '/exchange/*';
 export const PATH_FEED = '/feed';
 export const PATH_IA = '/ia/:id?';
 export const PATH_LECTURES = '/university/lectures';
+export const PATH_LECTURES_SELF = '/university/lectures/self';
 export const PATH_NOTIFICATIONS = '/notifications';
 export const PATH_PROFILE = '/profile/:id/*';
 export const PATH_SHOP = '/shop/*';
