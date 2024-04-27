@@ -13,7 +13,7 @@ export const Field = styled(UField)`
   ${inputStyle};
   border: 1px solid ${({$error}) => ($error ? colors.palette.red['400'] : colors.border)};
   display: block;
-  width: 260px;
+  width: 100%;
 `;
 
 export const Label = styled.div`

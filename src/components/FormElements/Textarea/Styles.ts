@@ -18,7 +18,7 @@ export const Field = styled(UField)`
   width: 100%;
 `;
 
-export const Label = styled.div`
+export const Label = styled.h2`
   font-size: 12px;
   margin-bottom: 8px;
 `;
