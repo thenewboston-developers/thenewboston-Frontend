@@ -132,6 +132,7 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
                     key={index}
                     lecture={lecture}
                     onClick={onLectureClick}
+                    selfLecture={selfLectures}
                   />
                 ))}
               </InfiniteScroll>
@@ -141,7 +142,19 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
       );
     }
 
-    return <EmptyPage bottomText="No lectures to display." graphic={LeavesEmptyState} topText="Nothing here!" />;
+    if (selfLectures) {
+      return (
+        <EmptyPage
+          actionText="Click here to add a new lecture"
+          onActionTextClick={toggleLectureModal}
+          bottomText="No lectures to display."
+          graphic={LeavesEmptyState}
+          topText="Nothing here!"
+        />
+      );
+    } else {
+      return <EmptyPage bottomText="No lectures to display." graphic={LeavesEmptyState} topText="Nothing here!" />;
+    }
   };
 
   return (

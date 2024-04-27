@@ -1,6 +1,13 @@
 import styled from 'styled-components';
 
 import {colors} from 'styles';
+import UIcon from '@mdi/react';
+
+export const ActionButtonsContainer = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+`;
 
 export const Container = styled.div<{selected: boolean}>`
   align-items: center;
@@ -41,6 +48,14 @@ export const Img = styled.img`
   cursor: pointer;
   object-fit: cover;
   width: 120px;
+`;
+
+export const Icon = styled(UIcon)`
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
 export const LectureNumber = styled.div`

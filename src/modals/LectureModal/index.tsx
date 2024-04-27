@@ -43,7 +43,7 @@ const LectureModal: SFC<LectureModalProps> = ({className, course_id, close, lect
       requestData.append('youtube_id', values.youtube_id);
 
       if (lecture) {
-        // await dispatch(updateLecture(lecture.id, requestData));
+        await dispatch(updateLecture(lecture.id, requestData));
         displayToast('Lecture updated successfully.', ToastType.SUCCESS);
       } else {
         await dispatch(createLecture(requestData));
@@ -70,7 +70,7 @@ const LectureModal: SFC<LectureModalProps> = ({className, course_id, close, lect
   return (
     <S.Modal className={className} close={close} header={lecture ? 'Edit Lecture' : 'Add Lecture'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
-        {({dirty, errors, isSubmitting, setFieldValue, touched, isValid, values}) => (
+        {({dirty, errors, isSubmitting, touched, isValid}) => (
           <Form>
             <S.Input errors={errors} label="Name" name="name" touched={touched} />
             <S.Input errors={errors} label="Description" name="description" touched={touched} />

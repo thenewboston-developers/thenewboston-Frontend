@@ -6,6 +6,7 @@ import UUserLabel from 'components/UserLabel';
 import UIcon from '@mdi/react';
 
 export const ActionButtonsContainer = styled.div`
+  align-items: center;
   display: flex;
   justify-content: space-between;
   padding: 5px 10px;
