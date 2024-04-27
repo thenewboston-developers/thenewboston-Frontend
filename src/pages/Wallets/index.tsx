@@ -17,6 +17,8 @@ import {displayErrorToast} from 'utils/toasts';
 import MenuItem from './MenuItem';
 import WalletDeposit from './WalletDeposit';
 import WalletWithdraw from './WalletWithdraw';
+import DepositIcon from 'assets/deposit.svg';
+import WithdrawlIcon from 'assets/withdrawl.svg';
 import * as S from './Styles';
 
 const Wallets: SFC = ({className}) => {
@@ -110,10 +112,12 @@ const Wallets: SFC = ({className}) => {
   const renderTabs = () => (
     <Tabs>
       <Tab isActive={manager.activeWalletTab === WalletTab.DEPOSIT} onClick={() => handleTabClick(WalletTab.DEPOSIT)}>
-        Deposit
+        {<img src={DepositIcon} height={16} width={16} />}
+        <span>Deposit</span>
       </Tab>
       <Tab isActive={manager.activeWalletTab === WalletTab.WITHDRAW} onClick={() => handleTabClick(WalletTab.WITHDRAW)}>
-        Withdraw
+        {<img src={WithdrawlIcon} height={16} width={16} />}
+        <span>Withdrawl</span>
       </Tab>
     </Tabs>
   );
