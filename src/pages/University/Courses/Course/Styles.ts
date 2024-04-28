@@ -3,6 +3,22 @@ import styled from 'styled-components';
 
 import {colors} from 'styles';
 import UUserLabel from 'components/UserLabel';
+import UIcon from '@mdi/react';
+
+export const ActionButtonsContainer = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+`;
+
+export const Icon = styled(UIcon)`
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
 
 export const Container = styled.div`
   border-radius: 4px;
