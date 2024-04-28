@@ -6,6 +6,8 @@ import {SFC} from 'types';
 import * as S from './Styles';
 import Buy from './Buy';
 import Sell from './Sell';
+import BuyIcon from 'assets/buy.svg';
+import SellIcon from 'assets/sell.svg';
 
 enum TradeTab {
   BUY = 'BUY',
@@ -33,9 +35,11 @@ const OrderTools: SFC = ({className}) => {
     return (
       <S.Tabs>
         <Tab isActive={activeTab === TradeTab.BUY} onClick={() => setActiveTab(TradeTab.BUY)}>
+          <img src={BuyIcon} width={16} height={16} alt="buy" />
           Buy
         </Tab>
         <Tab isActive={activeTab === TradeTab.SELL} onClick={() => setActiveTab(TradeTab.SELL)}>
+          <img src={SellIcon} width={16} height={16} alt="sell" />
           Sell
         </Tab>
       </S.Tabs>
