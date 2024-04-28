@@ -4,7 +4,7 @@ import {
   mdiAccount,
   mdiAccountGroup,
   mdiBell,
-  mdiBookEducation,
+  mdiSchool,
   mdiBrush,
   mdiExitToApp,
   mdiFaceWoman,
@@ -47,7 +47,7 @@ const LeftNav: SFC = ({className}) => {
         <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications" />
         <MenuLink icon={mdiAccount} rootPath={`/profile/${self.id}`} text="Profile" to={`/profile/${self.id}`} />
         <MenuLink icon={mdiShopping} rootPath="/shop" text="Shop" to="/shop/buy/catalog" />
-        <MenuLink icon={mdiBookEducation} rootPath={`${PATH_COURSES}`} text="University" to={`${PATH_COURSES}`} />
+        <MenuLink icon={mdiSchool} rootPath={`${PATH_COURSES}`} text="University" to={`${PATH_COURSES}`} />
         <MenuLink icon={mdiWalletBifoldOutline} rootPath="/wallets" text="Wallets" to="/wallets" />
         <CreatePostButton />
       </S.Top>
