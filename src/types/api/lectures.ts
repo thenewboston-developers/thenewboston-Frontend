@@ -1,11 +1,10 @@
-import {CourseReadSerializer} from './courses';
-import {CreatedModified} from 'types/createdModified';
 import {PublicationStatus} from 'enums/publicationStatus';
+import {CreatedModified} from 'types/createdModified';
+import {CourseReadSerializer} from './courses';
 
 export interface LectureReadSerializer extends CreatedModified {
   course: CourseReadSerializer;
   description: string;
-  duration_seconds: number;
   id: number;
   name: string;
   position: number;
