@@ -50,9 +50,9 @@ const Course: SFC<CourseProps> = ({className, course, selfCourse = false}) => {
     return null;
   };
 
-  return (
-    <>
-      <S.Container className={className}>
+  const renderContent = () => {
+    return (
+      <>
         {renderActionButtons()}
         <S.Img alt="image" src={thumbnail} />
         <S.Content>
@@ -77,8 +77,24 @@ const Course: SFC<CourseProps> = ({className, course, selfCourse = false}) => {
             </S.FooterItem>
           </S.Footer>
         </S.Content>
-        {courseDeleteModalIsOpen ? <CourseDeleteModal courseId={course.id} close={toggleCourseDeleteModal} /> : null}
-        {courseModalIsOpen ? <CourseModal course={course} close={toggleCourseModal} /> : null}
+      </>
+    );
+  };
+
+  const renderCourseDeleteModal = () => {
+    return courseDeleteModalIsOpen ? <CourseDeleteModal courseId={course.id} close={toggleCourseDeleteModal} /> : null;
+  };
+
+  const renderCourseModal = () => {
+    return courseModalIsOpen ? <CourseModal course={course} close={toggleCourseModal} /> : null;
+  };
+
+  return (
+    <>
+      <S.Container className={className}>
+        {renderContent()}
+        {renderCourseModal()}
+        {renderCourseDeleteModal()}
       </S.Container>
     </>
   );

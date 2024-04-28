@@ -58,27 +58,45 @@ const Lecture: FC<LectureProps> = ({index, lecture, onClick, isSelected = false,
     onClick(lecture);
   };
 
+  const renderContent = () => {
+    return (
+      <>
+        <S.LectureNumber>{index + 1}</S.LectureNumber>
+        <S.Img alt={`${name} thumbnail`} src={thumbnail_url} onClick={handleClick} />
+        <S.Content>
+          {renderActionButtons()}
+          <S.Name onClick={handleClick}>{name}</S.Name>
+          <S.Description>
+            <ReadMoreLess text={description} maxLength={100} />
+          </S.Description>
+          <S.Footer>
+            <S.FooterItem>
+              <Icon path={mdiCalendarOutline} size={1} />
+              {getTimeAgo(created_date)}
+            </S.FooterItem>
+          </S.Footer>
+        </S.Content>
+      </>
+    );
+  };
+
+  const renderLectureDeleteModal = () => {
+    return lectureDeleteModalIsOpen ? (
+      <LectureDeleteModal lectureId={lecture.id} close={toggleLectureDeleteModal} />
+    ) : null;
+  };
+
+  const renderLectureModal = () => {
+    return lectureModalIsOpen ? (
+      <LectureModal lecture={lecture} course_id={String(lecture.course.id)} close={toggleLectureModal} />
+    ) : null;
+  };
+
   return (
     <S.Container selected={isSelected}>
-      <S.LectureNumber>{index + 1}</S.LectureNumber>
-      <S.Img alt={`${name} thumbnail`} src={thumbnail_url} onClick={handleClick} />
-      <S.Content>
-        {renderActionButtons()}
-        <S.Name onClick={handleClick}>{name}</S.Name>
-        <S.Description>
-          <ReadMoreLess text={description} maxLength={100} />
-        </S.Description>
-        <S.Footer>
-          <S.FooterItem>
-            <Icon path={mdiCalendarOutline} size={1} />
-            {getTimeAgo(created_date)}
-          </S.FooterItem>
-        </S.Footer>
-      </S.Content>
-      {lectureDeleteModalIsOpen ? <LectureDeleteModal lectureId={lecture.id} close={toggleLectureDeleteModal} /> : null}
-      {lectureModalIsOpen ? (
-        <LectureModal lecture={lecture} course_id={String(lecture.course.id)} close={toggleLectureModal} />
-      ) : null}
+      {renderContent()}
+      {renderLectureModal()}
+      {renderLectureDeleteModal()}
     </S.Container>
   );
 };

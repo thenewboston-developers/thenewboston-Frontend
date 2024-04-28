@@ -6,7 +6,7 @@ export const Container = styled.div`
   padding: 24px 16px;
 `;
 
-export const HeadingSection = styled.div`
+export const SectionHeading = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;

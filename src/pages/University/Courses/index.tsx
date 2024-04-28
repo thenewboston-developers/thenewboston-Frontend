@@ -75,29 +75,37 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
 
     if (courseList.length) {
       return (
-        <S.CoursesContainer>
-          {selfCourses && <S.SectionHeading heading="My Courses" rightContent={renderAddCourseButton()} />}
-          <InfiniteScroll dataLength={courseList.length} hasMore={hasMore} next={fetchMoreCourses}>
-            <Row>
-              {courseList.map((course) => (
-                <Col size={4} key={course.id}>
-                  <Course course={course} selfCourse={selfCourses} />
-                </Col>
-              ))}
-            </Row>
-          </InfiniteScroll>
-        </S.CoursesContainer>
+        <InfiniteScroll dataLength={courseList.length} hasMore={hasMore} next={fetchMoreCourses}>
+          <Row>
+            {courseList.map((course) => (
+              <Col size={4} key={course.id}>
+                <Course course={course} selfCourse={selfCourses} />
+              </Col>
+            ))}
+          </Row>
+        </InfiniteScroll>
       );
     }
 
     return <EmptyPage bottomText="No courses to display." graphic={LeavesEmptyState} topText="Nothing here!" />;
   };
 
+  const renderSectionHeading = () => {
+    return selfCourses && <S.SectionHeading heading="My Courses" rightContent={renderAddCourseButton()} />;
+  };
+
+  const renderCourseModal = () => {
+    return courseModalIsOpen ? <CourseModal close={toggleCourseModal} /> : null;
+  };
+
   return (
     <S.Container className={className}>
       <Toolbar />
-      {renderContent()}
-      {courseModalIsOpen ? <CourseModal close={toggleCourseModal} /> : null}
+      <S.CoursesContainer>
+        {renderSectionHeading()}
+        {renderContent()}
+      </S.CoursesContainer>
+      {renderCourseModal()}
     </S.Container>
   );
 };

@@ -24,6 +24,7 @@ const LectureModal: SFC<LectureModalProps> = ({className, course_id, close, lect
       course_id: course_id,
       description: lecture?.description || '',
       name: lecture?.name || '',
+      position: lecture?.position || '',
       publication_status: lecture?.publication_status == PublicationStatus.PUBLISHED ? true : false,
       thumbnail_url: lecture?.thumbnail_url || '',
       youtube_id: lecture?.youtube_id || '',
@@ -38,6 +39,7 @@ const LectureModal: SFC<LectureModalProps> = ({className, course_id, close, lect
       requestData.append('course_id', values?.course_id || '');
       requestData.append('description', values.description);
       requestData.append('name', values.name);
+      requestData.append('position', String(values.position));
       requestData.append('publication_status', String(values.publication_status));
       requestData.append('thumbnail_url', values.thumbnail_url);
       requestData.append('youtube_id', values.youtube_id);
@@ -61,8 +63,9 @@ const LectureModal: SFC<LectureModalProps> = ({className, course_id, close, lect
     return yup.object().shape({
       description: yup.string().required('Description is required'),
       name: yup.string().required('Name is required'),
+      position: yup.number().positive('Ordering number must be a positive number'),
       publication_status: yup.boolean(),
-      thumbnail_url: yup.mixed(),
+      thumbnail_url: yup.mixed().required('Thumbnail URL is required'),
       youtube_id: yup.string().required('Youtube ID is required'),
     });
   }, []);
@@ -76,6 +79,7 @@ const LectureModal: SFC<LectureModalProps> = ({className, course_id, close, lect
             <S.Input errors={errors} label="Description" name="description" touched={touched} />
             <S.Input errors={errors} label="Youtube ID" name="youtube_id" touched={touched} />
             <S.Input errors={errors} label="Thumbnail URL" name="thumbnail_url" touched={touched} />
+            <S.Input errors={errors} label="Ordering Number" name="position" touched={touched} />
             <S.Checkbox errors={errors} label="Publish Lecture" name="publication_status" touched={touched} />
             <Button
               dirty={dirty}

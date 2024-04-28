@@ -87,19 +87,19 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
     setSelectedLecture(lecture);
   };
 
-  const renderHeadingSection = () => {
+  const renderSectionHeading = () => {
     if (selfLectures) {
       return (
-        <S.HeadingSection>
+        <S.SectionHeading>
           <S.H3>My Lectures</S.H3>
           <Button onClick={toggleLectureModal} text="Add Lecture" />
-        </S.HeadingSection>
+        </S.SectionHeading>
       );
     }
     return (
-      <S.HeadingSection>
+      <S.SectionHeading>
         <S.H3>Lectures</S.H3>
-      </S.HeadingSection>
+      </S.SectionHeading>
     );
   };
 
@@ -123,7 +123,7 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
           <Row>
             <Col size={7}>{selectedLecture && <LectureVideoPlayer lecture={selectedLecture} />}</Col>
             <Col size={5}>
-              {renderHeadingSection()}
+              {renderSectionHeading()}
               <InfiniteScroll dataLength={lecturesList.length} hasMore={hasMore} next={fetchMoreLectures}>
                 {lecturesList.map((lecture, index) => (
                   <Lecture
@@ -157,10 +157,14 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
     }
   };
 
+  const renderLectureModal = () => {
+    return lectureModalIsOpen ? <LectureModal close={toggleLectureModal} course_id={course_id} /> : null;
+  };
+
   return (
     <S.Container className={className}>
       {renderContent()}
-      {lectureModalIsOpen ? <LectureModal close={toggleLectureModal} course_id={course_id} /> : null}
+      {renderLectureModal()}
     </S.Container>
   );
 };
