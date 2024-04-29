@@ -23,7 +23,7 @@ const LectureModal: SFC<LectureModalProps> = ({className, course_id, close, lect
     () => ({
       course_id: course_id,
       description: lecture?.description || '',
-      isPublished: lecture?.publication_status == PublicationStatus.PUBLISHED ? true : false,
+      isPublished: lecture?.publication_status == PublicationStatus.PUBLISHED,
       name: lecture?.name || '',
       position: lecture?.position || '',
       thumbnail_url: lecture?.thumbnail_url || '',
