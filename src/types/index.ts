@@ -12,7 +12,7 @@ import {CreateInvitationRequest} from 'types/api/invitations';
 import {CreateMessageRequest} from 'types/api/messages';
 import {CreateOpenAIImageRequest, CreateOpenAIImageResponse} from 'types/api/openaiImages';
 import {CreateOrderRequest} from 'types/api/orders';
-import {CreateUserRequest, CreateUserResponse, UserReadSerializer, UserStatsReadSerializer} from 'types/api/users';
+import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
 import {LectureReadSerializer} from 'types/api/lectures';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
@@ -148,7 +148,6 @@ export {
   Trades,
   UpdateNotificationRequest,
   UserReadSerializer,
-  UserStatsReadSerializer,
   Users,
   Wallet,
   Wallets,

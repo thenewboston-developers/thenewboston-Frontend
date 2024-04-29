@@ -16,6 +16,10 @@ const useUser = (id: string | undefined): UserReadSerializer | null => {
     if (userId === self.id) {
       return {
         avatar: self.avatar,
+        // user stats are available in users state, not in self state.
+        default_wallet_balance: users[self.id]?.default_wallet_balance ?? undefined,
+        followers_count: users[self.id]?.followers_count ?? undefined,
+        following_count: users[self.id]?.following_count ?? undefined,
         id: self.id!,
         username: self.username!,
       };

@@ -5,6 +5,9 @@ import {Self} from 'types';
 
 const initialState: Self = {
   avatar: null,
+  default_wallet_balance: null,
+  followers_count: null,
+  following_count: null,
   id: null,
   username: null,
 };

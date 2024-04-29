@@ -41,6 +41,30 @@ export const ImgWrapper = styled.div`
   }
 `;
 
+export const TNBLogo = styled.img`
+  border-radius: 50%;
+  width: 15px;
+  margin: 0px 3px 0px 3px;
+`;
+
+export const Stats = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: start;
+  margin-top: 10px;
+  padding: 5px 0;
+
+  & > b {
+    margin: 0 5px;
+  }
+`;
+
 export const Username = styled.h1`
   margin-top: 16px;
+`;
+
+export const WalletBalance = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
 `;
