@@ -2,14 +2,15 @@ import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 
-import logo from 'assets/logo192.png';
 import {createFollower, deleteFollower, getFollowers} from 'api/followers';
-import DefaultAvatar from 'assets/default-avatar.png';
-import {useToggle, useUser} from 'hooks';
-import ProfileEditModal from 'modals/ProfileEditModal';
-import {getSelf} from 'selectors/state';
-import {FollowerReadSerializer, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
+import {FollowerReadSerializer, SFC} from 'types';
+import {formatNumber} from 'utils/numbers';
+import {getSelf} from 'selectors/state';
+import {useToggle, useUser} from 'hooks';
+import DefaultAvatar from 'assets/default-avatar.png';
+import logo from 'assets/logo192.png';
+import ProfileEditModal from 'modals/ProfileEditModal';
 import * as S from './Styles';
 
 const UserDetails: SFC = ({className}) => {
@@ -88,7 +89,7 @@ const UserDetails: SFC = ({className}) => {
     if (!user) return null;
     return (
       <S.Stats>
-        Followers: <b>{user.followers_count ?? 0}</b> | Followings: <b>{user.following_count ?? 0}</b>
+        Followings: <b>{user.following_count ?? 0}</b> | Followers: <b>{user.followers_count ?? 0}</b>
       </S.Stats>
     );
   };
@@ -97,7 +98,7 @@ const UserDetails: SFC = ({className}) => {
     if (!user || self.id !== user.id) return null;
     return (
       <S.WalletBalance>
-        Your Balance: <S.TNBLogo src={logo} /> <b>{user.default_wallet_balance ?? 0}</b>
+        Your Balance: <S.TNBLogo src={logo} /> <b>{formatNumber(user.default_wallet_balance ?? 0)}</b>
       </S.WalletBalance>
     );
   };
