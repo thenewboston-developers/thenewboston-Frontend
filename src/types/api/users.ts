@@ -4,6 +4,12 @@ export interface UserReadSerializer {
   username: string;
 }
 
+export interface UserStatsReadSerializer extends UserReadSerializer {
+  default_wallet_balance: number;
+  followers: number;
+  following: number;
+}
+
 export interface CreateUserRequest {
   invitation_code: string;
   password: string;
