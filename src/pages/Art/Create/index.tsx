@@ -128,7 +128,7 @@ const Create: SFC = ({className}) => {
                   </S.Row>
                   <S.Row>
                     <h3>Total fee</h3>
-                    <span>{+values.quantity * 1} TNB</span>
+                    <span>{values.quantity} TNB</span>
                   </S.Row>
                   <S.Row $gap={10}>
                     <S.Button
