@@ -25,8 +25,8 @@ const CourseModal: SFC<CourseModalProps> = ({className, close, course}) => {
   const initialValues = useMemo(
     () => ({
       description: course?.description || '',
-      isPublished: course?.publication_status == PublicationStatus.PUBLISHED ? true : false,
       name: course?.name || '',
+      publication_status: course?.publication_status == PublicationStatus.PUBLISHED ? true : false,
       thumbnail: course?.thumbnail || '',
     }),
     [course],
@@ -55,10 +55,7 @@ const CourseModal: SFC<CourseModalProps> = ({className, close, course}) => {
       requestData.append('name', values.name);
       requestData.append('description', values.description);
       if (initialValues.thumbnail !== values.thumbnail) requestData.append('thumbnail', values.thumbnail);
-      requestData.append(
-        'publication_status',
-        values.isPublished ? PublicationStatus.PUBLISHED : PublicationStatus.DRAFT,
-      );
+      requestData.append('publication_status', String(values.publication_status));
 
       if (course) {
         await dispatch(updateCourse(course.id, requestData));
@@ -78,8 +75,8 @@ const CourseModal: SFC<CourseModalProps> = ({className, close, course}) => {
   const validationSchema = useMemo(() => {
     return yup.object().shape({
       description: yup.string().required('Description is required'),
-      isPublished: yup.boolean(),
       name: yup.string().required('Name is required'),
+      publication_status: yup.boolean(),
       thumbnail: yup.mixed().required('Thumbnail is required'),
     });
   }, []);
@@ -103,7 +100,7 @@ const CourseModal: SFC<CourseModalProps> = ({className, close, course}) => {
                 src={previewThumbnail}
               />
             </S.ImageInput>
-            <S.Checkbox errors={errors} label="Publish Course" name="isPublished" touched={touched} />
+            <S.Checkbox errors={errors} label="Publish Course" name="publication_status" touched={touched} />
             <Button
               dirty={dirty}
               disabled={isSubmitting}

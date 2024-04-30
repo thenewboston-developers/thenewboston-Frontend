@@ -16,6 +16,7 @@ export const Field = styled(UField)`
   height: auto;
   resize: vertical;
   width: 100%;
+  border-radius: 10px;
 `;
 
 export const Label = styled.h2`
