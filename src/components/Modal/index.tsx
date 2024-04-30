@@ -20,8 +20,8 @@ const Modal: SFC<ModalProps> = ({children, className, close, disableOverlayClick
       <S.Overlay onClick={disableOverlayClick ? noop : close} />
       <S.Modal className={className}>
         <S.Header>
-          <span>{header}</span>
-          <Icon icon={mdiClose} onClick={close} size={16} />
+          <S.Text>{header}</S.Text>
+          <Icon icon={mdiClose} onClick={close} size={26} />
         </S.Header>
         <S.Content>{children}</S.Content>
       </S.Modal>

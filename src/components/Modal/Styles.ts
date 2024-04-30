@@ -21,13 +21,14 @@ export const Header = styled.div`
   font-weight: ${fonts.weight.bold};
   justify-content: space-between;
   margin-bottom: 36px;
-  padding: 16px 24px 0;
+  padding: 16px 24px 12px;
   position: relative;
+  border-bottom: 1px solid #f1f1f1;
 `;
 
 export const Modal = styled.div`
   background: #fff;
-  border-radius: 8px;
+  border-radius: 20px;
   left: 50%;
   position: fixed;
   top: 50%;
@@ -41,4 +42,9 @@ export const Overlay = styled.div`
   position: fixed;
   top: 0;
   width: 100vw;
+`;
+
+export const Text = styled.div`
+  font-size: 22px;
+  font-weight: 600;
 `;
