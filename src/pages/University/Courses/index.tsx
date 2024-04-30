@@ -18,6 +18,7 @@ import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Loader from 'components/Loader';
 import Toolbar from 'pages/University/Toolbar';
 import * as S from './Styles';
+import {UniversityHeader} from './Header';
 
 export interface CoursesProps {
   selfCourses?: boolean;
@@ -91,7 +92,9 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
   };
 
   const renderSectionHeading = () => {
-    return selfCourses && <S.SectionHeading heading="My Courses" rightContent={renderAddCourseButton()} />;
+    if (selfCourses) return <S.SectionHeading heading="My Courses" rightContent={renderAddCourseButton()} />;
+
+    return <UniversityHeader />;
   };
 
   const renderCourseModal = () => {
