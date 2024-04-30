@@ -3,7 +3,6 @@ import USectionHeading from 'components/SectionHeading';
 
 export const Container = styled.div`
   height: 100%;
-  overflow-y: auto;
 `;
 
 export const CoursesContainer = styled.div`

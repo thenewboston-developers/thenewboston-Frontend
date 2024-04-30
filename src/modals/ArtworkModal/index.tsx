@@ -1,7 +1,6 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, Dispatch, SetStateAction} from 'react';
 import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
-
 import Button, {ButtonType} from 'components/Button';
 import {Input, Select} from 'components/FormElements';
 import {createArtwork, updateArtwork} from 'dispatchers/artworks';
@@ -17,9 +16,19 @@ export interface ArtworkModalProps {
   close(): void;
   description?: string;
   imageUrl: string;
+  currentIndex?: number;
+  setIsImageSaved?: Dispatch<SetStateAction<number[]>>;
 }
 
-const ArtworkModal: SFC<ArtworkModalProps> = ({artwork, className, close, description, imageUrl}) => {
+const ArtworkModal: SFC<ArtworkModalProps> = ({
+  artwork,
+  className,
+  close,
+  description,
+  imageUrl,
+  currentIndex,
+  setIsImageSaved,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const priceCoreOptions = usePriceCoreOptions();
 
@@ -49,6 +58,9 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({artwork, className, close, descri
       } else {
         await dispatch(createArtwork({image_url: imageUrl, ...requestData}));
         displayToast('Artwork created!', ToastType.SUCCESS);
+        if (setIsImageSaved && (currentIndex === 0 || currentIndex)) {
+          setIsImageSaved((prev) => [...prev, currentIndex]);
+        }
       }
 
       close();

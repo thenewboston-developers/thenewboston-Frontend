@@ -3,7 +3,7 @@ import {Navigate, Route, Routes} from 'react-router-dom';
 import Art from 'pages/Art';
 import Contributions from 'pages/Contributions';
 import Cores from 'pages/Cores';
-import Courses from 'pages/University/Courses';
+import University from 'pages/University';
 import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
 import Ia from 'pages/Ia';
@@ -18,8 +18,8 @@ import {
   PATH_ART,
   PATH_CONTRIBUTIONS,
   PATH_CORES,
-  PATH_COURSES,
-  PATH_COURSES_SELF,
+  PATH_UNIVERSITY,
+  // PATH_COURSES_SELF,
   PATH_DEFAULT,
   PATH_EXCHANGE,
   PATH_FEED,
@@ -48,8 +48,8 @@ const MainArea: SFC = ({className}) => {
         <Route path={PATH_NOTIFICATIONS} element={<Notifications />} />
         <Route path={PATH_PROFILE} element={<Profile />} />
         <Route path={PATH_SHOP} element={<Shop />} />
-        <Route path={PATH_COURSES} element={<Courses />} />
-        <Route path={PATH_COURSES_SELF} element={<Courses selfCourses={true} />} />
+        <Route path={PATH_UNIVERSITY} element={<University />} />
+        {/* <Route path={PATH_COURSES_SELF} element={<Courses selfCourses={true} />} /> */}
         <Route path={PATH_LECTURES} element={<Lectures />} />
         <Route path={PATH_LECTURES_SELF} element={<Lectures selfLectures={true} />} />
         <Route path={PATH_WALLETS} element={<Wallets />} />

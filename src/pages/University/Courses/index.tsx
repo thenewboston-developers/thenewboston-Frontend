@@ -16,7 +16,6 @@ import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Loader from 'components/Loader';
-import Toolbar from 'pages/University/Toolbar';
 import * as S from './Styles';
 
 export interface CoursesProps {
@@ -100,7 +99,7 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
 
   return (
     <S.Container className={className}>
-      <Toolbar />
+      {/* <Toolbar /> */}
       <S.CoursesContainer>
         {renderSectionHeading()}
         {renderContent()}
