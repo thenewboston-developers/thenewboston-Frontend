@@ -15,6 +15,7 @@ import {orderBy} from 'lodash-es';
 const Create: SFC = ({className}) => {
   const [createOpenAIImageResponse, setCreateOpenAIImageResponse] = useState<CreateOpenAIImageResponse | null>(null);
   const [description, setDescription] = useState('');
+  const [isImageSaved, setIsImageSaved] = useState<Array<number>>([]);
   const wallets = useSelector(getWallets);
 
   const availableBalance = useMemo(
@@ -33,6 +34,7 @@ const Create: SFC = ({className}) => {
     try {
       const results = await createOpenAIImage({description: values.description, quantity: +values.quantity});
       setCreateOpenAIImageResponse(results);
+      setIsImageSaved([]);
     } catch (error) {
       console.error(error);
       displayErrorToast('Error generating art');
@@ -42,7 +44,14 @@ const Create: SFC = ({className}) => {
   const renderImageCarousel = () => {
     if (!createOpenAIImageResponse) return null;
     const imageUrls = createOpenAIImageResponse.data.map(({url}) => url);
-    return <ImageCarousel description={description} imageUrls={imageUrls} />;
+    return (
+      <ImageCarousel
+        description={description}
+        imageUrls={imageUrls}
+        isImageSaved={isImageSaved}
+        setIsImageSaved={setIsImageSaved}
+      />
+    );
   };
 
   const validationSchema = useMemo(() => {

@@ -47,3 +47,11 @@ export const ToolbarLeft = styled.div`
 `;
 
 export const ToolbarRight = styled.div``;
+
+export const Text = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 600;
+`;
