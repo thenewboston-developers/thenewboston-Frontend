@@ -1,6 +1,7 @@
 export const PATH_ART = '/art/*';
 export const PATH_CONTRIBUTIONS = '/contributions';
 export const PATH_CORES = '/cores';
+export const PATH_UNIVERSITY = '/university/*';
 export const PATH_COURSES = '/university/courses';
 export const PATH_COURSES_SELF = '/university/courses/self';
 export const PATH_EXCHANGE = '/exchange/*';
