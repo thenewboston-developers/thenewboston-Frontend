@@ -1,5 +1,5 @@
-import {useEffect, useRef, useState} from 'react';
-import {mdiChevronLeft, mdiChevronRight} from '@mdi/js';
+import {useEffect, useRef, useState, Dispatch, SetStateAction} from 'react';
+import {mdiChevronLeft, mdiChevronRight, mdiCheckAll} from '@mdi/js';
 
 import Button from 'components/Button';
 import {useToggle} from 'hooks';
@@ -10,11 +10,14 @@ import * as S from './Styles';
 export interface ImageCarouselProps {
   description: string;
   imageUrls: string[];
+  setIsImageSaved?: Dispatch<SetStateAction<number[]>>;
+  isImageSaved?: Array<number>;
 }
 
-const ImageCarousel: SFC<ImageCarouselProps> = ({className, description, imageUrls}) => {
+const ImageCarousel: SFC<ImageCarouselProps> = ({className, description, imageUrls, isImageSaved, setIsImageSaved}) => {
   const [artworkModalIsOpen, toggleArtworkModal] = useToggle(false);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+
   const imageUrlsRef = useRef<string[]>([]);
 
   useEffect(() => {
@@ -47,7 +50,16 @@ const ImageCarousel: SFC<ImageCarouselProps> = ({className, description, imageUr
           <S.PositionIndicator>{`${currentIndex + 1} of ${imageUrls.length}`}</S.PositionIndicator>
         </S.ToolbarLeft>
         <S.ToolbarRight>
-          <Button onClick={toggleArtworkModal} text="Save" />
+          {!isImageSaved?.includes(currentIndex) ? (
+            <Button onClick={toggleArtworkModal} text="Save" />
+          ) : (
+            <>
+              <S.IconContainer>
+                <S.Icon path={mdiCheckAll} size="20px" />
+                <S.Text>Saved</S.Text>
+              </S.IconContainer>
+            </>
+          )}
         </S.ToolbarRight>
       </S.Toolbar>
     );
@@ -60,7 +72,13 @@ const ImageCarousel: SFC<ImageCarouselProps> = ({className, description, imageUr
         <S.Img key={imageUrls[currentIndex]} src={imageUrls[currentIndex]} />
       </S.Container>
       {artworkModalIsOpen ? (
-        <ArtworkModal close={toggleArtworkModal} description={description} imageUrl={imageUrls[currentIndex]} />
+        <ArtworkModal
+          close={toggleArtworkModal}
+          description={description}
+          imageUrl={imageUrls[currentIndex]}
+          currentIndex={currentIndex}
+          setIsImageSaved={setIsImageSaved}
+        />
       ) : null}
     </>
   );
