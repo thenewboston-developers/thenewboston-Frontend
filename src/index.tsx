@@ -10,9 +10,7 @@ import initSentry from 'config/sentry';
 import {persistor, store} from 'store';
 import 'styles/fonts.css';
 
-if (process.env.NODE_ENV !== 'development') {
-  initSentry();
-}
+initSentry();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
