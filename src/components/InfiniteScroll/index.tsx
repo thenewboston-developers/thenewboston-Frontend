@@ -13,13 +13,15 @@ interface InfiniteScrollProps {
 }
 
 const InfiniteScroll: SFC<InfiniteScrollProps> = ({children, dataLength, hasMore, next}) => {
+  const InfiniteScrollComponentHeight = window.innerHeight - 105;
+
   return (
     <S.InfiniteScrollContainer>
       <InfiniteScrollComponent
         className="infinite-scroll-component"
         dataLength={dataLength}
         hasMore={hasMore}
-        height={window.innerHeight}
+        height={InfiniteScrollComponentHeight}
         loader={
           <S.LoaderContainer>
             <Loader size={24} />
