@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const InfiniteScrollContainer = styled.div`
-  overflow-y: auto;
+  overflow: hidden;
 
   &::-webkit-scrollbar {
     width: 0;
@@ -12,9 +12,6 @@ export const InfiniteScrollContainer = styled.div`
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
   width: 100%;
   height: 100%;
 `;
