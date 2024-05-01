@@ -40,7 +40,7 @@ const Feed: SFC = ({className}) => {
   const renderContent = () => {
     if (postList.length) {
       return (
-        <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts}>
+        <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts} heightMargin={0}>
           <S.PostContainer>
             {postList.map((post) => (
               <Post key={post.id} post={post} />
