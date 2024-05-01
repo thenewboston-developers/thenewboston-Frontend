@@ -31,10 +31,10 @@ interface LatestContributionsProps {
 }
 
 const LatestContributions: FC<LatestContributionsProps> = ({className, contributions}) => {
-  const contributionList = useMemo(() => {
+  const contributionsList = useMemo(() => {
     return orderBy(Object.values(contributions), ['created_date'], ['desc']);
   }, [contributions]);
-  const latestContributionList = contributionList.slice(0, 50);
+  const latestContributionsList = contributionsList.slice(0, 50);
 
   const userProfileLink = (contribution: Contribution) => `/profile/${contribution.user.id}`;
   const githubUserProfileLink = (contribution: Contribution) =>
@@ -48,7 +48,7 @@ const LatestContributions: FC<LatestContributionsProps> = ({className, contribut
     <div className={className}>
       <PanelHeading heading="Latest Contributions" />
       <Row $horizontalGap="15px" $verticalGap="5px">
-        {latestContributionList.map((contribution) => (
+        {latestContributionsList.map((contribution) => (
           <Col key={contribution.id} size={6}>
             <ContributionCard key={contribution.user.id}>
               <ContributionCardHeader>
