@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
 export const InfiniteScrollContainer = styled.div`
+  height: 100%;
   overflow: hidden;
+  width: 100%;
 
   .infinite-scroll-component {
     overflow-y: scroll;
