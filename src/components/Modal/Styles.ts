@@ -45,6 +45,6 @@ export const Overlay = styled.div`
 `;
 
 export const Heading = styled.div`
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
 `;
