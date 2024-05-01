@@ -124,7 +124,12 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
             <Col size={7}>{selectedLecture && <LectureVideoPlayer lecture={selectedLecture} />}</Col>
             <Col size={5}>
               {renderSectionHeading()}
-              <InfiniteScroll dataLength={lecturesList.length} hasMore={hasMore} next={fetchMoreLectures}>
+              <InfiniteScroll
+                dataLength={lecturesList.length}
+                hasMore={hasMore}
+                next={fetchMoreLectures}
+                heightMargin={150}
+              >
                 {lecturesList.map((lecture, index) => (
                   <Lecture
                     index={index}
