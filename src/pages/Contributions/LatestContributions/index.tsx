@@ -31,11 +31,10 @@ interface LatestContributionsProps {
 }
 
 const LatestContributions: FC<LatestContributionsProps> = ({className, contributions}) => {
-  const latestContributions = contributions.slice(0, 20);
-
-  const latestContributionList = useMemo(() => {
-    return orderBy(Object.values(latestContributions), ['created_date'], ['desc']);
-  }, [latestContributions]);
+  const contributionList = useMemo(() => {
+    return orderBy(Object.values(contributions), ['created_date'], ['desc']);
+  }, [contributions]);
+  const latestContributionList = contributionList.slice(0, 50);
 
   const userProfileLink = (contribution: Contribution) => `/profile/${contribution.user.id}`;
   const githubUserProfileLink = (contribution: Contribution) =>
