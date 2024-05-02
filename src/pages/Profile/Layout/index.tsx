@@ -7,20 +7,23 @@ import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
 import UserDetails from './UserDetails';
 import * as S from './Styles';
-import PostIcon from 'assets/post.svg';
-import ArtworkIcon from 'assets/artwork.svg';
-import FollowerIcon from 'assets/followers.svg';
-import FollowingIcon from 'assets/following.svg';
-import InvivationIcon from 'assets/invitation.svg';
+import Icon from '@mdi/react';
+import {
+  mdiAccountArrowDownOutline,
+  mdiAccountArrowUpOutline,
+  mdiAccountBoxPlusOutline,
+  mdiBrushOutline,
+  mdiTabletDashboard,
+} from '@mdi/js';
 
 type IconName = 'Artworks' | 'Followers' | 'Following' | 'Invitations' | 'Posts';
 
 const IconMapper = {
-  Artworks: ArtworkIcon,
-  Followers: FollowerIcon,
-  Following: FollowingIcon,
-  Invitations: InvivationIcon,
-  Posts: PostIcon,
+  Artworks: mdiBrushOutline,
+  Followers: mdiAccountArrowDownOutline,
+  Following: mdiAccountArrowUpOutline,
+  Invitations: mdiAccountBoxPlusOutline,
+  Posts: mdiTabletDashboard,
 };
 
 const Layout: SFC = ({className}) => {
@@ -34,7 +37,7 @@ const Layout: SFC = ({className}) => {
   const renderTab = (displayName: IconName, url: string) => {
     return (
       <Tab isActive={location.pathname === url} onClick={() => navigate(url)}>
-        {<img src={IconMapper[displayName]} height={20} width={20} />}
+        <Icon path={IconMapper[displayName]} size="20px" />
         <span>{displayName}</span>
       </Tab>
     );

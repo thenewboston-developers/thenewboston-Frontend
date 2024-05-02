@@ -17,9 +17,9 @@ import {displayErrorToast} from 'utils/toasts';
 import MenuItem from './MenuItem';
 import WalletDeposit from './WalletDeposit';
 import WalletWithdraw from './WalletWithdraw';
-import DepositIcon from 'assets/deposit.svg';
-import WithdrawlIcon from 'assets/withdrawl.svg';
 import * as S from './Styles';
+import Icon from '@mdi/react';
+import {mdiBankTransferIn, mdiBankTransferOut} from '@mdi/js';
 
 const Wallets: SFC = ({className}) => {
   const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
@@ -112,11 +112,11 @@ const Wallets: SFC = ({className}) => {
   const renderTabs = () => (
     <Tabs>
       <Tab isActive={manager.activeWalletTab === WalletTab.DEPOSIT} onClick={() => handleTabClick(WalletTab.DEPOSIT)}>
-        {<img src={DepositIcon} height={16} width={16} />}
+        <Icon path={mdiBankTransferIn} size={'18px'} />
         <span>Deposit</span>
       </Tab>
       <Tab isActive={manager.activeWalletTab === WalletTab.WITHDRAW} onClick={() => handleTabClick(WalletTab.WITHDRAW)}>
-        {<img src={WithdrawlIcon} height={16} width={16} />}
+        <Icon path={mdiBankTransferOut} size={'18px'} />
         <span>Withdrawl</span>
       </Tab>
     </Tabs>
