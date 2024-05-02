@@ -2,7 +2,6 @@ import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {AppDispatch, SFC} from 'types';
-import {Col, Row} from 'styles/components/GridStyle';
 import {displayErrorToast} from 'utils/toasts';
 import {getCourses as _getCourses, resetCourses as _resetCourses} from 'dispatchers/courses';
 import {getCourses as _getCoursesState} from 'selectors/state';
@@ -19,6 +18,10 @@ import Loader from 'components/Loader';
 import Toolbar from 'pages/University/Toolbar';
 import * as S from './Styles';
 import {UniversityHeader} from './Header';
+import {Input} from 'components/FormElements';
+import Icon from '@mdi/react';
+import {mdiMagnify} from '@mdi/js';
+import {colors} from 'styles';
 
 export interface CoursesProps {
   selfCourses?: boolean;
@@ -76,15 +79,26 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
 
     if (courseList.length) {
       return (
-        <InfiniteScroll dataLength={courseList.length} hasMore={hasMore} next={fetchMoreCourses}>
-          <Row>
-            {courseList.map((course) => (
-              <Col size={4} key={course.id}>
-                <Course course={course} selfCourse={selfCourses} />
-              </Col>
-            ))}
-          </Row>
-        </InfiniteScroll>
+        <S.ContentContainer>
+          <S.HeaderSection>
+            <h2>Learn with Us: Empower Your Journey</h2>
+            <S.SearchContainer>
+              <S.Input placeholder="Search" />
+              <S.Icon color={colors.gray} path={mdiMagnify} size={'20px'} />
+            </S.SearchContainer>
+          </S.HeaderSection>
+          <InfiniteScroll dataLength={courseList.length} hasMore={hasMore} next={fetchMoreCourses}>
+            <S.Row>
+              {courseList.map((course) => {
+                return (
+                  <S.Col>
+                    <Course course={course} selfCourse={selfCourses} />
+                  </S.Col>
+                );
+              })}
+            </S.Row>
+          </InfiniteScroll>
+        </S.ContentContainer>
       );
     }
 

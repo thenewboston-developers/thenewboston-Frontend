@@ -10,8 +10,11 @@ import CourseDeleteModal from 'modals/CourseDeleteModal';
 import CourseModal from 'modals/CourseModal';
 import Badge, {BadgeStyle} from 'components/Badge';
 import ReadMoreLess from 'components/ReadMoreLess';
+import FigmaIcon from 'assets/figma.svg';
+import CalendarIcon from 'assets/calendar.svg';
 
 import * as S from './Styles';
+import {colors} from 'styles';
 
 export interface CourseProps {
   course: TCourse;
@@ -52,32 +55,36 @@ const Course: SFC<CourseProps> = ({className, course, selfCourse = false}) => {
 
   const renderContent = () => {
     return (
-      <>
+      <S.ContentContainer>
         {renderActionButtons()}
         <S.Img alt="image" src={thumbnail} />
         <S.Content>
-          <S.Link to={`${selfCourse ? PATH_LECTURES_SELF : PATH_LECTURES}?course_id=${course.id}`}>
-            <S.Name>{name}</S.Name>
-          </S.Link>
-          <S.Description>
-            <ReadMoreLess text={description} maxLength={100} />
-          </S.Description>
-          <S.Footer>
-            <S.FooterItem>
-              <S.UserLabel
-                avatar={instructor.avatar}
-                description="Course Instructor"
-                id={instructor.id}
-                username={instructor.username}
-              />
-            </S.FooterItem>
-            <S.FooterItem>
-              <Icon path={mdiCalendarOutline} size={1} />
-              {getTimeAgo(created_date)}
-            </S.FooterItem>
-          </S.Footer>
+          <S.IconContainer>
+            <img src={FigmaIcon} width={18} height={18} alt="figma icon" />
+          </S.IconContainer>
+          <div>
+            <S.Link to={`${selfCourse ? PATH_LECTURES_SELF : PATH_LECTURES}?course_id=${course.id}`}>
+              <S.Name>{name}</S.Name>
+            </S.Link>
+            <S.Description>
+              <ReadMoreLess text={description} maxLength={30} />
+            </S.Description>
+          </div>
         </S.Content>
-      </>
+        <S.Footer>
+          <S.FooterItem $gap={12}>
+            <img src={instructor.avatar || ''} width={36} height={36} alt="avatar" />
+            <S.FooterContainer>
+              <S.InstructorName>{instructor.username}</S.InstructorName>
+              <S.Position>Course Instructor</S.Position>
+            </S.FooterContainer>
+          </S.FooterItem>
+          <S.FooterItem $gap={6}>
+            <Icon path={mdiCalendarOutline} color={colors.gray} size={1} />
+            <S.TimeText>{getTimeAgo(created_date)}</S.TimeText>
+          </S.FooterItem>
+        </S.Footer>
+      </S.ContentContainer>
     );
   };
 
