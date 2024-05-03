@@ -6,12 +6,10 @@ import {getTimeAgo} from 'utils/dates';
 import {PATH_LECTURES, PATH_LECTURES_SELF} from 'constants/paths';
 import {PublicationStatus} from 'enums';
 import {useToggle} from 'hooks';
+import Badge, {BadgeStyle} from 'components/Badge';
 import CourseDeleteModal from 'modals/CourseDeleteModal';
 import CourseModal from 'modals/CourseModal';
-import Badge, {BadgeStyle} from 'components/Badge';
 import ReadMoreLess from 'components/ReadMoreLess';
-import FigmaIcon from 'assets/figma.svg';
-import CalendarIcon from 'assets/calendar.svg';
 
 import * as S from './Styles';
 import {colors} from 'styles';
@@ -59,9 +57,6 @@ const Course: SFC<CourseProps> = ({className, course, selfCourse = false}) => {
         {renderActionButtons()}
         <S.Img alt="image" src={thumbnail} />
         <S.Content>
-          <S.IconContainer>
-            <img src={FigmaIcon} width={18} height={18} alt="figma icon" />
-          </S.IconContainer>
           <div>
             <S.Link to={`${selfCourse ? PATH_LECTURES_SELF : PATH_LECTURES}?course_id=${course.id}`}>
               <S.Name>{name}</S.Name>

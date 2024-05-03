@@ -1,6 +1,7 @@
-import * as S from './Styles';
-import LearningIcon from 'assets/learning.svg';
 import HeaderImage from 'assets/LearningHeader.png';
+import LearningIcon from 'assets/learning.svg';
+
+import * as S from './Styles';
 
 export const UniversityHeader = () => {
   return (
