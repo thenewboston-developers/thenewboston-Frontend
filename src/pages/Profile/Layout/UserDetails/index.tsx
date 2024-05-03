@@ -103,7 +103,7 @@ const UserDetails: SFC = ({className}) => {
   };
 
   const renderDefaultWalletBalance = () => {
-    if (!user || self.id !== user.id) return null;
+    if (!user) return null;
     return (
       <S.WalletBalance>
         Your Balance: <S.TNBLogo src={logo} /> <b>{formatNumber(default_wallet_balance)}</b>
