@@ -14,6 +14,7 @@ export const Container = styled.div`
 export const Content = styled.div`
   font-size: 15px;
   margin-top: 8px;
+  word-break: break-all;
 `;
 
 export const DropdownMenu = styled(UDropdownMenu)`

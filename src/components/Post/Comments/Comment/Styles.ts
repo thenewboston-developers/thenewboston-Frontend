@@ -13,6 +13,7 @@ export const Container = styled.div`
 export const Content = styled.div`
   line-height: 1.3;
   margin-top: 2px;
+  word-break: break-all;
 `;
 
 export const Date = styled.div`
