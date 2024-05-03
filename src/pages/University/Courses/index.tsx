@@ -1,12 +1,15 @@
-import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useEffect, useMemo, useState} from 'react';
 
 import {AppDispatch, SFC} from 'types';
+import {colors} from 'styles';
 import {displayErrorToast} from 'utils/toasts';
 import {getCourses as _getCourses, resetCourses as _resetCourses} from 'dispatchers/courses';
 import {getCourses as _getCoursesState} from 'selectors/state';
 import {getSelf} from 'selectors/state';
+import {mdiMagnify} from '@mdi/js';
 import {PublicationStatus} from 'enums';
+import {UniversityHeader} from './Header';
 import {useToggle} from 'hooks';
 import Button from 'components/Button';
 import Course from './Course';
@@ -16,10 +19,9 @@ import InfiniteScroll from 'components/InfiniteScroll';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Loader from 'components/Loader';
 import Toolbar from 'pages/University/Toolbar';
+import Tooltip from 'components/Tooltip';
+
 import * as S from './Styles';
-import {UniversityHeader} from './Header';
-import {mdiMagnify} from '@mdi/js';
-import {colors} from 'styles';
 
 export interface CoursesProps {
   selfCourses?: boolean;
@@ -80,10 +82,12 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
         <S.ContentContainer>
           <S.HeaderSection>
             <h2>Learn with Us: Empower Your Journey</h2>
-            <S.SearchContainer className="disabled">
-              <S.Input placeholder="Search" />
-              <S.Icon color={colors.gray} path={mdiMagnify} size={'20px'} />
-            </S.SearchContainer>
+            <Tooltip text="Feature coming soon...">
+              <S.SearchContainer className="disabled">
+                <S.Input placeholder="Search" />
+                <S.Icon color={colors.gray} path={mdiMagnify} size={'20px'} />
+              </S.SearchContainer>
+            </Tooltip>
           </S.HeaderSection>
           <InfiniteScroll dataLength={courseList.length} hasMore={hasMore} next={fetchMoreCourses}>
             <S.Row>
