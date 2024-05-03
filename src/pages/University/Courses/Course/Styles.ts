@@ -5,15 +5,6 @@ import {colors, fonts} from 'styles';
 import UUserLabel from 'components/UserLabel';
 import UIcon from '@mdi/react';
 
-export const ContentContainer = styled.div`
-  min-height: 347px;
-  border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
-`;
-
 export const ActionButtonsContainer = styled.div`
   align-items: center;
   display: flex;
@@ -21,24 +12,13 @@ export const ActionButtonsContainer = styled.div`
   padding: 5px 10px;
 `;
 
-export const IconContainer = styled.div`
-  height: 36px;
-  min-width: 36px;
-  width: 36px;
-  background: rgba(211, 211, 211, 0.25);
-  box-shadow: 0 2px 2px rgba(211, 211, 211, 0.25);
-  border-radius: 10px;
+export const ContentContainer = styled.div`
+  border-radius: 14px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const Icon = styled(UIcon)`
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.8;
-  }
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 347px;
+  overflow: hidden;
 `;
 
 export const Container = styled.div`
@@ -73,23 +53,32 @@ export const FooterItem = styled.div<{$gap: number}>`
   align-items: center;
   display: flex;
   gap: ${(props) => props.$gap}px;
-  img {
-    border-radius: 100px;
+`;
+
+export const IconContainer = styled.div`
+  align-items: center;
+  background: rgba(211, 211, 211, 0.25);
+  border-radius: 10px;
+  box-shadow: 0 2px 2px rgba(211, 211, 211, 0.25);
+  display: flex;
+  height: 36px;
+  justify-content: center;
+  min-width: 36px;
+  width: 36px;
+`;
+
+export const Icon = styled(UIcon)`
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
   }
 `;
 
 export const InstructorName = styled.h3`
-  font-weight: ${fonts.weight.semiBold};
   font-size: 14px;
-  line-height: 18px;
-`;
-
-export const Position = styled.p`
   font-weight: ${fonts.weight.semiBold};
-  font-size: 12px;
-  line-height: 20px;
-  color: #969696;
-  margin-bottom: 0;
+  line-height: 18px;
 `;
 
 export const FooterContainer = styled.div`
@@ -117,22 +106,20 @@ export const Link = styled(ULink)`
 `;
 
 export const Name = styled.h3`
-  font-weight: ${fonts.weight.semiBold};
   font-size: 16px;
+  font-weight: ${fonts.weight.semiBold};
   line-height: 24px;
 `;
 export const NameContainer = styled.div`
   display: flex;
-  gap: 2px;
   flex-direction: column;
+  gap: 2px;
 `;
 
 export const TimeText = styled.p`
-  font-weight: ${fonts.weight.semiBold};
+  color: ${colors.secondary};
   font-size: 12px;
-  line-height: 20px;
   margin-bottom: 0;
-  color: #969696;
 `;
 
 export const UserLabel = styled(UUserLabel)``;

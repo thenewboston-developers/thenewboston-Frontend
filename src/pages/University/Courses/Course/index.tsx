@@ -1,5 +1,4 @@
 import {mdiCalendarOutline, mdiFileEdit, mdiTrashCan} from '@mdi/js';
-import Icon from '@mdi/react';
 
 import {Course as TCourse, SFC} from 'types';
 import {getTimeAgo} from 'utils/dates';
@@ -68,14 +67,15 @@ const Course: SFC<CourseProps> = ({className, course, selfCourse = false}) => {
         </S.Content>
         <S.Footer>
           <S.FooterItem $gap={12}>
-            <img src={instructor.avatar || ''} width={36} height={36} alt="avatar" />
-            <S.FooterContainer>
-              <S.InstructorName>{instructor.username}</S.InstructorName>
-              <S.Position>Course Instructor</S.Position>
-            </S.FooterContainer>
+            <S.UserLabel
+              avatar={instructor.avatar}
+              description="Course Instructor"
+              id={instructor.id}
+              username={instructor.username}
+            />
           </S.FooterItem>
           <S.FooterItem $gap={6}>
-            <Icon path={mdiCalendarOutline} color={colors.gray} size={1} />
+            <S.Icon path={mdiCalendarOutline} color={colors.gray} size={'20px'} />
             <S.TimeText>{getTimeAgo(created_date)}</S.TimeText>
           </S.FooterItem>
         </S.Footer>

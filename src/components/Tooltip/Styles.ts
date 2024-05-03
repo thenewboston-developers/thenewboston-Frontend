@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {colors} from 'styles';
 
 export const Arrow = styled.div`
-  border-color: ${colors.secondary} transparent transparent transparent;
+  border-color: ${colors.gray} transparent transparent transparent;
   border-style: solid;
   border-width: 5px;
   content: '';
@@ -19,7 +19,7 @@ export const TooltipContainer = styled.div`
 `;
 
 export const TooltipBox = styled.div<{$isVisible: boolean}>`
-  background-color: ${colors.secondary};
+  background-color: ${colors.gray};
   border-radius: 4px;
   bottom: 100%;
   color: ${colors.white};
