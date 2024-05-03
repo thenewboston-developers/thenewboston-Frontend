@@ -1,17 +1,17 @@
 import {mdiCalendarOutline, mdiFileEdit, mdiTrashCan} from '@mdi/js';
-import Icon from '@mdi/react';
 
 import {Course as TCourse, SFC} from 'types';
 import {getTimeAgo} from 'utils/dates';
 import {PATH_LECTURES, PATH_LECTURES_SELF} from 'constants/paths';
 import {PublicationStatus} from 'enums';
 import {useToggle} from 'hooks';
+import Badge, {BadgeStyle} from 'components/Badge';
 import CourseDeleteModal from 'modals/CourseDeleteModal';
 import CourseModal from 'modals/CourseModal';
-import Badge, {BadgeStyle} from 'components/Badge';
 import ReadMoreLess from 'components/ReadMoreLess';
 
 import * as S from './Styles';
+import {colors} from 'styles';
 
 export interface CourseProps {
   course: TCourse;
@@ -52,32 +52,34 @@ const Course: SFC<CourseProps> = ({className, course, selfCourse = false}) => {
 
   const renderContent = () => {
     return (
-      <>
+      <S.ContentContainer>
         {renderActionButtons()}
         <S.Img alt="image" src={thumbnail} />
         <S.Content>
-          <S.Link to={`${selfCourse ? PATH_LECTURES_SELF : PATH_LECTURES}?course_id=${course.id}`}>
-            <S.Name>{name}</S.Name>
-          </S.Link>
-          <S.Description>
-            <ReadMoreLess text={description} maxLength={100} />
-          </S.Description>
-          <S.Footer>
-            <S.FooterItem>
-              <S.UserLabel
-                avatar={instructor.avatar}
-                description="Course Instructor"
-                id={instructor.id}
-                username={instructor.username}
-              />
-            </S.FooterItem>
-            <S.FooterItem>
-              <Icon path={mdiCalendarOutline} size={1} />
-              {getTimeAgo(created_date)}
-            </S.FooterItem>
-          </S.Footer>
+          <div>
+            <S.Link to={`${selfCourse ? PATH_LECTURES_SELF : PATH_LECTURES}?course_id=${course.id}`}>
+              <S.Name>{name}</S.Name>
+            </S.Link>
+            <S.Description>
+              <ReadMoreLess text={description} maxLength={80} />
+            </S.Description>
+          </div>
         </S.Content>
-      </>
+        <S.Footer>
+          <S.FooterItem $gap={12}>
+            <S.UserLabel
+              avatar={instructor.avatar}
+              description="Course Instructor"
+              id={instructor.id}
+              username={instructor.username}
+            />
+          </S.FooterItem>
+          <S.FooterItem $gap={6}>
+            <S.Icon path={mdiCalendarOutline} color={colors.gray} size={'20px'} />
+            <S.TimeText>{getTimeAgo(created_date)}</S.TimeText>
+          </S.FooterItem>
+        </S.Footer>
+      </S.ContentContainer>
     );
   };
 
