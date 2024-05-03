@@ -6,8 +6,8 @@ import {SFC} from 'types';
 import * as S from './Styles';
 import Buy from './Buy';
 import Sell from './Sell';
-import BuyIcon from 'assets/buy.svg';
-import SellIcon from 'assets/sell.svg';
+import Icon from '@mdi/react';
+import {mdiCartArrowDown, mdiCartArrowUp} from '@mdi/js';
 
 enum TradeTab {
   BUY = 'BUY',
@@ -35,11 +35,11 @@ const OrderTools: SFC = ({className}) => {
     return (
       <S.Tabs>
         <Tab isActive={activeTab === TradeTab.BUY} onClick={() => setActiveTab(TradeTab.BUY)}>
-          <img src={BuyIcon} width={16} height={16} alt="buy" />
+          <Icon path={mdiCartArrowDown} size={'16px'} />
           Buy
         </Tab>
         <Tab isActive={activeTab === TradeTab.SELL} onClick={() => setActiveTab(TradeTab.SELL)}>
-          <img src={SellIcon} width={16} height={16} alt="sell" />
+          <Icon path={mdiCartArrowUp} size={'16px'} />
           Sell
         </Tab>
       </S.Tabs>
