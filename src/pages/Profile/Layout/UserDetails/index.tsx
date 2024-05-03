@@ -3,12 +3,15 @@ import {useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 
 import {createFollower, deleteFollower, getFollowers} from 'api/followers';
-import DefaultAvatar from 'assets/default-avatar.png';
-import {useToggle, useUser} from 'hooks';
-import ProfileEditModal from 'modals/ProfileEditModal';
-import {getSelf} from 'selectors/state';
-import {FollowerReadSerializer, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
+import {FollowerReadSerializer, SFC} from 'types';
+import {formatNumber} from 'utils/numbers';
+import {getSelf} from 'selectors/state';
+import {getUserStats} from 'selectors/state';
+import {useToggle, useUser} from 'hooks';
+import DefaultAvatar from 'assets/default-avatar.png';
+import logo from 'assets/logo192.png';
+import ProfileEditModal from 'modals/ProfileEditModal';
 import * as S from './Styles';
 
 const UserDetails: SFC = ({className}) => {
@@ -16,9 +19,16 @@ const UserDetails: SFC = ({className}) => {
   const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
   const {id} = useParams();
   const self = useSelector(getSelf);
+  const userStats = useSelector(getUserStats);
   const user = useUser(id);
 
   const userId = id ? parseInt(id, 10) : null;
+
+  const {
+    following_count = 0,
+    followers_count = 0,
+    default_wallet_balance = 0,
+  } = id && userStats[id] ? userStats[id] : {};
 
   useEffect(() => {
     setFollower(null);
@@ -83,11 +93,31 @@ const UserDetails: SFC = ({className}) => {
     return <S.Username>{user.username}</S.Username>;
   };
 
+  const renderStats = () => {
+    if (!user) return null;
+    return (
+      <S.Stats>
+        Followings: <b>{following_count ?? 0}</b> | Followers: <b>{followers_count}</b>
+      </S.Stats>
+    );
+  };
+
+  const renderDefaultWalletBalance = () => {
+    if (!user) return null;
+    return (
+      <S.WalletBalance>
+        Your Balance: <S.TNBLogo src={logo} /> <b>{formatNumber(default_wallet_balance)}</b>
+      </S.WalletBalance>
+    );
+  };
+
   return (
     <>
       <S.Container className={className}>
         {renderAvatar()}
         {renderUsername()}
+        {renderStats()}
+        {renderDefaultWalletBalance()}
         {renderEditProfileButton()}
         {renderFollowButton()}
       </S.Container>
