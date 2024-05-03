@@ -3,6 +3,7 @@ import {useEffect, useMemo, useState} from 'react';
 
 import {AppDispatch, SFC} from 'types';
 import {colors} from 'styles';
+import {Col, Row} from 'styles/components/GridStyle';
 import {displayErrorToast} from 'utils/toasts';
 import {getCourses as _getCourses, resetCourses as _resetCourses} from 'dispatchers/courses';
 import {getCourses as _getCoursesState} from 'selectors/state';
@@ -80,26 +81,16 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
     if (courseList.length) {
       return (
         <S.ContentContainer>
-          <S.HeaderSection>
-            <h2>Learn with Us: Empower Your Journey</h2>
-            <Tooltip text="Feature coming soon...">
-              <S.SearchContainer className="disabled">
-                <S.Input placeholder="Search" />
-                <S.Icon color={colors.gray} path={mdiMagnify} size={'20px'} />
-              </S.SearchContainer>
-            </Tooltip>
-          </S.HeaderSection>
-          <InfiniteScroll dataLength={courseList.length} hasMore={hasMore} next={fetchMoreCourses}>
-            <S.Row>
-              {courseList.map((course) => {
-                return (
-                  <S.Col>
-                    <Course course={course} selfCourse={selfCourses} />
-                  </S.Col>
-                );
-              })}
-            </S.Row>
-          </InfiniteScroll>
+          {renderSectionSubHeading()}
+          <Row>
+            {courseList.map((course) => {
+              return (
+                <Col size={4} key={course.id}>
+                  <Course course={course} selfCourse={selfCourses} />
+                </Col>
+              );
+            })}
+          </Row>
         </S.ContentContainer>
       );
     }
@@ -113,6 +104,22 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
     return <UniversityHeader />;
   };
 
+  const renderSectionSubHeading = () => {
+    const subHeading = selfCourses ? 'Manage your courses efficiently' : 'Learn with Us: Empower Your Journey';
+
+    return (
+      <S.SectionSubHeading>
+        <h2>{subHeading}</h2>
+        <Tooltip text="Feature coming soon...">
+          <S.SearchContainer className="disabled">
+            <S.Input placeholder="Search" />
+            <S.Icon color={colors.gray} path={mdiMagnify} size={'20px'} />
+          </S.SearchContainer>
+        </Tooltip>
+      </S.SectionSubHeading>
+    );
+  };
+
   const renderCourseModal = () => {
     return courseModalIsOpen ? <CourseModal close={toggleCourseModal} /> : null;
   };
@@ -121,8 +128,10 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
     <S.Container className={className}>
       <Toolbar />
       <S.CoursesContainer>
-        {renderSectionHeading()}
-        {renderContent()}
+        <InfiniteScroll dataLength={courseList.length} hasMore={hasMore} next={fetchMoreCourses}>
+          {renderSectionHeading()}
+          {renderContent()}
+        </InfiniteScroll>
       </S.CoursesContainer>
       {renderCourseModal()}
     </S.Container>

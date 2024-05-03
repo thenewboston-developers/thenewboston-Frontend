@@ -13,39 +13,22 @@ export const CoursesContainer = styled.div`
 `;
 
 export const ContentContainer = styled.div`
-  margin-top: 60px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  margin-top: 60px;
 
   @media (min-width: ${breakpoints.mini}) {
     margin-top: 32px;
   }
 `;
 
-export const HeaderSection = styled.div`
+export const SectionSubHeading = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
 
   h2 {
     font-weight: ${fonts.weight.semiBold};
-    font-size: 22px;
-    line-height: 32px;
-    text-align: center;
-  }
-
-  @media (min-width: ${breakpoints.mini}) {
-    gap: 8px;
-    align-items: center;
-    h2 {
-      text-align: start;
-    }
-  }
-
-  @media (min-width: ${breakpoints.mobile}) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
   }
 `;
 
@@ -69,12 +52,12 @@ export const SearchContainer = styled.div`
 `;
 
 export const Input = styled.input`
-  padding: 10px 14px;
-  padding-left: 2rem;
   border-radius: 14px;
   border: none;
-  position: relative;
   box-shadow: 0 2px 2px rgba(211, 211, 211, 0.25);
+  padding-left: 2rem;
+  padding: 10px 14px;
+  position: relative;
 
   &::placeholder {
     position: absolute;
@@ -93,27 +76,7 @@ export const Input = styled.input`
 `;
 
 export const Icon = styled(_Icon)`
-  position: absolute;
   left: 20px;
+  position: absolute;
   top: 9px;
-`;
-
-export const Row = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-
-  @media (min-width: ${breakpoints.mobile}) {
-    justify-content: space-around;
-  }
-`;
-
-export const Col = styled.div`
-  width: 270px;
-  border-radius: 14px;
-
-  @media (min-width: ${breakpoints.tablet}) {
-    width: 373px;
-  }
 `;

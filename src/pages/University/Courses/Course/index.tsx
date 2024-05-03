@@ -61,7 +61,7 @@ const Course: SFC<CourseProps> = ({className, course, selfCourse = false}) => {
               <S.Name>{name}</S.Name>
             </S.Link>
             <S.Description>
-              <ReadMoreLess text={description} maxLength={30} />
+              <ReadMoreLess text={description} maxLength={80} />
             </S.Description>
           </div>
         </S.Content>

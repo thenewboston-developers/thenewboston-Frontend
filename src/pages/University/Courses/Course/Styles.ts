@@ -7,6 +7,7 @@ import UIcon from '@mdi/react';
 
 export const ActionButtonsContainer = styled.div`
   align-items: center;
+  background: ${colors.whiteHover};
   display: flex;
   justify-content: space-between;
   padding: 5px 10px;
@@ -14,15 +15,13 @@ export const ActionButtonsContainer = styled.div`
 
 export const ContentContainer = styled.div`
   border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 347px;
+  min-height: 340px;
   overflow: hidden;
 `;
 
 export const Container = styled.div`
-  border-radius: 0 0 14px 14px;
+  background: ${colors.white};
+  border-radius: 14px;
   border: 1px solid ${colors.border};
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
 `;
@@ -35,18 +34,21 @@ export const Content = styled.div`
 
 export const Description = styled.div`
   color: ${colors.gray};
-  font-weight: ${fonts.weight.regular};
   font-size: 14px;
+  font-weight: ${fonts.weight.regular};
+  height: 50px;
   line-height: 22px;
+  min-height: 60px;
+  overflow-y: auto;
 `;
 
 export const Footer = styled.div`
   align-items: center;
+  border-radius: 0 0 14px 14px;
+  border-top: 1px solid #f1f1f1;
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid #f1f1f1;
   padding: 16px;
-  border-radius: 0 0 14px 14px;
 `;
 
 export const FooterItem = styled.div<{$gap: number}>`
