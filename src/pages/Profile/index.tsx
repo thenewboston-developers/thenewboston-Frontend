@@ -4,8 +4,9 @@ import {Route, Routes, useParams} from 'react-router-dom';
 
 import {getInvitationLimit} from 'dispatchers/invitationLimits';
 import {getInvitations} from 'dispatchers/invitations';
-import {getUser} from 'dispatchers/users';
 import {getSelf} from 'selectors/state';
+import {getUserStats} from 'dispatchers/userStats';
+import {getUser} from 'dispatchers/users';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import Artworks from './Artworks';
@@ -27,7 +28,7 @@ const Profile: SFC = ({className}) => {
     (async () => {
       if (!userId) return;
 
-      const promises = [getUser(userId)];
+      const promises = [getUser(userId), getUserStats(userId)];
 
       if (userId === self.id) {
         promises.push(getInvitationLimit(userId));

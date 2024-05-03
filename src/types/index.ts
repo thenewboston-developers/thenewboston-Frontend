@@ -18,6 +18,7 @@ import {LectureReadSerializer} from 'types/api/lectures';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {PostReadSerializer} from 'types/api/posts';
 import {UpdateNotificationRequest} from 'types/api/notifications';
+import {UserStatsSerializer} from 'types/api/userStats';
 
 import {Address, Addresses} from 'types/addresses';
 import {AppDispatch, RootState} from 'types/store';
@@ -55,6 +56,7 @@ import {SelectOption} from 'types/forms';
 import {Self} from 'types/self';
 import {Trade, Trades} from 'types/trades';
 import {Users} from 'types/users';
+import {UserStats} from 'types/userStats';
 import {Wallet, Wallets} from 'types/wallets';
 import {Wire, Wires} from 'types/wires';
 
@@ -148,6 +150,8 @@ export {
   Trades,
   UpdateNotificationRequest,
   UserReadSerializer,
+  UserStats,
+  UserStatsSerializer,
   Users,
   Wallet,
   Wallets,

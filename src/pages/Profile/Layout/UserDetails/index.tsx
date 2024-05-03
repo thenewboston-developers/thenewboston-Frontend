@@ -7,6 +7,7 @@ import {displayErrorToast} from 'utils/toasts';
 import {FollowerReadSerializer, SFC} from 'types';
 import {formatNumber} from 'utils/numbers';
 import {getSelf} from 'selectors/state';
+import {getUserStats} from 'selectors/state';
 import {useToggle, useUser} from 'hooks';
 import DefaultAvatar from 'assets/default-avatar.png';
 import logo from 'assets/logo192.png';
@@ -18,9 +19,16 @@ const UserDetails: SFC = ({className}) => {
   const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
   const {id} = useParams();
   const self = useSelector(getSelf);
+  const userStats = useSelector(getUserStats);
   const user = useUser(id);
 
   const userId = id ? parseInt(id, 10) : null;
+
+  const {
+    following_count = 0,
+    followers_count = 0,
+    default_wallet_balance = 0,
+  } = id && userStats[id] ? userStats[id] : {};
 
   useEffect(() => {
     setFollower(null);
@@ -89,7 +97,7 @@ const UserDetails: SFC = ({className}) => {
     if (!user) return null;
     return (
       <S.Stats>
-        Followings: <b>{user.following_count ?? 0}</b> | Followers: <b>{user.followers_count ?? 0}</b>
+        Followings: <b>{following_count ?? 0}</b> | Followers: <b>{followers_count}</b>
       </S.Stats>
     );
   };
@@ -98,7 +106,7 @@ const UserDetails: SFC = ({className}) => {
     if (!user || self.id !== user.id) return null;
     return (
       <S.WalletBalance>
-        Your Balance: <S.TNBLogo src={logo} /> <b>{formatNumber(user.default_wallet_balance ?? 0)}</b>
+        Your Balance: <S.TNBLogo src={logo} /> <b>{formatNumber(default_wallet_balance)}</b>
       </S.WalletBalance>
     );
   };
