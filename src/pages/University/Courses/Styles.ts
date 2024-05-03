@@ -56,10 +56,8 @@ export const SectionHeading = styled(USectionHeading)`
 export const SearchContainer = styled.div`
   padding-left: 10px;
   position: relative;
-  display: none;
 
   @media (min-width: ${breakpoints.mini}) {
-    display: block;
     margin-left: -10px;
     width: 60%;
   }

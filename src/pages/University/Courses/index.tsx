@@ -18,8 +18,6 @@ import Loader from 'components/Loader';
 import Toolbar from 'pages/University/Toolbar';
 import * as S from './Styles';
 import {UniversityHeader} from './Header';
-import {Input} from 'components/FormElements';
-import Icon from '@mdi/react';
 import {mdiMagnify} from '@mdi/js';
 import {colors} from 'styles';
 
@@ -82,7 +80,7 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
         <S.ContentContainer>
           <S.HeaderSection>
             <h2>Learn with Us: Empower Your Journey</h2>
-            <S.SearchContainer>
+            <S.SearchContainer className="disabled">
               <S.Input placeholder="Search" />
               <S.Icon color={colors.gray} path={mdiMagnify} size={'20px'} />
             </S.SearchContainer>
