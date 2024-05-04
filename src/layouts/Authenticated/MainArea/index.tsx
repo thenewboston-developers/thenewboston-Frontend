@@ -1,5 +1,22 @@
 import {Navigate, Route, Routes} from 'react-router-dom';
 
+import {
+  PATH_ART,
+  PATH_CONTRIBUTIONS,
+  PATH_COURSES,
+  PATH_COURSES_SELF,
+  PATH_CURRENCIES,
+  PATH_DEFAULT,
+  PATH_EXCHANGE,
+  PATH_FEED,
+  PATH_IA,
+  PATH_LECTURES,
+  PATH_LECTURES_SELF,
+  PATH_NOTIFICATIONS,
+  PATH_PROFILE,
+  PATH_SHOP,
+  PATH_WALLETS,
+} from 'constants/paths';
 import Art from 'pages/Art';
 import Contributions from 'pages/Contributions';
 import Cores from 'pages/Cores';
@@ -13,25 +30,6 @@ import Profile from 'pages/Profile';
 import Shop from 'pages/Shop';
 import Wallets from 'pages/Wallets';
 import {SFC} from 'types';
-
-import {
-  PATH_ART,
-  PATH_CONTRIBUTIONS,
-  PATH_CURRENCIES,
-  PATH_COURSES,
-  PATH_COURSES_SELF,
-  PATH_DEFAULT,
-  PATH_EXCHANGE,
-  PATH_FEED,
-  PATH_IA,
-  PATH_LECTURES,
-  PATH_LECTURES_SELF,
-  PATH_NOTIFICATIONS,
-  PATH_PROFILE,
-  PATH_SHOP,
-  PATH_WALLETS,
-} from 'constants/paths';
-
 import * as S from './Styles';
 
 const MainArea: SFC = ({className}) => {

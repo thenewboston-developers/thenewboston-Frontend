@@ -1,4 +1,4 @@
-import {useState, ReactNode} from 'react';
+import {ReactNode, useState} from 'react';
 
 import {SFC} from 'types';
 import * as S from './Styles';

@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 
 import {AppDispatch, Course, SFC} from 'types';
 import {ToastType} from 'enums';
-import {displayToast, displayErrorToast} from 'utils/toasts';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import {Field, Form, Formik} from 'formik';
 import {FileInput} from 'components/FormElements';
 import {PublicationStatus} from 'enums/publicationStatus';
