@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 
 import {AppDispatch, Lecture, SFC} from 'types';
 import {ToastType} from 'enums';
-import {displayToast, displayErrorToast} from 'utils/toasts';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import {Form, Formik} from 'formik';
 import {PublicationStatus} from 'enums/publicationStatus';
 import Button, {ButtonType} from 'components/Button';

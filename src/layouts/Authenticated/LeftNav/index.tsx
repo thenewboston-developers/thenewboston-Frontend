@@ -2,14 +2,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {
   mdiAccount,
-  mdiAccountGroup,
   mdiBell,
-  mdiSchool,
   mdiBrush,
+  mdiCircleMultipleOutline,
   mdiExitToApp,
   mdiFaceWoman,
+  mdiHammerWrench,
   mdiHome,
-  mdiLanConnect,
+  mdiSchool,
   mdiShopping,
   mdiSwapHorizontalCircleOutline,
   mdiWalletBifoldOutline,
@@ -37,10 +37,9 @@ const LeftNav: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Top>
-        {/* TODO: replace these hardcoded paths with those in constants/paths.ts */}
         <MenuLink icon={mdiBrush} rootPath="/art" text="Art" to="/art/marketplace" />
-        <MenuLink icon={mdiAccountGroup} rootPath="/contributions" text="Contributions" to="/contributions" />
-        <MenuLink icon={mdiLanConnect} rootPath="/cores" text="Cores" to="/cores" />
+        <MenuLink icon={mdiHammerWrench} rootPath="/contributions" text="Contributions" to="/contributions" />
+        <MenuLink icon={mdiCircleMultipleOutline} rootPath="/currencies" text="Currencies" to="/currencies" />
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
         <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
         <MenuLink icon={mdiFaceWoman} rootPath="/ia" text="Ia" to="/ia" />

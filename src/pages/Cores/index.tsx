@@ -21,7 +21,7 @@ const Cores: SFC = ({className}) => {
   }, [cores]);
 
   const renderButton = () => {
-    return <Button onClick={toggleCoreModal} text="Add Core" />;
+    return <Button onClick={toggleCoreModal} text="Add Currency" />;
   };
 
   const renderContent = () => {
@@ -37,7 +37,7 @@ const Cores: SFC = ({className}) => {
   return (
     <>
       <S.Container className={className}>
-        <SectionHeading heading="Cores" rightContent={renderButton()} />
+        <SectionHeading heading="Currencies" rightContent={renderButton()} />
         {renderContent()}
       </S.Container>
       {coreModalIsOpen ? <CoreModal close={toggleCoreModal} /> : null}

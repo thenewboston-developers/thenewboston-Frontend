@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {USER_STATS} from 'constants/store';
-import {UserStatsSerializer, UserStats} from 'types';
+import {UserStats, UserStatsSerializer} from 'types';
 
 const initialState: UserStats = {};
 

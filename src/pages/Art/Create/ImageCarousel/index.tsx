@@ -1,5 +1,5 @@
-import {useEffect, useRef, useState, Dispatch, SetStateAction} from 'react';
-import {mdiChevronLeft, mdiChevronRight, mdiCheckAll} from '@mdi/js';
+import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
+import {mdiCheckAll, mdiChevronLeft, mdiChevronRight} from '@mdi/js';
 
 import Button from 'components/Button';
 import {useToggle} from 'hooks';

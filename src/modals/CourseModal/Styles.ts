@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {Input as UInput, Checkbox as UCheckbox} from 'components/FormElements';
+import {Checkbox as UCheckbox, Input as UInput} from 'components/FormElements';
 import UModal from 'components/Modal';
 
 export const Input = styled(UInput)`
