@@ -105,7 +105,7 @@ const UserDetails: SFC = ({className}) => {
     if (!user) return null;
     return (
       <S.WalletBalance>
-        Your Balance: <S.TNBLogo src={logo} /> <b>{formatNumber(default_wallet_balance)}</b>
+        Balance: <S.TNBLogo src={logo} /> <b>{formatNumber(default_wallet_balance)}</b>
       </S.WalletBalance>
     );
   };
