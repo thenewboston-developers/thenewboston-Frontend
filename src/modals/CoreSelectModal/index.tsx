@@ -17,7 +17,7 @@ const CoreSelectModal: SFC<CoreSelectModalProps> = ({className, close}) => {
   };
 
   return (
-    <S.Modal className={className} close={close} header="Cores">
+    <S.Modal className={className} close={close} header="Currencies">
       <S.RadioCardContainer>{renderRadioCards()}</S.RadioCardContainer>
     </S.Modal>
   );

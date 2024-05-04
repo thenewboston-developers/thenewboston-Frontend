@@ -88,7 +88,7 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({
           <Form>
             <Input errors={errors} label="Name" name="name" touched={touched} />
             <Input errors={errors} label="Description" name="description" touched={touched} />
-            <Select errors={errors} label="Price Core" name="price_core" options={priceCoreOptions} touched={touched} />
+            <Select errors={errors} label="Currency" name="price_core" options={priceCoreOptions} touched={touched} />
             <Input errors={errors} label="Price Amount" name="price_amount" touched={touched} type="number" />
             <Button
               dirty={dirty}

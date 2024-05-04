@@ -17,7 +17,7 @@ import {SFC} from 'types';
 import {
   PATH_ART,
   PATH_CONTRIBUTIONS,
-  PATH_CORES,
+  PATH_CURRENCIES,
   PATH_COURSES,
   PATH_COURSES_SELF,
   PATH_DEFAULT,
@@ -41,7 +41,7 @@ const MainArea: SFC = ({className}) => {
         <Route path="*" element={<Navigate to={PATH_DEFAULT} replace />} />
         <Route path={PATH_ART} element={<Art />} />
         <Route path={PATH_CONTRIBUTIONS} element={<Contributions />} />
-        <Route path={PATH_CORES} element={<Cores />} />
+        <Route path={PATH_CURRENCIES} element={<Cores />} />
         <Route path={PATH_EXCHANGE} element={<Exchange />} />
         <Route path={PATH_FEED} element={<Feed />} />
         <Route path={PATH_IA} element={<Ia />} />

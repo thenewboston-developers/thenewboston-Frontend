@@ -116,7 +116,7 @@ const SellCreateEditProduct: SFC = ({className}) => {
               src={preview}
             />
             <S.Bumper />
-            <Select errors={errors} label="Price Core" name="price_core" options={priceCoreOptions} touched={touched} />
+            <Select errors={errors} label="Currency" name="price_core" options={priceCoreOptions} touched={touched} />
             <Input errors={errors} label="Price Amount" name="price_amount" touched={touched} type="number" />
             <Input errors={errors} label="Quantity" name="quantity" touched={touched} type="number" />
             <Checkbox errors={errors} label="Activate Product" name="activation_status" touched={touched} />
