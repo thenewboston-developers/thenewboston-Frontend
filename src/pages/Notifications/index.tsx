@@ -1,9 +1,11 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {mdiCheckAll} from '@mdi/js';
 import orderBy from 'lodash/orderBy';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
+import Button, {ButtonColor, IconColor} from 'components/Button';
 import {getNotifications as _getNotifications} from 'dispatchers/notifications';
 import {getNotifications} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
@@ -42,7 +44,32 @@ const Notifications: SFC = ({className}) => {
     return <S.NotificationContainer>{_notifications}</S.NotificationContainer>;
   };
 
-  return <S.Container className={className}>{renderContent()}</S.Container>;
+  const renderSectionHeading = () => {
+    return (
+      <S.SectionHeading
+        heading={`Notifcations - ${notificationList?.length || 0}`}
+        rightContent={renderMarkAllAsReadButton()}
+      />
+    );
+  };
+
+  const renderMarkAllAsReadButton = () => {
+    return (
+      <Button
+        color={ButtonColor.secondary}
+        iconColor={IconColor.black}
+        iconLeft={mdiCheckAll}
+        text="Mark all as read"
+      />
+    );
+  };
+
+  return (
+    <S.Container className={className}>
+      {renderSectionHeading()}
+      {renderContent()}
+    </S.Container>
+  );
 };
 
 export default Notifications;
