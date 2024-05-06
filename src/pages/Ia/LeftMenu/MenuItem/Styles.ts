@@ -1,19 +1,21 @@
 import MdiIcon from '@mdi/react';
 
 import styled from 'styled-components';
+import {colors} from 'styles';
+import UDropdownMenu from 'components/DropdownMenu';
 
 const HEIGHT = '24px';
 
 export const Container = styled.div<{$isActive: boolean}>`
   align-items: center;
-  background: ${({$isActive}) => ($isActive ? 'rgba(208, 215, 222, 0.32)' : 'transparent')};
+  color: ${({$isActive}) => ($isActive ? `${colors.palette.blue[300]}` : `${colors.black}`)};
   display: flex;
   justify-content: space-between;
-  padding: 8px 12px;
+  padding: 12px 12px;
   transition: background 0.3s ease;
 
   &:hover {
-    background: rgba(208, 215, 222, 0.32);
+    background: ${colors.palette.blue[100]};
     cursor: pointer;
     text-decoration: none;
   }
@@ -49,4 +51,14 @@ export const Tools = styled.div`
   align-items: center;
   display: flex;
   gap: 2px;
+`;
+
+export const DropdownMenu = styled(UDropdownMenu)`
+  margin-right: -8px;
+  height: 24px;
+  width: 24px;
+  & svg {
+    height: 20px !important;
+    width: 20px !important;
+  }
 `;

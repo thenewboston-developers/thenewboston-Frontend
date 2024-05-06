@@ -31,24 +31,28 @@ const DropdownMenu: SFC<DropdownMenuProps> = ({className, icon, options}) => {
 
   useEventListener('mousedown', handleClick, document);
 
-  const handleIconClick = useCallback((): void => {
-    if (!iconRef.current) return;
+  const handleIconClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>): void => {
+      e.stopPropagation();
+      if (!iconRef.current) return;
 
-    const {
-      height: iconHeight,
-      left: iconLeft,
-      top: iconTop,
-      width: iconWidth,
-    } = iconRef.current.getBoundingClientRect();
+      const {
+        height: iconHeight,
+        left: iconLeft,
+        top: iconTop,
+        width: iconWidth,
+      } = iconRef.current.getBoundingClientRect();
 
-    const position: CSSProperties = {
-      right: window.innerWidth - iconLeft - iconWidth / 2,
-      top: iconTop + iconHeight / 2,
-    };
+      const position: CSSProperties = {
+        right: window.innerWidth - iconLeft - iconWidth / 2,
+        top: iconTop + iconHeight / 2,
+      };
 
-    setMenuPosition(position);
-    toggleIsOpen();
-  }, [toggleIsOpen]);
+      setMenuPosition(position);
+      toggleIsOpen();
+    },
+    [toggleIsOpen],
+  );
 
   const handleOptionClick = (optionOnClick: GenericVoidFunction) => async (): Promise<void> => {
     await optionOnClick();

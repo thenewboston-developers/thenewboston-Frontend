@@ -7,6 +7,7 @@ const colors = {
   border: '#efeff4',
   primary: '#0f1419',
   gray: '#747474',
+  lightGray: '#ececec',
   secondary: '#536471',
   white: '#ffffff',
   whiteHover: '#f3f4f6',

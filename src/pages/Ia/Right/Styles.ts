@@ -3,11 +3,14 @@ import styled from 'styled-components';
 
 import UButton from 'components/Button';
 import {InlineInput as UInlineInput} from 'components/FormElements';
+import Icon from 'components/Icon';
 import {colors} from 'styles';
 
 export const Bottom = styled.div`
   border-top: 1px solid ${colors.border};
-  padding: 16px 12px;
+  padding: 8px 10px;
+  background: ${colors.white};
+  border-radius: 16px;
 `;
 
 export const BottomMessage = styled.div`
@@ -15,13 +18,25 @@ export const BottomMessage = styled.div`
 `;
 
 export const Button = styled(UButton)`
-  display: none;
+  border-radius: 10px;
+  background-color: ${colors.lightGray};
+  color: ${colors.gray};
+  padding: 6px;
+  & svg {
+    & path {
+      fill: ${colors.black}!important;
+    }
+  }
+  &:hover {
+    background-color: ${colors.lightGray};
+  }
 `;
 
 export const Container = styled.div`
   display: grid;
   grid-template-rows: auto min-content;
-  height: 100vh;
+  height: calc(100vh - 40px);
+  gap: 10px;
 `;
 
 export const Form = styled(UForm)`
@@ -54,9 +69,23 @@ export const MessagesContainer = styled.div`
   flex-direction: column;
   overflow-y: auto;
   padding-top: 16px;
+  background: ${colors.white};
+  border-radius: 16px;
 `;
 
 export const TextInput = styled(UInlineInput)`
   flex: 1;
-  margin-left: 12px;
+  background-color: ${colors.white};
+  border: none;
+  outline: none;
+
+  &:focus {
+    border: none;
+  }
+`;
+
+export const TextInputIcon = styled(Icon)`
+  border-radius: 10px;
+  background-color: ${colors.lightGray};
+  color: ${colors.gray};
 `;

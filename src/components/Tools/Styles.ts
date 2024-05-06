@@ -7,7 +7,6 @@ export const Container = styled.div`
   display: flex;
   overflow: hidden;
   position: absolute;
-  right: 0;
   transition: all 0.15s;
 
   &:hover {
