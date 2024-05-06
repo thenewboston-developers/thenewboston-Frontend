@@ -5,6 +5,7 @@ const colors = {
   backgroundDark: '#22272e',
   black: '#000000',
   border: '#efeff4',
+  borderDarker: '#d7d7df',
   primary: '#0f1419',
   gray: '#747474',
   secondary: '#536471',

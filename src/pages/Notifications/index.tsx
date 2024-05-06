@@ -45,12 +45,8 @@ const Notifications: SFC = ({className}) => {
   };
 
   const renderSectionHeading = () => {
-    return (
-      <S.SectionHeading
-        heading={`Notifcations - ${notificationList?.length || 0}`}
-        rightContent={renderMarkAllAsReadButton()}
-      />
-    );
+    const unreadCount = notificationList?.filter((notification) => !notification.is_read).length || 0;
+    return <S.SectionHeading heading={`Notifcations - ${unreadCount}`} rightContent={renderMarkAllAsReadButton()} />;
   };
 
   const renderMarkAllAsReadButton = () => {

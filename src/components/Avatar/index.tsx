@@ -4,12 +4,13 @@ import * as S from './Styles';
 
 export interface AvatarProps {
   src: string | null;
+  size?: string;
 }
 
-const Avatar: SFC<AvatarProps> = ({className, src}) => {
+const Avatar: SFC<AvatarProps> = ({className, src, size = '36px'}) => {
   return (
     <S.Container className={className}>
-      <S.Img alt="avatar" src={src || DefaultAvatar} />
+      <S.Img alt="avatar" src={src || DefaultAvatar} $size={size} />
     </S.Container>
   );
 };

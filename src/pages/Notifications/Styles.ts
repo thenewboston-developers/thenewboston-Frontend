@@ -11,9 +11,6 @@ export const Container = styled.div`
 export const NotificationContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin: 0 auto;
-  max-width: 720px;
 `;
 
 export const SectionHeading = styled(USectionHeading)``;
