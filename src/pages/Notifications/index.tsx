@@ -3,13 +3,15 @@ import {useDispatch, useSelector} from 'react-redux';
 import {mdiCheckAll} from '@mdi/js';
 import orderBy from 'lodash/orderBy';
 
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
-import EmptyPage from 'components/EmptyPage';
 import Button, {ButtonColor, IconColor} from 'components/Button';
-import {getNotifications as _getNotifications} from 'dispatchers/notifications';
-import {getNotifications} from 'selectors/state';
-import {AppDispatch, SFC} from 'types';
+import EmptyPage from 'components/EmptyPage';
+import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Notification from './Notification';
+import {AppDispatch, SFC} from 'types';
+import {ToastType} from 'enums';
+import {displayToast} from 'utils/toasts';
+import {getNotifications as _getNotifications, markAllNotificationsAsRead} from 'dispatchers/notifications';
+import {getNotifications} from 'selectors/state';
 import * as S from './Styles';
 
 const Notifications: SFC = ({className}) => {
@@ -44,9 +46,15 @@ const Notifications: SFC = ({className}) => {
     return <S.NotificationContainer>{_notifications}</S.NotificationContainer>;
   };
 
+  const getUnreadNotificationsCount = () => {
+    return notificationList?.filter((notification) => !notification.is_read).length || 0;
+  };
+
   const renderSectionHeading = () => {
-    const unreadCount = notificationList?.filter((notification) => !notification.is_read).length || 0;
-    return <S.SectionHeading heading={`Notifcations - ${unreadCount}`} rightContent={renderMarkAllAsReadButton()} />;
+    const unreadCount = getUnreadNotificationsCount();
+    const sectionTitle = `Notifications${unreadCount > 0 ? ` - ${unreadCount}` : ''}`;
+    const rightContent = unreadCount > 0 ? renderMarkAllAsReadButton() : null;
+    return <S.SectionHeading heading={sectionTitle} rightContent={rightContent} />;
   };
 
   const renderMarkAllAsReadButton = () => {
@@ -55,9 +63,20 @@ const Notifications: SFC = ({className}) => {
         color={ButtonColor.secondary}
         iconColor={IconColor.black}
         iconLeft={mdiCheckAll}
+        onClick={handleMarkAllAsRead}
         text="Mark all as read"
       />
     );
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await dispatch(markAllNotificationsAsRead());
+      displayToast('All Notifications marked as read', ToastType.SUCCESS);
+    } catch (error) {
+      console.error(error);
+      displayToast('Oops.. An error occurred.', ToastType.ERROR);
+    }
   };
 
   return (
