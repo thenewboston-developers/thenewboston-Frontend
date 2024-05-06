@@ -11,7 +11,8 @@ export const Container = styled.div<{$isActive?: boolean}>`
   padding: 8px 16px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  box-shadow: ${({$isActive}) => ($isActive ? '0px 2px 2px 0px rgba(155, 156, 157, 0.25)' : 'none')};
+  gap: 10px;
 
   &:hover {
     color: ${({$isActive}) => ($isActive ? colors.black : '#4458b8')};

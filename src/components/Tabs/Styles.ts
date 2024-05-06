@@ -4,7 +4,8 @@ import {breakpoints} from 'styles';
 export const Container = styled.div`
   display: flex;
   border-radius: 100px;
-  background: #dfdfdf;
+  background: #f4f5f6;
+  border: 1px solid #dfdfdf;
   padding: 6px;
   overflow-x: auto;
   @media (min-width: ${breakpoints.mobile}) {
