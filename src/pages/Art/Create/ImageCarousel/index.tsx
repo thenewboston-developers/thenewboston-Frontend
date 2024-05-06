@@ -53,7 +53,7 @@ const ImageCarousel: SFC<ImageCarouselProps> = ({className, description, imageUr
             <Button onClick={toggleArtworkModal} text="Save" />
           ) : (
             <>
-              <S.IconContainer>
+              <S.IconContainer style={{cursor: 'default'}}>
                 <S.Icon path={mdiCheckAll} size="20px" />
                 <S.Text>Saved</S.Text>
               </S.IconContainer>
