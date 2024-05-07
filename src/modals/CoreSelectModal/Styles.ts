@@ -1,9 +1,16 @@
 import styled from 'styled-components';
 
+import UButton from 'components/Button';
 import UModal from 'components/Modal';
 import {breakpoints} from 'styles';
 import RadioCard from './RadioCard';
-import UButton from 'components/Button';
+
+export const Button = styled(UButton)`
+  border-radius: 100px;
+  height: 44px;
+  margin-top: 32px;
+  width: 112px;
+`;
 
 export const Modal = styled(UModal)`
   display: flex;
@@ -25,11 +32,4 @@ export const RadioCardContainer = styled.div`
 export const RadioCardWrapper = styled(RadioCard)`
   border-radius: 14px;
   width: 224px;
-`;
-
-export const Button = styled(UButton)`
-  width: 112px;
-  height: 44px;
-  border-radius: 100px;
-  margin-top: 32px;
 `;

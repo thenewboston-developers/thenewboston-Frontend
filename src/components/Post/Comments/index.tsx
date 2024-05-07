@@ -16,7 +16,6 @@ import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import Comment from './Comment';
 import * as S from './Styles';
-import {IconRight} from '../../Button/Styles';
 
 export interface CommentsProps {
   postId: number;
@@ -70,20 +69,15 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     return commentList.map((comment) => <Comment comment={comment} key={comment.id} />);
   };
 
-  const toggleMenu = () => {
-    toggleCoreSelectModal();
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   const renderSelectCoreElement = () => {
     if (manager.activeCommentCore) {
       return (
         <S.IconContainer onClick={toggleMenu}>
           <S.Img alt="logo" src={manager.activeCommentCore.logo || Coin} />
           {coreSelectModalIsOpen ? (
-            <IconRight path={mdiChevronUp} size="20px" />
+            <S.IconRight path={mdiChevronUp} size="20px" />
           ) : (
-            <IconRight path={mdiChevronDown} size="20px" />
+            <S.IconRight path={mdiChevronDown} size="20px" />
           )}
         </S.IconContainer>
       );
@@ -94,6 +88,11 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
         <S.Icon path={mdiPlusCircle} size="24px" />
       </S.IconContainer>
     );
+  };
+
+  const toggleMenu = () => {
+    toggleCoreSelectModal();
+    setIsMenuOpen(!isMenuOpen);
   };
 
   const validationSchema = useMemo(() => {

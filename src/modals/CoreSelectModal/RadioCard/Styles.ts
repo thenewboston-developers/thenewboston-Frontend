@@ -1,4 +1,4 @@
-import styled, {css} from 'styled-components';
+import styled from 'styled-components';
 
 import {colors, radioCardStyle} from 'styles';
 
@@ -6,10 +6,10 @@ export const IMG_HEIGHT = 24;
 
 export const Container = styled.div<{$isActive: boolean}>`
   ${radioCardStyle};
-  justify-content: flex-start;
-  gap: 4px;
+  background-color: ${(props) => (props.$isActive ? `${colors.white}` : `#f4f4f4`)};
   border-radius: 16px;
-  background-color: ${(props) => (props.$isActive ? `${colors.white}` : `${colors.palette.gray[200]}`)};
+  gap: 4px;
+  justify-content: flex-start;
 `;
 
 export const Img = styled.img`
@@ -36,13 +36,13 @@ export const Title = styled.div`
 `;
 
 export const Radio = styled.div`
+  border-radius: 50%;
   display: block;
   margin: 0 0 0 auto;
-  border-radius: 50%;
 `;
 
 export const RadioInput = styled.input`
-  width: 16px;
-  height: 16px;
   accent-color: #6287b1;
+  height: 16px;
+  width: 16px;
 `;

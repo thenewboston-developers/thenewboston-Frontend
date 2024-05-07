@@ -33,7 +33,14 @@ const RadioCard: SFC<RadioCardProps> = ({className, core}) => {
         <S.Title>{core.ticker}</S.Title>
       </S.ImageContainer>
       <S.Radio>
-        <S.RadioInput ref={radioRef} name={'ticker'} value={core.ticker} type="radio" checked={isActiveCommentCore} />
+        <S.RadioInput
+          checked={isActiveCommentCore}
+          name="ticker"
+          readOnly
+          ref={radioRef}
+          type="radio"
+          value={core.ticker}
+        />
       </S.Radio>
     </S.Container>
   );
