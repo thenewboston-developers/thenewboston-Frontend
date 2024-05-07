@@ -1,26 +1,22 @@
-import {useDispatch, useSelector} from 'react-redux';
 import {useEffect, useMemo, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
-import {AppDispatch, SFC} from 'types';
-import {colors} from 'styles';
-import {Col, Row} from 'styles/components/GridStyle';
-import {displayErrorToast} from 'utils/toasts';
-import {getCourses as _getCourses, resetCourses as _resetCourses} from 'dispatchers/courses';
-import {getCourses as _getCoursesState, getSelf} from 'selectors/state';
-import {mdiMagnify} from '@mdi/js';
-import {PublicationStatus} from 'enums';
-import {UniversityHeader} from './Header';
-import {useToggle} from 'hooks';
+import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Button from 'components/Button';
-import Course from './Course';
-import CourseModal from 'modals/CourseModal';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Loader from 'components/Loader';
+import {getCourses as _getCourses, resetCourses as _resetCourses} from 'dispatchers/courses';
+import {PublicationStatus} from 'enums';
+import {useToggle} from 'hooks';
+import CourseModal from 'modals/CourseModal';
 import Toolbar from 'pages/University/Toolbar';
-import Tooltip from 'components/Tooltip';
-
+import {getCourses as _getCoursesState, getSelf} from 'selectors/state';
+import {Col, Row} from 'styles/components/GridStyle';
+import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
+import Course from './Course';
+import {UniversityHeader} from './Header';
 import * as S from './Styles';
 
 export interface CoursesProps {
@@ -30,13 +26,10 @@ export interface CoursesProps {
 const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
   const [courseModalIsOpen, toggleCourseModal] = useToggle(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
-
   const {hasMore, isLoading, courses} = useSelector(_getCoursesState);
+  const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
-  const dispatch = useDispatch<AppDispatch>();
-
-  const courseList = useMemo(() => Object.values(courses), [courses]);
   const apiParams = useMemo(() => {
     if (selfCourses && self.id) {
       return {instructor_id: self.id};
@@ -45,8 +38,10 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
     }
   }, [selfCourses, self.id]);
 
+  const courseList = useMemo(() => Object.values(courses), [courses]);
+
   useEffect(() => {
-    const initFetch = async () => {
+    (async () => {
       try {
         dispatch(_resetCourses());
         setIsInitialLoading(true);
@@ -57,9 +52,7 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
         setIsInitialLoading(false);
         displayErrorToast('Error fetching courses');
       }
-    };
-
-    initFetch();
+    })();
   }, [dispatch, apiParams]);
 
   const fetchMoreCourses = async () => {
@@ -97,6 +90,10 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
     return <EmptyPage bottomText="No courses to display." graphic={LeavesEmptyState} topText="Nothing here!" />;
   };
 
+  const renderCourseModal = () => {
+    return courseModalIsOpen ? <CourseModal close={toggleCourseModal} /> : null;
+  };
+
   const renderSectionHeading = () => {
     if (selfCourses) return <S.SectionHeading heading="My Courses" rightContent={renderAddCourseButton()} />;
 
@@ -109,18 +106,8 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
     return (
       <S.SectionSubHeading>
         <h2>{subHeading}</h2>
-        <Tooltip text="Feature coming soon...">
-          <S.SearchContainer className="disabled">
-            <S.Input placeholder="Search" />
-            <S.Icon color={colors.gray} path={mdiMagnify} size={'20px'} />
-          </S.SearchContainer>
-        </Tooltip>
       </S.SectionSubHeading>
     );
-  };
-
-  const renderCourseModal = () => {
-    return courseModalIsOpen ? <CourseModal close={toggleCourseModal} /> : null;
   };
 
   return (
