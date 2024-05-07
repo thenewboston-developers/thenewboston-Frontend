@@ -5,6 +5,7 @@ import ImageCarousel from './ImageCarousel';
 import TNBLogo from 'components/TNBLogo';
 import yup from 'utils/yup';
 import {ButtonType} from 'components/Button';
+import {DEFAULT_CORE_TICKER, OPENAI_IMAGE_CREATION_FEE} from 'constants/general';
 import {CreateOpenAIImageResponse, SFC} from 'types';
 import {Textarea} from 'components/FormElements';
 import {createOpenAIImage} from 'api/openaiImages';
@@ -132,17 +133,21 @@ const Create: SFC = ({className}) => {
                     <h3>Available</h3>
                     <span>
                       <S.AvailableBalance>
-                        <TNBLogo /> <b>{formatNumber(stats?.default_wallet_balance || 0)}</b>&nbsp;TNB
+                        <TNBLogo /> <b>{formatNumber(stats?.default_wallet_balance || 0)}</b>&nbsp;{DEFAULT_CORE_TICKER}
                       </S.AvailableBalance>
                     </span>
                   </S.Row>
                   <S.Row>
                     <h3>1 image generation fee</h3>
-                    <span>1 TNB</span>
+                    <span>
+                      {OPENAI_IMAGE_CREATION_FEE} {DEFAULT_CORE_TICKER}
+                    </span>
                   </S.Row>
                   <S.Row>
                     <h3>Total fee</h3>
-                    <span>{values.quantity} TNB</span>
+                    <span>
+                      {values.quantity} {DEFAULT_CORE_TICKER}
+                    </span>
                   </S.Row>
                   <S.Row $gap={10}>
                     <S.Button
