@@ -3,12 +3,13 @@ import React, {useMemo} from 'react';
 import Loader from 'components/Loader';
 import {SFC} from 'types';
 import * as S from './Styles';
-import {ButtonColor, ButtonType} from './types';
+import {ButtonColor, ButtonType, IconColor} from './types';
 
 export interface ButtonProps {
   color?: ButtonColor;
   dirty?: boolean;
   disabled?: boolean;
+  iconColor?: IconColor;
   iconLeft?: string;
   iconRight?: string;
   isSubmitting?: boolean;
@@ -23,6 +24,7 @@ const Button: SFC<ButtonProps> = ({
   className,
   dirty = true,
   disabled = false,
+  iconColor = IconColor.white,
   iconLeft,
   iconRight,
   isSubmitting = false,
@@ -42,9 +44,9 @@ const Button: SFC<ButtonProps> = ({
 
   const renderButtonContent = () => (
     <>
-      {iconLeft ? <S.IconLeft color="white" path={iconLeft} size="18px" /> : null}
+      {iconLeft ? <S.IconLeft color={iconColor} path={iconLeft} size="18px" /> : null}
       {text}
-      {iconRight ? <S.IconRight color="white" path={iconRight} size="18px" /> : null}
+      {iconRight ? <S.IconRight color={iconColor} path={iconRight} size="18px" /> : null}
     </>
   );
 
@@ -62,5 +64,5 @@ const Button: SFC<ButtonProps> = ({
   );
 };
 
-export {ButtonColor, ButtonType};
+export {ButtonColor, ButtonType, IconColor};
 export default Button;

@@ -27,3 +27,12 @@ export const updateNotification = async (
     throw error;
   }
 };
+
+export const markAllNotificationsAsRead = async (): Promise<void> => {
+  try {
+    await axios.patch(`${BASE_URL}/mark_all_as_read`, {}, authorizationHeaders());
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

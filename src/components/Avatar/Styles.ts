@@ -6,8 +6,8 @@ export const Container = styled.div`
   position: relative;
 `;
 
-export const Img = styled.img`
+export const Img = styled.img<{$size: string}>`
   border-radius: 50%;
-  height: 36px;
-  width: 36px;
+  height: ${({$size}) => $size};
+  width: ${({$size}) => $size};
 `;
