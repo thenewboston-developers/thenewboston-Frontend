@@ -110,8 +110,8 @@ const Right: SFC = ({className}) => {
               <S.TextInput errors={errors} name="text" placeholder="Please type" touched={touched} />
               <S.Button
                 dirty={dirty}
-                iconRight={mdiSend}
                 disabled={isSubmitting}
+                iconRight={mdiSend}
                 isSubmitting={isSubmitting}
                 isValid={isValid}
                 text=""

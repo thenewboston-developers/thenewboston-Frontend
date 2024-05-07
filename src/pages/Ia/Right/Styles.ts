@@ -3,14 +3,13 @@ import styled from 'styled-components';
 
 import UButton from 'components/Button';
 import {InlineInput as UInlineInput} from 'components/FormElements';
-import Icon from 'components/Icon';
 import {colors} from 'styles';
 
 export const Bottom = styled.div`
-  border-top: 1px solid ${colors.border};
-  padding: 8px 10px;
   background: ${colors.white};
   border-radius: 16px;
+  border-top: 1px solid ${colors.border};
+  padding: 8px 10px;
 `;
 
 export const BottomMessage = styled.div`
@@ -22,13 +21,15 @@ export const Button = styled(UButton)`
   background-color: ${colors.lightGray};
   color: ${colors.gray};
   padding: 6px;
-  & svg {
-    & path {
-      fill: ${colors.black}!important;
-    }
-  }
+
   &:hover {
     background-color: ${colors.lightGray};
+  }
+
+  & svg {
+    & path {
+      fill: ${colors.black} !important;
+    }
   }
 `;
 
@@ -82,10 +83,4 @@ export const TextInput = styled(UInlineInput)`
   &:focus {
     border: none;
   }
-`;
-
-export const TextInputIcon = styled(Icon)`
-  border-radius: 10px;
-  background-color: ${colors.lightGray};
-  color: ${colors.gray};
 `;

@@ -1,8 +1,8 @@
 import MdiIcon from '@mdi/react';
-
 import styled from 'styled-components';
-import {colors} from 'styles';
+
 import UDropdownMenu from 'components/DropdownMenu';
+import {colors} from 'styles';
 
 const HEIGHT = '24px';
 
@@ -21,23 +21,14 @@ export const Container = styled.div<{$isActive: boolean}>`
   }
 `;
 
-export const Icon = styled(MdiIcon)`
-  color: #888;
+export const DropdownMenu = styled(UDropdownMenu)`
+  margin-right: -8px;
+  height: 24px;
+  width: 24px;
 `;
 
-export const IconWrapper = styled.div`
-  align-items: center;
-  border-radius: 50%;
-  display: flex;
-  height: ${HEIGHT};
-  justify-content: center;
-  padding: 4px;
-  transition: background-color 0.3s, color 0.3s;
-  width: ${HEIGHT};
-
-  &:hover {
-    background: rgba(208, 215, 222, 0.64);
-  }
+export const Icon = styled(MdiIcon)`
+  color: #888;
 `;
 
 export const Text = styled.div`
@@ -51,14 +42,4 @@ export const Tools = styled.div`
   align-items: center;
   display: flex;
   gap: 2px;
-`;
-
-export const DropdownMenu = styled(UDropdownMenu)`
-  margin-right: -8px;
-  height: 24px;
-  width: 24px;
-  & svg {
-    height: 20px !important;
-    width: 20px !important;
-  }
 `;

@@ -1,4 +1,4 @@
-import {CSSProperties, ReactNode, useCallback, useRef, useState} from 'react';
+import {CSSProperties, MouseEvent, ReactNode, useCallback, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
 
 import Icon from 'components/Icon';
@@ -32,7 +32,7 @@ const DropdownMenu: SFC<DropdownMenuProps> = ({className, icon, options}) => {
   useEventListener('mousedown', handleClick, document);
 
   const handleIconClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>): void => {
+    (e: MouseEvent<HTMLDivElement>): void => {
       e.stopPropagation();
       if (!iconRef.current) return;
 

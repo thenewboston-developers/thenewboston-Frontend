@@ -6,11 +6,11 @@ import {mdiDotsVertical} from '@mdi/js';
 import {useToggle} from 'hooks';
 import ConversationDeleteModal from 'modals/ConversationDeleteModal';
 import ConversationEditModal from 'modals/ConversationEditModal';
+import PostModal from 'modals/PostModal';
 import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, Conversation, SFC} from 'types';
 import * as S from './Styles';
-import PostModal from 'modals/PostModal';
 
 export interface MenuItemProps {
   conversation: Conversation;

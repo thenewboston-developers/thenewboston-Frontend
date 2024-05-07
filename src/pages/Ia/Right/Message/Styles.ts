@@ -1,8 +1,9 @@
+import {HTMLAttributes} from 'react';
 import styled, {css} from 'styled-components';
 
 import UTools from 'components/Tools';
+import {SenderType} from 'enums';
 import {colors, fonts} from 'styles';
-import {HTMLAttributes} from 'react';
 
 interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
   senderType: string;
@@ -14,7 +15,7 @@ export const Container = styled.div<ContainerProps>`
   position: relative;
 
   ${(props) =>
-    props.senderType === 'USER' &&
+    props.senderType === SenderType.USER &&
     css`
       flex-direction: row-reverse;
     `}
@@ -25,23 +26,22 @@ export const Container = styled.div<ContainerProps>`
 `;
 
 export const Content = styled.div<ContainerProps>`
-  font-size: 14px;
-  margin-top: 1px;
   background-color: ${colors.lightGray};
+  border-radius: 0 10px 10px 10px;
   color: ${colors.black};
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 0px 10px 10px 10px;
-  font-weight: 300;
-  max-width: 75%;
-  line-height: 18px;
   display: inline-block;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 18px;
+  margin-top: 5px;
+  max-width: 75%;
+  padding: 10px;
 
   ${(props) =>
-    props.senderType === 'USER' &&
+    props.senderType === SenderType.USER &&
     css`
       background-color: ${colors.palette.blue[400]};
-      border-radius: 10px 0px 10px 10px;
+      border-radius: 10px 0 10px 10px;
       color: ${colors.white};
     `}
 `;
@@ -88,7 +88,7 @@ export const Right = styled.div<ContainerProps>`
   flex: auto;
 
   ${(props) =>
-    props.senderType === 'USER'
+    props.senderType === SenderType.USER
       ? css`
           display: flex;
           flex-direction: column;
@@ -100,17 +100,11 @@ export const Right = styled.div<ContainerProps>`
         `}
 `;
 
-export const SenderType = styled.div`
-  font-size: 12px;
-  margin-top: 4px;
-  color: #888;
-`;
-
 export const Tools = styled(UTools)<ContainerProps>`
   top: -6px;
 
   ${(props) =>
-    props.senderType === 'USER'
+    props.senderType === SenderType.USER
       ? css`
           left: 12px;
         `

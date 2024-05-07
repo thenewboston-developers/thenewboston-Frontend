@@ -48,10 +48,10 @@ const Message: SFC<MessageProps> = ({className, message}) => {
   return (
     <>
       <S.Container
-        senderType={sender_type}
         className={className}
         onMouseOut={handleMouseOut}
         onMouseOver={handleMouseOver}
+        senderType={sender_type}
       >
         <Link to={`/profile/${sender.id}`}>
           <Avatar src={sender.avatar} />
