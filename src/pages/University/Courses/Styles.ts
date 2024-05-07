@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import _Icon from '@mdi/react';
+
 import USectionHeading from 'components/SectionHeading';
 import {breakpoints, colors, fonts} from 'styles';
-import _Icon from '@mdi/react';
 
 export const Container = styled.div`
   height: 100%;
@@ -23,39 +24,16 @@ export const ContentContainer = styled.div`
   }
 `;
 
-export const SectionSubHeading = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  h2 {
-    font-weight: ${fonts.weight.semiBold};
-  }
-`;
-
-export const SectionHeading = styled(USectionHeading)`
-  margin-bottom: 20px;
-`;
-
-export const SearchContainer = styled.div`
-  padding-left: 10px;
-  position: relative;
-
-  @media (min-width: ${breakpoints.mini}) {
-    margin-left: -10px;
-    width: 60%;
-  }
-
-  @media (min-width: ${breakpoints.mobile}) {
-    margin-left: 0;
-    width: fit-content;
-  }
+export const Icon = styled(_Icon)`
+  left: 20px;
+  position: absolute;
+  top: 9px;
 `;
 
 export const Input = styled.input`
   border-radius: 14px;
   border: none;
   box-shadow: 0 2px 2px rgba(211, 211, 211, 0.25);
-  padding-left: 2rem;
   padding: 10px 14px;
   position: relative;
 
@@ -75,8 +53,15 @@ export const Input = styled.input`
   }
 `;
 
-export const Icon = styled(_Icon)`
-  left: 20px;
-  position: absolute;
-  top: 9px;
+export const SectionHeading = styled(USectionHeading)`
+  margin-bottom: 20px;
+`;
+
+export const SectionSubHeading = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  h2 {
+    font-weight: ${fonts.weight.semiBold};
+  }
 `;
