@@ -20,7 +20,7 @@ export const Header = styled.div`
   display: flex;
   font-weight: ${fonts.weight.bold};
   justify-content: space-between;
-  margin-bottom: 36px;
+  margin-bottom: 20px;
   padding: 16px 24px 12px;
   position: relative;
   border-bottom: 1px solid #f1f1f1;

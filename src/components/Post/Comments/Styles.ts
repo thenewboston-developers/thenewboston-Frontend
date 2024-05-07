@@ -1,6 +1,6 @@
 import {Form as UForm} from 'formik';
 import styled from 'styled-components';
-import UMdiIcon from '@mdi/react';
+import UIcon from '@mdi/react';
 
 import UButton from 'components/Button';
 import {InlineInput as UInlineInput} from 'components/FormElements';
@@ -26,7 +26,18 @@ export const ContentInput = styled(UInlineInput)`
   }
 `;
 
-export const Icon = styled(UMdiIcon)`
+export const Form = styled(UForm)`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+
+  @media (max-width: ${breakpoints.mini}) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+`;
+
+export const Icon = styled(UIcon)`
   color: ${colors.secondary};
   margin-left: 12px;
 
@@ -42,6 +53,10 @@ export const IconContainer = styled.div`
   justify-content: center;
 `;
 
+export const IconRight = styled(UIcon)`
+  margin-left: 6px;
+`;
+
 export const Img = styled.img`
   border-radius: 50%;
   height: ${`${IMG_HEIGHT}px`};
@@ -54,20 +69,11 @@ export const Img = styled.img`
   }
 `;
 
-export const Form = styled(UForm)`
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-
-  @media (max-width: ${breakpoints.mini}) {
-    align-items: stretch;
-    flex-direction: column;
-  }
-`;
-
 export const PriceAmountInput = styled(UInlineInput)`
-  margin-left: 12px;
-  width: 80px;
+  border-left: 1px solid ${colors.borderDarker};
+  border-radius: 0 8px 8px 0;
+  margin-left: 8px;
+  width: 130px;
 
   @media (max-width: ${breakpoints.mini}) {
     margin: 8px 0;
@@ -77,5 +83,9 @@ export const PriceAmountInput = styled(UInlineInput)`
 
 export const PriceAmountInputContainer = styled.div`
   align-items: center;
-  display: flex;
+  background-color: ${colors.whiteHover};
+  border-radius: 8px;
+  display: grid;
+  grid-auto-flow: column;
+  margin-left: 12px;
 `;
