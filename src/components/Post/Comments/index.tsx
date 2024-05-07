@@ -1,8 +1,8 @@
-import {useMemo} from 'react';
+import {useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
-import {mdiPlusCircle} from '@mdi/js';
+import {mdiChevronDown, mdiChevronUp, mdiPlusCircle} from '@mdi/js';
 
 import Coin from 'assets/coin.svg';
 import Avatar from 'components/Avatar';
@@ -16,6 +16,7 @@ import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import Comment from './Comment';
 import * as S from './Styles';
+import {IconRight} from '../../Button/Styles';
 
 export interface CommentsProps {
   postId: number;
@@ -23,6 +24,7 @@ export interface CommentsProps {
 
 const Comments: SFC<CommentsProps> = ({className, postId}) => {
   const [coreSelectModalIsOpen, toggleCoreSelectModal] = useToggle(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const comments = useSelector(getComments);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
@@ -68,13 +70,27 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     return commentList.map((comment) => <Comment comment={comment} key={comment.id} />);
   };
 
+  const toggleMenu = () => {
+    toggleCoreSelectModal();
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const renderSelectCoreElement = () => {
     if (manager.activeCommentCore) {
-      return <S.Img alt="logo" onClick={toggleCoreSelectModal} src={manager.activeCommentCore.logo || Coin} />;
+      return (
+        <S.IconContainer onClick={toggleMenu}>
+          <S.Img alt="logo" src={manager.activeCommentCore.logo || Coin} />
+          {coreSelectModalIsOpen ? (
+            <IconRight path={mdiChevronUp} size="20px" />
+          ) : (
+            <IconRight path={mdiChevronDown} size="20px" />
+          )}
+        </S.IconContainer>
+      );
     }
 
     return (
-      <S.IconContainer onClick={toggleCoreSelectModal}>
+      <S.IconContainer onClick={toggleMenu}>
         <S.Icon path={mdiPlusCircle} size="24px" />
       </S.IconContainer>
     );
@@ -100,6 +116,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
               <Avatar src={self.avatar} />
               <S.ContentInput errors={errors} name="content" placeholder="Add a comment..." touched={touched} />
               <S.PriceAmountInputContainer>
+                {renderSelectCoreElement()}
                 <S.PriceAmountInput
                   errors={errors}
                   name="price_amount"
@@ -107,7 +124,6 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
                   touched={touched}
                   type="number"
                 />
-                {renderSelectCoreElement()}
               </S.PriceAmountInputContainer>
               <S.Button
                 dirty={dirty}

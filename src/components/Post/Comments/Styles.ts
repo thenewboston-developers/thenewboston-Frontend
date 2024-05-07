@@ -66,8 +66,11 @@ export const Form = styled(UForm)`
 `;
 
 export const PriceAmountInput = styled(UInlineInput)`
-  margin-left: 12px;
+  margin-left: 8px;
   width: 80px;
+  border-left: 1px solid ${colors.borderDarker};
+  border-radius: 0px 8px 8px 0px;
+  width: 130px;
 
   @media (max-width: ${breakpoints.mini}) {
     margin: 8px 0;
@@ -77,5 +80,9 @@ export const PriceAmountInput = styled(UInlineInput)`
 
 export const PriceAmountInputContainer = styled.div`
   align-items: center;
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
+  background-color: ${colors.whiteHover};
+  margin-left: 12px;
+  border-radius: 8px;
 `;
