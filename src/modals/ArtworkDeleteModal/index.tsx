@@ -1,11 +1,11 @@
 import {useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 
 import {deleteArtwork} from 'dispatchers/artworks';
 import {ToastType} from 'enums';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import * as S from './Styles';
-import {useNavigate} from 'react-router-dom';
 
 export interface ArtworkDeleteModalProps {
   artworkId: number;
@@ -20,8 +20,8 @@ const ArtworkDeleteModal: SFC<ArtworkDeleteModalProps> = ({artworkId, className,
     try {
       await dispatch(deleteArtwork(artworkId));
       displayToast('Artwork deleted!', ToastType.SUCCESS);
-      close();
       navigate('/art/marketplace');
+      close();
     } catch (error) {
       console.error(error);
       displayErrorToast('Error deleting artwork');
