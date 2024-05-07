@@ -2,17 +2,21 @@ import styled from 'styled-components';
 
 import {colors} from 'styles';
 
+const HEIGHT = 34;
+const BORDER_RADIUS = HEIGHT / 2;
+
 export const Container = styled.div<{$isActive?: boolean}>`
+  align-items: center;
   background: ${({$isActive}) => ($isActive ? colors.white : 'transparent')};
-  border-radius: 100px;
+  border-radius: ${`${BORDER_RADIUS}px`};
+  box-shadow: ${({$isActive}) => ($isActive ? '0 2px 4px rgb(0 0 0 / 8%)' : 'none')};
   color: ${({$isActive}) => ($isActive ? colors.black : colors.primary)};
+  display: flex;
   font-size: 13px;
   font-weight: ${({$isActive}) => ($isActive ? 600 : 400)};
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  box-shadow: ${({$isActive}) => ($isActive ? '0px 2px 2px 0px rgba(155, 156, 157, 0.25)' : 'none')};
   gap: 10px;
+  height: ${`${HEIGHT}px`};
+  padding: 8px 16px;
 
   &:hover {
     color: ${({$isActive}) => ($isActive ? colors.black : '#4458b8')};
