@@ -12,6 +12,7 @@ import {ToastType} from 'enums';
 import {displayToast} from 'utils/toasts';
 import {getNotifications as _getNotifications, markAllNotificationsAsRead} from 'dispatchers/notifications';
 import {getNotifications} from 'selectors/state';
+import {getUnreadNotificationsCount} from 'utils/notifications';
 import * as S from './Styles';
 
 const Notifications: SFC = ({className}) => {
@@ -46,12 +47,8 @@ const Notifications: SFC = ({className}) => {
     return <S.NotificationContainer>{_notifications}</S.NotificationContainer>;
   };
 
-  const getUnreadNotificationsCount = () => {
-    return notificationList?.filter((notification) => !notification.is_read).length || 0;
-  };
-
   const renderSectionHeading = () => {
-    const unreadCount = getUnreadNotificationsCount();
+    const unreadCount = getUnreadNotificationsCount(notificationList);
     const sectionTitle = `Notifications${unreadCount > 0 ? ` - ${unreadCount}` : ''}`;
     const rightContent = unreadCount > 0 ? renderMarkAllAsReadButton() : null;
     return <S.SectionHeading heading={sectionTitle} rightContent={rightContent} />;

@@ -1,3 +1,4 @@
+import {useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {
@@ -15,19 +16,25 @@ import {
   mdiWalletBifoldOutline,
 } from '@mdi/js';
 
-import {AppDispatch, SFC} from 'types';
-import {PATH_COURSES} from 'constants/paths';
-import {getSelf} from 'selectors/state';
-import {logout} from 'dispatchers/authentication';
+import BadgeCount from 'components/BadgeCount';
 import CreatePostButton from './CreatePostButton';
 import MenuButton from './MenuItem/MenuButton';
 import MenuLink from './MenuItem/MenuLink';
+import {AppDispatch, SFC} from 'types';
+import {PATH_COURSES} from 'constants/paths';
+import {getSelf, getNotifications} from 'selectors/state';
+import {getUnreadNotificationsCount} from 'utils/notifications';
+import {logout} from 'dispatchers/authentication';
 import * as S from './Styles';
 
 const LeftNav: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const self = useSelector(getSelf);
+  const notifications = useSelector(getNotifications);
+  const notificationsList = useMemo(() => {
+    return Object.values(notifications);
+  }, [notifications]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -43,7 +50,9 @@ const LeftNav: SFC = ({className}) => {
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
         <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
         <MenuLink icon={mdiFaceWoman} rootPath="/ia" text="Ia" to="/ia" />
-        <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications" />
+        <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications">
+          <BadgeCount items={notificationsList} countFunction={getUnreadNotificationsCount} />
+        </MenuLink>
         <MenuLink icon={mdiAccount} rootPath={`/profile/${self.id}`} text="Profile" to={`/profile/${self.id}`} />
         <MenuLink icon={mdiShopping} rootPath="/shop" text="Shop" to="/shop/buy/catalog" />
         <MenuLink icon={mdiSchool} rootPath={`${PATH_COURSES}`} text="University" to={`${PATH_COURSES}`} />
