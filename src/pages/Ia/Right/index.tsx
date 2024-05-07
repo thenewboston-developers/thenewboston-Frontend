@@ -1,16 +1,15 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
-import {mdiFaceWoman} from '@mdi/js';
+import {mdiFaceWoman, mdiSend} from '@mdi/js';
 
-import Avatar from 'components/Avatar';
 import {ButtonType} from 'components/Button';
 import Icon from 'components/Icon';
 import {createConversation} from 'dispatchers/conversations';
 import {createMessage, getMessages as _getMessages} from 'dispatchers/messages';
-import {getManager, getMessages, getSelf} from 'selectors/state';
+import {getManager, getMessages} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
@@ -26,7 +25,6 @@ const Right: SFC = ({className}) => {
   const messagesRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const params = useParams();
-  const self = useSelector(getSelf);
 
   const conversationId = params.id ? parseInt(params.id, 10) : manager.activeConversationId || null;
 
@@ -109,13 +107,11 @@ const Right: SFC = ({className}) => {
         >
           {({dirty, errors, isSubmitting, isValid, touched}) => (
             <S.Form>
-              <Link to={`/profile/${self.id}`}>
-                <Avatar src={self.avatar} />
-              </Link>
-              <S.TextInput errors={errors} name="text" placeholder="Send a message..." touched={touched} />
+              <S.TextInput errors={errors} name="text" placeholder="Please type" touched={touched} />
               <S.Button
                 dirty={dirty}
                 disabled={isSubmitting}
+                iconRight={mdiSend}
                 isSubmitting={isSubmitting}
                 isValid={isValid}
                 text=""

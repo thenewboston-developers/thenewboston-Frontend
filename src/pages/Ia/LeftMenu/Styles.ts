@@ -12,6 +12,8 @@ export const ButtonContainer = styled.div`
 `;
 
 export const Container = styled.div`
+  background: ${colors.white};
+  border-radius: 16px;
   border-right: 1px solid ${colors.border};
   overflow-y: auto;
   padding: 24px 0;

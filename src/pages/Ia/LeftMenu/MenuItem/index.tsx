@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
-import {mdiDelete, mdiPencil} from '@mdi/js';
+import {mdiDotsVertical} from '@mdi/js';
 
 import {useToggle} from 'hooks';
 import ConversationDeleteModal from 'modals/ConversationDeleteModal';
 import ConversationEditModal from 'modals/ConversationEditModal';
+import PostModal from 'modals/PostModal';
 import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, Conversation, SFC} from 'types';
@@ -18,6 +19,7 @@ export interface MenuItemProps {
 const MenuItem: SFC<MenuItemProps> = ({className, conversation}) => {
   const [conversationDeleteModalIsOpen, toggleConversationDeleteModal] = useToggle(false);
   const [conversationEditModalIsOpen, toggleConversationEditModal] = useToggle(false);
+  const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [toolsVisible, setToolsVisible] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
@@ -35,13 +37,11 @@ const MenuItem: SFC<MenuItemProps> = ({className, conversation}) => {
     navigate(`/ia/${conversation.id}`);
   };
 
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleDeleteClick = () => {
     toggleConversationDeleteModal();
   };
 
-  const handleEditClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleEditClick = () => {
     toggleConversationEditModal();
   };
 
@@ -53,16 +53,22 @@ const MenuItem: SFC<MenuItemProps> = ({className, conversation}) => {
     setToolsVisible(true);
   };
 
+  const menuOptions = [
+    {
+      label: 'Edit',
+      onClick: handleEditClick,
+    },
+    {
+      label: 'Delete',
+      onClick: handleDeleteClick,
+    },
+  ];
+
   const renderTools = () => {
     if (!toolsVisible) return null;
     return (
       <S.Tools>
-        <S.IconWrapper onClick={handleEditClick}>
-          <S.Icon path={mdiPencil} />
-        </S.IconWrapper>
-        <S.IconWrapper onClick={handleDeleteClick}>
-          <S.Icon path={mdiDelete} />
-        </S.IconWrapper>
+        <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />
       </S.Tools>
     );
   };
@@ -79,12 +85,14 @@ const MenuItem: SFC<MenuItemProps> = ({className, conversation}) => {
         <S.Text>{conversation.name}</S.Text>
         {renderTools()}
       </S.Container>
+
       {conversationDeleteModalIsOpen ? (
         <ConversationDeleteModal close={toggleConversationDeleteModal} conversationId={conversation.id} />
       ) : null}
       {conversationEditModalIsOpen ? (
         <ConversationEditModal close={toggleConversationEditModal} conversation={conversation} />
       ) : null}
+      {postModalIsOpen ? <PostModal close={togglePostModal} /> : null}
     </>
   );
 };

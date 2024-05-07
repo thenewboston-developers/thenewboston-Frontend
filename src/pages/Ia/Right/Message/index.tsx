@@ -21,7 +21,7 @@ const Message: SFC<MessageProps> = ({className, message}) => {
   const [toolsVisible, setToolsVisible] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const {modified_date, sender, text} = message;
+  const {modified_date, sender, text, sender_type} = message;
 
   const handleClick = () => {
     navigate(`/profile/${sender.id}`);
@@ -38,30 +38,34 @@ const Message: SFC<MessageProps> = ({className, message}) => {
   const renderTools = () => {
     if (!toolsVisible) return null;
     return (
-      <S.ToolsContainer>
-        <S.Tools>
-          <Tool icon={mdiPencil} onClick={toggleMessageEditModal} />
-          <Tool icon={mdiDelete} onClick={toggleMessageDeleteModal} />
-        </S.Tools>
-      </S.ToolsContainer>
+      <S.Tools senderType={sender_type}>
+        <Tool icon={mdiPencil} onClick={toggleMessageEditModal} />
+        <Tool icon={mdiDelete} onClick={toggleMessageDeleteModal} />
+      </S.Tools>
     );
   };
 
   return (
     <>
-      <S.Container className={className} onMouseOut={handleMouseOut} onMouseOver={handleMouseOver}>
+      <S.Container
+        className={className}
+        onMouseOut={handleMouseOut}
+        onMouseOver={handleMouseOver}
+        senderType={sender_type}
+      >
         <Link to={`/profile/${sender.id}`}>
           <Avatar src={sender.avatar} />
         </Link>
-        <S.Right>
+        <S.Right senderType={sender_type}>
           <S.Header>
             <S.HeaderLeft>
               <S.DisplayName onClick={handleClick}>{sender.username}</S.DisplayName>
+              <S.Dote />
               <S.Date>{shortDate(modified_date, true)}</S.Date>
             </S.HeaderLeft>
             <S.HeaderRight>{renderTools()}</S.HeaderRight>
           </S.Header>
-          <S.Content>{text}</S.Content>
+          <S.Content senderType={sender_type}>{text}</S.Content>
         </S.Right>
       </S.Container>
       {messageDeleteModalIsOpen ? <MessageDeleteModal close={toggleMessageDeleteModal} messageId={message.id} /> : null}
