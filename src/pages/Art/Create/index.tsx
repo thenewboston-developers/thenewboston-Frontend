@@ -1,27 +1,28 @@
-import React, {useMemo, useState} from 'react';
+import {useMemo, useState} from 'react';
 import {Field, Formik} from 'formik';
-import {createOpenAIImage} from 'api/openaiImages';
-import {ButtonType} from 'components/Button';
-import {Textarea} from 'components/FormElements';
-import {CreateOpenAIImageResponse, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
-import yup from 'utils/yup';
+
 import ImageCarousel from './ImageCarousel';
-import * as S from './Styles';
+import TNBLogo from 'components/TNBLogo';
+import yup from 'utils/yup';
+import {ButtonType} from 'components/Button';
+import {CreateOpenAIImageResponse, SFC} from 'types';
+import {Textarea} from 'components/FormElements';
+import {createOpenAIImage} from 'api/openaiImages';
+import {displayErrorToast} from 'utils/toasts';
+import {formatNumber} from 'utils/numbers';
+import {getSelf} from 'selectors/state';
 import {useSelector} from 'react-redux';
-import {getWallets} from 'selectors/state';
-import {orderBy} from 'lodash-es';
+import {useUserStats} from 'hooks/useUserStats';
+
+import * as S from './Styles';
 
 const Create: SFC = ({className}) => {
   const [createOpenAIImageResponse, setCreateOpenAIImageResponse] = useState<CreateOpenAIImageResponse | null>(null);
   const [description, setDescription] = useState('');
   const [isImageSaved, setIsImageSaved] = useState<Array<number>>([]);
-  const wallets = useSelector(getWallets);
+  const self = useSelector(getSelf);
 
-  const availableBalance = useMemo(
-    () => orderBy(Object.values(wallets), [(wallet) => wallet.core.ticker]),
-    [wallets],
-  )[0].balance;
+  const stats = useUserStats(self.id);
 
   const initialValues = {
     description: '',
@@ -129,7 +130,11 @@ const Create: SFC = ({className}) => {
                 <S.BottomContainer>
                   <S.Row>
                     <h3>Available</h3>
-                    <span>{availableBalance.toLocaleString('en-US')} TNB</span>
+                    <span>
+                      <S.AvailableBalance>
+                        <TNBLogo /> <b>{formatNumber(stats?.default_wallet_balance || 0)}</b>&nbsp;TNB
+                      </S.AvailableBalance>
+                    </span>
                   </S.Row>
                   <S.Row>
                     <h3>1 image generation fee</h3>

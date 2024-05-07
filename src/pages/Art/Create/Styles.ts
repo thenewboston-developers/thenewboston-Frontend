@@ -4,6 +4,11 @@ import {breakpoints, colors, fonts} from 'styles';
 import {Form as _Form} from 'formik';
 import _Button from 'components/Button';
 
+export const AvailableBalance = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export const Button = styled(_Button)<{$color?: string}>`
   width: 100%;
   background: ${(props) => props.$color || ''};
