@@ -15,7 +15,7 @@ export const IconContainer = styled.div`
   align-items: center;
   background: none;
   border-radius: 50%;
-  cursor: pointer;
+  cursor: default;
   display: flex;
   font-size: 24px;
 
