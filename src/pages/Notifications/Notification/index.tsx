@@ -1,10 +1,11 @@
 import {ReactNode} from 'react';
 import {Link} from 'react-router-dom';
-import {mdiBrush} from '@mdi/js';
-import Icon from '@mdi/react';
+import {mdiBrushOutline} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
+import Dot from 'components/Dot';
 import {Notification as TNotification, SFC} from 'types';
+import {longDate} from 'utils/dates';
 import * as S from './Styles';
 
 enum NotificationType {
@@ -16,20 +17,29 @@ export interface NotificationProps {
 }
 
 const Notification: SFC<NotificationProps> = ({className, notification}) => {
+  const renderRedDot = () => {
+    return notification.is_read ? null : (
+      <S.DotContainer>
+        <Dot />
+      </S.DotContainer>
+    );
+  };
+
   const renderArtworkPurchaseNotification = () => {
     return (
-      <>
-        <Icon path={mdiBrush} size="36px" />
-        <div>
-          <Link to={`/profile/${notification.payload.buyer.id}`}>
-            <Avatar src={notification.payload.buyer.avatar} />
-          </Link>
-          <S.TextContainer>
-            <S.Link to={`/profile/${notification.payload.buyer.id}`}>{notification.payload.buyer.username}</S.Link>{' '}
-            purchased your <S.Link to={`/art/artworks/${notification.payload.artwork_id}`}>artwork</S.Link>.
-          </S.TextContainer>
-        </div>
-      </>
+      <S.ArtworkPurchaseNotificationContainer>
+        <Link to={`/profile/${notification.payload.buyer.id}`}>
+          <Avatar src={notification.payload.buyer.avatar} size="45px" />
+          <S.IconBrush path={mdiBrushOutline} size="23px" />
+        </Link>
+        <S.TextContainer>
+          <S.Link to={`/profile/${notification.payload.buyer.id}`}>{notification.payload.buyer.username}</S.Link>{' '}
+          purchased your <S.Link to={`/art/artworks/${notification.payload.artwork_id}`}>artwork</S.Link>.
+          <br />
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
+        {renderRedDot()}
+      </S.ArtworkPurchaseNotificationContainer>
     );
   };
 
@@ -42,7 +52,11 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     return renderFunction ? renderFunction() : null;
   };
 
-  return <S.Container className={className}>{renderContent()}</S.Container>;
+  return (
+    <S.Container $isRead={notification.is_read} className={className}>
+      {renderContent()}
+    </S.Container>
+  );
 };
 
 export default Notification;
