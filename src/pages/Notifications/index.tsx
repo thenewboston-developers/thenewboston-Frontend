@@ -1,17 +1,18 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiCheckAll} from '@mdi/js';
 import orderBy from 'lodash/orderBy';
+import {mdiCheckAll} from '@mdi/js';
 
+import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Button, {ButtonColor, IconColor} from 'components/Button';
 import EmptyPage from 'components/EmptyPage';
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
-import Notification from './Notification';
-import {AppDispatch, SFC} from 'types';
-import {ToastType} from 'enums';
-import {displayToast} from 'utils/toasts';
 import {getNotifications as _getNotifications, markAllNotificationsAsRead} from 'dispatchers/notifications';
+import {ToastType} from 'enums';
 import {getNotifications} from 'selectors/state';
+import {AppDispatch, SFC} from 'types';
+import {displayToast} from 'utils/toasts';
+import {getUnreadNotificationsCount} from 'utils/notifications';
+import Notification from './Notification';
 import * as S from './Styles';
 
 const Notifications: SFC = ({className}) => {
@@ -23,6 +24,16 @@ const Notifications: SFC = ({className}) => {
       await dispatch(_getNotifications());
     })();
   }, [dispatch]);
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await dispatch(markAllNotificationsAsRead());
+      displayToast('All Notifications marked as read', ToastType.SUCCESS);
+    } catch (error) {
+      console.error(error);
+      displayToast('Oops.. An error occurred.', ToastType.ERROR);
+    }
+  };
 
   const notificationList = useMemo(() => {
     return orderBy(Object.values(notifications), ['created_date'], ['desc']);
@@ -46,12 +57,8 @@ const Notifications: SFC = ({className}) => {
     return <S.NotificationContainer>{_notifications}</S.NotificationContainer>;
   };
 
-  const getUnreadNotificationsCount = () => {
-    return notificationList?.filter((notification) => !notification.is_read).length || 0;
-  };
-
   const renderSectionHeading = () => {
-    const unreadCount = getUnreadNotificationsCount();
+    const unreadCount = getUnreadNotificationsCount(notificationList);
     const sectionTitle = `Notifications${unreadCount > 0 ? ` - ${unreadCount}` : ''}`;
     const rightContent = unreadCount > 0 ? renderMarkAllAsReadButton() : null;
     return <S.SectionHeading heading={sectionTitle} rightContent={rightContent} />;
@@ -67,16 +74,6 @@ const Notifications: SFC = ({className}) => {
         text="Mark all as read"
       />
     );
-  };
-
-  const handleMarkAllAsRead = async () => {
-    try {
-      await dispatch(markAllNotificationsAsRead());
-      displayToast('All Notifications marked as read', ToastType.SUCCESS);
-    } catch (error) {
-      console.error(error);
-      displayToast('Oops.. An error occurred.', ToastType.ERROR);
-    }
   };
 
   return (
