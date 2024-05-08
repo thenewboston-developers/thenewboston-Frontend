@@ -50,7 +50,7 @@ export const Button = styled.button<{$color: ButtonColor; $hasIcon: boolean}>`
   display: block;
   font-family: ${fonts.family.default};
   font-size: 14px;
-  font-weight: ${fonts.weight.bold};
+  font-weight: ${fonts.weight.semiBold};
   height: ${`${BUTTON_HEIGHT}px`};
   padding: 0 20px;
   transition: all 0.1s;
