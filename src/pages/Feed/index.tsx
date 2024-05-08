@@ -17,7 +17,8 @@ const Feed: SFC = ({className}) => {
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
 
-  const postList = useMemo(() => Object.values(posts), [posts]);
+  const postsData = posts && posts.posts;
+  const postList = useMemo(() => Object.values(postsData), [postsData]);
 
   useEffect(() => {
     (async () => {
@@ -42,8 +43,8 @@ const Feed: SFC = ({className}) => {
       return (
         <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts} heightMargin={0}>
           <S.PostContainer>
-            {postList.map((post) => (
-              <Post key={post.id} post={post} />
+            {postList.map((post, index) => (
+              <Post key={index} post={post} />
             ))}
           </S.PostContainer>
         </InfiniteScroll>

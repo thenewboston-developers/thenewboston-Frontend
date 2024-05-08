@@ -20,9 +20,11 @@ const Posts: SFC = ({className}) => {
 
   const userId = id ? parseInt(id, 10) : null;
 
+  const postsData = posts && posts.posts;
+
   const postList = useMemo(() => {
-    return Object.values(posts).filter(({owner}) => owner.id === userId);
-  }, [posts, userId]);
+    return Object.values(postsData).filter(({owner}) => owner.id === userId);
+  }, [postsData, userId]);
 
   useEffect(() => {
     (async () => {
