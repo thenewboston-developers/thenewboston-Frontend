@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 import {Link} from 'react-router-dom';
+import {colors, fonts} from 'styles';
 
 export const BreadcrumbNav = styled.nav`
-  padding: 10px 5px;
-  border-radius: 5px;
+  padding: 0 5px 20px 5px;
 `;
 
 export const BreadcrumbList = styled.ol`
@@ -21,14 +21,23 @@ export const BreadcrumbItem = styled.li`
     &:after {
       content: '>';
       margin-left: 8px;
+      color: ${colors.gray};
     }
   }
 `;
 
 export const StyledLink = styled(Link)`
   text-decoration: none;
-  color: #0275d8;
+  color: ${colors.gray};
+  font-weight: ${fonts.weight.semiBold};
+  font-size: 12px;
   &:hover {
     text-decoration: underline;
   }
+`;
+
+export const StyledSpan = styled.span`
+  color: ${colors.black};
+  font-weight: ${fonts.weight.semiBold};
+  font-size: 12px;
 `;

@@ -1,4 +1,6 @@
+import Avatar from 'components/Avatar';
 import styled from 'styled-components';
+import {colors} from 'styles';
 
 export const Container = styled.div`
   height: 100%;
@@ -9,8 +11,27 @@ export const Container = styled.div`
 export const SectionHeading = styled.div`
   align-items: center;
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  padding: 20px 22px;
+`;
+
+export const LectureAvatar = styled(Avatar)`
+  img {
+    height: 100%;
+    width: 100%;
+    color: ${colors.gray};
+    margin-right: 8px;
+  }
 `;
 
 export const H3 = styled.h3``;
+
+export const H5 = styled.h5`
+  color: ${colors.gray};
+  text-transform: uppercase;
+`;
+
+export const Wrapper = styled.div`
+  background-color: ${colors.white};
+  border-radius: 16px;
+  overflow: hidden;
+`;

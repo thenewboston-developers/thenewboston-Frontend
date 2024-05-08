@@ -9,6 +9,7 @@ export const Container = styled.div`
   position: relative;
   width: 100%;
   z-index: 10;
+  border-radius: 16px 16px 0 0;
 
   & iframe {
     height: 100%;
@@ -16,5 +17,6 @@ export const Container = styled.div`
     position: absolute;
     top: 0;
     width: 100%;
+    border: 0;
   }
 `;

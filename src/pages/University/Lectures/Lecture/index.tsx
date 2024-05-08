@@ -2,7 +2,6 @@ import {FC, MouseEvent} from 'react';
 
 import {Lecture as TLecture} from 'types';
 import {mdiCalendarOutline, mdiFileEdit, mdiTrashCan} from '@mdi/js';
-import Icon from '@mdi/react';
 
 import {getTimeAgo} from 'utils/dates';
 import {PublicationStatus} from 'enums';
@@ -71,7 +70,7 @@ const Lecture: FC<LectureProps> = ({index, lecture, onClick, isSelected = false,
           </S.Description>
           <S.Footer>
             <S.FooterItem>
-              <Icon path={mdiCalendarOutline} size={1} />
+              <S.StyledIcon path={mdiCalendarOutline} />
               {getTimeAgo(created_date)}
             </S.FooterItem>
           </S.Footer>
@@ -94,9 +93,11 @@ const Lecture: FC<LectureProps> = ({index, lecture, onClick, isSelected = false,
 
   return (
     <S.Container selected={isSelected}>
-      {renderContent()}
-      {renderLectureModal()}
-      {renderLectureDeleteModal()}
+      <S.WrapperContainer>
+        {renderContent()}
+        {renderLectureModal()}
+        {renderLectureDeleteModal()}
+      </S.WrapperContainer>
     </S.Container>
   );
 };

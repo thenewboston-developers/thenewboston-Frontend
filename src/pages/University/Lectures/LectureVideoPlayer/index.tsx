@@ -21,6 +21,7 @@ const LectureVideoPlayer: SFC<LectureVideoPlayerProps> = ({className, lecture}) 
         <S.Content>
           <S.Name>{name}</S.Name>
           <S.Description>{description}</S.Description>
+          <S.Divider />
           <S.Footer>
             <S.FooterItem>
               <S.UserLabel
@@ -31,7 +32,7 @@ const LectureVideoPlayer: SFC<LectureVideoPlayerProps> = ({className, lecture}) 
               />
             </S.FooterItem>
             <S.FooterItem>
-              <Icon path={mdiCalendarOutline} size={1} />
+              <S.StyledIcon path={mdiCalendarOutline} />
               {longDate(created_date)}
             </S.FooterItem>
           </S.Footer>

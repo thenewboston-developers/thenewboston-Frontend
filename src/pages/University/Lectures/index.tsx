@@ -20,6 +20,7 @@ import Lecture from './Lecture';
 import LectureVideoPlayer from './LectureVideoPlayer';
 import Loader from 'components/Loader';
 import * as S from './Styles';
+import LecturesIcon from 'assets/lecture-frame.png';
 
 export interface LecturesProps {
   selfLectures?: boolean;
@@ -97,7 +98,8 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
     }
     return (
       <S.SectionHeading>
-        <S.H3>Lectures</S.H3>
+        <S.LectureAvatar src={LecturesIcon} />
+        <S.H5>Lectures</S.H5>
       </S.SectionHeading>
     );
   };
@@ -122,24 +124,26 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
           <Row>
             <Col size={7}>{selectedLecture && <LectureVideoPlayer lecture={selectedLecture} />}</Col>
             <Col size={5}>
-              {renderSectionHeading()}
-              <InfiniteScroll
-                dataLength={lecturesList.length}
-                hasMore={hasMore}
-                next={fetchMoreLectures}
-                heightMargin={150}
-              >
-                {lecturesList.map((lecture, index) => (
-                  <Lecture
-                    index={index}
-                    isSelected={selectedLecture && lecture.id === selectedLecture.id}
-                    key={index}
-                    lecture={lecture}
-                    onClick={onLectureClick}
-                    selfLecture={selfLectures}
-                  />
-                ))}
-              </InfiniteScroll>
+              <S.Wrapper>
+                {renderSectionHeading()}
+                <InfiniteScroll
+                  dataLength={lecturesList.length}
+                  hasMore={hasMore}
+                  next={fetchMoreLectures}
+                  heightMargin={150}
+                >
+                  {lecturesList.map((lecture, index) => (
+                    <Lecture
+                      index={index}
+                      isSelected={selectedLecture && lecture.id === selectedLecture.id}
+                      key={index}
+                      lecture={lecture}
+                      onClick={onLectureClick}
+                      selfLecture={selfLectures}
+                    />
+                  ))}
+                </InfiniteScroll>
+              </S.Wrapper>
             </Col>
           </Row>
         </>
