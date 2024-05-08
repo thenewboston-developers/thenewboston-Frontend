@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import {colors, fonts} from 'styles';
 import UIcon from '@mdi/react';
 

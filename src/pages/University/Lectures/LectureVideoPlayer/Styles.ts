@@ -16,7 +16,7 @@ export const Content = styled.div`
 
 export const Description = styled.p`
   margin-top: 5px;
-  font-weight: 400;
+  font-weight: ${fonts.weight.regular};
   font-size: 14px;
   color: ${colors.gray};
 `;

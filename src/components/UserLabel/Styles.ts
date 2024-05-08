@@ -13,7 +13,6 @@ export const Container = styled.div`
 `;
 
 export const Description = styled.div`
-  color: ${colors.secondary};
   font-size: 12px;
   font-weight: ${fonts.weight.semiBold};
   color: ${colors.palette.gray[500]};

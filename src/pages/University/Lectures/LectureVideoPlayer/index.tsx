@@ -1,4 +1,3 @@
-import Icon from '@mdi/react';
 import {Lecture as TLecture, SFC} from 'types';
 import {mdiCalendarOutline} from '@mdi/js';
 
