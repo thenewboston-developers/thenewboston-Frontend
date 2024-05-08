@@ -4,7 +4,7 @@ import UIcon from '@mdi/react';
 import {colors, fonts} from 'styles';
 import {ButtonColor} from './types';
 
-const BUTTON_HEIGHT = 36;
+const BUTTON_HEIGHT = 44;
 
 const disabledMixin = css`
   background: ${colors.palette.red['300']};
@@ -42,7 +42,7 @@ const successMixin = css`
 `;
 
 export const Button = styled.button<{$color: ButtonColor; $hasIcon: boolean}>`
-  background: ${colors.palette.red['400']};
+  background: ${colors.palette.red['500']};
   border-radius: ${`${BUTTON_HEIGHT / 2}px`};
   border: 1px solid transparent;
   color: ${colors.white};
@@ -52,11 +52,11 @@ export const Button = styled.button<{$color: ButtonColor; $hasIcon: boolean}>`
   font-size: 14px;
   font-weight: ${fonts.weight.bold};
   height: ${`${BUTTON_HEIGHT}px`};
-  padding: 0 12px;
+  padding: 0 20px;
   transition: all 0.1s;
 
   &:hover {
-    background: ${colors.palette.red['500']};
+    background: ${colors.palette.red['600']};
   }
 
   ${({$color}) => {
