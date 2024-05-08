@@ -1,14 +1,14 @@
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 
-import {AppDispatch, Lecture as TLecture, SFC} from 'types';
+import {AppDispatch, Lecture as TLecture, SFC, Lecture as LectureFind} from 'types';
 import {Col, Row} from 'styles/components/GridStyle';
 import {displayErrorToast} from 'utils/toasts';
 import Button from 'components/Button';
 import {getLectures as _getLectures, resetLectures} from 'dispatchers/lectures';
 import {getLectures as _getLecturesState, getSelf} from 'selectors/state';
-import {PATH_COURSES, PATH_COURSES_SELF} from 'constants/paths';
+import {PATH_COURSES, PATH_COURSES_SELF, PATH_LECTURES} from 'constants/paths';
 import {PublicationStatus} from 'enums';
 import {useToggle} from 'hooks';
 import LectureModal from 'modals/LectureModal';
@@ -35,9 +35,11 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
 
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const queryParams = new URLSearchParams(location.search);
   const course_id = queryParams.get('course_id') || undefined;
+  const lecture_id = queryParams.get('lecture_id') || undefined;
 
   const lecturesList = useMemo(() => Object.values(lectures), [lectures]);
   const apiParams = useMemo(() => {
@@ -63,13 +65,25 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
     };
 
     initFetch();
-  }, [apiParams, dispatch, course_id]);
+  }, [apiParams, dispatch, course_id, lecture_id]);
 
   useEffect(() => {
     if (lecturesList.length > 0) {
-      setSelectedLecture(lecturesList[0]);
+      if (lecture_id) {
+        const foundLecture = lecturesList.find((lecture: LectureFind) => lecture.id === Number(lecture_id));
+        setSelectedLecture(foundLecture);
+      } else {
+        const courseId = lecturesList[0].course.id;
+        const lectureId = lecturesList[0].id;
+
+        navigate({
+          pathname: `${PATH_LECTURES}`,
+          search: `?course_id=${courseId}&lecture_id=${lectureId}`,
+        });
+        setSelectedLecture(lecturesList[0]);
+      }
     }
-  }, [lecturesList]);
+  }, [lecturesList, lecture_id, navigate]);
 
   const fetchMoreLectures = async () => {
     if (!isLoading && hasMore) {
@@ -84,6 +98,14 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
 
   const onLectureClick = (lecture: TLecture) => {
     setSelectedLecture(lecture);
+
+    const courseId = lecture.course.id;
+    const lectureId = lecture.id;
+
+    navigate({
+      pathname: `${PATH_LECTURES}`,
+      search: `?course_id=${courseId}&lecture_id=${lectureId}`,
+    });
   };
 
   const renderSectionHeading = () => {
