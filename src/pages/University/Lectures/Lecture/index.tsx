@@ -1,15 +1,14 @@
 import {FC, MouseEvent} from 'react';
-
-import {Lecture as TLecture} from 'types';
 import {mdiCalendarOutline, mdiFileEdit, mdiTrashCan} from '@mdi/js';
 
-import {getTimeAgo} from 'utils/dates';
+import Badge, {BadgeStyle} from 'components/Badge';
+import ReadMoreLess from 'components/ReadMoreLess';
 import {PublicationStatus} from 'enums';
 import {useToggle} from 'hooks';
 import LectureDeleteModal from 'modals/LectureDeleteModal';
-import Badge, {BadgeStyle} from 'components/Badge';
 import LectureModal from 'modals/LectureModal';
-import ReadMoreLess from 'components/ReadMoreLess';
+import {Lecture as TLecture} from 'types';
+import {getTimeAgo} from 'utils/dates';
 import * as S from './Styles';
 
 export interface LectureProps {

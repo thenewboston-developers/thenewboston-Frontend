@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-
-import {colors, fonts} from 'styles';
-import UUserLabel from 'components/UserLabel';
 import Icon from '@mdi/react';
+
+import UUserLabel from 'components/UserLabel';
+import {colors, fonts} from 'styles';
 
 export const Container = styled.div`
   background: ${colors.white};
@@ -15,10 +15,10 @@ export const Content = styled.div`
 `;
 
 export const Description = styled.p`
-  margin-top: 5px;
-  font-weight: ${fonts.weight.regular};
-  font-size: 14px;
   color: ${colors.gray};
+  font-size: 14px;
+  font-weight: ${fonts.weight.regular};
+  margin-top: 5px;
 `;
 
 export const Divider = styled.div`
@@ -35,17 +35,17 @@ export const Footer = styled.div`
 
 export const FooterItem = styled.div`
   align-items: center;
+  color: ${colors.palette.gray[500]};
   display: flex;
   font-size: 12px;
   font-weight: ${fonts.weight.semiBold};
-  color: ${colors.palette.gray[500]};
   justify-content: space-between;
 `;
 
 export const StyledIcon = styled(Icon)`
   height: 20px;
-  width: 20px;
   margin-right: 6px;
+  width: 20px;
 `;
 
 export const Name = styled.h3`

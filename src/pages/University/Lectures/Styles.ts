@@ -16,10 +16,10 @@ export const SectionHeading = styled.div`
 
 export const LectureAvatar = styled(Avatar)`
   img {
-    height: 100%;
-    width: 100%;
     color: ${colors.gray};
+    height: 100%;
     margin-right: 8px;
+    width: 100%;
   }
 `;
 

@@ -3,7 +3,6 @@ import {mdiCalendarOutline} from '@mdi/js';
 
 import YouTubeVideo from 'components/YouTubeVideo';
 import {longDate} from 'utils/dates';
-
 import * as S from './Styles';
 
 export interface LectureVideoPlayerProps {

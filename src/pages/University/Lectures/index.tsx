@@ -2,40 +2,38 @@ import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLocation} from 'react-router-dom';
 
-import {AppDispatch, Lecture as TLecture, SFC} from 'types';
-import {Col, Row} from 'styles/components/GridStyle';
-import {displayErrorToast} from 'utils/toasts';
+import LeavesEmptyState from 'assets/leaves-empty-state.png';
+import Breadcrumbs from 'components/Breadcrumbs';
 import Button from 'components/Button';
-import {getLectures as _getLectures, resetLectures} from 'dispatchers/lectures';
-import {getLectures as _getLecturesState, getSelf} from 'selectors/state';
+import EmptyPage from 'components/EmptyPage';
+import InfiniteScroll from 'components/InfiniteScroll';
+import Loader from 'components/Loader';
 import {PATH_COURSES, PATH_COURSES_SELF} from 'constants/paths';
+import {getLectures as _getLectures, resetLectures} from 'dispatchers/lectures';
 import {PublicationStatus} from 'enums';
 import {useToggle} from 'hooks';
 import LectureModal from 'modals/LectureModal';
-import Breadcrumbs from 'components/Breadcrumbs';
-import EmptyPage from 'components/EmptyPage';
-import InfiniteScroll from 'components/InfiniteScroll';
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
+import {getLectures as _getLecturesState, getSelf} from 'selectors/state';
+import {Col, Row} from 'styles/components/GridStyle';
+import {AppDispatch, Lecture as TLecture, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
+import LectureIcon from './lecture-icon.png';
 import Lecture from './Lecture';
 import LectureVideoPlayer from './LectureVideoPlayer';
-import Loader from 'components/Loader';
 import * as S from './Styles';
-import LecturesIcon from 'assets/lecture-frame.png';
 
 export interface LecturesProps {
   selfLectures?: boolean;
 }
 
 const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
-  const [lectureModalIsOpen, toggleLectureModal] = useToggle(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [lectureModalIsOpen, toggleLectureModal] = useToggle(false);
   const [selectedLecture, setSelectedLecture] = useState<TLecture | undefined>();
-
   const {hasMore, isLoading, lectures} = useSelector(_getLecturesState);
-  const self = useSelector(getSelf);
-
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
+  const self = useSelector(getSelf);
 
   const queryParams = new URLSearchParams(location.search);
   const course_id = queryParams.get('course_id') || undefined;
@@ -50,7 +48,7 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
   }, [selfLectures, self.id]);
 
   useEffect(() => {
-    const initFetch = async () => {
+    (async () => {
       try {
         dispatch(resetLectures());
         setIsInitialLoading(true);
@@ -61,9 +59,7 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
         setIsInitialLoading(false);
         displayErrorToast('Error fetching lectures');
       }
-    };
-
-    initFetch();
+    })();
   }, [apiParams, dispatch, course_id]);
 
   useEffect(() => {
@@ -98,7 +94,7 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
     }
     return (
       <S.SectionHeading>
-        <S.LectureAvatar src={LecturesIcon} />
+        <S.LectureAvatar src={LectureIcon} />
         <S.H5>Lectures</S.H5>
       </S.SectionHeading>
     );
@@ -129,8 +125,8 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
                 <InfiniteScroll
                   dataLength={lecturesList.length}
                   hasMore={hasMore}
-                  next={fetchMoreLectures}
                   heightMargin={150}
+                  next={fetchMoreLectures}
                 >
                   {lecturesList.map((lecture, index) => (
                     <Lecture
@@ -154,9 +150,9 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
       return (
         <EmptyPage
           actionText="Click here to add a new lecture"
-          onActionTextClick={toggleLectureModal}
           bottomText="No lectures to display."
           graphic={LeavesEmptyState}
+          onActionTextClick={toggleLectureModal}
           topText="Nothing here!"
         />
       );

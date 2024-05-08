@@ -13,9 +13,9 @@ export const Container = styled.div`
 `;
 
 export const Description = styled.div`
+  color: ${colors.palette.gray[500]};
   font-size: 12px;
   font-weight: ${fonts.weight.semiBold};
-  color: ${colors.palette.gray[500]};
 `;
 
 export const Right = styled.div`
@@ -24,9 +24,9 @@ export const Right = styled.div`
 `;
 
 export const Username = styled.div<{$id: number | null}>`
+  color: ${colors.black};
   font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
-  color: ${colors.black};
 
   &:hover {
     cursor: ${({$id}) => ($id ? 'pointer' : 'default')};
