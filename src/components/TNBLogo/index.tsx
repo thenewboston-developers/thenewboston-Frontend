@@ -1,5 +1,5 @@
-import {SFC} from 'types';
 import logo from 'assets/logo192.png';
+import {SFC} from 'types';
 import * as S from './Styles';
 
 export interface TNBLogoProps {

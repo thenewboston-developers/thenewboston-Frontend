@@ -2,15 +2,15 @@ import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 
-import DefaultAvatar from 'assets/default-avatar.png';
-import ProfileEditModal from 'modals/ProfileEditModal';
-import TNBLogo from 'components/TNBLogo';
-import {FollowerReadSerializer, SFC} from 'types';
 import {createFollower, deleteFollower, getFollowers} from 'api/followers';
+import DefaultAvatar from 'assets/default-avatar.png';
+import TNBLogo from 'components/TNBLogo';
+import {useToggle, useUser} from 'hooks';
+import ProfileEditModal from 'modals/ProfileEditModal';
+import {getSelf, getUserStats} from 'selectors/state';
+import {FollowerReadSerializer, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import {formatNumber} from 'utils/numbers';
-import {getSelf, getUserStats} from 'selectors/state';
-import {useToggle, useUser} from 'hooks';
 
 import * as S from './Styles';
 

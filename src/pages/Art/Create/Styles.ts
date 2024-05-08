@@ -1,18 +1,18 @@
 import styled from 'styled-components';
 
-import {breakpoints, colors, fonts} from 'styles';
-import {Form as _Form} from 'formik';
 import _Button from 'components/Button';
+import {Form as _Form} from 'formik';
+import {breakpoints, colors, fonts} from 'styles';
 
 export const AvailableBalance = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
 `;
 
 export const Button = styled(_Button)<{$color?: string}>`
-  width: 100%;
   background: ${(props) => props.$color || ''};
   color: ${(props) => (props.$color === 'transparent' ? colors.black : colors.white)};
+  width: 100%;
 
   &:hover {
     background: ${(props) => (props.$color === 'transparent' ? 'unset' : colors.palette.red['500'])};
@@ -21,27 +21,21 @@ export const Button = styled(_Button)<{$color?: string}>`
 
 export const Container = styled.div`
   display: flex;
-  width: 100%;
   flex-direction: column;
   padding: 16px 30px;
+  width: 100%;
 
   @media (min-width: ${breakpoints.mobile}) {
     flex-direction: row;
   }
 `;
 
-export const FormContainer = styled.div`
-  padding: 24px 16px;
-  display: flex;
-  flex-direction: column;
-  width: 40%;
-`;
-
 export const Form = styled(_Form)`
   display: flex;
   flex-direction: column;
-  width: 100%;
   gap: 2px;
+  width: 100%;
+
   @media (min-width: ${breakpoints.mobile}) {
     width: 40%;
   }
@@ -49,31 +43,31 @@ export const Form = styled(_Form)`
 
 export const Card = styled.div`
   background: ${colors.white};
-  padding: 16px;
   border-radius: 16px;
   overflow: auto;
+  padding: 16px;
 
   h2 {
     color: ${colors.gray};
     font-size: 12px;
-    line-height: 20px;
     font-weight: ${fonts.weight.bold};
+    line-height: 20px;
     margin-bottom: 10px;
   }
 
   textarea {
     background: ${colors.white};
-    height: 50vh;
     border: none;
-    outline: none;
     box-shadow: none;
-    resize: none;
+    height: 50vh;
+    outline: none;
     overflow: auto;
     padding: 0;
+    resize: none;
 
     &::placeholder {
-      font-weight: ${fonts.weight.semiBold};
       font-size: 16px;
+      font-weight: ${fonts.weight.semiBold};
       line-height: 26px;
     }
   }
@@ -82,6 +76,7 @@ export const Card = styled.div`
 export const ImageCarouselContainer = styled.div`
   padding: 24px 16px;
   width: 100%;
+
   @media (min-width: ${breakpoints.mobile}) {
     width: 60%;
   }
@@ -90,14 +85,14 @@ export const ImageCarouselContainer = styled.div`
 export const CardHeader = styled.h2`
   color: ${colors.gray};
   font-size: 12px;
-  line-height: 20px;
   font-weight: ${fonts.weight.bold};
+  line-height: 20px;
   margin-bottom: 10px;
 `;
 
 export const RadioGroup = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
   gap: 10px;
 
   input[type='radio'] {
@@ -105,16 +100,16 @@ export const RadioGroup = styled.div`
   }
 
   span {
-    display: flex;
-    justify-content: center;
     align-items: center;
-    cursor: pointer;
-    width: 34px;
-    height: 34px;
     border-radius: 50%;
     border: 1.5px solid #ededed;
-    text-align: center;
+    cursor: pointer;
+    display: flex;
+    height: 34px;
+    justify-content: center;
     line-height: 20px;
+    text-align: center;
+    width: 34px;
   }
 
   input[type='radio']:checked + span {
@@ -129,12 +124,12 @@ export const BottomContainer = styled.div`
 `;
 
 export const Row = styled.div<{$gap?: number}>`
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
-  gap: ${(props) => props.$gap || 0}px;
   border-bottom: 1px solid #f1f1f1;
+  display: flex;
+  gap: ${(props) => props.$gap || 0}px;
+  justify-content: space-between;
+  padding: 10px 0;
 
   &:nth-child(3),
   &:nth-child(4) {
@@ -142,22 +137,22 @@ export const Row = styled.div<{$gap?: number}>`
   }
 
   h3 {
-    font-weight: ${fonts.weight.regular};
-    font-size: 16px;
-    line-height: 26px;
     color: ${colors.black};
+    font-size: 16px;
+    font-weight: ${fonts.weight.regular};
+    line-height: 26px;
   }
 
   &:nth-child(3) {
     h3 {
-      font-weight: ${fonts.weight.bold};
       font-size: 16px;
+      font-weight: ${fonts.weight.bold};
       line-height: 26px;
     }
 
     span {
-      font-weight: ${fonts.weight.bold};
       font-size: 16px;
+      font-weight: ${fonts.weight.bold};
       line-height: 26px;
     }
   }

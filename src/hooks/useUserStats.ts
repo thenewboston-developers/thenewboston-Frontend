@@ -1,10 +1,10 @@
 import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 
+import {getUserStats} from 'dispatchers/userStats';
+import {getUserStats as getUserStatsState} from 'selectors/state';
 import {AppDispatch} from 'types';
 import {displayErrorToast} from 'utils/toasts';
-import {getUserStats as getUserStatsState} from 'selectors/state';
-import {getUserStats} from 'dispatchers/userStats';
 
 interface UserStats {
   default_wallet_balance?: number;
@@ -16,7 +16,7 @@ export const useUserStats = (id: number | null) => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const fetchUserStats = async () => {
+    (async () => {
       if (id) {
         try {
           await dispatch(getUserStats(id));
@@ -25,9 +25,7 @@ export const useUserStats = (id: number | null) => {
           displayErrorToast('Error fetching user stats');
         }
       }
-    };
-
-    fetchUserStats();
+    })();
   }, [id, dispatch]);
 
   const userStats = useSelector(getUserStatsState);

@@ -1,20 +1,19 @@
 import {useMemo, useState} from 'react';
 import {Field, Formik} from 'formik';
+import {useSelector} from 'react-redux';
 
-import ImageCarousel from './ImageCarousel';
-import TNBLogo from 'components/TNBLogo';
-import yup from 'utils/yup';
-import {ButtonType} from 'components/Button';
-import {DEFAULT_CORE_TICKER, OPENAI_IMAGE_CREATION_FEE} from 'constants/general';
-import {CreateOpenAIImageResponse, SFC} from 'types';
-import {Textarea} from 'components/FormElements';
 import {createOpenAIImage} from 'api/openaiImages';
+import {ButtonType} from 'components/Button';
+import {Textarea} from 'components/FormElements';
+import TNBLogo from 'components/TNBLogo';
+import {DEFAULT_CORE_TICKER, OPENAI_IMAGE_CREATION_FEE} from 'constants/general';
+import {useUserStats} from 'hooks/useUserStats';
+import ImageCarousel from './ImageCarousel';
 import {displayErrorToast} from 'utils/toasts';
 import {formatNumber} from 'utils/numbers';
+import yup from 'utils/yup';
 import {getSelf} from 'selectors/state';
-import {useSelector} from 'react-redux';
-import {useUserStats} from 'hooks/useUserStats';
-
+import {CreateOpenAIImageResponse, SFC} from 'types';
 import * as S from './Styles';
 
 const Create: SFC = ({className}) => {
