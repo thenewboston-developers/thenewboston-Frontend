@@ -1,10 +1,11 @@
+import {ReactNode} from 'react';
 import {useLocation} from 'react-router-dom';
 
 import {SFC} from 'types';
 import * as S from './Styles';
 
 export interface MenuLinkProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   icon: string;
   rootPath: string;
   text: string;

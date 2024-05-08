@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import Badge from 'components/Badge';
 
 export const BadgeCount = styled(Badge)`

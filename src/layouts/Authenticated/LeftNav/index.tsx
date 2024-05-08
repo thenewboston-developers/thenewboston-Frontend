@@ -17,21 +17,22 @@ import {
 } from '@mdi/js';
 
 import BadgeCount from 'components/BadgeCount';
+import {PATH_COURSES} from 'constants/paths';
+import {logout} from 'dispatchers/authentication';
+import {getSelf, getNotifications} from 'selectors/state';
+import {AppDispatch, SFC} from 'types';
+import {getUnreadNotificationsCount} from 'utils/notifications';
 import CreatePostButton from './CreatePostButton';
 import MenuButton from './MenuItem/MenuButton';
 import MenuLink from './MenuItem/MenuLink';
-import {AppDispatch, SFC} from 'types';
-import {PATH_COURSES} from 'constants/paths';
-import {getSelf, getNotifications} from 'selectors/state';
-import {getUnreadNotificationsCount} from 'utils/notifications';
-import {logout} from 'dispatchers/authentication';
 import * as S from './Styles';
 
 const LeftNav: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const self = useSelector(getSelf);
   const notifications = useSelector(getNotifications);
+  const self = useSelector(getSelf);
+
   const notificationsList = useMemo(() => {
     return Object.values(notifications);
   }, [notifications]);
