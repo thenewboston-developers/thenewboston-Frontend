@@ -3,14 +3,15 @@ import {useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 
 import {createFollower, deleteFollower, getFollowers} from 'api/followers';
-import {displayErrorToast} from 'utils/toasts';
-import {FollowerReadSerializer, SFC} from 'types';
-import {formatNumber} from 'utils/numbers';
-import {getSelf, getUserStats} from 'selectors/state';
-import {useToggle, useUser} from 'hooks';
 import DefaultAvatar from 'assets/default-avatar.png';
-import logo from 'assets/logo192.png';
+import TNBLogo from 'components/TNBLogo';
+import {useToggle, useUser} from 'hooks';
 import ProfileEditModal from 'modals/ProfileEditModal';
+import {getSelf, getUserStats} from 'selectors/state';
+import {FollowerReadSerializer, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
+import {formatNumber} from 'utils/numbers';
+
 import * as S from './Styles';
 
 const UserDetails: SFC = ({className}) => {
@@ -105,7 +106,7 @@ const UserDetails: SFC = ({className}) => {
     if (!user) return null;
     return (
       <S.WalletBalance>
-        Balance: <S.TNBLogo src={logo} /> <b>{formatNumber(default_wallet_balance)}</b>
+        Balance: <TNBLogo /> <b>{formatNumber(default_wallet_balance)}</b>
       </S.WalletBalance>
     );
   };

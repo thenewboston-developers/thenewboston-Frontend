@@ -41,12 +41,6 @@ export const ImgWrapper = styled.div`
   }
 `;
 
-export const TNBLogo = styled.img`
-  border-radius: 50%;
-  width: 15px;
-  margin: 0px 3px 0px 3px;
-`;
-
 export const Stats = styled.div`
   align-items: center;
   display: flex;
