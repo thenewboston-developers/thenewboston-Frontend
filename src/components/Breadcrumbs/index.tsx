@@ -18,7 +18,7 @@ const Breadcrumbs: SFC<BadgeProps> = ({paths}) => {
             {path.url && index < paths.length - 1 ? (
               <S.StyledLink to={path.url}>{path.label}</S.StyledLink>
             ) : (
-              <span>{path.label}</span>
+              <S.StyledSpan>{path.label}</S.StyledSpan>
             )}
           </S.BreadcrumbItem>
         ))}
