@@ -9,16 +9,18 @@ import Button from 'components/Button';
 import {getLectures as _getLectures, resetLectures} from 'dispatchers/lectures';
 import {getLectures as _getLecturesState, getSelf} from 'selectors/state';
 import {PATH_COURSES, PATH_COURSES_SELF, PATH_LECTURES} from 'constants/paths';
-import {PublicationStatus} from 'enums';
-import {useToggle} from 'hooks';
-import LectureModal from 'modals/LectureModal';
+import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Breadcrumbs from 'components/Breadcrumbs';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
+import Loader from 'components/Loader';
+import {PublicationStatus} from 'enums';
+import {useToggle} from 'hooks';
+import LectureModal from 'modals/LectureModal';
+
+import LectureIcon from './lecture-icon.png';
 import Lecture from './Lecture';
 import LectureVideoPlayer from './LectureVideoPlayer';
-import Loader from 'components/Loader';
 import * as S from './Styles';
 
 export interface LecturesProps {
@@ -26,16 +28,14 @@ export interface LecturesProps {
 }
 
 const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
-  const [lectureModalIsOpen, toggleLectureModal] = useToggle(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [lectureModalIsOpen, toggleLectureModal] = useToggle(false);
   const [selectedLecture, setSelectedLecture] = useState<TLecture | undefined>();
-
   const {hasMore, isLoading, lectures} = useSelector(_getLecturesState);
-  const self = useSelector(getSelf);
-
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
   const navigate = useNavigate();
+  const self = useSelector(getSelf);
 
   const queryParams = new URLSearchParams(location.search);
   const course_id = queryParams.get('course_id') || undefined;
@@ -51,7 +51,7 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
   }, [selfLectures, self.id]);
 
   useEffect(() => {
-    const initFetch = async () => {
+    (async () => {
       try {
         dispatch(resetLectures());
         setIsInitialLoading(true);
@@ -62,10 +62,8 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
         setIsInitialLoading(false);
         displayErrorToast('Error fetching lectures');
       }
-    };
-
-    initFetch();
-  }, [apiParams, dispatch, course_id, lecture_id]);
+    })();
+  }, [apiParams, dispatch, course_id]);
 
   useEffect(() => {
     if (lecturesList.length > 0) {
@@ -119,7 +117,8 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
     }
     return (
       <S.SectionHeading>
-        <S.H3>Lectures</S.H3>
+        <S.LectureAvatar src={LectureIcon} />
+        <S.H5>Lectures</S.H5>
       </S.SectionHeading>
     );
   };
@@ -144,24 +143,26 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
           <Row>
             <Col size={7}>{selectedLecture && <LectureVideoPlayer lecture={selectedLecture} />}</Col>
             <Col size={5}>
-              {renderSectionHeading()}
-              <InfiniteScroll
-                dataLength={lecturesList.length}
-                hasMore={hasMore}
-                next={fetchMoreLectures}
-                heightMargin={150}
-              >
-                {lecturesList.map((lecture, index) => (
-                  <Lecture
-                    index={index}
-                    isSelected={selectedLecture && lecture.id === selectedLecture.id}
-                    key={index}
-                    lecture={lecture}
-                    onClick={onLectureClick}
-                    selfLecture={selfLectures}
-                  />
-                ))}
-              </InfiniteScroll>
+              <S.Wrapper>
+                {renderSectionHeading()}
+                <InfiniteScroll
+                  dataLength={lecturesList.length}
+                  hasMore={hasMore}
+                  heightMargin={150}
+                  next={fetchMoreLectures}
+                >
+                  {lecturesList.map((lecture, index) => (
+                    <Lecture
+                      index={index}
+                      isSelected={selectedLecture && lecture.id === selectedLecture.id}
+                      key={index}
+                      lecture={lecture}
+                      onClick={onLectureClick}
+                      selfLecture={selfLectures}
+                    />
+                  ))}
+                </InfiniteScroll>
+              </S.Wrapper>
             </Col>
           </Row>
         </>
@@ -172,9 +173,9 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
       return (
         <EmptyPage
           actionText="Click here to add a new lecture"
-          onActionTextClick={toggleLectureModal}
           bottomText="No lectures to display."
           graphic={LeavesEmptyState}
+          onActionTextClick={toggleLectureModal}
           topText="Nothing here!"
         />
       );
