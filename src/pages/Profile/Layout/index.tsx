@@ -1,13 +1,5 @@
 import {useSelector} from 'react-redux';
 import {Outlet, useLocation, useNavigate, useParams} from 'react-router-dom';
-
-import Tab from 'components/Tab';
-import Tabs from 'components/Tabs';
-import {getSelf} from 'selectors/state';
-import {SFC} from 'types';
-import UserDetails from './UserDetails';
-import * as S from './Styles';
-import Icon from '@mdi/react';
 import {
   mdiAccountArrowDownOutline,
   mdiAccountArrowUpOutline,
@@ -15,6 +7,14 @@ import {
   mdiBrushOutline,
   mdiCardsOutline,
 } from '@mdi/js';
+import Icon from '@mdi/react';
+
+import Tab from 'components/Tab';
+import Tabs from 'components/Tabs';
+import {getSelf} from 'selectors/state';
+import {SFC} from 'types';
+import UserDetails from './UserDetails';
+import * as S from './Styles';
 
 type IconName = 'Artworks' | 'Followers' | 'Following' | 'Invitations' | 'Posts';
 

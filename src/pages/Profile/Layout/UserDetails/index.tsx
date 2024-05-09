@@ -1,28 +1,27 @@
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
+import {mdiSquareEditOutline} from '@mdi/js';
 
+import logo from 'assets/logo192.png';
 import {createFollower, deleteFollower, getFollowers} from 'api/followers';
 import DefaultAvatar from 'assets/default-avatar.png';
+import {ButtonColor} from 'components/Button';
 import {useToggle, useUser} from 'hooks';
 import ProfileEditModal from 'modals/ProfileEditModal';
 import {getSelf, getUserStats} from 'selectors/state';
 import {FollowerReadSerializer, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import {formatNumber} from 'utils/numbers';
-import logo from 'assets/logo192.png';
-
 import * as S from './Styles';
-import {ButtonColor} from 'components/Button';
-import {mdiSquareEditOutline} from '@mdi/js';
 
 const UserDetails: SFC = ({className}) => {
   const [follower, setFollower] = useState<FollowerReadSerializer | null>(null);
   const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
   const {id} = useParams();
   const self = useSelector(getSelf);
-  const userStats = useSelector(getUserStats);
   const user = useUser(id);
+  const userStats = useSelector(getUserStats);
 
   const userId = id ? parseInt(id, 10) : null;
 

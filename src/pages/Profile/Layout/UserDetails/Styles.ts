@@ -6,12 +6,13 @@ import {breakpoints, colors, fonts} from 'styles';
 const USER_IMAGE_SIZE = 110;
 
 export const Button = styled(UButton)`
+  background-color: ${colors.white};
   border-radius: 100px;
   border: none;
-  height: 44px;
-  background-color: ${colors.white};
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
   font-weight: ${fonts.weight.semiBold};
+  height: 44px;
+
   & svg {
     & path {
       fill: ${colors.black} !important;
@@ -31,50 +32,38 @@ export const Container = styled.div`
 `;
 
 export const Img = styled.img`
+  border-radius: 50%;
   height: 100%;
   object-fit: cover;
-  width: 100%;
-  border-radius: 50%;
   overflow: hidden;
+  width: 100%;
 `;
 
 export const ImgWrapper = styled.div`
+  background-color: ${colors.white};
   border-radius: 50%;
   height: ${USER_IMAGE_SIZE}px;
   overflow: hidden;
-  width: ${USER_IMAGE_SIZE}px;
-  background-color: ${colors.white};
   padding: 8px;
+  width: ${USER_IMAGE_SIZE}px;
 `;
 
 export const TNBLogo = styled.img`
   border-radius: 50%;
-  width: 20px;
   margin: 0 3px;
-`;
-
-export const Stats = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: start;
-  margin-top: 10px;
-  padding: 5px 0;
-
-  & > b {
-    margin: 0 5px;
-  }
+  width: 20px;
 `;
 
 export const Username = styled.h1`
-  margin-top: 16px;
-  text-transform: capitalize;
   font-size: 24px;
   font-weight: ${fonts.weight.bold};
+  margin-top: 16px;
+  text-transform: capitalize;
 `;
 
 export const StateBalanceWrapper = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
   flex-direction: column;
   row-gap: 10px;
 
@@ -97,25 +86,19 @@ export const Title = styled.p`
 `;
 
 export const Value = styled.span<{flex?: boolean}>`
-  font-weight: ${fonts.weight.bold};
-  font-size: 14px;
-  color: ${colors.black};
   ${({flex}) => flex && 'display: flex; align-items: center; gap: 5px;'}
-`;
-
-export const WalletBalance = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
+  color: ${colors.black};
+  font-size: 14px;
+  font-weight: ${fonts.weight.bold};
 `;
 
 export const Separator = styled.span`
   background-color: ${colors.palette.gray[400]};
-  width: 6px;
-  height: 6px;
   border-radius: 50%;
-  margin: 0 20px;
   display: none;
+  height: 6px;
+  margin: 0 20px;
+  width: 6px;
 
   @media (min-width: ${breakpoints.mobile}) {
     display: block;
@@ -123,15 +106,15 @@ export const Separator = styled.span`
 `;
 
 export const Wrapper = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-top: 10px;
   gap: 20px;
+  margin-top: 10px;
 
   @media (min-width: ${breakpoints.tablet}) {
-    justify-content: space-between;
     flex-direction: row;
     gap: 0;
+    justify-content: space-between;
   }
 `;
