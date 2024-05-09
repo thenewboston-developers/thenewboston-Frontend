@@ -1,7 +1,7 @@
 import {
   getNotifications as _getNotifications,
-  updateNotification as _updateNotification,
   markAllNotificationsAsRead as _markAllNotificationsAsRead,
+  updateNotification as _updateNotification,
 } from 'api/notifications';
 import {
   markAllNotificationsAsRead as markAllNotificationsAsReadAction,

@@ -15,7 +15,7 @@ import {useToggle} from 'hooks';
 import LectureModal from 'modals/LectureModal';
 import {getLectures as _getLecturesState, getSelf} from 'selectors/state';
 import {Col, Row} from 'styles/components/GridStyle';
-import {AppDispatch, Lecture as TLecture, SFC, Lecture as LectureFind} from 'types';
+import {AppDispatch, Lecture as TLecture, Lecture as LectureFind, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import LectureIcon from './lecture-icon.png';
 import Lecture from './Lecture';
