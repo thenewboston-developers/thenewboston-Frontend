@@ -1,5 +1,13 @@
 import {useSelector} from 'react-redux';
 import {Outlet, useLocation, useNavigate, useParams} from 'react-router-dom';
+import {
+  mdiAccountArrowDownOutline,
+  mdiAccountArrowUpOutline,
+  mdiAccountBoxPlusOutline,
+  mdiBrushOutline,
+  mdiCardsOutline,
+} from '@mdi/js';
+import Icon from '@mdi/react';
 
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
@@ -7,14 +15,6 @@ import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
 import UserDetails from './UserDetails';
 import * as S from './Styles';
-import Icon from '@mdi/react';
-import {
-  mdiAccountArrowDownOutline,
-  mdiAccountArrowUpOutline,
-  mdiAccountBoxPlusOutline,
-  mdiBrushOutline,
-  mdiTabletDashboard,
-} from '@mdi/js';
 
 type IconName = 'Artworks' | 'Followers' | 'Following' | 'Invitations' | 'Posts';
 
@@ -23,7 +23,7 @@ const IconMapper = {
   Followers: mdiAccountArrowDownOutline,
   Following: mdiAccountArrowUpOutline,
   Invitations: mdiAccountBoxPlusOutline,
-  Posts: mdiTabletDashboard,
+  Posts: mdiCardsOutline,
 };
 
 const Layout: SFC = ({className}) => {
@@ -31,7 +31,6 @@ const Layout: SFC = ({className}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const self = useSelector(getSelf);
-
   const userId = id ? parseInt(id, 10) : null;
 
   const renderTab = (displayName: IconName, url: string) => {

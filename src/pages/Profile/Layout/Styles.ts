@@ -1,19 +1,28 @@
 import styled from 'styled-components';
 
-import {breakpoints} from 'styles';
+import Pattern from './profile-pattern.png';
 
 export const Container = styled.div`
-  display: grid;
-  gap: 32px;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   padding: 24px 32px;
+  position: relative;
 
-  @media (min-width: ${breakpoints.tablet}) {
-    grid-template-columns: 260px 1fr;
+  &::after {
+    background-image: url(${Pattern});
+    content: '';
+    height: 125px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: -1;
   }
 `;
 
 export const OutletContainer = styled.div`
   height: 100%;
+  margin-top: 33px;
   overflow-y: auto;
 `;
