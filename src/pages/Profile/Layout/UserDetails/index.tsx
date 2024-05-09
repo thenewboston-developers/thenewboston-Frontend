@@ -4,15 +4,17 @@ import {useParams} from 'react-router-dom';
 
 import {createFollower, deleteFollower, getFollowers} from 'api/followers';
 import DefaultAvatar from 'assets/default-avatar.png';
-import TNBLogo from 'components/TNBLogo';
 import {useToggle, useUser} from 'hooks';
 import ProfileEditModal from 'modals/ProfileEditModal';
 import {getSelf, getUserStats} from 'selectors/state';
 import {FollowerReadSerializer, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import {formatNumber} from 'utils/numbers';
+import logo from 'assets/logo192.png';
 
 import * as S from './Styles';
+import {ButtonColor} from 'components/Button';
+import {mdiSquareEditOutline} from '@mdi/js';
 
 const UserDetails: SFC = ({className}) => {
   const [follower, setFollower] = useState<FollowerReadSerializer | null>(null);
@@ -80,12 +82,21 @@ const UserDetails: SFC = ({className}) => {
 
   const renderEditProfileButton = () => {
     if (self.id !== userId) return null;
-    return <S.Button onClick={toggleProfileEditModal} text="Edit Profile" />;
+    return (
+      <S.Button
+        onClick={toggleProfileEditModal}
+        text="Edit Profile"
+        color={ButtonColor.secondary}
+        iconLeft={mdiSquareEditOutline}
+      />
+    );
   };
 
   const renderFollowButton = () => {
     if (self.id === userId) return null;
-    return <S.Button onClick={handleFollowButtonClick} text={follower ? 'Unfollow' : 'Follow'} />;
+    return (
+      <S.Button color={ButtonColor.primary} onClick={handleFollowButtonClick} text={follower ? 'Unfollow' : 'Follow'} />
+    );
   };
 
   const renderUsername = () => {
@@ -93,21 +104,28 @@ const UserDetails: SFC = ({className}) => {
     return <S.Username>{user.username}</S.Username>;
   };
 
-  const renderStats = () => {
+  const renderStatesAndBalance = () => {
     if (!user) return null;
     return (
-      <S.Stats>
-        Followings: <b>{following_count ?? 0}</b> | Followers: <b>{followers_count}</b>
-      </S.Stats>
-    );
-  };
-
-  const renderDefaultWalletBalance = () => {
-    if (!user) return null;
-    return (
-      <S.WalletBalance>
-        Balance: <TNBLogo /> <b>{formatNumber(default_wallet_balance)}</b>
-      </S.WalletBalance>
+      <S.StateBalanceWrapper>
+        <S.Flex>
+          <S.Title>Followings:</S.Title>
+          <S.Value>{following_count ?? 0}</S.Value>
+        </S.Flex>
+        <S.Separator />
+        <S.Flex>
+          <S.Title>Followers:</S.Title>
+          <S.Value>{followers_count}</S.Value>
+        </S.Flex>
+        <S.Separator />
+        <S.Flex>
+          <S.Title>Your balance:</S.Title>
+          <S.Value flex={true}>
+            <S.TNBLogo src={logo} />
+            {formatNumber(default_wallet_balance)}
+          </S.Value>
+        </S.Flex>
+      </S.StateBalanceWrapper>
     );
   };
 
@@ -116,10 +134,11 @@ const UserDetails: SFC = ({className}) => {
       <S.Container className={className}>
         {renderAvatar()}
         {renderUsername()}
-        {renderStats()}
-        {renderDefaultWalletBalance()}
-        {renderEditProfileButton()}
-        {renderFollowButton()}
+        <S.Wrapper>
+          {renderStatesAndBalance()}
+          {renderEditProfileButton()}
+          {renderFollowButton()}
+        </S.Wrapper>
       </S.Container>
       {profileEditModalIsOpen ? <ProfileEditModal close={toggleProfileEditModal} /> : null}
     </>

@@ -13,7 +13,7 @@ import {
   mdiAccountArrowUpOutline,
   mdiAccountBoxPlusOutline,
   mdiBrushOutline,
-  mdiTabletDashboard,
+  mdiCardsOutline,
 } from '@mdi/js';
 
 type IconName = 'Artworks' | 'Followers' | 'Following' | 'Invitations' | 'Posts';
@@ -23,7 +23,7 @@ const IconMapper = {
   Followers: mdiAccountArrowDownOutline,
   Following: mdiAccountArrowUpOutline,
   Invitations: mdiAccountBoxPlusOutline,
-  Posts: mdiTabletDashboard,
+  Posts: mdiCardsOutline,
 };
 
 const Layout: SFC = ({className}) => {
@@ -31,7 +31,6 @@ const Layout: SFC = ({className}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const self = useSelector(getSelf);
-
   const userId = id ? parseInt(id, 10) : null;
 
   const renderTab = (displayName: IconName, url: string) => {
