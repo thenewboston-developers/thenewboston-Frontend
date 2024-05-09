@@ -2,22 +2,21 @@ import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLocation, useNavigate} from 'react-router-dom';
 
-import {AppDispatch, Lecture as TLecture, SFC, Lecture as LectureFind} from 'types';
-import {Col, Row} from 'styles/components/GridStyle';
-import {displayErrorToast} from 'utils/toasts';
-import Button from 'components/Button';
-import {getLectures as _getLectures, resetLectures} from 'dispatchers/lectures';
-import {getLectures as _getLecturesState, getSelf} from 'selectors/state';
-import {PATH_COURSES, PATH_COURSES_SELF, PATH_LECTURES} from 'constants/paths';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
+import Button from 'components/Button';
 import Breadcrumbs from 'components/Breadcrumbs';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
 import Loader from 'components/Loader';
+import {PATH_COURSES, PATH_COURSES_SELF, PATH_LECTURES} from 'constants/paths';
+import {getLectures as _getLectures, resetLectures} from 'dispatchers/lectures';
 import {PublicationStatus} from 'enums';
 import {useToggle} from 'hooks';
 import LectureModal from 'modals/LectureModal';
-
+import {getLectures as _getLecturesState, getSelf} from 'selectors/state';
+import {Col, Row} from 'styles/components/GridStyle';
+import {AppDispatch, Lecture as TLecture, SFC, Lecture as LectureFind} from 'types';
+import {displayErrorToast} from 'utils/toasts';
 import LectureIcon from './lecture-icon.png';
 import Lecture from './Lecture';
 import LectureVideoPlayer from './LectureVideoPlayer';
@@ -42,6 +41,7 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
   const lecture_id = queryParams.get('lecture_id') || undefined;
 
   const lecturesList = useMemo(() => Object.values(lectures), [lectures]);
+
   const apiParams = useMemo(() => {
     if (selfLectures && self.id) {
       return {instructor_id: self.id};
@@ -73,7 +73,6 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
       } else {
         const courseId = lecturesList[0].course.id;
         const lectureId = lecturesList[0].id;
-
         navigate({
           pathname: `${PATH_LECTURES}`,
           search: `?course_id=${courseId}&lecture_id=${lectureId}`,
