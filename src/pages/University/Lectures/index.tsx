@@ -1,21 +1,21 @@
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
-import Breadcrumbs from 'components/Breadcrumbs';
 import Button from 'components/Button';
+import Breadcrumbs from 'components/Breadcrumbs';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
 import Loader from 'components/Loader';
-import {PATH_COURSES, PATH_COURSES_SELF} from 'constants/paths';
+import {PATH_COURSES, PATH_COURSES_SELF, PATH_LECTURES} from 'constants/paths';
 import {getLectures as _getLectures, resetLectures} from 'dispatchers/lectures';
 import {PublicationStatus} from 'enums';
 import {useToggle} from 'hooks';
 import LectureModal from 'modals/LectureModal';
 import {getLectures as _getLecturesState, getSelf} from 'selectors/state';
 import {Col, Row} from 'styles/components/GridStyle';
-import {AppDispatch, Lecture as TLecture, SFC} from 'types';
+import {AppDispatch, Lecture as TLecture, Lecture as LectureFind, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import LectureIcon from './lecture-icon.png';
 import Lecture from './Lecture';
@@ -33,12 +33,15 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
   const {hasMore, isLoading, lectures} = useSelector(_getLecturesState);
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
+  const navigate = useNavigate();
   const self = useSelector(getSelf);
 
   const queryParams = new URLSearchParams(location.search);
   const course_id = queryParams.get('course_id') || undefined;
+  const lecture_id = queryParams.get('lecture_id') || undefined;
 
   const lecturesList = useMemo(() => Object.values(lectures), [lectures]);
+
   const apiParams = useMemo(() => {
     if (selfLectures && self.id) {
       return {instructor_id: self.id};
@@ -64,9 +67,20 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
 
   useEffect(() => {
     if (lecturesList.length > 0) {
-      setSelectedLecture(lecturesList[0]);
+      if (lecture_id) {
+        const foundLecture = lecturesList.find((lecture: LectureFind) => lecture.id === Number(lecture_id));
+        setSelectedLecture(foundLecture);
+      } else {
+        const courseId = lecturesList[0].course.id;
+        const lectureId = lecturesList[0].id;
+        navigate({
+          pathname: `${PATH_LECTURES}`,
+          search: `?course_id=${courseId}&lecture_id=${lectureId}`,
+        });
+        setSelectedLecture(lecturesList[0]);
+      }
     }
-  }, [lecturesList]);
+  }, [lecturesList, lecture_id, navigate]);
 
   const fetchMoreLectures = async () => {
     if (!isLoading && hasMore) {
@@ -81,6 +95,14 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
 
   const onLectureClick = (lecture: TLecture) => {
     setSelectedLecture(lecture);
+
+    const courseId = lecture.course.id;
+    const lectureId = lecture.id;
+
+    navigate({
+      pathname: `${PATH_LECTURES}`,
+      search: `?course_id=${courseId}&lecture_id=${lectureId}`,
+    });
   };
 
   const renderSectionHeading = () => {
