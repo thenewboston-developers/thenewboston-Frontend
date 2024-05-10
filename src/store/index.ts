@@ -15,6 +15,7 @@ import conversationsReducer from 'store/conversations';
 import coresReducer from 'store/cores';
 import coursesReducer from 'store/courses';
 import exchangeOrdersReducer from 'store/exchangeOrders';
+import iaReducer from 'store/ia';
 import invitationLimitsReducer from 'store/invitationLimits';
 import invitationsReducer from 'store/invitations';
 import lecturesReducer from 'store/lectures';
@@ -26,8 +27,8 @@ import postsReducer from 'store/posts';
 import productsReducer from 'store/products';
 import selfReducer from 'store/self';
 import tradesReducer from 'store/trades';
-import usersReducer from 'store/users';
 import userStatsReducer from 'store/userStats';
+import usersReducer from 'store/users';
 import walletsReducer from 'store/wallets';
 import wiresReducer from 'store/wires';
 
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
   cores: coresReducer,
   courses: coursesReducer,
   exchangeOrders: exchangeOrdersReducer,
+  ia: iaReducer,
   invitationLimits: invitationLimitsReducer,
   invitations: invitationsReducer,
   lectures: lecturesReducer,
