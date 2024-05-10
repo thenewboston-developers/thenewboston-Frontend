@@ -11,6 +11,7 @@ export const Container = styled.div`
 export const SectionHeading = styled.div`
   align-items: center;
   display: flex;
+  justify-content: space-between;
   padding: 20px 22px;
 `;
 
