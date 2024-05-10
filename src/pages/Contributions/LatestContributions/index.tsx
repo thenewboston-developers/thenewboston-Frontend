@@ -1,4 +1,5 @@
 import {FC, useMemo} from 'react';
+import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 import {
@@ -18,11 +19,12 @@ import {
   ContributionCardHeader,
   ContributionCardItem,
 } from 'components/Contributions/ContributionCard';
-import {ContributorInfo} from 'components/Contributions/ContributorInfo';
 import {Col, Row} from 'styles/components/GridStyle';
 import {Contribution} from 'types';
-import {getTimeAgo} from 'utils/dates';
+import {ContributorInfo} from 'components/Contributions/ContributorInfo';
+import {getIa} from 'selectors/state';
 import {getPullRequestUrl, getRepositoryUrl, getUserProfileUrl} from 'utils/github';
+import {getTimeAgo} from 'utils/dates';
 import * as S from './Styles';
 
 interface LatestContributionsProps {
@@ -31,11 +33,13 @@ interface LatestContributionsProps {
 }
 
 const LatestContributions: FC<LatestContributionsProps> = ({className, contributions}) => {
+  const ia = useSelector(getIa).ia;
   const contributionsList = useMemo(() => {
     return orderBy(Object.values(contributions), ['created_date'], ['desc']);
   }, [contributions]);
   const latestContributionsList = contributionsList.slice(0, 50);
 
+  const iaProfileLink = () => (ia ? `/profile/${ia.id}` : '');
   const userProfileLink = (contribution: Contribution) => `/profile/${contribution.user.id}`;
   const githubUserProfileLink = (contribution: Contribution) =>
     getUserProfileUrl(contribution.github_user.github_username);
@@ -108,7 +112,7 @@ const LatestContributions: FC<LatestContributionsProps> = ({className, contribut
               <Line />
               <ContributionCardHeader>
                 <div>
-                  <ContributionCardItem iconPath={mdiFaceWomanOutline} iconLink={userProfileLink(contribution)}>
+                  <ContributionCardItem iconPath={mdiFaceWomanOutline} iconLink={iaProfileLink()}>
                     <S.DescriptionHeading>
                       <Link to={userProfileLink(contribution)}>
                         <b>ia</b>
