@@ -8,9 +8,16 @@ export interface SectionHeadingProps {
   heading: string;
   rightContent?: ReactNode;
   subHeading?: string;
+  isDisplayLine?: boolean;
 }
 
-const SectionHeading: SFC<SectionHeadingProps> = ({className, heading, rightContent, subHeading}) => {
+const SectionHeading: SFC<SectionHeadingProps> = ({
+  className,
+  heading,
+  rightContent,
+  subHeading,
+  isDisplayLine = true,
+}) => {
   return (
     <S.Container className={className}>
       <S.Contents>
@@ -20,7 +27,7 @@ const SectionHeading: SFC<SectionHeadingProps> = ({className, heading, rightCont
         </S.Left>
         <S.Right>{rightContent ? rightContent : null}</S.Right>
       </S.Contents>
-      <Line />
+      {isDisplayLine ? <Line /> : null}
     </S.Container>
   );
 };
