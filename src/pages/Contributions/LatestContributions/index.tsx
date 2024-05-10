@@ -10,21 +10,21 @@ import {
   mdiSquareRoundedBadgeOutline,
 } from '@mdi/js';
 
-import Line from 'components/Line';
-import PanelHeading from 'components/PanelHeading';
-import ReadMoreLess from 'components/ReadMoreLess';
 import {
   ContributionCard,
   ContributionCardBody,
   ContributionCardHeader,
   ContributionCardItem,
 } from 'components/Contributions/ContributionCard';
-import {Col, Row} from 'styles/components/GridStyle';
-import {Contribution} from 'types';
 import {ContributorInfo} from 'components/Contributions/ContributorInfo';
+import {Col, Row} from 'styles/components/GridStyle';
+import Line from 'components/Line';
+import PanelHeading from 'components/PanelHeading';
+import ReadMoreLess from 'components/ReadMoreLess';
+import {Contribution} from 'types';
 import {getIa} from 'selectors/state';
-import {getPullRequestUrl, getRepositoryUrl, getUserProfileUrl} from 'utils/github';
 import {getTimeAgo} from 'utils/dates';
+import {getPullRequestUrl, getRepositoryUrl, getUserProfileUrl} from 'utils/github';
 import * as S from './Styles';
 
 interface LatestContributionsProps {
@@ -34,9 +34,11 @@ interface LatestContributionsProps {
 
 const LatestContributions: FC<LatestContributionsProps> = ({className, contributions}) => {
   const ia = useSelector(getIa).ia;
+
   const contributionsList = useMemo(() => {
     return orderBy(Object.values(contributions), ['created_date'], ['desc']);
   }, [contributions]);
+
   const latestContributionsList = contributionsList.slice(0, 50);
 
   const iaProfileLink = () => (ia ? `/profile/${ia.id}` : '');

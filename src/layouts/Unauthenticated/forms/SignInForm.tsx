@@ -3,11 +3,10 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
-import {AppDispatch, SFC} from 'types';
-import {ButtonType} from 'components/Button';
-import {displayErrorToast} from 'utils/toasts';
-import {getIa} from 'dispatchers/ia';
 import {login} from 'dispatchers/authentication';
+import {ButtonType} from 'components/Button';
+import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
@@ -25,7 +24,6 @@ const SignInForm: SFC = () => {
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
       await dispatch(login(values));
-      await dispatch(getIa());
       navigate('/feed');
     } catch (error) {
       console.error(error);
