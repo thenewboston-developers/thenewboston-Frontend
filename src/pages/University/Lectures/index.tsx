@@ -66,7 +66,7 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
   }, [apiParams, dispatch, currentCourseId]);
 
   useEffect(() => {
-    if (lecturesList.length == 0) {
+    if (lecturesList.length === 0) {
       return;
     }
     if (currenLectureId) {
