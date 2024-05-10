@@ -4,5 +4,7 @@ import {AppDispatch} from 'types';
 
 export const getIa = () => async (dispatch: AppDispatch) => {
   const responseData = await _getIa();
-  dispatch(setIa(responseData));
+  if (responseData) {
+    dispatch(setIa(responseData));
+  }
 };
