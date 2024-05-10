@@ -22,6 +22,7 @@ export const PRODUCTS = 'products';
 export const SELF = 'self';
 export const TRADES = 'trades';
 export const USERS = 'users';
+export const IA = 'ia';
 export const USER_STATS = 'userStats';
 export const WALLETS = 'wallets';
 export const WIRES = 'wires';

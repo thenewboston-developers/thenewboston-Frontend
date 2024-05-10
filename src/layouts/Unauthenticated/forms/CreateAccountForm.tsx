@@ -3,10 +3,11 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
+import {AppDispatch, SFC} from 'types';
 import {ButtonType} from 'components/Button';
 import {createUser} from 'dispatchers/users';
-import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
+import {getIa} from 'dispatchers/ia';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
@@ -31,6 +32,7 @@ const CreateAccountForm: SFC = () => {
         username: values.username,
       };
       const user = await dispatch(createUser(requestData));
+      await dispatch(getIa());
       navigate(`/profile/${user.id}`);
     } catch (error: any) {
       console.error(error);
