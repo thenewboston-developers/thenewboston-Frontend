@@ -8,14 +8,14 @@ import Breadcrumbs from 'components/Breadcrumbs';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
 import Loader from 'components/Loader';
-import {PATH_COURSES, PATH_COURSES_SELF, PATH_LECTURES} from 'constants/paths';
+import {PATH_COURSES, PATH_COURSES_SELF} from 'constants/paths';
 import {getLectures as _getLectures, resetLectures} from 'dispatchers/lectures';
 import {PublicationStatus} from 'enums';
 import {useToggle} from 'hooks';
 import LectureModal from 'modals/LectureModal';
 import {getLectures as _getLecturesState, getSelf} from 'selectors/state';
 import {Col, Row} from 'styles/components/GridStyle';
-import {AppDispatch, Lecture as TLecture, Lecture as LectureFind, SFC} from 'types';
+import {AppDispatch, Lecture as TLecture, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import LectureIcon from './lecture-icon.png';
 import Lecture from './Lecture';
@@ -37,8 +37,8 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
   const self = useSelector(getSelf);
 
   const queryParams = new URLSearchParams(location.search);
-  const course_id = queryParams.get('course_id') || undefined;
-  const lecture_id = queryParams.get('lecture_id') || undefined;
+  const currentCourseId = queryParams.get('course_id') || undefined;
+  const currenLectureId = queryParams.get('lecture_id') || undefined;
 
   const lecturesList = useMemo(() => Object.values(lectures), [lectures]);
 
@@ -55,7 +55,7 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
       try {
         dispatch(resetLectures());
         setIsInitialLoading(true);
-        await dispatch(_getLectures({course_id: course_id, ...apiParams}));
+        await dispatch(_getLectures({course_id: currentCourseId, ...apiParams}));
         setIsInitialLoading(false);
       } catch (error) {
         console.error(error);
@@ -63,24 +63,21 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
         displayErrorToast('Error fetching lectures');
       }
     })();
-  }, [apiParams, dispatch, course_id]);
+  }, [apiParams, dispatch, currentCourseId]);
 
   useEffect(() => {
-    if (lecturesList.length > 0) {
-      if (lecture_id) {
-        const foundLecture = lecturesList.find((lecture: LectureFind) => lecture.id === Number(lecture_id));
+    if (lecturesList.length === 0) {
+      return;
+    }
+    if (currenLectureId) {
+      const foundLecture = lecturesList.find((lecture: TLecture) => lecture.id === Number(currenLectureId));
+      if (foundLecture) {
         setSelectedLecture(foundLecture);
-      } else {
-        const courseId = lecturesList[0].course.id;
-        const lectureId = lecturesList[0].id;
-        navigate({
-          pathname: `${PATH_LECTURES}`,
-          search: `?course_id=${courseId}&lecture_id=${lectureId}`,
-        });
-        setSelectedLecture(lecturesList[0]);
+        return;
       }
     }
-  }, [lecturesList, lecture_id, navigate]);
+    setSelectedLecture(lecturesList[0]);
+  }, [lecturesList, currenLectureId]);
 
   const fetchMoreLectures = async () => {
     if (!isLoading && hasMore) {
@@ -95,14 +92,13 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
 
   const onLectureClick = (lecture: TLecture) => {
     setSelectedLecture(lecture);
+    updateQueryParam('lecture_id', lecture.id.toString());
+  };
 
-    const courseId = lecture.course.id;
-    const lectureId = lecture.id;
-
-    navigate({
-      pathname: `${PATH_LECTURES}`,
-      search: `?course_id=${courseId}&lecture_id=${lectureId}`,
-    });
+  const updateQueryParam = (paramName: string, value: string) => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set(paramName, value);
+    navigate(`${location.pathname}?${searchParams.toString()}`, {replace: true});
   };
 
   const renderSectionHeading = () => {
@@ -184,7 +180,7 @@ const Lectures: SFC<LecturesProps> = ({className, selfLectures = false}) => {
   };
 
   const renderLectureModal = () => {
-    return lectureModalIsOpen ? <LectureModal close={toggleLectureModal} course_id={course_id} /> : null;
+    return lectureModalIsOpen ? <LectureModal close={toggleLectureModal} course_id={currentCourseId} /> : null;
   };
 
   return (

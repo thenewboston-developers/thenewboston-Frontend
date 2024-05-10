@@ -1,5 +1,6 @@
-import Avatar from 'components/Avatar';
 import styled from 'styled-components';
+
+import Avatar from 'components/Avatar';
 import {colors} from 'styles';
 
 export const Container = styled.div`
@@ -11,6 +12,7 @@ export const Container = styled.div`
 export const SectionHeading = styled.div`
   align-items: center;
   display: flex;
+  justify-content: space-between;
   padding: 20px 22px;
 `;
 
