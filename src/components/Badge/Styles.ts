@@ -22,13 +22,25 @@ const successMixin = css`
 const warningMixin = css`
   background-color: ${colors.palette.orange['300']};
 `;
+const lightGreenMixin = css`
+  background-color: ${colors.lightGreen};
+  color: ${colors.palette.green['600']};
+`;
+const lightRedMixin = css`
+  background-color: ${colors.lightRed};
+  color: ${colors.palette.red['700']};
+`;
+export const Text = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 export const Container = styled.div<{$badgeStyle: BadgeStyle}>`
-  border-radius: 4px;
+  border-radius: 60px;
   color: #fff;
   font-size: 10px;
   font-weight: ${fonts.weight.semiBold};
-  padding: 2px 4px;
+  padding: 7px 14px 7px 14px;
   white-space: nowrap;
   width: fit-content;
 
@@ -38,6 +50,9 @@ export const Container = styled.div<{$badgeStyle: BadgeStyle}>`
     if ($badgeStyle === BadgeStyle.primary) return primaryMixin;
     if ($badgeStyle === BadgeStyle.success) return successMixin;
     if ($badgeStyle === BadgeStyle.warning) return warningMixin;
+    if ($badgeStyle === BadgeStyle.lightGreen) return lightGreenMixin;
+    if ($badgeStyle === BadgeStyle.lightRed) return lightRedMixin;
+
     return;
   }}
 `;

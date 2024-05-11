@@ -11,7 +11,31 @@ import {colors} from 'styles';
 import {AppDispatch, SFC} from 'types';
 import {chartDisplayDate} from 'utils/dates';
 import * as S from './Styles';
+import {FillStatus} from 'enums';
+import FillStatusBadge from 'components/FillStatusBadge';
+import Badge, {BadgeStyle} from 'components/Badge';
+import Icon from '@mdi/react';
+import {mdiFinance} from '@mdi/js';
 
+//temporary static
+const cardDetails = [
+  {
+    logo: '',
+    text: 'abc',
+  },
+  {
+    logo: '',
+    text: 'abc',
+  },
+  {
+    logo: '',
+    text: 'abc',
+  },
+  {
+    logo: '',
+    text: 'abc',
+  },
+];
 const Chart: SFC = ({className}) => {
   const activeAssetPair = useActiveAssetPair();
   const dispatch = useDispatch<AppDispatch>();
@@ -54,16 +78,33 @@ const Chart: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      {renderLastPrice()}
-      <ResponsiveContainer height={420} width="100%">
-        <LineChart data={tradeList}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="display_date" />
-          <YAxis />
-          <Tooltip />
-          <Line dataKey="trade_price" stroke={`${colors.palette.blue['400']}`} type="monotone" />
-        </LineChart>
-      </ResponsiveContainer>
+      <S.CardsContainer>
+        {cardDetails.map((item) => (
+          <S.Card>
+            <S.Text>
+              <span>{item.text}</span>
+              <span>
+                <Badge badgeStyle={BadgeStyle.lightGreen}>
+                  <Icon path={mdiFinance} size={1} />
+                  5.7%
+                </Badge>
+              </span>
+            </S.Text>
+          </S.Card>
+        ))}
+      </S.CardsContainer>
+      <S.ChartBackground>
+        {renderLastPrice()}
+        <ResponsiveContainer height={400} width="100%">
+          <LineChart data={tradeList}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="display_date" />
+            <YAxis />
+            <Tooltip />
+            <Line dataKey="trade_price" stroke={`${colors.palette.blue['400']}`} type="monotone" />
+          </LineChart>
+        </ResponsiveContainer>
+      </S.ChartBackground>
     </S.Container>
   );
 };

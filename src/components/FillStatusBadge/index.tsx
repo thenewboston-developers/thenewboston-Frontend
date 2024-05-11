@@ -14,7 +14,7 @@ const FillStatusBadge: SFC<FillStatusBadgeProps> = ({fillStatus}) => {
     [FillStatus.PARTIALLY_FILLED]: BadgeStyle.warning,
   };
 
-  return <Badge badgeStyle={badgeStyle[fillStatus]} text={fillStatus} />;
+  return <Badge badgeStyle={badgeStyle[fillStatus]} children={fillStatus} />;
 };
 
 export default FillStatusBadge;

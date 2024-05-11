@@ -12,7 +12,7 @@ const InvitationStatusBadge: SFC<InvitationStatusBadgeProps> = ({invitationStatu
     [InvitationStatus.PENDING]: BadgeStyle.draft,
   };
 
-  return <Badge badgeStyle={badgeStyle[invitationStatus]} text={invitationStatus} />;
+  return <Badge badgeStyle={badgeStyle[invitationStatus]} children={invitationStatus} />;
 };
 
 export default InvitationStatusBadge;

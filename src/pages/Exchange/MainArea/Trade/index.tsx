@@ -45,7 +45,6 @@ const Trade: SFC = ({className}) => {
     if (!!assetPairList.length) {
       return (
         <>
-          <AssetPairSelector />
           <S.Grid>
             <OrderTools />
             <Chart />
