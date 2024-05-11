@@ -30,10 +30,8 @@ const Orders: SFC = ({className}) => {
 
   const ordersList = useMemo(() => {
     const orderedOrders = orderBy(Object.values(orders), ['created_date'], ['desc']);
-    return orderedOrders;
-    //not matching data hance it's giving empty array
-    // return orderedOrders.filter((order) => order.owner === self.id);
-  }, [orders]);
+    return orderedOrders.filter((order) => order.owner === self.id);
+  }, [orders, self.id]);
 
   const renderContent = () => {
     if (!!ordersList.length) {
