@@ -18,113 +18,6 @@ import {longDate} from 'utils/dates';
 import * as S from './Styles';
 import {colors} from 'styles';
 
-//temporary static data
-const OrderData: any[] = [
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 1,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 2,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 3,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 4,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 5,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 6,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 7,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 8,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 9,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 10,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 11,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 12,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-  {
-    date: 'Apr 24, 2024,04:30 pm GMT+5',
-    filledAmount: '100VTX',
-    id: 13,
-    price: '40TNB',
-    quantity: '100 VTX',
-    type: 'Sell',
-  },
-];
 const Orders: SFC = ({className}) => {
   const [selectedOrder, setSelectedOrder] = useState<ExchangeOrder | null>(null);
   const [tradesModalIsOpen, toggleTradesModal] = useToggle(false);
@@ -137,11 +30,13 @@ const Orders: SFC = ({className}) => {
 
   const ordersList = useMemo(() => {
     const orderedOrders = orderBy(Object.values(orders), ['created_date'], ['desc']);
-    return orderedOrders.filter((order) => order.owner === self.id);
-  }, [orders, self.id]);
+    return orderedOrders;
+    //not matching data hance it's giving empty array
+    // return orderedOrders.filter((order) => order.owner === self.id);
+  }, [orders]);
 
   const renderContent = () => {
-    if (!!OrderData.length) {
+    if (!!ordersList.length) {
       return (
         <S.Table>
           <S.Thead>
@@ -152,6 +47,7 @@ const Orders: SFC = ({className}) => {
               <th>Price</th>
               <th>Filled Amount</th>
               <th>Fill Status</th>
+              <th>Action</th>
             </tr>
           </S.Thead>
 
@@ -194,33 +90,55 @@ const Orders: SFC = ({className}) => {
   );
 
   const renderRows = useCallback(() => {
-    return OrderData.map((item) => {
-      const [date, year, time] = item.date.split(',');
+    return ordersList.map((order) => {
+      const {
+        created_date,
+        id,
+        filled_amount,
+        fill_status,
+        order_type,
+        quantity,
+        price,
+        primary_currency,
+        secondary_currency,
+      } = order;
+
+      const primaryCurrencyTicker = getCurrencyTicker(primary_currency);
+      const secondaryCurrencyTicker = getCurrencyTicker(secondary_currency);
+      const [date, time] = longDate(created_date).split('at');
+
       return (
-        <tr key={item.id}>
+        <tr key={id}>
           <td>
-            {`${date}, ${year} `}
+            {`${date} `}
             <br />
             <S.TextColor>{time}</S.TextColor>
           </td>
           <td>
             <S.TextAlignment>
               <Icon path={mdiPackageVariantClosed} size={1} color={`${colors.gray}`} />
-              {item.type}
+              {order_type}
             </S.TextAlignment>
           </td>
-          <td>{item.quantity}</td>
-          <td>{item.price}</td>
-          <td>{item.filledAmount}</td>
+          <td>
+            {quantity.toLocaleString()} {primaryCurrencyTicker}
+          </td>
+          <td>
+            {price.toLocaleString()} {secondaryCurrencyTicker}
+          </td>
+          <td>
+            {filled_amount.toLocaleString()} {primaryCurrencyTicker}
+          </td>
           <td>
             <S.FillStatusBadgeWrapper>
-              <FillStatusBadge fillStatus={FillStatus.FILLED} />
+              <FillStatusBadge fillStatus={fill_status} />
             </S.FillStatusBadgeWrapper>
           </td>
+          <td>{renderDropdownMenu(order)}</td>
         </tr>
       );
     });
-  }, []);
+  }, [ordersList, getCurrencyTicker, renderDropdownMenu]);
 
   return (
     <>
