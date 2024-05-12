@@ -5,14 +5,16 @@ import orderBy from 'lodash/orderBy';
 
 import ArtworkCard from 'components/ArtworkCard';
 import EmptyText from 'components/EmptyText';
-import {getArtworks as _getArtworks} from 'dispatchers/artworks';
-import {getArtworks} from 'selectors/state';
+import InfiniteScroll from 'components/InfiniteScroll';
 import {AppDispatch, SFC} from 'types';
+import {getArtworks as _getArtworks, resetArtworks as _resetArtworks} from 'dispatchers/artworks';
+import {getArtworks as getArtworksState} from 'selectors/state';
 import * as S from './Styles';
 
 const Artworks: SFC = ({className}) => {
   const {id} = useParams();
-  const artworks = useSelector(getArtworks);
+  const artworksState = useSelector(getArtworksState);
+  const {artworks, hasMore, isLoading} = artworksState;
   const dispatch = useDispatch<AppDispatch>();
 
   const userId = id ? parseInt(id, 10) : null;
@@ -21,6 +23,7 @@ const Artworks: SFC = ({className}) => {
     if (!userId) return;
 
     (async () => {
+      dispatch(_resetArtworks());
       await dispatch(_getArtworks({owner: userId}));
     })();
   }, [dispatch, userId]);
@@ -30,9 +33,24 @@ const Artworks: SFC = ({className}) => {
     return _artworks.filter(({owner}) => owner.id === userId);
   }, [artworks, userId]);
 
+  const fetchMoreArtworks = async () => {
+    if (!isLoading) {
+      await dispatch(_getArtworks());
+    }
+  };
+
   const renderArtworkCards = () => {
-    const _artworks = artworkList.map((artwork) => <ArtworkCard artwork={artwork} key={artwork.id} />);
-    return <S.ArtworkCards>{_artworks}</S.ArtworkCards>;
+    if (artworkList.length) {
+      return (
+        <InfiniteScroll dataLength={artworkList.length} hasMore={hasMore} next={fetchMoreArtworks} heightMargin={0}>
+          <S.ArtworkCards>
+            {artworkList.map((artwork) => (
+              <ArtworkCard artwork={artwork} key={artwork.id} />
+            ))}
+          </S.ArtworkCards>
+        </InfiniteScroll>
+      );
+    }
   };
 
   const renderContent = () => {
