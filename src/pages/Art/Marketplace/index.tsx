@@ -1,6 +1,5 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
 
 import ArtworkCard from 'components/ArtworkCard';
 import EmptyText from 'components/EmptyText';
