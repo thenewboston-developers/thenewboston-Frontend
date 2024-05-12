@@ -23,8 +23,7 @@ const Marketplace: SFC = ({className}) => {
   }, [dispatch]);
 
   const artworkList = useMemo(() => {
-    const _artworks = orderBy(Object.values(artworks), ['created_date'], ['desc']);
-    return _artworks.filter(({price_amount, price_core}) => !!price_amount && !!price_core);
+    return Object.values(artworks).filter(({price_amount, price_core}) => !!price_amount && !!price_core);
   }, [artworks]);
 
   const fetchMoreArtworks = async () => {

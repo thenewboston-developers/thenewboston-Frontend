@@ -29,8 +29,7 @@ const Artworks: SFC = ({className}) => {
   }, [dispatch, userId]);
 
   const artworkList = useMemo(() => {
-    const _artworks = orderBy(Object.values(artworks), ['created_date'], ['desc']);
-    return _artworks.filter(({owner}) => owner.id === userId);
+    return Object.values(artworks).filter(({owner}) => owner.id === userId);
   }, [artworks, userId]);
 
   const fetchMoreArtworks = async () => {
