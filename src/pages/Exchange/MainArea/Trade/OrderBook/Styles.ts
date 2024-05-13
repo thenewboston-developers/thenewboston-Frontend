@@ -59,8 +59,6 @@ export const Table = styled.table`
 
   tbody {
     display: block;
-    max-height: 270px;
-    overflow-y: auto;
     width: 100%;
   }
 `;

@@ -9,7 +9,6 @@ import {getAssetPairs} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
-import AssetPairSelector from './AssetPairSelector';
 import Chart from './Chart';
 import OrderBook from './OrderBook';
 import OrderTools from './OrderTools';
