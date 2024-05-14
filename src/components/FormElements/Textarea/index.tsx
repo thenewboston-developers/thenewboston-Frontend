@@ -5,7 +5,7 @@ import * as S from './Styles';
 
 export interface TextareaProps {
   errors: {[field: string]: string};
-  label: string;
+  label?: string;
   name: string;
   placeholder?: string;
   onChange?(e: ChangeEvent<HTMLTextAreaElement>): void;
@@ -17,7 +17,7 @@ const Textarea: SFC<TextareaProps> = ({className, errors, label, name, onChange,
 
   return (
     <>
-      <S.Label>{label}</S.Label>
+      {label && <S.Label>{label}</S.Label>}
       <S.Field
         $error={isError}
         className={className}
