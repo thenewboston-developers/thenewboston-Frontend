@@ -1,17 +1,30 @@
+import {useState} from 'react';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
+import {
+  mdiComment,
+  mdiChevronDown,
+  mdiChevronUp,
+  mdiDeleteOutline,
+  mdiDotsVertical,
+  mdiSquareEditOutline,
+  mdiThumbUpOutline,
+} from '@mdi/js';
 
+import Line from 'components/Line';
+import {ButtonColor} from 'components/Button';
 import Linkify from 'components/Linkify';
-import UserLabel from 'components/UserLabel';
 import {deletePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
-import {useToggle} from 'hooks';
+import {useToggle, useUser} from 'hooks';
 import PostModal from 'modals/PostModal';
-import {getSelf} from 'selectors/state';
+import {getSelf, getUserStats} from 'selectors/state';
 import {AppDispatch, Post as TPost, SFC} from 'types';
 import {shortDate} from 'utils/dates';
+import {formatNumber} from 'utils/numbers';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import Comments from './Comments';
+import logo from 'assets/logo192.png';
 import * as S from './Styles';
 
 export interface PostProps {
@@ -19,7 +32,20 @@ export interface PostProps {
 }
 
 const Post: SFC<PostProps> = ({className, post}) => {
+  const navigate = useNavigate();
+  const userStats = useSelector(getUserStats);
+  const {id: userId} = useParams();
+  const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
+  const [showFullContent, setShowFullContent] = useState(true);
+  const user = useUser(userId);
+
+  const {default_wallet_balance = 0} = userId && userStats[userId] ? userStats[userId] : {};
+
+  const toggleShowFullContent = () => {
+    setShowFullContent(!showFullContent);
+  };
+
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
@@ -53,23 +79,80 @@ const Post: SFC<PostProps> = ({className, post}) => {
     return <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
 
+  const handleClick = () => {
+    if (!owner.id) return;
+    navigate(`/profile/${owner.id}`);
+  };
+
+  const renderAvatar = () => {
+    if (!owner.id) return <S.Avatar src={owner.avatar} />;
+
+    return (
+      <Link to={`/profile/${owner.id}`}>
+        <S.Avatar src={owner.avatar} />
+      </Link>
+    );
+  };
+
   return (
     <>
       <S.Container className={className}>
         <S.Top>
-          <UserLabel
-            avatar={owner.avatar}
-            description={shortDate(created_date, true)}
-            id={owner.id}
-            username={owner.username}
-          />
+          <S.Text>
+            {renderAvatar()}
+
+            <S.Right>
+              <S.Username $id={owner.id} onClick={handleClick}>
+                {owner.username}
+              </S.Username>
+              <S.Dot>·</S.Dot>
+              <S.Description>{shortDate(created_date, true)}</S.Description>
+            </S.Right>
+          </S.Text>
           {renderDropdownMenu()}
         </S.Top>
         <S.Content>
-          <Linkify>{content}</Linkify>
+          <Linkify>
+            {!showFullContent || content.length <= 400 ? (
+              <>
+                {content}
+                {content.length > 400 && <S.TextLink onClick={toggleShowFullContent}>See less</S.TextLink>}
+              </>
+            ) : (
+              <>
+                {`${content.slice(0, 400)}...`}
+                <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
+              </>
+            )}
+          </Linkify>
         </S.Content>
+
         {image ? <S.Img alt="image" src={image} /> : null}
-        <Comments postId={post.id} />
+        <Line />
+        <S.Div>
+          <S.BoxLeft>
+            <S.Button text="Like" color={ButtonColor.secondary} iconLeft={mdiThumbUpOutline} />
+            <S.Button
+              text="Comment"
+              color={ButtonColor.secondary}
+              iconLeft={mdiComment}
+              iconRight={isOpenCommentBox ? mdiChevronUp : mdiChevronDown}
+              onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
+              $isOpenCommentBox={isOpenCommentBox}
+            />
+          </S.BoxLeft>
+          <S.BoxRight>
+            <span>22 Likes</span>
+            <S.Dot>·</S.Dot>
+            <span>22 Comments</span>
+            <S.Dot>·</S.Dot>
+            <S.Value>
+              <S.TNBLogo src={logo} />
+              {user && formatNumber(default_wallet_balance)}
+            </S.Value>
+          </S.BoxRight>
+        </S.Div>
+        {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
       {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
     </>
