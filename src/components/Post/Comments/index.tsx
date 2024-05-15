@@ -2,7 +2,9 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
-import {mdiChevronDown, mdiChevronUp, mdiPlusCircle, mdiSend} from '@mdi/js';
+import Icon from '@mdi/react';
+import EmojiPicker from 'emoji-picker-react';
+import {mdiChevronDown, mdiChevronUp, mdiEmoticonOutline, mdiPlusCircle, mdiSend} from '@mdi/js';
 
 import Coin from 'assets/coin.svg';
 
@@ -16,6 +18,7 @@ import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import Comment from './Comment';
 import * as S from './Styles';
+import {breakpoints} from 'styles';
 
 export interface CommentsProps {
   postId: number;
@@ -24,12 +27,13 @@ export interface CommentsProps {
 const Comments: SFC<CommentsProps> = ({className, postId}) => {
   const [commentDetails, setCommentDetails] = useState<TComment[]>([]);
   const [startIndex, setStartIndex] = useState<number>(0);
-
+  const [isOpenEmojiBox, setIsOpenEmojiBox] = useState(false);
   const [coreSelectModalIsOpen, toggleCoreSelectModal] = useToggle(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const comments = useSelector(getComments);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
+  const miniDevice = breakpoints;
 
   const initialValues = {
     content: '',
@@ -61,6 +65,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
       };
       await dispatch(createComment(requestData));
       resetForm();
+      setIsOpenEmojiBox(false);
     } catch (error) {
       console.error(error);
       displayErrorToast('Error submitting the comment');
@@ -118,6 +123,14 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
       });
     }
   }, [commentList, startIndex]);
+
+  useEffect(() => {
+    if (isOpenEmojiBox && document.querySelectorAll('.epr_-3yva2a').length > 0) {
+      const emojiFooter = document.querySelectorAll('.epr_-3yva2a')[0];
+      emojiFooter.remove();
+    }
+  }, [isOpenEmojiBox]);
+
   return (
     <>
       <S.Container className={className}>
@@ -127,10 +140,30 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
           validateOnMount={false}
           validationSchema={validationSchema}
         >
-          {({dirty, errors, isSubmitting, isValid, touched}) => (
+          {({dirty, errors, isSubmitting, isValid, touched, values, setFieldValue}) => (
             <S.Form>
               <S.ContentInput errors={errors} name="content" placeholder="Add a comment..." touched={touched} />
+              {isOpenEmojiBox && (
+                <S.EmojiBox>
+                  <EmojiPicker
+                    width={miniDevice.mini ? 270 : 350}
+                    height={350}
+                    skinTonesDisabled
+                    onEmojiClick={(e) => {
+                      const updatedValue = values.content + e.emoji;
+                      setFieldValue('content', updatedValue);
+                    }}
+                  />
+                </S.EmojiBox>
+              )}
               <S.Wrapper>
+                <S.EmojiButton
+                  $isOpenEmojiBox={isOpenEmojiBox}
+                  onClick={() => setIsOpenEmojiBox(!isOpenEmojiBox)}
+                  type="button"
+                >
+                  <Icon path={mdiEmoticonOutline} size="24px" />
+                </S.EmojiButton>
                 <S.PriceAmountInputContainer>
                   {renderSelectCoreElement()}
                   <S.PriceAmountInput
@@ -158,9 +191,9 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
         {renderComments()}
 
         <S.Content>
-          <S.Div></S.Div>
+          <S.Div />
           <S.CommentBtn text="Show 4 more comments" color={ButtonColor.secondary} onClick={handleComment} />
-          <S.Div></S.Div>
+          <S.Div />
         </S.Content>
       </S.Container>
       {coreSelectModalIsOpen ? <CoreSelectModal close={toggleCoreSelectModal} /> : null}

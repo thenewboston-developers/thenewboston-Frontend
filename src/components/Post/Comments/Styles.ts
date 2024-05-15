@@ -98,7 +98,6 @@ export const PriceAmountInputContainer = styled.div`
   border-radius: 8px;
   display: grid;
   grid-auto-flow: column;
-  margin-left: 12px;
 
   @media (max-width: ${breakpoints.mini}) {
     width: 75%;
@@ -133,4 +132,36 @@ export const Content = styled.div`
 export const Div = styled.div`
   border: 1px solid ${colors.border};
   width: 100%;
+`;
+
+export const EmojiButton = styled.button<{$isOpenEmojiBox?: boolean | false}>`
+  outline: none;
+  background: none;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  color: ${({$isOpenEmojiBox}) => ($isOpenEmojiBox ? '#5a80ab' : `${colors.black}`)};
+`;
+
+export const EmojiBox = styled.div`
+  position: absolute;
+  right: 18%;
+  top: 60px;
+  z-index: 100;
+  @media (max-width: ${breakpoints.mobile}) {
+    right: 8%;
+    top: 70px;
+  }
+
+  @media ((min-width: ${breakpoints.mobile}) and(max-width: ${breakpoints.tablet})) {
+    right: 30%;
+  }
+
+  @media (min-width: ${breakpoints.tablet}) and (max-width: ${breakpoints.largeDesktop}) {
+    right: 25%;
+  }
+
+  @media (min-width: ${breakpoints.largeDesktop}) and (max-width: ${breakpoints.xlDesktop}) {
+    right: 12%;
+  }
 `;
