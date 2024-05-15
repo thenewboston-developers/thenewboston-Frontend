@@ -189,12 +189,13 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
           )}
         </Formik>
         {renderComments()}
-
-        <S.Content>
-          <S.Div />
-          <S.CommentBtn text="Show 4 more comments" color={ButtonColor.secondary} onClick={handleComment} />
-          <S.Div />
-        </S.Content>
+        {commentList.length > 4 && (
+          <S.Content>
+            <S.Div />
+            <S.CommentBtn text="Show 4 more comments" color={ButtonColor.secondary} onClick={handleComment} />
+            <S.Div />
+          </S.Content>
+        )}
       </S.Container>
       {coreSelectModalIsOpen ? <CoreSelectModal close={toggleCoreSelectModal} /> : null}
     </>

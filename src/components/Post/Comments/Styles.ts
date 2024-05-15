@@ -110,7 +110,7 @@ export const CommentBtn = styled(UButton)`
   border: none;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
   color: #5a80ab;
-  width: 500px;
+  width: 600px;
 `;
 
 export const Wrapper = styled.div`
@@ -126,7 +126,7 @@ export const Content = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin: 10px 0px;
+  margin: 30px 0px 10px 0px;
 `;
 
 export const Div = styled.div`
@@ -153,7 +153,7 @@ export const EmojiBox = styled.div`
     top: 70px;
   }
 
-  @media ((min-width: ${breakpoints.mobile}) and(max-width: ${breakpoints.tablet})) {
+  @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}) {
     right: 30%;
   }
 
