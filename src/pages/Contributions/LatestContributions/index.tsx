@@ -42,7 +42,6 @@ const LatestContributions: FC<LatestContributionsProps> = ({className, contribut
   const latestContributionsList = contributionsList.slice(0, 50);
 
   const iaProfileLink = () => (ia ? `/profile/${ia.id}` : '');
-  const userProfileLink = (contribution: Contribution) => `/profile/${contribution.user.id}`;
   const githubUserProfileLink = (contribution: Contribution) =>
     getUserProfileUrl(contribution.github_user.github_username);
   const githubRepositoryLink = (contribution: Contribution) =>
