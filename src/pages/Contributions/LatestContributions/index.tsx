@@ -42,7 +42,6 @@ const LatestContributions: FC<LatestContributionsProps> = ({className, contribut
   const latestContributionsList = contributionsList.slice(0, 50);
 
   const iaProfileLink = () => (ia ? `/profile/${ia.id}` : '');
-  const userProfileLink = (contribution: Contribution) => `/profile/${contribution.user.id}`;
   const githubUserProfileLink = (contribution: Contribution) =>
     getUserProfileUrl(contribution.github_user.github_username);
   const githubRepositoryLink = (contribution: Contribution) =>
@@ -114,9 +113,13 @@ const LatestContributions: FC<LatestContributionsProps> = ({className, contribut
               <Line />
               <ContributionCardHeader>
                 <div>
-                  <ContributionCardItem iconPath={mdiFaceWomanOutline} iconLink={iaProfileLink()}>
+                  <ContributionCardItem
+                    avatarSrc={ia?.avatar || ''}
+                    iconPath={mdiFaceWomanOutline}
+                    iconLink={iaProfileLink()}
+                  >
                     <S.DescriptionHeading>
-                      <Link to={userProfileLink(contribution)}>
+                      <Link to={iaProfileLink()}>
                         <b>ia</b>
                       </Link>
                       <small style={{marginLeft: '5px'}}>{getTimeAgo(contribution.created_date)}</small>
