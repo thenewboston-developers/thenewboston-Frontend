@@ -103,15 +103,10 @@ const Orders: SFC = ({className}) => {
 
       const primaryCurrencyTicker = getCurrencyTicker(primary_currency);
       const secondaryCurrencyTicker = getCurrencyTicker(secondary_currency);
-      const [date, time] = longDate(created_date).split('at');
 
       return (
         <tr key={id}>
-          <td>
-            {`${date} `}
-            <br />
-            <S.TextColor>{time}</S.TextColor>
-          </td>
+          <td>{longDate(created_date)}</td>
           <td>
             <S.TextAlignment>
               <Icon path={mdiPackageVariantClosed} size={1} color={`${colors.gray}`} />
@@ -142,7 +137,7 @@ const Orders: SFC = ({className}) => {
     <>
       <S.Container className={className}>
         <S.Box>
-          <SectionHeading heading="Orders" isDisplayLine={false} />
+          <SectionHeading heading="Orders" renderLine={false} />
           <S.TableStyle>{renderContent()}</S.TableStyle>
         </S.Box>
       </S.Container>
