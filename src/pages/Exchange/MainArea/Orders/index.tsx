@@ -1,7 +1,8 @@
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
-import {mdiDotsVertical} from '@mdi/js';
+import {mdiPackageVariantClosed, mdiDotsVertical} from '@mdi/js';
+import Icon from '@mdi/react';
 
 import DropdownMenu from 'components/DropdownMenu';
 import EmptyText from 'components/EmptyText';
@@ -15,6 +16,7 @@ import {getCores, getExchangeOrders, getSelf} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
 import * as S from './Styles';
+import {colors} from 'styles';
 
 const Orders: SFC = ({className}) => {
   const [selectedOrder, setSelectedOrder] = useState<ExchangeOrder | null>(null);
@@ -35,7 +37,7 @@ const Orders: SFC = ({className}) => {
     if (!!ordersList.length) {
       return (
         <S.Table>
-          <thead>
+          <S.Thead>
             <tr>
               <th>Date</th>
               <th>Order Type</th>
@@ -43,10 +45,11 @@ const Orders: SFC = ({className}) => {
               <th>Price</th>
               <th>Filled Amount</th>
               <th>Fill Status</th>
-              <th>Actions</th>
+              <th>Action</th>
             </tr>
-          </thead>
-          <tbody>{renderRows()}</tbody>
+          </S.Thead>
+
+          <S.Tbody>{renderRows()}</S.Tbody>
         </S.Table>
       );
     }
@@ -104,7 +107,12 @@ const Orders: SFC = ({className}) => {
       return (
         <tr key={id}>
           <td>{longDate(created_date)}</td>
-          <td>{order_type}</td>
+          <td>
+            <S.TextAlignment>
+              <Icon path={mdiPackageVariantClosed} size={1} color={`${colors.gray}`} />
+              {order_type}
+            </S.TextAlignment>
+          </td>
           <td>
             {quantity.toLocaleString()} {primaryCurrencyTicker}
           </td>
@@ -128,8 +136,10 @@ const Orders: SFC = ({className}) => {
   return (
     <>
       <S.Container className={className}>
-        <SectionHeading heading="Orders" />
-        {renderContent()}
+        <S.Box>
+          <SectionHeading heading="Orders" renderLine={false} />
+          <S.TableStyle>{renderContent()}</S.TableStyle>
+        </S.Box>
       </S.Container>
       {tradesModalIsOpen ? <TradesModal close={toggleTradesModal} order={selectedOrder} /> : null}
     </>
