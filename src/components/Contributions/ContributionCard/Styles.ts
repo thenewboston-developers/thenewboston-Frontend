@@ -30,9 +30,6 @@ export const ContributionCardItemContainer = styled.div`
 
 export const ContributionCardItemIcon = styled.div`
   align-items: center;
-  background: ${colors.white};
-  border: 2px solid ${colors.whiteHover};
-  border-radius: 10px;
   display: flex;
   height: 40px;
   justify-content: center;
