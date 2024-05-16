@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-import {Artwork, CreateArtworkRequest, EditArtworkRequest} from 'types';
+import {Artwork, CreateArtworkRequest, EditArtworkRequest, PaginatedResponse} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
+import {getApiUrl} from 'utils/urls';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/artworks`;
 
@@ -40,9 +41,10 @@ export interface GetArtworksParams {
   price_core_isnull?: boolean;
 }
 
-export const getArtworks = async (params?: GetArtworksParams): Promise<Artwork[]> => {
+export const getArtworks = async (url: string, params?: GetArtworksParams): Promise<PaginatedResponse<Artwork>> => {
   try {
-    const response = await axios.get<Artwork[]>(BASE_URL, {
+    const apiURL = getApiUrl(BASE_URL, url);
+    const response = await axios.get<PaginatedResponse<Artwork>>(apiURL, {
       params,
       ...authorizationHeaders(),
     });

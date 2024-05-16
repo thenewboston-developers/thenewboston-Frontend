@@ -1,6 +1,6 @@
-import {UserReadSerializer} from 'types/api/users';
 import {CreatedModified} from 'types/createdModified';
-import {Dict} from 'types/generic';
+import {Pagination} from 'types/pagination';
+import {UserReadSerializer} from 'types/api/users';
 
 export interface Artwork extends CreatedModified {
   creator: UserReadSerializer;
@@ -13,4 +13,6 @@ export interface Artwork extends CreatedModified {
   price_core: number | null;
 }
 
-export type Artworks = Dict<Artwork>;
+export interface Artworks extends Pagination {
+  artworks: Artwork[];
+}

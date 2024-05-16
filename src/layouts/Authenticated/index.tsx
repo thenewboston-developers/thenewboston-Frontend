@@ -6,6 +6,7 @@ import {getAssetPairs} from 'dispatchers/assetPairs';
 import {getCartProducts} from 'dispatchers/cartProducts';
 import {getCores} from 'dispatchers/cores';
 import {getExchangeOrders} from 'dispatchers/exchangeOrders';
+import {getIa} from 'dispatchers/ia';
 import {getWallets} from 'dispatchers/wallets';
 import {getWires} from 'dispatchers/wires';
 import {AppDispatch, SFC} from 'types';
@@ -26,6 +27,7 @@ const Authenticated: SFC = ({className}) => {
           dispatch(getCartProducts()),
           dispatch(getCores()),
           dispatch(getExchangeOrders()),
+          dispatch(getIa()),
           dispatch(getWallets()),
           dispatch(getWires()),
         ]);

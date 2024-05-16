@@ -19,7 +19,7 @@ import {
 import BadgeCount from 'components/BadgeCount';
 import {PATH_COURSES} from 'constants/paths';
 import {logout} from 'dispatchers/authentication';
-import {getSelf, getNotifications} from 'selectors/state';
+import {getNotifications, getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {getUnreadNotificationsCount} from 'utils/notifications';
 import CreatePostButton from './CreatePostButton';

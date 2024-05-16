@@ -11,7 +11,7 @@ import {useToggle} from 'hooks';
 import ArtworkDeleteModal from 'modals/ArtworkDeleteModal';
 import ArtworkModal from 'modals/ArtworkModal';
 import ArtworkTransferModal from 'modals/ArtworkTransferModal';
-import {getArtworks, getSelf} from 'selectors/state';
+import {getArtworks as getArtworksState, getSelf} from 'selectors/state';
 import {AppDispatch, Artwork, SFC} from 'types';
 import {longDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
@@ -23,7 +23,8 @@ const ArtworkDetails: SFC = ({className}) => {
   const [artworkModalIsOpen, toggleArtworkModal] = useToggle(false);
   const [artworkTransferModalIsOpen, toggleArtworkTransferModal] = useToggle(false);
   const {id} = useParams();
-  const artworks = useSelector(getArtworks);
+  const artworksState = useSelector(getArtworksState);
+  const {artworks} = artworksState;
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
@@ -42,7 +43,7 @@ const ArtworkDetails: SFC = ({className}) => {
 
   const artwork = useMemo((): Artwork | undefined => {
     if (!id) return undefined;
-    return artworks[id];
+    return artworks.find((obj) => obj.id === parseInt(id));
   }, [id, artworks]);
 
   const handleBuy = async () => {

@@ -14,6 +14,7 @@ import {CreateOpenAIImageRequest, CreateOpenAIImageResponse} from 'types/api/ope
 import {CreateOrderRequest} from 'types/api/orders';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
+import {IaReadSerializer} from 'types/api/ia';
 import {LectureReadSerializer} from 'types/api/lectures';
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {PostReadSerializer} from 'types/api/posts';
@@ -65,9 +66,9 @@ export {
   Addresses,
   AppDispatch,
   Artwork,
-  Artworks,
   ArtworkTransfer,
   ArtworkTransfers,
+  Artworks,
   AssetPair,
   AssetPairs,
   Authentication,
@@ -95,7 +96,6 @@ export {
   CreateCartProductRequest,
   CreateCommentRequest,
   CreateConversationRequest,
-  CreatedModified,
   CreateExchangeOrderRequest,
   CreateFollowerRequest,
   CreateInvitationRequest,
@@ -106,6 +106,7 @@ export {
   CreateUserRequest,
   CreateUserResponse,
   CreateWalletRequest,
+  CreatedModified,
   DepositResponse,
   Dict,
   EditArtworkRequest,
@@ -115,6 +116,7 @@ export {
   GenericFunction,
   GenericVoidFunction,
   GitHubUser,
+  IaReadSerializer,
   Invitation,
   InvitationLimit,
   InvitationLimits,
@@ -143,9 +145,9 @@ export {
   Pull,
   Repo,
   RootState,
+  SFC,
   SelectOption,
   Self,
-  SFC,
   Trade,
   Trades,
   UpdateNotificationRequest,

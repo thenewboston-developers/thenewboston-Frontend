@@ -3,8 +3,8 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
-import {ButtonType} from 'components/Button';
 import {login} from 'dispatchers/authentication';
+import {ButtonType} from 'components/Button';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';

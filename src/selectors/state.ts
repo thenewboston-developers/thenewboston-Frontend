@@ -25,6 +25,7 @@ export const getSelf = (state: RootState) => state.self;
 export const getTrades = (state: RootState) => state.trades;
 export const getUserStats = (state: RootState) => state.userStats;
 export const getUsers = (state: RootState) => state.users;
+export const getIa = (state: RootState) => state.ia;
 export const getWallets = (state: RootState) => state.wallets;
 export const getWires = (state: RootState) => state.wires;
 export const hasMorePosts = (state: RootState) => state.posts.hasMore;

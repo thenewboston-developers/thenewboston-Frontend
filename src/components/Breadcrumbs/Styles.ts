@@ -1,24 +1,26 @@
+import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 
-import {Link} from 'react-router-dom';
+import {colors, fonts} from 'styles';
 
 export const BreadcrumbNav = styled.nav`
-  padding: 10px 5px;
-  border-radius: 5px;
+  padding: 0 5px 20px 5px;
 `;
 
 export const BreadcrumbList = styled.ol`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
   align-items: center;
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 `;
 
 export const BreadcrumbItem = styled.li`
   &:not(:last-child) {
     margin-right: 8px;
+
     &:after {
+      color: ${colors.gray};
       content: '>';
       margin-left: 8px;
     }
@@ -26,9 +28,18 @@ export const BreadcrumbItem = styled.li`
 `;
 
 export const StyledLink = styled(Link)`
+  color: ${colors.gray};
+  font-size: 12px;
+  font-weight: ${fonts.weight.semiBold};
   text-decoration: none;
-  color: #0275d8;
+
   &:hover {
     text-decoration: underline;
   }
+`;
+
+export const StyledSpan = styled.span`
+  color: ${colors.black};
+  font-size: 12px;
+  font-weight: ${fonts.weight.semiBold};
 `;

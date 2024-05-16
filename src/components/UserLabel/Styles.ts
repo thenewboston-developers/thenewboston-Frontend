@@ -13,8 +13,9 @@ export const Container = styled.div`
 `;
 
 export const Description = styled.div`
-  color: ${colors.secondary};
+  color: ${colors.palette.gray[500]};
   font-size: 12px;
+  font-weight: ${fonts.weight.semiBold};
 `;
 
 export const Right = styled.div`
@@ -23,6 +24,7 @@ export const Right = styled.div`
 `;
 
 export const Username = styled.div<{$id: number | null}>`
+  color: ${colors.black};
   font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
 
