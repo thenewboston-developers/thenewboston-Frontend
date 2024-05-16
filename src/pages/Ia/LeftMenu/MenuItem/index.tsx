@@ -14,9 +14,10 @@ import * as S from './Styles';
 
 export interface MenuItemProps {
   conversation: Conversation;
+  index: number;
 }
 
-const MenuItem: SFC<MenuItemProps> = ({className, conversation}) => {
+const MenuItem: SFC<MenuItemProps> = ({className, conversation, index}) => {
   const [conversationDeleteModalIsOpen, toggleConversationDeleteModal] = useToggle(false);
   const [conversationEditModalIsOpen, toggleConversationEditModal] = useToggle(false);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
@@ -82,7 +83,9 @@ const MenuItem: SFC<MenuItemProps> = ({className, conversation}) => {
         onMouseOut={handleMouseOut}
         onMouseOver={handleMouseOver}
       >
-        <S.Text>{conversation.name}</S.Text>
+        <S.Text>
+          {conversation.name} {index + 1}
+        </S.Text>
         {renderTools()}
       </S.Container>
 

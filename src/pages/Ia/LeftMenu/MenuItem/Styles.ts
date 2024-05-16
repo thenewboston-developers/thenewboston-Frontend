@@ -12,8 +12,9 @@ export const Container = styled.div<{$isActive: boolean}>`
   display: flex;
   justify-content: space-between;
   padding: 12px 12px;
+  border-bottom: 1px solid ${colors.border};
   transition: background 0.3s ease;
-
+  font-weight: 700;
   &:hover {
     background: ${colors.palette.blue[100]};
     cursor: pointer;
@@ -35,7 +36,6 @@ export const Text = styled.div`
   display: flex;
   flex-direction: column;
   line-height: ${HEIGHT};
-  margin-left: 8px;
 `;
 
 export const Tools = styled.div`

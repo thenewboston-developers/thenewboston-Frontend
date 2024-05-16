@@ -3,10 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
-import {mdiFaceWoman, mdiSend} from '@mdi/js';
+import {mdiSend} from '@mdi/js';
 
 import {ButtonType} from 'components/Button';
-import Icon from 'components/Icon';
 import {createConversation} from 'dispatchers/conversations';
 import {createMessage, getMessages as _getMessages} from 'dispatchers/messages';
 import {getManager, getMessages} from 'selectors/state';
@@ -14,6 +13,7 @@ import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import Message from './Message';
+import LaImage from 'assets/LaImage.png';
 import * as S from './Styles';
 
 const Right: SFC = ({className}) => {
@@ -128,8 +128,11 @@ const Right: SFC = ({className}) => {
     return (
       <S.GreetingContainer>
         <S.GreetingElements>
-          <Icon className={className} icon={mdiFaceWoman} size={64} />
-          <S.GreetingText>Yo yo</S.GreetingText>
+          <S.Avatar>
+            <img alt="avatar" src={LaImage} />
+          </S.Avatar>
+          <S.GreetingText>How can I help you?</S.GreetingText>
+          <S.SubText>Start your conversation</S.SubText>
         </S.GreetingElements>
       </S.GreetingContainer>
     );

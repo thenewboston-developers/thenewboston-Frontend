@@ -16,5 +16,5 @@ export const Container = styled.div`
   border-radius: 16px;
   border-right: 1px solid ${colors.border};
   overflow-y: auto;
-  padding: 24px 0;
+  padding: 24px 10px;
 `;

@@ -50,6 +50,8 @@ export const GreetingContainer = styled.div`
   display: flex;
   height: 100%;
   justify-content: center;
+  border-radius: 16px;
+  background: ${colors.white};
 `;
 
 export const GreetingElements = styled.div`
@@ -58,11 +60,22 @@ export const GreetingElements = styled.div`
   flex-direction: column;
 `;
 
-export const GreetingText = styled.h2`
+export const GreetingText = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
   margin-top: 12px;
+  font-weight: 700;
+  font-size: 16px;
+`;
+
+export const SubText = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  font-weight: 400;
+  opacity: 40%;
 `;
 
 export const MessagesContainer = styled.div`
@@ -79,8 +92,18 @@ export const TextInput = styled(UInlineInput)`
   background-color: ${colors.white};
   border: none;
   outline: none;
-
   &:focus {
     border: none;
   }
+`;
+
+export const Avatar = styled.div`
+  align-items: center;
+  background: white;
+  border: 1px solid ${colors.border};
+  border-radius: 16px;
+  display: flex;
+  height: 80px;
+  justify-content: center;
+  width: 80px;
 `;
