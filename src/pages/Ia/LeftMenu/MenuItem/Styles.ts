@@ -8,13 +8,13 @@ const HEIGHT = '24px';
 
 export const Container = styled.div<{$isActive: boolean}>`
   align-items: center;
+  border-bottom: 1px solid ${colors.border};
   color: ${({$isActive}) => ($isActive ? `${colors.palette.blue[300]}` : `${colors.black}`)};
   display: flex;
+  font-weight: 700;
   justify-content: space-between;
   padding: 12px 12px;
-  border-bottom: 1px solid ${colors.border};
   transition: background 0.3s ease;
-  font-weight: 700;
   &:hover {
     background: ${colors.palette.blue[100]};
     cursor: pointer;
@@ -23,8 +23,8 @@ export const Container = styled.div<{$isActive: boolean}>`
 `;
 
 export const DropdownMenu = styled(UDropdownMenu)`
-  margin-right: -8px;
   height: 24px;
+  margin-right: -8px;
   width: 24px;
 `;
 

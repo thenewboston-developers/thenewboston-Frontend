@@ -20,7 +20,7 @@ const Right: SFC = ({className}) => {
   const bottomMessageRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
-  const iaIcon = useSelector(getIa).ia;
+  const ia = useSelector(getIa).ia;
   const messages = useSelector(getMessages);
   const messagesRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -129,7 +129,7 @@ const Right: SFC = ({className}) => {
       <S.GreetingContainer>
         <S.GreetingElements>
           <S.Avatar>
-            <S.Image alt="avatar" src={iaIcon?.avatar || ''} height={75} width={75} />
+            <S.Image alt="avatar" src={ia?.avatar || ''} height={75} width={75} />
           </S.Avatar>
           <S.GreetingText>How can I help you?</S.GreetingText>
           <S.SubText>Start your conversation</S.SubText>

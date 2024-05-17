@@ -35,9 +35,9 @@ export const Button = styled(UButton)`
 
 export const Container = styled.div`
   display: grid;
+  gap: 10px;
   grid-template-rows: auto min-content;
   height: calc(100vh - 40px);
-  gap: 10px;
 `;
 
 export const Form = styled(UForm)`
@@ -47,11 +47,11 @@ export const Form = styled(UForm)`
 
 export const GreetingContainer = styled.div`
   align-items: center;
+  background: ${colors.white};
+  border-radius: 16px;
   display: flex;
   height: 100%;
   justify-content: center;
-  border-radius: 16px;
-  background: ${colors.white};
 `;
 
 export const GreetingElements = styled.div`
@@ -64,9 +64,9 @@ export const GreetingText = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  margin-top: 12px;
-  font-weight: 700;
   font-size: 16px;
+  font-weight: 700;
+  margin-top: 12px;
 `;
 
 export const SubText = styled.div`
@@ -79,18 +79,18 @@ export const SubText = styled.div`
 `;
 
 export const MessagesContainer = styled.div`
+  background: ${colors.white};
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   padding-top: 16px;
-  background: ${colors.white};
-  border-radius: 16px;
 `;
 
 export const TextInput = styled(UInlineInput)`
-  flex: 1;
   background-color: ${colors.white};
   border: none;
+  flex: 1;
   outline: none;
   &:focus {
     border: none;
@@ -100,8 +100,8 @@ export const TextInput = styled(UInlineInput)`
 export const Avatar = styled.div`
   align-items: center;
   background: white;
-  border: 1px solid ${colors.border};
   border-radius: 16px;
+  border: 1px solid ${colors.border};
   display: flex;
   height: 80px;
   justify-content: center;
