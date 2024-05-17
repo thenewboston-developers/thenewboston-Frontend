@@ -8,12 +8,11 @@ import {mdiSend} from '@mdi/js';
 import {ButtonType} from 'components/Button';
 import {createConversation} from 'dispatchers/conversations';
 import {createMessage, getMessages as _getMessages} from 'dispatchers/messages';
-import {getManager, getMessages} from 'selectors/state';
+import {getConversations, getIa, getManager, getMessages} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import Message from './Message';
-import LaImage from 'assets/LaImage.png';
 import * as S from './Styles';
 
 const Right: SFC = ({className}) => {
@@ -21,10 +20,13 @@ const Right: SFC = ({className}) => {
   const bottomMessageRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
+  const iaIcon = useSelector(getIa).ia;
   const messages = useSelector(getMessages);
   const messagesRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const params = useParams();
+  const conversations = useSelector(getConversations);
+  const conversationsLength = Object.keys(conversations).length;
 
   const conversationId = params.id ? parseInt(params.id, 10) : manager.activeConversationId || null;
 
@@ -80,12 +82,10 @@ const Right: SFC = ({className}) => {
       let newConversationId: number | null = null;
 
       if (!conversationId) {
-        const conversation = await dispatch(createConversation({name: 'New Conversation'}));
+        const conversation = await dispatch(createConversation({name: `New Conversation ${conversationsLength + 1}`}));
         newConversationId = conversation.id;
       }
-
       const activeConversationId = conversationId || newConversationId;
-
       await dispatch(createMessage({...values, conversation: activeConversationId!}));
       resetForm();
 
@@ -129,7 +129,7 @@ const Right: SFC = ({className}) => {
       <S.GreetingContainer>
         <S.GreetingElements>
           <S.Avatar>
-            <img alt="avatar" src={LaImage} />
+            <S.Image alt="avatar" src={iaIcon?.avatar || ''} height={75} width={75} />
           </S.Avatar>
           <S.GreetingText>How can I help you?</S.GreetingText>
           <S.SubText>Start your conversation</S.SubText>

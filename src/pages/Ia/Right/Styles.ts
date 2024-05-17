@@ -107,3 +107,7 @@ export const Avatar = styled.div`
   justify-content: center;
   width: 80px;
 `;
+
+export const Image = styled.img`
+  border-radius: 16px;
+`;

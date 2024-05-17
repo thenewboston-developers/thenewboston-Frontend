@@ -44,8 +44,8 @@ const LeftMenu: SFC = ({className}) => {
   };
 
   const renderMenuItems = () => {
-    const menuItems = conversationList.map((conversation, index) => (
-      <MenuItem conversation={conversation} key={conversation.id} index={index} />
+    const menuItems = conversationList.map((conversation) => (
+      <MenuItem conversation={conversation} key={conversation.id} />
     ));
 
     return <>{menuItems}</>;
