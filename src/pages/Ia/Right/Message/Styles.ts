@@ -6,7 +6,7 @@ import {SenderType} from 'enums';
 import {colors, fonts} from 'styles';
 
 interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
-  senderType: string;
+  $sendertype: string;
 }
 
 export const Container = styled.div<ContainerProps>`
@@ -15,7 +15,7 @@ export const Container = styled.div<ContainerProps>`
   position: relative;
 
   ${(props) =>
-    props.senderType === SenderType.USER &&
+    props.$sendertype === SenderType.USER &&
     css`
       flex-direction: row-reverse;
     `}
@@ -38,7 +38,7 @@ export const Content = styled.div<ContainerProps>`
   padding: 10px;
 
   ${(props) =>
-    props.senderType === SenderType.USER &&
+    props.$sendertype === SenderType.USER &&
     css`
       background-color: ${colors.palette.blue[400]};
       border-radius: 10px 0 10px 10px;
@@ -88,7 +88,7 @@ export const Right = styled.div<ContainerProps>`
   flex: auto;
 
   ${(props) =>
-    props.senderType === SenderType.USER
+    props.$sendertype === SenderType.USER
       ? css`
           display: flex;
           flex-direction: column;
@@ -104,7 +104,7 @@ export const Tools = styled(UTools)<ContainerProps>`
   top: -6px;
 
   ${(props) =>
-    props.senderType === SenderType.USER
+    props.$sendertype === SenderType.USER
       ? css`
           left: 12px;
         `
