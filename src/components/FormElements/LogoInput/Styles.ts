@@ -6,6 +6,8 @@ import {colors, inputStyle} from 'styles';
 
 export const CoreLogo = styled(UCoreLogo)`
   margin-left: 12px;
+  position: absolute;
+  right: 10px;
 `;
 
 export const ErrorMessage = styled.div`
@@ -19,6 +21,8 @@ export const Field = styled(UField)`
   border: 1px solid ${({$error}) => ($error ? colors.palette.red['400'] : colors.border)};
   display: block;
   width: 260px;
+  border-radius: 14px;
+  padding: 21px 50px 21px 15px;
 
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
@@ -30,6 +34,7 @@ export const Field = styled(UField)`
 export const FieldWrapper = styled.div`
   align-items: center;
   display: flex;
+  position: relative;
 `;
 
 export const Label = styled.div`

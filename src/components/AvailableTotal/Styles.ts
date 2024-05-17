@@ -20,3 +20,7 @@ export const TotalRow = styled.div<{$isTotalValid: boolean}>`
   justify-content: space-between;
   padding-top: 4px;
 `;
+
+export const Text = styled.span`
+  word-break: break-all;
+`;

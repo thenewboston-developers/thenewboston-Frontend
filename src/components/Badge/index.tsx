@@ -3,7 +3,7 @@ import * as S from './Styles';
 
 export interface BadgeProps {
   badgeStyle: BadgeStyle;
-  text: string;
+  children: React.ReactNode;
 }
 
 export enum BadgeStyle {
@@ -12,12 +12,14 @@ export enum BadgeStyle {
   primary = 'primary',
   success = 'success',
   warning = 'warning',
+  lightGreen = 'lightGreen',
+  lightRed = 'lightRed',
 }
 
-const Badge: SFC<BadgeProps> = ({badgeStyle, className, text}) => {
+const Badge: SFC<BadgeProps> = ({badgeStyle, className, children}) => {
   return (
     <S.Container $badgeStyle={badgeStyle} className={className}>
-      {text}
+      <S.Text> {children}</S.Text>
     </S.Container>
   );
 };

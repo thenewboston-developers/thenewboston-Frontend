@@ -12,7 +12,7 @@ const sellMixin = css`
 `;
 
 export const Container = styled.div`
-  margin-top: 24px;
+  margin-top: 10px;
 `;
 
 export const FillStatusBadgeWrapper = styled.div`
@@ -23,6 +23,14 @@ export const FillStatusBadgeWrapper = styled.div`
 export const Table = styled.table`
   margin-top: 16px;
   width: 100%;
+  border-collapse: collapse;
+
+  thead,
+  tbody {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+  }
 
   th,
   td {
@@ -45,6 +53,52 @@ export const Table = styled.table`
   td:nth-child(7) {
     text-align: center;
   }
+  tr {
+    border-bottom: 1px solid ${colors.border};
+  }
+
+  tbody {
+    display: block;
+    width: 100%;
+  }
+`;
+
+export const Tbody = styled.tbody`
+  & > tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
+  & > tr > td {
+    font-weight: 600;
+    padding: 10px 0;
+  }
+`;
+
+export const Thead = styled.thead`
+  & > tr > th {
+    color: ${colors.gray};
+    text-transform: uppercase;
+    padding-bottom: 12px;
+  }
+`;
+
+export const TableStyle = styled.div`
+  min-width: 700px;
+`;
+
+export const Box = styled.div`
+  background-color: ${colors.white};
+  width: 100%;
+  max-width: 100%;
+  border-radius: 16px;
+  overflow-x: auto;
+  padding: 20px 20px 0px 20px;
+`;
+
+export const TextColor = styled.span`
+  color: ${colors.gray};
 `;
 
 export const Tr = styled.tr``;

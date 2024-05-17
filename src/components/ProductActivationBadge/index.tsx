@@ -12,7 +12,7 @@ const ProductActivationBadge: SFC<ProductActivationBadgeProps> = ({activationSta
     [ActivationStatus.DRAFT]: BadgeStyle.draft,
   };
 
-  return <Badge badgeStyle={badgeStyle[activationStatus]} text={activationStatus} />;
+  return <Badge badgeStyle={badgeStyle[activationStatus]} children={activationStatus} />;
 };
 
 export default ProductActivationBadge;

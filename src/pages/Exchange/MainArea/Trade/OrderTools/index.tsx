@@ -8,6 +8,7 @@ import Buy from './Buy';
 import Sell from './Sell';
 import Icon from '@mdi/react';
 import {mdiCartArrowDown, mdiCartArrowUp} from '@mdi/js';
+import AssetPairSelector from '../AssetPairSelector';
 
 enum TradeTab {
   BUY = 'BUY',
@@ -49,6 +50,7 @@ const OrderTools: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       {renderTabs()}
+      <AssetPairSelector />
       {renderTabContent()}
     </S.Container>
   );

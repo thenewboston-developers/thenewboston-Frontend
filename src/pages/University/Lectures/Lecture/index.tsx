@@ -35,7 +35,7 @@ const Lecture: FC<LectureProps> = ({index, lecture, onClick, isSelected = false,
       return (
         <S.ActionButtonsContainer>
           <div>
-            <Badge badgeStyle={badgeStyle[publication_status]} text={publication_status} />
+            <Badge badgeStyle={badgeStyle[publication_status]} children={publication_status} />
           </div>
           <div>
             <span onClick={toggleLectureModal}>
