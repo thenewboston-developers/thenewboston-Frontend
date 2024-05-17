@@ -2,6 +2,7 @@ import {FC, ReactNode} from 'react';
 import {Link} from 'react-router-dom';
 import Icon from '@mdi/react';
 
+import Avatar from 'components/Avatar';
 import * as S from './Styles';
 
 interface ContributionProps {
@@ -9,10 +10,11 @@ interface ContributionProps {
 }
 
 interface ContributionCardItemProps {
-  iconPath: string;
-  iconLink?: string;
-  isIconLinkExternal?: boolean;
+  avatarSrc?: string;
   children: ReactNode;
+  iconLink?: string;
+  iconPath: string;
+  isIconLinkExternal?: boolean;
 }
 
 export const ContributionCard: FC<ContributionProps> = ({children}) => (
@@ -28,27 +30,32 @@ export const ContributionCardBody: FC<ContributionProps> = ({children}) => (
 );
 
 export const ContributionCardItem: FC<ContributionCardItemProps> = ({
-  iconPath,
-  iconLink,
-  isIconLinkExternal,
+  avatarSrc,
   children,
-}) => (
-  <S.ContributionCardItemContainer>
-    {iconLink ? (
-      <Link
-        to={iconLink}
-        target={isIconLinkExternal ? '_blank' : undefined}
-        rel={isIconLinkExternal ? 'noopener noreferrer' : undefined}
-      >
-        <S.ContributionCardItemIcon>
-          <Icon path={iconPath} size={1} />
-        </S.ContributionCardItemIcon>
-      </Link>
-    ) : (
-      <S.ContributionCardItemIcon>
-        <Icon path={iconPath} size={1} />
-      </S.ContributionCardItemIcon>
-    )}
-    {children}
-  </S.ContributionCardItemContainer>
-);
+  iconLink,
+  iconPath,
+  isIconLinkExternal = false,
+}) => {
+  const renderIconOrAvatar = () => (
+    <S.ContributionCardItemIcon>
+      {avatarSrc ? <Avatar src={avatarSrc} /> : <Icon path={iconPath} size={1} />}
+    </S.ContributionCardItemIcon>
+  );
+
+  return (
+    <S.ContributionCardItemContainer>
+      {iconLink ? (
+        <Link
+          to={iconLink}
+          target={isIconLinkExternal ? '_blank' : '_self'}
+          rel={isIconLinkExternal ? 'noopener noreferrer' : undefined}
+        >
+          {renderIconOrAvatar()}
+        </Link>
+      ) : (
+        renderIconOrAvatar()
+      )}
+      {children}
+    </S.ContributionCardItemContainer>
+  );
+};

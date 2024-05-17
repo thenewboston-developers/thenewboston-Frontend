@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import {colors} from 'styles';
-
 export const ContributionCard = styled.div`
   background: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -30,9 +28,6 @@ export const ContributionCardItemContainer = styled.div`
 
 export const ContributionCardItemIcon = styled.div`
   align-items: center;
-  background: ${colors.white};
-  border: 2px solid ${colors.whiteHover};
-  border-radius: 10px;
   display: flex;
   height: 40px;
   justify-content: center;

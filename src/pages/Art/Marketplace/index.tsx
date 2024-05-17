@@ -22,7 +22,9 @@ const Marketplace: SFC = ({className}) => {
   }, [dispatch]);
 
   const artworkList = useMemo(() => {
-    return Object.values(artworks).filter(({price_amount, price_core}) => !!price_amount && !!price_core);
+    return artworks
+      ? Object.values(artworks).filter(({price_amount, price_core}) => !!price_amount && !!price_core)
+      : [];
   }, [artworks]);
 
   const fetchMoreArtworks = async () => {
