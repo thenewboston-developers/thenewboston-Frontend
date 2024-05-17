@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
-import {mdiDotsVertical} from '@mdi/js';
+import {mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 
 import AddressCard from 'components/AddressCard';
 import Button from 'components/Button';
@@ -42,7 +42,7 @@ const BuyCheckout: SFC = ({className}) => {
   };
 
   const renderAddressDropdownMenu = () => {
-    const menuOptions = [{label: 'Edit', onClick: toggleAddressSelectModal}];
+    const menuOptions = [{label: 'Edit', menuIcon: mdiSquareEditOutline, onClick: toggleAddressSelectModal}];
 
     return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };

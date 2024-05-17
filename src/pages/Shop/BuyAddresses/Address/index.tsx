@@ -1,6 +1,6 @@
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {mdiDotsVertical} from '@mdi/js';
+import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 
 import AddressCard from 'components/AddressCard';
 import DropdownMenu from 'components/DropdownMenu';
@@ -35,8 +35,8 @@ const Address: SFC<AddressProps> = ({address, className}) => {
 
   const renderDropdownMenu = () => {
     const menuOptions = [
-      {label: 'Edit', onClick: handleEditClick},
-      {label: 'Delete', onClick: handleDeleteClick},
+      {label: 'Edit', menuIcon: mdiSquareEditOutline, onClick: handleEditClick},
+      {label: 'Delete', menuIcon: mdiDeleteOutline, onClick: handleDeleteClick},
     ];
 
     return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;

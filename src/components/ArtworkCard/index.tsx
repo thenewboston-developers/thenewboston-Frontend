@@ -1,6 +1,6 @@
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {mdiDotsVertical} from '@mdi/js';
+import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 
 import Price from 'components/Price';
 import {useToggle} from 'hooks';
@@ -22,10 +22,12 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
   const menuOptions = [
     {
       label: 'Edit',
+      menuIcon: mdiSquareEditOutline,
       onClick: toggleArtworkModal,
     },
     {
       label: 'Delete',
+      menuIcon: mdiDeleteOutline,
       onClick: toggleArtworkDeleteModal,
     },
   ];

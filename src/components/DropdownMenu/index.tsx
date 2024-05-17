@@ -1,14 +1,14 @@
 import {CSSProperties, MouseEvent, ReactNode, useCallback, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
-
+import * as S from './Styles';
 import Icon from 'components/Icon';
 import {useEventListener, useToggle} from 'hooks';
-import {Menu, Option} from 'styles/components/DropMenuStyle';
 import {GenericVoidFunction, SFC} from 'types';
 
 export interface DropdownMenuOption {
   label: ReactNode;
   onClick: GenericVoidFunction;
+  menuIcon: string;
 }
 
 export interface DropdownMenuProps {
@@ -60,25 +60,36 @@ const DropdownMenu: SFC<DropdownMenuProps> = ({className, icon, options}) => {
   };
 
   const renderMenu = () => (
-    <Menu style={menuPosition}>
-      {options.map(({label, onClick: optionOnClick}, index) => (
-        <Option
+    <S.DropMenu style={menuPosition}>
+      {options.map(({label, onClick: optionOnClick, menuIcon}, index) => (
+        <S.MenuOption
           key={index}
           onClick={handleOptionClick(optionOnClick)}
           ref={(el) => {
             if (el) optionsRef.current[index] = el;
           }}
           role="button"
+          $MenuIndex={index}
         >
-          {label}
-        </Option>
+          <S.Div $label={label!.toString()}>
+            {menuIcon !== '' && <Icon icon={menuIcon} />}
+            {label}
+          </S.Div>
+        </S.MenuOption>
       ))}
-    </Menu>
+    </S.DropMenu>
   );
 
   return (
     <>
-      <Icon className={className} icon={icon} onClick={handleIconClick} ref={iconRef} size={24} />
+      <S.MenuIcon
+        className={className}
+        icon={icon}
+        onClick={handleIconClick}
+        ref={iconRef}
+        size={24}
+        $isOpen={isOpen}
+      />
       {isOpen && createPortal(renderMenu(), dropDown)}
     </>
   );

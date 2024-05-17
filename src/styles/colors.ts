@@ -8,6 +8,7 @@ const colors = {
   borderDarker: '#d7d7df',
   gray: '#747474',
   lightGray: '#ececec',
+  lightBlue: '#6A8CB3',
   primary: '#0f1419',
   secondary: '#536471',
   white: '#ffffff',

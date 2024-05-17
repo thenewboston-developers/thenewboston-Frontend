@@ -62,6 +62,7 @@ const Orders: SFC = ({className}) => {
       const menuOptions = [
         {
           label: 'View Trades',
+          menuIcon: '',
           onClick: () => {
             setSelectedOrder(order);
             toggleTradesModal();
@@ -72,6 +73,7 @@ const Orders: SFC = ({className}) => {
       if ([FillStatus.OPEN, FillStatus.PARTIALLY_FILLED].includes(order.fill_status)) {
         menuOptions.unshift({
           label: 'Cancel Order',
+          menuIcon: '',
           onClick: async () => {
             await dispatch(updateExchangeOrder(order.id, {fill_status: FillStatus.CANCELLED}));
           },
