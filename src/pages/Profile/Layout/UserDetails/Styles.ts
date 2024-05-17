@@ -85,8 +85,8 @@ export const Title = styled.p`
   font-weight: ${fonts.weight.regular};
 `;
 
-export const Value = styled.span<{flex?: boolean}>`
-  ${({flex}) => flex && 'display: flex; align-items: center; gap: 5px;'}
+export const Value = styled.span<{$flex?: boolean}>`
+  ${({$flex}) => $flex && 'display: flex; align-items: center; gap: 5px;'}
   color: ${colors.black};
   font-size: 14px;
   font-weight: ${fonts.weight.bold};

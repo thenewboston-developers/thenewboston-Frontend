@@ -119,7 +119,7 @@ const UserDetails: SFC = ({className}) => {
         <S.Separator />
         <S.Flex>
           <S.Title>Your balance:</S.Title>
-          <S.Value flex={true}>
+          <S.Value $flex={true}>
             <S.TNBLogo src={logo} />
             {formatNumber(default_wallet_balance)}
           </S.Value>
