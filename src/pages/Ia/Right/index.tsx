@@ -3,13 +3,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
-import {mdiFaceWoman, mdiSend} from '@mdi/js';
+import {mdiSend} from '@mdi/js';
 
 import {ButtonType} from 'components/Button';
-import Icon from 'components/Icon';
 import {createConversation} from 'dispatchers/conversations';
 import {createMessage, getMessages as _getMessages} from 'dispatchers/messages';
-import {getManager, getMessages} from 'selectors/state';
+import {getConversations, getIa, getManager, getMessages} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
@@ -21,10 +20,13 @@ const Right: SFC = ({className}) => {
   const bottomMessageRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
+  const ia = useSelector(getIa).ia;
   const messages = useSelector(getMessages);
   const messagesRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const params = useParams();
+  const conversations = useSelector(getConversations);
+  const conversationsLength = Object.keys(conversations).length;
 
   const conversationId = params.id ? parseInt(params.id, 10) : manager.activeConversationId || null;
 
@@ -80,12 +82,10 @@ const Right: SFC = ({className}) => {
       let newConversationId: number | null = null;
 
       if (!conversationId) {
-        const conversation = await dispatch(createConversation({name: 'New Conversation'}));
+        const conversation = await dispatch(createConversation({name: `New Conversation ${conversationsLength + 1}`}));
         newConversationId = conversation.id;
       }
-
       const activeConversationId = conversationId || newConversationId;
-
       await dispatch(createMessage({...values, conversation: activeConversationId!}));
       resetForm();
 
@@ -128,8 +128,11 @@ const Right: SFC = ({className}) => {
     return (
       <S.GreetingContainer>
         <S.GreetingElements>
-          <Icon className={className} icon={mdiFaceWoman} size={64} />
-          <S.GreetingText>Yo yo</S.GreetingText>
+          <S.Avatar>
+            <S.Image alt="avatar" src={ia?.avatar || ''} height={75} width={75} />
+          </S.Avatar>
+          <S.GreetingText>How can I help you?</S.GreetingText>
+          <S.SubText>Start your conversation</S.SubText>
         </S.GreetingElements>
       </S.GreetingContainer>
     );
