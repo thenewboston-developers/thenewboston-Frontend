@@ -86,6 +86,7 @@ export const ContributorContainer = styled.div`
 export const Header = styled.div`
   display: flex;
   justify-content: space-between;
+  padding-bottom: 15px;
 `;
 
 export const Heading = styled.div`

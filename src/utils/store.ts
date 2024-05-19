@@ -15,6 +15,7 @@ interface Identifiable {
  * @template Item - The type of item managed by the slice.
  */
 interface ItemSliceState<Item extends Identifiable> {
+  count: number;
   items: Item[];
   hasMore: boolean;
   isLoading: boolean;
@@ -35,6 +36,7 @@ export const createItemSlice = <Item extends Identifiable>(sliceName: string, in
     reducers: {
       // Resets the state to initial values.
       resetItems: (state) => {
+        state.count = 0;
         state.hasMore = false;
         state.isLoading = false;
         state.next = null;
@@ -51,6 +53,7 @@ export const createItemSlice = <Item extends Identifiable>(sliceName: string, in
       },
       // Sets a list of items, usually from paginated API responses.
       setItems: (state, {payload}: PayloadAction<PaginatedResponse<Item>>) => {
+        state.count = payload.count;
         state.hasMore = !!payload.next;
         state.isLoading = false;
         state.next = payload.next;
@@ -62,6 +65,7 @@ export const createItemSlice = <Item extends Identifiable>(sliceName: string, in
       },
       // Removes an item by ID.
       unsetItem: (state, {payload: id}: PayloadAction<number>) => {
+        state.count = state.count - 1;
         state.items = state.items.filter((obj) => obj.id !== id);
       },
     },

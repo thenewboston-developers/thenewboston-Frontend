@@ -3,6 +3,7 @@ import {Follower} from 'types';
 import {createItemSlice} from 'utils/store';
 
 const followersSlice = createItemSlice<Follower>(FOLLOWERS, {
+  count: 0,
   hasMore: false,
   isLoading: false,
   items: [],

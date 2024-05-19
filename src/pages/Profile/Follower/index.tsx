@@ -2,12 +2,13 @@ import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
-import {mdiAccountPlusOutline, mdiMagnify} from '@mdi/js';
+import {mdiAccountPlusOutline} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import EmptyText from 'components/EmptyText';
 import Icon from '@mdi/react';
-import {AppDispatch, SFC} from 'types';
+import InfiniteScroll from 'components/InfiniteScroll';
+import {AppDispatch, SFC, UserReadSerializer} from 'types';
 import {FollowerType} from 'enums';
 import {colors} from 'styles';
 import {displayErrorToast} from 'utils/toasts';
@@ -46,7 +47,7 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
   const userId = id ? parseInt(id, 10) : undefined;
 
   const {emptyText, extractObject, get, getState, reset, title} = followerTypeConfig[type as FollowerType];
-  const {items, hasMore, isLoading} = useSelector(getState);
+  const {count, items, hasMore, isLoading} = useSelector(getState);
 
   const followerList = useMemo(() => {
     return orderBy(items, ['created_date'], ['desc']);
@@ -76,43 +77,53 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
   };
 
   const renderFollowerCards = () => {
-    const _followers = followerList.map((item, index) => {
-      const user = extractObject(item);
-      return (
-        <S.ContributorContainer key={index}>
-          <S.TableGrid>
-            <S.Rank>{index + 1}</S.Rank>
-            <S.UserLabelContainer>
-              <S.FollowerCards>
-                <S.FollowerUser>
-                  <Avatar src={user.avatar} />
-                  <S.UserName>{user.username}</S.UserName>
-                </S.FollowerUser>
-              </S.FollowerCards>
-            </S.UserLabelContainer>
-            <S.RewardAmountContainer>
-              <S.Status>
-                <Icon path={mdiAccountPlusOutline} size={1} color={`${colors.palette.blue['500']}`} />
-                <S.StatusFollow>Follow</S.StatusFollow>
-              </S.Status>
-            </S.RewardAmountContainer>
-          </S.TableGrid>
-        </S.ContributorContainer>
-      );
-    });
-    return <S.FollowerCards>{_followers}</S.FollowerCards>;
+    return (
+      <InfiniteScroll dataLength={followerList.length} hasMore={hasMore} heightMargin={200} next={fetchMoreFollowers}>
+        {followerList.map((item, index) => {
+          const user = extractObject(item);
+          return getFollowerCard(user, index);
+        })}
+      </InfiniteScroll>
+    );
+  };
+
+  const getFollowerCard = (follower: UserReadSerializer, index: number) => {
+    return (
+      <S.ContributorContainer key={index}>
+        <S.TableGrid>
+          <S.Rank>{index + 1}</S.Rank>
+          <S.UserLabelContainer>
+            <S.FollowerCards>
+              <S.FollowerUser>
+                <Avatar src={follower.avatar} />
+                <S.UserName>{follower.username}</S.UserName>
+              </S.FollowerUser>
+            </S.FollowerCards>
+          </S.UserLabelContainer>
+          <S.RewardAmountContainer>
+            <S.Status>
+              <Icon path={mdiAccountPlusOutline} size={1} color={`${colors.palette.blue['500']}`} />
+              <S.StatusFollow>Follow</S.StatusFollow>
+            </S.Status>
+          </S.RewardAmountContainer>
+        </S.TableGrid>
+      </S.ContributorContainer>
+    );
   };
 
   return (
     <S.Container className={className}>
       <S.Header>
         <S.Heading>
-          {title} — {followerList.length}
+          {title} — {count}
         </S.Heading>
-        <S.Search>
-          <Icon path={mdiMagnify} />
-          <input type="text" placeholder="Search" />
-        </S.Search>
+        {/* 
+          # TODO(muhammad) MEDIUM: Implement search functionality 
+          <S.Search>
+            <Icon path={mdiMagnify} />
+            <input type="text" placeholder="Search" />
+          </S.Search>
+        */}
       </S.Header>
       {renderContent()}
     </S.Container>
