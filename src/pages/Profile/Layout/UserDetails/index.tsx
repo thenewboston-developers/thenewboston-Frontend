@@ -1,10 +1,10 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {mdiSquareEditOutline} from '@mdi/js';
 
 import logo from 'assets/logo192.png';
-import {createFollower, deleteFollower, getFollowers} from 'api/followers';
+import {createFollower, deleteFollower} from 'api/followers';
 import DefaultAvatar from 'assets/default-avatar.svg';
 import {ButtonColor} from 'components/Button';
 import {useToggle, useUser} from 'hooks';
@@ -31,22 +31,22 @@ const UserDetails: SFC = ({className}) => {
     default_wallet_balance = 0,
   } = id && userStats[id] ? userStats[id] : {};
 
-  useEffect(() => {
-    setFollower(null);
+  // useEffect(() => {
+  //   setFollower(null);
 
-    if (!self.id || !userId) return;
-    if (self.id == userId) return;
+  //   if (!self.id || !userId) return;
+  //   if (self.id == userId) return;
 
-    (async () => {
-      try {
-        const response = await getFollowers({follower: self.id!, following: userId});
-        setFollower(!!response.length ? response[0] : null);
-      } catch (error) {
-        console.error(error);
-        displayErrorToast('Error fetching follow relationship');
-      }
-    })();
-  }, [self.id, userId]);
+  //   (async () => {
+  //     try {
+  //       const response = await getFollowers({follower: self.id!, following: userId});
+  //       setFollower(!!response.length ? response[0] : null);
+  //     } catch (error) {
+  //       console.error(error);
+  //       displayErrorToast('Error fetching follow relationship');
+  //     }
+  //   })();
+  // }, [self.id, userId]);
 
   const handleFollowButtonClick = async () => {
     if (!userId || self.id === userId) return null;

@@ -6,17 +6,17 @@ export const FollowerCards = styled.div`
 `;
 
 export const Container = styled.div`
-  background: #fff;
+  background: ${colors.white};
   border-radius: 14px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   margin-top: 16px;
+  padding: 20px;
 `;
 export const Rank = styled.div`
   font-size: 14px;
   display: flex;
   align-items: center;
 `;
-
 export const UserLabelContainer = styled.div``;
 
 export const RewardAmountContainer = styled.div`
@@ -83,16 +83,13 @@ export const ContributorContainer = styled.div`
   }
 `;
 
-export const Wrapper = styled.div`
+export const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin: 0 20px;
-  padding-top: 23px;
 `;
 
-export const Title = styled.div`
-  font-size: 20px;
+export const Heading = styled.div`
+  font-size: 18px;
   color: ${colors.gray};
   font-weight: ${fonts.weight.semiBold};
 
@@ -102,32 +99,32 @@ export const Title = styled.div`
 `;
 
 export const Search = styled.div`
-  position: relative;
+  background-color: ${colors.whiteHover};
+  border-radius: 100px;
   display: flex;
   height: 46px;
-  width: 300px;
-  background-color: #f4f4f4;
-  border-radius: 100px;
+  position: relative;
+  width: 250px;
 
   & svg {
+    color: ${colors.gray};
     height: 20px;
-    width: 20px;
-    position: absolute;
     left: 14px;
+    position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    color: ${colors.gray};
+    width: 20px;
   }
 
   & input {
-    width: 100%;
-    padding-left: 40px;
-    border: none;
-    outline: none;
     background-color: transparent;
+    border-radius: 100px;
+    border: none;
+    color: ${colors.gray};
     font-size: 14px;
     font-weight: ${fonts.weight.regular};
-    color: ${colors.gray};
-    border-radius: 100px;
+    outline: none;
+    padding-left: 40px;
+    width: 100%;
   }
 `;
