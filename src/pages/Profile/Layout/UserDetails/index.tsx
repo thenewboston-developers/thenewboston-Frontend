@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {mdiSquareEditOutline} from '@mdi/js';
@@ -6,29 +6,27 @@ import {mdiSquareEditOutline} from '@mdi/js';
 import DefaultAvatar from 'assets/default-avatar.svg';
 import ProfileEditModal from 'modals/ProfileEditModal';
 import logo from 'assets/logo192.png';
-import {AppDispatch, FollowerReadSerializer, SFC} from 'types';
+import {AppDispatch, SFC} from 'types';
 import {ButtonColor} from 'components/Button';
 import {createFollower, deleteFollower} from 'dispatchers/followers';
 import {displayErrorToast} from 'utils/toasts';
 import {formatNumber} from 'utils/numbers';
-import {getFollowings as getFollowingsState} from 'selectors/state';
-import {getFollowings} from 'dispatchers/followings';
-import {getSelf, getUserStats} from 'selectors/state';
+import {getFollowers} from 'api/followers';
+import {getSelf, getUserStats as getUserStatsState} from 'selectors/state';
+import {getUserStats} from 'dispatchers/userStats';
 import {useToggle, useUser} from 'hooks';
 
 import * as S from './Styles';
 
 const UserDetails: SFC = ({className}) => {
+  const [selfFollowing, setSelfFollowing] = useState<boolean>(false);
   const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
   const {id} = useParams();
   const user = useUser(id);
-  const userStats = useSelector(getUserStats);
-  const {items: followings} = useSelector(getFollowingsState);
-
+  const userStats = useSelector(getUserStatsState);
   const userId = id ? parseInt(id, 10) : null;
-  const follower = followings.find((obj: FollowerReadSerializer) => obj.following.id === userId);
   const {
     following_count = 0,
     followers_count = 0,
@@ -41,20 +39,32 @@ const UserDetails: SFC = ({className}) => {
 
     (async () => {
       try {
-        await dispatch(getFollowings({follower: self.id!, following: userId}));
+        const responseData = await getFollowers('', {follower: self.id!, following: userId});
+        if (responseData.results.length > 0) {
+          setSelfFollowing(true);
+        } else {
+          setSelfFollowing(false);
+        }
       } catch (error) {
+        setSelfFollowing(false);
         console.error(error);
         displayErrorToast('Error fetching follow relationship');
       }
     })();
   }, [dispatch, self.id, userId]);
 
+  const updateUserStats = async () => {
+    if (userId) await dispatch(getUserStats(userId));
+  };
+
   const handleFollowButtonClick = async () => {
     if (!userId || self.id === userId) return null;
 
-    if (follower) {
+    if (selfFollowing) {
       try {
-        await dispatch(deleteFollower(follower.following.id));
+        await dispatch(deleteFollower(userId));
+        setSelfFollowing(false);
+        updateUserStats();
       } catch (error) {
         console.error(error);
         displayErrorToast('Error unfollowing user');
@@ -62,6 +72,8 @@ const UserDetails: SFC = ({className}) => {
     } else {
       try {
         await dispatch(createFollower({following: userId}));
+        setSelfFollowing(true);
+        updateUserStats();
       } catch (error) {
         console.error(error);
         displayErrorToast('Error unfollowing user');
@@ -93,7 +105,11 @@ const UserDetails: SFC = ({className}) => {
   const renderFollowButton = () => {
     if (self.id === userId) return null;
     return (
-      <S.Button color={ButtonColor.primary} onClick={handleFollowButtonClick} text={follower ? 'Unfollow' : 'Follow'} />
+      <S.Button
+        color={ButtonColor.primary}
+        onClick={handleFollowButtonClick}
+        text={selfFollowing ? 'Unfollow' : 'Follow'}
+      />
     );
   };
 
