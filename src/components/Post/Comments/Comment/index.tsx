@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {mdiDotsVertical} from '@mdi/js';
+import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import Linkify from 'components/Linkify';
@@ -38,10 +38,12 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
   const menuOptions = [
     {
       label: 'Edit',
+      menuIcon: mdiSquareEditOutline,
       onClick: toggleCommentEditModal,
     },
     {
       label: 'Delete',
+      menuIcon: mdiDeleteOutline,
       onClick: handleDelete,
     },
   ];

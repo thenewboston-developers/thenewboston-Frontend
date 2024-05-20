@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
-import {mdiDotsVertical} from '@mdi/js';
+import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 
 import {useToggle} from 'hooks';
 import ConversationDeleteModal from 'modals/ConversationDeleteModal';
@@ -56,10 +56,12 @@ const MenuItem: SFC<MenuItemProps> = ({className, conversation}) => {
   const menuOptions = [
     {
       label: 'Edit',
+      menuIcon: mdiSquareEditOutline,
       onClick: handleEditClick,
     },
     {
       label: 'Delete',
+      menuIcon: mdiDeleteOutline,
       onClick: handleDeleteClick,
     },
   ];

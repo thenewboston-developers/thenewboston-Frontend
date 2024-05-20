@@ -18,7 +18,6 @@ export const Option = styled.div`
   white-space: nowrap;
 
   &:hover {
-    background: ${colors.whiteHover};
     cursor: pointer;
   }
 `;

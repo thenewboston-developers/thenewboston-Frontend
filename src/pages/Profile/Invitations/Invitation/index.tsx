@@ -1,5 +1,5 @@
 import {useDispatch} from 'react-redux';
-import {mdiDotsVertical} from '@mdi/js';
+import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 
 import DropdownMenu from 'components/DropdownMenu';
 import InvitationStatusBadge from 'components/InvitationStatusBadge';
@@ -36,6 +36,7 @@ const Invitation: SFC<InvitationProps> = ({invitation}) => {
   const menuOptions = [
     {
       label: 'Edit',
+      menuIcon: mdiSquareEditOutline,
       onClick: toggleInvitationModal,
     },
   ];
@@ -43,6 +44,7 @@ const Invitation: SFC<InvitationProps> = ({invitation}) => {
   if (!recipient) {
     menuOptions.push({
       label: 'Delete',
+      menuIcon: mdiDeleteOutline,
       onClick: handleDelete,
     });
   }

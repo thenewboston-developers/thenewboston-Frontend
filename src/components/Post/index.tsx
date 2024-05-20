@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiDotsVertical} from '@mdi/js';
+import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 
 import Linkify from 'components/Linkify';
 import UserLabel from 'components/UserLabel';
@@ -38,10 +38,12 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const menuOptions = [
     {
       label: 'Edit',
+      menuIcon: mdiSquareEditOutline,
       onClick: togglePostModal,
     },
     {
       label: 'Delete',
+      menuIcon: mdiDeleteOutline,
       onClick: handleDelete,
     },
   ];
