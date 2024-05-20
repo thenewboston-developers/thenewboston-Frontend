@@ -1,8 +1,7 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
-import orderBy from 'lodash/orderBy';
-import {mdiAccountPlusOutline} from '@mdi/js';
+import {mdiAccountPlusOutline, mdiAccountMinusOutline} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import EmptyText from 'components/EmptyText';
@@ -10,11 +9,11 @@ import Icon from '@mdi/react';
 import InfiniteScroll from 'components/InfiniteScroll';
 import {AppDispatch, SFC, UserReadSerializer} from 'types';
 import {FollowerType} from 'enums';
-import {colors} from 'styles';
-import {displayErrorToast} from 'utils/toasts';
-import {getFollowers as getFollowersState, getFollowings as getFollowingsState} from 'selectors/state';
-import {getFollowers, resetFollowers} from 'dispatchers/followers';
+import {createFollower, deleteFollower, getFollowers, resetFollowers} from 'dispatchers/followers';
 import {getFollowings, resetFollowings} from 'dispatchers/followings';
+import {displayErrorToast} from 'utils/toasts';
+import {getFollowers as getFollowersState, getFollowings as getFollowingsState, getSelf} from 'selectors/state';
+import {getUserStats} from 'dispatchers/userStats';
 
 import * as S from './Styles';
 
@@ -25,16 +24,18 @@ export interface FollowerProps {
 const followerTypeConfig = {
   [FollowerType.FOLLOWERS]: {
     emptyText: 'No followers to display.',
-    extractObject: (item: any) => item.following,
+    extractObject: (item: any) => item.follower,
     get: getFollowers,
+    getParams: (userId?: number) => ({following: userId}),
     getState: getFollowersState,
     reset: resetFollowers,
     title: 'Followers',
   },
   [FollowerType.FOLLOWING]: {
     emptyText: 'No followings to display.',
-    extractObject: (item: any) => item.follower,
+    extractObject: (item: any) => item.following,
     get: getFollowings,
+    getParams: (userId?: number) => ({follower: userId}),
     getState: getFollowingsState,
     reset: resetFollowings,
     title: 'Following',
@@ -46,28 +47,29 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
   const {id} = useParams();
   const userId = id ? parseInt(id, 10) : undefined;
 
-  const {emptyText, extractObject, get, getState, reset, title} = followerTypeConfig[type as FollowerType];
+  const {emptyText, extractObject, get, getParams, getState, reset, title} = followerTypeConfig[type as FollowerType];
+  const self = useSelector(getSelf);
   const {count, items, hasMore, isLoading} = useSelector(getState);
 
   const followerList = useMemo(() => {
-    return orderBy(items, ['created_date'], ['desc']);
+    return items;
   }, [items]);
 
   useEffect(() => {
     (async () => {
       try {
         dispatch(reset());
-        await dispatch(get(userId));
+        await dispatch(get(getParams(userId)));
       } catch (error) {
         console.error(error);
         displayErrorToast(`Error fetching ${type.toLowerCase()}`);
       }
     })();
-  }, [dispatch, userId, type, reset, get]);
+  }, [dispatch, userId, type, reset, get, getParams]);
 
   const fetchMoreFollowers = async () => {
     if (!isLoading && hasMore) {
-      await dispatch(get(userId));
+      await dispatch(get());
     }
   };
 
@@ -81,33 +83,48 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
       <InfiniteScroll dataLength={followerList.length} hasMore={hasMore} heightMargin={200} next={fetchMoreFollowers}>
         {followerList.map((item, index) => {
           const user = extractObject(item);
-          return getFollowerCard(user, index);
+          return getFollowerCard(index, item.id, item.self_following, user);
         })}
       </InfiniteScroll>
     );
   };
 
-  const getFollowerCard = (follower: UserReadSerializer, index: number) => {
+  const handleFollowBtnClick = async (userID: number) => {
+    await dispatch(createFollower({following: userID}));
+    if (self.id) await dispatch(getUserStats(self.id));
+  };
+
+  const handleUnFollowBtnClick = async (followingUserID: number) => {
+    dispatch(deleteFollower(followingUserID));
+    if (self.id) await dispatch(getUserStats(self.id));
+  };
+
+  const getFollowerCard = (index: number, followerId: number, selfFollowing: boolean, user: UserReadSerializer) => {
     return (
-      <S.ContributorContainer key={index}>
-        <S.TableGrid>
-          <S.Rank>{index + 1}</S.Rank>
-          <S.UserLabelContainer>
-            <S.FollowerCards>
-              <S.FollowerUser>
-                <Avatar src={follower.avatar} />
-                <S.UserName>{follower.username}</S.UserName>
-              </S.FollowerUser>
-            </S.FollowerCards>
-          </S.UserLabelContainer>
-          <S.RewardAmountContainer>
-            <S.Status>
-              <Icon path={mdiAccountPlusOutline} size={1} color={`${colors.palette.blue['500']}`} />
-              <S.StatusFollow>Follow</S.StatusFollow>
-            </S.Status>
-          </S.RewardAmountContainer>
-        </S.TableGrid>
-      </S.ContributorContainer>
+      <S.FollowerContainer key={index}>
+        <S.Grid>
+          <S.Counter>{index + 1}</S.Counter>
+          <S.FollowerLink to={`/profile/${user.id}`}>
+            <Avatar src={user.avatar} />
+            <S.Username>{user.username}</S.Username>
+          </S.FollowerLink>
+          {self.id === userId ? (
+            <S.BtnContainer>
+              {selfFollowing ? (
+                <S.UnFollowButton onClick={() => handleUnFollowBtnClick(user.id)}>
+                  <Icon path={mdiAccountMinusOutline} size={1} />
+                  <S.BtnText>Unfollow</S.BtnText>
+                </S.UnFollowButton>
+              ) : (
+                <S.FollowButton onClick={() => handleFollowBtnClick(user.id)}>
+                  <Icon path={mdiAccountPlusOutline} size={1} />
+                  <S.BtnText>Follow</S.BtnText>
+                </S.FollowButton>
+              )}
+            </S.BtnContainer>
+          ) : null}
+        </S.Grid>
+      </S.FollowerContainer>
     );
   };
 
@@ -118,7 +135,7 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
           {title} — {count}
         </S.Heading>
         {/* 
-          # TODO(muhammad) MEDIUM: Implement search functionality 
+          TODO(muhammad) MEDIUM: Implement search functionality
           <S.Search>
             <Icon path={mdiMagnify} />
             <input type="text" placeholder="Search" />

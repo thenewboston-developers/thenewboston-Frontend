@@ -1,8 +1,20 @@
 import styled from 'styled-components';
+import {Link as ULink} from 'react-router-dom';
 import {colors, fonts} from 'styles';
 
-export const FollowerCards = styled.div`
-  display: grid;
+export const BtnContainer = styled.div`
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: ${fonts.weight.semiBold};
+  gap: 5px;
+  justify-content: start;
+  width: 100%;
+`;
+
+export const BtnText = styled.div`
+  font-size: 12px;
+  font-weight: ${fonts.weight.semiBold};
+  text-transform: capitalize;
 `;
 
 export const Container = styled.div`
@@ -12,62 +24,22 @@ export const Container = styled.div`
   margin-top: 16px;
   padding: 20px;
 `;
-export const Rank = styled.div`
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-`;
-export const UserLabelContainer = styled.div``;
 
-export const RewardAmountContainer = styled.div`
+export const Counter = styled.div`
   align-items: center;
   display: flex;
   font-size: 14px;
-  font-weight: ${fonts.weight.semiBold};
-  justify-content: start;
-  width: 100%;
-`;
-export const UserLabel = styled.div`
-  flex-grow: 1;
-`;
-export const StatusFollow = styled.div`
-  font-size: 12px;
-  text-transform: capitalize;
-  font-weight: ${fonts.weight.semiBold};
-  color: ${colors.palette.blue['500']};
 `;
 
-export const StatusFollowing = styled.div`
-  font-size: 12px;
-  text-transform: capitalize;
-  font-weight: ${fonts.weight.semiBold};
-  color: ${colors.palette.red['500']};
-`;
-
-export const TableGrid = styled.div`
-  width: 100%;
-  grid-template-columns: 1fr 16fr 2fr;
-  display: grid;
-`;
-export const UserName = styled.div`
-  font-size: 16px;
-  text-transform: capitalize;
-`;
-
-export const Status = styled.div`
-  display: flex;
-  gap: 5px;
+export const FollowerLink = styled(ULink)`
   align-items: center;
-`;
-
-export const FollowerUser = styled.div`
   display: flex;
   gap: 10px;
-  align-items: center;
 `;
-export const ContributorContainer = styled.div`
+
+export const FollowerContainer = styled.div`
   align-items: center;
-  border-bottom: 1px solid #f1f1f1;
+  border-bottom: 1px solid ${colors.border};
   display: flex;
   justify-content: space-between;
   margin: 0 20px;
@@ -81,6 +53,19 @@ export const ContributorContainer = styled.div`
     border-bottom: none;
     padding-bottom: 20px;
   }
+`;
+
+export const FollowButton = styled.div`
+  align-items: center;
+  color: ${colors.palette.blue['500']};
+  display: flex;
+  gap: 5px;
+`;
+
+export const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 16fr 2fr;
+  width: 100%;
 `;
 
 export const Header = styled.div`
@@ -128,4 +113,29 @@ export const Search = styled.div`
     padding-left: 40px;
     width: 100%;
   }
+`;
+
+export const StatusFollowing = styled.div`
+  font-size: 12px;
+  text-transform: capitalize;
+  font-weight: ${fonts.weight.semiBold};
+  color: ${colors.palette.red['500']};
+`;
+
+export const UserLabelContainer = styled.div``;
+
+export const UserLabel = styled.div`
+  flex-grow: 1;
+`;
+
+export const Username = styled.div`
+  font-size: 16px;
+  text-transform: capitalize;
+`;
+
+export const UnFollowButton = styled.div`
+  align-items: center;
+  color: ${colors.palette.red['500']};
+  display: flex;
+  gap: 5px;
 `;

@@ -1,5 +1,6 @@
 import {store} from 'store';
 import {
+  GetFollowersParams,
   createFollower as _createFollowing,
   deleteFollower as _deleteFollowing,
   getFollowers as _getFollowings,
@@ -28,9 +29,9 @@ export const resetFollowings = () => (dispatch: AppDispatch) => {
   dispatch(_resetFollowing());
 };
 
-export const getFollowings = (userId?: number) => async (dispatch: AppDispatch) => {
+export const getFollowings = (params?: GetFollowersParams) => async (dispatch: AppDispatch) => {
   dispatch(startLoading());
   const nextURL = getNextUrlFromState(store.getState().followings);
-  const responseData = await _getFollowings(nextURL, {following: userId});
+  const responseData = await _getFollowings(nextURL, params);
   dispatch(setFollowings(responseData));
 };

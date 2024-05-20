@@ -6,7 +6,6 @@ import {breakpoints, colors, fonts} from 'styles';
 const USER_IMAGE_SIZE = 110;
 
 export const Button = styled(UButton)`
-  background-color: ${colors.white};
   border-radius: 100px;
   border: none;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);

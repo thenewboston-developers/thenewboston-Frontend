@@ -6,7 +6,7 @@ import {PaginatedResponse} from 'types';
  * Define a base interface that all item types must extend.
  * This interface requires that each item must have an 'id' property.
  */
-interface Identifiable {
+export interface Identifiable {
   id: number;
 }
 
@@ -14,7 +14,7 @@ interface Identifiable {
  * Interface for the state of a generic item slice.
  * @template Item - The type of item managed by the slice.
  */
-interface ItemSliceState<Item extends Identifiable> {
+export interface ItemSliceState<Item extends Identifiable> {
   count: number;
   items: Item[];
   hasMore: boolean;
@@ -23,13 +23,25 @@ interface ItemSliceState<Item extends Identifiable> {
 }
 
 /**
+ * Type for custom reducers. It ensures that the state in each reducer
+ * has the correct type based on the item type.
+ */
+export type CustomReducers<Item extends Identifiable> = {
+  [key: string]: (state: ItemSliceState<Item>, action: PayloadAction<any>) => void;
+};
+
+/**
  * Creates a Redux slice for managing a list of items with identifiable properties.
  * @param sliceName - The name of the slice.
  * @param initialState - The initial state of the slice.
  * @returns A slice for managing items that includes actions and reducer.
  * @template Item - The type of items managed by the slice.
  */
-export const createItemSlice = <Item extends Identifiable>(sliceName: string, initialState: ItemSliceState<Item>) => {
+export const createItemSlice = <Item extends Identifiable>(
+  sliceName: string,
+  initialState: ItemSliceState<Item>,
+  customReducers: CustomReducers<Item> = {},
+) => {
   return createSlice({
     initialState,
     name: sliceName,
@@ -68,6 +80,7 @@ export const createItemSlice = <Item extends Identifiable>(sliceName: string, in
         state.count = state.count - 1;
         state.items = state.items.filter((obj) => obj.id !== id);
       },
+      ...customReducers,
     },
   });
 };
