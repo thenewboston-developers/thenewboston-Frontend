@@ -1,4 +1,4 @@
-import DefaultAvatar from 'assets/default-avatar.png';
+import DefaultAvatar from 'assets/default-avatar.svg';
 import {SFC} from 'types';
 import * as S from './Styles';
 
