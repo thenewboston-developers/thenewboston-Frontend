@@ -10,7 +10,7 @@ import InfiniteScroll from 'components/InfiniteScroll';
 import {AppDispatch, SFC, UserReadSerializer} from 'types';
 import {FollowerType} from 'enums';
 import {createFollower, deleteFollower, getFollowers, resetFollowers} from 'dispatchers/followers';
-import {getFollowings, resetFollowings} from 'dispatchers/followings';
+import {deleteFollowing, getFollowings, resetFollowings} from 'dispatchers/followings';
 import {displayErrorToast} from 'utils/toasts';
 import {getFollowers as getFollowersState, getFollowings as getFollowingsState, getSelf} from 'selectors/state';
 import {getUserStats} from 'dispatchers/userStats';
@@ -89,14 +89,50 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
     );
   };
 
-  const handleFollowBtnClick = async (userID: number) => {
-    await dispatch(createFollower({following: userID}));
+  const updateUserStats = async () => {
     if (self.id) await dispatch(getUserStats(self.id));
   };
 
-  const handleUnFollowBtnClick = async (followingUserID: number) => {
+  const handleFollowerFollowBtnClick = async (userID: number) => {
+    await dispatch(createFollower({following: userID}));
+    updateUserStats();
+  };
+
+  const handleFollowerUnFollowBtnClick = async (followingUserID: number) => {
     dispatch(deleteFollower(followingUserID));
-    if (self.id) await dispatch(getUserStats(self.id));
+    updateUserStats();
+  };
+
+  const handleFollowingUnFollowBtnClick = async (followerId: number, followingUserID: number) => {
+    dispatch(deleteFollowing(followerId, followingUserID));
+    updateUserStats();
+  };
+
+  const renderFollowButton = (followerId: number, user: UserReadSerializer, selfFollowing: boolean) => {
+    if (self.id !== userId) return null;
+
+    return type === FollowerType.FOLLOWERS ? (
+      <S.BtnContainer>
+        {selfFollowing ? (
+          <S.UnFollowButton onClick={() => handleFollowerUnFollowBtnClick(user.id)}>
+            <Icon path={mdiAccountMinusOutline} size={1} />
+            <S.BtnText>Unfollow</S.BtnText>
+          </S.UnFollowButton>
+        ) : (
+          <S.FollowButton onClick={() => handleFollowerFollowBtnClick(user.id)}>
+            <Icon path={mdiAccountPlusOutline} size={1} />
+            <S.BtnText>Follow</S.BtnText>
+          </S.FollowButton>
+        )}
+      </S.BtnContainer>
+    ) : (
+      <S.BtnContainer>
+        <S.UnFollowButton onClick={() => handleFollowingUnFollowBtnClick(followerId, user.id)}>
+          <Icon path={mdiAccountMinusOutline} size={1} />
+          <S.BtnText>Unfollow</S.BtnText>
+        </S.UnFollowButton>
+      </S.BtnContainer>
+    );
   };
 
   const getFollowerCard = (index: number, followerId: number, selfFollowing: boolean, user: UserReadSerializer) => {
@@ -108,21 +144,7 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
             <Avatar src={user.avatar} />
             <S.Username>{user.username}</S.Username>
           </S.FollowerLink>
-          {self.id === userId ? (
-            <S.BtnContainer>
-              {selfFollowing ? (
-                <S.UnFollowButton onClick={() => handleUnFollowBtnClick(user.id)}>
-                  <Icon path={mdiAccountMinusOutline} size={1} />
-                  <S.BtnText>Unfollow</S.BtnText>
-                </S.UnFollowButton>
-              ) : (
-                <S.FollowButton onClick={() => handleFollowBtnClick(user.id)}>
-                  <Icon path={mdiAccountPlusOutline} size={1} />
-                  <S.BtnText>Follow</S.BtnText>
-                </S.FollowButton>
-              )}
-            </S.BtnContainer>
-          ) : null}
+          {renderFollowButton(followerId, user, selfFollowing)}
         </S.Grid>
       </S.FollowerContainer>
     );

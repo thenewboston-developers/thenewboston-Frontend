@@ -1,28 +1,13 @@
 import {store} from 'store';
-import {
-  GetFollowersParams,
-  createFollower as _createFollowing,
-  deleteFollower as _deleteFollowing,
-  getFollowers as _getFollowings,
-} from 'api/followers';
-import {
-  resetFollowing as _resetFollowing,
-  setFollowing,
-  setFollowings,
-  startLoading,
-  unsetFollowing,
-} from 'store/followings';
-import {AppDispatch, CreateFollowerRequest} from 'types';
+
+import {AppDispatch} from 'types';
+import {GetFollowersParams, deleteFollower as _deleteFollowing, getFollowers as _getFollowings} from 'api/followers';
 import {getNextUrlFromState} from 'utils/urls';
+import {resetFollowing as _resetFollowing, setFollowings, startLoading, unsetFollowing} from 'store/followings';
 
-export const createFollowing = (data: CreateFollowerRequest) => async (dispatch: AppDispatch) => {
-  const responseData = await _createFollowing(data);
-  dispatch(setFollowing(responseData));
-};
-
-export const deleteFollowing = (id: number) => async (dispatch: AppDispatch) => {
-  await _deleteFollowing(id);
-  dispatch(unsetFollowing(id));
+export const deleteFollowing = (followerId: number, followingUserId: number) => async (dispatch: AppDispatch) => {
+  await _deleteFollowing(followingUserId);
+  dispatch(unsetFollowing(followerId));
 };
 
 export const resetFollowings = () => (dispatch: AppDispatch) => {

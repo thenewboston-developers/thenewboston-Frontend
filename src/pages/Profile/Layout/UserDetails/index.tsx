@@ -102,7 +102,7 @@ const UserDetails: SFC = ({className}) => {
     return <S.Username>{user.username}</S.Username>;
   };
 
-  const renderStatesAndBalance = () => {
+  const renderStatsAndBalance = () => {
     if (!user) return null;
     return (
       <S.StateBalanceWrapper>
@@ -133,7 +133,7 @@ const UserDetails: SFC = ({className}) => {
         {renderAvatar()}
         {renderUsername()}
         <S.Wrapper>
-          {renderStatesAndBalance()}
+          {renderStatsAndBalance()}
           {renderEditProfileButton()}
           {renderFollowButton()}
         </S.Wrapper>
