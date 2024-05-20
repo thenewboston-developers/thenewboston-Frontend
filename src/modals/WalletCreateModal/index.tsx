@@ -6,7 +6,6 @@ import {useAvailableWalletCores} from 'hooks';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
-import RadioCard from './RadioCard';
 import * as S from './Styles';
 
 export interface WalletCreateModalProps {
@@ -41,7 +40,7 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
 
   const renderRadioCards = () => {
     return availableWalletCores.map((core) => (
-      <RadioCard
+      <S.RadioCardWrapper
         activeCoreId={selectedCoreId}
         core={core}
         handleRadioCardClick={() => handleRadioCardClick(core.id)}
@@ -53,9 +52,7 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
   return (
     <S.Modal className={className} close={close} header="Create Wallet">
       <S.RadioCardContainer>{renderRadioCards()}</S.RadioCardContainer>
-      <S.ButtonContainer>
-        <S.Button disabled={selectedCoreId === null} onClick={handleButtonClick} text="Submit" />
-      </S.ButtonContainer>
+      <S.Button disabled={selectedCoreId === null} onClick={handleButtonClick} text="Submit" />
     </S.Modal>
   );
 };
