@@ -2,6 +2,7 @@ import {useMemo, useState} from 'react';
 import {Field, Formik} from 'formik';
 import {useSelector} from 'react-redux';
 
+import DefaultImage from 'assets/default-image.svg';
 import {createOpenAIImage} from 'api/openaiImages';
 import {ButtonType} from 'components/Button';
 import {Textarea} from 'components/FormElements';
@@ -41,7 +42,6 @@ const Create: SFC = ({className}) => {
       displayErrorToast('Error generating art');
     }
   };
-
   const renderImageCarousel = () => {
     if (!createOpenAIImageResponse) return null;
     const imageUrls = createOpenAIImageResponse.data.map(({url}) => url);
@@ -52,6 +52,18 @@ const Create: SFC = ({className}) => {
         isImageSaved={isImageSaved}
         setIsImageSaved={setIsImageSaved}
       />
+    );
+  };
+  const renderDefaultImage = () => {
+    return (
+      <>
+        <S.ImgWrapper>
+          <S.Img alt="image" src={DefaultImage} />
+        </S.ImgWrapper>
+        <S.Text>
+          Describe your art, select image quantity <br /> and generate art!
+        </S.Text>
+      </>
     );
   };
 
@@ -164,7 +176,10 @@ const Create: SFC = ({className}) => {
           );
         }}
       </Formik>
-      <S.ImageCarouselContainer>{renderImageCarousel()}</S.ImageCarouselContainer>
+
+      <S.ImageCarouselContainer>
+        {!createOpenAIImageResponse ? renderDefaultImage() : renderImageCarousel()}
+      </S.ImageCarouselContainer>
     </S.Container>
   );
 };

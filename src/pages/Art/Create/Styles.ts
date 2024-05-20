@@ -4,6 +4,8 @@ import _Button from 'components/Button';
 import {Form as _Form} from 'formik';
 import {breakpoints, colors, fonts} from 'styles';
 
+const USER_IMAGE_SIZE = 80;
+
 export const AvailableBalance = styled.div`
   align-items: center;
   display: flex;
@@ -24,7 +26,6 @@ export const Container = styled.div`
   flex-direction: column;
   padding: 16px 30px;
   width: 100%;
-
   @media (min-width: ${breakpoints.mobile}) {
     flex-direction: row;
   }
@@ -74,9 +75,12 @@ export const Card = styled.div`
 `;
 
 export const ImageCarouselContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 24px 16px;
   width: 100%;
-
   @media (min-width: ${breakpoints.mobile}) {
     width: 60%;
   }
@@ -156,4 +160,27 @@ export const Row = styled.div<{$gap?: number}>`
       line-height: 26px;
     }
   }
+`;
+
+export const Img = styled.img`
+  height: 40px;
+  width: 40px;
+`;
+
+export const ImgWrapper = styled.div`
+  align-items: center;
+  background-color: ${colors.white};
+  border-radius: 16px;
+  display: flex;
+  height: ${USER_IMAGE_SIZE}px;
+  justify-content: center;
+  padding: 8px;
+  width: ${USER_IMAGE_SIZE}px;
+`;
+
+export const Text = styled.div`
+  font-weight: 400;
+  margin-top: 10px;
+  opacity: 40%;
+  text-align: center;
 `;
