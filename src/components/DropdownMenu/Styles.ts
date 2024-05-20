@@ -14,21 +14,21 @@ export const MenuIcon = styled(Icon)<{$isOpen: boolean}>`
 
 export const DropMenu = styled(Menu)`
   border-radius: 14px;
-  padding: 12px 18px;
+  padding: 10px 14px;
 `;
 
 export const MenuOption = styled(Option)<{$MenuIndex: number}>`
-  padding: 5px 0px;
   border-top: ${({$MenuIndex = 0}) => ($MenuIndex === 0 ? 'none' : `1px solid ${colors.border}`)};
+  padding: 2px 0px;
 `;
 
 export const Div = styled.div<{$label: string}>`
-  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
-  font-weight: 600;
   color: ${({$label = ''}) => ($label === 'Delete' ? colors.palette.red['500'] : colors.black)};
+  display: flex;
+  font-weight: 600;
+  gap: 5px;
+  justify-content: center;
   &:hover {
     color: ${({$label = ''}) => ($label === 'Delete' ? colors.palette.red['600'] : colors.lightBlue)};
   }

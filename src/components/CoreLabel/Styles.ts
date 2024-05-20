@@ -7,15 +7,15 @@ export const Container = styled.div`
 `;
 
 export const Box = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: space-between;
   margin: 10px 0px 15px 0px;
   width: 100%;
 `;
 export const BoxLeft = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
 `;
 export const Domain = styled.div`
   font-size: 12px;

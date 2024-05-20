@@ -1,5 +1,4 @@
-import CoreLabel from 'components/CoreLabel';
-
+import CoreDetail from 'components/CoreLabel';
 import {Core, SFC} from 'types';
 import * as S from './Styles';
 
@@ -11,7 +10,7 @@ const CoreCard: SFC<CoreCardProps> = ({className, core}) => {
   return (
     <>
       <S.Container className={className}>
-        <CoreLabel domain={core.domain} logo={core.logo} ticker={core.ticker} core={core} />
+        <CoreDetail core={core} />
       </S.Container>
     </>
   );
