@@ -38,7 +38,7 @@ const Message: SFC<MessageProps> = ({className, message}) => {
   const renderTools = () => {
     if (!toolsVisible) return null;
     return (
-      <S.Tools senderType={sender_type}>
+      <S.Tools $sendertype={sender_type}>
         <Tool icon={mdiPencil} onClick={toggleMessageEditModal} />
         <Tool icon={mdiDelete} onClick={toggleMessageDeleteModal} />
       </S.Tools>
@@ -51,12 +51,12 @@ const Message: SFC<MessageProps> = ({className, message}) => {
         className={className}
         onMouseOut={handleMouseOut}
         onMouseOver={handleMouseOver}
-        senderType={sender_type}
+        $sendertype={sender_type}
       >
         <Link to={`/profile/${sender.id}`}>
           <Avatar src={sender.avatar} />
         </Link>
-        <S.Right senderType={sender_type}>
+        <S.Right $sendertype={sender_type}>
           <S.Header>
             <S.HeaderLeft>
               <S.DisplayName onClick={handleClick}>{sender.username}</S.DisplayName>
@@ -65,7 +65,7 @@ const Message: SFC<MessageProps> = ({className, message}) => {
             </S.HeaderLeft>
             <S.HeaderRight>{renderTools()}</S.HeaderRight>
           </S.Header>
-          <S.Content senderType={sender_type}>{text}</S.Content>
+          <S.Content $sendertype={sender_type}>{text}</S.Content>
         </S.Right>
       </S.Container>
       {messageDeleteModalIsOpen ? <MessageDeleteModal close={toggleMessageDeleteModal} messageId={message.id} /> : null}

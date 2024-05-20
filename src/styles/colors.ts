@@ -6,6 +6,8 @@ const colors = {
   black: '#000000',
   border: '#efeff4',
   borderDarker: '#d7d7df',
+  lightGreen: '#E1F6E1',
+  lightRed: '#FBDEDE',
   gray: '#747474',
   lightGray: '#ececec',
   lightBlue: '#6A8CB3',
@@ -44,6 +46,7 @@ const colors = {
       '300': '#81c784',
       '400': '#66bb6a',
       '500': '#4caf50',
+      '600': '#16AA16',
     },
     orange: {
       '100': '#ffe0b2',
@@ -59,6 +62,7 @@ const colors = {
       '400': '#f44336',
       '500': '#dc0d16',
       '600': '#b00a12',
+      '700': '#C00B0B',
     },
   },
 };

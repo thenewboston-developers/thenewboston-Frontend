@@ -21,15 +21,15 @@ const AvailableTotal: SFC<AvailableTotalProps> = ({
     <S.Container className={className}>
       <S.AvailableRow>
         <span>Available</span>
-        <span>
+        <S.Text>
           {available.toLocaleString()} {availableTicker}
-        </span>
+        </S.Text>
       </S.AvailableRow>
       <S.TotalRow $isTotalValid={isTotalValid}>
         <span>Total</span>
-        <span>
+        <S.Text>
           {total.toLocaleString()} {totalTicker}
-        </span>
+        </S.Text>
       </S.TotalRow>
     </S.Container>
   );

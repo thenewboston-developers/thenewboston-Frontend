@@ -34,7 +34,7 @@ const Course: SFC<CourseProps> = ({className, course, selfCourse = false}) => {
       return (
         <S.ActionButtonsContainer>
           <div>
-            <Badge badgeStyle={badgeStyle[publication_status]} text={publication_status} />
+            <Badge badgeStyle={badgeStyle[publication_status]} children={publication_status} />
           </div>
           <div>
             <span onClick={toggleCourseModal}>

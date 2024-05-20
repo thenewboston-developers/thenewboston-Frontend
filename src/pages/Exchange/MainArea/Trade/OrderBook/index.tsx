@@ -32,7 +32,7 @@ const OrderBook: SFC = ({className}) => {
 
     return (
       <S.Table>
-        <thead>
+        <S.Thead>
           <S.Tr>
             <th>Date</th>
             <th>Order Type</th>
@@ -42,34 +42,43 @@ const OrderBook: SFC = ({className}) => {
             <th>Price ({activeAssetPair.secondary_currency.ticker})</th>
             <th>Fill Status</th>
           </S.Tr>
-        </thead>
-        <tbody>
-          {filteredOrders.map((order) => (
-            <S.Tr key={order.id}>
-              <S.Td>{longDate(order.created_date)}</S.Td>
-              <S.Td>{order.order_type}</S.Td>
-              <S.Td>{order.quantity}</S.Td>
-              <S.Td>{order.filled_amount}</S.Td>
-              <S.Td>{(order.quantity - order.filled_amount).toLocaleString()}</S.Td>
-              <S.Td $orderType={ExchangeOrderType[order.order_type as keyof typeof ExchangeOrderType]}>
-                {order.price.toLocaleString()}
-              </S.Td>
-              <S.Td>
-                <S.FillStatusBadgeWrapper>
-                  <FillStatusBadge fillStatus={order.fill_status} />
-                </S.FillStatusBadgeWrapper>
-              </S.Td>
-            </S.Tr>
-          ))}
-        </tbody>
+        </S.Thead>
+        <S.Tbody>
+          {filteredOrders.map((order) => {
+            const [date, time] = longDate(order.created_date).split('at');
+            return (
+              <S.Tr key={order.id}>
+                <S.Td>
+                  {date}
+                  <br />
+                  <S.TextColor>{time}</S.TextColor>
+                </S.Td>
+                <S.Td>{order.order_type}</S.Td>
+                <S.Td>{order.quantity}</S.Td>
+                <S.Td>{order.filled_amount}</S.Td>
+                <S.Td>{(order.quantity - order.filled_amount).toLocaleString()}</S.Td>
+                <S.Td $orderType={ExchangeOrderType[order.order_type as keyof typeof ExchangeOrderType]}>
+                  {order.price.toLocaleString()}
+                </S.Td>
+                <S.Td>
+                  <S.FillStatusBadgeWrapper>
+                    <FillStatusBadge fillStatus={order.fill_status} />
+                  </S.FillStatusBadgeWrapper>
+                </S.Td>
+              </S.Tr>
+            );
+          })}
+        </S.Tbody>
       </S.Table>
     );
   };
 
   return (
     <S.Container className={className}>
-      <h2>Order Book</h2>
-      {renderTable()}
+      <S.Box>
+        <h2>Order Book</h2>
+        <S.TableStyle> {renderTable()}</S.TableStyle>
+      </S.Box>
     </S.Container>
   );
 };

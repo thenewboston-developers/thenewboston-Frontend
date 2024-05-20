@@ -54,16 +54,18 @@ const Chart: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      {renderLastPrice()}
-      <ResponsiveContainer height={420} width="100%">
-        <LineChart data={tradeList}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="display_date" />
-          <YAxis />
-          <Tooltip />
-          <Line dataKey="trade_price" stroke={`${colors.palette.blue['400']}`} type="monotone" />
-        </LineChart>
-      </ResponsiveContainer>
+      <S.ChartBackground>
+        {renderLastPrice()}
+        <ResponsiveContainer height={420} width="100%">
+          <LineChart data={tradeList}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="display_date" />
+            <YAxis />
+            <Tooltip />
+            <Line dataKey="trade_price" stroke={`${colors.palette.blue['400']}`} type="monotone" />
+          </LineChart>
+        </ResponsiveContainer>
+      </S.ChartBackground>
     </S.Container>
   );
 };
