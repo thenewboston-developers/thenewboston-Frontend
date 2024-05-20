@@ -1,6 +1,6 @@
 import {FC, useEffect, useState} from 'react';
 
-import DefaultAvatar from 'assets/default-avatar.png';
+import DefaultAvatar from 'assets/default-avatar.svg';
 import CoreLogo from 'components/CoreLogo';
 import PanelHeading from 'components/PanelHeading';
 import {Contribution, Contributor} from 'types';

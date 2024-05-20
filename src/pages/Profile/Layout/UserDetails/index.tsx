@@ -5,7 +5,7 @@ import {mdiSquareEditOutline} from '@mdi/js';
 
 import logo from 'assets/logo192.png';
 import {createFollower, deleteFollower, getFollowers} from 'api/followers';
-import DefaultAvatar from 'assets/default-avatar.png';
+import DefaultAvatar from 'assets/default-avatar.svg';
 import {ButtonColor} from 'components/Button';
 import {useToggle, useUser} from 'hooks';
 import ProfileEditModal from 'modals/ProfileEditModal';
