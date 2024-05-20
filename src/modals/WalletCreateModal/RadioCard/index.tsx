@@ -15,7 +15,13 @@ const RadioCard: SFC<RadioCardProps> = ({activeCoreId, className, core, handleRa
       key={core.id}
       onClick={handleRadioCardClick}
     >
-      {core.ticker}
+      <S.ImageContainer>
+        <S.Img alt="logo" src={core.logo || ''} />
+        <S.Title>{core.ticker}</S.Title>
+      </S.ImageContainer>
+      <S.Radio>
+        <S.RadioInput checked={activeCoreId === core.id} name="ticker" readOnly type="radio" value={core.ticker} />
+      </S.Radio>
     </S.Container>
   );
 };

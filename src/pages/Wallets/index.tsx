@@ -117,11 +117,10 @@ const Wallets: SFC = ({className}) => {
       </Tab>
       <Tab isActive={manager.activeWalletTab === WalletTab.WITHDRAW} onClick={() => handleTabClick(WalletTab.WITHDRAW)}>
         <Icon path={mdiBankTransferOut} size={'18px'} />
-        <span>Withdrawl</span>
+        <span>Withdraw</span>
       </Tab>
     </Tabs>
   );
-
   return (
     <>
       <S.Container className={className}>
