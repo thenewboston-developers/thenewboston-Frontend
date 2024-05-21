@@ -118,7 +118,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     if (nextIndex < commentList.length) {
       setStartIndex(nextIndex);
       setCommentDetails((prevDetails) => {
-        const nextComments = commentList.slice(0, nextIndex + 4);
+        const nextComments = commentList.slice(startIndex, nextIndex);
         return [...prevDetails, ...nextComments];
       });
     }
@@ -189,10 +189,14 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
           )}
         </Formik>
         {renderComments()}
-        {commentList.length > 4 && (
+        {commentList.length > commentDetails.length && (
           <S.Content>
             <S.Div />
-            <S.CommentBtn text="Show 4 more comments" color={ButtonColor.secondary} onClick={handleComment} />
+            <S.CommentBtn
+              text={`Show ${Math.min(4, commentList.length - commentDetails.length)} more comments`}
+              color={ButtonColor.secondary}
+              onClick={handleComment}
+            />
             <S.Div />
           </S.Content>
         )}
