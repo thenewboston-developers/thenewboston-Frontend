@@ -7,8 +7,8 @@ import {colors, fonts} from 'styles';
 export const Container = styled.div`
   display: flex;
   gap: 10px;
-  width: 100%;
   margin-top: 12px;
+  width: 100%;
 `;
 
 export const Content = styled.div`
@@ -31,14 +31,14 @@ export const Dot = styled.div`
 export const DropdownMenu = styled(UDropdownMenu)``;
 
 export const CommentSection = styled.div`
-  background: #f4f5f6;
+  background: ${colors.background};
   border-radius: 0px 14px 14px 14px;
   flex-grow: 1;
   padding: 14px;
 `;
 export const HeadSection = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: space-between;
 `;
 

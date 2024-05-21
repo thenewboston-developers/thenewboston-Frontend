@@ -8,10 +8,10 @@ import {breakpoints, colors} from 'styles';
 export const IMG_HEIGHT = 24;
 
 export const Button = styled(UButton)`
-  padding: 10px;
-  height: 40px;
-  background-color: #f4f5f6;
+  background-color: ${colors.background};
   color: ${colors.black};
+  height: 40px;
+  padding: 10px;
 
   & svg {
     margin-right: 0px !important;
@@ -29,12 +29,12 @@ export const Container = styled.div`
 `;
 
 export const ContentInput = styled(UInlineInput)`
-  flex: 1;
-  width: 100%;
-  border-radius: 12px;
-  position: relative;
   background-color: ${colors.white};
+  border-radius: 12px;
+  flex: 1;
   padding: 26px 300px 26px 16px;
+  position: relative;
+  width: 100%;
   @media (max-width: ${breakpoints.mini}) {
     margin: 8px 0;
 
@@ -105,7 +105,7 @@ export const PriceAmountInputContainer = styled.div`
 `;
 
 export const CommentBtn = styled(UButton)`
-  background-color: #f4f5f6;
+  background-color: ${colors.background};
   border-radius: 8px;
   border: none;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);

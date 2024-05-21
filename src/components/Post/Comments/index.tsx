@@ -175,13 +175,13 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
                   />
                 </S.PriceAmountInputContainer>
                 <S.Button
+                  color={ButtonColor.secondary}
                   dirty={dirty}
                   disabled={isSubmitting}
+                  iconLeft={mdiSend}
                   isSubmitting={isSubmitting}
                   isValid={isValid}
                   text=""
-                  color={ButtonColor.secondary}
-                  iconLeft={mdiSend}
                   type={ButtonType.submit}
                 />
               </S.Wrapper>

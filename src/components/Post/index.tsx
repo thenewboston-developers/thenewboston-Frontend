@@ -2,13 +2,12 @@ import {useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  mdiComment,
+  mdiCommentTextOutline,
   mdiChevronDown,
   mdiChevronUp,
   mdiDeleteOutline,
   mdiDotsVertical,
   mdiSquareEditOutline,
-  mdiThumbUpOutline,
 } from '@mdi/js';
 
 import Line from 'components/Line';
@@ -131,21 +130,16 @@ const Post: SFC<PostProps> = ({className, post}) => {
         <Line />
         <S.Div>
           <S.BoxLeft>
-            <S.Button text="Like" color={ButtonColor.secondary} iconLeft={mdiThumbUpOutline} />
             <S.Button
               text="Comment"
               color={ButtonColor.secondary}
-              iconLeft={mdiComment}
+              iconLeft={mdiCommentTextOutline}
               iconRight={isOpenCommentBox ? mdiChevronUp : mdiChevronDown}
               onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
               $isOpenCommentBox={isOpenCommentBox}
             />
           </S.BoxLeft>
           <S.BoxRight>
-            <span>22 Likes</span>
-            <S.Dot>·</S.Dot>
-            <span>22 Comments</span>
-            <S.Dot>·</S.Dot>
             <S.Value>
               <S.TNBLogo src={logo} />
               {user && formatNumber(default_wallet_balance)}

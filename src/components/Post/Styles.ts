@@ -14,8 +14,8 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   font-size: 15px;
-  margin-top: 8px;
   margin-bottom: 16px;
+  margin-top: 8px;
   word-break: break-all;
 `;
 
@@ -31,19 +31,18 @@ export const Img = styled.img`
 `;
 
 export const Top = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: space-between;
 `;
 
 export const Button = styled(UButton)<{$isOpenCommentBox?: boolean | false}>`
-  background-color: #f4f5f6;
+  background-color: ${colors.background};
   border-radius: 8px;
   border: none;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
-  font-weight: ${fonts.weight.semiBold};
-  height: 40px;
   color: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? '#5a80ab' : `${colors.black}`)};
+  height: 40px;
+  font-weight: ${fonts.weight.regular};
   & svg {
     & path {
       fill: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? '#5a80ab !important' : `${colors.black} !important`)};
@@ -52,10 +51,10 @@ export const Button = styled(UButton)<{$isOpenCommentBox?: boolean | false}>`
 `;
 
 export const Div = styled.div`
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   @media (max-width: ${breakpoints.mini}) {
     justify-content: center;
   }
@@ -76,21 +75,21 @@ export const BoxRight = styled.div`
   gap: 10px;
 `;
 export const TextLink = styled.button`
-  outline: none;
-  color: #5a80ab;
   background: none;
   border: none;
-  font-weight: 600;
+  color: #5a80ab;
   cursor: pointer;
+  font-weight: 600;
+  outline: none;
 `;
 
 export const Value = styled.span`
-  display: flex;
   align-items: center;
-  gap: 5px;
   color: ${colors.black};
+  display: flex;
   font-size: 14px;
   font-weight: ${fonts.weight.bold};
+  gap: 5px;
 `;
 
 export const TNBLogo = styled.img`
@@ -110,9 +109,9 @@ export const Description = styled.div`
 `;
 
 export const Right = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: row;
-  align-items: center;
   gap: 5px;
 `;
 
