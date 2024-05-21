@@ -6,13 +6,14 @@ import {colors, fonts} from 'styles';
 
 export const Container = styled.div`
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
   margin-top: 12px;
+  width: 100%;
 `;
 
 export const Content = styled.div`
   line-height: 1.3;
-  margin-top: 2px;
+  margin-top: 12px;
   word-break: break-all;
 `;
 
@@ -27,15 +28,18 @@ export const Dot = styled.div`
   margin: 0 4px;
 `;
 
-export const DropdownMenu = styled(UDropdownMenu)`
-  margin-right: -8px;
-`;
+export const DropdownMenu = styled(UDropdownMenu)``;
 
-export const Middle = styled.div`
+export const CommentSection = styled.div`
+  background: ${colors.background};
+  border-radius: 0px 14px 14px 14px;
+  flex-grow: 1;
+  padding: 14px;
+`;
+export const HeadSection = styled.div`
+  align-items: center;
   display: flex;
-  flex: 1;
-  flex-direction: column;
-  margin-left: 10px;
+  justify-content: space-between;
 `;
 
 export const PriceMini = styled(UPriceMini)`
@@ -53,4 +57,9 @@ export const Username = styled.div`
 export const UsernameDateContainer = styled.div`
   align-items: baseline;
   display: flex;
+`;
+
+export const Text = styled.div`
+  display: flex;
+  gap: 20px;
 `;
