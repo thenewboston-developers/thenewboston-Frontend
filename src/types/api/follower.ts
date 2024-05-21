@@ -9,4 +9,5 @@ export interface FollowerReadSerializer extends CreatedModified {
   follower: UserReadSerializer;
   following: UserReadSerializer;
   id: number;
+  self_following: boolean;
 }

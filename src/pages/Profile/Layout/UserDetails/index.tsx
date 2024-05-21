@@ -1,30 +1,32 @@
 import {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {mdiSquareEditOutline} from '@mdi/js';
 
-import logo from 'assets/logo192.png';
-import {createFollower, deleteFollower, getFollowers} from 'api/followers';
 import DefaultAvatar from 'assets/default-avatar.svg';
-import {ButtonColor} from 'components/Button';
-import {useToggle, useUser} from 'hooks';
 import ProfileEditModal from 'modals/ProfileEditModal';
-import {getSelf, getUserStats} from 'selectors/state';
-import {FollowerReadSerializer, SFC} from 'types';
+import logo from 'assets/logo192.png';
+import {AppDispatch, SFC} from 'types';
+import {ButtonColor} from 'components/Button';
+import {createFollower, deleteFollower} from 'dispatchers/followers';
 import {displayErrorToast} from 'utils/toasts';
 import {formatNumber} from 'utils/numbers';
+import {getFollowers} from 'api/followers';
+import {getSelf, getUserStats as getUserStatsState} from 'selectors/state';
+import {getUserStats} from 'dispatchers/userStats';
+import {useToggle, useUser} from 'hooks';
+
 import * as S from './Styles';
 
 const UserDetails: SFC = ({className}) => {
-  const [follower, setFollower] = useState<FollowerReadSerializer | null>(null);
+  const [selfFollowing, setSelfFollowing] = useState<boolean>(false);
   const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
-  const {id} = useParams();
+  const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
+  const {id} = useParams();
   const user = useUser(id);
-  const userStats = useSelector(getUserStats);
-
+  const userStats = useSelector(getUserStatsState);
   const userId = id ? parseInt(id, 10) : null;
-
   const {
     following_count = 0,
     followers_count = 0,
@@ -32,37 +34,46 @@ const UserDetails: SFC = ({className}) => {
   } = id && userStats[id] ? userStats[id] : {};
 
   useEffect(() => {
-    setFollower(null);
-
     if (!self.id || !userId) return;
     if (self.id == userId) return;
 
     (async () => {
       try {
-        const response = await getFollowers({follower: self.id!, following: userId});
-        setFollower(!!response.length ? response[0] : null);
+        const responseData = await getFollowers('', {follower: self.id!, following: userId});
+        if (responseData.results.length > 0) {
+          setSelfFollowing(true);
+        } else {
+          setSelfFollowing(false);
+        }
       } catch (error) {
+        setSelfFollowing(false);
         console.error(error);
         displayErrorToast('Error fetching follow relationship');
       }
     })();
-  }, [self.id, userId]);
+  }, [dispatch, self.id, userId]);
+
+  const updateUserStats = async () => {
+    if (userId) await dispatch(getUserStats(userId));
+  };
 
   const handleFollowButtonClick = async () => {
     if (!userId || self.id === userId) return null;
 
-    if (follower) {
+    if (selfFollowing) {
       try {
-        await deleteFollower(follower.id);
-        setFollower(null);
+        await dispatch(deleteFollower(userId));
+        setSelfFollowing(false);
+        updateUserStats();
       } catch (error) {
         console.error(error);
         displayErrorToast('Error unfollowing user');
       }
     } else {
       try {
-        const response = await createFollower({following: userId});
-        setFollower(response);
+        await dispatch(createFollower({following: userId}));
+        setSelfFollowing(true);
+        updateUserStats();
       } catch (error) {
         console.error(error);
         displayErrorToast('Error unfollowing user');
@@ -94,7 +105,11 @@ const UserDetails: SFC = ({className}) => {
   const renderFollowButton = () => {
     if (self.id === userId) return null;
     return (
-      <S.Button color={ButtonColor.primary} onClick={handleFollowButtonClick} text={follower ? 'Unfollow' : 'Follow'} />
+      <S.Button
+        color={ButtonColor.primary}
+        onClick={handleFollowButtonClick}
+        text={selfFollowing ? 'Unfollow' : 'Follow'}
+      />
     );
   };
 
@@ -103,7 +118,7 @@ const UserDetails: SFC = ({className}) => {
     return <S.Username>{user.username}</S.Username>;
   };
 
-  const renderStatesAndBalance = () => {
+  const renderStatsAndBalance = () => {
     if (!user) return null;
     return (
       <S.StateBalanceWrapper>
@@ -134,7 +149,7 @@ const UserDetails: SFC = ({className}) => {
         {renderAvatar()}
         {renderUsername()}
         <S.Wrapper>
-          {renderStatesAndBalance()}
+          {renderStatsAndBalance()}
           {renderEditProfileButton()}
           {renderFollowButton()}
         </S.Wrapper>

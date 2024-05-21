@@ -15,6 +15,8 @@ import conversationsReducer from 'store/conversations';
 import coresReducer from 'store/cores';
 import coursesReducer from 'store/courses';
 import exchangeOrdersReducer from 'store/exchangeOrders';
+import followersReducer from 'store/followers';
+import followingsReducer from 'store/followings';
 import iaReducer from 'store/ia';
 import invitationLimitsReducer from 'store/invitationLimits';
 import invitationsReducer from 'store/invitations';
@@ -45,6 +47,8 @@ const rootReducer = combineReducers({
   cores: coresReducer,
   courses: coursesReducer,
   exchangeOrders: exchangeOrdersReducer,
+  followers: followersReducer,
+  followings: followingsReducer,
   ia: iaReducer,
   invitationLimits: invitationLimitsReducer,
   invitations: invitationsReducer,

@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-import {CreateFollowerRequest, FollowerReadSerializer} from 'types';
+import {PaginatedResponse, CreateFollowerRequest, FollowerReadSerializer} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
+import {getApiUrl} from 'utils/urls';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/followers`;
 
@@ -29,9 +30,13 @@ export interface GetFollowersParams {
   following?: number;
 }
 
-export const getFollowers = async (params?: GetFollowersParams): Promise<FollowerReadSerializer[]> => {
+export const getFollowers = async (
+  url: string,
+  params?: GetFollowersParams,
+): Promise<PaginatedResponse<FollowerReadSerializer>> => {
   try {
-    const response = await axios.get<FollowerReadSerializer[]>(BASE_URL, {
+    const apiURL = getApiUrl(BASE_URL, url);
+    const response = await axios.get<PaginatedResponse<FollowerReadSerializer>>(apiURL, {
       params,
       ...authorizationHeaders(),
     });
