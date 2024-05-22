@@ -2,10 +2,10 @@ import {useMemo, useState} from 'react';
 import {Field, Formik} from 'formik';
 import {useSelector} from 'react-redux';
 
-import DefaultImage from 'assets/default-image.svg';
 import {createOpenAIImage} from 'api/openaiImages';
 import {ButtonType} from 'components/Button';
 import {Textarea} from 'components/FormElements';
+import EmptyImage from 'components/EmptyImage';
 import TNBLogo from 'components/TNBLogo';
 import {DEFAULT_CORE_TICKER, OPENAI_IMAGE_CREATION_FEE} from 'constants/general';
 import {useUserStats} from 'hooks/useUserStats';
@@ -55,16 +55,7 @@ const Create: SFC = ({className}) => {
     );
   };
   const renderDefaultImage = () => {
-    return (
-      <>
-        <S.ImgWrapper>
-          <S.Img alt="image" src={DefaultImage} />
-        </S.ImgWrapper>
-        <S.Text>
-          Describe your art, select image quantity <br /> and generate art!
-        </S.Text>
-      </>
-    );
+    return <EmptyImage>Describe your art, select image quantity and generate art !</EmptyImage>;
   };
 
   const validationSchema = useMemo(() => {
@@ -177,8 +168,9 @@ const Create: SFC = ({className}) => {
         }}
       </Formik>
 
-      <S.ImageCarouselContainer>
-        {!createOpenAIImageResponse ? renderDefaultImage() : renderImageCarousel()}
+      <S.ImageCarouselContainer $createOpenAIImageResponse={createOpenAIImageResponse}>
+        {createOpenAIImageResponse === null && renderDefaultImage()}
+        {createOpenAIImageResponse !== null && createOpenAIImageResponse.data.length > 0 && renderImageCarousel()}
       </S.ImageCarouselContainer>
     </S.Container>
   );

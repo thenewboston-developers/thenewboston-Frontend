@@ -2,9 +2,8 @@ import styled from 'styled-components';
 
 import _Button from 'components/Button';
 import {Form as _Form} from 'formik';
+import {CreateOpenAIImageResponse} from 'types';
 import {breakpoints, colors, fonts} from 'styles';
-
-const USER_IMAGE_SIZE = 80;
 
 export const AvailableBalance = styled.div`
   align-items: center;
@@ -74,11 +73,11 @@ export const Card = styled.div`
   }
 `;
 
-export const ImageCarouselContainer = styled.div`
-  align-items: center;
+export const ImageCarouselContainer = styled.div<{$createOpenAIImageResponse: CreateOpenAIImageResponse | null}>`
+  align-items: ${({$createOpenAIImageResponse}) => ($createOpenAIImageResponse ? 'initial' : 'center')};
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: ${({$createOpenAIImageResponse}) => ($createOpenAIImageResponse ? 'initial' : 'center')};
   padding: 24px 16px;
   width: 100%;
   @media (min-width: ${breakpoints.mobile}) {
@@ -160,27 +159,4 @@ export const Row = styled.div<{$gap?: number}>`
       line-height: 26px;
     }
   }
-`;
-
-export const Img = styled.img`
-  height: 40px;
-  width: 40px;
-`;
-
-export const ImgWrapper = styled.div`
-  align-items: center;
-  background-color: ${colors.white};
-  border-radius: 16px;
-  display: flex;
-  height: ${USER_IMAGE_SIZE}px;
-  justify-content: center;
-  padding: 8px;
-  width: ${USER_IMAGE_SIZE}px;
-`;
-
-export const Text = styled.div`
-  font-weight: 400;
-  margin-top: 10px;
-  opacity: 40%;
-  text-align: center;
 `;
