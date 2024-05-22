@@ -1,4 +1,3 @@
-import {Form as UForm} from 'formik';
 import styled from 'styled-components';
 import UIcon from '@mdi/react';
 import UButton from 'components/Button';
@@ -28,21 +27,20 @@ export const Container = styled.div`
   margin-top: 16px;
 `;
 
-export const ContentInput = styled(UInlineInput)`
+export const ContentInput = styled(UInlineInput)<{$isMobileDevice: boolean | false}>`
   background-color: ${colors.white};
   border-radius: 12px;
   flex: 1;
-  padding: 26px 300px 26px 16px;
+  padding: ${({$isMobileDevice}) => ($isMobileDevice ? '26px 95px 26px 16px' : '26px 300px 26px 16px')};
   position: relative;
   width: 100%;
   @media (max-width: ${breakpoints.mini}) {
     margin: 8px 0;
-
     width: 100%;
   }
 `;
 
-export const Form = styled(UForm)`
+export const InputBox = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
@@ -100,8 +98,13 @@ export const PriceAmountInputContainer = styled.div`
   grid-auto-flow: column;
 
   @media (max-width: ${breakpoints.mini}) {
-    width: 75%;
+    width: 40%;
   }
+`;
+export const Box = styled.div`
+  float: right;
+  margin-bottom: 6px;
+  padding: 0x 16px;
 `;
 
 export const CommentBtn = styled(UButton)`
@@ -148,7 +151,11 @@ export const EmojiBox = styled.div`
   right: 18%;
   top: 60px;
   z-index: 100;
-  @media (max-width: ${breakpoints.mobile}) {
+  @media (max-width: ${breakpoints.mini}) {
+    right: 0;
+    top: 70px;
+  }
+  @media (min-width: ${breakpoints.mini}) and (max-width: ${breakpoints.mobile}) {
     right: 8%;
     top: 70px;
   }
