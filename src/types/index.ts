@@ -7,7 +7,7 @@ import {CreateArtworkTransferRequest} from 'types/api/artworkTransfers';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
 import {CreateConversationRequest} from 'types/api/conversations';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
-import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/followers';
+import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/follower';
 import {CreateInvitationRequest} from 'types/api/invitations';
 import {CreateMessageRequest} from 'types/api/messages';
 import {CreateOpenAIImageRequest, CreateOpenAIImageResponse} from 'types/api/openaiImages';
@@ -37,6 +37,7 @@ import {Core, Cores} from 'types/cores';
 import {Course, Courses} from 'types/courses';
 import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
+import {Followers, Follower} from 'types/follower';
 import {GitHubUser} from 'types/githubUsers';
 import {Invitation, Invitations} from 'types/invitations';
 import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
@@ -112,7 +113,9 @@ export {
   EditArtworkRequest,
   ExchangeOrder,
   ExchangeOrders,
+  Follower,
   FollowerReadSerializer,
+  Followers,
   GenericFunction,
   GenericVoidFunction,
   GitHubUser,

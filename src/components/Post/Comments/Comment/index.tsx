@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
+import {mdiDeleteOutline, mdiDotsHorizontal, mdiSquareEditOutline} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import Linkify from 'components/Linkify';
@@ -50,7 +50,7 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
 
   const renderDropdownMenu = () => {
     if (self.id !== owner.id) return null;
-    return <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
+    return <S.DropdownMenu icon={mdiDotsHorizontal} options={menuOptions} />;
   };
 
   const renderNameDateContainer = () => {
@@ -76,14 +76,21 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
         <Link to={`/profile/${owner.id}`}>
           <Avatar src={owner.avatar} />
         </Link>
-        <S.Middle>
-          {renderNameDateContainer()}
-          <S.Content>
-            <Linkify>{content}</Linkify>
-          </S.Content>
-          {renderPriceMini()}
-        </S.Middle>
-        <S.Right>{renderDropdownMenu()}</S.Right>
+
+        <S.CommentSection>
+          <S.HeadSection>
+            {renderNameDateContainer()}
+            <S.Text>
+              {renderPriceMini()}
+              {renderDropdownMenu()}
+            </S.Text>
+          </S.HeadSection>
+          <div>
+            <S.Content>
+              <Linkify>{content}</Linkify>
+            </S.Content>
+          </div>
+        </S.CommentSection>
       </S.Container>
       {commentEditModalIsOpen ? <CommentEditModal close={toggleCommentEditModal} comment={comment} /> : null}
     </>

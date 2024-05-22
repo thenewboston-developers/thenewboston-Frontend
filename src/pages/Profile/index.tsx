@@ -2,19 +2,19 @@ import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Route, Routes, useParams} from 'react-router-dom';
 
+import Artworks from './Artworks';
+import Follower from './Follower';
+import Invitations from './Invitations';
+import Layout from './Layout';
+import Posts from './Posts';
+import {AppDispatch, SFC} from 'types';
+import {FollowerType} from 'enums';
+import {displayErrorToast} from 'utils/toasts';
 import {getInvitationLimit} from 'dispatchers/invitationLimits';
 import {getInvitations} from 'dispatchers/invitations';
 import {getSelf} from 'selectors/state';
 import {getUserStats} from 'dispatchers/userStats';
 import {getUser} from 'dispatchers/users';
-import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
-import Artworks from './Artworks';
-import Followers from './Followers';
-import Following from './Following';
-import Invitations from './Invitations';
-import Layout from './Layout';
-import Posts from './Posts';
 import * as S from './Styles';
 
 const Profile: SFC = ({className}) => {
@@ -51,8 +51,8 @@ const Profile: SFC = ({className}) => {
           {/* TODO: replace hardcoded paths with constants */}
           <Route index element={<Posts />} />
           <Route path="/artworks" element={<Artworks />} />
-          <Route path="/following" element={<Following />} />
-          <Route path="/followers" element={<Followers />} />
+          <Route path="/following" element={<Follower type={FollowerType.FOLLOWING} />} />
+          <Route path="/followers" element={<Follower type={FollowerType.FOLLOWERS} />} />
           <Route path="/invitations" element={<Invitations />} />
         </Route>
       </Routes>
