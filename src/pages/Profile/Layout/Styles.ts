@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import Pattern from './profile-pattern.png';
+import {breakpoints} from 'styles';
 
 export const Container = styled.div`
   display: flex;
@@ -18,6 +19,9 @@ export const Container = styled.div`
     top: 0;
     width: 100%;
     z-index: -1;
+  }
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 24px 16px;
   }
 `;
 

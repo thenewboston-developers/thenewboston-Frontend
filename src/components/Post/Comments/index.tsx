@@ -1,6 +1,6 @@
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Formik, FormikHelpers} from 'formik';
+import {Formik, FormikHelpers, Form} from 'formik';
 import orderBy from 'lodash/orderBy';
 import Icon from '@mdi/react';
 import EmojiPicker from 'emoji-picker-react';
@@ -11,6 +11,7 @@ import Coin from 'assets/coin.svg';
 import {ButtonColor, ButtonType} from 'components/Button';
 import {createComment} from 'dispatchers/comments';
 import {useToggle} from 'hooks';
+import {breakpoints} from 'styles';
 import CoreSelectModal from 'modals/CoreSelectModal';
 import {getComments, getManager} from 'selectors/state';
 import {AppDispatch, Comment as TComment, SFC} from 'types';
@@ -18,7 +19,6 @@ import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import Comment from './Comment';
 import * as S from './Styles';
-import {breakpoints} from 'styles';
 
 export interface CommentsProps {
   postId: number;
@@ -29,11 +29,13 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   const [startIndex, setStartIndex] = useState<number>(0);
   const [isOpenEmojiBox, setIsOpenEmojiBox] = useState(false);
   const [coreSelectModalIsOpen, toggleCoreSelectModal] = useToggle(false);
+  const [isMobileDevice, setIsMobileDevice] = useState<boolean>(window.innerWidth <= parseInt(breakpoints.mini));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const emojiBoxRef = useRef<HTMLDivElement>(null);
+  const emojiButtonRef = useRef<HTMLButtonElement>(null);
   const comments = useSelector(getComments);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
-  const miniDevice = breakpoints;
 
   const initialValues = {
     content: '',
@@ -131,6 +133,35 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     }
   }, [isOpenEmojiBox]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileDevice(window.innerWidth <= parseInt(breakpoints.mini));
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiBoxRef.current &&
+        !emojiBoxRef.current.contains(event.target as Node) &&
+        emojiButtonRef.current &&
+        !emojiButtonRef.current.contains(event.target as Node)
+      ) {
+        setIsOpenEmojiBox(false);
+      }
+    };
+    if (isOpenEmojiBox) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [isOpenEmojiBox]);
+
   return (
     <>
       <S.Container className={className}>
@@ -141,51 +172,77 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
           validationSchema={validationSchema}
         >
           {({dirty, errors, isSubmitting, isValid, touched, values, setFieldValue}) => (
-            <S.Form>
-              <S.ContentInput errors={errors} name="content" placeholder="Add a comment..." touched={touched} />
-              {isOpenEmojiBox && (
-                <S.EmojiBox>
-                  <EmojiPicker
-                    width={miniDevice.mini ? 270 : 350}
-                    height={350}
-                    skinTonesDisabled
-                    onEmojiClick={(e) => {
-                      const updatedValue = values.content + e.emoji;
-                      setFieldValue('content', updatedValue);
-                    }}
-                  />
-                </S.EmojiBox>
-              )}
-              <S.Wrapper>
-                <S.EmojiButton
-                  $isOpenEmojiBox={isOpenEmojiBox}
-                  onClick={() => setIsOpenEmojiBox(!isOpenEmojiBox)}
-                  type="button"
-                >
-                  <Icon path={mdiEmoticonOutline} size="24px" />
-                </S.EmojiButton>
-                <S.PriceAmountInputContainer>
-                  {renderSelectCoreElement()}
-                  <S.PriceAmountInput
-                    errors={errors}
-                    name="price_amount"
-                    placeholder="Amount"
-                    touched={touched}
-                    type="number"
-                  />
-                </S.PriceAmountInputContainer>
-                <S.Button
-                  color={ButtonColor.secondary}
-                  dirty={dirty}
-                  disabled={isSubmitting}
-                  iconLeft={mdiSend}
-                  isSubmitting={isSubmitting}
-                  isValid={isValid}
-                  text=""
-                  type={ButtonType.submit}
+            <Form>
+              <S.InputBox>
+                <S.ContentInput
+                  errors={errors}
+                  name="content"
+                  placeholder="Add a comment..."
+                  touched={touched}
+                  $isMobileDevice={isMobileDevice}
                 />
-              </S.Wrapper>
-            </S.Form>
+                {isOpenEmojiBox && (
+                  <S.EmojiBox ref={emojiBoxRef}>
+                    <EmojiPicker
+                      width={isMobileDevice ? 250 : 280}
+                      height={350}
+                      skinTonesDisabled
+                      onEmojiClick={(e) => {
+                        const updatedValue = values.content + e.emoji;
+                        setFieldValue('content', updatedValue);
+                      }}
+                    />
+                  </S.EmojiBox>
+                )}
+                <S.Wrapper>
+                  <S.EmojiButton
+                    ref={emojiButtonRef}
+                    $isOpenEmojiBox={isOpenEmojiBox}
+                    onClick={() => setIsOpenEmojiBox(!isOpenEmojiBox)}
+                    type="button"
+                  >
+                    <Icon path={mdiEmoticonOutline} size="24px" />
+                  </S.EmojiButton>
+                  {!isMobileDevice && (
+                    <S.PriceAmountInputContainer>
+                      {renderSelectCoreElement()}
+                      <S.PriceAmountInput
+                        errors={errors}
+                        name="price_amount"
+                        placeholder="Amount"
+                        touched={touched}
+                        type="number"
+                      />
+                    </S.PriceAmountInputContainer>
+                  )}
+
+                  <S.Button
+                    color={ButtonColor.secondary}
+                    dirty={dirty}
+                    disabled={isSubmitting}
+                    iconLeft={mdiSend}
+                    isSubmitting={isSubmitting}
+                    isValid={isValid}
+                    text=""
+                    type={ButtonType.submit}
+                  />
+                </S.Wrapper>
+              </S.InputBox>
+              {isMobileDevice && (
+                <S.Box>
+                  <S.PriceAmountInputContainer>
+                    {renderSelectCoreElement()}
+                    <S.PriceAmountInput
+                      errors={errors}
+                      name="price_amount"
+                      placeholder="Amount"
+                      touched={touched}
+                      type="number"
+                    />
+                  </S.PriceAmountInputContainer>
+                </S.Box>
+              )}
+            </Form>
           )}
         </Formik>
         {renderComments()}
