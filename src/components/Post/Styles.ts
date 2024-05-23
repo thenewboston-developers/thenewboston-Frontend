@@ -70,10 +70,6 @@ export const BoxLeft = styled.div`
   margin: 10px 0px;
 `;
 
-export const BoxRight = styled.div`
-  display: flex;
-  gap: 10px;
-`;
 export const TextLink = styled.button`
   background: none;
   border: none;
