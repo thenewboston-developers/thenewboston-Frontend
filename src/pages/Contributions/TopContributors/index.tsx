@@ -1,24 +1,17 @@
-import {FC, useEffect, useState} from 'react';
+import {FC} from 'react';
 
 import DefaultAvatar from 'assets/default-avatar.svg';
 import CoreLogo from 'components/CoreLogo';
 import PanelHeading from 'components/PanelHeading';
-import {Contribution, Contributor} from 'types';
-import {getTopContributors} from 'utils/contributions';
+import {Contributor} from 'types';
 import * as S from './Styles';
 
 interface TopContributorsProps {
   className?: string;
-  contributions: Contribution[];
+  topContributors: Contributor[];
 }
 
-const TopContributors: FC<TopContributorsProps> = ({className, contributions}) => {
-  const [topContributors, setTopContributors] = useState<Contributor[]>([]);
-
-  useEffect(() => {
-    setTopContributors(getTopContributors(contributions));
-  }, [contributions]);
-
+const TopContributors: FC<TopContributorsProps> = ({className, topContributors}) => {
   const renderContributorList = () => {
     return (
       <S.ContributorList>

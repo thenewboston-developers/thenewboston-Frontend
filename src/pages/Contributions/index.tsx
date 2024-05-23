@@ -3,13 +3,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
 import EmptyText from 'components/EmptyText';
-import TotalContributionsChart from './TotalContributionsChart';
 import LatestContributions from './LatestContributions';
 import TopContributors from './TopContributors';
-import {getContributions as _getContributions} from 'dispatchers/contributions';
-import {Col, Row} from 'styles/components/GridStyle';
-import {getContributions} from 'selectors/state';
+import TotalContributionsChart from './TotalContributionsChart';
 import {AppDispatch, SFC} from 'types';
+import {Col, Row} from 'styles/components/GridStyle';
+import {getContributions as _getContributions} from 'dispatchers/contributions';
+import {getContributions} from 'selectors/state';
+import {getTopContributors} from 'utils/contributions';
 import * as S from './Styles';
 
 interface ContributionsProps {
@@ -27,6 +28,7 @@ const Contributions: SFC<ContributionsProps> = ({className}) => {
   const contributionList = useMemo(() => {
     return orderBy(Object.values(contributions), ['created_date'], ['asc']);
   }, [contributions]);
+  const topContributors = getTopContributors(contributionList);
 
   if (!(contributionList && contributionList.length)) {
     return (
@@ -39,9 +41,11 @@ const Contributions: SFC<ContributionsProps> = ({className}) => {
   return (
     <S.Container className={className}>
       <Row>
-        <Col size={4}>
-          <TopContributors contributions={contributionList} />
-        </Col>
+        {topContributors.length > 0 ? (
+          <Col size={4}>
+            <TopContributors topContributors={topContributors} />
+          </Col>
+        ) : null}
         <Col size={8}>
           <TotalContributionsChart contributions={contributionList} />
         </Col>
