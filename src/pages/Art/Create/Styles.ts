@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import _Button from 'components/Button';
 import {Form as _Form} from 'formik';
+import {CreateOpenAIImageResponse} from 'types';
 import {breakpoints, colors, fonts} from 'styles';
 
 export const AvailableBalance = styled.div`
@@ -24,7 +25,6 @@ export const Container = styled.div`
   flex-direction: column;
   padding: 16px 30px;
   width: 100%;
-
   @media (min-width: ${breakpoints.mobile}) {
     flex-direction: row;
   }
@@ -73,10 +73,13 @@ export const Card = styled.div`
   }
 `;
 
-export const ImageCarouselContainer = styled.div`
+export const ImageCarouselContainer = styled.div<{$createOpenAIImageResponse: CreateOpenAIImageResponse | null}>`
+  align-items: ${({$createOpenAIImageResponse}) => ($createOpenAIImageResponse ? 'initial' : 'center')};
+  display: flex;
+  flex-direction: column;
+  justify-content: ${({$createOpenAIImageResponse}) => ($createOpenAIImageResponse ? 'initial' : 'center')};
   padding: 24px 16px;
   width: 100%;
-
   @media (min-width: ${breakpoints.mobile}) {
     width: 60%;
   }
