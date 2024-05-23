@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   mdiCommentTextOutline,
@@ -15,15 +15,13 @@ import {ButtonColor} from 'components/Button';
 import Linkify from 'components/Linkify';
 import {deletePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
-import {useToggle, useUser} from 'hooks';
+import {useToggle} from 'hooks';
 import PostModal from 'modals/PostModal';
-import {getSelf, getUserStats} from 'selectors/state';
+import {getSelf} from 'selectors/state';
 import {AppDispatch, Post as TPost, SFC} from 'types';
 import {shortDate} from 'utils/dates';
-import {formatNumber} from 'utils/numbers';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import Comments from './Comments';
-import logo from 'assets/logo192.png';
 import * as S from './Styles';
 
 export interface PostProps {
@@ -32,14 +30,9 @@ export interface PostProps {
 
 const Post: SFC<PostProps> = ({className, post}) => {
   const navigate = useNavigate();
-  const userStats = useSelector(getUserStats);
-  const {id: userId} = useParams();
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [showFullContent, setShowFullContent] = useState(true);
-  const user = useUser(userId);
-
-  const {default_wallet_balance = 0} = userId && userStats[userId] ? userStats[userId] : {};
 
   const toggleShowFullContent = () => {
     setShowFullContent(!showFullContent);
@@ -139,12 +132,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
               $isOpenCommentBox={isOpenCommentBox}
             />
           </S.BoxLeft>
-          <S.BoxRight>
-            <S.Value>
-              <S.TNBLogo src={logo} />
-              {user && formatNumber(default_wallet_balance)}
-            </S.Value>
-          </S.BoxRight>
         </S.Div>
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
