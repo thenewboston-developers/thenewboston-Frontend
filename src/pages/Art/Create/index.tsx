@@ -55,7 +55,7 @@ const Create: SFC = ({className}) => {
     );
   };
   const renderDefaultImage = () => {
-    return <EmptyImage>Describe your art, select image quantity and generate art !</EmptyImage>;
+    return <EmptyImage>Describe your art, select image quantity and generate art!</EmptyImage>;
   };
 
   const validationSchema = useMemo(() => {

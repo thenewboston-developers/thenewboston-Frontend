@@ -3,11 +3,11 @@ import {SFC} from 'types';
 import * as S from './Styles';
 
 export interface EmptyImageProps {
-  size?: string;
   children: string;
+  size?: string;
 }
 
-const EmptyImage: SFC<EmptyImageProps> = ({size = '40px', children}) => {
+const EmptyImage: SFC<EmptyImageProps> = ({children, size = '40px'}) => {
   return (
     <>
       <S.ImgWrapper>
