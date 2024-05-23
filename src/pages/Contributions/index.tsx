@@ -6,6 +6,7 @@ import EmptyText from 'components/EmptyText';
 import LatestContributions from './LatestContributions';
 import TopContributors from './TopContributors';
 import TotalContributionsChart from './TotalContributionsChart';
+import Toolbar from './Toolbar';
 import {AppDispatch, SFC} from 'types';
 import {Col, Row} from 'styles/components/GridStyle';
 import {getContributions as _getContributions} from 'dispatchers/contributions';
@@ -40,20 +41,23 @@ const Contributions: SFC<ContributionsProps> = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <Row>
-        {topContributors.length > 0 ? (
-          <Col size={4}>
-            <TopContributors topContributors={topContributors} />
+      <Toolbar />
+      <S.ContributionsContainer>
+        <Row>
+          {topContributors.length > 0 ? (
+            <Col size={4}>
+              <TopContributors topContributors={topContributors} />
+            </Col>
+          ) : null}
+          <Col size={8}>
+            <TotalContributionsChart contributions={contributionList} />
           </Col>
-        ) : null}
-        <Col size={8}>
-          <TotalContributionsChart contributions={contributionList} />
-        </Col>
-        <br />
-        <Col size={12}>
-          <LatestContributions contributions={contributionList} />
-        </Col>
-      </Row>
+          <br />
+          <Col size={12}>
+            <LatestContributions contributions={contributionList} />
+          </Col>
+        </Row>
+      </S.ContributionsContainer>
     </S.Container>
   );
 };
