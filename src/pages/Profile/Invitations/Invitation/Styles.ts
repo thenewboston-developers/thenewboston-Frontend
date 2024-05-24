@@ -7,5 +7,4 @@ export const DropdownMenuContainer = styled.div`
 
 export const InvitationStatusBadgeContainer = styled.div`
   display: flex;
-  justify-content: center;
 `;
