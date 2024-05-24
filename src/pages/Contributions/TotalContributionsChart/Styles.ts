@@ -24,6 +24,7 @@ export const Container = styled.div`
 export const ChartHeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 18px;
 `;
 
 export const CoreLogo = styled.img`

@@ -8,6 +8,7 @@ export const getAuthentication = (state: RootState) => state.authentication;
 export const getCartProducts = (state: RootState) => state.cartProducts;
 export const getComments = (state: RootState) => state.comments;
 export const getContributions = (state: RootState) => state.contributions;
+export const getTopContributions = (state: RootState) => state.topContributions;
 export const getConversations = (state: RootState) => state.conversations;
 export const getCores = (state: RootState) => state.cores;
 export const getCourses = (state: RootState) => state.courses;

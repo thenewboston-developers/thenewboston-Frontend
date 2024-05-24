@@ -2,13 +2,16 @@ import styled from 'styled-components';
 
 import UUserLabel from 'components/UserLabel';
 import {breakpoints, fonts} from 'styles';
+import ContributionFilterMenu from '../../../components/Contributions/ContributionFilter';
 
 export const ContributorList = styled.div`
   background: #fff;
-  border-radius: 14px;
+  border-radius: 15px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
 `;
-
+export const DropdownMenu = styled(ContributionFilterMenu)`
+  margin-right: -8px;
+`;
 export const ContributorContainer = styled.div`
   align-items: center;
   border-bottom: 1px solid #f1f1f1;

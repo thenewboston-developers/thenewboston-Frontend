@@ -7,14 +7,18 @@ export interface IconProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
   disabled?: boolean;
   icon: string;
+  title?: string;
+
   onClick?(e?: React.MouseEvent<HTMLDivElement, MouseEvent>): void;
+
   onKeyDown?(e?: React.KeyboardEvent<HTMLDivElement>): void;
+
   size?: number;
   totalSize?: number | 'unset';
 }
 
 const Icon = forwardRef<HTMLDivElement, IconProps>(
-  ({className, disabled = false, icon, onClick, onKeyDown, size = 24, totalSize}, ref) => {
+  ({className, disabled = false, icon, title, onClick, onKeyDown, size = 24, totalSize}, ref) => {
     const handleClick = (e?: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
       if (disabled || !onClick) return;
       onClick(e);
@@ -38,7 +42,7 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
         role={onClick ? 'button' : 'img'}
         size={size}
       >
-        <MdiIcon path={icon} size={`${size}px`} />
+        <MdiIcon path={icon} title={title} size={`${size}px`} />
       </S.Wrapper>
     );
   },

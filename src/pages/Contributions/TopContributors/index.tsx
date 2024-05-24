@@ -3,21 +3,65 @@ import {FC, useEffect, useState} from 'react';
 import DefaultAvatar from 'assets/default-avatar.svg';
 import CoreLogo from 'components/CoreLogo';
 import PanelHeading from 'components/PanelHeading';
-import {Contribution, Contributor} from 'types';
-import {getTopContributors} from 'utils/contributions';
+import {TopContribution, TopContributor} from 'types/topContributions';
+import {getTopContributors} from 'utils/topContributions';
 import * as S from './Styles';
+import {mdiSwapHorizontal} from '@mdi/js';
+import ContributorContainer from 'components/Contributions/ContributorContainer';
 
 interface TopContributorsProps {
   className?: string;
-  contributions: Contribution[];
+  topContributions: TopContribution[];
+  onFilterChange: (filter: string) => void;
 }
 
-const TopContributors: FC<TopContributorsProps> = ({className, contributions}) => {
-  const [topContributors, setTopContributors] = useState<Contributor[]>([]);
+const TopContributors: FC<TopContributorsProps> = ({topContributions, onFilterChange}) => {
+  const [topContributors, setTopContributors] = useState<TopContributor[]>([]);
+  const [selectedFilter, setSelectedFilter] = useState<string>('all');
 
   useEffect(() => {
-    setTopContributors(getTopContributors(contributions));
-  }, [contributions]);
+    setTopContributors(getTopContributors(topContributions));
+  }, [topContributions]);
+
+  const handleOptionClick = (filter: string) => {
+    setSelectedFilter(filter);
+    onFilterChange(filter);
+  };
+
+  const menuOptions = [
+    {
+      disabled: true,
+      label: 'FILTER BY',
+    },
+    {
+      checked: selectedFilter === 'none',
+      label: 'None',
+      onClick: () => handleOptionClick('none'),
+      radio: true,
+      radioName: 'timeFilter',
+    },
+    {
+      checked: selectedFilter === 'today',
+      label: 'Today',
+      onClick: () => handleOptionClick('today'),
+      radio: true,
+      radioName: 'timeFilter',
+    },
+    {
+      checked: selectedFilter === 'week',
+      label: 'This Week',
+      onClick: () => handleOptionClick('week'),
+      radio: true,
+      radioName: 'timeFilter',
+    },
+    {
+      checked: selectedFilter === 'all',
+      label: 'All Time',
+      onClick: () => handleOptionClick('all'),
+      radio: true,
+      radioName: 'timeFilter',
+    },
+  ];
 
   const renderContributorList = () => {
     return (
@@ -34,9 +78,9 @@ const TopContributors: FC<TopContributorsProps> = ({className, contributions}) =
               />
             </S.UserLabelContainer>
             <S.RewardAmountContainer>
-              {contributor.core.logo && <CoreLogo logo={contributor.core.logo} width="22px" />}
+              {contributor.user.logo_url && <CoreLogo logo={contributor.user.logo_url} width="22px" />}
               &nbsp;
-              {contributor.totalRewardAmount.toLocaleString()}
+              {contributor.user.total.toLocaleString()}
             </S.RewardAmountContainer>
           </S.ContributorContainer>
         ))}
@@ -45,10 +89,13 @@ const TopContributors: FC<TopContributorsProps> = ({className, contributions}) =
   };
 
   return (
-    <section className={className}>
-      <PanelHeading
-        heading={topContributors.length ? `Top ${topContributors.length} Contributors` : 'Top Contributors'}
-      />
+    <section>
+      <ContributorContainer>
+        <PanelHeading
+          heading={topContributors.length ? `Top ${topContributors.length} Contributors` : 'Top Contributors'}
+        />
+        <S.DropdownMenu title={'filter'} icon={mdiSwapHorizontal} options={menuOptions} />
+      </ContributorContainer>
       {renderContributorList()}
     </section>
   );

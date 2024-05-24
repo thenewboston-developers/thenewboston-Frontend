@@ -32,6 +32,7 @@ import {CartProduct, CartProducts} from 'types/cartProducts';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {Comment, Comments} from 'types/comments';
 import {Contribution, Contributions, Contributor} from 'types/contributions';
+import {TopContribution, TopContributions, TopContributor} from 'types/topContributions';
 import {Conversation, Conversations} from 'types/conversations';
 import {Core, Cores} from 'types/cores';
 import {Course, Courses} from 'types/courses';
@@ -151,6 +152,9 @@ export {
   SFC,
   SelectOption,
   Self,
+  TopContribution,
+  TopContributions,
+  TopContributor,
   Trade,
   Trades,
   UpdateNotificationRequest,

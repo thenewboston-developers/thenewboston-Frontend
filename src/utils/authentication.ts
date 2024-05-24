@@ -7,6 +7,7 @@ export const authorizationFormHeaders = () => {
 
   return {
     headers: {
+      'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'multipart/form-data',
     },

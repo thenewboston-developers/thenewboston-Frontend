@@ -6,6 +6,7 @@ export const AUTHENTICATION = 'authentication';
 export const CART_PRODUCTS = 'cartProducts';
 export const COMMENTS = 'comments';
 export const CONTRIBUTIONS = 'contributions';
+export const TOPCONTRIBUTIONS = 'topContributions';
 export const CONVERSATIONS = 'conversations';
 export const CORES = 'cores';
 export const COURSES = 'courses';

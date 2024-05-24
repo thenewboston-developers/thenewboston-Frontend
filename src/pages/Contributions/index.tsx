@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
@@ -7,8 +7,9 @@ import TotalContributionsChart from './TotalContributionsChart';
 import LatestContributions from './LatestContributions';
 import TopContributors from './TopContributors';
 import {getContributions as _getContributions} from 'dispatchers/contributions';
+import {getTopContributions as _getTopContributions} from 'dispatchers/topContributions';
 import {Col, Row} from 'styles/components/GridStyle';
-import {getContributions} from 'selectors/state';
+import {getContributions, getTopContributions} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import * as S from './Styles';
 
@@ -18,12 +19,20 @@ interface ContributionsProps {
 
 const Contributions: SFC<ContributionsProps> = ({className}) => {
   const contributions = useSelector(getContributions);
+  const topContributions = useSelector(getTopContributions);
   const dispatch = useDispatch<AppDispatch>();
+  const [selectedFilter, setSelectedFilter] = useState<string>('none');
 
   useEffect(() => {
     dispatch(_getContributions());
   }, [dispatch]);
+  useEffect(() => {
+    dispatch(_getTopContributions(selectedFilter));
+  }, [selectedFilter, dispatch]);
 
+  const topContributionList = useMemo(() => {
+    return Object.values(topContributions);
+  }, [topContributions]);
   const contributionList = useMemo(() => {
     return orderBy(Object.values(contributions), ['created_date'], ['asc']);
   }, [contributions]);
@@ -35,12 +44,15 @@ const Contributions: SFC<ContributionsProps> = ({className}) => {
       </S.Container>
     );
   }
+  const handleFilterChange = (filter: string) => {
+    setSelectedFilter(filter);
+  };
 
   return (
     <S.Container className={className}>
       <Row>
         <Col size={4}>
-          <TopContributors contributions={contributionList} />
+          <TopContributors topContributions={topContributionList} onFilterChange={handleFilterChange} />
         </Col>
         <Col size={8}>
           <TotalContributionsChart contributions={contributionList} />

@@ -21,7 +21,7 @@ export const getPositionIcon = (position: number): string => {
 /**
  * Aggregates contributions by users and determines the top five contributors over the past week.
  */
-export const getTopContributors = (contributions: Contribution[]): Contributor[] => {
+export const getContributors = (contributions: Contribution[]): Contributor[] => {
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 

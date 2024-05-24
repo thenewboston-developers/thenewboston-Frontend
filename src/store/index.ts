@@ -11,6 +11,7 @@ import authenticationReducer from 'store/authentication';
 import cartProductsReducer from 'store/cartProducts';
 import commentsReducer from 'store/comments';
 import contributionsReducer from 'store/contributions';
+import topContributionsReducer from 'store/topContributions';
 import conversationsReducer from 'store/conversations';
 import coresReducer from 'store/cores';
 import coursesReducer from 'store/courses';
@@ -60,6 +61,7 @@ const rootReducer = combineReducers({
   posts: postsReducer,
   products: productsReducer,
   self: selfReducer,
+  topContributions: topContributionsReducer,
   trades: tradesReducer,
   userStats: userStatsReducer,
   users: usersReducer,
