@@ -18,8 +18,6 @@ export interface Contribution extends CreatedModified {
   user: UserReadSerializer;
 }
 
-export type Contributions = Dict<Contribution>;
-
 export interface Contributor {
   core: Core;
   positionIcon: string;

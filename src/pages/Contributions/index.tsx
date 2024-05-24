@@ -21,7 +21,9 @@ interface ContributionsProps {
 }
 
 const Contributions: SFC<ContributionsProps> = ({className, selfContributions = false}) => {
-  const contributions = useSelector(getContributions);
+  const {count, items, hasMore, isLoading} = useSelector(getContributions);
+  const contributions = items;
+  console.log(contributions, count, hasMore, isLoading);
   const dispatch = useDispatch<AppDispatch>();
 
   const apiParams = useMemo(() => {

@@ -1,8 +1,9 @@
 import axios from 'axios';
 
-import {Contribution} from 'types';
+import {Contribution, PaginatedResponse} from 'types';
 import {UserIdFilterValues} from 'enums';
 import {authorizationHeaders} from 'utils/authentication';
+import {getApiUrl} from 'utils/urls';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/contributions`;
 
@@ -10,9 +11,13 @@ export interface GetContributionsParams {
   user_id?: UserIdFilterValues;
 }
 
-export const getContributions = async (params: GetContributionsParams): Promise<Contribution[]> => {
+export const getContributions = async (
+  url: string,
+  params?: GetContributionsParams,
+): Promise<PaginatedResponse<Contribution>> => {
   try {
-    const response = await axios.get<Contribution[]>(BASE_URL, {
+    const apiURL = getApiUrl(BASE_URL, url);
+    const response = await axios.get<PaginatedResponse<Contribution>>(apiURL, {
       params,
       ...authorizationHeaders(),
     });
