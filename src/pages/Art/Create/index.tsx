@@ -23,7 +23,7 @@ const Create: SFC = ({className}) => {
   const [isImageSaved, setIsImageSaved] = useState<Array<number>>([]);
   const self = useSelector(getSelf);
 
-  const stats = useUserStats(self.id);
+  const {handleRefetch, stats} = useUserStats(self.id);
 
   const initialValues = {
     description: '',
@@ -36,6 +36,7 @@ const Create: SFC = ({className}) => {
     try {
       const results = await createOpenAIImage({description: values.description, quantity: +values.quantity});
       setCreateOpenAIImageResponse(results);
+      handleRefetch();
       setIsImageSaved([]);
     } catch (error) {
       console.error(error);

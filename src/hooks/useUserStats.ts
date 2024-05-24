@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {getUserStats} from 'dispatchers/userStats';
@@ -13,7 +13,12 @@ interface UserStats {
 }
 
 export const useUserStats = (id: number | null) => {
+  const [isRefetching, setIsRefetching] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
+
+  const handleRefetch = () => {
+    setIsRefetching((prev) => !prev);
+  };
 
   useEffect(() => {
     (async () => {
@@ -26,9 +31,9 @@ export const useUserStats = (id: number | null) => {
         }
       }
     })();
-  }, [id, dispatch]);
+  }, [isRefetching, id, dispatch]);
 
   const userStats = useSelector(getUserStatsState);
   const stats: UserStats = id ? userStats[id] || {} : {};
-  return stats;
+  return {handleRefetch, stats};
 };
