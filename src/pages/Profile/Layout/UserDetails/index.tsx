@@ -5,6 +5,7 @@ import {mdiSquareEditOutline} from '@mdi/js';
 
 import DefaultAvatar from 'assets/default-avatar.svg';
 import ProfileEditModal from 'modals/ProfileEditModal';
+import ProfileAvatarModal from 'modals/ProfileAvatarModal';
 import logo from 'assets/logo192.png';
 import {AppDispatch, SFC} from 'types';
 import {ButtonColor} from 'components/Button';
@@ -21,6 +22,7 @@ import * as S from './Styles';
 const UserDetails: SFC = ({className}) => {
   const [selfFollowing, setSelfFollowing] = useState<boolean>(false);
   const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
+  const [ProfileAvatarModalIsOpen, toggleProfileAvatarModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
   const {id} = useParams();
@@ -85,7 +87,7 @@ const UserDetails: SFC = ({className}) => {
     if (!user) return;
     return (
       <S.ImgWrapper>
-        <S.Img alt="image" src={user.avatar || DefaultAvatar} />
+        <S.Img alt="image" onClick={toggleProfileAvatarModal} src={user.avatar || DefaultAvatar} />
       </S.ImgWrapper>
     );
   };
@@ -155,6 +157,7 @@ const UserDetails: SFC = ({className}) => {
         </S.Wrapper>
       </S.Container>
       {profileEditModalIsOpen ? <ProfileEditModal close={toggleProfileEditModal} /> : null}
+      {ProfileAvatarModalIsOpen ? <ProfileAvatarModal close={toggleProfileAvatarModal} /> : null}
     </>
   );
 };
