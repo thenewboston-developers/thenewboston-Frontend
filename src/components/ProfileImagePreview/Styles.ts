@@ -17,11 +17,11 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(64, 64, 64, 0.4);
+  background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(10px);
 `;
 
 export const Img = styled.img`
-  height: 760px;
-  width: 360px;
+  height: 560px;
+  width: 560px;
 `;
