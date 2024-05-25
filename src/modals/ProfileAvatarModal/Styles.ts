@@ -1,7 +1,5 @@
 import styled, {keyframes} from 'styled-components';
-// import ImagePreview from 'components/ImagePreview';
 import ProfileImagePreview from 'components/ProfileImagePreview';
-import ImagePreview from 'components/ImagePreview';
 
 const addOverlay = keyframes`
   from {
@@ -17,7 +15,7 @@ export const Bumper = styled.div`
 `;
 
 export const Modal = styled.div`
-  background: #fff;
+  background: rgba(0, 0, 0, 0);
   border-radius: 20px;
   left: 50%;
   position: fixed;
@@ -35,12 +33,12 @@ export const Overlay = styled.div`
 `;
 
 export const ImagePreviewCustom = styled(ProfileImagePreview)`
-  width: 97vw;
-  height: 97vh;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(64, 64, 64, 0.4);
+  background-color: rgba(64, 64, 64, 0.9);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 `;

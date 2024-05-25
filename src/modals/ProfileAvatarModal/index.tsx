@@ -3,9 +3,7 @@ import {useSelector} from 'react-redux';
 import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
 import * as S from './Styles';
-import ImagePreview from 'components/ImagePreview';
 import DefaultAvatar from '../../assets/default-avatar.svg';
-import {noop} from 'lodash-es';
 import {createPortal} from 'react-dom';
 
 export interface ProfileAvatarModalProps {
@@ -13,7 +11,7 @@ export interface ProfileAvatarModalProps {
   disableOverlayClick?: boolean;
 }
 
-const ProfileAvatarModal: SFC<ProfileAvatarModalProps> = ({disableOverlayClick = false, close}) => {
+const ProfileAvatarModal: SFC<ProfileAvatarModalProps> = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const self = useSelector(getSelf);
 
@@ -31,7 +29,6 @@ const ProfileAvatarModal: SFC<ProfileAvatarModalProps> = ({disableOverlayClick =
 
   return createPortal(
     <>
-      <S.Overlay onClick={disableOverlayClick ? noop : close} />
       <S.Modal>
         <S.ImagePreviewCustom
           onClear={() => {
