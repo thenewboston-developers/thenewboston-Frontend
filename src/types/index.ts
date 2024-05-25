@@ -25,6 +25,7 @@ import {Address, Addresses} from 'types/addresses';
 import {AppDispatch, RootState} from 'types/store';
 import {Artwork, Artworks} from 'types/artworks';
 import {ArtworkTransfer, ArtworkTransfers} from 'types/artworkTransfers';
+import {Article, Articles} from './articles';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
@@ -66,6 +67,8 @@ export {
   Address,
   Addresses,
   AppDispatch,
+  Article,
+  Articles,
   Artwork,
   ArtworkTransfer,
   ArtworkTransfers,
