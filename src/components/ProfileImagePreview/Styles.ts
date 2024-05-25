@@ -2,22 +2,23 @@ import styled from 'styled-components';
 
 export const CloseButtonContainer = styled.div`
   align-items: center;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0);
   color: #fff;
   cursor: pointer;
   display: flex;
   justify-content: center;
   padding: 4px;
   position: absolute;
-  right: 0;
-  top: 0;
+  right: 15px;
+  top: 15px;
 `;
 
 export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  background-color: rgba(64, 64, 64, 0.4);
+  backdrop-filter: blur(10px);
 `;
 
 export const Img = styled.img`

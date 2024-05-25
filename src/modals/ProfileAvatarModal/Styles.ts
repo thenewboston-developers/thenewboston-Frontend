@@ -1,4 +1,7 @@
 import styled, {keyframes} from 'styled-components';
+// import ImagePreview from 'components/ImagePreview';
+import ProfileImagePreview from 'components/ProfileImagePreview';
+import ImagePreview from 'components/ImagePreview';
 
 const addOverlay = keyframes`
   from {
@@ -29,4 +32,15 @@ export const Overlay = styled.div`
   position: fixed;
   top: 0;
   width: 100vw;
+`;
+
+export const ImagePreviewCustom = styled(ProfileImagePreview)`
+  width: 97vw;
+  height: 97vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(64, 64, 64, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 `;

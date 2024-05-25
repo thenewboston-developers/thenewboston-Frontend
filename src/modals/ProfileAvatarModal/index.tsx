@@ -33,7 +33,12 @@ const ProfileAvatarModal: SFC<ProfileAvatarModalProps> = ({disableOverlayClick =
     <>
       <S.Overlay onClick={disableOverlayClick ? noop : close} />
       <S.Modal>
-        <ImagePreview onClear={() => setPreview(null)} src={preview}></ImagePreview>
+        <S.ImagePreviewCustom
+          onClear={() => {
+            setPreview(null);
+          }}
+          src={preview}
+        ></S.ImagePreviewCustom>
       </S.Modal>
     </>,
     document.getElementById('modal-root') as HTMLElement,
