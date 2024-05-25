@@ -1,14 +1,14 @@
 import Line from 'components/Line';
 import CoreLogo from 'components/CoreLogo';
-import { SFC } from 'types';
+import {SFC} from 'types';
 import * as S from './Styles';
-import { Article } from 'types/articles';
+import {Article} from 'types/articles';
 
 export interface ArticleDetailsProps {
   article: Article;
 }
 
-const ArticleDetail: SFC<ArticleDetailsProps> = ({ className, article }) => {
+const ArticleDetail: SFC<ArticleDetailsProps> = ({className, article}) => {
   return (
     <>
       <S.Container className={className}>
@@ -16,7 +16,7 @@ const ArticleDetail: SFC<ArticleDetailsProps> = ({ className, article }) => {
           <S.BoxLeft>
             <CoreLogo logo={article.logo} />
             <S.Text>
-              <S.Ticker>{article.ticker}</S.Ticker>
+              <S.Ticker>{article.title}</S.Ticker>
             </S.Text>
           </S.BoxLeft>
         </S.Box>

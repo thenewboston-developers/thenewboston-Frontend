@@ -3,6 +3,7 @@ import {SFC} from 'types';
 import * as S from './Styles';
 import Button from 'components/Button';
 import {useToggle} from 'hooks';
+import CoreModal from 'modals/CoreModal';
 
 const Toolbar: SFC = ({className}) => {
   const [coreModalIsOpen, toggleCoreModal] = useToggle(false);
@@ -11,13 +12,16 @@ const Toolbar: SFC = ({className}) => {
     return <Button onClick={toggleCoreModal} text="Add Currency" />;
   };
   return (
-    <S.Container className={className}>
-      <S.Center>
-        <ToolbarMenuLink text="Home" to="/currencies/home" />
-        <ToolbarMenuLink text="Learn More" to="/currencies/learn-more" />
-      </S.Center>
-      {renderButton()}
-    </S.Container>
+    <>
+      <S.Container className={className}>
+        <S.Center>
+          <ToolbarMenuLink text="Home" to="/currencies/home" />
+          <ToolbarMenuLink text="Learn More" to="/currencies/learn-more" />
+        </S.Center>
+        {renderButton()}
+      </S.Container>
+      {coreModalIsOpen ? <CoreModal close={toggleCoreModal} /> : null}
+    </>
   );
 };
 

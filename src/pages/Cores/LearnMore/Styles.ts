@@ -24,3 +24,42 @@ export const CardsContainer = styled.div`
 export const Container = styled.div`
   padding: 24px 32px;
 `;
+
+export const ListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+`;
+
+export const ListItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+`;
+
+export const RoleNumber = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+`;
+
+export const Content = styled.div`
+  margin-left: 20px;
+`;
+
+export const Line = styled.div`
+  position: absolute;
+  left: 20px;
+  width: 2px;
+  height: calc(100% - 20px);
+  background: repeating-linear-gradient(to bottom, transparent, transparent 5px, #007bff 5px, #007bff 10px);
+  z-index: 0;
+`;

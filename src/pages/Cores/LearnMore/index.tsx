@@ -11,35 +11,40 @@ import {getCores} from 'selectors/state';
 import {SFC} from 'types';
 import CoreCard from '../CoreCard';
 import * as S from './Styles';
+import {articlesData} from './ArticlesData';
+import ArticleCard from './ArticleCard';
 
 const LearnMore: SFC = ({className}) => {
   const [coreModalIsOpen, toggleCoreModal] = useToggle(false);
-  const cores = useSelector(getCores);
-
-  const coresList = useMemo(() => {
-    return orderBy(Object.values(cores), ['ticker']);
-  }, [cores]);
-
-  const renderButton = () => {
-    return <Button onClick={toggleCoreModal} text="Add Currency" />;
-  };
+  const articles = articlesData;
 
   const renderContent = () => {
-    if (!!coresList.length) return renderCores();
-    return <EmptyText>No cores to display.</EmptyText>;
+    if (!!articles.length) return renderArticles();
+    return <EmptyText>No articles to display.</EmptyText>;
   };
 
-  const renderCores = () => {
-    const coreCards = coresList.map((core) => <CoreCard core={core} key={core.id} />);
+  const renderArticles = () => {
+    const coreCards = articles.map((article) =>
+      article.type === 'list' ? null : <ArticleCard article={article} key={article.id} />,
+    );
     return <S.CardsContainer>{coreCards}</S.CardsContainer>;
+  };
+
+  const renderDataInArticles = (data: string[]) => {
+    <S.ListContainer>
+      <S.Line />
+      {data.map((item, index) => (
+        <S.ListItem key={index}>
+          <S.RoleNumber>{index + 1}</S.RoleNumber>
+          <S.Content>{item}</S.Content>
+        </S.ListItem>
+      ))}
+    </S.ListContainer>;
   };
 
   return (
     <>
-      <S.Container className={className}>
-        <SectionHeading heading="Currencies" rightContent={renderButton()} />
-        {renderContent()}
-      </S.Container>
+      <S.Container className={className}>{renderContent()}</S.Container>
       {coreModalIsOpen ? <CoreModal close={toggleCoreModal} /> : null}
     </>
   );

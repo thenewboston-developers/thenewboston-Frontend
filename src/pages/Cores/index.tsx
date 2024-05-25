@@ -1,4 +1,4 @@
-import {Route, Routes} from 'react-router-dom';
+import {Navigate, Route, Routes} from 'react-router-dom';
 
 import {SFC} from 'types';
 import Home from './Home';
@@ -13,6 +13,7 @@ const Cores: SFC = ({className}) => {
         <Route element={<Layout />}>
           {/* TODO: replace these hardcoded paths with those in constants/paths.ts */}
           {/* <Route path="/artworks/:id" element={<Home />} /> */}
+          <Route path="*" element={<Navigate to="/currencies/home" replace />} />
           <Route path="/home" element={<Home />} />
           <Route path="/learn-more" element={<LearnMore />} />
         </Route>
