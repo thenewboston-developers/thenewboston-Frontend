@@ -78,9 +78,7 @@ const Invitation: SFC<InvitationProps> = ({invitation, index}) => {
         <td>{invitation.note}</td>
         <td>{invitation.code}</td>
         <td>
-          <S.InvitationStatusBadgeContainer>
-            <div>{renderInvitationStatusBadge()}</div>
-          </S.InvitationStatusBadgeContainer>
+          <S.InvitationStatusBadgeContainer>{renderInvitationStatusBadge()}</S.InvitationStatusBadgeContainer>
         </td>
         <td>
           <S.DropdownMenuContainer>{renderDropdownMenu()}</S.DropdownMenuContainer>

@@ -33,13 +33,13 @@ const Invitations: SFC = ({className}) => {
     return orderBy(_invitations, ['created_date'], ['desc']);
   }, [invitations, userId]);
 
-  const renderButton = () => {
+  const renderCreateInvitationButton = () => {
     if (userId !== self.id) return null;
     if (invitationList.length >= invitationLimitAmount) return null;
     return <Button onClick={toggleInvitationModal} text="Create" />;
   };
 
-  const renderRows = useCallback(() => {
+  const renderTBody = useCallback(() => {
     return invitationList.map((invitation, index) => (
       <Invitation invitation={invitation} key={invitation.id} index={index} />
     ));
@@ -60,7 +60,7 @@ const Invitations: SFC = ({className}) => {
                 <th></th>
               </tr>
             </S.Thead>
-            <S.Tbody>{renderRows()}</S.Tbody>
+            <S.Tbody>{renderTBody()}</S.Tbody>
           </S.Table>
         </>
       );
@@ -76,7 +76,7 @@ const Invitations: SFC = ({className}) => {
             <S.Heading>
               Invitations — <span>{`${invitationList.length}/${invitationLimitAmount}`}</span>
             </S.Heading>
-            {renderButton()}
+            {renderCreateInvitationButton()}
           </S.Header>
           {renderContent()}
         </S.Div>
