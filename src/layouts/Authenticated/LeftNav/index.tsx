@@ -46,7 +46,7 @@ const LeftNav: SFC = ({className}) => {
     <S.Container className={className}>
       <S.Top>
         <MenuLink icon={mdiBrush} rootPath="/art" text="Art" to="/art/marketplace" />
-        <MenuLink icon={mdiHammerWrench} rootPath="/contributions" text="Contributions" to="/contributions" />
+        <MenuLink icon={mdiHammerWrench} rootPath="/contributions" text="Contributions" to="/contributions/home" />
         <MenuLink icon={mdiCircleMultipleOutline} rootPath="/currencies" text="Currencies" to="/currencies" />
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
         <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
