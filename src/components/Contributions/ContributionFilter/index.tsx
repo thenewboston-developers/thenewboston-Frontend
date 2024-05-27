@@ -100,7 +100,7 @@ const ContributionFilterMenu: SFC<DropdownMenuProps> = ({options}) => {
 
   return (
     <>
-      <Button onClick={handleIconClick} ref={iconRef} isActive={isActive}>
+      <Button onClick={handleIconClick} ref={iconRef} $isActive={isActive}>
         <Icon icon={mdiSwapHorizontal}></Icon>
         Filter
         {options.some((option) => option.checked && option.radioName === 'timeFilter' && option.label !== 'None') && (

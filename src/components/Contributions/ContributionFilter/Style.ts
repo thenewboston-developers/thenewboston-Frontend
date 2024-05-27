@@ -47,7 +47,7 @@ export const RadioOption = styled.label`
     }
   }
 `;
-export const Button = styled.button<{isActive: boolean}>`
+export const Button = styled.button<{$isActive: boolean}>`
   align-items: center;
   border: none;
   border-radius: 15px;
@@ -58,8 +58,8 @@ export const Button = styled.button<{isActive: boolean}>`
   padding: 0px 18px 0px 15px;
   color: #b1b1b1;
   cursor: pointer;
-  ${({isActive}) =>
-    isActive &&
+  ${({$isActive}) =>
+    $isActive &&
     `
       color: #84a0c1;
       border: 1px solid #84a0c1;
