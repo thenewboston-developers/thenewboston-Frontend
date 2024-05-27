@@ -2,7 +2,6 @@ import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
-import Button from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import SectionHeading from 'components/SectionHeading';
 import {useToggle} from 'hooks';
