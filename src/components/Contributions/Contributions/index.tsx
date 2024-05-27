@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux';
 
 import Button from 'components/Button';
 import {useToggle} from 'hooks';
-import CourseModal from 'modals/ContributionCreateModal';
+import ContributionCreateModal from 'modals/ContributionCreateModal';
 import Contribution from 'components/Contributions/Contribution';
 import InfiniteScroll from 'components/InfiniteScroll';
 import PanelHeading from 'components/PanelHeading';
@@ -34,7 +34,9 @@ const Contributions: FC<ContributionsProps> = ({
   const [createNewContributionModalIsOpen, toggleCreateNewContributionModal] = useToggle(false);
 
   const renderCreateNewContributionModal = () => {
-    return createNewContributionModalIsOpen ? <CourseModal close={toggleCreateNewContributionModal} /> : null;
+    return createNewContributionModalIsOpen ? (
+      <ContributionCreateModal close={toggleCreateNewContributionModal} />
+    ) : null;
   };
 
   const renderContributions = () => {

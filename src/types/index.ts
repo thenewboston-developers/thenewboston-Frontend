@@ -5,6 +5,7 @@ import {CreateArtworkPurchaseRequest} from 'types/api/artworkPurchases';
 import {CreateArtworkRequest, EditArtworkRequest} from 'types/api/artworks';
 import {CreateArtworkTransferRequest} from 'types/api/artworkTransfers';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
+import {CreateContributionRequest} from 'types/api/contributions';
 import {CreateConversationRequest} from 'types/api/conversations';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/follower';
@@ -95,6 +96,7 @@ export {
   CreateArtworkTransferRequest,
   CreateCartProductRequest,
   CreateCommentRequest,
+  CreateContributionRequest,
   CreateConversationRequest,
   CreateExchangeOrderRequest,
   CreateFollowerRequest,
