@@ -17,7 +17,7 @@ interface TopContributorsProps {
 
 const TopContributors: FC<TopContributorsProps> = ({topContributions, onFilterChange}) => {
   const [topContributors, setTopContributors] = useState<TopContributor[]>([]);
-  const [selectedFilter, setSelectedFilter] = useState<string>('all');
+  const [selectedFilter, setSelectedFilter] = useState<string>('none');
 
   useEffect(() => {
     setTopContributors(getTopContributors(topContributions));

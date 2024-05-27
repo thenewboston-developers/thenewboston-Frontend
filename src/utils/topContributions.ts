@@ -35,11 +35,14 @@ export const getTopContributors = (contributions: TopContribution[]): TopContrib
           username: contribution.user_username,
         },
       };
+    } else {
+      acc[userId].user.total += contribution.total;
     }
     return acc;
   }, {});
 
-  return Object.values(contributionSumByUser).map((contributor, index) => ({
+  const sortedContributors = Object.values(contributionSumByUser).sort((a, b) => b.user.total - a.user.total);
+  return sortedContributors.map((contributor, index) => ({
     ...contributor,
     positionIcon: getPositionIcon(index + 1),
   }));
