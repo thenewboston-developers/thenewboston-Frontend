@@ -1,16 +1,20 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
 
 import ContributionsList from 'components/Contributions/Contributions';
 import EmptyText from 'components/EmptyText';
 import Toolbar from './Toolbar';
 import TopContributors from './TopContributors';
+import Loader from 'components/Loader';
 import TotalContributionsChart from './TotalContributionsChart';
+import {displayErrorToast} from 'utils/toasts';
 import {AppDispatch, SFC} from 'types';
 import {Col, Row} from 'styles/components/GridStyle';
 import {UserIdFilterValues} from 'enums';
-import {getContributions as _getContributions} from 'dispatchers/contributions';
+import {
+  getContributions as _getContributions,
+  resetContributions as _resetContributions,
+} from 'dispatchers/contributions';
 import {getContributions} from 'selectors/state';
 import {getTopContributors} from 'utils/contributions';
 import * as S from './Styles';
@@ -21,10 +25,14 @@ interface ContributionsProps {
 }
 
 const Contributions: SFC<ContributionsProps> = ({className, selfContributions = false}) => {
-  const {count, items, hasMore, isLoading} = useSelector(getContributions);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const {items, hasMore, isLoading} = useSelector(getContributions);
   const contributions = items;
-  console.log(contributions, count, hasMore, isLoading);
   const dispatch = useDispatch<AppDispatch>();
+
+  const contributionList = useMemo(() => {
+    return Object.values(contributions);
+  }, [contributions]);
 
   const apiParams = useMemo(() => {
     if (selfContributions) {
@@ -35,14 +43,32 @@ const Contributions: SFC<ContributionsProps> = ({className, selfContributions = 
   }, [selfContributions]);
 
   useEffect(() => {
-    dispatch(_getContributions(apiParams));
+    const fetchContributions = async () => {
+      try {
+        setIsInitialLoading(true);
+        await dispatch(_resetContributions());
+        await dispatch(_getContributions(apiParams));
+      } catch (error) {
+        console.error(error);
+        displayErrorToast('Error fetching contributions');
+      } finally {
+        setIsInitialLoading(false);
+      }
+    };
+
+    fetchContributions();
   }, [apiParams, dispatch]);
 
-  const contributionList = useMemo(() => {
-    return orderBy(Object.values(contributions), ['created_date'], ['asc']);
-  }, [contributions]);
+  const fetchMoreContributions = async () => {
+    if (!isLoading) {
+      await dispatch(_getContributions());
+    }
+  };
 
   const renderContent = () => {
+    if (isInitialLoading) {
+      return <Loader className="align-screen-center" size={24} />;
+    }
     if (selfContributions) {
       return renderSelfContributionsContent();
     } else {
@@ -82,6 +108,8 @@ const Contributions: SFC<ContributionsProps> = ({className, selfContributions = 
       <Col size={12}>
         <ContributionsList
           contributionsList={contributionList}
+          fetchMore={fetchMoreContributions}
+          hasMore={hasMore}
           panelHeading={'My Contributions'}
           selfContributions={selfContributions}
         />

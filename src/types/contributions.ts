@@ -1,7 +1,6 @@
 import {UserReadSerializer} from 'types/api/users';
 import {Core} from 'types/cores';
 import {CreatedModified} from 'types/createdModified';
-import {Dict} from 'types/generic';
 import {GitHubUser} from 'types/githubUsers';
 import {Issue} from 'types/issues';
 import {Pull} from 'types/pulls';

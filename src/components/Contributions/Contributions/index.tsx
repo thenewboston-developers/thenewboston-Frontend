@@ -5,6 +5,7 @@ import Button from 'components/Button';
 import {useToggle} from 'hooks';
 import CourseModal from 'modals/ContributionCreateModal';
 import Contribution from 'components/Contributions/Contribution';
+import InfiniteScroll from 'components/InfiniteScroll';
 import PanelHeading from 'components/PanelHeading';
 import {Col, Row} from 'styles/components/GridStyle';
 import {Contribution as TContribution} from 'types';
@@ -15,6 +16,8 @@ import * as S from './Styles';
 interface ContributionsProps {
   className?: string;
   contributionsList: TContribution[];
+  fetchMore?: () => void;
+  hasMore?: boolean;
   panelHeading: string;
   selfContributions?: boolean;
 }
@@ -22,6 +25,8 @@ interface ContributionsProps {
 const Contributions: FC<ContributionsProps> = ({
   className,
   contributionsList,
+  fetchMore,
+  hasMore,
   panelHeading,
   selfContributions = false,
 }) => {
@@ -32,19 +37,31 @@ const Contributions: FC<ContributionsProps> = ({
     return createNewContributionModalIsOpen ? <CourseModal close={toggleCreateNewContributionModal} /> : null;
   };
 
+  const renderContributions = () => {
+    return (
+      <Row $horizontalGap="15px" $verticalGap="5px">
+        {contributionsList.map((contribution) => (
+          <Col key={contribution.id} size={6}>
+            <Contribution contribution={contribution} ia={ia} />
+          </Col>
+        ))}
+      </Row>
+    );
+  };
+
   return (
     <div className={className}>
       <S.PanelHeadingContainer>
         <PanelHeading heading={panelHeading} />
         {selfContributions && <Button onClick={toggleCreateNewContributionModal} text="Create New" />}
       </S.PanelHeadingContainer>
-      <Row $horizontalGap="15px" $verticalGap="5px">
-        {contributionsList.map((contribution) => (
-          <Col key={contribution.id} size={6}>
-            <Contribution contribution={contribution} ia={ia}></Contribution>
-          </Col>
-        ))}
-      </Row>
+      {fetchMore && contributionsList.length > 0 ? (
+        <InfiniteScroll dataLength={contributionsList.length} hasMore={hasMore || false} next={fetchMore}>
+          {renderContributions()}
+        </InfiniteScroll>
+      ) : (
+        renderContributions()
+      )}
       {selfContributions && renderCreateNewContributionModal()}
     </div>
   );
