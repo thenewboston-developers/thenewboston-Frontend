@@ -5,13 +5,15 @@ import {Article} from 'types/articles';
 
 export interface ArticleCardProps {
   article: Article;
+  element?: any;
 }
 
-const ArticleCard: SFC<ArticleCardProps> = ({className, article}) => {
+// eslint-disable-next-line prettier/prettier
+const ArticleCard: SFC<ArticleCardProps> = ({ className, article, element: element }) => {
   return (
     <>
       <S.Container className={className}>
-        <ArticleDetail article={article} />
+        <ArticleDetail article={article} element={element} />
       </S.Container>
     </>
   );

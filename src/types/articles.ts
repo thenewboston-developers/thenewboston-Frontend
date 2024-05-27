@@ -6,12 +6,7 @@ export interface Article {
   logo: string;
   title: string;
   type: string;
-  data?: {
-    1: string;
-    2: string;
-    3: string;
-    4: string;
-  };
+  data?: object;
 }
 
 export type Articles = Dict<Article>;

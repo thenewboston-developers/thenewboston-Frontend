@@ -4,6 +4,7 @@ import {fonts} from 'styles';
 
 export const Container = styled.div`
   width: 100%;
+  padding: 15px;
 `;
 
 export const Box = styled.div`
@@ -16,18 +17,23 @@ export const Box = styled.div`
 export const BoxLeft = styled.div`
   align-items: center;
   display: flex;
+  flex-direction: column;
 `;
 export const Domain = styled.div`
-  font-size: 12px;
+  font-size: 17px;
   margin: 10px 0px;
 `;
 
 export const Text = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 8px;
+  font-size: 1.5vw;
 `;
 
 export const Ticker = styled.div`
   font-weight: ${fonts.weight.semiBold};
+`;
+
+export const Divider = styled.div`
+  height: 1vh;
 `;

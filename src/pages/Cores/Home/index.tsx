@@ -20,10 +20,6 @@ const Home: SFC = ({className}) => {
     return orderBy(Object.values(cores), ['ticker']);
   }, [cores]);
 
-  const renderButton = () => {
-    return <Button onClick={toggleCoreModal} text="Add Currency" />;
-  };
-
   const renderContent = () => {
     if (!!coresList.length) return renderCores();
     return <EmptyText>No cores to display.</EmptyText>;
@@ -37,7 +33,7 @@ const Home: SFC = ({className}) => {
   return (
     <>
       <S.Container className={className}>
-        <SectionHeading heading="Currencies" rightContent={renderButton()} />
+        <SectionHeading heading="Currencies" />
         {renderContent()}
       </S.Container>
       {coreModalIsOpen ? <CoreModal close={toggleCoreModal} /> : null}
