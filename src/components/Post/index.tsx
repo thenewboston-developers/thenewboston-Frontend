@@ -23,6 +23,7 @@ import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import Comments from './Comments';
 import * as S from './Styles';
+import PostImageModal from 'modals/PostImageModal';
 
 export interface PostProps {
   post: TPost;
@@ -33,6 +34,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [showFullContent, setShowFullContent] = useState(true);
+  const [postImageModalIsOpen, togglePostImageModal] = useToggle(false);
 
   const toggleShowFullContent = () => {
     setShowFullContent(!showFullContent);
@@ -74,6 +76,10 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const handleClick = () => {
     if (!owner.id) return;
     navigate(`/profile/${owner.id}`);
+  };
+
+  const handlePostImageClick = () => {
+    togglePostImageModal();
   };
 
   const renderAvatar = () => {
@@ -119,7 +125,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
           </Linkify>
         </S.Content>
 
-        {image ? <S.Img alt="image" src={image} /> : null}
+        {image ? <S.Img onClick={handlePostImageClick} alt="image" src={image} /> : null}
         <Line />
         <S.Div>
           <S.BoxLeft>
@@ -136,6 +142,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
       {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
+      {postImageModalIsOpen ? <PostImageModal close={togglePostImageModal} image={image} /> : null}
     </>
   );
 };
