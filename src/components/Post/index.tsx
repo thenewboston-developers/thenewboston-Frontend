@@ -9,7 +9,6 @@ import {
   mdiDotsVertical,
   mdiSquareEditOutline,
 } from '@mdi/js';
-
 import Line from 'components/Line';
 import {ButtonColor} from 'components/Button';
 import Linkify from 'components/Linkify';

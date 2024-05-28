@@ -19,7 +19,7 @@ export const Modal = styled.div`
   border-radius: 20px;
   left: 50%;
   position: fixed;
-  top: 50%;
+  top: 50.1%;
   transform: translate(-50%, -50%);
 `;
 

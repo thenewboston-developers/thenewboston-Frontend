@@ -1,7 +1,6 @@
 import React from 'react';
 import MdiIcon from '@mdi/react';
 import {mdiClose} from '@mdi/js';
-
 import {GenericVoidFunction, SFC} from 'types';
 import * as S from './Styles';
 

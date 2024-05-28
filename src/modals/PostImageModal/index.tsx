@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {SFC} from 'types';
+
 import * as S from './Styles';
 import {createPortal} from 'react-dom';
 
