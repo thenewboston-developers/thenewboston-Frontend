@@ -6,7 +6,6 @@ import PanelHeading from 'components/PanelHeading';
 import {TopContribution, TopContributor} from 'types/topContributions';
 import {getTopContributors} from 'utils/topContributions';
 import * as S from './Styles';
-import {mdiSwapHorizontal} from '@mdi/js';
 import ContributorContainer from 'components/Contributions/ContributorContainer';
 
 interface TopContributorsProps {
@@ -94,7 +93,7 @@ const TopContributors: FC<TopContributorsProps> = ({topContributions, onFilterCh
         <PanelHeading
           heading={topContributors.length ? `Top ${topContributors.length} Contributors` : 'Top Contributors'}
         />
-        <S.DropdownMenu title={'filter'} icon={mdiSwapHorizontal} options={menuOptions} />
+        <S.DropdownMenu options={menuOptions} />
       </ContributorContainer>
       {renderContributorList()}
     </section>

@@ -56,22 +56,18 @@ export const Button = styled.button<{$isActive: boolean}>`
   background-color: #fff;
   height: 32px;
   padding: 0px 18px 0px 15px;
-  color: #b1b1b1;
+  color: ${({$isActive}) => ($isActive ? '#000' : '#b1b1b1')};
   cursor: pointer;
   ${({$isActive}) =>
     $isActive &&
     `
+      cursor: pointer;
       color: #84a0c1;
       border: 1px solid #84a0c1;
   `}
   &:hover {
     cursor: pointer;
     color: #84a0c1;
-  }
-  &:active {
-    cursor: pointer;
-    color: #84a0c1;
-    border: 1px solid #84a0c1;
   }
 `;
 export const Span = styled.span`

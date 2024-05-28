@@ -4,7 +4,7 @@ import {useEventListener, useToggle} from 'hooks';
 import {Menu, Option, RadioOption, Button, Span} from './Style';
 import {GenericVoidFunction, SFC} from 'types';
 import Icon from '../../Icon';
-import {mdiSwapHorizontal} from '@mdi/js';
+import {mdiTuneVariant} from '@mdi/js';
 import {CodiconCircleFilled} from '../../Icon/CircleIcon';
 
 export interface ContributionFilterOption {
@@ -17,8 +17,8 @@ export interface ContributionFilterOption {
 }
 
 export interface DropdownMenuProps {
-  icon: string;
-  title: string;
+  icon?: string;
+  title?: string;
   options: ContributionFilterOption[];
 }
 
@@ -69,7 +69,7 @@ const ContributionFilterMenu: SFC<DropdownMenuProps> = ({options}) => {
       setTimeout(() => {
         toggleIsOpen(false);
         setIsActive(false);
-      }, 2000);
+      }, 1000);
     };
 
   const renderMenu = () => (
@@ -101,7 +101,7 @@ const ContributionFilterMenu: SFC<DropdownMenuProps> = ({options}) => {
   return (
     <>
       <Button onClick={handleIconClick} ref={iconRef} $isActive={isActive}>
-        <Icon icon={mdiSwapHorizontal}></Icon>
+        <Icon icon={mdiTuneVariant} size={20}></Icon>
         Filter
         {options.some((option) => option.checked && option.radioName === 'timeFilter' && option.label !== 'None') && (
           <Span>
