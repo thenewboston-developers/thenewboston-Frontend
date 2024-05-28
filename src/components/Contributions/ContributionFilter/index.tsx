@@ -30,6 +30,7 @@ const ContributionFilterMenu: SFC<DropdownMenuProps> = ({options}) => {
   const iconRef = useRef<HTMLButtonElement>(null); // Updated to HTMLButtonElement
   const optionsRef = useRef<HTMLDivElement[]>([]);
   const [isActive, setIsActive] = useState(false);
+  const [isFilterColor, setIsFilterColor] = useState(false);
   const handleClick = (e: any): void => {
     if (iconRef.current?.contains(e.target)) return;
     if (!iconRef.current?.contains(e.target) && !dropDown.contains(e.target)) toggleIsOpen(false);
@@ -58,17 +59,19 @@ const ContributionFilterMenu: SFC<DropdownMenuProps> = ({options}) => {
       setMenuPosition(position);
       toggleIsOpen();
       setIsActive(!isOpen);
+      setIsFilterColor(false);
     },
     [toggleIsOpen, isOpen],
   );
 
   const handleOptionClick =
-    (optionOnClick: GenericVoidFunction = () => {}): GenericVoidFunction =>
+    (label: ReactNode, optionOnClick: GenericVoidFunction = () => {}): GenericVoidFunction =>
     async (): Promise<void> => {
       await optionOnClick();
       setTimeout(() => {
         toggleIsOpen(false);
         setIsActive(false);
+        setIsFilterColor(label !== 'None');
       }, 1000);
     };
 
@@ -77,7 +80,7 @@ const ContributionFilterMenu: SFC<DropdownMenuProps> = ({options}) => {
       {options.map(({label, onClick: optionOnClick, radio, radioName, disabled, checked}, index) => (
         <Option
           key={index}
-          onClick={!disabled ? handleOptionClick(optionOnClick) : undefined}
+          onClick={!disabled ? handleOptionClick(label, optionOnClick) : undefined}
           ref={(el) => {
             if (el) optionsRef.current[index] = el;
           }}
@@ -100,7 +103,7 @@ const ContributionFilterMenu: SFC<DropdownMenuProps> = ({options}) => {
 
   return (
     <>
-      <Button onClick={handleIconClick} ref={iconRef} $isActive={isActive}>
+      <Button onClick={handleIconClick} ref={iconRef} $isActive={isActive} $isFilterColor={isFilterColor}>
         <Icon icon={mdiTuneVariant} size={20}></Icon>
         Filter
         {options.some((option) => option.checked && option.radioName === 'timeFilter' && option.label !== 'None') && (

@@ -47,7 +47,7 @@ export const RadioOption = styled.label`
     }
   }
 `;
-export const Button = styled.button<{$isActive: boolean}>`
+export const Button = styled.button<{$isActive: boolean; $isFilterColor: boolean}>`
   align-items: center;
   border: none;
   border-radius: 15px;
@@ -56,7 +56,7 @@ export const Button = styled.button<{$isActive: boolean}>`
   background-color: #fff;
   height: 32px;
   padding: 0px 18px 0px 15px;
-  color: ${({$isActive}) => ($isActive ? '#000' : '#b1b1b1')};
+  color: #b1b1b1;
   cursor: pointer;
   ${({$isActive}) =>
     $isActive &&
@@ -69,6 +69,11 @@ export const Button = styled.button<{$isActive: boolean}>`
     cursor: pointer;
     color: #84a0c1;
   }
+  ${({$isFilterColor}) =>
+    $isFilterColor &&
+    `
+      color: #000;
+  `}
 `;
 export const Span = styled.span`
   margin-top: -11px;
