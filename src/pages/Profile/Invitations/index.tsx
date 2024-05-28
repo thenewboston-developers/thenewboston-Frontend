@@ -1,11 +1,10 @@
-import {useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 import {useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 
 import Button from 'components/Button';
 import EmptyText from 'components/EmptyText';
-import SectionHeading from 'components/SectionHeading';
 import {useToggle} from 'hooks';
 import InvitationModal from 'modals/InvitationModal';
 import {getInvitationLimits, getInvitations, getSelf} from 'selectors/state';
@@ -34,27 +33,53 @@ const Invitations: SFC = ({className}) => {
     return orderBy(_invitations, ['created_date'], ['desc']);
   }, [invitations, userId]);
 
-  const renderButton = () => {
+  const renderCreateInvitationButton = () => {
     if (userId !== self.id) return null;
     if (invitationList.length >= invitationLimitAmount) return null;
     return <Button onClick={toggleInvitationModal} text="Create" />;
   };
 
+  const renderTBody = useCallback(() => {
+    return invitationList.map((invitation, index) => (
+      <Invitation invitation={invitation} key={invitation.id} index={index} />
+    ));
+  }, [invitationList]);
+
   const renderContent = () => {
-    if (!invitationList.length) return <EmptyText>No invitations to display.</EmptyText>;
-    const _invitations = invitationList.map((invitation) => <Invitation invitation={invitation} key={invitation.id} />);
-    return <S.InvitationContainer>{_invitations}</S.InvitationContainer>;
+    if (invitationList.length) {
+      return (
+        <>
+          <S.Table>
+            <S.Thead>
+              <tr>
+                <th className="fixed-width"></th>
+                <th>NAME & DATE</th>
+                <th>NOTE</th>
+                <th>CODE</th>
+                <th>STATUS</th>
+                <th></th>
+              </tr>
+            </S.Thead>
+            <S.Tbody>{renderTBody()}</S.Tbody>
+          </S.Table>
+        </>
+      );
+    }
+    return <EmptyText>No invitations to display.</EmptyText>;
   };
 
   return (
     <>
       <S.Container className={className}>
-        <SectionHeading
-          heading="Invitations"
-          rightContent={renderButton()}
-          subHeading={`${invitationList.length}/${invitationLimitAmount}`}
-        />
-        {renderContent()}
+        <S.Div>
+          <S.Header>
+            <S.Heading>
+              Invitations — <span>{`${invitationList.length}/${invitationLimitAmount}`}</span>
+            </S.Heading>
+            {renderCreateInvitationButton()}
+          </S.Header>
+          {renderContent()}
+        </S.Div>
       </S.Container>
       {invitationModalIsOpen ? <InvitationModal close={toggleInvitationModal} /> : null}
     </>
