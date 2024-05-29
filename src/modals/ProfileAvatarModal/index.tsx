@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux';
 import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
 import * as S from './Styles';
-import DefaultAvatar from '../../assets/default-avatar.svg';
+import DefaultAvatar from 'assets/default-avatar.svg';
 import {createPortal} from 'react-dom';
 
 export interface ProfileAvatarModalProps {
