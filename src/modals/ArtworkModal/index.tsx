@@ -49,7 +49,7 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({
           <Icon path={mdiCubeScan} size={'16px'} />
           Sell on Marketplace
         </Tab>
-        {artworkVl && (
+        {!artworkVl && (
           <Tab isActive={activeTab === SaveTypeTab.SAVE} onClick={() => setActiveTab(SaveTypeTab.SAVE)}>
             <Icon path={mdiContentSaveOutline} size={'16px'} />
             Save As Draft
