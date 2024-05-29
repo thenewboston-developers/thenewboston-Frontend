@@ -8,7 +8,4 @@ export const Bumper = styled.div`
 
 export const Modal = styled(UModal)`
   width: 360px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;

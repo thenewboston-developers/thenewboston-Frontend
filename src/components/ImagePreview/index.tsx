@@ -1,9 +1,8 @@
-import React from 'react';
-import MdiIcon from '@mdi/react';
-import {mdiClose} from '@mdi/js';
-
 import {GenericVoidFunction, SFC} from 'types';
+import {mdiClose} from '@mdi/js';
 import * as S from './Styles';
+import MdiIcon from '@mdi/react';
+import React from 'react';
 
 export interface ImagePreviewProps {
   onClear: GenericVoidFunction;
