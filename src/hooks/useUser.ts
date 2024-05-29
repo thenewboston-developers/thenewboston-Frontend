@@ -17,6 +17,7 @@ const useUser = (id: string | undefined): UserReadSerializer | null => {
       return {
         avatar: self.avatar,
         id: self.id!,
+        is_manual_contribution_allowed: self.is_manual_contribution_allowed,
         username: self.username!,
       };
     }
