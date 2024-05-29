@@ -9,6 +9,7 @@ import ArtworkModal from 'modals/ArtworkModal';
 import {getSelf} from 'selectors/state';
 import {Artwork, SFC} from 'types';
 import * as S from './Styles';
+import Badge, {BadgeStyle} from 'components/Badge';
 
 export interface ArtworkCardProps {
   artwork: Artwork;
@@ -18,6 +19,10 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
   const [artworkDeleteModalIsOpen, toggleArtworkDeleteModal] = useToggle(false);
   const [artworkModalIsOpen, toggleArtworkModal] = useToggle(false);
   const self = useSelector(getSelf);
+  const enum badgeTexts {
+    SALE = 'For Sale',
+    DRAFT = 'Draft',
+  }
 
   const menuOptions = [
     {
@@ -64,6 +69,7 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
       <S.Container className={className}>
         <Link to={`/art/artworks/${artwork.id}`}>
           <S.Thumbnail thumbnailUrl={artwork.image} />
+          <Badge badgeStyle={BadgeStyle.draft} children={artwork.price_amount ? badgeTexts.SALE : badgeTexts.DRAFT} />
         </Link>
         {renderDetails()}
       </S.Container>

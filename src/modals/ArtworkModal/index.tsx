@@ -13,7 +13,7 @@ import yup from 'utils/yup';
 import * as S from './Styles';
 import Tab from 'components/Tab';
 import Icon from '@mdi/react';
-import {mdiCartArrowDown, mdiCartArrowUp} from '@mdi/js';
+import {mdiContentSaveOutline, mdiCubeScan} from '@mdi/js';
 
 export interface ArtworkModalProps {
   artwork?: Artwork;
@@ -42,17 +42,19 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({
   const priceCoreOptions = usePriceCoreOptions();
   const [activeTab, setActiveTab] = useState<SaveTypeTab>(SaveTypeTab.SAVE);
 
-  const renderTabs = () => {
+  const renderTabs = (artworkVl: Artwork | null) => {
     return (
       <S.Tabs>
         <Tab isActive={activeTab === SaveTypeTab.SELL} onClick={() => setActiveTab(SaveTypeTab.SELL)}>
-          <Icon path={mdiCartArrowDown} size={'16px'} />
+          <Icon path={mdiCubeScan} size={'16px'} />
           Sell on Marketplace
         </Tab>
-        <Tab isActive={activeTab === SaveTypeTab.SAVE} onClick={() => setActiveTab(SaveTypeTab.SAVE)}>
-          <Icon path={mdiCartArrowUp} size={'16px'} />
-          Save As Draft
-        </Tab>
+        {artworkVl && (
+          <Tab isActive={activeTab === SaveTypeTab.SAVE} onClick={() => setActiveTab(SaveTypeTab.SAVE)}>
+            <Icon path={mdiContentSaveOutline} size={'16px'} />
+            Save As Draft
+          </Tab>
+        )}
       </S.Tabs>
     );
   };
@@ -108,35 +110,40 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({
   return (
     <S.Modal className={className} close={close} header={artwork ? 'Edit Artwork' : 'Create Artwork'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
-        {({dirty, errors, isSubmitting, isValid, touched}) => (
-          <>
-            {renderTabs()}
-            <Form>
-              <Input errors={errors} label="Name" name="name" touched={touched} />
-              <Input errors={errors} label="Description" name="description" touched={touched} />
-              {activeTab === SaveTypeTab.SELL && (
-                <>
-                  <Select
-                    errors={errors}
-                    label="Currency"
-                    name="price_core"
-                    options={priceCoreOptions}
-                    touched={touched}
-                  />
-                  <Input errors={errors} label="Price Amount" name="price_amount" touched={touched} type="number" />
-                </>
-              )}{' '}
-              <Button
-                dirty={dirty}
-                disabled={isSubmitting}
-                isSubmitting={isSubmitting}
-                isValid={isValid}
-                text={activeTab === SaveTypeTab.SELL ? 'Sell on Marketplace' : 'Save as Draft'}
-                type={ButtonType.submit}
-              />
-            </Form>
-          </>
-        )}
+        {({dirty, errors, isSubmitting, isValid, touched}) => {
+          return (
+            <>
+              {renderTabs(artwork ? artwork : null)}
+              <S.Divider />
+              <Form>
+                <Input errors={errors} label="Name" name="name" touched={touched} />
+                <Input errors={errors} label="Description" name="description" touched={touched} />
+                {activeTab === SaveTypeTab.SELL && (
+                  <S.Row>
+                    <Select
+                      errors={errors}
+                      label="Currency"
+                      name="price_core"
+                      options={priceCoreOptions}
+                      touched={touched}
+                    />
+                    <S.Container>
+                      <Input errors={errors} label="Price Amount" name="price_amount" touched={touched} type="number" />
+                    </S.Container>
+                  </S.Row>
+                )}{' '}
+                <Button
+                  dirty={dirty}
+                  disabled={isSubmitting}
+                  isSubmitting={isSubmitting}
+                  isValid={isValid}
+                  text={activeTab === SaveTypeTab.SELL ? 'Sell Artwork' : 'Save as Draft'}
+                  type={ButtonType.submit}
+                />
+              </Form>
+            </>
+          );
+        }}
       </Formik>
     </S.Modal>
   );

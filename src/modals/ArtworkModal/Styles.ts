@@ -8,4 +8,20 @@ export const Modal = styled(UModal)`
   flex-direction: column;
   width: 519px;
 `;
-export const Tabs = styled(UTabs)``;
+export const Tabs = styled(UTabs)`
+  height: 6vh;
+  width: 22vw;
+  font-weight: bold;
+`;
+
+export const Divider = styled.div`
+  height: 5vh;
+`;
+
+export const Row = styled.div`
+  display: grid;
+  gap: 1vw;
+  grid-template-columns: repeat(2, 1fr);
+  font-weight: 900px;
+`;
+export const Container = styled.div``;
