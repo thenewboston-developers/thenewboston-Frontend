@@ -26,3 +26,6 @@ yarn-error.log*
 
 # Webstorm
 .idea/
+
+# eslint
+.eslintrc.json
