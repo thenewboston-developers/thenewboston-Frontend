@@ -13,11 +13,11 @@ export const Container = styled.div`
 `;
 
 export const Left = styled.div`
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  flex-grow: 1;
   gap: 5px;
+  justify-content: space-between;
 `;
 
 export const Right = styled.div``;
@@ -27,7 +27,7 @@ export const Title = styled.span`
   margin-right: 10px;
 `;
 export const Dot = styled.span<{$marginLeft?: string}>`
+  font-weight: 600;
   margin-left: ${({$marginLeft}) => $marginLeft || '10px'};
   margin-right: 5px;
-  font-weight: 600;
 `;

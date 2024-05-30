@@ -14,9 +14,9 @@ export const Container = styled.div<{$isSelected: boolean}>`
   border: 1px solid #e3e8ee;
   display: flex;
   flex-direction: column;
+  gap: 5px;
   padding: 8px 2px 8px 10px;
   transition: all 0.15s;
-  gap: 5px;
   &:hover {
     background: #f8f8f8;
     cursor: pointer;
@@ -30,7 +30,7 @@ export const Title = styled.span`
   margin-right: 10px;
 `;
 export const Dot = styled.span<{$marginLeft?: string}>`
+  font-weight: 600;
   margin-left: ${({$marginLeft}) => $marginLeft || '10px'};
   margin-right: 5px;
-  font-weight: 600;
 `;
