@@ -16,11 +16,21 @@ export const Container = styled.div<{$isSelected: boolean}>`
   flex-direction: column;
   padding: 8px 2px 8px 10px;
   transition: all 0.15s;
-
+  gap: 5px;
   &:hover {
     background: #f8f8f8;
     cursor: pointer;
   }
 
   ${({$isSelected}) => $isSelected && selectedMixin}
+`;
+
+export const Title = styled.span`
+  font-weight: 600;
+  margin-right: 10px;
+`;
+export const Dot = styled.span<{$marginLeft?: string}>`
+  margin-left: ${({$marginLeft}) => $marginLeft || '10px'};
+  margin-right: 5px;
+  font-weight: 600;
 `;
