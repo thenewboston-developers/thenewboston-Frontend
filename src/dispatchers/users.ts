@@ -1,4 +1,4 @@
-import {createUser as _createUser, getUser as _getUser, updateUser as _updateUser} from 'api/users';
+import {createUser as _createUser, getUser as _getUser, updateUser as _updateUser, filterUserList as _filterUserList} from 'api/users';
 import {setAuthentication} from 'store/authentication';
 import {setSelf} from 'store/self';
 import {setUser} from 'store/users';
@@ -31,5 +31,9 @@ export const getUser = (id: number) => async (dispatch: AppDispatch) => {
 
 export const updateUser = (id: number, data: FormData) => async (dispatch: AppDispatch) => {
   const responseData = await _updateUser(id, data);
+  dispatch(setSelf(responseData));
+};
+export const filterUserList = (ussername: string) => async (dispatch: AppDispatch) => {
+  const responseData = await _filterUserList(ussername);
   dispatch(setSelf(responseData));
 };
