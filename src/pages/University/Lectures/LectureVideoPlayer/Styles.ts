@@ -3,10 +3,19 @@ import Icon from '@mdi/react';
 
 import UUserLabel from 'components/UserLabel';
 import {colors, fonts} from 'styles';
+import IaUniversity from './IaUniversity';
 
 export const Container = styled.div`
   background: ${colors.white};
   border-radius: 16px;
+  margin-bottom: 10px;
+`;
+
+export const Section = styled.div`
+  background: ${colors.white};
+  border-radius: 16px;
+  margin-bottom: 10px;
+  padding: 4px;
 `;
 
 export const Content = styled.div`
@@ -53,3 +62,7 @@ export const Name = styled.h3`
 `;
 
 export const UserLabel = styled(UUserLabel)``;
+export const IaForUniversity = styled(IaUniversity)`
+  height: calc(100vh - 780px);
+  border-radius: 16px;
+`;

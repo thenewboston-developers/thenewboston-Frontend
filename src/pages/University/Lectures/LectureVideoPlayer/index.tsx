@@ -4,6 +4,7 @@ import {mdiCalendarOutline} from '@mdi/js';
 import YouTubeVideo from 'components/YouTubeVideo';
 import {longDate} from 'utils/dates';
 import * as S from './Styles';
+import {IaForUniversity} from './Styles';
 
 export interface LectureVideoPlayerProps {
   lecture: TLecture;
@@ -36,6 +37,9 @@ const LectureVideoPlayer: SFC<LectureVideoPlayerProps> = ({className, lecture}) 
           </S.Footer>
         </S.Content>
       </S.Container>
+      <S.Section>
+        <IaForUniversity />
+      </S.Section>
     </>
   );
 };
