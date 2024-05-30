@@ -36,6 +36,7 @@ export const Img = styled.img`
   object-fit: cover;
   overflow: hidden;
   width: 100%;
+  cursor: ponter;
 `;
 
 export const ImgWrapper = styled.div`
@@ -45,6 +46,7 @@ export const ImgWrapper = styled.div`
   overflow: hidden;
   padding: 8px;
   width: ${USER_IMAGE_SIZE}px;
+  cursor: pointer;
 `;
 
 export const TNBLogo = styled.img`
