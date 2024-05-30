@@ -22,7 +22,7 @@ import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import Comments from './Comments';
 import * as S from './Styles';
-import PostImageModal from 'modals/PostImageModal';
+import ImageModal from 'modals/ImageModal';
 
 export interface PostProps {
   post: TPost;
@@ -33,7 +33,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [showFullContent, setShowFullContent] = useState(true);
-  const [postImageModalIsOpen, togglePostImageModal] = useToggle(false);
+  const [imageModalIsOpen, toggleImageModal] = useToggle(false);
 
   const toggleShowFullContent = () => {
     setShowFullContent(!showFullContent);
@@ -78,7 +78,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
   };
 
   const handlePostImageClick = () => {
-    togglePostImageModal();
+    toggleImageModal();
   };
 
   const renderAvatar = () => {
@@ -141,7 +141,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
       {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
-      {postImageModalIsOpen ? <PostImageModal close={togglePostImageModal} image={image} /> : null}
+      {imageModalIsOpen ? <ImageModal close={toggleImageModal} image={image} /> : null}
     </>
   );
 };
