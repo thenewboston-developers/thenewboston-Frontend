@@ -1,5 +1,6 @@
 import ImagePreview from 'components/ImagePreview';
 import styled, {keyframes} from 'styled-components';
+import {colors} from 'styles';
 
 const addOverlay = keyframes`
   from {
@@ -37,15 +38,13 @@ export const ImagePreviewWrapper = styled.div`
   height: 100vh;
   justify-content: center;
   width: 100vw;
-
   img {
-    max-height: 500px;
-    max-width: 500px;
+    max-height: 600px;
+    max-width: 700px;
   }
 `;
 
 export const ImagePreviewCustom = styled(ImagePreview)`
-  -webkit-backdrop-filter: blur(10px);
   align-items: center;
   backdrop-filter: blur(80px);
   display: flex;
@@ -53,7 +52,8 @@ export const ImagePreviewCustom = styled(ImagePreview)`
   justify-content: center;
   width: 100vw;
   &::before {
-    opacity: 0.9;
+    background: ${colors.backgroundDark}
+    opacity: 0.99;
     z-index: -1;
   }
 `;
