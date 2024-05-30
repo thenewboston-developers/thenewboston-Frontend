@@ -1,9 +1,9 @@
-import ToolbarMenuLink from 'components/ToolbarMenuLink';
 import {SFC} from 'types';
+import {useToggle} from 'hooks';
 import * as S from './Styles';
 import Button from 'components/Button';
-import {useToggle} from 'hooks';
 import CoreModal from 'modals/CoreModal';
+import ToolbarMenuLink from 'components/ToolbarMenuLink';
 
 const Toolbar: SFC = ({className}) => {
   const [coreModalIsOpen, toggleCoreModal] = useToggle(false);

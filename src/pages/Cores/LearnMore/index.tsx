@@ -1,10 +1,10 @@
-import EmptyText from 'components/EmptyText';
-import {useToggle} from 'hooks';
-import CoreModal from 'modals/CoreModal';
-import {SFC} from 'types';
-import * as S from './Styles';
 import {articlesData} from './ArticlesData';
+import {SFC} from 'types';
+import {useToggle} from 'hooks';
+import * as S from './Styles';
 import ArticleCard from './ArticleCard';
+import CoreModal from 'modals/CoreModal';
+import EmptyText from 'components/EmptyText';
 
 const LearnMore: SFC = ({className}) => {
   const [coreModalIsOpen, toggleCoreModal] = useToggle(false);

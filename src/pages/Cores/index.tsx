@@ -1,10 +1,9 @@
 import {Navigate, Route, Routes} from 'react-router-dom';
-
 import {SFC} from 'types';
-import Home from './Home';
-import LearnMore from './LearnMore';
-import Layout from './layout';
 import * as S from './Styles';
+import Home from './Home';
+import Layout from './layout';
+import LearnMore from './LearnMore';
 
 const Cores: SFC = ({className}) => {
   return (

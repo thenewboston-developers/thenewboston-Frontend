@@ -26,21 +26,21 @@ export const Container = styled.div`
 `;
 
 export const CodeContainer = styled.div`
-  padding: 24px 32px;
   background-color: #d3d3d3;
   border-radius: 10px;
+  padding: 24px 32px;
 `;
 
 export const ListContainer = styled.div`
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   position: relative;
 `;
 
 export const ListItem = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
   margin: 10px 0;
 `;
 
@@ -51,15 +51,15 @@ export const ListLine = styled.div`
 `;
 
 export const RoleNumber = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  align-items: center;
   background-color: #064d8d;
+  border-radius: 50%;
   color: white;
   display: flex;
+  height: 40px;
   justify-content: center;
-  align-items: center;
   position: relative;
+  width: 40px;
   z-index: 1;
 `;
 

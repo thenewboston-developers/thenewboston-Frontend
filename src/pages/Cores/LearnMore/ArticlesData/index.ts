@@ -1,10 +1,10 @@
 import {Article} from 'types';
-import VisionImg from '../../../../assets/articles/vision_statement.jpg';
-import MissionImg from '../../../../assets/articles/mission_statement.jpg';
-import SystemArc from '../../../../assets/articles/system_architecture.png';
-import Benefits from '../../../../assets/articles/benefits.png';
-import UseCases from '../../../../assets/articles/use_cases.png';
-import Tag from '../../../../assets/articles/tag_icon.png';
+import Benefits from 'assets/articles/benefits.png';
+import MissionImg from 'assets/articles/mission_statement.jpg';
+import SystemArc from 'assets/articles/system_architecture.png';
+import Tag from 'assets/articles/tag_icon.png';
+import UseCases from 'assets/articles/use_cases.png';
+import VisionImg from 'assets/articles/vision_statement.jpg';
 
 export const data = {
   amount: 5,
@@ -12,12 +12,12 @@ export const data = {
   payload: {
     message: 'Hey',
     recipient: `995bd2a4db610062f404510617e83126fa37e28368
-    05975f334108b55523634c`,
+                05975f334108b55523634c`,
     sender: `eb01f474a637e402b44407f3c1044a0c4b59261515d50
-    be9abd4ee34fcb9075b`,
+              be9abd4ee34fcb9075b`,
     signature: `4b86d923cfc7603f39e1d0c36afcec2e454c624b1d
-    c4dd03bf6764e4662162644d0a78c864d16bb7e4608a76db6df0e84
-    2a550c52d4811f81d8049f273da8a01`,
+                c4dd03bf6764e4662162644d0a78c864d16bb7e4608a76db6df0e84
+                2a550c52d4811f81d8049f273da8a01`,
     transaction_fee: 1,
   },
 };

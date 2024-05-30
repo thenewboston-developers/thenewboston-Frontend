@@ -1,6 +1,6 @@
 import {SFC} from 'types';
 import * as S from './Styles';
-import ArticleDetail from 'components/ArticleCard';
+import ArticleDetail from 'components/ArticleLabel';
 import {Article} from 'types/articles';
 
 export interface ArticleCardProps {

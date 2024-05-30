@@ -1,15 +1,14 @@
-import {useMemo} from 'react';
-import {useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
-
-import EmptyText from 'components/EmptyText';
-import SectionHeading from 'components/SectionHeading';
-import {useToggle} from 'hooks';
-import CoreModal from 'modals/CoreModal';
 import {getCores} from 'selectors/state';
 import {SFC} from 'types';
-import CoreCard from '../CoreCard';
+import {useMemo} from 'react';
+import {useSelector} from 'react-redux';
+import {useToggle} from 'hooks';
 import * as S from './Styles';
+import CoreCard from '../CoreCard';
+import CoreModal from 'modals/CoreModal';
+import EmptyText from 'components/EmptyText';
+import orderBy from 'lodash/orderBy';
+import SectionHeading from 'components/SectionHeading';
 
 const Home: SFC = ({className}) => {
   const [coreModalIsOpen, toggleCoreModal] = useToggle(false);
