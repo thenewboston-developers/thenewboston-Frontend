@@ -36,7 +36,10 @@ export const updateUser = async (id: number, data: FormData): Promise<UserReadSe
 };
 export const filterUserList = async (username: string): Promise<UserReadSerializer> => {
   try {
-    const response = await axios.patch<UserReadSerializer>(`${BASE_URL}/list/${username}`, authorizationFormHeaders());
+    const response = await axios.patch<UserReadSerializer>(
+      `${BASE_URL}/list?q=${username}`,
+      authorizationFormHeaders(),
+    );
     return response.data;
   } catch (error) {
     console.error(error);
