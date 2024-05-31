@@ -10,7 +10,9 @@ export const Modal = styled(UModal)`
   width: 360px;
 `;
 export const InputBox = styled(Textarea)`
-  padding-right: 36px;
+  padding-right: 43px;
+  max-height: 350px;
+  overflow-y: auto;
 `;
 
 export const Div = styled.div`

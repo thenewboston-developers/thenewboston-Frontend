@@ -17,5 +17,5 @@ export const EmojiButton = styled.button<{$isOpenEmojiBox?: boolean | false}>`
   outline: none;
   position: absolute;
   right: 15px;
-  top: 30px;
+  top: 34px;
 `;
