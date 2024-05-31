@@ -1,10 +1,11 @@
-import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
+import {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {Field, Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
-import {FileInput, Textarea} from 'components/FormElements';
+import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
+import EmojiBox from 'components/EmojiPicker';
 import {createPost, updatePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {AppDispatch, Post, SFC} from 'types';
@@ -83,7 +84,11 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <Textarea errors={errors} label="Content" name="content" touched={touched} />
+            <S.Div>
+              <S.InputBox errors={errors} label="Content" name="content" touched={touched} />
+              <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
+            </S.Div>
+
             {!values.image && (
               <Field component={FileInput} name="image" onChange={handleFileChange} touched={touched} />
             )}
