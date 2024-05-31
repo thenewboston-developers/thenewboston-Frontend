@@ -2,15 +2,14 @@ import {createPortal} from 'react-dom';
 import {SFC} from 'types';
 import {useState} from 'react';
 import * as S from './Styles';
-import DefaultAvatar from '../../assets/default-avatar.svg';
 
 export interface ImageModalProps {
   close(): void;
-  image: string | null;
+  imageSrc: string;
 }
 
-const ImageModal: SFC<ImageModalProps> = ({image, close}) => {
-  const [preview, setPreview] = useState<string | null>(image ? image : DefaultAvatar);
+const FullScreenImageModal: SFC<ImageModalProps> = ({imageSrc, close}) => {
+  const [preview, setPreview] = useState<string | null>(imageSrc);
 
   return createPortal(
     <>
@@ -30,4 +29,4 @@ const ImageModal: SFC<ImageModalProps> = ({image, close}) => {
   );
 };
 
-export default ImageModal;
+export default FullScreenImageModal;

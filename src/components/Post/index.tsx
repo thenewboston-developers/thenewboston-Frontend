@@ -1,28 +1,28 @@
-import {useState} from 'react';
+import {AppDispatch, Post as TPost, SFC} from 'types';
+import {ButtonColor} from 'components/Button';
+import {deletePost} from 'dispatchers/posts';
+import {displayErrorToast, displayToast} from 'utils/toasts';
+import {getSelf} from 'selectors/state';
 import {Link, useNavigate} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
 import {
-  mdiCommentTextOutline,
   mdiChevronDown,
   mdiChevronUp,
+  mdiCommentTextOutline,
   mdiDeleteOutline,
   mdiDotsVertical,
   mdiSquareEditOutline,
 } from '@mdi/js';
-import Line from 'components/Line';
-import {ButtonColor} from 'components/Button';
-import Linkify from 'components/Linkify';
-import {deletePost} from 'dispatchers/posts';
-import {ToastType} from 'enums';
-import {useToggle} from 'hooks';
-import PostModal from 'modals/PostModal';
-import {getSelf} from 'selectors/state';
-import {AppDispatch, Post as TPost, SFC} from 'types';
 import {shortDate} from 'utils/dates';
-import {displayErrorToast, displayToast} from 'utils/toasts';
-import Comments from './Comments';
+import {ToastType} from 'enums';
+import {useDispatch, useSelector} from 'react-redux';
+import {useState} from 'react';
+import {useToggle} from 'hooks';
 import * as S from './Styles';
-import ImageModal from 'modals/ImageModal';
+import Comments from './Comments';
+import FullScreenImageModal from 'modals/FullScreenImageModal';
+import Line from 'components/Line';
+import Linkify from 'components/Linkify';
+import PostModal from 'modals/PostModal';
 
 export interface PostProps {
   post: TPost;
@@ -141,7 +141,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
       {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
-      {imageModalIsOpen ? <ImageModal close={toggleImageModal} image={image} /> : null}
+      {imageModalIsOpen && image ? <FullScreenImageModal close={toggleImageModal} imageSrc={image} /> : null}
     </>
   );
 };
