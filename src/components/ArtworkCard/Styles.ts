@@ -1,9 +1,8 @@
+import {colors, fonts} from 'styles';
 import styled from 'styled-components';
-
 import UDropdownMenu from 'components/DropdownMenu';
 import ULine from 'components/Line';
 import UThumbnail from 'components/Thumbnail';
-import {colors, fonts} from 'styles';
 
 export const Bottom = styled.div`
   display: flex;
@@ -18,6 +17,7 @@ export const Container = styled.div`
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
   overflow: hidden;
   transition: all 0.2s ease-in-out 0s;
+  position: relative; /* Ensure the container is positioned relative */
 `;
 
 export const Description = styled.div`
@@ -51,6 +51,14 @@ export const TextContainer = styled.div`
 
 export const Thumbnail = styled(UThumbnail)`
   border-radius: 0;
+  position: relative; /* Ensure the thumbnail is positioned relative */
+`;
+
+export const BadgeContainer = styled.div`
+  left: 10px;
+  position: absolute;
+  top: 10px;
+  z-index: 1;
 `;
 
 export const Top = styled.div`

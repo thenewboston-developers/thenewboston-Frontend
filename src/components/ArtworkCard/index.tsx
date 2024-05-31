@@ -1,21 +1,22 @@
-import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
+import {useSelector} from 'react-redux';
 
-import Price from 'components/Price';
+import {Artwork, SFC} from 'types';
+import {getSelf} from 'selectors/state';
 import {useToggle} from 'hooks';
+import * as S from './Styles';
 import ArtworkDeleteModal from 'modals/ArtworkDeleteModal';
 import ArtworkModal from 'modals/ArtworkModal';
-import {getSelf} from 'selectors/state';
-import {Artwork, SFC} from 'types';
-import * as S from './Styles';
 import Badge, {BadgeStyle} from 'components/Badge';
+import Price from 'components/Price';
 
 export interface ArtworkCardProps {
   artwork: Artwork;
+  pageName: string;
 }
 
-const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
+const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className, pageName}) => {
   const [artworkDeleteModalIsOpen, toggleArtworkDeleteModal] = useToggle(false);
   const [artworkModalIsOpen, toggleArtworkModal] = useToggle(false);
   const self = useSelector(getSelf);
@@ -69,7 +70,14 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className}) => {
       <S.Container className={className}>
         <Link to={`/art/artworks/${artwork.id}`}>
           <S.Thumbnail thumbnailUrl={artwork.image} />
-          <Badge badgeStyle={BadgeStyle.draft} children={artwork.price_amount ? badgeTexts.SALE : badgeTexts.DRAFT} />
+          {pageName === 'profile' && (
+            <S.BadgeContainer>
+              <Badge
+                badgeStyle={BadgeStyle.draft}
+                children={artwork.price_amount ? badgeTexts.SALE : badgeTexts.DRAFT}
+              />
+            </S.BadgeContainer>
+          )}
         </Link>
         {renderDetails()}
       </S.Container>

@@ -38,7 +38,7 @@ const Marketplace: SFC = ({className}) => {
       return (
         <S.ArtworkCards>
           {artworkList.map((artwork) => (
-            <ArtworkCard artwork={artwork} key={artwork.id} />
+            <ArtworkCard pageName="marketplace" artwork={artwork} key={artwork.id} />
           ))}
         </S.ArtworkCards>
       );
