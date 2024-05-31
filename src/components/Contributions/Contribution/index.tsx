@@ -30,14 +30,18 @@ interface ContributionProps {
 }
 
 const Contribution: FC<ContributionProps> = ({className, contribution, ia}) => {
-  const githubRepositoryLink = getRepositoryUrl(contribution.repo.owner_name, contribution.repo.name);
-  const githubUserProfileLink = getUserProfileUrl(contribution.github_user.github_username);
-  const githubPullRequestLink = getPullRequestUrl(
-    contribution.repo.owner_name,
-    contribution.repo.name,
-    contribution.pull.issue_number,
-  );
+  const githubRepositoryLink = contribution.repo
+    ? getRepositoryUrl(contribution.repo.owner_name, contribution.repo.name)
+    : '';
+  const githubUserProfileLink = contribution.github_user
+    ? getUserProfileUrl(contribution.github_user.github_username)
+    : '';
+  const githubPullRequestLink =
+    contribution.repo && contribution.pull
+      ? getPullRequestUrl(contribution.repo.owner_name, contribution.repo.name, contribution.pull.issue_number)
+      : '';
   const iaProfileLink = ia ? `/profile/${ia.id}` : '';
+  const NO_GITHUB_DETAILS_FOUND_TEXT = 'Not Found';
 
   return (
     <div className={className}>
@@ -53,16 +57,24 @@ const Contribution: FC<ContributionProps> = ({className, contribution, ia}) => {
         <ContributionCardBody>
           <Col size={6}>
             <ContributionCardItem iconPath={mdiGithub} iconLink={githubUserProfileLink} isIconLinkExternal={true}>
-              <Link to={githubUserProfileLink} target="_blank">
-                {contribution.github_user.github_username}
-              </Link>
+              {githubUserProfileLink ? (
+                <Link to={githubUserProfileLink} target="_blank">
+                  {contribution?.github_user?.github_username}
+                </Link>
+              ) : (
+                NO_GITHUB_DETAILS_FOUND_TEXT
+              )}
             </ContributionCardItem>
           </Col>
           <Col size={6}>
             <ContributionCardItem iconPath={mdiCodeBrackets} iconLink={githubRepositoryLink} isIconLinkExternal={true}>
-              <Link to={githubRepositoryLink} target="_blank">
-                {contribution.repo.name}
-              </Link>
+              {githubRepositoryLink ? (
+                <Link to={githubRepositoryLink} target="_blank">
+                  {contribution?.repo?.name || NO_GITHUB_DETAILS_FOUND_TEXT}
+                </Link>
+              ) : (
+                NO_GITHUB_DETAILS_FOUND_TEXT
+              )}
             </ContributionCardItem>
           </Col>
         </ContributionCardBody>
@@ -70,15 +82,15 @@ const Contribution: FC<ContributionProps> = ({className, contribution, ia}) => {
           <Col size={6}>
             <ContributionCardItem
               iconPath={mdiSquareRoundedBadgeOutline}
-              iconLink={contribution?.pull ? githubPullRequestLink : ''}
+              iconLink={githubPullRequestLink}
               isIconLinkExternal={true}
             >
-              {contribution?.pull ? (
+              {githubPullRequestLink ? (
                 <Link to={githubPullRequestLink} target="_blank">
-                  {contribution.pull.title}
+                  {contribution?.pull?.title || ''}
                 </Link>
               ) : (
-                'Not Found'
+                NO_GITHUB_DETAILS_FOUND_TEXT
               )}
             </ContributionCardItem>
           </Col>
@@ -100,7 +112,10 @@ const Contribution: FC<ContributionProps> = ({className, contribution, ia}) => {
               </S.DescriptionHeading>
             </ContributionCardItem>
             <S.Description>
-              <ReadMoreLess text={contribution?.pull?.assessment_explanation} maxLength={180} />
+              <ReadMoreLess
+                text={contribution?.pull?.assessment_explanation || contribution?.assessment_explanation || ''}
+                maxLength={180}
+              />
             </S.Description>
           </div>
         </ContributionCardHeader>

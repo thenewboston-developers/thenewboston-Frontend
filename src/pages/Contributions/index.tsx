@@ -3,20 +3,21 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import ContributionsList from 'components/Contributions/Contributions';
 import EmptyText from 'components/EmptyText';
+import Loader from 'components/Loader';
 import Toolbar from './Toolbar';
 import TopContributors from './TopContributors';
-import Loader from 'components/Loader';
 import TotalContributionsChart from './TotalContributionsChart';
-import {displayErrorToast} from 'utils/toasts';
 import {AppDispatch, SFC} from 'types';
 import {Col, Row} from 'styles/components/GridStyle';
 import {UserIdFilterValues} from 'enums';
+import {displayErrorToast} from 'utils/toasts';
 import {
   getContributions as _getContributions,
   resetContributions as _resetContributions,
 } from 'dispatchers/contributions';
 import {getContributions} from 'selectors/state';
 import {getTopContributors} from 'utils/contributions';
+
 import * as S from './Styles';
 
 interface ContributionsProps {

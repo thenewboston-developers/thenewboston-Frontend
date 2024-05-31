@@ -2,14 +2,15 @@ import {FC} from 'react';
 import {useSelector} from 'react-redux';
 
 import Button from 'components/Button';
-import {useToggle} from 'hooks';
-import ContributionCreateModal from 'modals/ContributionCreateModal';
 import Contribution from 'components/Contributions/Contribution';
+import ContributionCreateModal from 'modals/ContributionCreateModal';
 import InfiniteScroll from 'components/InfiniteScroll';
 import PanelHeading from 'components/PanelHeading';
 import {Col, Row} from 'styles/components/GridStyle';
 import {Contribution as TContribution} from 'types';
 import {getIa} from 'selectors/state';
+import {getSelf} from 'selectors/state';
+import {useToggle} from 'hooks';
 
 import * as S from './Styles';
 
@@ -31,6 +32,7 @@ const Contributions: FC<ContributionsProps> = ({
   selfContributions = false,
 }) => {
   const ia = useSelector(getIa).ia;
+  const self = useSelector(getSelf);
   const [createNewContributionModalIsOpen, toggleCreateNewContributionModal] = useToggle(false);
 
   const renderCreateNewContributionModal = () => {
@@ -55,7 +57,9 @@ const Contributions: FC<ContributionsProps> = ({
     <div className={className}>
       <S.PanelHeadingContainer>
         <PanelHeading heading={panelHeading} />
-        {selfContributions && <Button onClick={toggleCreateNewContributionModal} text="Create New" />}
+        {selfContributions && self.is_manual_contribution_allowed && (
+          <Button onClick={toggleCreateNewContributionModal} text="Create New" />
+        )}
       </S.PanelHeadingContainer>
       {fetchMore && contributionsList.length > 0 ? (
         <InfiniteScroll dataLength={contributionsList.length} hasMore={hasMore || false} next={fetchMore}>
