@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
-import {Input, Select} from 'components/FormElements';
+import {Input, Select, Textarea} from 'components/FormElements';
 import {createArtwork, updateArtwork} from 'dispatchers/artworks';
 import {ToastType} from 'enums';
 import {usePriceCoreOptions} from 'hooks';
@@ -116,19 +116,19 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({
               {renderTabs(artwork ? artwork : null)}
               <S.Divider />
               <Form>
-                <Input errors={errors} label="Name" name="name" touched={touched} />
-                <Input errors={errors} label="Description" name="description" touched={touched} />
+                <Input errors={errors} label="NAME" name="name" touched={touched} />
+                <Textarea errors={errors} label="DESCRIPTION" name="description" touched={touched} />
                 {activeTab === SaveTypeTab.SELL && (
                   <S.Row>
                     <Select
                       errors={errors}
-                      label="Currency"
+                      label="CURRENCY"
                       name="price_core"
                       options={priceCoreOptions}
                       touched={touched}
                     />
                     <S.Container>
-                      <Input errors={errors} label="Price Amount" name="price_amount" touched={touched} type="number" />
+                      <Input errors={errors} label="PRICE AMOUNT" name="price_amount" touched={touched} type="number" />
                     </S.Container>
                   </S.Row>
                 )}{' '}
@@ -137,7 +137,7 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({
                   disabled={isSubmitting}
                   isSubmitting={isSubmitting}
                   isValid={isValid}
-                  text={activeTab === SaveTypeTab.SELL ? 'Sell Artwork' : 'Save as Draft'}
+                  text={activeTab === SaveTypeTab.SELL ? 'Sell artwork' : 'Save as draft'}
                   type={ButtonType.submit}
                 />
               </Form>
