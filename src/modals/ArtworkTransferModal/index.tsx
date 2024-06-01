@@ -58,7 +58,7 @@ const ArtworkTransferModal: SFC<ArtworkTransferModalProps> = ({artwork, classNam
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, touched}) => (
           <Form>
-            <Input errors={errors} label="New Owner ID" name="new_owner" touched={touched} />
+            {/* <Input errors={errors} label="New Owner ID" name="new_owner" touched={touched} /> */}
             <UserFilterDropdown />
             <Button
               dirty={dirty}

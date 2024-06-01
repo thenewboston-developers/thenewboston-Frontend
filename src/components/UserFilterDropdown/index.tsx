@@ -1,19 +1,18 @@
 import React, {useEffect, useState, ChangeEvent} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import axios from 'axios';
 import {filterUserList} from 'dispatchers/users';
 import {displayErrorToast} from 'utils/toasts';
 import {AppDispatch, SFC} from 'types';
+import * as S from './Styles';
+import axios from 'axios';
+import {UserReadSerializer} from 'types';
+import {authorizationHeaders} from 'utils/authentication';
+const BASE_URL = `${process.env.REACT_APP_API_URL}/api/users`;
 
-// Define the User type
 interface User {
   id: number;
   username: string;
-  // Add other fields as needed
 }
-
-// Define the fixed API URL
-const API_URL = 'https://dixeam.com/users';
 
 const UserFilterDropdown: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -34,10 +33,12 @@ const UserFilterDropdown: React.FC = () => {
   const handleSearch = async (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
     try {
-      const response = await dispatch(filterUserList(searchTerm));
-      console.log(response);
-      setUsers([]);
-      setFilteredUsers([]);
+      const response = await axios.get<UserReadSerializer, any>(
+        `${BASE_URL}?q=${event.target.value}`,
+        authorizationHeaders(),
+      );
+      setUsers(response.data);
+      setFilteredUsers(response.data);
     } catch (error) {
       console.error('Error fetching users:', error);
     }
@@ -45,12 +46,12 @@ const UserFilterDropdown: React.FC = () => {
 
   return (
     <div>
-      <input type="text" placeholder="Search by username" value={searchTerm} onChange={handleSearch} />
-      <ul>
+      <S.Input type="text" placeholder="Search by username" value={searchTerm} onChange={handleSearch} />
+      <S.Ulist>
         {filteredUsers.map((user) => (
-          <li key={user.id}>{user.username}</li>
+          <S.Uli key={user.id}>{user.username}</S.Uli>
         ))}
-      </ul>
+      </S.Ulist>
     </div>
   );
 };

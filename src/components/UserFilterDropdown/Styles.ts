@@ -1,35 +1,32 @@
-import Icon from 'components/Icon';
 import styled from 'styled-components';
-import {colors} from 'styles';
-import {Menu, Option} from 'styles/components/DropMenuStyle';
 
-export const MenuIcon = styled(Icon)<{$isOpen: boolean}>`
-  background: ${({$isOpen = false}) => ($isOpen ? colors.whiteHover : 'none')};
-  color: ${({$isOpen = false}) => ($isOpen ? colors.lightBlue : 'none')};
+export const Ulist = styled.ul`
+  list-style: none;
+  padding: 0px;
+  border: solid 1px #f2f2f2;
+  border-radius: 6px;
+  position: absolute;
+  background: #fff;
+  z-index: 50;
+  top: 105px;
+  width: 89%;
+`;
+export const Uli = styled.li`
+  list-style: none;
+  padding: 10px 10px 10px 10px;
+  border-bottom: solid 1px #f2f2f2;
+
   &:hover {
-    color: ${colors.lightBlue};
-    cursor: pointer;
+    background-color: #e0e0e0;
   }
 `;
-
-export const DropMenu = styled(Menu)`
-  border-radius: 14px;
+export const Input = styled.input`
+  background: #f3f4f6;
+  border-radius: 3px;
+  font-family: OpenSans, sans-serif;
+  height: 40px;
   padding: 10px 14px;
-`;
-
-export const MenuOption = styled(Option)<{$MenuIndex: number}>`
-  border-top: ${({$MenuIndex = 0}) => ($MenuIndex === 0 ? 'none' : `1px solid ${colors.border}`)};
-  padding: 2px 0px;
-`;
-
-export const Div = styled.div<{$label: string}>`
-  align-items: center;
-  color: ${({$label = ''}) => ($label === 'Delete' ? colors.palette.red['500'] : colors.black)};
-  display: flex;
-  font-weight: 600;
-  gap: 5px;
-  justify-content: center;
-  &:hover {
-    color: ${({$label = ''}) => ($label === 'Delete' ? colors.palette.red['600'] : colors.lightBlue)};
-  }
+  border: 1px solid #f44336;
+  display: block;
+  width: 100%;
 `;
