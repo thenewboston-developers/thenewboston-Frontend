@@ -1,8 +1,5 @@
-import {AppDispatch, Post as TPost, SFC} from 'types';
-import {ButtonColor} from 'components/Button';
-import {deletePost} from 'dispatchers/posts';
-import {displayErrorToast, displayToast} from 'utils/toasts';
-import {getSelf} from 'selectors/state';
+import {useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
 import {
   mdiChevronDown,
@@ -12,17 +9,22 @@ import {
   mdiDotsVertical,
   mdiSquareEditOutline,
 } from '@mdi/js';
-import {shortDate} from 'utils/dates';
-import {ToastType} from 'enums';
-import {useDispatch, useSelector} from 'react-redux';
-import {useState} from 'react';
-import {useToggle} from 'hooks';
-import * as S from './Styles';
+
 import Comments from './Comments';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
 import Line from 'components/Line';
 import Linkify from 'components/Linkify';
 import PostModal from 'modals/PostModal';
+import {AppDispatch, Post as TPost, SFC} from 'types';
+import {ButtonColor} from 'components/Button';
+import {ToastType} from 'enums';
+import {deletePost} from 'dispatchers/posts';
+import {displayErrorToast, displayToast} from 'utils/toasts';
+import {getSelf} from 'selectors/state';
+import {shortDate} from 'utils/dates';
+import {useToggle} from 'hooks';
+
+import * as S from './Styles';
 
 export interface PostProps {
   post: TPost;
