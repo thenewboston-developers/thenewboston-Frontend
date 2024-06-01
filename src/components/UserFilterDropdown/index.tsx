@@ -34,7 +34,7 @@ const UserFilterDropdown: React.FC = () => {
     setSearchTerm(event.target.value);
     try {
       const response = await axios.get<UserReadSerializer, any>(
-        `${BASE_URL}?q=${event.target.value}`,
+        `${BASE_URL}?search=${event.target.value}`,
         authorizationHeaders(),
       );
       setUsers(response.data);
