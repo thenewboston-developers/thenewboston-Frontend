@@ -40,22 +40,24 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({
 
   const dispatch = useDispatch<AppDispatch>();
   const priceCoreOptions = usePriceCoreOptions();
-  const [activeTab, setActiveTab] = useState<SaveTypeTab>(SaveTypeTab.SAVE);
+  const [activeTab, setActiveTab] = useState<SaveTypeTab>(SaveTypeTab.SELL);
 
   const renderTabs = (artworkVl: Artwork | null) => {
     return (
-      <S.Tabs>
-        <Tab isActive={activeTab === SaveTypeTab.SELL} onClick={() => setActiveTab(SaveTypeTab.SELL)}>
-          <Icon path={mdiCubeScan} size={'16px'} />
-          Sell on Marketplace
-        </Tab>
-        {!artworkVl && (
-          <Tab isActive={activeTab === SaveTypeTab.SAVE} onClick={() => setActiveTab(SaveTypeTab.SAVE)}>
-            <Icon path={mdiContentSaveOutline} size={'16px'} />
-            Save As Draft
-          </Tab>
+      <>
+        {!artworkVl?.price_amount && (
+          <S.Tabs>
+            <S.CustomTab isActive={activeTab === SaveTypeTab.SELL} onClick={() => setActiveTab(SaveTypeTab.SELL)}>
+              <Icon path={mdiCubeScan} size={'16px'} />
+              Sell on Marketplace
+            </S.CustomTab>
+            <S.CustomTab isActive={activeTab === SaveTypeTab.SAVE} onClick={() => setActiveTab(SaveTypeTab.SAVE)}>
+              <Icon path={mdiContentSaveOutline} size={'16px'} />
+              Save As Draft
+            </S.CustomTab>
+          </S.Tabs>
         )}
-      </S.Tabs>
+      </>
     );
   };
 

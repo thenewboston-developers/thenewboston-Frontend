@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import UModal from 'components/Modal';
 import UTabs from 'components/Tabs';
+import Tab from 'components/Tab';
 
 export const Modal = styled(UModal)`
   display: flex;
@@ -14,7 +15,7 @@ export const Wrap = styled.div`
 
 export const Tabs = styled(UTabs)`
   height: 6vh;
-  width: 22vw;
+  width: 23vw;
   font-weight: bold;
 `;
 
@@ -28,3 +29,7 @@ export const Row = styled.div`
   grid-template-columns: repeat(2, 1fr);
 `;
 export const Container = styled.div``;
+
+export const CustomTab = styled(Tab)`
+  font-size: 0.8vw;
+`;

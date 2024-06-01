@@ -17,7 +17,7 @@ export const Container = styled.div`
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
   overflow: hidden;
   transition: all 0.2s ease-in-out 0s;
-  position: relative; /* Ensure the container is positioned relative */
+  position: relative;
 `;
 
 export const Description = styled.div`
@@ -51,14 +51,14 @@ export const TextContainer = styled.div`
 
 export const Thumbnail = styled(UThumbnail)`
   border-radius: 0;
-  position: relative; /* Ensure the thumbnail is positioned relative */
+  position: relative;
 `;
 
 export const BadgeContainer = styled.div`
   left: 10px;
   position: absolute;
   top: 10px;
-  z-index: 1;
+  z-index: 0;
 `;
 
 export const Top = styled.div`

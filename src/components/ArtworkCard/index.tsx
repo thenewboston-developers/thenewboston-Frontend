@@ -13,10 +13,10 @@ import Price from 'components/Price';
 
 export interface ArtworkCardProps {
   artwork: Artwork;
-  pageName: string;
+  showBadge: boolean;
 }
 
-const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className, pageName}) => {
+const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className, showBadge}) => {
   const [artworkDeleteModalIsOpen, toggleArtworkDeleteModal] = useToggle(false);
   const [artworkModalIsOpen, toggleArtworkModal] = useToggle(false);
   const self = useSelector(getSelf);
@@ -70,7 +70,7 @@ const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className, pageName}) => {
       <S.Container className={className}>
         <Link to={`/art/artworks/${artwork.id}`}>
           <S.Thumbnail thumbnailUrl={artwork.image} />
-          {pageName === 'profile' && (
+          {showBadge && (
             <S.BadgeContainer>
               <Badge
                 badgeStyle={BadgeStyle.draft}
