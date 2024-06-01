@@ -8,6 +8,10 @@ export const Modal = styled(UModal)`
   flex-direction: column;
   width: 519px;
 `;
+export const Wrap = styled.div`
+  font-weight: bold;
+`;
+
 export const Tabs = styled(UTabs)`
   height: 6vh;
   width: 22vw;
