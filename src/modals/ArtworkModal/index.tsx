@@ -2,18 +2,17 @@ import React, {Dispatch, SetStateAction, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
-import Button, {ButtonType} from 'components/Button';
-import {Input, Select, Textarea} from 'components/FormElements';
+import {AppDispatch, Artwork, SFC} from 'types';
 import {createArtwork, updateArtwork} from 'dispatchers/artworks';
+import {displayErrorToasts, displayToast} from 'utils/toasts';
+import {Input, Select, Textarea} from 'components/FormElements';
+import {mdiContentSaveOutline, mdiCubeScan} from '@mdi/js';
 import {ToastType} from 'enums';
 import {usePriceCoreOptions} from 'hooks';
-import {AppDispatch, Artwork, SFC} from 'types';
-import {displayErrorToasts, displayToast} from 'utils/toasts';
-import yup from 'utils/yup';
 import * as S from './Styles';
-import Tab from 'components/Tab';
+import Button, {ButtonType} from 'components/Button';
 import Icon from '@mdi/react';
-import {mdiContentSaveOutline, mdiCubeScan} from '@mdi/js';
+import yup from 'utils/yup';
 
 export interface ArtworkModalProps {
   artwork?: Artwork;

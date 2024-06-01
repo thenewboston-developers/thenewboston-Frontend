@@ -14,9 +14,9 @@ export const Wrap = styled.div`
 `;
 
 export const Tabs = styled(UTabs)`
+  font-weight: bold;
   height: 6vh;
   width: 23vw;
-  font-weight: bold;
 `;
 
 export const Divider = styled.div`
