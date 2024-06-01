@@ -1,3 +1,8 @@
+import {mdiSquareEditOutline} from '@mdi/js';
+import {useDispatch, useSelector} from 'react-redux';
+import {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
+
 import {AppDispatch, SFC} from 'types';
 import {ButtonColor} from 'components/Button';
 import {createFollower, deleteFollower} from 'dispatchers/followers';
@@ -6,14 +11,10 @@ import {formatNumber} from 'utils/numbers';
 import {getFollowers} from 'api/followers';
 import {getSelf, getUserStats as getUserStatsState} from 'selectors/state';
 import {getUserStats} from 'dispatchers/userStats';
-import {mdiSquareEditOutline} from '@mdi/js';
-import {useDispatch, useSelector} from 'react-redux';
-import {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
 import {useToggle, useUser} from 'hooks';
 import * as S from './Styles';
 import DefaultAvatar from 'assets/default-avatar.svg';
-import ImageModal from 'modals/ImageModal';
+import FullScreenImageModal from 'modals/FullScreenImageModal';
 import logo from 'assets/logo192.png';
 import ProfileEditModal from 'modals/ProfileEditModal';
 
@@ -160,7 +161,9 @@ const UserDetails: SFC = ({className}) => {
         </S.Wrapper>
       </S.Container>
       {profileEditModalIsOpen ? <ProfileEditModal close={toggleProfileEditModal} /> : null}
-      {ProfileAvatarModalIsOpen ? <ImageModal image={user ? user.avatar : null} close={handleClose} /> : null}
+      {ProfileAvatarModalIsOpen ? (
+        <FullScreenImageModal imageSrc={user?.avatar ? user.avatar : DefaultAvatar} close={handleClose} />
+      ) : null}
     </>
   );
 };
