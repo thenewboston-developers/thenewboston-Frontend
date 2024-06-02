@@ -85,7 +85,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
             <S.Div>
-              <S.InputBox errors={errors} label="Content" name="content" touched={touched} />
+              <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
               <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
             </S.Div>
 

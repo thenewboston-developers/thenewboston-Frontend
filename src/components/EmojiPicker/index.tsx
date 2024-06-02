@@ -1,16 +1,18 @@
-import {SFC} from 'types';
 import {useEffect, useRef, useState} from 'react';
 import {mdiEmoticonOutline} from '@mdi/js';
 import Icon from '@mdi/react';
+
 import EmojiPicker from 'emoji-picker-react';
+import {SFC} from 'types';
+
 import * as S from './Styles';
 
 interface EmojiBoxProps {
   field: string;
-  value: string;
   setFieldValue: (field: string, value: string) => void;
+  value: string;
 }
-const EmojiBox: SFC<EmojiBoxProps> = ({field, value, setFieldValue}) => {
+const EmojiBox: SFC<EmojiBoxProps> = ({field, setFieldValue, value}) => {
   const [isOpenEmojiBox, setIsOpenEmojiBox] = useState(false);
 
   const emojiBoxRef = useRef<HTMLDivElement>(null);
