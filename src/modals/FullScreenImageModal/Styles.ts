@@ -1,5 +1,7 @@
-import ImagePreview from 'components/ImagePreview';
 import styled, {keyframes} from 'styled-components';
+
+import UImagePreview from 'components/ImagePreview';
+
 import {colors} from 'styles';
 
 const addOverlay = keyframes`
@@ -32,7 +34,7 @@ export const Overlay = styled.div`
   width: 100vw;
 `;
 
-export const ImagePreviewWrapper = styled.div`
+export const ImagePreviewContainer = styled.div`
   align-items: center;
   display: flex;
   height: 100vh;
@@ -44,7 +46,7 @@ export const ImagePreviewWrapper = styled.div`
   }
 `;
 
-export const ImagePreviewCustom = styled(ImagePreview)`
+export const ImagePreview = styled(UImagePreview)`
   align-items: center;
   backdrop-filter: blur(80px);
   display: flex;

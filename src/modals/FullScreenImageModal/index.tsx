@@ -16,15 +16,15 @@ const FullScreenImageModal: SFC<ImageModalProps> = ({imageSrc, close}) => {
   return createPortal(
     <>
       <S.Modal>
-        <S.ImagePreviewWrapper>
-          <S.ImagePreviewCustom
+        <S.ImagePreviewContainer>
+          <S.ImagePreview
             onClear={() => {
               setPreview(null);
               close();
             }}
             src={preview}
-          ></S.ImagePreviewCustom>
-        </S.ImagePreviewWrapper>
+          ></S.ImagePreview>
+        </S.ImagePreviewContainer>
       </S.Modal>
     </>,
     document.getElementById('modal-root') as HTMLElement,
