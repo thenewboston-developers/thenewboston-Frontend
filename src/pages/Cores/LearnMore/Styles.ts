@@ -39,15 +39,16 @@ export const ListContainer = styled.div`
 `;
 
 export const ListItem = styled.div`
-  align-items: center;
   display: flex;
-  margin: 10px 0;
+  margin: 20px 0;
 `;
 
 export const ListLine = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80%;
+  gap: 1vh;
+  padding-top: 5px;
+  width: 100%;
 `;
 
 export const RoleNumber = styled.div`
@@ -64,9 +65,9 @@ export const RoleNumber = styled.div`
 `;
 
 export const ContentTitle = styled.div`
-  margin-left: 20px;
-  font-weight: bold;
   font-size: 50;
+  font-weight: bold;
+  margin-left: 20px;
 `;
 
 export const ContentDetail = styled.div`
@@ -74,25 +75,25 @@ export const ContentDetail = styled.div`
 `;
 
 export const Detail = styled.div`
-  margin-left: 25px;
   font-size: 17px;
+  margin-left: 25px;
 `;
 
 export const Line = styled.div`
-  position: absolute;
-  left: 20px;
-  width: 2px;
-  height: 90%;
-  top: 30px;
   background: repeating-linear-gradient(to bottom, transparent, transparent 5px, #007bff 5px, #007bff 10px);
+  height: 90%;
+  left: 20px;
+  position: absolute;
+  top: 30px;
+  width: 2px;
   z-index: 0;
 `;
 
 export const Code = styled.pre`
-  font-size: 15px;
   background-color: white;
-  padding: 15px;
   border-radius: 10px;
+  font-size: 15px;
+  padding: 15px;
 `;
 
 export const Img = styled.img`

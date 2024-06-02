@@ -13,5 +13,5 @@ export const Img = styled.img`
 export const ImgWrapper = styled.div<{width?: string}>`
   padding-bottom: 100%;
   position: relative;
-  width: ${({width}) => width || '86px'};
+  width: ${({width}) => width || '36px'};
 `;

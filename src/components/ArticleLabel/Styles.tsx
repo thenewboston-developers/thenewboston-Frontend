@@ -20,14 +20,14 @@ export const BoxLeft = styled.div`
   flex-direction: column;
 `;
 export const Domain = styled.div`
-  font-size: 17px;
+  font-size: 14px;
   margin: 10px 0px;
 `;
 
 export const Text = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 1.5vw;
+  font-size: 1vw;
 `;
 
 export const Ticker = styled.div`
