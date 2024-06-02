@@ -1,8 +1,9 @@
-import {colors, fonts} from 'styles';
 import styled from 'styled-components';
+
 import UDropdownMenu from 'components/DropdownMenu';
 import ULine from 'components/Line';
 import UThumbnail from 'components/Thumbnail';
+import {colors, fonts} from 'styles';
 
 export const Bottom = styled.div`
   display: flex;
@@ -16,8 +17,8 @@ export const Container = styled.div`
   border: 1px solid ${colors.border};
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
   overflow: hidden;
-  transition: all 0.2s ease-in-out 0s;
   position: relative;
+  transition: all 0.2s ease-in-out 0s;
 `;
 
 export const Description = styled.div`

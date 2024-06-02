@@ -1,22 +1,23 @@
 import {Link} from 'react-router-dom';
-import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 import {useSelector} from 'react-redux';
+import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 
-import {Artwork, SFC} from 'types';
-import {getSelf} from 'selectors/state';
-import {useToggle} from 'hooks';
-import * as S from './Styles';
 import ArtworkDeleteModal from 'modals/ArtworkDeleteModal';
 import ArtworkModal from 'modals/ArtworkModal';
 import Badge, {BadgeStyle} from 'components/Badge';
 import Price from 'components/Price';
+import {Artwork, SFC} from 'types';
+import {getSelf} from 'selectors/state';
+import {useToggle} from 'hooks';
+
+import * as S from './Styles';
 
 export interface ArtworkCardProps {
   artwork: Artwork;
-  showBadge: boolean;
+  showBadge?: boolean;
 }
 
-const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className, showBadge}) => {
+const ArtworkCard: SFC<ArtworkCardProps> = ({artwork, className, showBadge = false}) => {
   const [artworkDeleteModalIsOpen, toggleArtworkDeleteModal] = useToggle(false);
   const [artworkModalIsOpen, toggleArtworkModal] = useToggle(false);
   const self = useSelector(getSelf);

@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
+import UTab from 'components/Tab';
 import UModal from 'components/Modal';
 import UTabs from 'components/Tabs';
-import Tab from 'components/Tab';
 
 export const Modal = styled(UModal)`
   display: flex;
@@ -30,6 +30,6 @@ export const Row = styled.div`
 `;
 export const Container = styled.div``;
 
-export const CustomTab = styled(Tab)`
+export const Tab = styled(UTab)`
   font-size: 0.8vw;
 `;
