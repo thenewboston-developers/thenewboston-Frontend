@@ -1,27 +1,29 @@
 import {useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
+import {Link, useNavigate} from 'react-router-dom';
 import {
-  mdiCommentTextOutline,
   mdiChevronDown,
   mdiChevronUp,
+  mdiCommentTextOutline,
   mdiDeleteOutline,
   mdiDotsVertical,
   mdiSquareEditOutline,
 } from '@mdi/js';
 
-import Line from 'components/Line';
-import {ButtonColor} from 'components/Button';
-import Linkify from 'components/Linkify';
-import {deletePost} from 'dispatchers/posts';
-import {ToastType} from 'enums';
-import {useToggle} from 'hooks';
-import PostModal from 'modals/PostModal';
-import {getSelf} from 'selectors/state';
-import {AppDispatch, Post as TPost, SFC} from 'types';
-import {shortDate} from 'utils/dates';
-import {displayErrorToast, displayToast} from 'utils/toasts';
 import Comments from './Comments';
+import FullScreenImageModal from 'modals/FullScreenImageModal';
+import Line from 'components/Line';
+import Linkify from 'components/Linkify';
+import PostModal from 'modals/PostModal';
+import {AppDispatch, Post as TPost, SFC} from 'types';
+import {ButtonColor} from 'components/Button';
+import {ToastType} from 'enums';
+import {deletePost} from 'dispatchers/posts';
+import {displayErrorToast, displayToast} from 'utils/toasts';
+import {getSelf} from 'selectors/state';
+import {shortDate} from 'utils/dates';
+import {useToggle} from 'hooks';
+
 import * as S from './Styles';
 
 export interface PostProps {
@@ -33,6 +35,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [showFullContent, setShowFullContent] = useState(true);
+  const [imageModalIsOpen, toggleImageModal] = useToggle(false);
 
   const toggleShowFullContent = () => {
     setShowFullContent(!showFullContent);
@@ -74,6 +77,10 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const handleClick = () => {
     if (!owner.id) return;
     navigate(`/profile/${owner.id}`);
+  };
+
+  const handlePostImageClick = () => {
+    toggleImageModal();
   };
 
   const renderAvatar = () => {
@@ -119,7 +126,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
           </Linkify>
         </S.Content>
 
-        {image ? <S.Img alt="image" src={image} /> : null}
+        {image ? <S.Img onClick={handlePostImageClick} alt="image" src={image} /> : null}
         <Line />
         <S.Div>
           <S.BoxLeft>
@@ -136,6 +143,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
       {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
+      {imageModalIsOpen && image ? <FullScreenImageModal close={toggleImageModal} imageSrc={image} /> : null}
     </>
   );
 };

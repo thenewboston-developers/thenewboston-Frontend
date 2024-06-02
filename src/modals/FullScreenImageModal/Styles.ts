@@ -1,6 +1,7 @@
 import styled, {keyframes} from 'styled-components';
 
 import UImagePreview from 'components/ImagePreview';
+
 import {colors} from 'styles';
 
 const addOverlay = keyframes`
