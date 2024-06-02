@@ -1,8 +1,12 @@
-import {mdiSquareEditOutline} from '@mdi/js';
-import {useDispatch, useSelector} from 'react-redux';
 import {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
+import {mdiSquareEditOutline} from '@mdi/js';
 
+import DefaultAvatar from 'assets/default-avatar.svg';
+import FullScreenImageModal from 'modals/FullScreenImageModal';
+import ProfileEditModal from 'modals/ProfileEditModal';
+import logo from 'assets/logo192.png';
 import {AppDispatch, SFC} from 'types';
 import {ButtonColor} from 'components/Button';
 import {createFollower, deleteFollower} from 'dispatchers/followers';
@@ -12,22 +16,20 @@ import {getFollowers} from 'api/followers';
 import {getSelf, getUserStats as getUserStatsState} from 'selectors/state';
 import {getUserStats} from 'dispatchers/userStats';
 import {useToggle, useUser} from 'hooks';
+
 import * as S from './Styles';
-import DefaultAvatar from 'assets/default-avatar.svg';
-import FullScreenImageModal from 'modals/FullScreenImageModal';
-import logo from 'assets/logo192.png';
-import ProfileEditModal from 'modals/ProfileEditModal';
 
 const UserDetails: SFC = ({className}) => {
   const [selfFollowing, setSelfFollowing] = useState<boolean>(false);
   const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
-  const [ProfileAvatarModalIsOpen, toggleProfileAvatarModal] = useToggle(false);
+  const [profileAvatarModalIsOpen, toggleProfileAvatarModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
   const {id} = useParams();
   const user = useUser(id);
   const userStats = useSelector(getUserStatsState);
   const userId = id ? parseInt(id, 10) : null;
+  const userAvatar = user?.avatar || DefaultAvatar;
   const {
     following_count = 0,
     followers_count = 0,
@@ -86,7 +88,7 @@ const UserDetails: SFC = ({className}) => {
     if (!user) return;
     return (
       <S.ImgWrapper>
-        <S.Img alt="image" onClick={toggleProfileAvatarModal} src={user.avatar || DefaultAvatar} />
+        <S.Img alt="image" onClick={toggleProfileAvatarModal} src={userAvatar} />
       </S.ImgWrapper>
     );
   };
@@ -161,9 +163,7 @@ const UserDetails: SFC = ({className}) => {
         </S.Wrapper>
       </S.Container>
       {profileEditModalIsOpen ? <ProfileEditModal close={toggleProfileEditModal} /> : null}
-      {ProfileAvatarModalIsOpen ? (
-        <FullScreenImageModal imageSrc={user?.avatar ? user.avatar : DefaultAvatar} close={handleClose} />
-      ) : null}
+      {profileAvatarModalIsOpen ? <FullScreenImageModal imageSrc={userAvatar} close={handleClose} /> : null}
     </>
   );
 };

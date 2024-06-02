@@ -9,8 +9,8 @@ export const CloseButtonContainer = styled.div`
   justify-content: center;
   padding: 4px;
   position: absolute;
-  right: 6px;
-  top: 6px;
+  right: 0;
+  top: 0;
 `;
 
 export const Container = styled.div`
