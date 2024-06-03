@@ -18,7 +18,7 @@ const Toolbar: SFC = ({className}) => {
           <ToolbarMenuLink text="Home" to="/currencies/home" />
           <ToolbarMenuLink text="Learn More" to="/currencies/learn-more" />
         </S.Center>
-        {renderButton()}
+        <S.ButtonContainer>{renderButton()}</S.ButtonContainer>
       </S.Container>
       {coreModalIsOpen ? <CoreModal close={toggleCoreModal} /> : null}
     </>

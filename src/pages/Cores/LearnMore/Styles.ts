@@ -40,13 +40,13 @@ export const ListContainer = styled.div`
 
 export const ListItem = styled.div`
   display: flex;
-  margin: 20px 0;
+  margin: 10px 0;
 `;
 
 export const ListLine = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1vh;
+  gap: 0.5vh;
   padding-top: 5px;
   width: 100%;
 `;
@@ -57,10 +57,10 @@ export const RoleNumber = styled.div`
   border-radius: 50%;
   color: white;
   display: flex;
-  height: 40px;
+  height: 30px;
   justify-content: center;
   position: relative;
-  width: 40px;
+  width: 30px;
   z-index: 1;
 `;
 
@@ -82,7 +82,7 @@ export const Detail = styled.div`
 export const Line = styled.div`
   background: repeating-linear-gradient(to bottom, transparent, transparent 5px, #007bff 5px, #007bff 10px);
   height: 90%;
-  left: 20px;
+  left: 15px;
   position: absolute;
   top: 30px;
   width: 2px;
@@ -99,4 +99,9 @@ export const Code = styled.pre`
 export const Img = styled.img`
   height: 40px;
   width: 40px;
+`;
+
+export const Span = styled.span`
+  color: 'red',
+  fontWeight: 'bold',
 `;

@@ -48,6 +48,16 @@ const LearnMore: SFC = ({className}) => {
   };
 
   const RenderCode = (data: any) => {
+    const detail = data.data.detail;
+    console.log(detail);
+    const wordToStyle = 'Ed25519';
+
+    const parts = detail.split(new RegExp(`(${wordToStyle})`, 'gi'));
+    for (let i = 0; i < 3; i++) {
+      console.log(parts[i].toLowerCase() === wordToStyle.toLowerCase());
+    }
+    console.log(wordToStyle.toLowerCase());
+    console.log(parts);
     return (
       <S.CodeContainer>
         <S.ListItem>
@@ -56,7 +66,11 @@ const LearnMore: SFC = ({className}) => {
         </S.ListItem>
         <S.Code>{JSON.stringify(data.data.data, null, 2).replace(/\\n/g, '\n')}</S.Code>
         <br />
-        <S.Detail>{data.data.detail}</S.Detail>
+        <S.Detail>
+          {parts.map((part: string) =>
+            part.toLowerCase() === wordToStyle.toLowerCase() ? <S.Span>{part}</S.Span> : part,
+          )}
+        </S.Detail>
       </S.CodeContainer>
     );
   };

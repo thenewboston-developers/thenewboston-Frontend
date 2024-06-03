@@ -1,4 +1,3 @@
-import CoreLogo from 'components/CoreLogo';
 import {SFC} from 'types';
 import * as S from './Styles';
 import {Article} from 'types/articles';
@@ -14,7 +13,9 @@ const ArticleDetail: SFC<ArticleDetailsProps> = ({className, article, element}) 
       <S.Container className={className}>
         <S.Box>
           <S.BoxLeft>
-            <CoreLogo logo={article.logo} />
+            <S.ArticleLogo>
+              <S.Img src={article.logo}></S.Img>
+            </S.ArticleLogo>
           </S.BoxLeft>
         </S.Box>
         <S.Text>

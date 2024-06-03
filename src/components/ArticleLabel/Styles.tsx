@@ -37,3 +37,14 @@ export const Ticker = styled.div`
 export const Divider = styled.div`
   height: 1vh;
 `;
+
+export const Img = styled.img<{width?: string}>`
+  object-fit: cover;
+  width: ${({width}) => width || '5vw'};
+  border-radius: 50%;
+`;
+
+export const ArticleLogo = styled.div`
+  display: flex;
+  justify-content: center;
+`;

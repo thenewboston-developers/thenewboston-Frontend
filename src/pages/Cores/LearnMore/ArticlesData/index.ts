@@ -1,10 +1,10 @@
 import {Article} from 'types';
-import Benefits from 'assets/articles/benefits.png';
-import MissionImg from 'assets/articles/mission_statement.jpg';
-import SystemArc from 'assets/articles/system_architecture.png';
+import Benefits from 'assets/articles/benefit.png';
+import MissionImg from 'assets/articles/m_statement.png';
 import Tag from 'assets/articles/tag_icon.png';
-import UseCases from 'assets/articles/use_cases.png';
-import VisionImg from 'assets/articles/vision_statement.jpg';
+import UseCases from 'assets/articles/UseCases.png';
+import VisionImg from 'assets/articles/v_statement.png';
+import SystemArc from 'assets/articles/Archi.png';
 
 export const data = {
   amount: 5,
