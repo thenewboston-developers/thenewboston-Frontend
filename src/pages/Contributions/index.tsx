@@ -6,7 +6,7 @@ import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
 import Toolbar from './Toolbar';
 import TopContributors from './TopContributors';
-import TotalContributionsChart from './TotalContributionsChart';
+import ContributionsCumulativeChart from './ContributionsCumulativeChart';
 import {AppDispatch, SFC} from 'types';
 import {Col, Row} from 'styles/components/GridStyle';
 import {UserIdFilterValues} from 'enums';
@@ -86,7 +86,7 @@ const Contributions: SFC<ContributionsProps> = ({className, selfContributions = 
           <TopContributors />
         </Col>
         <Col size={8}>
-          <TotalContributionsChart contributions={contributionList} />
+          <ContributionsCumulativeChart />
         </Col>
         <br />
         <Col size={12}>

@@ -33,6 +33,7 @@ import {CartProduct, CartProducts} from 'types/cartProducts';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {Comment, Comments} from 'types/comments';
 import {Contribution} from 'types/contributions';
+import {ContributionsCumulative} from 'types/contributionsCumulative';
 import {Contributor, Contributors} from 'types/contributors';
 import {Conversation, Conversations} from 'types/conversations';
 import {Core, Cores} from 'types/cores';
@@ -83,6 +84,7 @@ export {
   CommentReadSerializer,
   Comments,
   Contribution,
+  ContributionsCumulative,
   Contributor,
   Contributors,
   Conversation,

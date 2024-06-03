@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {CONTRIBUTORS} from 'constants/store';
-import {Contributor, Contributors} from 'types';
+import {Contributors} from 'types';
 
 const initialState = {
   isLoading: false,
@@ -13,7 +13,7 @@ const contributors = createSlice({
   name: CONTRIBUTORS,
   reducers: {
     resetContributors: () => initialState,
-    setContributors: (state, {payload}: PayloadAction<Contributor[]>) => {
+    setContributors: (state, {payload}: PayloadAction<Contributors>) => {
       state.items = payload;
       state.isLoading = false;
     },

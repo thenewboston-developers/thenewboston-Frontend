@@ -1,5 +1,8 @@
 import styled from 'styled-components';
 
+import ULoader from 'components/Loader';
+import {colors} from 'styles';
+
 export const Amount = styled.div`
   font-size: 18px;
   font-weight: 600;
@@ -15,7 +18,7 @@ export const AmountContainer = styled.div`
 `;
 
 export const Container = styled.div`
-  background: #fff;
+  background: ${colors.white};
   border-radius: 14px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   padding: 24px 32px;
@@ -26,8 +29,6 @@ export const ChartHeaderContainer = styled.div`
   justify-content: space-between;
 `;
 
-export const CoreLogo = styled.img`
-  border-radius: 50%;
-  height: 18px;
-  width: 18px;
+export const Loader = styled(ULoader)`
+  padding: 20px;
 `;
