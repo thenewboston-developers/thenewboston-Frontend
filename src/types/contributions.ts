@@ -17,10 +17,3 @@ export interface Contribution extends CreatedModified {
   reward_amount: number;
   user: UserReadSerializer;
 }
-
-export interface Contributor {
-  core: Core;
-  positionIcon: string;
-  totalRewardAmount: number;
-  user: UserReadSerializer;
-}

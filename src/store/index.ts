@@ -11,6 +11,7 @@ import authenticationReducer from 'store/authentication';
 import cartProductsReducer from 'store/cartProducts';
 import commentsReducer from 'store/comments';
 import contributionsReducer from 'store/contributions';
+import contributorsReducer from 'store/contributors';
 import conversationsReducer from 'store/conversations';
 import coresReducer from 'store/cores';
 import coursesReducer from 'store/courses';
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   cartProducts: cartProductsReducer,
   comments: commentsReducer,
   contributions: contributionsReducer,
+  contributors: contributorsReducer,
   conversations: conversationsReducer,
   cores: coresReducer,
   courses: coursesReducer,

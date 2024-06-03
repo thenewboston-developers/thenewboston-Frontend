@@ -32,7 +32,8 @@ import {Block} from 'types/blocks';
 import {CartProduct, CartProducts} from 'types/cartProducts';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {Comment, Comments} from 'types/comments';
-import {Contribution, Contributor} from 'types/contributions';
+import {Contribution} from 'types/contributions';
+import {Contributor, Contributors} from 'types/contributors';
 import {Conversation, Conversations} from 'types/conversations';
 import {Core, Cores} from 'types/cores';
 import {Course, Courses} from 'types/courses';
@@ -83,6 +84,7 @@ export {
   Comments,
   Contribution,
   Contributor,
+  Contributors,
   Conversation,
   Conversations,
   Core,

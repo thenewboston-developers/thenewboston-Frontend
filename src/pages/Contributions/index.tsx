@@ -16,7 +16,6 @@ import {
   resetContributions as _resetContributions,
 } from 'dispatchers/contributions';
 import {getContributions} from 'selectors/state';
-import {getTopContributors} from 'utils/contributions';
 
 import * as S from './Styles';
 
@@ -81,14 +80,11 @@ const Contributions: SFC<ContributionsProps> = ({className, selfContributions = 
     if (!contributionList?.length) {
       return renderEmptyText();
     }
-    const topContributors = getTopContributors(contributionList);
     return (
       <>
-        {topContributors.length > 0 ? (
-          <Col size={4}>
-            <TopContributors topContributors={topContributors} />
-          </Col>
-        ) : null}
+        <Col size={4}>
+          <TopContributors />
+        </Col>
         <Col size={8}>
           <TotalContributionsChart contributions={contributionList} />
         </Col>
