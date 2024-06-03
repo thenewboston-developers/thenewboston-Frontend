@@ -6,7 +6,7 @@ import UseCases from 'assets/articles/UseCases.png';
 import VisionImg from 'assets/articles/v_statement.png';
 import SystemArc from 'assets/articles/Archi.png';
 
-export const data = {
+const data = {
   amount: 5,
   id: 'dc348eac-fc89-4b4e-96de-4a988e0b94e1',
   payload: {
@@ -21,6 +21,14 @@ export const data = {
     transaction_fee: 1,
   },
 };
+
+const article_detail = `The system operates as a decentralized network of networks, allowing individuals to create and distribute their own digital currency known as "coins." Each core server in the network maintains a separate ledger. The minting and distribution of new coins are determined by the server owner. \n
+      \n
+      Coins within the network serve various purposes. They enable secure messaging between devices and can also be transferred as a form of value between users. The network architecture permits devices to store data locally, removing the need for a centralized database and facilitating the development of distributed applications. \n
+      \n
+      To enable messaging and value transfer, a standardized protocol is employed. Although core servers are not directly connected, clients can connect to multiple cores, effectively linking them through client devices.\n
+      \n
+      Notably, messaging and value transfers take place only within the same core server. Each server maintains its independent ledger, ensuring that each users transaction history remains within a single server as the definitive record of truth.`;
 
 export const articlesData: Article[] = [
   {
@@ -40,20 +48,7 @@ export const articlesData: Article[] = [
     type: 'normal',
   },
   {
-    detail: `The system operates as a decentralized network of networks, allowing individuals to 
-      create and distribute their own digital currency known as "coins." Each core server in 
-      the network maintains a separate ledger. The minting and distribution of new coins are 
-      determined by the server owner.
-      
-      Coins within the network serve various purposes. They enable 
-      secure messaging between devices and can also be transferred as a form of value between users. 
-      The network architecture permits devices to store data locally, removing the need for a 
-      centralized database and facilitating the development of distributed applications.To 
-      enable messaging and value transfer, a standardized protocol is employed. Although core 
-      servers are not directly connected, clients can connect to multiple cores, effectively linking 
-      them through client devices.Notably, messaging and value transfers take place only within the 
-      same core server. Each server maintains its independent ledger, ensuring that each users transaction 
-      history remains within a single server as the definitive record of truth.`,
+    detail: article_detail,
     id: 3,
     logo: SystemArc,
     title: 'System Architecture',

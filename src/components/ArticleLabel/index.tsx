@@ -8,6 +8,7 @@ export interface ArticleDetailsProps {
 }
 
 const ArticleDetail: SFC<ArticleDetailsProps> = ({className, article, element}) => {
+  const paragraphs = article.detail.split('\n').filter((paragraph) => paragraph.trim() !== '');
   return (
     <>
       <S.Container className={className}>
@@ -24,7 +25,13 @@ const ArticleDetail: SFC<ArticleDetailsProps> = ({className, article, element}) 
         {article.detail !== '' ? (
           <>
             <S.Divider />
-            <S.Domain>{article.detail}</S.Domain>
+            <S.Domain>
+              {paragraphs.map((paragraph, index) => (
+                <p key={index} style={{marginBottom: '1em'}}>
+                  {paragraph}
+                </p>
+              ))}
+            </S.Domain>
           </>
         ) : (
           element
