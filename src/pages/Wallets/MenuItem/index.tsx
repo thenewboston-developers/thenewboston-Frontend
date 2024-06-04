@@ -19,14 +19,20 @@ const MenuItem: SFC<MenuItemProps> = ({className, wallet}) => {
   };
 
   return (
-    <S.Container $isActive={manager.activeWalletId === wallet.id} className={className} onClick={handleClick}>
-      <CoreLogo logo={wallet.core.logo} />
-      <S.Text>
-        <S.Ticker>{wallet.core.ticker}</S.Ticker>
-        <S.Domain>{wallet.core.domain}</S.Domain>
-        <S.Balance>Balance: {wallet.balance.toLocaleString()}</S.Balance>
-      </S.Text>
-    </S.Container>
+    <>
+      <S.Container $isActive={manager.activeWalletId === wallet.id} className={className} onClick={handleClick}>
+        <S.Text>
+          <S.Div>
+            <S.Ticker $isActive={manager.activeWalletId === wallet.id}>{wallet.core.ticker}</S.Ticker>
+            <S.Domain>{wallet.core.domain}</S.Domain>
+          </S.Div>
+          <CoreLogo logo={wallet.core.logo} />
+        </S.Text>
+        <S.Balance>
+          Balance: <S.Span> {wallet.balance.toLocaleString()}</S.Span>
+        </S.Balance>
+      </S.Container>
+    </>
   );
 };
 

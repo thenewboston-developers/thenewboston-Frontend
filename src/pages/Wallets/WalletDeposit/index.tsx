@@ -1,13 +1,12 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 import {mdiRefresh} from '@mdi/js';
 import MdiIcon from '@mdi/react';
-
 import Button, {ButtonColor} from 'components/Button';
 import ExpandableWire from 'components/ExpandableWire';
 import Loader from 'components/Loader';
-import Qr from 'components/Qr';
+import Line from 'components/Line';
 import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
 import {WireType} from 'enums';
 import {useActiveWallet} from 'hooks';
@@ -15,6 +14,7 @@ import {getWires} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
+import {colors} from 'styles';
 
 const WalletDeposit: SFC = ({className}) => {
   const [createDepositRequestPending, setCreateDepositRequestPending] = useState(false);
@@ -74,39 +74,39 @@ const WalletDeposit: SFC = ({className}) => {
   const renderIcon = () => {
     let content = (
       <S.RefreshIconContainer onClick={handleIconClick}>
-        <MdiIcon path={mdiRefresh} size={`${16}px`} />
+        <MdiIcon path={mdiRefresh} size={`${20}px`} color={colors.palette.blue[700]} />
       </S.RefreshIconContainer>
     );
 
-    if (getBalanceRequestPending) content = <Loader size={16} />;
+    if (getBalanceRequestPending) content = <Loader size={20} />;
 
     return <S.IconWrapper>{content}</S.IconWrapper>;
   };
 
   return (
     <S.Container className={className}>
-      <S.Panel>
-        <S.Top>
-          <h2>Deposit Account</h2>
-          <S.QrWrapper>
-            <Qr text={activeWallet.deposit_account_number} width={120} />
-          </S.QrWrapper>
-          <S.CopyContainer text={activeWallet.deposit_account_number} />
-        </S.Top>
-      </S.Panel>
-      <S.Panel>
-        <S.DepositAccountRow>
-          <S.DepositLeft>
-            <h4>Deposit Account Balance: {activeWallet.deposit_balance.toLocaleString()}</h4>
-            {renderIcon()}
-          </S.DepositLeft>
-          {renderButton()}
-        </S.DepositAccountRow>
-      </S.Panel>
-      <S.Panel>
-        <h4>Deposits</h4>
+      <S.Top>
+        <S.QrWrapper>
+          <S.QR text={activeWallet.deposit_account_number} width={120} />
+          <S.LeftCornerBorders />
+          <S.RightCornerBorders />
+        </S.QrWrapper>
+        <S.CopyContainer text={activeWallet.deposit_account_number} />
+      </S.Top>
+      <Line />
+      <S.DepositAccountRow>
+        <S.DepositLeft>
+          <S.Text>Deposit Account Balance:</S.Text>
+          <S.Balance>{activeWallet.deposit_balance.toLocaleString()}</S.Balance>
+        </S.DepositLeft>
+        {renderIcon()}
+        {renderButton()}
+      </S.DepositAccountRow>
+      <Line />
+      <S.Div>
+        <S.Title>Deposits history </S.Title>
         {renderDeposits()}
-      </S.Panel>
+      </S.Div>
     </S.Container>
   );
 };
