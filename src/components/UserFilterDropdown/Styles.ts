@@ -43,3 +43,15 @@ export const Span = styled.span`
 export const Table = styled.table`
   width: 100%;
 `;
+
+export const SelectedUserDiv = styled.div`
+  border: solid 1px #f2f2f2;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  padding-left: 6px;
+  padding-right: 6px;
+`;
+export const A = styled.a`
+  float: right;
+  font-size: 14pt;
+`;
