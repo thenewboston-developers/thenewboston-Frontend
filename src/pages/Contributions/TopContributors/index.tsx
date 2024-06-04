@@ -22,7 +22,7 @@ interface TopContributorsProps {
 const TopContributors: FC<TopContributorsProps> = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
   const {items, isLoading} = useSelector(getContributorsState);
-  const topConstributors = items;
+  const topContributors = items;
 
   useEffect(() => {
     (async () => {
@@ -45,7 +45,7 @@ const TopContributors: FC<TopContributorsProps> = ({className}) => {
       );
     }
 
-    if (topConstributors.length === 0 && !isLoading) {
+    if (topContributors.length === 0 && !isLoading) {
       return (
         <S.ContributorList>
           <S.ContributorContainer>
@@ -59,7 +59,7 @@ const TopContributors: FC<TopContributorsProps> = ({className}) => {
 
     return (
       <S.ContributorList>
-        {topConstributors.map((contributor) => (
+        {topContributors.map((contributor) => (
           <S.ContributorContainer key={contributor.user.id}>
             <S.UserLabelContainer>
               <S.PositionIcon
@@ -87,7 +87,7 @@ const TopContributors: FC<TopContributorsProps> = ({className}) => {
   return (
     <section className={className}>
       <PanelHeading
-        heading={topConstributors.length ? `Top ${topConstributors.length} Contributors` : 'Top Contributors'}
+        heading={topContributors.length ? `Top ${topContributors.length} Contributors` : 'Top Contributors'}
       />
       {renderContributorList()}
     </section>
