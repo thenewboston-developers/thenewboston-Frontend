@@ -87,6 +87,7 @@ const UserFilterDropdown: React.FC = () => {
         </S.SelectedUserDiv>
       ) : (
         <div>
+          <S.Label>Username</S.Label>
           <S.Input type="text" placeholder="Search by username" value={searchTerm} onChange={handleSearch} />
           <S.Ulist>
             {filteredUsers.map((user) => (

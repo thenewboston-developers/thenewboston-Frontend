@@ -55,3 +55,6 @@ export const A = styled.a`
   float: right;
   font-size: 14pt;
 `;
+export const Label = styled.label`
+  text-transform: uppercase;
+`;
