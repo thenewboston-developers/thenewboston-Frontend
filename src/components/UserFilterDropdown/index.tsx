@@ -12,6 +12,7 @@ const BASE_URL = `${process.env.REACT_APP_API_URL}/api/users`;
 interface User {
   id: number;
   username: string;
+  avatar: string;
 }
 
 const UserFilterDropdown: React.FC = () => {
@@ -49,7 +50,28 @@ const UserFilterDropdown: React.FC = () => {
       <S.Input type="text" placeholder="Search by username" value={searchTerm} onChange={handleSearch} />
       <S.Ulist>
         {filteredUsers.map((user) => (
-          <S.Uli key={user.id}>{user.username}</S.Uli>
+          <S.Uli key={user.id}>
+            <S.Table>
+              <tr>
+                <td>
+                  <S.Span>{user.username}</S.Span>
+                </td>
+                <td>
+                  {user.avatar ? (
+                    <S.Img src={user.avatar} />
+                  ) : (
+                    <S.Img
+                      src="/static/media/default-avatar.20c02f587c3406ffb40e0e88a890f426.svg"
+                      alt="Default Avatar"
+                    />
+                  )}
+                  {/* <img src="/static/media/default-avatar.20c02f587c3406ffb40e0e88a890f426.svg" />
+
+                  <S.Img src="http://127.0.0.1:8000/media/images/04c7321c-04b7-4a16-9760-17f5901c25ec.jpeg" /> */}
+                </td>
+              </tr>
+            </S.Table>
+          </S.Uli>
         ))}
       </S.Ulist>
     </div>

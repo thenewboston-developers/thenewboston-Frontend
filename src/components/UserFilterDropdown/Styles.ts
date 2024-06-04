@@ -13,7 +13,7 @@ export const Ulist = styled.ul`
 `;
 export const Uli = styled.li`
   list-style: none;
-  padding: 10px 10px 10px 10px;
+  padding: 6px;
   border-bottom: solid 1px #f2f2f2;
 
   &:hover {
@@ -28,5 +28,18 @@ export const Input = styled.input`
   padding: 10px 14px;
   border: 1px solid #f44336;
   display: block;
+  width: 100%;
+`;
+
+export const Img = styled.img`
+  border-radius: 50%;
+  height: 36px;
+  width: 36px;
+  float: right;
+`;
+export const Span = styled.span`
+  font-size: 13pt;
+`;
+export const Table = styled.table`
   width: 100%;
 `;
