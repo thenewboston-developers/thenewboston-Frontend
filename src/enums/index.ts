@@ -7,6 +7,7 @@ import {SenderType} from 'enums/messages';
 import {ShopToolbarType} from 'enums/shopToolbar';
 import {SocketDataType} from 'enums/sockets';
 import {ToastType} from 'enums/toast';
+import {UserIdFilterValues} from 'enums/contribution';
 import {WalletTab} from 'enums/manager';
 import {WireType} from 'enums/wires';
 
@@ -21,6 +22,7 @@ export {
   ShopToolbarType,
   SocketDataType,
   ToastType,
+  UserIdFilterValues,
   WalletTab,
   WireType,
 };

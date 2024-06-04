@@ -5,6 +5,7 @@ import {CreateArtworkPurchaseRequest} from 'types/api/artworkPurchases';
 import {CreateArtworkRequest, EditArtworkRequest} from 'types/api/artworks';
 import {CreateArtworkTransferRequest} from 'types/api/artworkTransfers';
 import {CreateCartProductRequest} from 'types/api/cartProducts';
+import {CreateContributionRequest} from 'types/api/contributions';
 import {CreateConversationRequest} from 'types/api/conversations';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/follower';
@@ -31,7 +32,9 @@ import {Block} from 'types/blocks';
 import {CartProduct, CartProducts} from 'types/cartProducts';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {Comment, Comments} from 'types/comments';
-import {Contribution, Contributions, Contributor} from 'types/contributions';
+import {Contribution} from 'types/contributions';
+import {ContributionsCumulative} from 'types/contributionsCumulative';
+import {Contributor, Contributors} from 'types/contributors';
 import {Conversation, Conversations} from 'types/conversations';
 import {Core, Cores} from 'types/cores';
 import {Course, Courses} from 'types/courses';
@@ -81,8 +84,9 @@ export {
   CommentReadSerializer,
   Comments,
   Contribution,
-  Contributions,
+  ContributionsCumulative,
   Contributor,
+  Contributors,
   Conversation,
   Conversations,
   Core,
@@ -96,6 +100,7 @@ export {
   CreateArtworkTransferRequest,
   CreateCartProductRequest,
   CreateCommentRequest,
+  CreateContributionRequest,
   CreateConversationRequest,
   CreateExchangeOrderRequest,
   CreateFollowerRequest,
