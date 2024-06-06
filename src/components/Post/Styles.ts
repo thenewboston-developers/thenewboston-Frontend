@@ -126,8 +126,6 @@ export const Text = styled.div`
   display: flex;
 `;
 
-export const TextContent = styled.pre`
-  font-family: OpenSans, sans-serif;
-  margin: 0px;
+export const TextContent = styled.div`
   white-space: pre-wrap;
 `;
