@@ -2,7 +2,7 @@ import styled, {keyframes} from 'styled-components';
 
 import UImagePreview from 'components/ImagePreview';
 
-import {colors} from 'styles';
+import {breakpoints, colors} from 'styles';
 
 const addOverlay = keyframes`
   from {
@@ -43,6 +43,14 @@ export const ImagePreviewContainer = styled.div`
   img {
     max-height: 600px;
     max-width: 700px;
+    @media (max-width: ${breakpoints.mini}) {
+      max-height: 400px;
+      max-width: 350px;
+    }
+    @media (min-width: ${breakpoints.mini}) and (max-width: ${breakpoints.mobile}) {
+      max-height: 500px;
+      max-width: 480px;
+    }
   }
 `;
 
