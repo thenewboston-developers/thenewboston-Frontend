@@ -5,6 +5,7 @@ import {useParams} from 'react-router-dom';
 import EmptyText from 'components/EmptyText';
 import InfiniteScroll from 'components/InfiniteScroll';
 import Post from 'components/Post';
+import PostSkeleton from 'components/Post/Skeleton';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
@@ -44,19 +45,19 @@ const Posts: SFC = ({className}) => {
   };
 
   const renderContent = () => {
-    if (postList.length) {
-      return (
-        <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts}>
-          <S.PostContainer>
-            {postList.map((post) => (
-              <Post key={post.id} post={post} />
-            ))}
-          </S.PostContainer>
-        </InfiniteScroll>
-      );
+    if (!postList.length && !isLoading) {
+      return <EmptyText>No posts to display.</EmptyText>;
     }
-
-    return <EmptyText>No posts to display.</EmptyText>;
+    return (
+      <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts}>
+        <S.PostContainer>
+          {isLoading && <PostSkeleton dataLength={5} />}
+          {postList.map((post) => (
+            <Post key={post.id} post={post} />
+          ))}
+        </S.PostContainer>
+      </InfiniteScroll>
+    );
   };
 
   return <S.Container className={className}>{renderContent()}</S.Container>;

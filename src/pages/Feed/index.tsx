@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
+import PostSkeleton from 'components/Post/Skeleton';
 import Post from 'components/Post';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
@@ -16,7 +17,6 @@ const Feed: SFC = ({className}) => {
   const posts = useSelector(getPosts);
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
-
   const postList = useMemo(() => Object.values(posts), [posts]);
 
   useEffect(() => {
@@ -38,24 +38,24 @@ const Feed: SFC = ({className}) => {
   };
 
   const renderContent = () => {
-    if (postList.length) {
+    if (!isLoading && !postList.length) {
       return (
-        <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts} heightMargin={0}>
-          <S.PostContainer>
-            {postList.map((post) => (
-              <Post key={post.id} post={post} />
-            ))}
-          </S.PostContainer>
-        </InfiniteScroll>
+        <EmptyPage
+          bottomText="Try following some users to see their posts here!"
+          graphic={LeavesEmptyState}
+          topText="Nothing here!"
+        />
       );
     }
-
     return (
-      <EmptyPage
-        bottomText="Try following some users to see their posts here!"
-        graphic={LeavesEmptyState}
-        topText="Nothing here!"
-      />
+      <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts} heightMargin={0}>
+        <S.PostContainer>
+          {isLoading && <PostSkeleton dataLength={3} />}
+          {postList.map((post) => (
+            <Post key={post.id} post={post} />
+          ))}
+        </S.PostContainer>
+      </InfiniteScroll>
     );
   };
 

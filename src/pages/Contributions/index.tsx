@@ -3,10 +3,10 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import ContributionsList from 'components/Contributions/Contributions';
 import EmptyText from 'components/EmptyText';
-import Loader from 'components/Loader';
 import Toolbar from './Toolbar';
 import TopContributors from './TopContributors';
 import ContributionsCumulativeChart from './ContributionsCumulativeChart';
+import ContributionsSkeleton from './Skeleton';
 import {AppDispatch, SFC} from 'types';
 import {Col, Row} from 'styles/components/GridStyle';
 import {UserIdFilterValues} from 'enums';
@@ -29,9 +29,10 @@ const Contributions: SFC<ContributionsProps> = ({className, selfContributions = 
   const {items, hasMore, isLoading} = useSelector(getContributions);
   const contributions = items;
   const dispatch = useDispatch<AppDispatch>();
-
   const contributionList = useMemo(() => {
-    return Object.values(contributions);
+    if (contributions.length) {
+      return Object.values(contributions);
+    }
   }, [contributions]);
 
   const apiParams = useMemo(() => {
@@ -66,8 +67,8 @@ const Contributions: SFC<ContributionsProps> = ({className, selfContributions = 
   };
 
   const renderContent = () => {
-    if (isInitialLoading) {
-      return <Loader className="align-screen-center" size={24} />;
+    if (isInitialLoading && isLoading) {
+      return <ContributionsSkeleton dataLength={10} />;
     }
     if (selfContributions) {
       return renderSelfContributionsContent();
@@ -77,7 +78,7 @@ const Contributions: SFC<ContributionsProps> = ({className, selfContributions = 
   };
 
   const renderHomeContributionsContent = () => {
-    if (!contributionList?.length) {
+    if (!contributionList?.length && !isInitialLoading && !isLoading) {
       return renderEmptyText();
     }
     return (
@@ -90,11 +91,13 @@ const Contributions: SFC<ContributionsProps> = ({className, selfContributions = 
         </Col>
         <br />
         <Col size={12}>
-          <ContributionsList
-            contributionsList={contributionList.slice(0, 50)}
-            panelHeading={'Latest Contributions'}
-            selfContributions={selfContributions}
-          />
+          {contributionList && (
+            <ContributionsList
+              contributionsList={contributionList.slice(0, 50)}
+              panelHeading={'Latest Contributions'}
+              selfContributions={selfContributions}
+            />
+          )}
         </Col>
       </>
     );
@@ -104,13 +107,13 @@ const Contributions: SFC<ContributionsProps> = ({className, selfContributions = 
     return (
       <Col size={12}>
         <ContributionsList
-          contributionsList={contributionList}
+          contributionsList={contributionList || []}
           fetchMore={fetchMoreContributions}
           hasMore={hasMore}
           panelHeading={'My Contributions'}
           selfContributions={selfContributions}
         />
-        {!contributionList?.length ? renderEmptyText() : null}
+        {!contributionList?.length && !isInitialLoading && !isLoading ? renderEmptyText() : null}
       </Col>
     );
   };

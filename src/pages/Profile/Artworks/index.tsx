@@ -5,6 +5,7 @@ import {useParams} from 'react-router-dom';
 import ArtworkCard from 'components/ArtworkCard';
 import EmptyText from 'components/EmptyText';
 import InfiniteScroll from 'components/InfiniteScroll';
+import ArtWorksSkeleton from './Skeleton';
 import {AppDispatch, SFC} from 'types';
 import {getArtworks as _getArtworks, resetArtworks as _resetArtworks} from 'dispatchers/artworks';
 import {getArtworks as getArtworksState} from 'selectors/state';
@@ -38,22 +39,21 @@ const Artworks: SFC = ({className}) => {
   };
 
   const renderArtworkCards = () => {
-    if (artworkList.length) {
-      return (
-        <InfiniteScroll dataLength={artworkList.length} hasMore={hasMore} next={fetchMoreArtworks} heightMargin={0}>
-          <S.ArtworkCards>
-            {artworkList.map((artwork) => (
-              <ArtworkCard showBadge={true} artwork={artwork} key={artwork.id} />
-            ))}
-          </S.ArtworkCards>
-        </InfiniteScroll>
-      );
-    }
+    return (
+      <InfiniteScroll dataLength={artworkList.length} hasMore={hasMore} next={fetchMoreArtworks} heightMargin={0}>
+        <S.ArtworkCards>
+          {isLoading && <ArtWorksSkeleton dataLength={4} />}
+          {artworkList.map((artwork) => (
+            <ArtworkCard showBadge={true} artwork={artwork} key={artwork.id} />
+          ))}
+        </S.ArtworkCards>
+      </InfiniteScroll>
+    );
   };
 
   const renderContent = () => {
-    if (!!artworkList.length) return renderArtworkCards();
-    return <EmptyText>No artwork to display.</EmptyText>;
+    if (!artworkList.length && !isLoading) return <EmptyText>No artwork to display.</EmptyText>;
+    return renderArtworkCards();
   };
 
   return <S.Container className={className}>{renderContent()}</S.Container>;

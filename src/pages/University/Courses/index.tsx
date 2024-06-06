@@ -5,7 +5,7 @@ import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Button from 'components/Button';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
-import Loader from 'components/Loader';
+import CourseSkeleton from './Skeleton';
 import {getCourses as _getCourses, resetCourses as _resetCourses} from 'dispatchers/courses';
 import {PublicationStatus} from 'enums';
 import {useToggle} from 'hooks';
@@ -66,28 +66,24 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
   };
 
   const renderContent = () => {
-    if (isLoading && isInitialLoading) {
-      return <Loader className="align-screen-center" size={24} />;
+    if (!isLoading && !isInitialLoading && !courseList.length) {
+      return <EmptyPage bottomText="No courses to display." graphic={LeavesEmptyState} topText="Nothing here!" />;
     }
-
-    if (courseList.length) {
-      return (
-        <S.ContentContainer>
-          {renderSectionSubHeading()}
-          <Row>
-            {courseList.map((course) => {
-              return (
-                <Col size={4} key={course.id}>
-                  <Course course={course} selfCourse={selfCourses} />
-                </Col>
-              );
-            })}
-          </Row>
-        </S.ContentContainer>
-      );
-    }
-
-    return <EmptyPage bottomText="No courses to display." graphic={LeavesEmptyState} topText="Nothing here!" />;
+    return (
+      <S.ContentContainer>
+        {renderSectionSubHeading()}
+        <Row>
+          {isLoading && isInitialLoading && <CourseSkeleton dataLength={10} />}
+          {courseList.map((course) => {
+            return (
+              <Col size={4} key={course.id}>
+                <Course course={course} selfCourse={selfCourses} />
+              </Col>
+            );
+          })}
+        </Row>
+      </S.ContentContainer>
+    );
   };
 
   const renderCourseModal = () => {

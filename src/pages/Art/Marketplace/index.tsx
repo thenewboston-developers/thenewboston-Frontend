@@ -4,10 +4,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import ArtworkCard from 'components/ArtworkCard';
 import EmptyText from 'components/EmptyText';
 import InfiniteScroll from 'components/InfiniteScroll';
+import ArtworkCardSkeleton from './Skeleton';
 import {AppDispatch, SFC} from 'types';
 import {getArtworks as _getArtworks, resetArtworks as _resetArtworks} from 'dispatchers/artworks';
 import {getArtworks as getArtworksState} from 'selectors/state';
-
 import * as S from './Styles';
 
 const Marketplace: SFC = ({className}) => {
@@ -35,28 +35,26 @@ const Marketplace: SFC = ({className}) => {
   };
 
   const renderArtworkCards = () => {
-    if (artworkList.length) {
-      return (
-        <S.ArtworkCards>
-          {artworkList.map((artwork) => (
-            <ArtworkCard artwork={artwork} key={artwork.id} />
-          ))}
-        </S.ArtworkCards>
-      );
-    }
+    return (
+      <S.ArtworkCards>
+        {isLoading && <ArtworkCardSkeleton dataLength={20} />}
+        {artworkList.map((artwork) => (
+          <ArtworkCard artwork={artwork} key={artwork.id} />
+        ))}
+      </S.ArtworkCards>
+    );
   };
 
   const renderContent = () => {
-    if (!!artworkList.length) {
-      return (
-        <>
-          <S.ArtworkCardsHeading>Buy from our marketplace</S.ArtworkCardsHeading>
-          {renderArtworkCards()}
-        </>
-      );
+    if (!isLoading && !artworkList.length) {
+      return <EmptyText>No artwork to display.</EmptyText>;
     }
-
-    return <EmptyText>No artwork to display.</EmptyText>;
+    return (
+      <>
+        <S.ArtworkCardsHeading>Buy from our marketplace</S.ArtworkCardsHeading>
+        {renderArtworkCards()}
+      </>
+    );
   };
 
   return (
