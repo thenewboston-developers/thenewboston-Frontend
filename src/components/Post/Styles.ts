@@ -125,3 +125,9 @@ export const Username = styled.div<{$id: number | null}>`
 export const Text = styled.div`
   display: flex;
 `;
+
+export const TextContent = styled.pre`
+  font-family: OpenSans, sans-serif;
+  margin: 0px;
+  white-space: pre-wrap;
+`;

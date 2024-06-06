@@ -114,13 +114,17 @@ const Post: SFC<PostProps> = ({className, post}) => {
           <Linkify>
             {!showFullContent || content.length <= 400 ? (
               <>
-                {content}
-                {content.length > 400 && <S.TextLink onClick={toggleShowFullContent}>See less</S.TextLink>}
+                <S.TextContent>
+                  {content}
+                  {content.length > 400 && <S.TextLink onClick={toggleShowFullContent}>See less</S.TextLink>}
+                </S.TextContent>
               </>
             ) : (
               <>
-                {`${content.slice(0, 400)}...`}
-                <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
+                <S.TextContent>
+                  {`${content.slice(0, 400)}...`}
+                  <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
+                </S.TextContent>
               </>
             )}
           </Linkify>
