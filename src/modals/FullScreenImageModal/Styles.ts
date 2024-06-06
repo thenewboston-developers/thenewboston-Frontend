@@ -57,6 +57,7 @@ export const ImagePreviewContainer = styled.div`
 export const ImagePreview = styled(UImagePreview)`
   align-items: center;
   backdrop-filter: blur(80px);
+  -webkit-backdrop-filter: blur(80px); /* webkit prefix for Safari */
   display: flex;
   height: 100vh;
   justify-content: center;
