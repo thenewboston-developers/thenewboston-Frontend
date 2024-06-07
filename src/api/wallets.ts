@@ -58,3 +58,12 @@ export const getWallets = async (): Promise<Wallet[]> => {
     throw error;
   }
 };
+
+export const getDefaultWallet = async (): Promise<Wallet> => {
+  try {
+    const response = await axios.get<Wallet>(`${BASE_URL}/default`, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

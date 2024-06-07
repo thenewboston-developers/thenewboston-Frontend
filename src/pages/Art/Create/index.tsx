@@ -1,19 +1,16 @@
 import {useMemo, useState} from 'react';
 import {Field, Formik} from 'formik';
-import {useSelector} from 'react-redux';
-
 import {createOpenAIImage} from 'api/openaiImages';
 import {ButtonType} from 'components/Button';
 import {Textarea} from 'components/FormElements';
 import EmptyImage from 'components/EmptyImage';
 import TNBLogo from 'components/TNBLogo';
 import {DEFAULT_CORE_TICKER, OPENAI_IMAGE_CREATION_FEE} from 'constants/general';
-import {useUserStats} from 'hooks/useUserStats';
+import {useDefaultWallet} from 'hooks';
 import ImageCarousel from './ImageCarousel';
 import {displayErrorToast} from 'utils/toasts';
 import {formatNumber} from 'utils/numbers';
 import yup from 'utils/yup';
-import {getSelf} from 'selectors/state';
 import {CreateOpenAIImageResponse, SFC} from 'types';
 import * as S from './Styles';
 
@@ -21,9 +18,7 @@ const Create: SFC = ({className}) => {
   const [createOpenAIImageResponse, setCreateOpenAIImageResponse] = useState<CreateOpenAIImageResponse | null>(null);
   const [description, setDescription] = useState('');
   const [isImageSaved, setIsImageSaved] = useState<Array<number>>([]);
-  const self = useSelector(getSelf);
-
-  const stats = useUserStats(self.id);
+  const defaultWallet = useDefaultWallet();
 
   const initialValues = {
     description: '',
@@ -135,7 +130,7 @@ const Create: SFC = ({className}) => {
                     <h3>Available</h3>
                     <span>
                       <S.AvailableBalance>
-                        <TNBLogo /> <b>{formatNumber(stats?.default_wallet_balance || 0)}</b>&nbsp;{DEFAULT_CORE_TICKER}
+                        <TNBLogo /> <b>{formatNumber(defaultWallet?.balance || 0)}</b>&nbsp;{DEFAULT_CORE_TICKER}
                       </S.AvailableBalance>
                     </span>
                   </S.Row>
