@@ -1,11 +1,11 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {getDefaultWallet} from 'dispatchers/wallets';
 import {AppDispatch, Wallet} from 'types';
 import {DEFAULT_CORE_TICKER} from 'constants/general';
-import {getWallets} from 'selectors/state';
 import {displayErrorToast} from 'utils/toasts';
+import {getDefaultWallet} from 'dispatchers/wallets';
+import {getWallets} from 'selectors/state';
 
 const useDefaultWallet = (): Wallet | undefined => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,11 +21,11 @@ const useDefaultWallet = (): Wallet | undefined => {
     })();
   }, [dispatch]);
 
-  const defaultWallets = useSelector(getWallets);
+  const wallets = useSelector(getWallets);
 
   const defaultWallet = useMemo(() => {
-    return Object.values(defaultWallets).find((wallet) => wallet.core.ticker === DEFAULT_CORE_TICKER);
-  }, [defaultWallets]);
+    return Object.values(wallets).find((wallet) => wallet.core.ticker === DEFAULT_CORE_TICKER);
+  }, [wallets]);
 
   return defaultWallet;
 };
