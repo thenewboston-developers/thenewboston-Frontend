@@ -4,6 +4,7 @@ import {
   createWalletWithdraw as _createWalletWithdraw,
   getWalletDepositBalance as _getWalletDepositBalance,
   getWallets as _getWallets,
+  getDefaultWallet as _getDefaultWallet,
 } from 'api/wallets';
 import {setWallet, setWallets} from 'store/wallets';
 import {setWire} from 'store/wires';
@@ -36,4 +37,9 @@ export const getWalletDepositBalance = (walletId: number) => async (dispatch: Ap
 export const getWallets = () => async (dispatch: AppDispatch) => {
   const responseData = await _getWallets();
   dispatch(setWallets(responseData));
+};
+
+export const getDefaultWallet = () => async (dispatch: AppDispatch) => {
+  const responseData = await _getDefaultWallet();
+  dispatch(setWallet(responseData));
 };

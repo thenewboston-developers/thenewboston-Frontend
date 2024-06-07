@@ -10,7 +10,7 @@ import usePriceCoreOptions from 'hooks/usePriceCoreOptions';
 import useSelfAvatar from 'hooks/useSelfAvatar';
 import useToggle from 'hooks/useToggle';
 import useUser from 'hooks/useUser';
-
+import useDefaultWallet from 'hooks/useDefaultWallet';
 export {
   useActiveAssetPair,
   useActiveOrderAddress,
@@ -24,4 +24,5 @@ export {
   useSelfAvatar,
   useToggle,
   useUser,
+  useDefaultWallet,
 };
