@@ -11,6 +11,8 @@ import useSelfAvatar from 'hooks/useSelfAvatar';
 import useToggle from 'hooks/useToggle';
 import useUser from 'hooks/useUser';
 import useDefaultWallet from 'hooks/useDefaultWallet';
+import useResizeObserver from 'hooks/useResizeObserver';
+
 export {
   useActiveAssetPair,
   useActiveOrderAddress,
@@ -25,4 +27,5 @@ export {
   useToggle,
   useUser,
   useDefaultWallet,
+  useResizeObserver,
 };
