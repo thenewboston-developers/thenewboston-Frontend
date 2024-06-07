@@ -1,20 +1,22 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
 import {mdiRefresh} from '@mdi/js';
 import MdiIcon from '@mdi/react';
+import orderBy from 'lodash/orderBy';
+
 import Button, {ButtonColor} from 'components/Button';
 import ExpandableWire from 'components/ExpandableWire';
 import Loader from 'components/Loader';
 import Line from 'components/Line';
-import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
-import {WireType} from 'enums';
-import {useActiveWallet} from 'hooks';
-import {getWires} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
-import * as S from './Styles';
+import {WireType} from 'enums';
 import {colors} from 'styles';
+import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
+import {displayErrorToast} from 'utils/toasts';
+import {getWires} from 'selectors/state';
+import {useActiveWallet} from 'hooks';
+
+import * as S from './Styles';
 
 const WalletDeposit: SFC = ({className}) => {
   const [createDepositRequestPending, setCreateDepositRequestPending] = useState(false);

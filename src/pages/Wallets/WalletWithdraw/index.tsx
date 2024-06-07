@@ -1,19 +1,20 @@
 import {useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik, FormikHelpers} from 'formik';
-import wallet from 'assets/wallet.svg';
 import orderBy from 'lodash/orderBy';
 
+import wallet from 'assets/wallet.svg';
 import Button, {ButtonType} from 'components/Button';
 import ExpandableWire from 'components/ExpandableWire';
 import {CORE_TRANSACTION_FEE} from 'constants/protocol';
+import {AppDispatch, SFC} from 'types';
 import {createWalletWithdraw} from 'dispatchers/wallets';
 import {WireType} from 'enums';
-import {useActiveWallet} from 'hooks';
 import {getWires} from 'selectors/state';
-import {AppDispatch, SFC} from 'types';
+import {useActiveWallet} from 'hooks';
 import {displayErrorToast} from 'utils/toasts';
 import yup, {accountNumberSchema} from 'utils/yup';
+
 import * as S from './Styles';
 
 const WalletWithdraw: SFC = ({className}) => {

@@ -1,11 +1,12 @@
-import {mdiContentCopy} from '@mdi/js';
 import Icon from '@mdi/react';
-import link from 'assets/link.svg';
-import {useResizeObserver} from 'hooks';
-import {ToastType} from 'enums';
+import {mdiContentCopy, mdiLink} from '@mdi/js';
+
 import {SFC} from 'types';
+import {ToastType} from 'enums';
 import {displayToast} from 'utils/toasts';
+import {useResizeObserver} from 'hooks';
 import {breakpoints} from 'styles';
+
 import * as S from './Styles';
 
 export interface CopyContainerProps {
@@ -21,7 +22,7 @@ const CopyContainer: SFC<CopyContainerProps> = ({className, text}) => {
   return (
     <S.Container className={className}>
       <S.Text>
-        <img alt="link" src={link} />
+        <Icon path={mdiLink} size={1} />
         {isMobileDevice ? `${text.slice(0, 40)}...` : text}
       </S.Text>
       <S.Button text={text} onCopy={handleCopy}>

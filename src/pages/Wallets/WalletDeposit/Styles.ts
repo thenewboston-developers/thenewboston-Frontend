@@ -85,7 +85,6 @@ export const RightCornerBorders = styled.div`
 export const QrWrapper = styled.div`
   background: ${colors.background};
   border-radius: 16px;
-  border: 1px solid ${colors.border};
   border: 2px solid ${colors.border};
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
   display: inline-block;
