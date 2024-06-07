@@ -16,7 +16,7 @@ export const ContributorInfo: FC<ContributorInfoProps> = ({core, user, rewardAmo
       <S.UserLabel avatar={user.avatar} description="" id={user.id} username={user.username} />
       {core.logo && <CoreLogo logo={core.logo} width="20px" />}
       &nbsp;
-      {rewardAmount.toLocaleString()}
+      {rewardAmount?.toLocaleString() || 'Calculating...'}
     </>
   );
 };

@@ -13,6 +13,8 @@ export const displayErrorToast = (error: any) => {
     errorStr = JSON.stringify(error.response.data);
   } else if (error?.message) {
     errorStr = error.message;
+  } else if (error?.detail) {
+    errorStr = error.detail;
   } else {
     errorStr = JSON.stringify(error);
   }
