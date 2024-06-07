@@ -25,6 +25,7 @@ export const DropdownMenu = styled(UDropdownMenu)`
 
 export const Img = styled.img`
   border-radius: 4px;
+  cursor: pointer;
   margin-top: 12px;
   max-height: 600px;
   max-width: 100%;
@@ -123,4 +124,8 @@ export const Username = styled.div<{$id: number | null}>`
 
 export const Text = styled.div`
   display: flex;
+`;
+
+export const TextContent = styled.div`
+  white-space: pre-wrap;
 `;

@@ -7,6 +7,7 @@ import InfiniteScroll from 'components/InfiniteScroll';
 import {AppDispatch, SFC} from 'types';
 import {getArtworks as _getArtworks, resetArtworks as _resetArtworks} from 'dispatchers/artworks';
 import {getArtworks as getArtworksState} from 'selectors/state';
+
 import * as S from './Styles';
 
 const Marketplace: SFC = ({className}) => {

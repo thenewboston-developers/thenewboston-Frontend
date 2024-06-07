@@ -43,7 +43,7 @@ const Artworks: SFC = ({className}) => {
         <InfiniteScroll dataLength={artworkList.length} hasMore={hasMore} next={fetchMoreArtworks} heightMargin={0}>
           <S.ArtworkCards>
             {artworkList.map((artwork) => (
-              <ArtworkCard artwork={artwork} key={artwork.id} />
+              <ArtworkCard showBadge={true} artwork={artwork} key={artwork.id} />
             ))}
           </S.ArtworkCards>
         </InfiniteScroll>

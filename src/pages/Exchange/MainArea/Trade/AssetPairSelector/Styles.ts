@@ -32,6 +32,8 @@ export const Select = styled.select`
   border-bottom: 1px solid ${colors.black};
   padding: 10px;
   padding-left: 50px;
+  text-indent: 45px;
+  height: 26pt;
   &:focus {
     outline: none;
   }

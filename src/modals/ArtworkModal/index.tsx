@@ -1,23 +1,26 @@
-import React, {Dispatch, SetStateAction, useMemo} from 'react';
+import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
+import Icon from '@mdi/react';
 import {Form, Formik} from 'formik';
+import {mdiContentSaveOutline, mdiCubeScan} from '@mdi/js';
 
 import Button, {ButtonType} from 'components/Button';
-import {Input, Select} from 'components/FormElements';
-import {createArtwork, updateArtwork} from 'dispatchers/artworks';
-import {ToastType} from 'enums';
-import {usePriceCoreOptions} from 'hooks';
-import {AppDispatch, Artwork, SFC} from 'types';
-import {displayErrorToasts, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
+import {AppDispatch, Artwork, SFC} from 'types';
+import {Input, Select, Textarea} from 'components/FormElements';
+import {ToastType} from 'enums';
+import {createArtwork, updateArtwork} from 'dispatchers/artworks';
+import {displayErrorToasts, displayToast} from 'utils/toasts';
+import {usePriceCoreOptions} from 'hooks';
+
 import * as S from './Styles';
 
 export interface ArtworkModalProps {
   artwork?: Artwork;
   close(): void;
+  currentIndex?: number;
   description?: string;
   imageUrl: string;
-  currentIndex?: number;
   setIsImageSaved?: Dispatch<SetStateAction<number[]>>;
 }
 
@@ -25,13 +28,38 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({
   artwork,
   className,
   close,
+  currentIndex,
   description,
   imageUrl,
-  currentIndex,
   setIsImageSaved,
 }) => {
+  enum SaveTypeTab {
+    SELL = 'Sell On Marketplace',
+    SAVE = 'Save As Draft',
+  }
+
   const dispatch = useDispatch<AppDispatch>();
   const priceCoreOptions = usePriceCoreOptions();
+  const [activeTab, setActiveTab] = useState<SaveTypeTab>(SaveTypeTab.SELL);
+
+  const renderTabs = (artworkVl: Artwork | null) => {
+    return (
+      <>
+        {!artworkVl?.price_amount && (
+          <S.Tabs>
+            <S.Tab isActive={activeTab === SaveTypeTab.SELL} onClick={() => setActiveTab(SaveTypeTab.SELL)}>
+              <Icon path={mdiCubeScan} size={'16px'} />
+              Sell on Marketplace
+            </S.Tab>
+            <S.Tab isActive={activeTab === SaveTypeTab.SAVE} onClick={() => setActiveTab(SaveTypeTab.SAVE)}>
+              <Icon path={mdiContentSaveOutline} size={'16px'} />
+              Save As Draft
+            </S.Tab>
+          </S.Tabs>
+        )}
+      </>
+    );
+  };
 
   const initialValues = useMemo(
     () => ({
@@ -84,22 +112,40 @@ const ArtworkModal: SFC<ArtworkModalProps> = ({
   return (
     <S.Modal className={className} close={close} header={artwork ? 'Edit Artwork' : 'Create Artwork'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
-        {({dirty, errors, isSubmitting, isValid, touched}) => (
-          <Form>
-            <Input errors={errors} label="Name" name="name" touched={touched} />
-            <Input errors={errors} label="Description" name="description" touched={touched} />
-            <Select errors={errors} label="Currency" name="price_core" options={priceCoreOptions} touched={touched} />
-            <Input errors={errors} label="Price Amount" name="price_amount" touched={touched} type="number" />
-            <Button
-              dirty={dirty}
-              disabled={isSubmitting}
-              isSubmitting={isSubmitting}
-              isValid={isValid}
-              text="Submit"
-              type={ButtonType.submit}
-            />
-          </Form>
-        )}
+        {({dirty, errors, isSubmitting, isValid, touched}) => {
+          return (
+            <>
+              {renderTabs(artwork ? artwork : null)}
+              <S.Divider />
+              <Form>
+                <Input errors={errors} label="NAME" name="name" touched={touched} />
+                <Textarea errors={errors} label="DESCRIPTION" name="description" touched={touched} />
+                {activeTab === SaveTypeTab.SELL && (
+                  <S.Row>
+                    <Select
+                      errors={errors}
+                      label="CURRENCY"
+                      name="price_core"
+                      options={priceCoreOptions}
+                      touched={touched}
+                    />
+                    <S.Container>
+                      <Input errors={errors} label="PRICE AMOUNT" name="price_amount" touched={touched} type="number" />
+                    </S.Container>
+                  </S.Row>
+                )}{' '}
+                <Button
+                  dirty={dirty}
+                  disabled={isSubmitting}
+                  isSubmitting={isSubmitting}
+                  isValid={isValid}
+                  text={activeTab === SaveTypeTab.SELL ? 'Sell artwork' : 'Save as draft'}
+                  type={ButtonType.submit}
+                />
+              </Form>
+            </>
+          );
+        }}
       </Formik>
     </S.Modal>
   );

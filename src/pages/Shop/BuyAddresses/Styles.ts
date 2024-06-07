@@ -19,4 +19,7 @@ export const Addresses = styled.div`
 
 export const Container = styled.div`
   padding: 24px 32px;
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 24px 16px;
+  }
 `;

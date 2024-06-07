@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  padding: 24px 32px;
+  height: 100%;
+  overflow-y: auto;
+`;
+
+export const ContributionsContainer = styled.div`
+  padding: 32px;
 `;

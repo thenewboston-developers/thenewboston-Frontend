@@ -1,6 +1,7 @@
 export interface UserReadSerializer {
   avatar: string | null;
   id: number;
+  is_manual_contribution_allowed: boolean;
   username: string;
 }
 
