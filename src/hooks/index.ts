@@ -10,6 +10,7 @@ import usePriceCoreOptions from 'hooks/usePriceCoreOptions';
 import useSelfAvatar from 'hooks/useSelfAvatar';
 import useToggle from 'hooks/useToggle';
 import useUser from 'hooks/useUser';
+import useResizeObserver from 'hooks/useResizeObserver';
 
 export {
   useActiveAssetPair,
@@ -24,4 +25,5 @@ export {
   useSelfAvatar,
   useToggle,
   useUser,
+  useResizeObserver,
 };

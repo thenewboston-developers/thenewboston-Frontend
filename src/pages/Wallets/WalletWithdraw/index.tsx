@@ -1,18 +1,20 @@
-import React, {useMemo} from 'react';
+import {useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
 
+import wallet from 'assets/wallet.svg';
 import Button, {ButtonType} from 'components/Button';
 import ExpandableWire from 'components/ExpandableWire';
 import {CORE_TRANSACTION_FEE} from 'constants/protocol';
+import {AppDispatch, SFC} from 'types';
 import {createWalletWithdraw} from 'dispatchers/wallets';
 import {WireType} from 'enums';
-import {useActiveWallet} from 'hooks';
 import {getWires} from 'selectors/state';
-import {AppDispatch, SFC} from 'types';
+import {useActiveWallet} from 'hooks';
 import {displayErrorToast} from 'utils/toasts';
 import yup, {accountNumberSchema} from 'utils/yup';
+
 import * as S from './Styles';
 
 const WalletWithdraw: SFC = ({className}) => {
@@ -68,17 +70,31 @@ const WalletWithdraw: SFC = ({className}) => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
           {({dirty, errors, isSubmitting, isValid, touched, values}) => (
             <S.Form>
-              <S.Input errors={errors} label="Amount" name="amount" touched={touched} type="number" />
+              <S.AmountLogoInput
+                errors={errors}
+                label="Amount"
+                name="amount"
+                logo={activeWallet.core.logo}
+                touched={touched}
+              />
               <S.Input errors={errors} label="Account Number" name="accountNumber" touched={touched} />
               <S.DetailRowContainer>
                 <S.DetailRow>
-                  <S.Label>Fee</S.Label>
+                  <S.Label>FEE</S.Label>
                   <S.Value>{CORE_TRANSACTION_FEE}</S.Value>
                 </S.DetailRow>
                 <S.Line />
                 <S.DetailRow>
-                  <S.Label>Total</S.Label>
-                  <S.Value>{values.amount ? getTotal(values.amount).toLocaleString() : '-'}</S.Value>
+                  <S.Label>TOTAL</S.Label>
+                  <S.Value>
+                    {values.amount ? (
+                      <span>
+                        {getTotal(values.amount).toLocaleString()} {activeWallet.core.ticker}
+                      </span>
+                    ) : (
+                      `0 ${activeWallet.core.ticker}`
+                    )}
+                  </S.Value>
                 </S.DetailRow>
               </S.DetailRowContainer>
               <Button
@@ -86,17 +102,19 @@ const WalletWithdraw: SFC = ({className}) => {
                 disabled={isSubmitting}
                 isSubmitting={isSubmitting}
                 isValid={isValid}
-                text="Withdraw"
+                text={`Buy ${activeWallet.core.ticker}`}
                 type={ButtonType.submit}
               />
             </S.Form>
           )}
         </Formik>
+        <S.Img alt="wallet" src={wallet} />
       </S.Panel>
-      <S.Panel>
-        <h4>Withdraws</h4>
+
+      <S.Div>
+        <S.Title>Withdraws history </S.Title>
         {renderWithdraws()}
-      </S.Panel>
+      </S.Div>
     </S.Container>
   );
 };

@@ -1,25 +1,26 @@
 import {useCallback, useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import Icon from '@mdi/react';
+import {mdiBankTransferIn, mdiBankTransferOut} from '@mdi/js';
 import orderBy from 'lodash/orderBy';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
-import {getWallets as _getWallets} from 'dispatchers/wallets';
+import {AppDispatch, SFC} from 'types';
 import {WalletTab} from 'enums';
+import {getWallets as _getWallets} from 'dispatchers/wallets';
 import {useAvailableWalletCores, useToggle} from 'hooks';
 import WalletCreateModal from 'modals/WalletCreateModal';
 import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
-import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import MenuItem from './MenuItem';
 import WalletDeposit from './WalletDeposit';
 import WalletWithdraw from './WalletWithdraw';
+
 import * as S from './Styles';
-import Icon from '@mdi/react';
-import {mdiBankTransferIn, mdiBankTransferOut} from '@mdi/js';
 
 const Wallets: SFC = ({className}) => {
   const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
@@ -125,8 +126,8 @@ const Wallets: SFC = ({className}) => {
     <>
       <S.Container className={className}>
         <S.LeftMenu>
-          {renderButtonContainer()}
-          {renderMenuItems()}
+          <S.Div>{renderButtonContainer()}</S.Div>
+          <S.Box>{renderMenuItems()}</S.Box>
         </S.LeftMenu>
         <S.Right>{renderRightContent()}</S.Right>
       </S.Container>

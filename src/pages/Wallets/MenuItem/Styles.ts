@@ -3,33 +3,43 @@ import styled from 'styled-components';
 import {colors, fonts} from 'styles';
 
 export const Balance = styled.div`
-  color: ${colors.palette.darkGray['300']};
-  font-size: 12px;
+  font-size: 14px;
+  padding: 7px 4px;
 `;
 
 export const Container = styled.div<{$isActive: boolean}>`
-  background: ${({$isActive}) => ($isActive ? 'rgba(208, 215, 222, 0.32)' : 'transparent')};
-  display: flex;
+  background: ${({$isActive}) => ($isActive ? `${colors.palette.blue[600]}` : 'transparent')};
+  border-bottom: 1px solid ${colors.border};
   padding: 8px 12px;
   transition: background 0.3s ease;
-
   &:hover {
-    background: rgba(208, 215, 222, 0.32);
+    background: ${colors.palette.blue[600]};
     cursor: pointer;
     text-decoration: none;
   }
 `;
 
 export const Domain = styled.div`
+  color: ${colors.palette.darkGray['300']};
   font-size: 12px;
 `;
 
 export const Text = styled.div`
+  align-items: center;
   display: flex;
-  flex-direction: column;
-  margin-left: 8px;
+  justify-content: space-between;
+  padding: 0px 4px;
 `;
 
-export const Ticker = styled.div`
+export const Ticker = styled.div<{$isActive: boolean}>`
+  color: ${({$isActive}) => ($isActive ? colors.palette.blue[700] : `${colors.black}`)};
+  font-size: 18px;
   font-weight: ${fonts.weight.semiBold};
 `;
+
+export const Span = styled.span`
+  font-weight: ${fonts.weight.semiBold};
+  margin-left: 5px;
+`;
+
+export const Div = styled.div``;
