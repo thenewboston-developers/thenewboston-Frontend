@@ -26,7 +26,7 @@ export const Code = styled.div`
   background-color: ${colors.white};
   border-radius: 10px;
   font-size: 12px;
-  margin: 0 10px;
+  margin-left: 10px;
   padding: 0 10px;
 `;
 
@@ -35,8 +35,8 @@ export const CodeContainer = styled.div`
   border-radius: 10px;
   flex: 1;
   padding: 5px 5px;
-  margin: 15px;
-  min-width: 350px;
+  margin-left: 15px;
+  min-width: 100px;
   white-space: pre-wrap;
   word-break: break-all;
   word-wrap: break-word;
@@ -67,7 +67,6 @@ export const CodeTitle = styled.div`
   font-size: 12px;
   font-weight: bold;
   padding: 13px;
-  width: 50vw;
 `;
 
 export const Detail = styled.div`
@@ -113,8 +112,10 @@ export const Line = styled.div`
 `;
 
 export const LearnMoreContainer = styled.div`
-  padding: 24px 32px;
+  padding: 24px 30px;
+  margin: 0;
   font-family: OpenSans;
+  overflow-y: auto;
   @media (max-width: ${breakpoints.mobile}) {
     margin: 0;
     padding: 1vw;

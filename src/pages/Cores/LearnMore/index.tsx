@@ -119,11 +119,7 @@ const LearnMore: SFC = ({className}) => {
     );
   };
 
-  return (
-    <>
-      <S.LearnMoreContainer className={className}>{renderArticles()}</S.LearnMoreContainer>
-    </>
-  );
+  return <S.LearnMoreContainer className={className}>{renderArticles()}</S.LearnMoreContainer>;
 };
 
 export default LearnMore;
