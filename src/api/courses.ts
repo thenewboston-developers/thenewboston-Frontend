@@ -41,6 +41,7 @@ export const getCourses = async (
       params,
       ...authorizationHeaders(),
     });
+    console.log('Courses:', response.data);
     return response.data;
   } catch (error) {
     console.error(error);
