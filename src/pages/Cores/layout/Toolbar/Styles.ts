@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {toolbarStyle} from 'styles';
+import {toolbarStyle, breakpoints} from 'styles';
 
 export const Center = styled.div`
   align-items: flex-start;

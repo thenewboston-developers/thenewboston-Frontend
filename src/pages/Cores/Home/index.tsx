@@ -1,17 +1,16 @@
-import {getCores} from 'selectors/state';
-import {SFC} from 'types';
 import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
-import {useToggle} from 'hooks';
-import * as S from './Styles';
-import CoreCard from '../CoreCard';
-import CoreModal from 'modals/CoreModal';
-import EmptyText from 'components/EmptyText';
 import orderBy from 'lodash/orderBy';
+
+import {getCores} from 'selectors/state';
+import {SFC} from 'types';
+import CoreCard from '../CoreCard';
+import EmptyText from 'components/EmptyText';
 import SectionHeading from 'components/SectionHeading';
 
+import * as S from './Styles';
+
 const Home: SFC = ({className}) => {
-  const [coreModalIsOpen, toggleCoreModal] = useToggle(false);
   const cores = useSelector(getCores);
 
   const coresList = useMemo(() => {
@@ -34,7 +33,6 @@ const Home: SFC = ({className}) => {
         <SectionHeading heading="Currencies" />
         {renderContent()}
       </S.Container>
-      {coreModalIsOpen ? <CoreModal close={toggleCoreModal} /> : null}
     </>
   );
 };

@@ -1,35 +1,72 @@
-import {articlesData} from './ArticlesData';
 import {SFC} from 'types';
-import {useToggle} from 'hooks';
+import LearnMoreCardDetail from 'components/LearnMoreCardDetail';
+import * as LearnMoreContent from 'constants/coresLearnMore';
+
 import * as S from './Styles';
-import ArticleCard from './ArticleCard';
-import CoreModal from 'modals/CoreModal';
-import EmptyText from 'components/EmptyText';
 
 const LearnMore: SFC = ({className}) => {
-  const [coreModalIsOpen, toggleCoreModal] = useToggle(false);
-  const articles = articlesData;
+  const VisionStatement = () => {
+    return (
+      <S.LearnMoreCardContainer className={className}>
+        <LearnMoreCardDetail learnMoreContent={LearnMoreContent.VisionStatement} element={null} />
+      </S.LearnMoreCardContainer>
+    );
+  };
 
-  const renderContent = () => {
-    if (!!articles.length) return renderArticles();
-    return <EmptyText>No articles to display.</EmptyText>;
+  const MissionStatement = () => {
+    return (
+      <S.LearnMoreCardContainer className={className}>
+        <LearnMoreCardDetail learnMoreContent={LearnMoreContent.MissionStatement} element={null} />
+      </S.LearnMoreCardContainer>
+    );
+  };
+
+  const SystemArchitecture = () => {
+    return (
+      <S.SystemArchContainer className={className}>
+        <S.SystemArchLeft>
+          <LearnMoreCardDetail learnMoreContent={LearnMoreContent.systemArchitecture} element={null} />
+        </S.SystemArchLeft>
+        <RenderCode data={LearnMoreContent.systemArchitectureCode} />
+      </S.SystemArchContainer>
+    );
+  };
+
+  const Benefits = () => {
+    return (
+      <S.LearnMoreCardContainer className={className}>
+        <LearnMoreCardDetail
+          learnMoreContent={LearnMoreContent.Benefits}
+          element={renderDataInArticles(LearnMoreContent.Benefits.data)}
+        />
+      </S.LearnMoreCardContainer>
+    );
+  };
+
+  const UseCases = () => {
+    return (
+      <S.LearnMoreCardContainer className={className}>
+        <LearnMoreCardDetail
+          learnMoreContent={LearnMoreContent.UseCases}
+          element={renderDataInArticles(LearnMoreContent.UseCases.data)}
+        />
+      </S.LearnMoreCardContainer>
+    );
   };
 
   const renderArticles = () => {
-    const coreCards = articles.map((article) => {
-      if (article.type === 'list') {
-        return <ArticleCard article={article} key={article.id} element={renderDataInArticles(article.data)} />;
-      } else if (article.type === 'normal') {
-        return <ArticleCard article={article} key={article.id} />;
-      } else if (article.type === 'code') {
-        return <RenderCode data={article} />;
-      }
-    });
-    return <S.CardsContainer>{coreCards}</S.CardsContainer>;
+    return (
+      <S.CardsContainer>
+        <VisionStatement />
+        <MissionStatement />
+        <SystemArchitecture />
+        <Benefits />
+        <UseCases />
+      </S.CardsContainer>
+    );
   };
 
   const renderDataInArticles = (data?: object) => {
-    console.log(data);
     const dataArr = data ? Object.values(data) : [];
     return (
       <S.ListContainer>
@@ -46,33 +83,45 @@ const LearnMore: SFC = ({className}) => {
       </S.ListContainer>
     );
   };
+  const CodeViewer = ({data}: any) => {
+    const renderValue = (value: any) => {
+      if (typeof value === 'object' && value !== null) {
+        return <CodeViewer data={value} />;
+      }
+      return <span>{String(value)}</span>;
+    };
+
+    return (
+      <S.Code>
+        {`{`}
+        {Object.entries(data).map(([key, value]) => (
+          <S.CodeValueWrapper key={key}>
+            {`"${key}": `}
+            {renderValue(value)}
+          </S.CodeValueWrapper>
+        ))}
+        {`}`}
+      </S.Code>
+    );
+  };
 
   const RenderCode = (data: any) => {
-    const detail = data.data.detail;
-    const wordToStyle = 'Ed25519';
-
-    const parts = detail.split(new RegExp(`(${wordToStyle})`, 'gi'));
     return (
       <S.CodeContainer>
-        <S.ListItem>
+        <S.CodeTitle>
           <S.Img alt="tag icon" src={data.data.logo}></S.Img>
           <S.ContentTitle>{data.data.title}</S.ContentTitle>
-        </S.ListItem>
-        <S.Code>{JSON.stringify(data.data.data, null, 2).replace(/\\n/g, '\n')}</S.Code>
+        </S.CodeTitle>
+        <CodeViewer data={data.data.data} />
         <br />
-        <S.Detail>
-          {parts.map((part: string) =>
-            part.toLowerCase() === wordToStyle.toLowerCase() ? <S.Span>{part}</S.Span> : part.replace(/\\n/g, '\n'),
-          )}
-        </S.Detail>
+        <S.Detail>{data.data.detail}</S.Detail>
       </S.CodeContainer>
     );
   };
 
   return (
     <>
-      <S.Container className={className}>{renderContent()}</S.Container>
-      {coreModalIsOpen ? <CoreModal close={toggleCoreModal} /> : null}
+      <S.LearnMoreContainer className={className}>{renderArticles()}</S.LearnMoreContainer>
     </>
   );
 };

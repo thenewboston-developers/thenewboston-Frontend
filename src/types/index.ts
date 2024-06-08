@@ -25,7 +25,7 @@ import {Address, Addresses} from 'types/addresses';
 import {AppDispatch, RootState} from 'types/store';
 import {Artwork, Artworks} from 'types/artworks';
 import {ArtworkTransfer, ArtworkTransfers} from 'types/artworkTransfers';
-import {Article, Articles} from './articles';
+import {LearnMoreContent, LearnMoreContents} from './learnMoreContent';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
@@ -67,8 +67,8 @@ export {
   Address,
   Addresses,
   AppDispatch,
-  Article,
-  Articles,
+  LearnMoreContent,
+  LearnMoreContents,
   Artwork,
   ArtworkTransfer,
   ArtworkTransfers,

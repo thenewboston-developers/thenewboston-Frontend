@@ -1,6 +1,6 @@
 import {Dict} from 'types/generic';
 
-export interface Article {
+export interface LearnMoreContent {
   detail: string;
   id: number;
   logo: string;
@@ -9,4 +9,4 @@ export interface Article {
   data?: object;
 }
 
-export type Articles = Dict<Article>;
+export type LearnMoreContents = Dict<LearnMoreContent>;
