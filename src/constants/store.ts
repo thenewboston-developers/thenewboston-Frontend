@@ -1,5 +1,4 @@
 export const ADDRESSES = 'addresses';
-export const ARTICLES = 'articles';
 export const ARTWORKS = 'artworks';
 export const ARTWORK_TRANSFERS = 'artworkTransfers';
 export const ASSET_PAIRS = 'assetPairs';

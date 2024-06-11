@@ -25,7 +25,6 @@ import {Address, Addresses} from 'types/addresses';
 import {AppDispatch, RootState} from 'types/store';
 import {Artwork, Artworks} from 'types/artworks';
 import {ArtworkTransfer, ArtworkTransfers} from 'types/artworkTransfers';
-import {LearnMoreContent, LearnMoreContents} from './learnMoreContent';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
@@ -44,6 +43,7 @@ import {Invitation, Invitations} from 'types/invitations';
 import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Issue} from 'types/issues';
 import {Item} from 'types/items';
+import {LearnMore} from './learnMore';
 import {Lecture, Lectures} from 'types/lectures';
 import {Manager} from 'types/manager';
 import {Message, Messages} from 'types/messages';
@@ -67,8 +67,6 @@ export {
   Address,
   Addresses,
   AppDispatch,
-  LearnMoreContent,
-  LearnMoreContents,
   Artwork,
   ArtworkTransfer,
   ArtworkTransfers,
@@ -129,6 +127,7 @@ export {
   Invitations,
   Issue,
   Item,
+  LearnMore,
   Lecture,
   LectureReadSerializer,
   Lectures,

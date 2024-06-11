@@ -48,7 +48,7 @@ const Courses: SFC<CoursesProps> = ({className, selfCourses = false}) => {
         await dispatch(_getCourses(apiParams));
         setIsInitialLoading(false);
       } catch (error) {
-        console.error(error, 'here');
+        console.error(error);
         setIsInitialLoading(false);
         displayErrorToast('Error fetching courses');
       }

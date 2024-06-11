@@ -2,11 +2,11 @@ import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
-import {getCores} from 'selectors/state';
-import {SFC} from 'types';
 import CoreCard from '../CoreCard';
 import EmptyText from 'components/EmptyText';
 import SectionHeading from 'components/SectionHeading';
+import {SFC} from 'types';
+import {getCores} from 'selectors/state';
 
 import * as S from './Styles';
 

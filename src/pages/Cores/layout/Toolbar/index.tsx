@@ -1,8 +1,8 @@
-import {SFC} from 'types';
-import {useToggle} from 'hooks';
 import Button from 'components/Button';
 import CoreModal from 'modals/CoreModal';
 import ToolbarMenuLink from 'components/ToolbarMenuLink';
+import {SFC} from 'types';
+import {useToggle} from 'hooks';
 
 import * as S from './Styles';
 

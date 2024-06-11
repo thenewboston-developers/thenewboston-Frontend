@@ -42,7 +42,6 @@ export const getLectures = async (
       params,
       ...authorizationHeaders(),
     });
-    console.log('lectures:', response.data);
     return response.data;
   } catch (error) {
     console.error(error);

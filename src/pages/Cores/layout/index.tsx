@@ -1,7 +1,7 @@
 import {Outlet} from 'react-router-dom';
 
-import {SFC} from 'types';
 import Toolbar from './Toolbar';
+import {SFC} from 'types';
 
 import * as S from './Styles';
 
