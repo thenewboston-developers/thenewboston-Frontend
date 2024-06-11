@@ -11,7 +11,7 @@ export const CodeContainer = styled.div`
   background-color: ${colors.whiteHover};
   border-radius: 10px;
   flex: 1;
-  margin: 0 15px;
+  margin-left: 15px;
   padding: 5px 5px;
   white-space: pre-wrap;
   word-break: break-all;
