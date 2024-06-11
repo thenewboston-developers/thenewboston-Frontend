@@ -46,6 +46,7 @@ import {Invitation, Invitations} from 'types/invitations';
 import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Issue} from 'types/issues';
 import {Item} from 'types/items';
+import {LearnMore} from './learnMore';
 import {Lecture, Lectures} from 'types/lectures';
 import {Manager} from 'types/manager';
 import {Message, Messages} from 'types/messages';
@@ -131,6 +132,7 @@ export {
   Invitations,
   Issue,
   Item,
+  LearnMore,
   Lecture,
   LectureReadSerializer,
   Lectures,
