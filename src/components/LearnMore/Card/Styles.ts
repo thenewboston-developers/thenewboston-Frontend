@@ -2,15 +2,20 @@ import styled from 'styled-components';
 
 import {breakpoints, colors, fonts} from 'styles';
 
-export const Container = styled.div<{$displayStyle?: string}>`
+export const Container = styled.div<{$displayStyle?: string; $minHeight?: string}>`
   background-color: ${colors.white};
   border-radius: 14px;
   border: 1px solid ${colors.border};
   display: ${({$displayStyle}) => $displayStyle || 'block'};
   padding: 20px;
+  min-height: ${({$minHeight}) => $minHeight || 'auto'};
 
   @media (max-width: ${breakpoints.mobile}) {
     display: block;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    min-height: auto;
   }
 `;
 

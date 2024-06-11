@@ -7,16 +7,17 @@ import * as S from './Styles';
 export interface LearnMoreCardProps {
   children?: ReactNode;
   content: LearnMore;
-  contentDisplayStyle?: 'flex' | 'block';
   contentWidth?: string;
+  displayStyle?: 'flex' | 'block';
+  minHeight?: string;
 }
 
-const LearnMoreCard: SFC<LearnMoreCardProps> = ({content, contentDisplayStyle, contentWidth, children = null}) => {
+const LearnMoreCard: SFC<LearnMoreCardProps> = ({content, contentWidth, displayStyle, minHeight, children = null}) => {
   // TODO (muhammad) LOW: Replace this logic of splitting \n with something more better/robust.
   const paragraphs = content.detail.split('\n').filter((paragraph) => paragraph.trim() !== '');
   return (
     <>
-      <S.Container $displayStyle={contentDisplayStyle}>
+      <S.Container $displayStyle={displayStyle} $minHeight={minHeight}>
         <S.ContentContainer $width={contentWidth}>
           <S.LogoContainer>
             <S.Logo src={content.logo}></S.Logo>

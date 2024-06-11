@@ -16,22 +16,37 @@ import {SFC, LearnMore as TLearnMore} from 'types';
 import * as S from './Styles';
 
 const LearnMore: SFC = ({className}) => {
+  const visionMissionMinHeight = '250px';
+  const benefitsUseCasesMinHeight = '1050px';
+
   const getLearnMoreList = useCallback((obj?: object) => <LearnMoreList list={obj ? Object.values(obj) : []} />, []);
 
   const getVisionStatement = useCallback(() => {
-    return <LearnMoreCard content={VISION_STATEMENT} />;
+    return <LearnMoreCard content={VISION_STATEMENT} minHeight={visionMissionMinHeight} />;
   }, []);
 
   const getMissionStatement = useCallback(() => {
-    return <LearnMoreCard content={MISSION_STATEMENT} />;
+    return <LearnMoreCard content={MISSION_STATEMENT} minHeight={visionMissionMinHeight} />;
   }, []);
 
   const getBenefits = useCallback(() => {
-    return <LearnMoreCard content={BENEFITS} children={getLearnMoreList(BENEFITS.obj)} />;
+    return (
+      <LearnMoreCard
+        content={BENEFITS}
+        children={getLearnMoreList(BENEFITS.obj)}
+        minHeight={benefitsUseCasesMinHeight}
+      />
+    );
   }, [getLearnMoreList]);
 
   const getUseCases = useCallback(() => {
-    return <LearnMoreCard content={USE_CASES} children={getLearnMoreList(USE_CASES.obj)} />;
+    return (
+      <LearnMoreCard
+        content={USE_CASES}
+        children={getLearnMoreList(USE_CASES.obj)}
+        minHeight={benefitsUseCasesMinHeight}
+      />
+    );
   }, [getLearnMoreList]);
 
   const getSystemArchitecture = useCallback(() => {
@@ -50,7 +65,7 @@ const LearnMore: SFC = ({className}) => {
     };
 
     return (
-      <LearnMoreCard content={SYSTEM_ARCHITECTURE} contentDisplayStyle="flex" contentWidth="50%">
+      <LearnMoreCard content={SYSTEM_ARCHITECTURE} displayStyle="flex" contentWidth="50%">
         {getCodeSection(SYSTEM_ARCHITECTURE_CODE)}
       </LearnMoreCard>
     );
