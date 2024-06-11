@@ -1,26 +1,30 @@
 import styled from 'styled-components';
 
-import {colors, fonts} from 'styles';
+import {breakpoints, colors, fonts} from 'styles';
 
-export const Container = styled.div`
+export const Container = styled.div<{$displayStyle?: string}>`
   background-color: ${colors.white};
   border-radius: 14px;
   border: 1px solid ${colors.border};
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  justify-content: space-between;
-  padding: 20px;
-`;
-
-export const ContentContainer = styled.div<{$displayStyle?: string}>`
   display: ${({$displayStyle}) => $displayStyle || 'block'};
+  padding: 20px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    display: block;
+  }
 `;
 
-export const Content = styled.div<{$width?: string}>`
+export const ContentContainer = styled.div<{$width?: string}>`
+  width: ${({$width}) => $width || '100%'};
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: auto;
+  }
+`;
+
+export const Content = styled.div`
   font-size: 14px;
   margin: 10px 0px;
-  width: ${({$width}) => $width || '100%'};
 `;
 
 export const Logo = styled.img<{width?: string}>`

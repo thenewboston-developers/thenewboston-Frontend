@@ -13,7 +13,7 @@ export const VISION_STATEMENT: LearnMore = {
   title: 'Vision Statement',
 };
 
-export const MISION_STATEMENT: LearnMore = {
+export const MISSION_STATEMENT: LearnMore = {
   detail:
     'Our mission is to equip developers with the tools to build innovative applications and services using decentralized digital currencies. We advocate our financial inclusion, privacy and security while eliminating barriers and intermediaries, cultivating a fair and interconnected digital economy.',
   logo: MissionImg,

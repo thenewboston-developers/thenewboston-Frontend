@@ -1,6 +1,8 @@
+import {useCallback} from 'react';
+
 import {
   BENEFITS,
-  MISION_STATEMENT,
+  MISSION_STATEMENT,
   SYSTEM_ARCHITECTURE,
   SYSTEM_ARCHITECTURE_CODE,
   USE_CASES,
@@ -8,51 +10,31 @@ import {
 } from 'constants/coresLearnMore';
 import LearnMoreCard from 'components/LearnMore/Card';
 import LearnMoreList from 'components/LearnMore/List';
+import Code from 'components/Code';
 import {SFC, LearnMore as TLearnMore} from 'types';
 
 import * as S from './Styles';
 
 const LearnMore: SFC = ({className}) => {
-  const getVisionStatement = () => {
+  const getLearnMoreList = useCallback((obj?: object) => <LearnMoreList list={obj ? Object.values(obj) : []} />, []);
+
+  const getVisionStatement = useCallback(() => {
     return <LearnMoreCard content={VISION_STATEMENT} />;
-  };
+  }, []);
 
-  const getMissionStatement = () => {
-    return <LearnMoreCard content={MISION_STATEMENT} />;
-  };
+  const getMissionStatement = useCallback(() => {
+    return <LearnMoreCard content={MISSION_STATEMENT} />;
+  }, []);
 
-  const getBenefits = () => {
+  const getBenefits = useCallback(() => {
     return <LearnMoreCard content={BENEFITS} children={getLearnMoreList(BENEFITS.obj)} />;
-  };
+  }, [getLearnMoreList]);
 
-  const getUseCases = () => {
+  const getUseCases = useCallback(() => {
     return <LearnMoreCard content={USE_CASES} children={getLearnMoreList(USE_CASES.obj)} />;
-  };
+  }, [getLearnMoreList]);
 
-  const getSystemArchitecture = () => {
-    const getCode = (data: any) => {
-      console.log(data);
-      const renderValue = (value: any) => {
-        if (typeof value === 'object' && value !== null) {
-          return getCode(data);
-        }
-        return <span>{String(value)}</span>;
-      };
-
-      return (
-        <S.Code>
-          {`{`}
-          {Object.entries(data).map(([key, value]) => (
-            <S.CodeValueWrapper key={key}>
-              {`"${key}": `}
-              {renderValue(value)}
-            </S.CodeValueWrapper>
-          ))}
-          {`}`}
-        </S.Code>
-      );
-    };
-
+  const getSystemArchitecture = useCallback(() => {
     const getCodeSection = (data: TLearnMore) => {
       return (
         <S.CodeContainer>
@@ -60,7 +42,7 @@ const LearnMore: SFC = ({className}) => {
             <S.Img alt="tag icon" src={data.logo}></S.Img>
             <S.CodeTitle>{data.title}</S.CodeTitle>
           </S.CodeTitleContainer>
-          {getCode(data.obj)}
+          <Code data={data.obj} />
           <br />
           <S.CodeDetail>{data.detail}</S.CodeDetail>
         </S.CodeContainer>
@@ -68,36 +50,27 @@ const LearnMore: SFC = ({className}) => {
     };
 
     return (
-      <LearnMoreCard
-        children={getCodeSection(SYSTEM_ARCHITECTURE_CODE)}
-        content={SYSTEM_ARCHITECTURE}
-        contentDisplayStyle="flex"
-        contentWidth="50%"
-      />
+      <LearnMoreCard content={SYSTEM_ARCHITECTURE} contentDisplayStyle="flex" contentWidth="50%">
+        {getCodeSection(SYSTEM_ARCHITECTURE_CODE)}
+      </LearnMoreCard>
     );
-  };
+  }, []);
 
-  const getLearnMoreList = (obj?: object) => {
-    return <LearnMoreList list={obj ? Object.values(obj) : []} />;
-  };
-
-  const renderContent = () => {
-    return (
-      <>
-        <S.Row>
-          <S.Col size={6}>{getVisionStatement()}</S.Col>
-          <S.Col size={6}>{getMissionStatement()}</S.Col>
-        </S.Row>
-        <S.Row>
-          <S.Col size={12}>{getSystemArchitecture()}</S.Col>
-        </S.Row>
-        <S.Row>
-          <S.Col size={6}>{getBenefits()}</S.Col>
-          <S.Col size={6}>{getUseCases()}</S.Col>
-        </S.Row>
-      </>
-    );
-  };
+  const renderContent = () => (
+    <>
+      <S.Row>
+        <S.Col size={6}>{getVisionStatement()}</S.Col>
+        <S.Col size={6}>{getMissionStatement()}</S.Col>
+      </S.Row>
+      <S.Row>
+        <S.Col size={12}>{getSystemArchitecture()}</S.Col>
+      </S.Row>
+      <S.Row>
+        <S.Col size={6}>{getBenefits()}</S.Col>
+        <S.Col size={6}>{getUseCases()}</S.Col>
+      </S.Row>
+    </>
+  );
 
   return <S.Container className={className}>{renderContent()}</S.Container>;
 };

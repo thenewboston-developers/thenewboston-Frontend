@@ -7,20 +7,11 @@ export const Container = styled.div`
   padding: 24px 32px;
 `;
 
-export const Code = styled.div`
-  background-color: ${colors.white};
-  border-radius: 10px;
-  font-size: 12px;
-  margin-left: 10px;
-  padding: 0 10px;
-`;
-
 export const CodeContainer = styled.div`
   background-color: ${colors.whiteHover};
   border-radius: 10px;
   flex: 1;
-  margin-left: 15px;
-  min-width: 100px;
+  margin: 0 15px;
   padding: 5px 5px;
   white-space: pre-wrap;
   word-break: break-all;
@@ -28,7 +19,7 @@ export const CodeContainer = styled.div`
   @media (max-width: ${breakpoints.mobile}) {
     margin: 0;
     padding: 0;
-    width: 5vw;
+    width: 100%;
   }
 `;
 
