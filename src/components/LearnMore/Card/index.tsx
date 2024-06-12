@@ -30,6 +30,7 @@ const LearnMoreCard: SFC<LearnMoreCardProps> = ({content, contentWidth, displayS
               </p>
             ))}
           </S.Content>
+          {content?.img ? <S.Img src={content.img} /> : null}
         </S.ContentContainer>
         {children}
       </S.Container>

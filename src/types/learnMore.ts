@@ -1,6 +1,7 @@
 export interface LearnMore {
   detail: string;
-  logo: string;
+  img?: string;
+  logo?: string;
   obj?: object;
   title: string;
 }
