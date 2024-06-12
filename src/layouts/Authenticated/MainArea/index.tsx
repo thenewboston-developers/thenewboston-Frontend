@@ -3,7 +3,6 @@ import {Navigate, Route, Routes} from 'react-router-dom';
 import {
   PATH_ART,
   PATH_CONTRIBUTIONS,
-  PATH_CONTRIBUTIONS_SELF,
   PATH_COURSES,
   PATH_COURSES_SELF,
   PATH_CURRENCIES,
@@ -39,8 +38,7 @@ const MainArea: SFC = ({className}) => {
       <Routes>
         <Route path="*" element={<Navigate to={PATH_DEFAULT} replace />} />
         <Route path={PATH_ART} element={<Art />} />
-        <Route path={PATH_CONTRIBUTIONS_SELF} element={<Contributions selfContributions={true} />} />
-        <Route path={PATH_CONTRIBUTIONS} element={<Contributions />} />
+        <Route path={PATH_CONTRIBUTIONS.ROOT} element={<Contributions />} />
         <Route path={PATH_COURSES_SELF} element={<Courses selfCourses={true} />} />
         <Route path={PATH_COURSES} element={<Courses />} />
         <Route path={PATH_CURRENCIES} element={<Cores />} />
