@@ -7,12 +7,11 @@ import * as S from './Styles';
 const Toolbar: SFC = ({className}) => {
   return (
     <S.Container className={className}>
-      <S.Left />
-      <S.Center>
+      <S.Left>
         <ToolbarMenuLink text="Home" to={PATH_CONTRIBUTIONS.HOME} />
         <ToolbarMenuLink text="My Contributions" to={PATH_CONTRIBUTIONS.SELF} />
-      </S.Center>
-      <S.Right />
+        <ToolbarMenuLink text="Learn More" to={PATH_CONTRIBUTIONS.LEARN_MORE} />
+      </S.Left>
     </S.Container>
   );
 };

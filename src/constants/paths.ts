@@ -2,6 +2,7 @@ export const PATH_ART = '/art/*';
 export const BASE_CONTRIBUTIONS = '/contributions';
 export const PATH_CONTRIBUTIONS = {
   HOME: `${BASE_CONTRIBUTIONS}/home`,
+  LEARN_MORE: `${BASE_CONTRIBUTIONS}/learn-more`,
   ROOT: `${BASE_CONTRIBUTIONS}/*`,
   SELF: `${BASE_CONTRIBUTIONS}/self`,
 };

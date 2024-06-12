@@ -2,15 +2,11 @@ import styled from 'styled-components';
 
 import {toolbarStyle} from 'styles';
 
-export const Center = styled.div`
-  align-items: center;
-  display: flex;
-`;
-
 export const Container = styled.div`
   ${toolbarStyle};
 `;
 
-export const Left = styled.div``;
-
-export const Right = styled.div``;
+export const Left = styled.div`
+  align-items: start;
+  display: flex;
+`;

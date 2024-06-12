@@ -32,6 +32,11 @@ export const Content = styled.div`
   margin: 10px 0px;
 `;
 
+export const Img = styled.img`
+  object-fit: cover;
+  width: 100%;
+`;
+
 export const Logo = styled.img<{width?: string}>`
   object-fit: cover;
   width: ${({width}) => width || '50px'};
