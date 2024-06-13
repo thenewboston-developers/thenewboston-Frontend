@@ -49,7 +49,13 @@ const ContributionCreateModal: SFC<ContributionCreateModalProps> = ({className, 
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid}) => (
           <Form>
-            <S.Input errors={errors} label="Description" name="description" touched={touched} />
+            <S.Textarea
+              errors={errors}
+              label="Description"
+              name="description"
+              placeholder="Please type your contribution's description here"
+              touched={touched}
+            />
             <Button
               dirty={dirty}
               disabled={isSubmitting}
