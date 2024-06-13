@@ -4,6 +4,7 @@ import {
   mdiCalendarOutline,
   mdiCodeBrackets,
   mdiFaceWomanOutline,
+  mdiFileDocumentOutline,
   mdiGithub,
   mdiSquareRoundedBadgeOutline,
 } from '@mdi/js';
@@ -18,9 +19,11 @@ import Line from 'components/Line';
 import ReadMoreLess from 'components/ReadMoreLess';
 import {Col} from 'styles/components/GridStyle';
 import {Contribution as TContribution, UserReadSerializer} from 'types';
+import {ContributionType} from 'enums';
 import {ContributorInfo} from 'components/Contributions/ContributorInfo';
 import {getPullRequestUrl, getRepositoryUrl, getUserProfileUrl} from 'utils/github';
 import {getTimeAgo} from 'utils/dates';
+
 import * as S from './Styles';
 
 interface ContributionProps {
@@ -40,6 +43,8 @@ const Contribution: FC<ContributionProps> = ({className, contribution, ia}) => {
     contribution.repo && contribution.pull
       ? getPullRequestUrl(contribution.repo.owner_name, contribution.repo.name, contribution.pull.issue_number)
       : '';
+  const showManualContributionDescription = contribution.contribution_type == ContributionType.MANUAL;
+  const showGithubDetails = contribution.contribution_type == ContributionType.PULL_REQUEST;
   const iaProfileLink = ia ? `/profile/${ia.id}` : '';
   const NO_GITHUB_DETAILS_FOUND_TEXT = 'Not Found';
 
@@ -54,52 +59,77 @@ const Contribution: FC<ContributionProps> = ({className, contribution, ia}) => {
           />
         </ContributionCardHeader>
         <Line />
+        {showGithubDetails ? (
+          <ContributionCardBody>
+            <Col size={6}>
+              <ContributionCardItem iconPath={mdiGithub} iconLink={githubUserProfileLink} isIconLinkExternal={true}>
+                {githubUserProfileLink ? (
+                  <Link to={githubUserProfileLink} target="_blank">
+                    {contribution?.github_user?.github_username}
+                  </Link>
+                ) : (
+                  NO_GITHUB_DETAILS_FOUND_TEXT
+                )}
+              </ContributionCardItem>
+            </Col>
+            <Col size={6}>
+              <ContributionCardItem
+                iconPath={mdiCodeBrackets}
+                iconLink={githubRepositoryLink}
+                isIconLinkExternal={true}
+              >
+                {githubRepositoryLink ? (
+                  <Link to={githubRepositoryLink} target="_blank">
+                    {contribution?.repo?.name || NO_GITHUB_DETAILS_FOUND_TEXT}
+                  </Link>
+                ) : (
+                  NO_GITHUB_DETAILS_FOUND_TEXT
+                )}
+              </ContributionCardItem>
+            </Col>
+          </ContributionCardBody>
+        ) : null}
         <ContributionCardBody>
-          <Col size={6}>
-            <ContributionCardItem iconPath={mdiGithub} iconLink={githubUserProfileLink} isIconLinkExternal={true}>
-              {githubUserProfileLink ? (
-                <Link to={githubUserProfileLink} target="_blank">
-                  {contribution?.github_user?.github_username}
-                </Link>
-              ) : (
-                NO_GITHUB_DETAILS_FOUND_TEXT
-              )}
-            </ContributionCardItem>
-          </Col>
-          <Col size={6}>
-            <ContributionCardItem iconPath={mdiCodeBrackets} iconLink={githubRepositoryLink} isIconLinkExternal={true}>
-              {githubRepositoryLink ? (
-                <Link to={githubRepositoryLink} target="_blank">
-                  {contribution?.repo?.name || NO_GITHUB_DETAILS_FOUND_TEXT}
-                </Link>
-              ) : (
-                NO_GITHUB_DETAILS_FOUND_TEXT
-              )}
-            </ContributionCardItem>
-          </Col>
-        </ContributionCardBody>
-        <ContributionCardBody>
-          <Col size={6}>
-            <ContributionCardItem
-              iconPath={mdiSquareRoundedBadgeOutline}
-              iconLink={githubPullRequestLink}
-              isIconLinkExternal={true}
-            >
-              {githubPullRequestLink ? (
-                <Link to={githubPullRequestLink} target="_blank">
-                  {contribution?.pull?.title || ''}
-                </Link>
-              ) : (
-                NO_GITHUB_DETAILS_FOUND_TEXT
-              )}
-            </ContributionCardItem>
-          </Col>
+          {showGithubDetails ? (
+            <Col size={6}>
+              <ContributionCardItem
+                iconPath={mdiSquareRoundedBadgeOutline}
+                iconLink={githubPullRequestLink}
+                isIconLinkExternal={true}
+              >
+                {githubPullRequestLink ? (
+                  <Link to={githubPullRequestLink} target="_blank">
+                    {contribution?.pull?.title || ''}
+                  </Link>
+                ) : (
+                  NO_GITHUB_DETAILS_FOUND_TEXT
+                )}
+              </ContributionCardItem>
+            </Col>
+          ) : null}
           <Col size={6}>
             <ContributionCardItem iconPath={mdiCalendarOutline}>
               {new Date(contribution.created_date).toLocaleDateString()}
             </ContributionCardItem>
           </Col>
         </ContributionCardBody>
+        {showManualContributionDescription ? (
+          <>
+            <Line />
+            <ContributionCardHeader>
+              <div>
+                <ContributionCardItem iconPath={mdiFileDocumentOutline}>
+                  <S.DescriptionHeading>
+                    <b>Description</b>
+                  </S.DescriptionHeading>
+                </ContributionCardItem>
+                <S.Description>
+                  <ReadMoreLess text={contribution?.description || ''} maxLength={180} />
+                </S.Description>
+              </div>
+            </ContributionCardHeader>
+          </>
+        ) : null}
         <Line />
         <ContributionCardHeader>
           <div>
