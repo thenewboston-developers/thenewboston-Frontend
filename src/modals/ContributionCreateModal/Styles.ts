@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-import {Checkbox as UCheckbox, Input as UInput} from 'components/FormElements';
+import {Checkbox as UCheckbox, Textarea as UTextarea} from 'components/FormElements';
 import UModal from 'components/Modal';
 
-export const Input = styled(UInput)`
+export const Textarea = styled(UTextarea)`
   width: 100%;
 `;
 
