@@ -3,6 +3,7 @@ import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
+import UserFilterDropdown from 'components/UserFilterDropdown';
 import {Input} from 'components/FormElements';
 import {getArtwork} from 'dispatchers/artworks';
 import {createArtworkTransfer} from 'dispatchers/artworkTransfers';
@@ -57,7 +58,8 @@ const ArtworkTransferModal: SFC<ArtworkTransferModalProps> = ({artwork, classNam
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, touched}) => (
           <Form>
-            <Input errors={errors} label="New Owner ID" name="new_owner" touched={touched} />
+            {/* <Input errors={errors} label="New Owner ID" name="new_owner" touched={touched} /> */}
+            <UserFilterDropdown />
             <Button
               dirty={dirty}
               disabled={isSubmitting}

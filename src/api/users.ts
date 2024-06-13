@@ -34,3 +34,13 @@ export const updateUser = async (id: number, data: FormData): Promise<UserReadSe
     throw error;
   }
 };
+export const filterUserList = async (username: string): Promise<UserReadSerializer> => {
+  try {
+    //const response = await axios.post<ArtworkTransfer>(BASE_URL, data, authorizationHeaders());
+    const response = await axios.get<UserReadSerializer>(`${BASE_URL}?search=${username}`, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
