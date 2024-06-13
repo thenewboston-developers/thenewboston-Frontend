@@ -38,7 +38,7 @@ export const ContributionCardItem: FC<ContributionCardItemProps> = ({
 }) => {
   const renderIconOrAvatar = () => (
     <S.ContributionCardItemIcon>
-      {avatarSrc ? <Avatar src={avatarSrc} /> : <Icon path={iconPath} size={1} />}
+      {avatarSrc ? <Avatar src={avatarSrc} size="25px" /> : <Icon path={iconPath} size={1} />}
     </S.ContributionCardItemIcon>
   );
 

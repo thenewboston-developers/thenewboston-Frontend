@@ -7,12 +7,13 @@ import {SenderType} from 'enums/messages';
 import {ShopToolbarType} from 'enums/shopToolbar';
 import {SocketDataType} from 'enums/sockets';
 import {ToastType} from 'enums/toast';
-import {UserIdFilterValues} from 'enums/contribution';
+import {ContributionType, UserIdFilterValues} from 'enums/contributions';
 import {WalletTab} from 'enums/manager';
 import {WireType} from 'enums/wires';
 
 export {
   ActivationStatus,
+  ContributionType,
   ExchangeOrderType,
   FillStatus,
   FollowerType,
