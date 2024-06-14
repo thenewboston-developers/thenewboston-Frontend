@@ -44,10 +44,12 @@ const BuyAddresses: SFC = ({className}) => {
     return (
       <S.Div>
         <EmptyPage
+          actionText="Click here to add a new address"
           bottomText="Add your address to display."
           graphic={EmptyAddress}
           topText="Sorry! You haven’t add your address yet."
           size={340}
+          onActionTextClick={setAddressModalIsOpen}
         />
       </S.Div>
     );

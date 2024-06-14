@@ -51,7 +51,7 @@ const SellProducts: SFC = ({className}) => {
     return (
       <S.Div>
         <EmptyPage
-          actionText="Click here to add a new address"
+          actionText="Click here to add a new product"
           bottomText="Add products to sell."
           graphic={EmptyProduct}
           topText="Sorry! You haven’t add products yet."
