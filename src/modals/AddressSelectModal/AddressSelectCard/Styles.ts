@@ -1,4 +1,5 @@
 import styled, {css} from 'styled-components';
+import {colors, fonts} from 'styles';
 
 const selectedMixin = css`
   background: rgba(52, 195, 143, 0.1);
@@ -25,12 +26,11 @@ export const Container = styled.div<{$isSelected: boolean}>`
   ${({$isSelected}) => $isSelected && selectedMixin}
 `;
 
-export const Title = styled.span`
-  font-weight: 600;
+export const Text = styled.div`
+  color: ${colors.black};
+  font-size: 18px;
+  font-weight: ${fonts.weight.semiBold};
   margin-right: 10px;
 `;
-export const Dot = styled.span<{$marginLeft?: string}>`
-  font-weight: 600;
-  margin-left: ${({$marginLeft}) => $marginLeft || '10px'};
-  margin-right: 5px;
-`;
+
+export const Div = styled.div``;

@@ -23,7 +23,7 @@ const UserLabel: SFC<UserLabelProps> = ({avatar, className, description, id, use
 
     return (
       <Link to={`/profile/${id}`}>
-        <S.Avatar src={avatar} />
+        <S.Avatar src={avatar} size={'44px'} />
       </Link>
     );
   };

@@ -1,16 +1,16 @@
 import {Link as ULink} from 'react-router-dom';
 import styled from 'styled-components';
+import {colors, fonts, TOOLBAR_HEIGHT} from 'styles';
 
-import {fonts, TOOLBAR_HEIGHT} from 'styles';
-
-export const Container = styled(ULink)<{$isActive: boolean}>`
+export const Container = styled(ULink)<{$isActive: boolean; $isMobileDevice: boolean}>`
   align-items: center;
-  background: transparent;
-  border-bottom: 2px solid ${({$isActive}) => ($isActive ? '#000' : 'transparent')};
-  color: #000;
+  background: ${({$isActive, $isMobileDevice}) => ($isActive && $isMobileDevice ? `${colors.border}` : 'transparent')};
+  border-bottom: 2px solid
+    ${({$isActive, $isMobileDevice}) => ($isActive && !$isMobileDevice ? `${colors.black}` : 'transparent')};
+  color: ${colors.black};
   display: flex;
   font-weight: ${({$isActive}) => ($isActive ? fonts.weight.bold : fonts.weight.regular)};
-  height: ${`${TOOLBAR_HEIGHT}px`};
+  height: ${({$isMobileDevice}) => ($isMobileDevice ? '40px' : `${TOOLBAR_HEIGHT}px`)};
   padding: 0 8px;
 
   &:hover {

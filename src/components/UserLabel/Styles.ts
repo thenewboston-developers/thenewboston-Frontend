@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import UAvatar from 'components/Avatar';
 import {colors, fonts} from 'styles';
 
@@ -13,9 +12,9 @@ export const Container = styled.div`
 `;
 
 export const Description = styled.div`
-  color: ${colors.palette.gray[500]};
+  color: ${colors.gray};
   font-size: 12px;
-  font-weight: ${fonts.weight.semiBold};
+  font-weight: ${fonts.weight.bold};
 `;
 
 export const Right = styled.div`

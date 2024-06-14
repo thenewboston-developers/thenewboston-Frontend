@@ -1,7 +1,7 @@
 import styled, {css} from 'styled-components';
 
 import UPriceMini from 'components/PriceMini';
-import {listItemDescription, listItemName} from 'styles';
+import {colors, fonts, listItemDescription, listItemName} from 'styles';
 import {GenericVoidFunction} from 'types';
 
 const isClickableMixin = css`
@@ -17,13 +17,24 @@ export const Container = styled.div`
 
 export const Description = styled.div`
   ${listItemDescription};
+  color: ${colors.gray};
+  font-size: 14px;
+  font-weight: ${fonts.weight.regular};
 `;
 
 export const Name = styled.div<{onClick?: GenericVoidFunction}>`
   ${listItemName};
   ${({onClick}) => !!onClick && isClickableMixin}
+  color:${colors.black};
+  margin-top: 10px;
 `;
 
 export const PriceMini = styled(UPriceMini)`
   margin-top: 10px;
+`;
+
+export const Date = styled.div`
+  color: ${colors.black};
+  font-weight: ${fonts.weight.regular};
+  margin: 20px 0px 10px 0px;
 `;

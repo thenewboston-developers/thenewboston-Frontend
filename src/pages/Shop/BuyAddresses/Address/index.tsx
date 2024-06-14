@@ -1,9 +1,9 @@
 import {useDispatch} from 'react-redux';
-import {useNavigate} from 'react-router-dom';
 import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
-
+import {useToggle} from 'hooks';
 import AddressCard from 'components/AddressCard';
 import DropdownMenu from 'components/DropdownMenu';
+import BuyAddressDetailsModal from 'modals/BuyAddressDetailsModal';
 import {deleteAddress} from 'dispatchers/addresses';
 import {ToastType} from 'enums';
 import {updateManager} from 'store/manager';
@@ -15,8 +15,8 @@ export interface AddressProps {
 }
 
 const Address: SFC<AddressProps> = ({address, className}) => {
+  const [addressEditModalIsOpen, setAddressEditModalIsOpen] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
 
   const handleDeleteClick = async () => {
     try {
@@ -30,7 +30,7 @@ const Address: SFC<AddressProps> = ({address, className}) => {
 
   const handleEditClick = () => {
     dispatch(updateManager({activeAddress: address}));
-    navigate('/shop/buy/createEditAddress');
+    setAddressEditModalIsOpen();
   };
 
   const renderDropdownMenu = () => {
@@ -42,7 +42,12 @@ const Address: SFC<AddressProps> = ({address, className}) => {
     return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
 
-  return <AddressCard address={address} className={className} rightContent={renderDropdownMenu()} />;
+  return (
+    <>
+      <AddressCard address={address} className={className} rightContent={renderDropdownMenu()} />
+      {addressEditModalIsOpen ? <BuyAddressDetailsModal close={setAddressEditModalIsOpen} /> : null}
+    </>
+  );
 };
 
 export default Address;

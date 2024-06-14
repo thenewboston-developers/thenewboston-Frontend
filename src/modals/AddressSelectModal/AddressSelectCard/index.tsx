@@ -24,33 +24,10 @@ const AddressSelectCard: SFC<AddressSelectCardProps> = ({address, className}) =>
 
   return (
     <S.Container $isSelected={isSelected} className={className} onClick={handleClick}>
-      <div>
-        <S.Title>Address 1</S.Title>
-        <S.Dot>:</S.Dot>
-        {address_1}
-      </div>
-      {address_2 && (
-        <div>
-          <S.Title>Address 2</S.Title>
-          <S.Dot>:</S.Dot>
-          {address_2}
-        </div>
-      )}
-      <div>
-        <S.Title>State/City</S.Title>
-        <S.Dot>:</S.Dot>
-        {state}/ {city}
-      </div>
-      <div>
-        <S.Title>Zip code</S.Title>
-        <S.Dot $marginLeft={'20px'}>:</S.Dot>
-        {zip_code}
-      </div>
-      <div>
-        <S.Title>Country</S.Title>
-        <S.Dot $marginLeft={'21px'}>:</S.Dot>
-        {country}
-      </div>
+      <S.Text>{address_1}</S.Text>
+      {address_2 && <S.Div>{`${address_2} #2`}</S.Div>}
+      <S.Div>{`${state}, ${city}, ${country}`}</S.Div>
+      {zip_code}
     </S.Container>
   );
 };

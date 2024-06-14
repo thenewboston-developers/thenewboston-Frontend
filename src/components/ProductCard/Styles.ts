@@ -2,20 +2,18 @@ import styled from 'styled-components';
 
 import ULine from 'components/Line';
 import UThumbnail from 'components/Thumbnail';
+import UPrice from 'components/Price';
 import UUserLabel from 'components/UserLabel';
-import {colors} from 'styles';
-
-export const Bottom = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 12px 16px;
-`;
+import {colors, fonts} from 'styles';
 
 export const Container = styled.div`
-  background: #fff;
-  border-radius: 4px;
+  background: ${colors.white};
+  border-radius: 14px;
   border: 1px solid ${colors.border};
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   overflow: hidden;
   transition: all 0.2s ease-in-out 0s;
 
@@ -28,7 +26,7 @@ export const Container = styled.div`
 export const Description = styled.div`
   color: ${colors.secondary};
   font-size: 12px;
-  margin-top: 4px;
+  padding: 0px 0px 10px 20px;
 `;
 
 export const Line = styled(ULine)`
@@ -37,7 +35,8 @@ export const Line = styled(ULine)`
 
 export const Name = styled.div`
   font-size: 20px;
-  font-weight: 600;
+  font-weight: ${fonts.weight.semiBold};
+  padding: 10px 0px 5px 20px;
 `;
 
 export const Thumbnail = styled(UThumbnail)`
@@ -45,5 +44,11 @@ export const Thumbnail = styled(UThumbnail)`
 `;
 
 export const UserLabel = styled(UUserLabel)`
-  margin-top: 16px;
+  padding: 10px 0px 10px 20px;
 `;
+
+export const Price = styled(UPrice)`
+  padding: 10px 0px 10px 20px;
+`;
+
+export const Div = styled.div``;

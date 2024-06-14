@@ -1,9 +1,9 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-
 import ArtworkCard from 'components/ArtworkCard';
 import EmptyText from 'components/EmptyText';
 import InfiniteScroll from 'components/InfiniteScroll';
+import ArtIcon from 'assets/art-icon.svg';
 import {AppDispatch, SFC} from 'types';
 import {getArtworks as _getArtworks, resetArtworks as _resetArtworks} from 'dispatchers/artworks';
 import {getArtworks as getArtworksState} from 'selectors/state';
@@ -62,7 +62,12 @@ const Marketplace: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <InfiniteScroll dataLength={artworkList.length} hasMore={hasMore} next={fetchMoreArtworks} heightMargin={50}>
-        <S.Banner />
+        <S.Banner
+          heading={'Craft Your Vision, Reap Rewards'}
+          icon={ArtIcon}
+          subHeading={'Explore the dynamic world of creating and selling your own art'}
+        />
+
         {renderContent()}
       </InfiniteScroll>
     </S.Container>

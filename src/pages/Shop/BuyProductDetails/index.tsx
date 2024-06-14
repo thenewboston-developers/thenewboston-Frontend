@@ -1,17 +1,22 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
+import {mdiCalendarOutline, mdiChevronLeft} from '@mdi/js';
+import Icon from '@mdi/react';
 
 import Button from 'components/Button';
-import Price from 'components/Price';
+import Line from 'components/Line';
 import {createCartProduct, deleteCartProduct} from 'dispatchers/cartProducts';
 import {getProduct} from 'dispatchers/products';
 import {ToastType} from 'enums';
+import {colors} from 'styles';
 import {useCartSeller, useToggle} from 'hooks';
 import CartWarningModal from 'modals/CartWarningModal';
 import {getCartProducts, getProducts} from 'selectors/state';
 import {AppDispatch, CartProduct, Product, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
+import {longDate} from 'utils/dates';
+
 import * as S from './Styles';
 
 const BuyProductDetails: SFC = ({className}) => {
@@ -83,34 +88,70 @@ const BuyProductDetails: SFC = ({className}) => {
     return <Button onClick={handleAddToCartClick} text="Add to Cart" />;
   };
 
-  const renderLeft = () => {
-    if (!product) return null;
-
-    return (
-      <S.Left>
-        <S.Img alt="Product image" src={product.image} />
-      </S.Left>
-    );
-  };
-
   const renderRight = () => {
     if (!product) return null;
 
     return (
       <S.Right>
-        <S.Name>{product.name}</S.Name>
-        <S.Description>{product.description}</S.Description>
+        <S.Img alt="Product image" src={product.image} />
+      </S.Right>
+    );
+  };
+
+  const renderHeader = () => {
+    if (!product) return null;
+    return (
+      <S.Header>
+        <S.Left>
+          <S.Button onClick={() => history.go(-1)}>
+            <Icon path={mdiChevronLeft} size={1} color={colors.palette.blue[700]} />
+          </S.Button>
+          <span>Go Back</span>
+        </S.Left>
+        {renderCartButton()}
+      </S.Header>
+    );
+  };
+
+  const renderCalendarIcon = () => {
+    return (
+      <S.Icon>
+        <Icon path={mdiCalendarOutline} size={1} color={colors.gray} />
+      </S.Icon>
+    );
+  };
+  const renderLeft = () => {
+    if (!product) return null;
+
+    return (
+      <S.ProductDetail>
+        <S.Wrapper>
+          <S.Name>{product.name}</S.Name>
+          <S.Price price_amount={product.price_amount} price_core={product.price_core} />
+          <S.Description>
+            {renderCalendarIcon()}
+            <S.Text>
+              <S.Title>DESCRIPTION</S.Title>
+              <span>{product.description}</span>
+            </S.Text>
+          </S.Description>
+        </S.Wrapper>
+        <Line />
         <S.UserLabel
           avatar={product.seller.avatar}
-          description="Seller"
+          description="SELLER"
           id={product.seller.id}
           username={product.seller.username}
         />
-        <S.PriceContainer>
-          <Price price_amount={product.price_amount} price_core={product.price_core} />
-          {renderCartButton()}
-        </S.PriceContainer>
-      </S.Right>
+        <Line />
+        <S.Date>
+          {renderCalendarIcon()}
+          <S.Text>
+            <S.Title>CREATED</S.Title>
+            <span>{longDate(product.created_date)}</span>
+          </S.Text>
+        </S.Date>
+      </S.ProductDetail>
     );
   };
 
@@ -119,8 +160,11 @@ const BuyProductDetails: SFC = ({className}) => {
   return (
     <>
       <S.Container className={className}>
-        {renderLeft()}
-        {renderRight()}
+        {renderHeader()}
+        <S.Div>
+          {renderLeft()}
+          {renderRight()}
+        </S.Div>
       </S.Container>
       {cartWarningModalIsOpen ? <CartWarningModal close={toggleCartWarningModal} productId={product.id} /> : null}
     </>
