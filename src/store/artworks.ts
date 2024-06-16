@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {ARTWORKS} from 'constants/store';
 import {Artwork, Artworks, PaginatedResponse} from 'types';
 
-const initialState: Artworks = {
+export const initialState: Artworks = {
   artworks: [],
   hasMore: false,
   isLoading: false,

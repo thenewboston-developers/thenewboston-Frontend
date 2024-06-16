@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {POSTS} from 'constants/store';
 import {PaginatedResponse, Post, Posts} from 'types';
 
-const initialState: Posts = {
+export const initialState: Posts = {
   hasMore: false,
   isLoading: false,
   next: null,

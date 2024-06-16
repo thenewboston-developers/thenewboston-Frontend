@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {ARTWORK_TRANSFERS} from 'constants/store';
 import {ArtworkTransfer, ArtworkTransfers} from 'types';
 
-const initialState: ArtworkTransfers = {};
+export const initialState: ArtworkTransfers = {};
 
 const artworkTransfers = createSlice({
   initialState,

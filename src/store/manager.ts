@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {MANAGER} from 'constants/store';
 import {Manager} from 'types';
 
-const initialState: Manager = {
+export const initialState: Manager = {
   activeAddress: null,
   activeAssetPairId: null,
   activeCommentCore: null,

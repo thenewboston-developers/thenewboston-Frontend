@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {WIRES} from 'constants/store';
 import {Wire, Wires} from 'types';
 
-const initialState: Wires = {};
+export const initialState: Wires = {};
 
 const wires = createSlice({
   initialState,

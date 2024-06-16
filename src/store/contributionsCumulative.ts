@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {CONTRIBUTIONS_CUMULATIVE} from 'constants/store';
 import {ContributionsCumulative} from 'types';
 
-const initialState = {
+export const initialState = {
   isLoading: false,
   items: [] as ContributionsCumulative,
 };

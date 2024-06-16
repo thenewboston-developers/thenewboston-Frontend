@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {INVITATIONS} from 'constants/store';
 import {Invitation, Invitations} from 'types';
 
-const initialState: Invitations = {};
+export const initialState: Invitations = {};
 
 const invitations = createSlice({
   initialState,

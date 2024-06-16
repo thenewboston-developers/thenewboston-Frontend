@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {CORES} from 'constants/store';
 import {Core, Cores} from 'types';
 
-const initialState: Cores = {};
+export const initialState: Cores = {};
 
 const cores = createSlice({
   initialState,

@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {NOTIFICATIONS} from 'constants/store';
 import {Notification, Notifications} from 'types';
 
-const initialState: Notifications = {};
+export const initialState: Notifications = {};
 
 const notifications = createSlice({
   initialState,

@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {SELF} from 'constants/store';
 import {Self} from 'types';
 
-const initialState: Self = {
+export const initialState: Self = {
   avatar: null,
   id: null,
   is_manual_contribution_allowed: false,

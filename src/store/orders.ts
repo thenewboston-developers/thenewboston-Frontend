@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {ORDERS} from 'constants/store';
 import {Order, Orders} from 'types';
 
-const initialState: Orders = {};
+export const initialState: Orders = {};
 
 const orders = createSlice({
   initialState,

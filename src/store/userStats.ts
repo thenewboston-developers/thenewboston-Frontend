@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {USER_STATS} from 'constants/store';
 import {UserStats, UserStatsSerializer} from 'types';
 
-const initialState: UserStats = {};
+export const initialState: UserStats = {};
 
 const userStats = createSlice({
   initialState,

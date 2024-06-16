@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {CONTRIBUTORS} from 'constants/store';
 import {Contributors} from 'types';
 
-const initialState = {
+export const initialState = {
   isLoading: false,
   items: [] as Contributors,
 };

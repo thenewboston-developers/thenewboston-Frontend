@@ -7,7 +7,7 @@ interface IaState {
   ia: IaReadSerializer | null;
 }
 
-const initialState: IaState = {
+export const initialState: IaState = {
   ia: null,
 };
 

@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {LECTURES} from 'constants/store';
 import {Lecture, Lectures, PaginatedResponse} from 'types';
 
-const initialState: Lectures = {
+export const initialState: Lectures = {
   hasMore: false,
   isLoading: false,
   lectures: [],
