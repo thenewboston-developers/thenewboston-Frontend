@@ -2,13 +2,14 @@ import {FOLLOWINGS} from 'constants/store';
 import {Follower} from 'types';
 import {createItemSlice} from 'utils/store';
 
-const followingsSlice = createItemSlice<Follower>(FOLLOWINGS, {
+export const initialState = {
   count: 0,
   hasMore: false,
   isLoading: false,
   items: [],
   next: null,
-});
+};
+const followingsSlice = createItemSlice<Follower>(FOLLOWINGS, initialState);
 
 export const {
   resetItems: resetFollowing,

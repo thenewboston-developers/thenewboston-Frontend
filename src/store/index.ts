@@ -10,7 +10,7 @@ import assetPairsReducer, {initialState as assetPairsInitialState} from 'store/a
 import authenticationReducer, {initialState as authenticationInitialState} from 'store/authentication';
 import cartProductsReducer, {initialState as cartProductsInitialState} from 'store/cartProducts';
 import commentsReducer, {initialState as commentsInitialState} from 'store/comments';
-import contributionsReducer from 'store/contributions';
+import contributionsReducer, {initialState as contributionsInitialState} from 'store/contributions';
 import contributionsCumulativeReducer, {
   initialState as contributionsCumulativeInitialState,
 } from 'store/contributionsCumulative';
@@ -19,8 +19,8 @@ import conversationsReducer, {initialState as conversationsInitialState} from 's
 import coresReducer, {initialState as coresInitialState} from 'store/cores';
 import coursesReducer, {initialState as coursesInitialState} from 'store/courses';
 import exchangeOrdersReducer, {initialState as exchangeOrdersInitialState} from 'store/exchangeOrders';
-import followersReducer from 'store/followers';
-import followingsReducer from 'store/followings';
+import followersReducer, {initialState as followersInitialState} from 'store/followers';
+import followingsReducer, {initialState as followingsInitialState} from 'store/followings';
 import iaReducer, {initialState as iaInitialState} from 'store/ia';
 import invitationLimitsReducer, {initialState as invitationLimitsInitialState} from 'store/invitationLimits';
 import invitationsReducer, {initialState as invitationsInitialState} from 'store/invitations';
@@ -91,12 +91,15 @@ const persistConfig = {
         authentication: state.authentication || authenticationInitialState,
         cartProducts: state.cartProducts || cartProductsInitialState,
         comments: state.comments || commentsInitialState,
+        contributions: state.contributions || contributionsInitialState,
         contributionsCumulative: state.contributionsCumulative || contributionsCumulativeInitialState,
         contributors: state.contributors || contributorsInitialState,
         conversations: state.conversations || conversationsInitialState,
         cores: state.cores || coresInitialState,
         courses: state.courses || coursesInitialState,
         exchangeOrders: state.exchangeOrders || exchangeOrdersInitialState,
+        followers: state.followers || followersInitialState,
+        followings: state.followings || followingsInitialState,
         ia: state.ia || iaInitialState,
         invitationLimits: state.invitationLimits || invitationLimitsInitialState,
         invitations: state.invitations || invitationsInitialState,
@@ -123,12 +126,15 @@ const persistConfig = {
       authentication: authenticationInitialState,
       cartProducts: cartProductsInitialState,
       comments: commentsInitialState,
+      contributions: contributionsInitialState,
       contributionsCumulative: contributionsCumulativeInitialState,
       contributors: contributorsInitialState,
       conversations: conversationsInitialState,
       cores: coresInitialState,
       courses: coursesInitialState,
       exchangeOrders: exchangeOrdersInitialState,
+      followers: followersInitialState,
+      followings: followingsInitialState,
       ia: iaInitialState,
       invitationLimits: invitationLimitsInitialState,
       invitations: invitationsInitialState,

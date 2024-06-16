@@ -22,17 +22,14 @@ const customReducers: CustomReducers<Follower> = {
   },
 };
 
-const followersSlice = createItemSlice<Follower>(
-  FOLLOWERS,
-  {
-    count: 0,
-    hasMore: false,
-    isLoading: false,
-    items: [],
-    next: null,
-  },
-  customReducers,
-);
+export const initialState = {
+  count: 0,
+  hasMore: false,
+  isLoading: false,
+  items: [],
+  next: null,
+};
+const followersSlice = createItemSlice<Follower>(FOLLOWERS, initialState, customReducers);
 
 export const {
   resetItems: resetFollowers,
