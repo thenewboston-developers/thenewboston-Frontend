@@ -1,40 +1,42 @@
+import {AnyAction, combineReducers, configureStore} from '@reduxjs/toolkit';
 import {FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import {AnyAction, combineReducers, configureStore} from '@reduxjs/toolkit';
 
 import {LOGOUT_USER} from 'store/actions';
-import addressesReducer from 'store/addresses';
-import artworksReducer from 'store/artworks';
-import artworkTransfersReducer from 'store/artworkTransfers';
-import assetPairsReducer from 'store/assetPairs';
-import authenticationReducer from 'store/authentication';
-import cartProductsReducer from 'store/cartProducts';
-import commentsReducer from 'store/comments';
+import addressesReducer, {initialState as addressesInitialState} from 'store/addresses';
+import artworksReducer, {initialState as artworksInitialState} from 'store/artworks';
+import artworkTransfersReducer, {initialState as artworkTransfersInitialState} from 'store/artworkTransfers';
+import assetPairsReducer, {initialState as assetPairsInitialState} from 'store/assetPairs';
+import authenticationReducer, {initialState as authenticationInitialState} from 'store/authentication';
+import cartProductsReducer, {initialState as cartProductsInitialState} from 'store/cartProducts';
+import commentsReducer, {initialState as commentsInitialState} from 'store/comments';
 import contributionsReducer from 'store/contributions';
-import contributionsCumulativeReducer from 'store/contributionsCumulative';
-import contributorsReducer from 'store/contributors';
-import conversationsReducer from 'store/conversations';
-import coresReducer from 'store/cores';
-import coursesReducer from 'store/courses';
-import exchangeOrdersReducer from 'store/exchangeOrders';
+import contributionsCumulativeReducer, {
+  initialState as contributionsCumulativeInitialState,
+} from 'store/contributionsCumulative';
+import contributorsReducer, {initialState as contributorsInitialState} from 'store/contributors';
+import conversationsReducer, {initialState as conversationsInitialState} from 'store/conversations';
+import coresReducer, {initialState as coresInitialState} from 'store/cores';
+import coursesReducer, {initialState as coursesInitialState} from 'store/courses';
+import exchangeOrdersReducer, {initialState as exchangeOrdersInitialState} from 'store/exchangeOrders';
 import followersReducer from 'store/followers';
 import followingsReducer from 'store/followings';
-import iaReducer from 'store/ia';
-import invitationLimitsReducer from 'store/invitationLimits';
-import invitationsReducer from 'store/invitations';
-import lecturesReducer from 'store/lectures';
-import managerReducer from 'store/manager';
-import messagesReducer from 'store/messages';
-import notificationsReducer from 'store/notifications';
-import ordersReducer from 'store/orders';
-import postsReducer from 'store/posts';
-import productsReducer from 'store/products';
-import selfReducer from 'store/self';
-import tradesReducer from 'store/trades';
-import userStatsReducer from 'store/userStats';
-import usersReducer from 'store/users';
-import walletsReducer from 'store/wallets';
-import wiresReducer from 'store/wires';
+import iaReducer, {initialState as iaInitialState} from 'store/ia';
+import invitationLimitsReducer, {initialState as invitationLimitsInitialState} from 'store/invitationLimits';
+import invitationsReducer, {initialState as invitationsInitialState} from 'store/invitations';
+import lecturesReducer, {initialState as lecturesInitialState} from 'store/lectures';
+import managerReducer, {initialState as managerInitialState} from 'store/manager';
+import messagesReducer, {initialState as messagesInitialState} from 'store/messages';
+import notificationsReducer, {initialState as notificationsInitialState} from 'store/notifications';
+import ordersReducer, {initialState as ordersInitialState} from 'store/orders';
+import postsReducer, {initialState as postsInitialState} from 'store/posts';
+import productsReducer, {initialState as productsInitialState} from 'store/products';
+import selfReducer, {initialState as selfInitialState} from 'store/self';
+import tradesReducer, {initialState as tradesInitialState} from 'store/trades';
+import usersReducer, {initialState as usersInitialState} from 'store/users';
+import userStatsReducer, {initialState as userStatsInitialState} from 'store/userStats';
+import walletsReducer, {initialState as walletsInitialState} from 'store/wallets';
+import wiresReducer, {initialState as wiresInitialState} from 'store/wires';
 
 const rootReducer = combineReducers({
   addresses: addressesReducer,
@@ -78,7 +80,75 @@ const appReducer = (state: any, action: AnyAction) => {
 
 const persistConfig = {
   key: 'thenewboston',
+  migrate: async (state: any) => {
+    if (state) {
+      return {
+        ...state,
+        addresses: state.addresses || addressesInitialState,
+        artworkTransfers: state.artworkTransfers || artworkTransfersInitialState,
+        artworks: state.artworks || artworksInitialState,
+        assetPairs: state.assetPairs || assetPairsInitialState,
+        authentication: state.authentication || authenticationInitialState,
+        cartProducts: state.cartProducts || cartProductsInitialState,
+        comments: state.comments || commentsInitialState,
+        contributionsCumulative: state.contributionsCumulative || contributionsCumulativeInitialState,
+        contributors: state.contributors || contributorsInitialState,
+        conversations: state.conversations || conversationsInitialState,
+        cores: state.cores || coresInitialState,
+        courses: state.courses || coursesInitialState,
+        exchangeOrders: state.exchangeOrders || exchangeOrdersInitialState,
+        ia: state.ia || iaInitialState,
+        invitationLimits: state.invitationLimits || invitationLimitsInitialState,
+        invitations: state.invitations || invitationsInitialState,
+        lectures: state.lectures || lecturesInitialState,
+        manager: state.manager || managerInitialState,
+        messages: state.messages || messagesInitialState,
+        notifications: state.notifications || notificationsInitialState,
+        orders: state.orders || ordersInitialState,
+        posts: state.posts || postsInitialState,
+        products: state.products || productsInitialState,
+        self: state.self || selfInitialState,
+        trades: state.trades || tradesInitialState,
+        userStats: state.userStats || userStatsInitialState,
+        users: state.users || usersInitialState,
+        wallets: state.wallets || walletsInitialState,
+        wires: state.wires || wiresInitialState,
+      };
+    }
+    return {
+      addresses: addressesInitialState,
+      artworkTransfers: artworkTransfersInitialState,
+      artworks: artworksInitialState,
+      assetPairs: assetPairsInitialState,
+      authentication: authenticationInitialState,
+      cartProducts: cartProductsInitialState,
+      comments: commentsInitialState,
+      contributionsCumulative: contributionsCumulativeInitialState,
+      contributors: contributorsInitialState,
+      conversations: conversationsInitialState,
+      cores: coresInitialState,
+      courses: coursesInitialState,
+      exchangeOrders: exchangeOrdersInitialState,
+      ia: iaInitialState,
+      invitationLimits: invitationLimitsInitialState,
+      invitations: invitationsInitialState,
+      lectures: lecturesInitialState,
+      manager: managerInitialState,
+      messages: messagesInitialState,
+      notifications: notificationsInitialState,
+      orders: ordersInitialState,
+      posts: postsInitialState,
+      products: productsInitialState,
+      self: selfInitialState,
+      trades: tradesInitialState,
+      userStats: userStatsInitialState,
+      users: usersInitialState,
+      wallets: walletsInitialState,
+      wires: wiresInitialState,
+    };
+  },
   storage,
+  version: 1,
 };
 
 const persistedReducer = persistReducer(persistConfig, appReducer);
