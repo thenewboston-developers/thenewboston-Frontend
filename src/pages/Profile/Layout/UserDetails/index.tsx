@@ -131,7 +131,7 @@ const UserDetails: SFC = ({className}) => {
     return (
       <S.StateBalanceWrapper>
         <S.Flex>
-          <S.Title>Followings:</S.Title>
+          <S.Title>Following:</S.Title>
           <S.Value>{following_count ?? 0}</S.Value>
         </S.Flex>
         <S.Separator />
