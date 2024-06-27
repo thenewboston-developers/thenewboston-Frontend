@@ -1,36 +1,17 @@
 import styled from 'styled-components';
 import {breakpoints, colors, fonts} from 'styles';
 
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-`;
-
-export const Products = styled.div`
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(2, 1fr);
-  padding: 12px 0;
-  @media (max-width: ${breakpoints.mobile}) {
-    grid-template-columns: auto;
-  }
-`;
-
 export const Box = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
 `;
-export const Heading = styled.div`
-  color: ${colors.gray};
-  font-size: 18px;
-  font-weight: ${fonts.weight.semiBold};
 
-  & span {
-    color: ${colors.black};
-  }
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
 `;
 
 export const Div = styled.div`
@@ -42,4 +23,24 @@ export const Div = styled.div`
   flex-direction: column;
   margin-top: 12px;
   flex-grow: 1;
+`;
+
+export const Heading = styled.div`
+  color: ${colors.gray};
+  font-size: 18px;
+  font-weight: ${fonts.weight.semiBold};
+
+  & span {
+    color: ${colors.black};
+  }
+`;
+
+export const Products = styled.div`
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 12px 0;
+  @media (max-width: ${breakpoints.mobile}) {
+    grid-template-columns: auto;
+  }
 `;

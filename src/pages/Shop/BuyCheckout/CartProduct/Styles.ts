@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import UThumbnail from 'components/Thumbnail';
 import {breakpoints, colors, fonts} from 'styles';
 
-const Thumbnail_SIZE = '154px';
+const THUMBNAIL_SIZE = '154px';
 
 export const Thumbnail = styled(UThumbnail)`
   border-radius: 10px;
-  height: ${Thumbnail_SIZE};
-  width: ${Thumbnail_SIZE};
+  height: ${THUMBNAIL_SIZE};
+  width: ${THUMBNAIL_SIZE};
   &:hover {
     cursor: pointer;
   }

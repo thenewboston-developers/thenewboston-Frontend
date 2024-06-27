@@ -1,6 +1,8 @@
 import {mdiMenu} from '@mdi/js';
+
 import ToolbarMenuLink from 'components/ToolbarMenuLink';
 import {SFC} from 'types';
+
 import * as S from './Styles';
 
 interface Menu {

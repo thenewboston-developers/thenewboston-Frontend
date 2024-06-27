@@ -2,20 +2,20 @@ import styled from 'styled-components';
 import UThumbnail from 'components/Thumbnail';
 import {breakpoints, colors, fonts} from 'styles';
 
-const Thumbnail_SIZE = '154px';
+const THUMBNAIL_SIZE = '154px';
 
 export const ActivationStatus = styled.div``;
 
-export const Thumbnail = styled(UThumbnail)`
-  border-radius: 10px;
-  height: ${Thumbnail_SIZE};
-  width: ${Thumbnail_SIZE};
-  &:hover {
-    cursor: pointer;
-  }
-  @media (max-width: ${breakpoints.mini}) {
-    width: 100%;
-  }
+export const Amount = styled.div`
+  color: ${colors.black};
+  font-size: 18px;
+  font-weight: ${fonts.weight.semiBold};
+  margin-left: 6px;
+`;
+
+export const Box = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const Container = styled.div`
@@ -26,6 +26,17 @@ export const Container = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 12px;
+`;
+
+export const CoreLogo = styled.img`
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
+`;
+
+export const Div = styled.div`
+  align-items: center;
+  display: flex;
 `;
 
 export const Left = styled.div`
@@ -39,7 +50,10 @@ export const Left = styled.div`
     flex-direction: column;
   }
 `;
-export const Right = styled.div``;
+
+export const Link = styled.div`
+  margin-top: 5px;
+`;
 
 export const ProductDetails = styled.div`
   flex-grow: 1;
@@ -53,29 +67,16 @@ export const Price = styled.div`
   margin: 10px 0px 0px 0px;
 `;
 
-export const Amount = styled.div`
-  color: ${colors.black};
-  font-size: 18px;
-  font-weight: ${fonts.weight.semiBold};
-  margin-left: 6px;
-`;
+export const Right = styled.div``;
 
-export const Div = styled.div`
-  align-items: center;
-  display: flex;
-`;
-
-export const CoreLogo = styled.img`
-  border-radius: 50%;
-  height: 24px;
-  width: 24px;
-`;
-
-export const Box = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-export const Link = styled.div`
-  margin-top: 5px;
+export const Thumbnail = styled(UThumbnail)`
+  border-radius: 10px;
+  height: ${THUMBNAIL_SIZE};
+  width: ${THUMBNAIL_SIZE};
+  &:hover {
+    cursor: pointer;
+  }
+  @media (max-width: ${breakpoints.mini}) {
+    width: 100%;
+  }
 `;

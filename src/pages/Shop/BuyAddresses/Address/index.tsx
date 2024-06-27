@@ -1,14 +1,15 @@
 import {useDispatch} from 'react-redux';
 import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
-import {useToggle} from 'hooks';
+
 import AddressCard from 'components/AddressCard';
-import DropdownMenu from 'components/DropdownMenu';
 import BuyAddressDetailsModal from 'modals/BuyAddressDetailsModal';
-import {deleteAddress} from 'dispatchers/addresses';
-import {ToastType} from 'enums';
-import {updateManager} from 'store/manager';
+import DropdownMenu from 'components/DropdownMenu';
 import {Address as TAddress, AppDispatch, SFC} from 'types';
+import {ToastType} from 'enums';
+import {deleteAddress} from 'dispatchers/addresses';
 import {displayErrorToast, displayToast} from 'utils/toasts';
+import {updateManager} from 'store/manager';
+import {useToggle} from 'hooks';
 
 export interface AddressProps {
   address: TAddress;
