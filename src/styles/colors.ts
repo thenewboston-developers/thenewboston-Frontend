@@ -15,6 +15,7 @@ const colors = {
   secondary: '#536471',
   white: '#ffffff',
   whiteHover: '#f3f4f6',
+  whiteSmoke: '#ebebeb',
   spanishGray: '#939393',
   palette: {
     blue: {
