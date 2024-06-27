@@ -10,9 +10,15 @@ import * as S from './Styles';
 export interface ArtworkDeleteModalProps {
   artworkId: number;
   close(): void;
+  navigateToMarketplace?: boolean;
 }
 
-const ArtworkDeleteModal: SFC<ArtworkDeleteModalProps> = ({artworkId, className, close}) => {
+const ArtworkDeleteModal: SFC<ArtworkDeleteModalProps> = ({
+  artworkId,
+  className,
+  close,
+  navigateToMarketplace = false,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -20,7 +26,7 @@ const ArtworkDeleteModal: SFC<ArtworkDeleteModalProps> = ({artworkId, className,
     try {
       await dispatch(deleteArtwork(artworkId));
       displayToast('Artwork deleted!', ToastType.SUCCESS);
-      navigate('/art/marketplace');
+      if (navigateToMarketplace) navigate('/art/marketplace');
       close();
     } catch (error) {
       console.error(error);
