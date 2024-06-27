@@ -9,3 +9,25 @@ export const ErrorMessage = styled.div`
 `;
 
 export const SecondaryContainer = styled.div``;
+
+export const Span = styled.span`
+  cursor: pointer;
+`;
+
+export const Link = styled.a`
+  color: ${colors.palette.blue[300]};
+  overflow: hidden;
+  position: relative;
+  text-decoration: underline;
+
+  &:hover {
+    color: ${colors.palette.blue[700]};
+  }
+`;
+
+export const FileInput = styled.input`
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+`;

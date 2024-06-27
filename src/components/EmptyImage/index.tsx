@@ -1,4 +1,4 @@
-import DefaultImage from 'assets/default-image.svg';
+import DefaultImage from 'assets/default_image.svg';
 import {SFC} from 'types';
 import * as S from './Styles';
 

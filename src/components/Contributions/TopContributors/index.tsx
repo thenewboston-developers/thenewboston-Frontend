@@ -2,7 +2,7 @@ import {useEffect, FC} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import CoreLogo from 'components/CoreLogo';
-import DefaultAvatar from 'assets/default-avatar.svg';
+import DefaultAvatar from 'assets/default_avatar.svg';
 import PanelHeading from 'components/PanelHeading';
 import {AppDispatch} from 'types';
 import {displayErrorToast} from 'utils/toasts';

@@ -1,6 +1,6 @@
 import {useSelector} from 'react-redux';
 
-import DefaultAvatar from 'assets/default-avatar.svg';
+import DefaultAvatar from 'assets/default_avatar.svg';
 import {getSelf} from 'selectors/state';
 
 const useSelfAvatar = (): string => {

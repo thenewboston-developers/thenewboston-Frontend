@@ -24,5 +24,5 @@ export const Label = styled.h2`
 `;
 
 export const SecondaryContainer = styled.div`
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 `;

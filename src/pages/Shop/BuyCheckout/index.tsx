@@ -1,20 +1,28 @@
 import {useMemo} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 
 import AddressCard from 'components/AddressCard';
 import Button from 'components/Button';
+import EmptyAddress from 'assets/empty_address.svg';
+import EmptyProduct from 'assets/empty_product.svg';
+import EmptyParticipants from 'assets/default_participants.svg';
 import DropdownMenu from 'components/DropdownMenu';
 import UserLabel from 'components/UserLabel';
+import EmptyPage from 'components/EmptyPage';
+import {updateManager} from 'store/manager';
 import {useActiveOrderAddress, useCartSeller, useToggle} from 'hooks';
 import AddressSelectModal from 'modals/AddressSelectModal';
+import BuyAddressDetailsModal from 'modals/BuyAddressDetailsModal';
 import {getCartProducts, getSelf} from 'selectors/state';
-import {SFC} from 'types';
+import {AppDispatch, SFC} from 'types';
 import CartProduct from './CartProduct';
 import PaymentDetails from './PaymentDetails';
 import * as S from './Styles';
 
 const BuyCheckout: SFC = ({className}) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [addressEditModalIsOpen, setAddressEditModalIsOpen] = useToggle(false);
   const [addressSelectModalIsOpen, toggleAddressSelectModal] = useToggle(false);
   const activeOrderAddress = useActiveOrderAddress();
   const cartProducts = useSelector(getCartProducts);
@@ -26,23 +34,44 @@ const BuyCheckout: SFC = ({className}) => {
   }, [cartProducts]);
 
   const renderAddress = () => {
-    let content = <Button onClick={toggleAddressSelectModal} text="Select Address" />;
-
+    let content;
     if (activeOrderAddress) {
       content = <AddressCard address={activeOrderAddress} rightContent={renderAddressDropdownMenu()} />;
+    } else {
+      content = (
+        <S.AddressContent>
+          <EmptyPage
+            bottomText="Add your address to display."
+            graphic={EmptyAddress}
+            topText="Sorry! You haven’t add your address yet."
+            size={200}
+          />
+        </S.AddressContent>
+      );
     }
-
     return (
-      <S.Address>
-        <S.Heading>Address</S.Heading>
-        <S.Line />
-        {content}
-      </S.Address>
+      <>
+        <S.Address>
+          <S.Box>
+            <S.Heading>Address</S.Heading>
+            <div>
+              <Button onClick={toggleAddressSelectModal} text="Change Address" />
+            </div>
+          </S.Box>
+          {content}
+        </S.Address>
+        {addressEditModalIsOpen ? <BuyAddressDetailsModal close={setAddressEditModalIsOpen} isCheckout={true} /> : null}
+      </>
     );
   };
 
+  const handleEditClick = () => {
+    dispatch(updateManager({activeAddress: activeOrderAddress}));
+    setAddressEditModalIsOpen();
+  };
+
   const renderAddressDropdownMenu = () => {
-    const menuOptions = [{label: 'Edit', menuIcon: mdiSquareEditOutline, onClick: toggleAddressSelectModal}];
+    const menuOptions = [{label: 'Edit', menuIcon: mdiSquareEditOutline, onClick: handleEditClick}];
 
     return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
@@ -68,25 +97,26 @@ const BuyCheckout: SFC = ({className}) => {
 
   const renderParticipants = () => {
     const content = !!cartProductList.length ? (
-      <>
-        <UserLabel avatar={self.avatar} description="buyer" id={self.id} username={self.username!} />
+      <S.User>
+        <UserLabel avatar={self.avatar} description="BUYER" id={self.id} username={self.username!} />
         {cartSeller && (
           <S.UserLabel
             avatar={cartSeller.avatar}
-            description="seller"
+            description="SELLER"
             id={cartSeller.id}
             username={cartSeller.username}
           />
         )}
-      </>
+      </S.User>
     ) : (
-      <S.EmptyText>No buyer or seller to display.</S.EmptyText>
+      <>
+        <EmptyPage graphic={EmptyParticipants} topText="No buyer or seller to display." bottomText="" size={200} />
+      </>
     );
 
     return (
       <S.Participants>
         <S.Heading>Participants</S.Heading>
-        <S.Line />
         {content}
       </S.Participants>
     );
@@ -96,14 +126,22 @@ const BuyCheckout: SFC = ({className}) => {
     const content = !!cartProductList.length ? (
       renderCartProducts()
     ) : (
-      <S.EmptyText>No products to display.</S.EmptyText>
+      <EmptyPage
+        bottomText="Add products to sell."
+        graphic={EmptyProduct}
+        topText="Sorry! You haven’t add products yet."
+        size={300}
+      />
     );
 
     return (
       <>
-        <S.Heading>Products</S.Heading>
-        <S.Line />
-        {content}
+        <S.Div>
+          <S.Heading>
+            Products — <span>{cartProductList.length}</span>
+          </S.Heading>
+          {content}
+        </S.Div>
       </>
     );
   };
@@ -111,8 +149,7 @@ const BuyCheckout: SFC = ({className}) => {
   const renderRight = () => {
     return (
       <S.Right>
-        <S.Heading>Total</S.Heading>
-        <S.Line />
+        <S.Heading>Order Summary</S.Heading>
         <PaymentDetails />
       </S.Right>
     );

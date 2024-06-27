@@ -1,23 +1,29 @@
 import {useDispatch} from 'react-redux';
-import {useNavigate} from 'react-router-dom';
+import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 
+import DropdownMenu from 'components/DropdownMenu';
 import ActionLink from 'components/ActionLink';
+import {useCoreLogo} from 'hooks';
 import ProductActivationBadge from 'components/ProductActivationBadge';
 import ShopProductListDetails from 'components/ShopProductListDetails';
 import {deleteProduct, updateProduct} from 'dispatchers/products';
+import Line from 'components/Line';
 import {ActivationStatus, ToastType} from 'enums';
 import {updateManager} from 'store/manager';
 import {AppDispatch, Product as TProduct, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
+
 import * as S from './Styles';
 
 export interface ProductProps {
   product: TProduct;
+  setSellProductModalIsOpen(isOpen: boolean): void;
 }
 
-const Product: SFC<ProductProps> = ({product}) => {
+const Product: SFC<ProductProps> = ({product, setSellProductModalIsOpen}) => {
+  const coreLogo = useCoreLogo(product.price_core);
+
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
 
   const handleActivationActionLinkClick = async () => {
     try {
@@ -46,7 +52,7 @@ const Product: SFC<ProductProps> = ({product}) => {
 
   const handleEditClick = () => {
     dispatch(updateManager({activeProduct: product}));
-    navigate('/shop/sell/createEditProduct');
+    setSellProductModalIsOpen(true);
   };
 
   const renderActivationActionLink = () => {
@@ -54,25 +60,45 @@ const Product: SFC<ProductProps> = ({product}) => {
     return <ActionLink onClick={handleActivationActionLinkClick}>{actionText}</ActionLink>;
   };
 
+  const renderDropdownMenu = () => {
+    const menuOptions = [
+      {label: 'Edit', menuIcon: mdiSquareEditOutline, onClick: handleEditClick},
+      {label: 'Delete', menuIcon: mdiDeleteOutline, onClick: handleDeleteClick},
+    ];
+
+    return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
+  };
+
   return (
-    <>
-      <S.Thumbnail onClick={handleEditClick} thumbnailUrl={product.image} />
-      <ShopProductListDetails
-        coreId={product.price_core}
-        description={product.description}
-        name={product.name}
-        onClick={handleEditClick}
-        price={product.price_amount}
-      />
-      <S.ActivationStatus>
-        <ProductActivationBadge activationStatus={product.activation_status} />
-      </S.ActivationStatus>
-      <S.Actions>
-        <ActionLink onClick={handleEditClick}>Edit</ActionLink>
-        <ActionLink onClick={handleDeleteClick}>Delete</ActionLink>
-        {renderActivationActionLink()}
-      </S.Actions>
-    </>
+    <S.Container>
+      <S.Left>
+        <S.Thumbnail onClick={handleEditClick} thumbnailUrl={product.image} />
+        <S.ProductDetails>
+          <S.Box>
+            <ShopProductListDetails
+              coreId={product.price_core}
+              description={product.description}
+              name={product.name}
+              createDate={product.created_date}
+              onClick={handleEditClick}
+              price={product.price_amount}
+            />
+            <S.Link>{renderActivationActionLink()}</S.Link>
+          </S.Box>
+          <Line />
+          <S.Price>
+            <S.Div>
+              <S.CoreLogo alt="core logo" src={coreLogo} />
+              <S.Amount>{product.price_amount.toLocaleString()}</S.Amount>
+            </S.Div>
+            <S.ActivationStatus>
+              <ProductActivationBadge activationStatus={product.activation_status} />
+            </S.ActivationStatus>
+          </S.Price>
+        </S.ProductDetails>
+      </S.Left>
+      <S.Right> {renderDropdownMenu()}</S.Right>
+    </S.Container>
   );
 };
 

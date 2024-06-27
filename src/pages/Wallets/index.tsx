@@ -4,7 +4,7 @@ import Icon from '@mdi/react';
 import {mdiBankTransferIn, mdiBankTransferOut} from '@mdi/js';
 import orderBy from 'lodash/orderBy';
 
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
+import LeavesEmptyState from 'assets/leaves_empty_state.png';
 import EmptyPage from 'components/EmptyPage';
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';

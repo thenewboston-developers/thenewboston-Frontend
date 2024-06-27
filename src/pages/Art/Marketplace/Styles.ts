@@ -1,7 +1,7 @@
 import styled from 'styled-components';
+import UBanner from 'components/Banner';
 
 import {breakpoints, fonts} from 'styles';
-import UBanner from './Banner';
 
 export const ArtworkCards = styled.div`
   display: grid;

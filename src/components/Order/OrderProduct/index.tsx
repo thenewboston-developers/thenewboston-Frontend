@@ -13,6 +13,7 @@ const OrderProduct: SFC<OrderProductProps> = ({orderProduct}) => {
       <ShopProductListDetails
         coreId={orderProduct.price_core}
         description={orderProduct.description}
+        isOrderProduct={true}
         name={orderProduct.name}
         price={orderProduct.price_amount}
       />

@@ -2,11 +2,11 @@ import styled from 'styled-components';
 
 import {colors, fonts} from 'styles';
 
-export const Container = styled.div`
-  background: #fff;
+export const Container = styled.div<{$height: string}>`
+  background: ${colors.white};
   border-radius: 16px;
   display: flex;
-  height: 194px;
+  height: ${({$height}) => $height};
   justify-content: space-between;
   overflow: hidden;
   padding: 0 26px;
@@ -51,7 +51,7 @@ export const Left = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 20px 0;
+  padding: 20px 0px;
 `;
 
 export const Right = styled.div`

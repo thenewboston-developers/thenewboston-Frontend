@@ -1,21 +1,26 @@
-import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
+import {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {Field, Form, Formik} from 'formik';
+import {Field, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
-import {Checkbox, FileInput, Input, Select} from 'components/FormElements';
+import {Checkbox, FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
+import DefaultImage from 'assets/default_image.svg';
 import {createProduct, updateProduct} from 'dispatchers/products';
 import {ActivationStatus, ToastType} from 'enums';
 import {usePriceCoreOptions} from 'hooks';
 import {getManager} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
+import {displayErrorToast, displayToast} from 'utils/toasts';
+
 import * as S from './Styles';
 
-const SellCreateEditProduct: SFC = ({className}) => {
+export interface SellProductModalProps {
+  close(): void;
+}
+const SellProductModal: SFC<SellProductModalProps> = ({className, close}) => {
   const [preview, setPreview] = useState<string | null>(null);
   const {activeProduct} = useSelector(getManager);
   const dispatch = useDispatch<AppDispatch>();
@@ -83,6 +88,7 @@ const SellCreateEditProduct: SFC = ({className}) => {
       }
 
       navigate('/shop/sell/products');
+      close();
     } catch (error) {
       console.error(error);
       const verb = activeProduct ? 'updating' : 'creating';
@@ -99,14 +105,30 @@ const SellCreateEditProduct: SFC = ({className}) => {
   }, []);
 
   return (
-    <S.Container className={className}>
+    <S.Modal className={className} close={close} header={activeProduct ? 'Update Product' : 'Add Product'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
-          <Form>
-            <Input errors={errors} label="Name" name="name" touched={touched} />
-            <Input errors={errors} label="Description" name="description" touched={touched} />
+          <S.Form>
+            <S.Input errors={errors} label="Name" name="name" touched={touched} />
+            <S.Label>Description</S.Label>
+            <S.TextArea errors={errors} label="" name="description" touched={touched} />
             {!values.image && (
-              <Field component={FileInput} name="image" onChange={handleFileChange} touched={touched} />
+              <>
+                <S.Label>Photo</S.Label>
+                <S.ImageInput>
+                  <S.Img alt="image" src={DefaultImage} />
+                  <S.Div>
+                    <S.Span>Drag & drop file or </S.Span>
+                    <Field
+                      asLink={true}
+                      component={FileInput}
+                      name="image"
+                      onChange={handleFileChange}
+                      touched={touched}
+                    />
+                  </S.Div>
+                </S.ImageInput>
+              </>
             )}
             <ImagePreview
               onClear={async () => {
@@ -116,9 +138,17 @@ const SellCreateEditProduct: SFC = ({className}) => {
               src={preview}
             />
             <S.Bumper />
-            <Select errors={errors} label="Currency" name="price_core" options={priceCoreOptions} touched={touched} />
-            <Input errors={errors} label="Price Amount" name="price_amount" touched={touched} type="number" />
-            <Input errors={errors} label="Quantity" name="quantity" touched={touched} type="number" />
+            <S.Box>
+              <S.CurrencyInput>
+                <S.Label>Currency</S.Label>
+                <S.Select errors={errors} label="" name="price_core" options={priceCoreOptions} touched={touched} />
+              </S.CurrencyInput>
+              <S.PriceInput>
+                <S.Label>Price Amount</S.Label>
+                <S.PriceAmount errors={errors} label="" name="price_amount" touched={touched} type="number" />
+              </S.PriceInput>
+            </S.Box>
+            <S.Input errors={errors} label="Quantity" name="quantity" touched={touched} type="number" />
             <Checkbox errors={errors} label="Activate Product" name="activation_status" touched={touched} />
             <Button
               dirty={dirty}
@@ -128,11 +158,11 @@ const SellCreateEditProduct: SFC = ({className}) => {
               text="Submit"
               type={ButtonType.submit}
             />
-          </Form>
+          </S.Form>
         )}
       </Formik>
-    </S.Container>
+    </S.Modal>
   );
 };
 
-export default SellCreateEditProduct;
+export default SellProductModal;

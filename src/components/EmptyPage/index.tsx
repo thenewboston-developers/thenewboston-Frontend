@@ -6,10 +6,19 @@ export interface EmptyPageProps {
   bottomText: string;
   graphic: string;
   onActionTextClick?: GenericVoidFunction;
+  size?: number;
   topText: string;
 }
 
-const EmptyPage: SFC<EmptyPageProps> = ({actionText, bottomText, className, graphic, onActionTextClick, topText}) => {
+const EmptyPage: SFC<EmptyPageProps> = ({
+  actionText,
+  bottomText,
+  className,
+  graphic,
+  onActionTextClick,
+  size,
+  topText,
+}) => {
   return (
     <S.Container className={className}>
       <S.EmptyState
@@ -17,6 +26,7 @@ const EmptyPage: SFC<EmptyPageProps> = ({actionText, bottomText, className, grap
         bottomText={bottomText}
         graphic={graphic}
         onActionTextClick={onActionTextClick}
+        size={size}
         topText={topText}
       />
     </S.Container>

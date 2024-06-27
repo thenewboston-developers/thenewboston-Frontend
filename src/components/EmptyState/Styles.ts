@@ -1,33 +1,46 @@
 import styled from 'styled-components';
 
-import {colors} from 'styles';
+import {breakpoints, colors, fonts} from 'styles';
 
 export const Container = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
+  text-align: center;
 `;
 
 export const H3 = styled.h3`
-  font-weight: 600;
-  margin-top: 32px;
+  font-weight: ${fonts.weight.semiBold};
+  margin-top: 20px;
 `;
 
 export const HelperText = styled.div`
-  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
   margin-top: 8px;
+  @media (max-width: ${breakpoints.mini}) {
+    flex-direction: column;
+  }
 `;
 
-export const Img = styled.img`
-  width: 72px;
+export const Img = styled.img<{$size: string}>`
+  height: ${({$size}) => $size || '72px'};
+  width: ${({$size}) => $size || '72px'};
+
+  @media (max-width: ${breakpoints.mini}) {
+    height: ${({$size}) => ($size ? '200px' : '72px')};
+    width: ${({$size}) => ($size ? '200px' : '72px')};
+  }
 `;
 
 export const SpanBlue = styled.span`
   color: ${colors.palette.blue['400']};
   cursor: pointer;
-  font-weight: 600;
+  font-weight: ${fonts.weight.semiBold};
 `;
 
 export const SpanGray = styled.span`
   color: ${colors.palette.darkGray['500']};
 `;
+export const Div = styled.div``;
