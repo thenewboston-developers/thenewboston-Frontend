@@ -138,7 +138,9 @@ const ArtworkDetails: SFC = ({className}) => {
         </S.Top>
         <ArtworkTransferHistory />
       </S.Container>
-      {artworkDeleteModalIsOpen ? <ArtworkDeleteModal artworkId={artwork.id} close={toggleArtworkDeleteModal} /> : null}
+      {artworkDeleteModalIsOpen ? (
+        <ArtworkDeleteModal artworkId={artwork.id} close={toggleArtworkDeleteModal} navigateToMarketplace={true} />
+      ) : null}
       {artworkModalIsOpen ? (
         <ArtworkModal artwork={artwork} close={toggleArtworkModal} imageUrl={artwork.image} />
       ) : null}
