@@ -5,7 +5,7 @@ import orderBy from 'lodash/orderBy';
 import {useToggle} from 'hooks';
 import Button from 'components/Button';
 import EmptyPage from 'components/EmptyPage';
-import EmptyProduct from 'assets/empty-product.svg';
+import EmptyProduct from 'assets/empty_product.svg';
 import SellProductModal from 'modals/SellProductModal';
 import {getProducts as _getProducts} from 'dispatchers/products';
 import {getProducts, getSelf} from 'selectors/state';

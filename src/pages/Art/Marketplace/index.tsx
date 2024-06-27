@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import ArtworkCard from 'components/ArtworkCard';
 import EmptyText from 'components/EmptyText';
 import InfiniteScroll from 'components/InfiniteScroll';
-import ArtIcon from 'assets/art-icon.svg';
+import ArtIcon from 'assets/art_icon.svg';
 import {AppDispatch, SFC} from 'types';
 import {getArtworks as _getArtworks, resetArtworks as _resetArtworks} from 'dispatchers/artworks';
 import {getArtworks as getArtworksState} from 'selectors/state';

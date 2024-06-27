@@ -6,7 +6,7 @@ import {Field, Formik} from 'formik';
 import Button, {ButtonType} from 'components/Button';
 import {Checkbox, FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
-import DefaultImage from 'assets/default-image.svg';
+import DefaultImage from 'assets/default_image.svg';
 import {createProduct, updateProduct} from 'dispatchers/products';
 import {ActivationStatus, ToastType} from 'enums';
 import {usePriceCoreOptions} from 'hooks';

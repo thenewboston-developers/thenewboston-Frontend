@@ -1,7 +1,7 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
+import LeavesEmptyState from 'assets/leaves_empty_state.png';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
 import Post from 'components/Post';

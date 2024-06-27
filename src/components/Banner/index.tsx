@@ -1,7 +1,7 @@
 import {useNavigate} from 'react-router-dom';
 import {SFC} from 'types';
 import Button from 'components/Button';
-import ArtIcon from 'assets/art-icon.svg';
+import ArtIcon from 'assets/art_icon.svg';
 import Artworks from './artworks.png';
 import * as S from './Styles';
 

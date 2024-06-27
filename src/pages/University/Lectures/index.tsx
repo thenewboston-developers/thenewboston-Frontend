@@ -2,7 +2,7 @@ import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLocation, useNavigate} from 'react-router-dom';
 
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
+import LeavesEmptyState from 'assets/leaves_empty_state.png';
 import Button from 'components/Button';
 import Breadcrumbs from 'components/Breadcrumbs';
 import EmptyPage from 'components/EmptyPage';

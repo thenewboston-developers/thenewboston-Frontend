@@ -6,7 +6,7 @@ import Button from 'components/Button';
 import EmptyPage from 'components/EmptyPage';
 import BuyAddressDetailsModal from 'modals/BuyAddressDetailsModal';
 import Address from './Address';
-import EmptyAddress from 'assets/empty-address.svg';
+import EmptyAddress from 'assets/empty_address.svg';
 import {getAddresses} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';

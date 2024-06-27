@@ -6,8 +6,8 @@ import * as S from './Styles';
 const FileInput: FC<
   FieldProps<File | null> & {asLink?: boolean; onChange: (event: ChangeEvent<HTMLInputElement>) => void}
 > = ({asLink, field, form, onChange, ...props}) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, __, helpers] = useField<File | null>(field.name);
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.currentTarget.files && event.currentTarget.files[0];

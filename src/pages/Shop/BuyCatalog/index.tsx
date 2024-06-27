@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import EmptyPage from 'components/EmptyPage';
 import ProductCard from 'components/ProductCard';
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
+import LeavesEmptyState from 'assets/leaves_empty_state.png';
 import ShopIcon from 'assets/shop-icon.svg';
 import ProductCardsContainer from 'components/ProductCardsContainer';
 import {getProducts as _getProducts} from 'dispatchers/products';

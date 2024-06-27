@@ -4,9 +4,9 @@ import {mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 
 import AddressCard from 'components/AddressCard';
 import Button from 'components/Button';
-import EmptyAddress from 'assets/empty-address.svg';
-import EmptyProduct from 'assets/empty-product.svg';
-import EmptyParticipants from 'assets/default-participants.svg';
+import EmptyAddress from 'assets/empty_address.svg';
+import EmptyProduct from 'assets/empty_product.svg';
+import EmptyParticipants from 'assets/default_participants.svg';
 import DropdownMenu from 'components/DropdownMenu';
 import UserLabel from 'components/UserLabel';
 import EmptyPage from 'components/EmptyPage';
