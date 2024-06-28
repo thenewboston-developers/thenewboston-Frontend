@@ -10,10 +10,18 @@ interface InfiniteScrollProps {
   dataLength: number;
   hasMore: boolean;
   heightMargin?: number;
+  loader?: ReactNode;
   next: () => void;
 }
 
-const InfiniteScroll: SFC<InfiniteScrollProps> = ({children, dataLength, hasMore, next, heightMargin = 105}) => {
+const InfiniteScroll: SFC<InfiniteScrollProps> = ({
+  children,
+  dataLength,
+  hasMore,
+  next,
+  heightMargin = 105,
+  loader = null,
+}) => {
   const infiniteScrollComponentHeight = window.innerHeight - heightMargin;
 
   return (
@@ -23,11 +31,7 @@ const InfiniteScroll: SFC<InfiniteScrollProps> = ({children, dataLength, hasMore
         dataLength={dataLength}
         hasMore={hasMore}
         height={infiniteScrollComponentHeight}
-        loader={
-          <S.LoaderContainer>
-            <Loader size={24} />
-          </S.LoaderContainer>
-        }
+        loader={<S.LoaderContainer>{loader ? loader : <Loader size={24} />}</S.LoaderContainer>}
         next={next}
       >
         {children}
