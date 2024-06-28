@@ -38,17 +38,25 @@ const Feed: SFC = ({className}) => {
     }
   };
 
+  const getSkeleton = (n: number) => (
+    <S.PostContainer>
+      <PostSkeleton dataLength={n} />
+    </S.PostContainer>
+  );
+
   const renderContent = () => {
     if (isLoading && !postList.length) {
-      return (
-        <S.PostContainer>
-          <PostSkeleton dataLength={3} />
-        </S.PostContainer>
-      );
+      return getSkeleton(3);
     }
     if (postList.length) {
       return (
-        <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts} heightMargin={0}>
+        <InfiniteScroll
+          dataLength={postList.length}
+          hasMore={hasMore}
+          next={fetchMorePosts}
+          heightMargin={0}
+          loader={getSkeleton(1)}
+        >
           <S.PostContainer>
             {postList.map((post) => (
               <Post key={post.id} post={post} />
