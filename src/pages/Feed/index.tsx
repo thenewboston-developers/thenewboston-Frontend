@@ -1,15 +1,16 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
-import LeavesEmptyState from 'assets/leaves_empty_state.png';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
-import PostSkeleton from 'components/Post/PostSkeleton';
+import LeavesEmptyState from 'assets/leaves_empty_state.png';
 import Post from 'components/Post';
-import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
-import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
+import PostSkeleton from 'components/Post/PostSkeleton';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
+import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
+import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
+
 import * as S from './Styles';
 
 const Feed: SFC = ({className}) => {

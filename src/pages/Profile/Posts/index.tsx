@@ -5,10 +5,12 @@ import {useParams} from 'react-router-dom';
 import EmptyText from 'components/EmptyText';
 import InfiniteScroll from 'components/InfiniteScroll';
 import Post from 'components/Post';
-import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
-import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
+import PostSkeleton from 'components/Post/PostSkeleton';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
+import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
+import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
+
 import * as S from './Styles';
 
 const Posts: SFC = ({className}) => {
@@ -37,6 +39,12 @@ const Posts: SFC = ({className}) => {
     })();
   }, [dispatch, userId]);
 
+  const getSkeleton = (n: number) => (
+    <S.PostContainer>
+      <PostSkeleton dataLength={n} />
+    </S.PostContainer>
+  );
+
   const fetchMorePosts = async () => {
     if (!isLoading) {
       await dispatch(_getPosts());
@@ -44,9 +52,12 @@ const Posts: SFC = ({className}) => {
   };
 
   const renderContent = () => {
+    if (isLoading && !postList.length) {
+      return getSkeleton(3);
+    }
     if (postList.length) {
       return (
-        <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts}>
+        <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts} loader={getSkeleton(1)}>
           <S.PostContainer>
             {postList.map((post) => (
               <Post key={post.id} post={post} />
