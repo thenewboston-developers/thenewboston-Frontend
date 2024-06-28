@@ -22,7 +22,7 @@ root.render(
     <PersistGate loading={null} persistor={persistor}>
       <GlobalStyle />
       <ToastifyStyle />
-      <SkeletonTheme highlightColor={colors.palette.gray[100]} baseColor={colors.whiteSmoke}>
+      <SkeletonTheme highlightColor={colors.palette.gray[300]} baseColor={colors.whiteSmoke}>
         <BrowserRouter>
           <App />
         </BrowserRouter>

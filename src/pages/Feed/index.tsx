@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import LeavesEmptyState from 'assets/leaves_empty_state.png';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
+import PostSkeleton from 'components/Post/PostSkeleton';
 import Post from 'components/Post';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
@@ -38,6 +39,13 @@ const Feed: SFC = ({className}) => {
   };
 
   const renderContent = () => {
+    if (isLoading && !postList.length) {
+      return (
+        <S.PostContainer>
+          <PostSkeleton dataLength={3} />
+        </S.PostContainer>
+      );
+    }
     if (postList.length) {
       return (
         <InfiniteScroll dataLength={postList.length} hasMore={hasMore} next={fetchMorePosts} heightMargin={0}>
