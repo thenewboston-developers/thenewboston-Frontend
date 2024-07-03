@@ -1,6 +1,7 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import ArtworkCard from 'components/ArtworkCard';
+import ArtworkCardSkeleton from 'components/ArtworkCard/ArtworkCardSkeleton';
 import EmptyText from 'components/EmptyText';
 import InfiniteScroll from 'components/InfiniteScroll';
 import ArtIcon from 'assets/art_icon.svg';
@@ -34,6 +35,17 @@ const Marketplace: SFC = ({className}) => {
     }
   };
 
+  const getHeading = () => <S.ArtworkCardsHeading>Buy from our marketplace</S.ArtworkCardsHeading>;
+
+  const getSkeleton = (n: number) => (
+    <>
+      {getHeading()}
+      <S.ArtworkCards>
+        <ArtworkCardSkeleton dataLength={n} />
+      </S.ArtworkCards>
+    </>
+  );
+
   const renderArtworkCards = () => {
     if (artworkList.length) {
       return (
@@ -47,10 +59,13 @@ const Marketplace: SFC = ({className}) => {
   };
 
   const renderContent = () => {
+    if (isLoading && !artworkList.length) {
+      return getSkeleton(4);
+    }
     if (!!artworkList.length) {
       return (
         <>
-          <S.ArtworkCardsHeading>Buy from our marketplace</S.ArtworkCardsHeading>
+          {getHeading()}
           {renderArtworkCards()}
         </>
       );
@@ -61,7 +76,13 @@ const Marketplace: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <InfiniteScroll dataLength={artworkList.length} hasMore={hasMore} next={fetchMoreArtworks} heightMargin={50}>
+      <InfiniteScroll
+        dataLength={artworkList.length}
+        hasMore={hasMore}
+        next={fetchMoreArtworks}
+        heightMargin={50}
+        loader={getSkeleton(4)}
+      >
         <S.Banner
           heading={'Craft Your Vision, Reap Rewards'}
           icon={ArtIcon}

@@ -3,11 +3,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 
 import ArtworkCard from 'components/ArtworkCard';
+import ArtworkCardSkeleton from 'components/ArtworkCard/ArtworkCardSkeleton';
 import EmptyText from 'components/EmptyText';
 import InfiniteScroll from 'components/InfiniteScroll';
 import {AppDispatch, SFC} from 'types';
 import {getArtworks as _getArtworks, resetArtworks as _resetArtworks} from 'dispatchers/artworks';
 import {getArtworks as getArtworksState} from 'selectors/state';
+
 import * as S from './Styles';
 
 const Artworks: SFC = ({className}) => {
@@ -37,10 +39,22 @@ const Artworks: SFC = ({className}) => {
     }
   };
 
+  const getSkeleton = (n: number) => (
+    <S.ArtworkCards>
+      <ArtworkCardSkeleton dataLength={n} />
+    </S.ArtworkCards>
+  );
+
   const renderArtworkCards = () => {
     if (artworkList.length) {
       return (
-        <InfiniteScroll dataLength={artworkList.length} hasMore={hasMore} next={fetchMoreArtworks} heightMargin={0}>
+        <InfiniteScroll
+          dataLength={artworkList.length}
+          hasMore={hasMore}
+          next={fetchMoreArtworks}
+          heightMargin={0}
+          loader={getSkeleton(3)}
+        >
           <S.ArtworkCards>
             {artworkList.map((artwork) => (
               <ArtworkCard showBadge={true} artwork={artwork} key={artwork.id} />
@@ -52,6 +66,9 @@ const Artworks: SFC = ({className}) => {
   };
 
   const renderContent = () => {
+    if (isLoading && !artworkList.length) {
+      return getSkeleton(3);
+    }
     if (!!artworkList.length) return renderArtworkCards();
     return <EmptyText>No artwork to display.</EmptyText>;
   };

@@ -1,5 +1,4 @@
-import React from 'react';
-
+import ListRenderer from 'components/ListRenderer';
 import Skeleton from 'components/Skeleton';
 import {Row} from 'styles/components/GridStyle';
 import {SFC} from 'types';
@@ -35,13 +34,7 @@ const PostSkeleton: SFC<PostSkeletonProps> = ({dataLength}) => {
     </S.Container>
   );
 
-  return (
-    <React.Fragment>
-      {Array.from({length: dataLength}, (_, index) => (
-        <div key={index}>{renderContent()}</div>
-      ))}
-    </React.Fragment>
-  );
+  return <ListRenderer dataLength={dataLength} renderItem={() => renderContent()} />;
 };
 
 export default PostSkeleton;
