@@ -3,11 +3,13 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
-import {ButtonType} from 'components/Button';
-import {createUser} from 'dispatchers/users';
 import {AppDispatch, SFC} from 'types';
+import {ButtonType} from 'components/Button';
+import {PATH_AUTHENTICATION} from 'constants/paths';
+import {createUser} from 'dispatchers/users';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
+
 import * as S from './Styles';
 
 const CreateAccountForm: SFC = () => {
@@ -83,7 +85,7 @@ const CreateAccountForm: SFC = () => {
         </Formik>
       </S.Panel>
       <S.QuestionText>
-        Already have an account? <S.Link to="/signIn">Sign In</S.Link>
+        Already have an account? <S.Link to={PATH_AUTHENTICATION.LOGIN}>Sign In</S.Link>
       </S.QuestionText>
     </>
   );

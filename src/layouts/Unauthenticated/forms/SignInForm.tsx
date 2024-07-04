@@ -8,6 +8,8 @@ import {ButtonType} from 'components/Button';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
+import {PATH_AUTHENTICATION} from 'constants/paths';
+
 import * as S from './Styles';
 
 const SignInForm: SFC = () => {
@@ -60,7 +62,7 @@ const SignInForm: SFC = () => {
         </Formik>
       </S.Panel>
       <S.QuestionText>
-        New user? <S.Link to="/createAccount">Create an Account</S.Link>
+        New user? <S.Link to={PATH_AUTHENTICATION.SIGNUP}>Create an Account</S.Link>
       </S.QuestionText>
     </>
   );
