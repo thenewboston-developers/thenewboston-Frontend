@@ -2,6 +2,7 @@ import {Navigate, Route, Routes} from 'react-router-dom';
 
 import {
   PATH_ART,
+  PATH_AUTHENTICATION,
   PATH_CONTRIBUTIONS,
   PATH_COURSES,
   PATH_COURSES_SELF,
@@ -25,11 +26,13 @@ import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
 import Ia from 'pages/Ia';
 import Lectures from 'pages/University/Lectures';
+import Logout from 'components/Logout';
 import Notifications from 'pages/Notifications';
 import Profile from 'pages/Profile';
 import Shop from 'pages/Shop';
 import Wallets from 'pages/Wallets';
 import {SFC} from 'types';
+
 import * as S from './Styles';
 
 const MainArea: SFC = ({className}) => {
@@ -50,6 +53,7 @@ const MainArea: SFC = ({className}) => {
         <Route path={PATH_NOTIFICATIONS} element={<Notifications />} />
         <Route path={PATH_PROFILE} element={<Profile />} />
         <Route path={PATH_SHOP} element={<Shop />} />
+        <Route path={PATH_AUTHENTICATION.LOGOUT} element={<Logout />} />
         <Route path={PATH_WALLETS} element={<Wallets />} />
       </Routes>
     </S.Container>

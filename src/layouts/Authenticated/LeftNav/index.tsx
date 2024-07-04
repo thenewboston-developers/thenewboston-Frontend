@@ -1,6 +1,5 @@
 import {useMemo} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {useNavigate} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 import {
   mdiAccount,
   mdiBell,
@@ -17,30 +16,21 @@ import {
 } from '@mdi/js';
 
 import BadgeCount from 'components/BadgeCount';
-import {PATH_COURSES} from 'constants/paths';
-import {logout} from 'dispatchers/authentication';
+import {PATH_AUTHENTICATION, PATH_COURSES} from 'constants/paths';
 import {getNotifications, getSelf} from 'selectors/state';
-import {AppDispatch, SFC} from 'types';
+import {SFC} from 'types';
 import {getUnreadNotificationsCount} from 'utils/notifications';
 import CreatePostButton from './CreatePostButton';
-import MenuButton from './MenuItem/MenuButton';
 import MenuLink from './MenuItem/MenuLink';
 import * as S from './Styles';
 
 const LeftNav: SFC = ({className}) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
   const notifications = useSelector(getNotifications);
   const self = useSelector(getSelf);
 
   const notificationsList = useMemo(() => {
     return Object.values(notifications);
   }, [notifications]);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate('/signIn');
-  };
 
   return (
     <S.Container className={className}>
@@ -61,7 +51,12 @@ const LeftNav: SFC = ({className}) => {
         <CreatePostButton />
       </S.Top>
       <S.Bottom>
-        <MenuButton icon={mdiExitToApp} onClick={handleLogout} text="Log out" />
+        <MenuLink
+          icon={mdiExitToApp}
+          rootPath={`${PATH_AUTHENTICATION.LOGOUT}`}
+          text="Log out"
+          to={`${PATH_AUTHENTICATION.LOGOUT}`}
+        />
       </S.Bottom>
     </S.Container>
   );
