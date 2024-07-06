@@ -1,4 +1,14 @@
-import {FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+  createMigrate,
+  persistReducer,
+  persistStore,
+} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import {AnyAction, combineReducers, configureStore} from '@reduxjs/toolkit';
 
@@ -25,6 +35,7 @@ import invitationsReducer from 'store/invitations';
 import lecturesReducer from 'store/lectures';
 import managerReducer from 'store/manager';
 import messagesReducer from 'store/messages';
+import migrations from 'store/migrations';
 import notificationsReducer from 'store/notifications';
 import ordersReducer from 'store/orders';
 import postsReducer from 'store/posts';
@@ -78,7 +89,9 @@ const appReducer = (state: any, action: AnyAction) => {
 
 const persistConfig = {
   key: 'thenewboston',
+  migrate: createMigrate(migrations, {debug: false}),
   storage,
+  version: 1,
 };
 
 const persistedReducer = persistReducer(persistConfig, appReducer);
