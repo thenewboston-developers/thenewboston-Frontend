@@ -37,9 +37,9 @@ const Marketplace: SFC = ({className}) => {
 
   const getHeading = () => <S.ArtworkCardsHeading>Buy from our marketplace</S.ArtworkCardsHeading>;
 
-  const getSkeleton = (n: number) => (
+  const getSkeleton = (n: number, showHeading = true) => (
     <>
-      {getHeading()}
+      {showHeading ? getHeading() : null}
       <S.ArtworkCards>
         <ArtworkCardSkeleton dataLength={n} />
       </S.ArtworkCards>
@@ -81,7 +81,7 @@ const Marketplace: SFC = ({className}) => {
         hasMore={hasMore}
         next={fetchMoreArtworks}
         heightMargin={50}
-        loader={getSkeleton(4)}
+        loader={getSkeleton(4, false)}
       >
         <S.Banner
           heading={'Craft Your Vision, Reap Rewards'}
