@@ -1,14 +1,15 @@
+import ContributionsCardSkeleton from 'components/Contributions/Skeleton/ContributionsCardSkeleton';
 import ContributionsList from 'components/Contributions/Contributions';
-import Loader from 'components/Loader';
 import useContributions from 'hooks/useContributions';
 import {Col} from 'styles/components/GridStyle';
 
 const MyContributions = () => {
   const {items, hasMore, isInitialLoading, fetchMoreContributions} = useContributions(true);
   const contributionsList = Object.values(items);
+  const panelHeading = 'My Contributions';
 
   if (isInitialLoading) {
-    return <Loader className="align-screen-center" size={24} />;
+    return <ContributionsCardSkeleton dataLength={4} panelHeading={panelHeading} />;
   }
 
   return (
@@ -17,7 +18,7 @@ const MyContributions = () => {
         contributionsList={contributionsList}
         fetchMore={fetchMoreContributions}
         hasMore={hasMore}
-        panelHeading="My Contributions"
+        panelHeading={panelHeading}
         selfContributions={true}
       />
     </Col>
