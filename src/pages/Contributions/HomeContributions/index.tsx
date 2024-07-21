@@ -1,6 +1,6 @@
 import ContributionsCumulativeChart from 'components/Contributions/ContributionsCumulativeChart';
 import ContributionsList from 'components/Contributions/Contributions';
-import ContributionsSkeleton from 'components/Contributions/Skeleton';
+import HomeContributionsSkeleton from 'components/Contributions/Skeleton/HomeContributionsSkeleton';
 import TopContributorsSkeleton from 'components/Contributions/Skeleton/TopContributorsSkeleton';
 import Loader from 'components/Loader';
 import TopContributors from 'components/Contributions/TopContributors';
@@ -11,15 +11,7 @@ const HomeContributions = () => {
   const {items, isInitialLoading} = useContributions();
   const contributionsList = Object.values(items);
 
-  const getSkeleton = (n: number) => <ContributionsSkeleton dataLength={n} />;
-
-  return (
-    <Row>
-      <Col size={4}>
-        <TopContributorsSkeleton />
-      </Col>
-    </Row>
-  );
+  return <HomeContributionsSkeleton />;
 
   if (isInitialLoading) {
     // return getSkeleton(4);
