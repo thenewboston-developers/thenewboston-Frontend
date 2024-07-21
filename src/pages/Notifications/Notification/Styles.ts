@@ -1,6 +1,7 @@
 import UIcon from '@mdi/react';
 import {Link as ULink} from 'react-router-dom';
 
+import UDot from 'components/Dot';
 import styled from 'styled-components';
 import {colors, fonts} from 'styles';
 
@@ -8,6 +9,8 @@ export const ArtworkPurchaseNotificationContainer = styled.div`
   align-items: center;
   display: flex;
   padding: 0 16px;
+  position: relative;
+  width: 100%;
 `;
 
 export const Container = styled.div<{$isRead: boolean}>`
@@ -18,6 +21,29 @@ export const Container = styled.div<{$isRead: boolean}>`
   gap: 16px;
   margin-top: 16px;
   padding: 16px 0;
+`;
+
+export const DotContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -5px;
+  position: absolute;
+  right: 15px;
+  top: 0;
+`;
+
+export const Dot = styled(UDot)``;
+
+export const IconBrush = styled(UIcon)`
+  background: ${colors.backgroundDark};
+  border-radius: 50%;
+  border: 1px solid ${colors.border};
+  color: ${colors.white};
+  margin-left: 28px;
+  margin-top: -16px;
+  padding: 2px;
+  position: absolute;
+  z-index: 100;
 `;
 
 export const Link = styled(ULink)`
@@ -33,23 +59,6 @@ export const TextContainer = styled.div`
 `;
 
 export const TimeStamp = styled.small`
-  font-weight: ${fonts.weight.semiBold};
   color: ${colors.gray};
-`;
-
-export const IconBrush = styled(UIcon)`
-  background: ${colors.backgroundDark};
-  border-radius: 50%;
-  border: 1px solid ${colors.border};
-  color: ${colors.white};
-  margin-left: 28px;
-  margin-top: -16px;
-  padding: 2px;
-  position: absolute;
-`;
-
-export const DotContainer = styled.div`
-  margin-top: -50px;
-  position: absolute;
-  right: 45px;
+  font-weight: ${fonts.weight.semiBold};
 `;
