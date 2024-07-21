@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import CoreLogo from 'components/CoreLogo';
 import DefaultAvatar from 'assets/default_avatar.svg';
 import PanelHeading from 'components/PanelHeading';
+import TopContributorsSkeleton from 'components/Contributions/Skeleton/TopContributorsSkeleton';
 import {AppDispatch} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import {getContributors as getContributorsState} from 'selectors/state';
@@ -37,14 +38,6 @@ const TopContributors: FC<TopContributorsProps> = ({className}) => {
   }, [dispatch]);
 
   const renderContributorList = () => {
-    if (isLoading) {
-      return (
-        <S.ContributorList>
-          <S.Loader />
-        </S.ContributorList>
-      );
-    }
-
     if (topContributors.length === 0 && !isLoading) {
       return (
         <S.ContributorList>
@@ -83,6 +76,10 @@ const TopContributors: FC<TopContributorsProps> = ({className}) => {
       </S.ContributorList>
     );
   };
+
+  if (isLoading) {
+    return <TopContributorsSkeleton />;
+  }
 
   return (
     <section className={className}>

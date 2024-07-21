@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
+import ContributionsCumulativeChartSkeleton from 'components/Contributions/Skeleton/ContributionsCumulativeChartSkeleton';
 import PanelHeading from 'components/PanelHeading';
 import TNBLogo from 'components/TNBLogo';
 import {AppDispatch, SFC} from 'types';
@@ -73,10 +74,6 @@ const ContributionsCumulativeChart: SFC<ContributionsCumulativeChartProps> = ({c
   };
 
   const renderContent = () => {
-    if (isLoading) {
-      return <S.Loader />;
-    }
-
     return (
       <ResponsiveContainer height={380} width="100%">
         <AreaChart data={cumulativeContributions}>
@@ -89,6 +86,10 @@ const ContributionsCumulativeChart: SFC<ContributionsCumulativeChartProps> = ({c
       </ResponsiveContainer>
     );
   };
+
+  if (isLoading) {
+    return <ContributionsCumulativeChartSkeleton />;
+  }
 
   return (
     <>
