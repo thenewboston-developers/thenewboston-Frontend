@@ -3,9 +3,9 @@ import {Link} from 'react-router-dom';
 import {mdiBrushOutline} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
-import Dot from 'components/Dot';
 import {Notification as TNotification, SFC} from 'types';
 import {longDate} from 'utils/dates';
+
 import * as S from './Styles';
 
 enum NotificationType {
@@ -20,7 +20,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const renderRedDot = () => {
     return notification.is_read ? null : (
       <S.DotContainer>
-        <Dot />
+        <S.Dot />
       </S.DotContainer>
     );
   };
