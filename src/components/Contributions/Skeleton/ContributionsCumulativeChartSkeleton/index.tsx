@@ -18,7 +18,7 @@ const ContributionsCumulativeChartSkeleton: SFC = () => {
       <S.ChartContainer>
         <Row>
           <Col size={12}>
-            <Skeleton width="100%" height={300} />
+            <Skeleton width="100%" height={380} />
           </Col>
         </Row>
       </S.ChartContainer>

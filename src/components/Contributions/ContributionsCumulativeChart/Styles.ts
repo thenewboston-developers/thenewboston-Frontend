@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import ULoader from 'components/Loader';
 import {colors} from 'styles';
 
 export const Amount = styled.div`
@@ -27,8 +26,4 @@ export const Container = styled.div`
 export const ChartHeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
-`;
-
-export const Loader = styled(ULoader)`
-  padding: 20px;
 `;

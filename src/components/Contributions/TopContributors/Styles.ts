@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import UUserLabel from 'components/UserLabel';
-import ULoader from 'components/Loader';
 import {breakpoints, fonts} from 'styles';
 
 export const ContributorList = styled.div`
@@ -31,10 +30,6 @@ export const ContributorContainer = styled.div`
     display: block;
     justify-content: start;
   }
-`;
-
-export const Loader = styled(ULoader)`
-  padding: 20px;
 `;
 
 export const PositionIcon = styled.img`
