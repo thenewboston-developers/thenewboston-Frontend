@@ -6,7 +6,7 @@ import {getTrades as _getTrades} from 'dispatchers/trades';
 import {ExchangeOrderType} from 'enums';
 import {getCores, getTrades} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
-import {longDate} from 'utils/dates';
+import {getDateStr, getTimeStr} from 'utils/dates';
 import * as S from './Styles';
 
 export interface TradesModalProps {
@@ -45,20 +45,29 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
     const primaryCurrencyTicker = getCurrencyTicker(order.primary_currency);
     const secondaryCurrencyTicker = getCurrencyTicker(order.secondary_currency);
 
-    return filteredTrades.map(({created_date, fill_quantity, id, overpayment_amount, trade_price}) => (
-      <tr key={id}>
-        <td>{longDate(created_date)}</td>
-        <td>
-          {fill_quantity.toLocaleString()} {primaryCurrencyTicker}
-        </td>
-        <td>
-          {trade_price.toLocaleString()} {secondaryCurrencyTicker}
-        </td>
-        <td>
-          {overpayment_amount.toLocaleString()} {secondaryCurrencyTicker}
-        </td>
-      </tr>
-    ));
+    return filteredTrades.map(({created_date, fill_quantity, id, overpayment_amount, trade_price}, index) => {
+      const createdAt = new Date(created_date);
+      return (
+        <tr key={id}>
+          <td>
+            <S.TextMuted>{index + 1}</S.TextMuted>
+          </td>
+          <td>
+            {getDateStr(createdAt)}
+            <S.TextMuted>{getTimeStr(createdAt, true)}</S.TextMuted>
+          </td>
+          <td>
+            {fill_quantity.toLocaleString()} {primaryCurrencyTicker}
+          </td>
+          <td>
+            {trade_price.toLocaleString()} {secondaryCurrencyTicker}
+          </td>
+          <td>
+            {overpayment_amount.toLocaleString()} {secondaryCurrencyTicker}
+          </td>
+        </tr>
+      );
+    });
   }, [filteredTrades, getCurrencyTicker, order]);
 
   if (!order) return null;
@@ -66,15 +75,16 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
   return (
     <S.Modal className={className} close={close} header="Trades">
       <S.Table>
-        <thead>
+        <S.Thead>
           <tr>
+            <th>No.</th>
             <th>Date</th>
             <th>Fill Quantity</th>
             <th>Trade Price</th>
             <th>Overpayment Amount</th>
           </tr>
-        </thead>
-        <tbody>{renderRows()}</tbody>
+        </S.Thead>
+        <S.Tbody>{renderRows()}</S.Tbody>
       </S.Table>
     </S.Modal>
   );
