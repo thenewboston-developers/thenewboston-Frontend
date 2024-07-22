@@ -42,10 +42,33 @@ export const isToday = (date: Date): boolean => {
   );
 };
 
+export const getDateStr = (date: Date): string => {
+  return date.toLocaleDateString(undefined, {dateStyle: 'long'});
+};
+
+export const getTimeStr = (date: Date, use12HourFormat = false): string => {
+  let config: Intl.DateTimeFormatOptions;
+
+  if (use12HourFormat) {
+    config = {
+      hour: '2-digit',
+      hour12: true,
+      minute: '2-digit',
+      second: '2-digit',
+    };
+  } else {
+    config = {
+      timeStyle: 'long',
+    };
+  }
+
+  return date.toLocaleTimeString(undefined, config);
+};
+
 export const longDate = (date: number | string | Date): string => {
   const customDate = new Date(date);
-  const dateStr = customDate.toLocaleDateString(undefined, {dateStyle: 'long'});
-  const timeStr = customDate.toLocaleTimeString(undefined, {timeStyle: 'long'});
+  const dateStr = getDateStr(customDate);
+  const timeStr = getTimeStr(customDate);
   return `${dateStr} at ${timeStr}`;
 };
 

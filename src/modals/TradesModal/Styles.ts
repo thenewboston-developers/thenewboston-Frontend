@@ -1,27 +1,33 @@
 import styled from 'styled-components';
 
 import UModal from 'components/Modal';
+import {Table as UTable, Tbody as UTbody, Thead as UThead} from 'styles/components/Table';
+import {breakpoints, colors} from 'styles';
 
 export const Modal = styled(UModal)`
   display: flex;
   flex-direction: column;
-  width: 640px;
-`;
+  width: 60%;
 
-export const Table = styled.table`
-  width: 100%;
-
-  th,
-  td {
-    text-align: left;
-  }
-
-  th:nth-child(2),
-  td:nth-child(2),
-  th:nth-child(3),
-  td:nth-child(3),
-  th:nth-child(4),
-  td:nth-child(4) {
-    text-align: right;
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 90%;
   }
 `;
+
+export const TextMuted = styled.div`
+  color: ${colors.palette.gray[500]};
+  font-size: 0.9rem;
+  margin-top: 2px;
+  text-transform: lowercase;
+`;
+
+export const Table = styled(UTable)`
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 80px;
+  }
+`;
+
+export const Tbody = styled(UTbody)``;
+
+export const Thead = styled(UThead)``;
