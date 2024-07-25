@@ -106,7 +106,7 @@ const WalletDeposit: SFC = ({className}) => {
       </S.DepositAccountRow>
       <Line />
       <S.Div>
-        <S.Title>Deposits history </S.Title>
+        <S.Title>Deposit History</S.Title>
         {renderDeposits()}
       </S.Div>
     </S.Container>

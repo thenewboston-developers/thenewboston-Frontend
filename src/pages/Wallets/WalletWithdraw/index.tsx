@@ -102,7 +102,7 @@ const WalletWithdraw: SFC = ({className}) => {
                 disabled={isSubmitting}
                 isSubmitting={isSubmitting}
                 isValid={isValid}
-                text={`Buy ${activeWallet.core.ticker}`}
+                text={`Withdraw ${activeWallet.core.ticker}`}
                 type={ButtonType.submit}
               />
             </S.Form>
@@ -112,7 +112,7 @@ const WalletWithdraw: SFC = ({className}) => {
       </S.Panel>
 
       <S.Div>
-        <S.Title>Withdraws history </S.Title>
+        <S.Title>Withdrawal History</S.Title>
         {renderWithdraws()}
       </S.Div>
     </S.Container>
