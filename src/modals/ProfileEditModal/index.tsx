@@ -1,14 +1,16 @@
-import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
+import {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Field, Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
-import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
-import {updateUser} from 'dispatchers/users';
-import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
+import {FileInput} from 'components/FormElements';
+import {ToastType} from 'enums';
+import {displayErrorToast, displayToast} from 'utils/toasts';
+import {getSelf} from 'selectors/state';
+import {updateUser} from 'dispatchers/users';
+
 import * as S from './Styles';
 
 export interface ProfileEditModalProps {
@@ -17,14 +19,16 @@ export interface ProfileEditModalProps {
 
 const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
   const [preview, setPreview] = useState<string | null>(null);
+  const [isAvatarCleared, setIsAvatarCleared] = useState<boolean | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
   const initialValues = useMemo(
     () => ({
       avatar: self.avatar || '',
+      discord_username: self.discord_username || '',
     }),
-    [self.avatar],
+    [self.avatar, self.discord_username],
   );
 
   type FormValues = typeof initialValues;
@@ -47,30 +51,41 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
       const requestData = new FormData();
-      requestData.append('avatar', values.avatar);
+      if (initialValues.avatar !== values.avatar) requestData.append('avatar', values.avatar);
+      requestData.append('is_avatar_cleared', isAvatarCleared ? 'True' : 'False');
+      requestData.append('discord_username', values.discord_username);
       await dispatch(updateUser(self.id!, requestData));
       close();
+      displayToast('Profile successfully updated', ToastType.SUCCESS);
     } catch (error) {
       console.error(error);
-      displayErrorToast('Error updating avatar');
+      displayErrorToast('Error updating your profile');
     }
   };
 
   return (
     <S.Modal className={className} close={close} header="Edit Profile">
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {({dirty, isSubmitting, isValid, setFieldValue, touched, values}) => (
+        {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            {!values.avatar && (
-              <Field component={FileInput} name="avatar" onChange={handleFileChange} touched={touched} />
-            )}
-            <ImagePreview
-              onClear={async () => {
-                await setFieldValue('avatar', '');
-                setPreview(null);
-              }}
-              src={preview}
-            />
+            <S.FormField>
+              <S.Label>Profile Picture</S.Label>
+              {!values.avatar && (
+                <Field component={FileInput} name="avatar" onChange={handleFileChange} touched={touched} />
+              )}
+              <ImagePreview
+                onClear={async () => {
+                  await setFieldValue('avatar', '');
+                  setPreview(null);
+                  setIsAvatarCleared(true);
+                }}
+                src={preview}
+              />
+            </S.FormField>
+            <S.FormField>
+              <S.Label>Link your TNB Account to Discord</S.Label>
+              <S.TextInput errors={errors} touched={touched} name="discord_username" placeholder="Discord Username" />
+            </S.FormField>
             <S.Bumper />
             <Button
               dirty={dirty}

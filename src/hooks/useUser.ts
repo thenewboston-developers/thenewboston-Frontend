@@ -16,6 +16,7 @@ const useUser = (id: string | undefined): UserReadSerializer | null => {
     if (userId === self.id) {
       return {
         avatar: self.avatar,
+        discord_username: self.discord_username,
         id: self.id!,
         is_manual_contribution_allowed: self.is_manual_contribution_allowed,
         username: self.username!,

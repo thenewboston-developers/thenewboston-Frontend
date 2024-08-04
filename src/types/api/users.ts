@@ -1,5 +1,6 @@
 export interface UserReadSerializer {
   avatar: string | null;
+  discord_username: string | null;
   id: number;
   is_manual_contribution_allowed: boolean;
   username: string;
