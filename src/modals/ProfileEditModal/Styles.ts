@@ -11,15 +11,15 @@ export const FormField = styled.div`
   margin: 20px 0;
 `;
 
-export const Label = styled.div`
+export const FormLabel = styled.div`
   font-size: 12px;
   margin-bottom: 5px;
 `;
 
-export const Modal = styled(UModal)`
-  width: 360px;
+export const FormTextInput = styled(UInlineInput)`
+  width: 100%;
 `;
 
-export const TextInput = styled(UInlineInput)`
-  width: 100%;
+export const Modal = styled(UModal)`
+  width: 360px;
 `;

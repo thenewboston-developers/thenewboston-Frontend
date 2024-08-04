@@ -69,7 +69,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
             <S.FormField>
-              <S.Label>Profile Picture</S.Label>
+              <S.FormLabel>Profile Picture</S.FormLabel>
               {!values.avatar && (
                 <Field component={FileInput} name="avatar" onChange={handleFileChange} touched={touched} />
               )}
@@ -83,8 +83,13 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
               />
             </S.FormField>
             <S.FormField>
-              <S.Label>Link your TNB Account to Discord</S.Label>
-              <S.TextInput errors={errors} touched={touched} name="discord_username" placeholder="Discord Username" />
+              <S.FormLabel>Link your TNB Account to Discord</S.FormLabel>
+              <S.FormTextInput
+                errors={errors}
+                touched={touched}
+                name="discord_username"
+                placeholder="Discord Username"
+              />
             </S.FormField>
             <S.Bumper />
             <Button
