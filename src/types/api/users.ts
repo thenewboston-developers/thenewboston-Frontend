@@ -6,7 +6,6 @@ export interface UserReadSerializer {
 }
 
 export interface CreateUserRequest {
-  invitation_code: string;
   password: string;
   username: string;
 }

@@ -30,8 +30,6 @@ import exchangeOrdersReducer from 'store/exchangeOrders';
 import followersReducer from 'store/followers';
 import followingsReducer from 'store/followings';
 import iaReducer from 'store/ia';
-import invitationLimitsReducer from 'store/invitationLimits';
-import invitationsReducer from 'store/invitations';
 import lecturesReducer from 'store/lectures';
 import managerReducer from 'store/manager';
 import messagesReducer from 'store/messages';
@@ -65,8 +63,6 @@ const rootReducer = combineReducers({
   followers: followersReducer,
   followings: followingsReducer,
   ia: iaReducer,
-  invitationLimits: invitationLimitsReducer,
-  invitations: invitationsReducer,
   lectures: lecturesReducer,
   manager: managerReducer,
   messages: messagesReducer,

@@ -4,14 +4,11 @@ import {Route, Routes, useParams} from 'react-router-dom';
 
 import Artworks from './Artworks';
 import Follower from './Follower';
-import Invitations from './Invitations';
 import Layout from './Layout';
 import Posts from './Posts';
 import {AppDispatch, SFC} from 'types';
 import {FollowerType} from 'enums';
 import {displayErrorToast} from 'utils/toasts';
-import {getInvitationLimit} from 'dispatchers/invitationLimits';
-import {getInvitations} from 'dispatchers/invitations';
 import {getSelf} from 'selectors/state';
 import {getUserStats} from 'dispatchers/userStats';
 import {getUser} from 'dispatchers/users';
@@ -29,11 +26,6 @@ const Profile: SFC = ({className}) => {
       if (!userId) return;
 
       const promises = [getUser(userId), getUserStats(userId)];
-
-      if (userId === self.id) {
-        promises.push(getInvitationLimit(userId));
-        promises.push(getInvitations());
-      }
 
       try {
         await Promise.all(promises.map(dispatch));
@@ -53,7 +45,6 @@ const Profile: SFC = ({className}) => {
           <Route path="/artworks" element={<Artworks />} />
           <Route path="/following" element={<Follower type={FollowerType.FOLLOWING} />} />
           <Route path="/followers" element={<Follower type={FollowerType.FOLLOWERS} />} />
-          <Route path="/invitations" element={<Invitations />} />
         </Route>
       </Routes>
     </S.Container>

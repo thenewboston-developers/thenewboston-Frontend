@@ -16,8 +16,6 @@ export const getCourses = (state: RootState) => state.courses;
 export const getExchangeOrders = (state: RootState) => state.exchangeOrders;
 export const getFollowers = (state: RootState) => state.followers;
 export const getFollowings = (state: RootState) => state.followings;
-export const getInvitationLimits = (state: RootState) => state.invitationLimits;
-export const getInvitations = (state: RootState) => state.invitations;
 export const getLectures = (state: RootState) => state.lectures;
 export const getManager = (state: RootState) => state.manager;
 export const getMessages = (state: RootState) => state.messages;
