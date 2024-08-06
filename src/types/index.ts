@@ -9,7 +9,6 @@ import {CreateContributionRequest} from 'types/api/contributions';
 import {CreateConversationRequest} from 'types/api/conversations';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/follower';
-import {CreateInvitationRequest} from 'types/api/invitations';
 import {CreateMessageRequest} from 'types/api/messages';
 import {CreateOpenAIImageRequest, CreateOpenAIImageResponse} from 'types/api/openaiImages';
 import {CreateOrderRequest} from 'types/api/orders';
@@ -42,8 +41,6 @@ import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
 import {Followers, Follower} from 'types/follower';
 import {GitHubUser} from 'types/githubUsers';
-import {Invitation, Invitations} from 'types/invitations';
-import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Issue} from 'types/issues';
 import {Item} from 'types/items';
 import {LearnMore} from './learnMore';
@@ -105,7 +102,6 @@ export {
   CreateConversationRequest,
   CreateExchangeOrderRequest,
   CreateFollowerRequest,
-  CreateInvitationRequest,
   CreateMessageRequest,
   CreateOpenAIImageRequest,
   CreateOpenAIImageResponse,
@@ -126,10 +122,6 @@ export {
   GenericVoidFunction,
   GitHubUser,
   IaReadSerializer,
-  Invitation,
-  InvitationLimit,
-  InvitationLimits,
-  Invitations,
   Issue,
   Item,
   LearnMore,
