@@ -1,23 +1,22 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Formik, FormikHelpers, Form} from 'formik';
-import orderBy from 'lodash/orderBy';
-import Icon from '@mdi/react';
 import EmojiPicker from 'emoji-picker-react';
+import Icon from '@mdi/react';
+import {Formik, FormikHelpers, Form} from 'formik';
 import {mdiChevronDown, mdiChevronUp, mdiEmoticonOutline, mdiPlusCircle, mdiSend} from '@mdi/js';
 
 import Coin from 'assets/coin.svg';
-
-import {ButtonColor, ButtonType} from 'components/Button';
-import {createComment} from 'dispatchers/comments';
-import {useToggle} from 'hooks';
-import {breakpoints} from 'styles';
-import CoreSelectModal from 'modals/CoreSelectModal';
-import {getComments, getManager} from 'selectors/state';
-import {AppDispatch, Comment as TComment, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
-import yup from 'utils/yup';
 import Comment from './Comment';
+import CoreSelectModal from 'modals/CoreSelectModal';
+import yup from 'utils/yup';
+import {AppDispatch, Comment as TComment, SFC} from 'types';
+import {ButtonColor, ButtonType} from 'components/Button';
+import {breakpoints} from 'styles';
+import {createComment} from 'dispatchers/comments';
+import {displayErrorToast} from 'utils/toasts';
+import {getComments, getManager} from 'selectors/state';
+import {useToggle} from 'hooks';
+
 import * as S from './Styles';
 
 export interface CommentsProps {
@@ -45,7 +44,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   type FormValues = typeof initialValues;
 
   const commentList = useMemo(() => {
-    const _comments = orderBy(Object.values(comments), ['created_date'], ['desc']);
+    const _comments = Object.values(comments);
     return _comments.filter(({post}) => post === postId);
   }, [comments, postId]);
 
