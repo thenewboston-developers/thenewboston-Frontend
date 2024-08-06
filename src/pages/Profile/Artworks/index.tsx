@@ -9,7 +9,6 @@ import InfiniteScroll from 'components/InfiniteScroll';
 import {AppDispatch, SFC} from 'types';
 import {getArtworks as _getArtworks, resetArtworks as _resetArtworks} from 'dispatchers/artworks';
 import {getArtworks as getArtworksState} from 'selectors/state';
-import logger from 'utils/logger';
 
 import * as S from './Styles';
 
@@ -27,7 +26,6 @@ const Artworks: SFC = ({className}) => {
     (async () => {
       dispatch(_resetArtworks());
       await dispatch(_getArtworks({owner: userId}));
-      logger.error(Error('testing: Hello world'));
     })();
   }, [dispatch, userId]);
 
@@ -40,6 +38,7 @@ const Artworks: SFC = ({className}) => {
       await dispatch(_getArtworks());
     }
   };
+
   const getSkeleton = (n: number) => (
     <S.ArtworkCards>
       <ArtworkCardSkeleton dataLength={n} />
