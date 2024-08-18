@@ -16,6 +16,17 @@ export const Content = styled.div`
   font-size: 15px;
   margin-bottom: 16px;
   margin-top: 8px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+`;
+
+export const TextContent = styled.div`
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+`;
+
+export const LongContent = styled.span`
   word-break: break-all;
 `;
 
@@ -65,10 +76,11 @@ export const Dot = styled.div`
   color: ${colors.secondary};
   font-size: 16px;
 `;
+
 export const BoxLeft = styled.div`
   display: flex;
   gap: 10px;
-  margin: 10px 0px;
+  margin: 10px 0;
 `;
 
 export const TextLink = styled.button`
@@ -78,21 +90,6 @@ export const TextLink = styled.button`
   cursor: pointer;
   font-weight: 600;
   outline: none;
-`;
-
-export const Value = styled.span`
-  align-items: center;
-  color: ${colors.black};
-  display: flex;
-  font-size: 14px;
-  font-weight: ${fonts.weight.bold};
-  gap: 5px;
-`;
-
-export const TNBLogo = styled.img`
-  border-radius: 50%;
-  margin: 0 3px;
-  width: 20px;
 `;
 
 export const Avatar = styled(UAvatar)`
@@ -124,8 +121,4 @@ export const Username = styled.div<{$id: number | null}>`
 
 export const Text = styled.div`
   display: flex;
-`;
-
-export const TextContent = styled.div`
-  white-space: pre-wrap;
 `;

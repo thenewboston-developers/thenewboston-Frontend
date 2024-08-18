@@ -93,6 +93,16 @@ const Post: SFC<PostProps> = ({className, post}) => {
     );
   };
 
+  const renderContent = () => {
+    const words = content.split(' ');
+    return words.map((word, index) => {
+      if (word.length > 30) {
+        return <S.LongContent key={index}>{word} </S.LongContent>;
+      }
+      return word + ' ';
+    });
+  };
+
   return (
     <>
       <S.Container className={className}>
@@ -115,14 +125,14 @@ const Post: SFC<PostProps> = ({className, post}) => {
             {!showFullContent || content.length <= 400 ? (
               <>
                 <S.TextContent>
-                  {content}
+                  {renderContent()}
                   {content.length > 400 && <S.TextLink onClick={toggleShowFullContent}>See less</S.TextLink>}
                 </S.TextContent>
               </>
             ) : (
               <>
                 <S.TextContent>
-                  {`${content.slice(0, 400)}...`}
+                  {renderContent().slice(0, 400)}...
                   <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
                 </S.TextContent>
               </>

@@ -14,6 +14,11 @@ export const Container = styled.div`
 export const Content = styled.div`
   line-height: 1.3;
   margin-top: 12px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+`;
+
+export const LongContent = styled.span`
   word-break: break-all;
 `;
 
@@ -32,10 +37,11 @@ export const DropdownMenu = styled(UDropdownMenu)``;
 
 export const CommentSection = styled.div`
   background: ${colors.background};
-  border-radius: 0px 14px 14px 14px;
+  border-radius: 0 14px 14px 14px;
   flex-grow: 1;
   padding: 14px;
 `;
+
 export const HeadSection = styled.div`
   align-items: center;
   display: flex;
