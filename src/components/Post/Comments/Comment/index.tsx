@@ -70,6 +70,16 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
     return <S.PriceMini price={price_amount} coreId={price_core} />;
   };
 
+  const renderContent = () => {
+    const words = content.split(' ');
+    return words.map((word, index) => {
+      if (word.length > 30) {
+        return <S.LongContent key={index}>{word} </S.LongContent>;
+      }
+      return word + ' ';
+    });
+  };
+
   return (
     <>
       <S.Container className={className}>
@@ -85,11 +95,9 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
               {renderDropdownMenu()}
             </S.Text>
           </S.HeadSection>
-          <div>
-            <S.Content>
-              <Linkify>{content}</Linkify>
-            </S.Content>
-          </div>
+          <S.Content>
+            <Linkify>{renderContent()}</Linkify>
+          </S.Content>
         </S.CommentSection>
       </S.Container>
       {commentEditModalIsOpen ? <CommentEditModal close={toggleCommentEditModal} comment={comment} /> : null}
