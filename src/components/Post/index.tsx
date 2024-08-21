@@ -25,6 +25,7 @@ import {shortDate} from 'utils/dates';
 import {useToggle} from 'hooks';
 
 import * as S from './Styles';
+import Reaction from './Reaction';
 
 export interface PostProps {
   post: TPost;
@@ -134,6 +135,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         <Line />
         <S.Div>
           <S.BoxLeft>
+            <Reaction postId={post.id} />
             <S.Button
               text="Comment"
               color={ButtonColor.secondary}
