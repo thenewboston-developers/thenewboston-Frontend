@@ -3,15 +3,18 @@ import EmojiPicker from 'emoji-picker-react';
 import {mdiThumbUpOutline} from '@mdi/js';
 
 import {SFC} from 'types';
+import {PostReactionSerializer} from 'types/api/post_reaction';
 import {breakpoints} from 'styles';
 
 import * as S from './Styles';
 
 export interface ReactionProps {
   postId: number;
+  userReaction: string;
+  userReactions: PostReactionSerializer[];
 }
 
-const Reaction: SFC<ReactionProps> = ({}) => {
+const Reaction: SFC<ReactionProps> = ({userReaction}) => {
   const [isOpenEmojiPicker, setIsOpenEmojiPicker] = useState(false);
   const [isMobileDevice, setIsMobileDevice] = useState<boolean>(window.innerWidth <= parseInt(breakpoints.mini));
   const emojiBoxRef = useRef<HTMLDivElement>(null);
@@ -54,14 +57,14 @@ const Reaction: SFC<ReactionProps> = ({}) => {
     }
   }, [isOpenEmojiPicker]);
 
-  const emojiIcon = (
+  const emojiIcon = userReaction ? (
+    <S.EmojiIcon>
+      {userReaction} <span>Reacted</span>
+    </S.EmojiIcon>
+  ) : (
     <S.EmojiIcon>
       <S.Icon path={mdiThumbUpOutline} size="20px" />
       <span>Like</span>
-    </S.EmojiIcon>
-  ) || (
-    <S.EmojiIcon>
-      😢 <span>Reacted</span>
     </S.EmojiIcon>
   );
 

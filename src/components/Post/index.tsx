@@ -135,7 +135,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         <Line />
         <S.Div>
           <S.BoxLeft>
-            <Reaction postId={post.id} />
+            <Reaction postId={post.id} userReaction={post.user_reaction} userReactions={post.user_reactions} />
             <S.Button
               text="Comment"
               color={ButtonColor.secondary}
