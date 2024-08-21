@@ -3,10 +3,13 @@ import EmojiPicker from 'emoji-picker-react';
 import {mdiThumbUpOutline} from '@mdi/js';
 
 import {SFC} from 'types';
-import {PostReactionSerializer} from 'types/api/post_reaction';
+import {PostReactionSerializer, AppDispatch} from 'types';
+import {createPostReaction} from 'dispatchers/reactions';
 import {breakpoints} from 'styles';
 
 import * as S from './Styles';
+import {useDispatch} from 'react-redux';
+import {displayErrorToast} from 'utils/toasts';
 
 export interface ReactionProps {
   postId: number;
@@ -14,12 +17,12 @@ export interface ReactionProps {
   userReactions: PostReactionSerializer[];
 }
 
-const Reaction: SFC<ReactionProps> = ({userReaction}) => {
+const Reaction: SFC<ReactionProps> = ({userReaction, postId}) => {
   const [isOpenEmojiPicker, setIsOpenEmojiPicker] = useState(false);
   const [isMobileDevice, setIsMobileDevice] = useState<boolean>(window.innerWidth <= parseInt(breakpoints.mini));
   const emojiBoxRef = useRef<HTMLDivElement>(null);
   const emojiButtonRef = useRef<HTMLButtonElement>(null);
-  // const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (isOpenEmojiPicker && document.querySelectorAll('.epr_-3yva2a').length > 0) {
@@ -57,6 +60,20 @@ const Reaction: SFC<ReactionProps> = ({userReaction}) => {
     }
   }, [isOpenEmojiPicker]);
 
+  const handleEmojiSelection = async (emoji: string) => {
+    try {
+      await dispatch(
+        createPostReaction({
+          post: postId,
+          reaction: emoji,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      displayErrorToast('Error in reacting to post');
+    }
+  };
+
   const emojiIcon = userReaction ? (
     <S.EmojiIcon>
       {userReaction} <span>Reacted</span>
@@ -85,7 +102,8 @@ const Reaction: SFC<ReactionProps> = ({userReaction}) => {
             width={isMobileDevice ? 250 : 280}
             allowExpandReactions={false}
             onReactionClick={(e) => {
-              console.log('EMOJI: ', e, e.emoji);
+              handleEmojiSelection(e.emoji);
+              setIsOpenEmojiPicker(false);
             }}
           />
         </S.EmojiBox>

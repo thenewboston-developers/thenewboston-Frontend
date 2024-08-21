@@ -1,6 +1,4 @@
-import {CommentReadSerializer} from 'types/api/comments';
-import {PostReactionSerializer} from 'types/api/post_reaction';
-import {UserReadSerializer} from 'types/api/users';
+import {PostReactionSerializer, CommentReadSerializer, UserReadSerializer} from 'types';
 import {CreatedModified} from 'types/createdModified';
 
 export interface PostReadSerializer extends CreatedModified {

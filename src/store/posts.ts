@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {POSTS} from 'constants/store';
-import {PaginatedResponse, Post, Posts} from 'types';
+import {PaginatedResponse, Post, Posts, PostReactionCreateRequest} from 'types';
 
 const initialState: Posts = {
   hasMore: false,
@@ -28,6 +28,12 @@ const posts = createSlice({
         state.posts.unshift(payload);
       }
     },
+    setPostUserReaction: (state, {payload}: PayloadAction<PostReactionCreateRequest>) => {
+      const existingPostIndex = state.posts.findIndex((post) => post.id === payload.post);
+      if (existingPostIndex >= 0) {
+        state.posts[existingPostIndex].user_reaction = payload.reaction;
+      }
+    },
     setPosts: (state, {payload}: PayloadAction<PaginatedResponse<Post>>) => {
       state.hasMore = !!payload.next;
       state.isLoading = false;
@@ -43,5 +49,5 @@ const posts = createSlice({
   },
 });
 
-export const {setPost, setPosts, unsetPost, startLoading, resetPosts} = posts.actions;
+export const {setPost, setPosts, unsetPost, startLoading, resetPosts, setPostUserReaction} = posts.actions;
 export default posts.reducer;
