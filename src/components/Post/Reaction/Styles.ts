@@ -48,13 +48,8 @@ export const InputBox = styled.div`
 `;
 
 export const Icon = styled(UIcon)`
-  color: ${colors.secondary};
-  margin-left: 12px;
-
-  &:hover {
-    color: ${colors.backgroundDark};
-    cursor: pointer;
-  }
+  margin-right: 7px;
+  vertical-align: middle;
 `;
 
 export const IconContainer = styled.div`

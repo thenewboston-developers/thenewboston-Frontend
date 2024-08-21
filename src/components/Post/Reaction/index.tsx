@@ -1,6 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
 import EmojiPicker from 'emoji-picker-react';
-import Icon from '@mdi/react';
 import {mdiThumbUpOutline} from '@mdi/js';
 
 import {SFC} from 'types';
@@ -57,7 +56,7 @@ const Reaction: SFC<ReactionProps> = ({}) => {
 
   const emojiIcon = (
     <S.EmojiIcon>
-      <Icon path={mdiThumbUpOutline} size="20px" />
+      <S.Icon path={mdiThumbUpOutline} size="20px" />
       <span>Like</span>
     </S.EmojiIcon>
   ) || (
