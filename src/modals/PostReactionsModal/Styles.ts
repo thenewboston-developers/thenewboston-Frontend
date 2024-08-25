@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import {Textarea as UTextarea} from 'components/FormElements';
 import UModal from 'components/Modal';
 
 export const Bumper = styled.div`
@@ -9,11 +8,6 @@ export const Bumper = styled.div`
 export const Modal = styled(UModal)`
   width: 250px;
   height: 250px;
-`;
-export const Textarea = styled(UTextarea)`
-  padding-right: 43px;
-  max-height: 350px;
-  overflow-y: auto;
 `;
 
 export const Div = styled.div`
