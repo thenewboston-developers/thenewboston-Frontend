@@ -24,7 +24,7 @@ export const Button = styled(UButton)`
 `;
 
 export const Container = styled.div`
-  margin-top: 16px;
+  margin-top: 0.4rem;
 `;
 
 export const ContentInput = styled(UInlineInput)<{$isMobileDevice: boolean | false}>`
@@ -111,6 +111,10 @@ export const CommentBtn = styled(UButton)`
   width: 600px;
 `;
 
+export const CenterDiv = styled.div`
+  text-align: center;
+`;
+
 export const Wrapper = styled.div`
   display: flex;
   gap: 10px;
@@ -119,17 +123,19 @@ export const Wrapper = styled.div`
   right: 10px;
 `;
 
+export const ClickableAction = styled.a`
+  color: #0070e0;
+  font-size: 12px;
+  vertical-align: -webkit-baseline-middle;
+  text-decoration-line: underline;
+`;
+
 export const Content = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   margin: 30px 0px 10px 0px;
-`;
-
-export const Div = styled.div`
-  border: 1px solid ${colors.border};
-  width: 100%;
 `;
 
 export const EmojiIcon = styled.span`

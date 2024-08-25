@@ -10,6 +10,9 @@ import {breakpoints} from 'styles';
 import * as S from './Styles';
 import {useDispatch} from 'react-redux';
 import {displayErrorToast} from 'utils/toasts';
+import {formatToDynamicDigits} from 'utils/numbers';
+import {PostReactionModal} from 'modals/PostReactionsModal';
+import {useToggle} from 'hooks';
 
 export interface ReactionProps {
   postId: number;
@@ -17,7 +20,8 @@ export interface ReactionProps {
   userReactions: PostReactionSerializer[];
 }
 
-const Reaction: SFC<ReactionProps> = ({userReaction, postId}) => {
+const Reaction: SFC<ReactionProps> = ({userReaction, postId, userReactions}) => {
+  const [showUserReactions, toggleShowUserReactions] = useToggle(false);
   const [isOpenEmojiPicker, setIsOpenEmojiPicker] = useState(false);
   const [isMobileDevice, setIsMobileDevice] = useState<boolean>(window.innerWidth <= parseInt(breakpoints.mini));
   const emojiBoxRef = useRef<HTMLDivElement>(null);
@@ -86,30 +90,42 @@ const Reaction: SFC<ReactionProps> = ({userReaction, postId}) => {
   );
 
   return (
-    <>
-      <S.EmojiButton
-        ref={emojiButtonRef}
-        $isOpenEmojiPicker={isOpenEmojiPicker}
-        onClick={() => setIsOpenEmojiPicker(!isOpenEmojiPicker)}
-        type="button"
-      >
-        <S.EmojiBox ref={emojiBoxRef}>
-          <EmojiPicker
-            open={isOpenEmojiPicker}
-            searchDisabled
-            reactionsDefaultOpen
-            skinTonesDisabled
-            width={isMobileDevice ? 250 : 280}
-            allowExpandReactions={false}
-            onReactionClick={(e) => {
-              handleEmojiSelection(e.emoji);
-              setIsOpenEmojiPicker(false);
-            }}
-          />
-        </S.EmojiBox>
-        {emojiIcon}
-      </S.EmojiButton>
-    </>
+    <S.Container>
+      <div>
+        <S.EmojiButton
+          ref={emojiButtonRef}
+          $isOpenEmojiPicker={isOpenEmojiPicker}
+          onClick={() => setIsOpenEmojiPicker(!isOpenEmojiPicker)}
+          type="button"
+        >
+          <S.EmojiBox ref={emojiBoxRef}>
+            <EmojiPicker
+              open={isOpenEmojiPicker}
+              searchDisabled
+              reactionsDefaultOpen
+              skinTonesDisabled
+              width={isMobileDevice ? 250 : 280}
+              allowExpandReactions={false}
+              onReactionClick={(e) => {
+                handleEmojiSelection(e.emoji);
+                setIsOpenEmojiPicker(false);
+              }}
+            />
+          </S.EmojiBox>
+          {emojiIcon}
+        </S.EmojiButton>
+      </div>
+      {userReactions.length ? (
+        <>
+          <S.CenterDiv>
+            <S.ClickableAction onClick={toggleShowUserReactions}>
+              {formatToDynamicDigits(userReactions.length)} reactions
+            </S.ClickableAction>
+          </S.CenterDiv>
+          {showUserReactions ? <PostReactionModal reactions={userReactions} close={toggleShowUserReactions} /> : null}
+        </>
+      ) : null}
+    </S.Container>
   );
 };
 
