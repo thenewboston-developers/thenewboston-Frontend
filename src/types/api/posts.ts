@@ -1,5 +1,4 @@
-import {CommentReadSerializer} from 'types/api/comments';
-import {UserReadSerializer} from 'types/api/users';
+import {PostReactionSerializer, CommentReadSerializer, UserReadSerializer} from 'types';
 import {CreatedModified} from 'types/createdModified';
 
 export interface PostReadSerializer extends CreatedModified {
@@ -8,4 +7,6 @@ export interface PostReadSerializer extends CreatedModified {
   id: number;
   image: string | null;
   owner: UserReadSerializer;
+  user_reaction: string;
+  user_reactions: PostReactionSerializer[];
 }

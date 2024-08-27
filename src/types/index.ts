@@ -21,6 +21,7 @@ import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {PostReadSerializer} from 'types/api/posts';
 import {UpdateNotificationRequest} from 'types/api/notifications';
 import {UserStatsSerializer} from 'types/api/userStats';
+import {PostReactionCreateRequest, PostReactionSerializer} from 'types/api/postReaction';
 
 import {Address, Addresses} from 'types/addresses';
 import {AppDispatch, RootState} from 'types/store';
@@ -171,4 +172,6 @@ export {
   Wires,
   WithdrawRequest,
   WithdrawResponse,
+  PostReactionCreateRequest,
+  PostReactionSerializer,
 };
