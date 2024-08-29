@@ -115,7 +115,7 @@ const Reaction: SFC<ReactionProps> = ({userReaction, postId, userReactions}) => 
           {emojiIcon}
         </S.EmojiButton>
       </div>
-      {userReactions.length ? (
+      {userReactions?.length ? (
         <>
           <S.CenterDiv>
             <S.ClickableAction onClick={toggleShowUserReactions}>
