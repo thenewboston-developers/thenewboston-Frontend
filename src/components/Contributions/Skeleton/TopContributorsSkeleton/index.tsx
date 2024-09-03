@@ -4,6 +4,7 @@ import PanelHeading from 'components/PanelHeading';
 import Skeleton from 'components/Skeleton';
 import {Row, Col} from 'styles/components/GridStyle';
 import {SFC} from 'types';
+import Filters from './Filters';
 
 import * as S from './Styles';
 
@@ -28,9 +29,20 @@ const TopContributorsSkeleton: SFC = () => {
     </React.Fragment>
   );
 
+  const headerLabel = 'Top Contributors';
+
+  const heading = (
+    <div>
+      {headerLabel}
+      <S.FilterSpan>
+        <Filters />
+      </S.FilterSpan>
+    </div>
+  );
+
   const renderContent = () => (
     <S.Container>
-      <PanelHeading heading="Top Contributors" />
+      <PanelHeading heading={heading} />
       <S.ContributorCardContainer>
         {[...Array(CONTRIBUTORS_COUNT)].map((_, index) => getContributor(index))}
       </S.ContributorCardContainer>
