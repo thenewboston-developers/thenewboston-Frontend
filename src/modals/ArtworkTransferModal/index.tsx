@@ -2,8 +2,7 @@ import React, {useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
-import Button, {ButtonType} from 'components/Button';
-import {Input} from 'components/FormElements';
+import {ButtonType} from 'components/Button';
 import {getArtwork} from 'dispatchers/artworks';
 import {createArtworkTransfer} from 'dispatchers/artworkTransfers';
 import {ToastType} from 'enums';
@@ -11,6 +10,7 @@ import {AppDispatch, Artwork, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import * as S from './Styles';
+import UsersDropdown from 'components/Users/UsersDropdown';
 
 interface ArtworkTransferModalProps {
   artwork: Artwork;
@@ -55,10 +55,19 @@ const ArtworkTransferModal: SFC<ArtworkTransferModalProps> = ({artwork, classNam
   return (
     <S.Modal className={className} close={close} header="Transfer Artwork">
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
-        {({dirty, errors, isSubmitting, isValid, touched}) => (
+        {({dirty, errors, isSubmitting, isValid, touched, setFieldValue}) => (
           <Form>
-            <Input errors={errors} label="New Owner ID" name="new_owner" touched={touched} />
-            <Button
+            <UsersDropdown
+              label="New Owner"
+              name="new_owner"
+              placeholder="Select new owner..."
+              handleSelect={(userId) => {
+                setFieldValue('new_owner', userId);
+              }}
+              touched={touched.new_owner || false}
+              error={errors.new_owner || null}
+            />
+            <S.Button
               dirty={dirty}
               disabled={isSubmitting}
               isSubmitting={isSubmitting}
