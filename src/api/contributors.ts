@@ -4,9 +4,14 @@ import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/contributions/top_contributors`;
 
-export const getTopContributors = async (): Promise<Contributors> => {
+export interface GetTopContributorsParams {
+  daysBack: number | null;
+}
+
+export const getTopContributors = async (params: GetTopContributorsParams): Promise<Contributors> => {
   try {
     const response = await axios.get<Contributors>(BASE_URL, {
+      params,
       ...authorizationHeaders(),
     });
     return response.data;

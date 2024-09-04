@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import UDropdownMenu from 'components/DropdownMenu';
 
 import UUserLabel from 'components/UserLabel';
 import {breakpoints, fonts} from 'styles';
@@ -58,4 +59,13 @@ export const UserLabelContainer = styled.div`
 
 export const UserLabel = styled(UUserLabel)`
   flex-grow: 1;
+`;
+
+export const DropdownMenu = styled(UDropdownMenu)`
+  display: inline-block;
+  vertical-align: middle;
+`;
+
+export const FilterSpan = styled.span`
+  float: right;
 `;

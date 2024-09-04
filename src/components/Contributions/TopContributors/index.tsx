@@ -1,4 +1,4 @@
-import {useEffect, FC} from 'react';
+import {useEffect, FC, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import CoreLogo from 'components/CoreLogo';
@@ -15,12 +15,15 @@ import {
 } from 'dispatchers/contributors';
 
 import * as S from './Styles';
+import {CONTRIBUTION_DURATION_DAYS} from './constants';
+import Filters from './Filters';
 
 interface TopContributorsProps {
   className?: string;
 }
 
 const TopContributors: FC<TopContributorsProps> = ({className}) => {
+  const [daysBack, setDaysBack] = useState<number | null>(CONTRIBUTION_DURATION_DAYS.WEEK);
   const dispatch = useDispatch<AppDispatch>();
   const {items, isLoading} = useSelector(getContributorsState);
   const topContributors = items;
@@ -29,13 +32,13 @@ const TopContributors: FC<TopContributorsProps> = ({className}) => {
     (async () => {
       try {
         dispatch(_resetContributors());
-        await dispatch(_getTopContributors());
+        await dispatch(_getTopContributors(daysBack));
       } catch (error) {
         console.error(error);
         displayErrorToast('Error fetching top contributors');
       }
     })();
-  }, [dispatch]);
+  }, [dispatch, daysBack]);
 
   const renderContributorList = () => {
     if (topContributors.length === 0 && !isLoading) {
@@ -81,11 +84,20 @@ const TopContributors: FC<TopContributorsProps> = ({className}) => {
     return <TopContributorsSkeleton />;
   }
 
+  const headerLabel = topContributors.length ? `Top ${topContributors.length} Contributors` : 'Top Contributors';
+
+  const heading = (
+    <div>
+      {headerLabel}
+      <S.FilterSpan>
+        <Filters onClick={(value: number | null) => setDaysBack(value)} value={daysBack} />
+      </S.FilterSpan>
+    </div>
+  );
+
   return (
     <section className={className}>
-      <PanelHeading
-        heading={topContributors.length ? `Top ${topContributors.length} Contributors` : 'Top Contributors'}
-      />
+      <PanelHeading heading={heading} />
       {renderContributorList()}
     </section>
   );

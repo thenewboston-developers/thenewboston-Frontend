@@ -21,3 +21,7 @@ export const Line = styled(ULine)`
 export const NameContainer = styled.div`
   margin-top: 7px;
 `;
+
+export const FilterSpan = styled.span`
+  float: right;
+`;
