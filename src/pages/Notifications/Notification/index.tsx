@@ -1,6 +1,6 @@
 import {ReactNode} from 'react';
 import {Link} from 'react-router-dom';
-import {mdiBrushOutline} from '@mdi/js';
+import {mdiBrushOutline, mdiContentCopy} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import {Notification as TNotification, SFC} from 'types';
@@ -28,10 +28,10 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
 
   const renderArtworkPurchaseNotification = () => {
     return (
-      <S.ArtworkPurchaseNotificationContainer>
+      <S.NotificationContainer>
         <Link to={`/profile/${notification.payload.buyer.id}`}>
           <Avatar src={notification.payload.buyer.avatar} size="45px" />
-          <S.IconBrush path={mdiBrushOutline} size="23px" />
+          <S.Icon path={mdiBrushOutline} size="23px" />
         </Link>
         <S.TextContainer>
           <S.Link to={`/profile/${notification.payload.buyer.id}`}>{notification.payload.buyer.username}</S.Link>{' '}
@@ -40,16 +40,16 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
           <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
         </S.TextContainer>
         {renderRedDot()}
-      </S.ArtworkPurchaseNotificationContainer>
+      </S.NotificationContainer>
     );
   };
 
   const renderPostCommentNotification = () => {
     return (
-      <S.ArtworkPurchaseNotificationContainer>
+      <S.NotificationContainer>
         <Link to={`/profile/${notification.payload.commenter.id}`}>
           <Avatar src={notification.payload.commenter.avatar} size="45px" />
-          <S.IconBrush path={mdiBrushOutline} size="23px" />
+          <S.Icon path={mdiContentCopy} size="23px" />
         </Link>
         <S.TextContainer>
           <S.Link to={`/profile/${notification.payload.commenter.id}`}>
@@ -60,7 +60,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
           <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
         </S.TextContainer>
         {renderRedDot()}
-      </S.ArtworkPurchaseNotificationContainer>
+      </S.NotificationContainer>
     );
   };
 
