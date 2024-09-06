@@ -5,7 +5,7 @@ import UDot from 'components/Dot';
 import styled from 'styled-components';
 import {colors, fonts} from 'styles';
 
-export const ArtworkPurchaseNotificationContainer = styled.div`
+export const NotificationContainer = styled.div`
   align-items: center;
   display: flex;
   padding: 0 16px;
@@ -34,7 +34,7 @@ export const DotContainer = styled.div`
 
 export const Dot = styled(UDot)``;
 
-export const IconBrush = styled(UIcon)`
+export const Icon = styled(UIcon)`
   background: ${colors.backgroundDark};
   border-radius: 50%;
   border: 1px solid ${colors.border};
