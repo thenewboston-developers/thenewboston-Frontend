@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import EmptyPage from 'components/EmptyPage';
@@ -12,12 +12,14 @@ import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/post
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
 
 import * as S from './Styles';
+import ScrollToTopButton from 'components/ScrollUpButton';
 
 const Feed: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
   const posts = useSelector(getPosts);
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
+  const scrollableDivRef = useRef<HTMLDivElement | null>(null);
 
   const postList = useMemo(() => Object.values(posts), [posts]);
 
@@ -52,12 +54,14 @@ const Feed: SFC = ({className}) => {
     if (postList.length) {
       return (
         <InfiniteScroll
+          ref={scrollableDivRef}
           dataLength={postList.length}
           hasMore={hasMore}
           next={fetchMorePosts}
           heightMargin={0}
           loader={getSkeleton(1)}
         >
+          <ScrollToTopButton targetRef={scrollableDivRef} />
           <S.PostContainer>
             {postList.map((post) => (
               <Post key={post.id} post={post} />
