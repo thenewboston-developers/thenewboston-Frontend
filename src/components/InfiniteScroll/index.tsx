@@ -1,8 +1,6 @@
-import {ReactNode} from 'react';
+import {ReactNode, forwardRef} from 'react';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
-
 import Loader from 'components/Loader';
-import {SFC} from 'types';
 import * as S from './Styles';
 
 interface InfiniteScrollProps {
@@ -14,30 +12,25 @@ interface InfiniteScrollProps {
   next: () => void;
 }
 
-const InfiniteScroll: SFC<InfiniteScrollProps> = ({
-  children,
-  dataLength,
-  hasMore,
-  next,
-  heightMargin = 105,
-  loader = null,
-}) => {
-  const infiniteScrollComponentHeight = window.innerHeight - heightMargin;
+const InfiniteScroll = forwardRef<HTMLDivElement, InfiniteScrollProps>(
+  ({children, dataLength, hasMore, next, heightMargin = 105, loader = null}, ref) => {
+    const infiniteScrollComponentHeight = window.innerHeight - heightMargin;
 
-  return (
-    <S.InfiniteScrollContainer>
-      <InfiniteScrollComponent
-        className="infinite-scroll-component"
-        dataLength={dataLength}
-        hasMore={hasMore}
-        height={infiniteScrollComponentHeight}
-        loader={<S.LoaderContainer>{loader ? loader : <Loader size={24} />}</S.LoaderContainer>}
-        next={next}
-      >
-        {children}
-      </InfiniteScrollComponent>
-    </S.InfiniteScrollContainer>
-  );
-};
+    return (
+      <S.InfiniteScrollContainer ref={ref}>
+        <InfiniteScrollComponent
+          className="infinite-scroll-component"
+          dataLength={dataLength}
+          hasMore={hasMore}
+          height={infiniteScrollComponentHeight}
+          loader={<S.LoaderContainer>{loader ? loader : <Loader size={24} />}</S.LoaderContainer>}
+          next={next}
+        >
+          {children}
+        </InfiniteScrollComponent>
+      </S.InfiniteScrollContainer>
+    );
+  },
+);
 
 export default InfiniteScroll;
