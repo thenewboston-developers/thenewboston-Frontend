@@ -1,11 +1,11 @@
-import React, {useState, useEffect, useCallback, ReactElement} from 'react';
-import {mdiArrowUp} from '@mdi/js'; // Import your chosen icon (scroll up icon)
-import Icon from '@mdi/react'; // Assuming you're using @mdi/react for rendering icons
+import React, {useState, useEffect, useCallback} from 'react';
+import {mdiArrowUp} from '@mdi/js';
+import Icon from '@mdi/react';
 import * as S from './Styles';
 import {SFC} from 'types';
 
 interface ScrollToTopButtonProps {
-  targetRef: React.RefObject<HTMLDivElement>; // Type the ref prop
+  targetRef: React.RefObject<HTMLDivElement>;
 }
 
 const ScrollToTopButton: SFC<ScrollToTopButtonProps> = ({targetRef}) => {
