@@ -1,28 +1,19 @@
-import {useSelector} from 'react-redux';
 import {Outlet, useLocation, useNavigate, useParams} from 'react-router-dom';
-import {
-  mdiAccountArrowDownOutline,
-  mdiAccountArrowUpOutline,
-  mdiAccountBoxPlusOutline,
-  mdiBrushOutline,
-  mdiCardsOutline,
-} from '@mdi/js';
+import {mdiAccountArrowDownOutline, mdiAccountArrowUpOutline, mdiBrushOutline, mdiCardsOutline} from '@mdi/js';
 import Icon from '@mdi/react';
 
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
-import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
 import UserDetails from './UserDetails';
 import * as S from './Styles';
 
-type IconName = 'Artworks' | 'Followers' | 'Following' | 'Invitations' | 'Posts';
+type IconName = 'Artworks' | 'Followers' | 'Following' | 'Posts';
 
 const IconMapper = {
   Artworks: mdiBrushOutline,
   Followers: mdiAccountArrowDownOutline,
   Following: mdiAccountArrowUpOutline,
-  Invitations: mdiAccountBoxPlusOutline,
   Posts: mdiCardsOutline,
 };
 
@@ -30,7 +21,6 @@ const Layout: SFC = ({className}) => {
   const {id} = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const self = useSelector(getSelf);
   const userId = id ? parseInt(id, 10) : null;
 
   const renderTab = (displayName: IconName, url: string) => {
@@ -51,7 +41,6 @@ const Layout: SFC = ({className}) => {
         {renderTab('Artworks', `/profile/${userId}/artworks`)}
         {renderTab('Followers', `/profile/${userId}/followers`)}
         {renderTab('Following', `/profile/${userId}/following`)}
-        {userId === self.id ? renderTab('Invitations', `/profile/${userId}/invitations`) : null}
       </Tabs>
     );
   };
