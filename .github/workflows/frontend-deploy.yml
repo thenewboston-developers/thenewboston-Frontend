@@ -43,8 +43,7 @@ jobs:
       - name: Deploy build to S3
         run: |
           aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} \
-            --delete \
-            --acl public-read
+            --delete 
 
       # 6. Invalidate CloudFront to serve fresh assets
       - name: Invalidate CloudFront cache
