@@ -1,0 +1,55 @@
+# .github/workflows/frontend-deploy.yml
+name: React Frontend CI/CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      # These should be added as repo Secrets in GitHub:
+      REACT_APP_API_URL:  ${{ secrets.PROD_API_URL }}
+      REACT_APP_WS_URL:   ${{ secrets.PROD_WS_URL }}
+
+    steps:
+      # 1. Checkout your code
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # 3. Install deps & build production bundle                 
+      - name: Install dependencies & build
+        run: |
+          npm ci
+          npm run build
+        # REACT_APP_* vars are injected above, so the build picks up your prod URLs
+
+      # 4. Configure AWS CLI
+      - name: Configure AWS credentials                                 
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:            ${{ secrets.AWS_REGION }}
+
+      # 5. Sync build output to S3
+      - name: Deploy build to S3
+        run: |
+          aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} \
+            --delete \
+            --acl public-read
+
+      # 6. Invalidate CloudFront to serve fresh assets
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+ 
