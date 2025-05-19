@@ -9,7 +9,6 @@ const initialState: Manager = {
   activeCommentCore: null,
   activeConversationId: null,
   activeOrderAddressId: null,
-  activeProduct: null,
   activeWalletId: null,
   activeWalletTab: null,
 };

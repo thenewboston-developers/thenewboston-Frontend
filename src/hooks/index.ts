@@ -2,7 +2,6 @@ import useActiveAssetPair from 'hooks/useActiveAssetPair';
 import useActiveOrderAddress from 'hooks/useActiveOrderAddress';
 import useActiveWallet from 'hooks/useActiveWallet';
 import useAvailableWalletCores from 'hooks/useAvailableWalletCores';
-import useCartSeller from 'hooks/useCartSeller';
 import useCoreLogo from 'hooks/useCoreLogo';
 import useDefaultWallet from 'hooks/useDefaultWallet';
 import useEventListener from 'hooks/useEventListener';
@@ -18,7 +17,6 @@ export {
   useActiveOrderAddress,
   useActiveWallet,
   useAvailableWalletCores,
-  useCartSeller,
   useCoreLogo,
   useDefaultWallet,
   useEventListener,

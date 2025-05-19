@@ -4,7 +4,6 @@ import {
   mdiAccountArrowDownOutline,
   mdiAccountArrowUpOutline,
   mdiAccountBoxPlusOutline,
-  mdiBrushOutline,
   mdiCardsOutline,
 } from '@mdi/js';
 import Icon from '@mdi/react';
@@ -16,10 +15,9 @@ import {SFC} from 'types';
 import UserDetails from './UserDetails';
 import * as S from './Styles';
 
-type IconName = 'Artworks' | 'Followers' | 'Following' | 'Invitations' | 'Posts';
+type IconName = 'Followers' | 'Following' | 'Invitations' | 'Posts';
 
 const IconMapper = {
-  Artworks: mdiBrushOutline,
   Followers: mdiAccountArrowDownOutline,
   Following: mdiAccountArrowUpOutline,
   Invitations: mdiAccountBoxPlusOutline,
@@ -48,7 +46,6 @@ const Layout: SFC = ({className}) => {
     return (
       <Tabs>
         {renderTab('Posts', `/profile/${userId}`)}
-        {renderTab('Artworks', `/profile/${userId}/artworks`)}
         {renderTab('Followers', `/profile/${userId}/followers`)}
         {renderTab('Following', `/profile/${userId}/following`)}
         {userId === self.id ? renderTab('Invitations', `/profile/${userId}/invitations`) : null}

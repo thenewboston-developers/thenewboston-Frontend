@@ -2,7 +2,6 @@ import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Route, Routes, useParams} from 'react-router-dom';
 
-import Artworks from './Artworks';
 import Follower from './Follower';
 import Invitations from './Invitations';
 import Layout from './Layout';
@@ -50,7 +49,6 @@ const Profile: SFC = ({className}) => {
         <Route element={<Layout />}>
           {/* TODO: replace hardcoded paths with constants */}
           <Route index element={<Posts />} />
-          <Route path="/artworks" element={<Artworks />} />
           <Route path="/following" element={<Follower type={FollowerType.FOLLOWING} />} />
           <Route path="/followers" element={<Follower type={FollowerType.FOLLOWERS} />} />
           <Route path="/invitations" element={<Invitations />} />

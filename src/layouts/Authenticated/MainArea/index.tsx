@@ -6,7 +6,6 @@ import {
   PATH_DEFAULT,
   PATH_EXCHANGE,
   PATH_FEED,
-  PATH_IA,
   PATH_NOTIFICATIONS,
   PATH_PROFILE,
   PATH_WALLETS,
@@ -14,7 +13,6 @@ import {
 import Cores from 'pages/Cores';
 import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
-import Ia from 'pages/Ia';
 import Logout from 'components/Logout';
 import Notifications from 'pages/Notifications';
 import Profile from 'pages/Profile';
@@ -31,7 +29,6 @@ const MainArea: SFC = ({className}) => {
         <Route path={PATH_CURRENCIES} element={<Cores />} />
         <Route path={PATH_EXCHANGE} element={<Exchange />} />
         <Route path={PATH_FEED} element={<Feed />} />
-        <Route path={PATH_IA} element={<Ia />} />
         <Route path={PATH_NOTIFICATIONS} element={<Notifications />} />
         <Route path={PATH_PROFILE} element={<Profile />} />
         <Route path={PATH_AUTHENTICATION.LOGOUT} element={<Logout />} />

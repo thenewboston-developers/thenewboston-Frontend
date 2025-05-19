@@ -5,7 +5,6 @@ import {
   mdiBell,
   mdiCircleMultipleOutline,
   mdiExitToApp,
-  mdiFaceWoman,
   mdiHome,
   mdiSwapHorizontalCircleOutline,
   mdiWalletBifoldOutline,
@@ -34,7 +33,6 @@ const LeftNav: SFC = ({className}) => {
         <MenuLink icon={mdiCircleMultipleOutline} rootPath="/currencies" text="Currencies" to="/currencies" />
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
         <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
-        <MenuLink icon={mdiFaceWoman} rootPath="/ia" text="Ia" to="/ia" />
         <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications">
           <BadgeCount items={notificationsList} countFunction={getUnreadNotificationsCount} />
         </MenuLink>
