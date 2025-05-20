@@ -1,11 +1,6 @@
 import {useSelector} from 'react-redux';
 import {Outlet, useLocation, useNavigate, useParams} from 'react-router-dom';
-import {
-  mdiAccountArrowDownOutline,
-  mdiAccountArrowUpOutline,
-  mdiAccountBoxPlusOutline,
-  mdiCardsOutline,
-} from '@mdi/js';
+import {mdiAccountArrowDownOutline, mdiAccountArrowUpOutline, mdiAccountBoxPlusOutline, mdiCardsOutline} from '@mdi/js';
 import Icon from '@mdi/react';
 
 import Tab from 'components/Tab';

@@ -28,7 +28,6 @@ import {Core, Cores} from 'types/cores';
 import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
 import {Followers, Follower} from 'types/follower';
-import {GitHubUser} from 'types/githubUsers';
 import {Invitation, Invitations} from 'types/invitations';
 import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Issue} from 'types/issues';
@@ -62,20 +61,17 @@ export {
   Comment,
   CommentReadSerializer,
   Comments,
-
   Conversation,
   Conversations,
   Core,
   Cores,
   CreateAddressRequest,
-
   CreateCommentRequest,
   CreateConversationRequest,
   CreateExchangeOrderRequest,
   CreateFollowerRequest,
   CreateInvitationRequest,
   CreateMessageRequest,
-
   CreateUserRequest,
   CreateUserResponse,
   CreateWalletRequest,
@@ -89,7 +85,6 @@ export {
   Followers,
   GenericFunction,
   GenericVoidFunction,
-  GitHubUser,
   Invitation,
   InvitationLimit,
   InvitationLimits,
