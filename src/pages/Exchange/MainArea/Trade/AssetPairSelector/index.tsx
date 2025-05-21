@@ -30,7 +30,7 @@ const AssetPairSelector: SFC = ({className}) => {
           {updatedAssetsParis.map((assetsValue, index) => {
             return (
               <option key={index} value={assetsValue[1].id}>
-                {assetsValue[1].primary_currency.ticker} - {assetsValue[1].secondary_currency.ticker}
+                {assetsValue[1].primary_currency.ticker}
               </option>
             );
           })}
