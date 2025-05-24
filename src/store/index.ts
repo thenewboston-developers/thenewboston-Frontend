@@ -13,11 +13,9 @@ import storage from 'redux-persist/lib/storage';
 import {AnyAction, combineReducers, configureStore} from '@reduxjs/toolkit';
 
 import {LOGOUT_USER} from 'store/actions';
-import addressesReducer from 'store/addresses';
 import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
 import commentsReducer from 'store/comments';
-
 import coresReducer from 'store/cores';
 import exchangeOrdersReducer from 'store/exchangeOrders';
 import followersReducer from 'store/followers';
@@ -36,7 +34,6 @@ import walletsReducer from 'store/wallets';
 import wiresReducer from 'store/wires';
 
 const rootReducer = combineReducers({
-  addresses: addressesReducer,
   assetPairs: assetPairsReducer,
   authentication: authenticationReducer,
   comments: commentsReducer,

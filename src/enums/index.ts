@@ -6,13 +6,4 @@ import {ToastType} from 'enums/toast';
 import {WalletTab} from 'enums/manager';
 import {WireType} from 'enums/wires';
 
-export {
-  ExchangeOrderType,
-  FillStatus,
-  FollowerType,
-  InvitationStatus,
-  SocketDataType,
-  ToastType,
-  WalletTab,
-  WireType,
-};
+export {ExchangeOrderType, FillStatus, FollowerType, InvitationStatus, SocketDataType, ToastType, WalletTab, WireType};
