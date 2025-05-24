@@ -18,7 +18,6 @@ import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
 import commentsReducer from 'store/comments';
 
-import conversationsReducer from 'store/conversations';
 import coresReducer from 'store/cores';
 import exchangeOrdersReducer from 'store/exchangeOrders';
 import followersReducer from 'store/followers';
@@ -26,7 +25,6 @@ import followingsReducer from 'store/followings';
 import invitationLimitsReducer from 'store/invitationLimits';
 import invitationsReducer from 'store/invitations';
 import managerReducer from 'store/manager';
-import messagesReducer from 'store/messages';
 import migrations from 'store/migrations';
 import notificationsReducer from 'store/notifications';
 import postsReducer from 'store/posts';
@@ -42,7 +40,6 @@ const rootReducer = combineReducers({
   assetPairs: assetPairsReducer,
   authentication: authenticationReducer,
   comments: commentsReducer,
-  conversations: conversationsReducer,
   cores: coresReducer,
   exchangeOrders: exchangeOrdersReducer,
   followers: followersReducer,
@@ -50,7 +47,6 @@ const rootReducer = combineReducers({
   invitationLimits: invitationLimitsReducer,
   invitations: invitationsReducer,
   manager: managerReducer,
-  messages: messagesReducer,
   notifications: notificationsReducer,
   posts: postsReducer,
   self: selfReducer,

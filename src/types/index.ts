@@ -1,10 +1,8 @@
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CreateAddressRequest} from 'types/api/addresses';
-import {CreateConversationRequest} from 'types/api/conversations';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/follower';
 import {CreateInvitationRequest} from 'types/api/invitations';
-import {CreateMessageRequest} from 'types/api/messages';
 
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
@@ -23,7 +21,6 @@ import {Block} from 'types/blocks';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {Comment, Comments} from 'types/comments';
 
-import {Conversation, Conversations} from 'types/conversations';
 import {Core, Cores} from 'types/cores';
 import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
@@ -34,7 +31,6 @@ import {Issue} from 'types/issues';
 import {Item} from 'types/items';
 import {LearnMore} from './learnMore';
 import {Manager} from 'types/manager';
-import {Message, Messages} from 'types/messages';
 import {Notification, Notifications} from 'types/notifications';
 
 import {PaginatedResponse} from 'types/pagination';
@@ -61,17 +57,13 @@ export {
   Comment,
   CommentReadSerializer,
   Comments,
-  Conversation,
-  Conversations,
   Core,
   Cores,
   CreateAddressRequest,
   CreateCommentRequest,
-  CreateConversationRequest,
   CreateExchangeOrderRequest,
   CreateFollowerRequest,
   CreateInvitationRequest,
-  CreateMessageRequest,
   CreateUserRequest,
   CreateUserResponse,
   CreateWalletRequest,
@@ -95,8 +87,6 @@ export {
   LoginRequest,
   LoginResponse,
   Manager,
-  Message,
-  Messages,
   Notification,
   Notifications,
   PaginatedResponse,
