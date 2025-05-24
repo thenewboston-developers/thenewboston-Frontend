@@ -20,7 +20,7 @@ const Posts: SFC = ({className}) => {
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
   const posts = useSelector(getPosts);
-  const scrollableDivRef = useRef<HTMLDivElement | null>(null);
+  const scrollableDivRef = useRef<HTMLDivElement>(null!);
 
   const userId = id ? parseInt(id, 10) : null;
 
