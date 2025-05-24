@@ -22,15 +22,11 @@ import {Follower, Followers} from 'types/follower';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {Invitation, Invitations} from 'types/invitations';
 import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
-import {Issue} from 'types/issues';
-import {Item} from 'types/items';
 import {LearnMore} from 'types/learnMore';
 import {Manager} from 'types/manager';
 import {Notification, Notifications} from 'types/notifications';
 import {PaginatedResponse} from 'types/pagination';
 import {Post, Posts} from 'types/posts';
-import {Pull} from 'types/pulls';
-import {Repo} from 'types/repos';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
 import {Trade, Trades} from 'types/trades';
@@ -72,8 +68,6 @@ export {
   InvitationLimit,
   InvitationLimits,
   Invitations,
-  Issue,
-  Item,
   LearnMore,
   LoginRequest,
   LoginResponse,
@@ -86,8 +80,6 @@ export {
   PostReactionSerializer,
   PostReadSerializer,
   Posts,
-  Pull,
-  Repo,
   RootState,
   SFC,
   SelectOption,
