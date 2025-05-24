@@ -11,7 +11,6 @@ export const INVITATION_LIMITS = 'invitationLimits';
 export const MANAGER = 'manager';
 export const NOTIFICATIONS = 'notifications';
 export const POSTS = 'posts';
-export const PRODUCTS = 'products';
 export const SELF = 'self';
 export const TRADES = 'trades';
 export const USERS = 'users';
