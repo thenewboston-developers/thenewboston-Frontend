@@ -23,11 +23,11 @@ export function formatToDynamicDigits(givenNumber: number, digits = 3) {
 
   while (givenNumber >= 1000 && unitIndex < units.length - 1) {
     givenNumber /= 1000;
-    unitIndex++;
+    unitIndex += 1;
   }
 
-  const roundedNum = Math.floor(givenNumber * Math.pow(10, digits - 1)) / Math.pow(10, digits - 1);
-  const isExact = (givenNumber * Math.pow(10, digits - 1)) % 1 === 0;
+  const roundedNum = Math.floor(givenNumber * 10 ** (digits - 1)) / 10 ** (digits - 1);
+  const isExact = (givenNumber * 10 ** (digits - 1)) % 1 === 0;
 
   return isExact ? roundedNum + units[unitIndex] : roundedNum + units[unitIndex] + '+';
 }

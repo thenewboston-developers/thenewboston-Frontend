@@ -13,11 +13,15 @@
 
 # Misc
 .DS_Store
+.env
 .env.development
 .env.development.local
 .env.production
 .env.production.local
 .env.test.local
+
+# TypeScript
+*.tsbuildinfo
 
 # Logs
 npm-debug.log*

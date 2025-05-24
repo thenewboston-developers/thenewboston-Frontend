@@ -67,7 +67,6 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
 
       close();
     } catch (error) {
-      console.error(error);
       const verb = post ? 'updating' : 'creating';
       displayErrorToast(`Error ${verb} post`);
     }

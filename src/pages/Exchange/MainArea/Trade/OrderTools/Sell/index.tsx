@@ -46,7 +46,6 @@ const Sell: SFC = ({className}) => {
       displayToast('Sell order created!', ToastType.SUCCESS);
       resetForm();
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error creating order');
     }
   };

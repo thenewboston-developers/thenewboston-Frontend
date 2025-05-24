@@ -10,7 +10,6 @@ export const getAssetPairs = async (): Promise<AssetPair[]> => {
     const response = await axios.get<AssetPair[]>(BASE_URL, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

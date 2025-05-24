@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import * as Sentry from '@sentry/react';
 
 interface LogContext {
@@ -7,7 +8,7 @@ interface LogContext {
 type LogMessage = string | Error;
 
 class Logger {
-  private addBreadcrumb(level: Sentry.SeverityLevel, message: string, context: LogContext): void {
+  private static addBreadcrumb(level: Sentry.SeverityLevel, message: string, context: LogContext): void {
     Sentry.addBreadcrumb({
       category: level,
       data: context,
@@ -16,22 +17,22 @@ class Logger {
     });
   }
 
-  debug(message: LogMessage, context: LogContext = {}): void {
+  static debug(message: LogMessage, context: LogContext = {}): void {
     console.debug(message, context);
-    this.addBreadcrumb('debug', String(message), context);
+    Logger.addBreadcrumb('debug', String(message), context);
   }
 
-  info(message: LogMessage, context: LogContext = {}): void {
+  static info(message: LogMessage, context: LogContext = {}): void {
     console.info(message, context);
-    this.addBreadcrumb('info', String(message), context);
+    Logger.addBreadcrumb('info', String(message), context);
   }
 
-  warn(message: LogMessage, context: LogContext = {}): void {
+  static warn(message: LogMessage, context: LogContext = {}): void {
     console.warn(message, context);
-    this.addBreadcrumb('warning', String(message), context);
+    Logger.addBreadcrumb('warning', String(message), context);
   }
 
-  error(error: Error, context: LogContext = {}): void {
+  static error(error: Error, context: LogContext = {}): void {
     console.error(error, context);
     Sentry.withScope((scope) => {
       scope.setExtras(context);
@@ -40,6 +41,4 @@ class Logger {
   }
 }
 
-const logger = new Logger();
-
-export default logger;
+export default Logger;

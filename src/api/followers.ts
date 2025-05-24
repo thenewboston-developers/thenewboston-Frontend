@@ -11,7 +11,6 @@ export const createFollower = async (data: CreateFollowerRequest): Promise<Follo
     const response = await axios.post<FollowerReadSerializer>(BASE_URL, data, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -20,7 +19,6 @@ export const deleteFollower = async (id: number): Promise<void> => {
   try {
     await axios.delete(`${BASE_URL}/${id}`, authorizationHeaders());
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -42,7 +40,6 @@ export const getFollowers = async (
     });
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

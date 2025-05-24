@@ -25,6 +25,8 @@ export const Container = styled.div<{type: ToastType}>`
   }};
   display: flex;
   padding: 12px;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 export const Text = styled.span`

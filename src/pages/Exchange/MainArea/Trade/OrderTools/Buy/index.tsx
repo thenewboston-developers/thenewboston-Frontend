@@ -47,7 +47,6 @@ const Buy: SFC = ({className}) => {
       resetForm();
       setTotal(0);
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error creating order');
     }
   };

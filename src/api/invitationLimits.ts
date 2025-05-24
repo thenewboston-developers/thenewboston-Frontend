@@ -10,7 +10,6 @@ export const getInvitationLimit = async (id: number): Promise<InvitationLimit> =
     const response = await axios.get<InvitationLimit>(`${BASE_URL}/${id}`, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

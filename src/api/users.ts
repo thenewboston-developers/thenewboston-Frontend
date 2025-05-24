@@ -10,7 +10,6 @@ export const createUser = async (data: CreateUserRequest): Promise<CreateUserRes
     const response = await axios.post<CreateUserResponse>(BASE_URL, data);
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -20,7 +19,6 @@ export const getUser = async (id: number): Promise<UserReadSerializer> => {
     const response = await axios.get<UserReadSerializer>(`${BASE_URL}/${id}`, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -30,7 +28,6 @@ export const getUsers = async (): Promise<UserReadSerializer[]> => {
     const response = await axios.get<UserReadSerializer[]>(`${BASE_URL}`, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -40,7 +37,6 @@ export const updateUser = async (id: number, data: FormData): Promise<UserReadSe
     const response = await axios.patch<UserReadSerializer>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

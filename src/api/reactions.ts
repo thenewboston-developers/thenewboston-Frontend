@@ -10,7 +10,6 @@ export const createPostReaction = async (data: PostReactionCreateRequest): Promi
     await axios.post<void>(BASE_URL, data, authorizationHeaders());
     return data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

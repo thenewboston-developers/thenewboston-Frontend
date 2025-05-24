@@ -28,7 +28,6 @@ const SignInForm: SFC = () => {
       await dispatch(login(values));
       navigate('/feed');
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error logging in');
     }
   };

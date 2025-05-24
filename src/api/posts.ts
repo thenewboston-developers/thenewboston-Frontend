@@ -11,7 +11,6 @@ export const createPost = async (data: FormData): Promise<PostReadSerializer> =>
     const response = await axios.post<PostReadSerializer>(BASE_URL, data, authorizationFormHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -20,7 +19,6 @@ export const deletePost = async (id: number): Promise<void> => {
   try {
     await axios.delete(`${BASE_URL}/${id}`, authorizationHeaders());
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -41,7 +39,6 @@ export const getPosts = async (
     });
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -51,7 +48,6 @@ export const updatePost = async (id: number, data: FormData): Promise<PostReadSe
     const response = await axios.patch<PostReadSerializer>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

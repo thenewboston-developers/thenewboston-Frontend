@@ -51,7 +51,6 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
       await dispatch(updateUser(self.id!, requestData));
       close();
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error updating avatar');
     }
   };

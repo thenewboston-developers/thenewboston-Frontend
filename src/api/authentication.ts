@@ -7,7 +7,6 @@ export const login = async (data: LoginRequest): Promise<LoginResponse> => {
     const response = await axios.post<LoginResponse>(`${process.env.REACT_APP_API_URL}/api/login`, data);
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

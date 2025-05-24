@@ -34,7 +34,6 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
       displayToast('Comment updated!', ToastType.SUCCESS);
       close();
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error updating comment');
     }
   };

@@ -73,7 +73,6 @@ const Reaction: SFC<ReactionProps> = ({userReaction, postId, userReactions}) => 
         }),
       );
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error in reacting to post');
     }
   };

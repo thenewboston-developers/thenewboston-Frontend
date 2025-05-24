@@ -38,7 +38,6 @@ const CoreModal: SFC<CoreModalProps> = ({className, close, core}) => {
 
       close();
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error');
     }
   };
