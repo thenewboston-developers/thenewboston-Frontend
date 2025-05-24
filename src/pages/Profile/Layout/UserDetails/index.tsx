@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {mdiSquareEditOutline} from '@mdi/js';
 
-import DefaultAvatar from 'assets/default_avatar.svg';
+import DefaultAvatar from 'assets/default-avatar.svg';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
 import ProfileEditModal from 'modals/ProfileEditModal';
 import logo from 'assets/logo192.png';

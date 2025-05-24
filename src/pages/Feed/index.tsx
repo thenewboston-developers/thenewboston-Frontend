@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
-import LeavesEmptyState from 'assets/leaves_empty_state.png';
+import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Post from 'components/Post';
 import PostSkeleton from 'components/Post/PostSkeleton';
 import {AppDispatch, SFC} from 'types';
