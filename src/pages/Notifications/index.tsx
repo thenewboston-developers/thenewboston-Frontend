@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 import {mdiCheckAll} from '@mdi/js';
 
-import LeavesEmptyState from 'assets/leaves_empty_state.png';
+import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Button, {ButtonColor, IconColor} from 'components/Button';
 import EmptyPage from 'components/EmptyPage';
 import {getNotifications as _getNotifications, markAllNotificationsAsRead} from 'dispatchers/notifications';

@@ -1,9 +1,9 @@
 import BenefitImg from 'assets/coresLearnMore/benefit.png';
-import MissionImg from 'assets/coresLearnMore/m_statement.png';
-import SystemArc from 'assets/coresLearnMore/Archi.png';
-import Tag from 'assets/coresLearnMore/tag_icon.png';
-import UseCaseImg from 'assets/coresLearnMore/UseCases.png';
-import VisionImg from 'assets/coresLearnMore/v_statement.png';
+import MissionImg from 'assets/coresLearnMore/mission-statement.png';
+import SystemArc from 'assets/coresLearnMore/architecture.png';
+import Tag from 'assets/coresLearnMore/tag-icon.png';
+import UseCaseImg from 'assets/coresLearnMore/use-cases.png';
+import VisionImg from 'assets/coresLearnMore/vision-statement.png';
 import {LearnMore} from 'types';
 
 export const VISION_STATEMENT: LearnMore = {

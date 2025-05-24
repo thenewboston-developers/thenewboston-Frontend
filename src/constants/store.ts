@@ -1,9 +1,6 @@
-export const ADDRESSES = 'addresses';
 export const ASSET_PAIRS = 'assetPairs';
 export const AUTHENTICATION = 'authentication';
 export const COMMENTS = 'comments';
-
-export const CONVERSATIONS = 'conversations';
 export const CORES = 'cores';
 export const EXCHANGE_ORDERS = 'exchangeOrders';
 export const FOLLOWERS = 'followers';
@@ -11,10 +8,8 @@ export const FOLLOWINGS = 'followings';
 export const INVITATIONS = 'invitations';
 export const INVITATION_LIMITS = 'invitationLimits';
 export const MANAGER = 'manager';
-export const MESSAGES = 'messages';
 export const NOTIFICATIONS = 'notifications';
 export const POSTS = 'posts';
-export const PRODUCTS = 'products';
 export const SELF = 'self';
 export const TRADES = 'trades';
 export const USERS = 'users';
