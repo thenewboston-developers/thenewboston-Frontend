@@ -40,7 +40,6 @@ const InvitationModal: SFC<InvitationModalProps> = ({className, close, invitatio
 
       close();
     } catch (error) {
-      console.error(error);
       const verb = invitation ? 'updating' : 'creating';
       displayErrorToast(`Error ${verb} invitation`);
     }

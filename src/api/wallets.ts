@@ -10,7 +10,6 @@ export const createWallet = async (data: CreateWalletRequest): Promise<Wallet> =
     const response = await axios.post<Wallet>(BASE_URL, data, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -20,7 +19,6 @@ export const createWalletDeposit = async (walletId: number): Promise<DepositResp
     const response = await axios.post<DepositResponse>(`${BASE_URL}/${walletId}/deposit`, {}, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -34,7 +32,6 @@ export const createWalletWithdraw = async (walletId: number, data: WithdrawReque
     );
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -44,7 +41,6 @@ export const getWalletDepositBalance = async (walletId: number): Promise<Wallet>
     const response = await axios.get<Wallet>(`${BASE_URL}/${walletId}/deposit_balance`, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -54,7 +50,6 @@ export const getWallets = async (): Promise<Wallet[]> => {
     const response = await axios.get<Wallet[]>(BASE_URL, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

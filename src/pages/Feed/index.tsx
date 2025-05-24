@@ -29,7 +29,6 @@ const Feed: SFC = ({className}) => {
         dispatch(_resetPosts());
         await dispatch(_getPosts());
       } catch (error) {
-        console.error(error);
         displayErrorToast('Error fetching posts');
       }
     })();

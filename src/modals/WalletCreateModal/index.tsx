@@ -29,7 +29,6 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
       );
       close();
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error creating wallet');
     }
   };

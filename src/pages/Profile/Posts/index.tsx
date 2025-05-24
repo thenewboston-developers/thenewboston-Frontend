@@ -35,7 +35,6 @@ const Posts: SFC = ({className}) => {
         dispatch(_resetPosts());
         await dispatch(_getPosts({owner: userId}));
       } catch (error) {
-        console.error(error);
         displayErrorToast('Error fetching posts');
       }
     })();

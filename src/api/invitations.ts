@@ -10,7 +10,6 @@ export const createInvitation = async (data: CreateInvitationRequest): Promise<I
     const response = await axios.post<Invitation>(BASE_URL, data, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -19,7 +18,6 @@ export const deleteInvitation = async (id: number): Promise<void> => {
   try {
     await axios.delete(`${BASE_URL}/${id}`, authorizationHeaders());
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -29,7 +27,6 @@ export const getInvitations = async (): Promise<Invitation[]> => {
     const response = await axios.get<Invitation[]>(BASE_URL, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -39,7 +36,6 @@ export const updateInvitation = async (id: number, data: CreateInvitationRequest
     const response = await axios.patch<Invitation>(`${BASE_URL}/${id}`, data, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

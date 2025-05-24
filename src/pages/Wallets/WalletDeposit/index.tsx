@@ -33,7 +33,6 @@ const WalletDeposit: SFC = ({className}) => {
     try {
       await dispatch(createWalletDeposit(activeWallet.id));
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error depositing funds');
     } finally {
       setCreateDepositRequestPending(false);
@@ -46,7 +45,6 @@ const WalletDeposit: SFC = ({className}) => {
     try {
       await dispatch(getWalletDepositBalance(activeWallet.id));
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error fetching deposit balance');
     } finally {
       setGetBalanceRequestPending(false);

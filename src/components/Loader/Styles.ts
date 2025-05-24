@@ -30,6 +30,8 @@ const spin = keyframes`
 `;
 
 export const LoadingIcon = styled(Icon)`
-  animation: ${fade} 1s linear infinite, ${spin} 1s linear infinite;
+  animation:
+    ${fade} 1s linear infinite,
+    ${spin} 1s linear infinite;
   display: inline;
 `;

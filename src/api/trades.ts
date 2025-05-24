@@ -20,7 +20,6 @@ export const getTrades = async (params?: GetTradesParams): Promise<Trade[]> => {
     });
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

@@ -42,7 +42,6 @@ const WalletWithdraw: SFC = ({className}) => {
       await dispatch(createWalletWithdraw(activeWallet!.id, requestData));
       resetForm();
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error withdrawing funds');
     }
   };

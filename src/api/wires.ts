@@ -10,7 +10,6 @@ export const getWires = async (): Promise<Wire[]> => {
     const response = await axios.get<Wire[]>(BASE_URL, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

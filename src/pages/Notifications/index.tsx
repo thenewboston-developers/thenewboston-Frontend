@@ -30,7 +30,6 @@ const Notifications: SFC = ({className}) => {
       await dispatch(markAllNotificationsAsRead());
       displayToast('All Notifications marked as read', ToastType.SUCCESS);
     } catch (error) {
-      console.error(error);
       displayToast('Oops.. An error occurred.', ToastType.ERROR);
     }
   };
