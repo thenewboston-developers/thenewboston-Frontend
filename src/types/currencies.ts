@@ -4,7 +4,7 @@ import {Dict} from 'types/generic';
 export interface Currency extends CreatedModified {
   domain: string;
   id: number;
-  logo: string | null;
+  logo: string;
   owner: number;
   ticker: string;
 }

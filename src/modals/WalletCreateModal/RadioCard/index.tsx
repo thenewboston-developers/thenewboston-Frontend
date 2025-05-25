@@ -17,7 +17,7 @@ const RadioCard: SFC<RadioCardProps> = ({activeCurrencyId, className, currency, 
       onClick={handleRadioCardClick}
     >
       <S.ImageContainer>
-        <S.Img alt="logo" src={currency.logo || ''} />
+        <S.Img alt="logo" src={currency.logo} />
         <S.Title>{currency.ticker}</S.Title>
       </S.ImageContainer>
       <S.Radio>

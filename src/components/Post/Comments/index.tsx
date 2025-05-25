@@ -5,7 +5,6 @@ import Icon from '@mdi/react';
 import EmojiPicker from 'emoji-picker-react';
 import {Form, Formik, FormikHelpers} from 'formik';
 
-import Coin from 'assets/coin.svg';
 import {ButtonColor, ButtonType} from 'components/Button';
 import {createComment} from 'dispatchers/comments';
 import {useToggle} from 'hooks';
@@ -80,7 +79,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     if (manager.activeCommentCurrency) {
       return (
         <S.IconContainer onClick={toggleMenu}>
-          <S.Img alt="logo" src={manager.activeCommentCurrency.logo || Coin} />
+          <S.Img alt="logo" src={manager.activeCommentCurrency.logo} />
           {currencySelectModalIsOpen ? (
             <S.IconRight path={mdiChevronUp} size="20px" />
           ) : (
