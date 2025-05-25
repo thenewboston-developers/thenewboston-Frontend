@@ -101,7 +101,9 @@ const Detail: SFC = ({className}) => {
       return <S.EmptyMints>No mints yet</S.EmptyMints>;
     }
 
-    const mintsList = Object.values(mints).filter((mint) => mint.currency === currency?.id);
+    const mintsList = Object.values(mints)
+      .filter((mint) => mint.currency === currency?.id)
+      .sort((a, b) => new Date(b.created_date).getTime() - new Date(a.created_date).getTime());
 
     return (
       <>

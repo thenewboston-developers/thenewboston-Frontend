@@ -13,13 +13,12 @@ const mints = createSlice({
       state[payload.id] = payload;
     },
     setMints: (state: Mints, {payload}: PayloadAction<Mint[]>) => {
-      return payload.reduce((acc, mint) => ({...acc, [mint.id]: mint}), {});
-    },
-    unsetMint: (state: Mints, {payload}: PayloadAction<string>) => {
-      delete state[payload];
+      payload.forEach((mint) => {
+        state[mint.id] = mint;
+      });
     },
   },
 });
 
-export const {setMint, setMints, unsetMint} = mints.actions;
+export const {setMint, setMints} = mints.actions;
 export default mints.reducer;
