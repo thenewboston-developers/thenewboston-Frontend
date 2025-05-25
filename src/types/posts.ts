@@ -1,5 +1,5 @@
-import {UserReadSerializer} from 'types/api/users';
 import {PostReactionSerializer} from 'types';
+import {UserReadSerializer} from 'types/api/users';
 import {CreatedModified} from 'types/createdModified';
 import {Pagination} from 'types/pagination';
 

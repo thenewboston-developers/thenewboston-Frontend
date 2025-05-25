@@ -1,5 +1,4 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-
 import {AUTHENTICATION} from 'constants/store';
 import {Authentication} from 'types';
 

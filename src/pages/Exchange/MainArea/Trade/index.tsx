@@ -1,14 +1,15 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
-import EmptyPage from 'components/EmptyPage';
 import {getAssetPairs as _getAssetPairs} from 'dispatchers/assetPairs';
 import {useActiveAssetPair} from 'hooks';
 import {getAssetPairs} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
+
+import EmptyPage from 'components/EmptyPage';
 import {displayErrorToast} from 'utils/toasts';
+
 import Chart from './Chart';
 import OrderBook from './OrderBook';
 import OrderTools from './OrderTools';

@@ -1,6 +1,5 @@
-import styled, {css} from 'styled-components';
-
 import {ExchangeOrderType} from 'enums';
+import styled, {css} from 'styled-components';
 import {colors} from 'styles';
 
 const buyMixin = css`

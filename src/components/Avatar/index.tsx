@@ -1,5 +1,6 @@
 import DefaultAvatar from 'assets/default-avatar.svg';
 import {SFC} from 'types';
+
 import * as S from './Styles';
 
 export interface AvatarProps {

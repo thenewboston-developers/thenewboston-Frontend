@@ -1,5 +1,7 @@
-import CurrencyDetail from 'components/CurrencyLabel';
 import {Currency, SFC} from 'types';
+
+import CurrencyDetail from 'components/CurrencyLabel';
+
 import * as S from './Styles';
 
 export interface CurrencyCardProps {

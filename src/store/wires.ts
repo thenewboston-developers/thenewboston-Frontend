@@ -1,5 +1,4 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-
 import {WIRES} from 'constants/store';
 import {Wire, Wires} from 'types';
 

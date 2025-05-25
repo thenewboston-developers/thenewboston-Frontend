@@ -1,8 +1,9 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {mdiArrowUp} from '@mdi/js';
 import Icon from '@mdi/react';
-import * as S from './Styles';
 import {SFC} from 'types';
+
+import * as S from './Styles';
 
 interface ScrollToTopButtonProps {
   targetRef: React.RefObject<HTMLDivElement>;

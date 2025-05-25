@@ -1,9 +1,10 @@
 import {Form as UForm} from 'formik';
 import styled from 'styled-components';
-import {Input as UInput} from 'components/FormElements';
-import ULine from 'components/Line';
-import {LogoInput} from 'components/FormElements';
 import {breakpoints, colors, fonts} from 'styles';
+
+import {Input as UInput} from 'components/FormElements';
+import {LogoInput} from 'components/FormElements';
+import ULine from 'components/Line';
 
 const WITHDRAW_IMAGE_SIZE = 363;
 

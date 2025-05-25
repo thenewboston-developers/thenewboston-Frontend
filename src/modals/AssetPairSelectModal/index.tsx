@@ -1,8 +1,8 @@
 import {useDispatch, useSelector} from 'react-redux';
-
 import {getAssetPairs, getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
+
 import RadioCard from './RadioCard';
 import * as S from './Styles';
 

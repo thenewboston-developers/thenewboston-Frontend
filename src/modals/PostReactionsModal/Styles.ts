@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import UModal from 'components/Modal';
 
 export const Bumper = styled.div`

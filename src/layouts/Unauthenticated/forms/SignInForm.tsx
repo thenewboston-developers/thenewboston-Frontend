@@ -1,14 +1,14 @@
 import {useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {Form, Formik} from 'formik';
-
+import {PATH_AUTHENTICATION} from 'constants/paths';
 import {login} from 'dispatchers/authentication';
-import {ButtonType} from 'components/Button';
+import {Form, Formik} from 'formik';
 import {AppDispatch, SFC} from 'types';
+
+import {ButtonType} from 'components/Button';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
-import {PATH_AUTHENTICATION} from 'constants/paths';
 
 import * as S from './Styles';
 

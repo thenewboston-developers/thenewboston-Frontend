@@ -1,5 +1,5 @@
-import {Currency} from 'types/currencies';
 import {CreatedModified} from 'types/createdModified';
+import {Currency} from 'types/currencies';
 import {Dict} from 'types/generic';
 
 export interface Wallet extends CreatedModified {

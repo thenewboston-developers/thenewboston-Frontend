@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import {colors, radioCardStyle} from 'styles';
 
 export const IMG_HEIGHT = 24;

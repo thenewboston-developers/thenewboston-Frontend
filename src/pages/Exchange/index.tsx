@@ -1,7 +1,8 @@
 import {SFC} from 'types';
+
 import MainArea from './MainArea';
-import Toolbar from './Toolbar';
 import * as S from './Styles';
+import Toolbar from './Toolbar';
 
 const Exchange: SFC = ({className}) => {
   return (

@@ -1,5 +1,4 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-
 import {EXCHANGE_ORDERS} from 'constants/store';
 import {ExchangeOrder, ExchangeOrders} from 'types';
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
+import {CreateFollowerRequest, FollowerReadSerializer, PaginatedResponse} from 'types';
 
-import {PaginatedResponse, CreateFollowerRequest, FollowerReadSerializer} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 import {getApiUrl} from 'utils/urls';
 

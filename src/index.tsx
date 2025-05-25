@@ -1,15 +1,16 @@
 import ReactDOM from 'react-dom/client';
-import {Provider} from 'react-redux';
-import {PersistGate} from 'redux-persist/integration/react';
-import {BrowserRouter} from 'react-router-dom';
 import {SkeletonTheme} from 'react-loading-skeleton';
-
+import {Provider} from 'react-redux';
+import {BrowserRouter} from 'react-router-dom';
 import App from 'containers/App';
+import {PersistGate} from 'redux-persist/integration/react';
+import {persistor, store} from 'store';
+import {colors} from 'styles';
 import GlobalStyle from 'styles/components/GlobalStyle';
 import ToastifyStyle from 'styles/components/ToastifyStyle';
+
 import initSentry from 'config/sentry';
-import {colors} from 'styles';
-import {persistor, store} from 'store';
+
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'styles/fonts.css';
 

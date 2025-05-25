@@ -1,8 +1,8 @@
 import styled from 'styled-components';
+import {colors, fonts} from 'styles';
 
 import UCopyContainer from 'components/CopyContainer';
 import Qr from 'components/Qr';
-import {colors, fonts} from 'styles';
 
 export const Container = styled.div`
   margin-top: 16px;

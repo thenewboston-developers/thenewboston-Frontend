@@ -1,5 +1,4 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-
 import {CURRENCIES} from 'constants/store';
 import {Currencies, Currency} from 'types';
 

@@ -1,17 +1,18 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
 import {mdiCheckAll} from '@mdi/js';
-
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
-import Button, {ButtonColor, IconColor} from 'components/Button';
-import EmptyPage from 'components/EmptyPage';
 import {getNotifications as _getNotifications, markAllNotificationsAsRead} from 'dispatchers/notifications';
 import {ToastType} from 'enums';
+import orderBy from 'lodash/orderBy';
 import {getNotifications} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayToast} from 'utils/toasts';
+
+import Button, {ButtonColor, IconColor} from 'components/Button';
+import EmptyPage from 'components/EmptyPage';
 import {getUnreadNotificationsCount} from 'utils/notifications';
+import {displayToast} from 'utils/toasts';
+
 import Notification from './Notification';
 import * as S from './Styles';
 

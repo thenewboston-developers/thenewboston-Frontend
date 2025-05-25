@@ -1,12 +1,13 @@
 import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
+import {getCurrencies} from 'selectors/state';
+import {SFC} from 'types';
 
-import CurrencyCard from '../CurrencyCard';
 import EmptyText from 'components/EmptyText';
 import SectionHeading from 'components/SectionHeading';
-import {SFC} from 'types';
-import {getCurrencies} from 'selectors/state';
+
+import CurrencyCard from '../CurrencyCard';
 
 import * as S from './Styles';
 

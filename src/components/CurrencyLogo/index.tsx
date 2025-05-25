@@ -1,5 +1,6 @@
 import Coin from 'assets/coin.svg';
 import {SFC} from 'types';
+
 import * as S from './Styles';
 
 export interface CurrencyLogoProps {

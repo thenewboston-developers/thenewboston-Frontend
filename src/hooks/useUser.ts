@@ -1,6 +1,5 @@
 import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
-
 import {getSelf, getUsers} from 'selectors/state';
 import {UserReadSerializer} from 'types';
 

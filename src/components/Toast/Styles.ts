@@ -1,8 +1,8 @@
+import {ToastType} from 'enums';
 import styled from 'styled-components';
+import {colors} from 'styles';
 
 import Icon from 'components/Icon';
-import {ToastType} from 'enums';
-import {colors} from 'styles';
 
 const iconProps = `
   color: #fff;

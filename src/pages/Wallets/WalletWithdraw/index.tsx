@@ -1,17 +1,17 @@
 import {useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Formik, FormikHelpers} from 'formik';
-import orderBy from 'lodash/orderBy';
-
 import wallet from 'assets/wallet.svg';
-import Button, {ButtonType} from 'components/Button';
-import ExpandableWire from 'components/ExpandableWire';
 import {CURRENCY_TRANSACTION_FEE} from 'constants/protocol';
-import {AppDispatch, SFC} from 'types';
 import {createWalletWithdraw} from 'dispatchers/wallets';
 import {WireType} from 'enums';
-import {getWires} from 'selectors/state';
+import {Formik, FormikHelpers} from 'formik';
 import {useActiveWallet} from 'hooks';
+import orderBy from 'lodash/orderBy';
+import {getWires} from 'selectors/state';
+import {AppDispatch, SFC} from 'types';
+
+import Button, {ButtonType} from 'components/Button';
+import ExpandableWire from 'components/ExpandableWire';
 import {displayErrorToast} from 'utils/toasts';
 import yup, {accountNumberSchema} from 'utils/yup';
 

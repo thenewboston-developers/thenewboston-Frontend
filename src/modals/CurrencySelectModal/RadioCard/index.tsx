@@ -1,9 +1,9 @@
 import {useMemo, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-
 import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, Currency, SFC} from 'types';
+
 import * as S from './Styles';
 
 interface RadioCardProps {

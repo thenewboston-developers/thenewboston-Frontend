@@ -1,14 +1,15 @@
 import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {updateUser} from 'dispatchers/users';
 import {Field, Form, Formik} from 'formik';
+import {getSelf} from 'selectors/state';
+import {AppDispatch, SFC} from 'types';
 
 import Button, {ButtonType} from 'components/Button';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
-import {updateUser} from 'dispatchers/users';
-import {getSelf} from 'selectors/state';
-import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
+
 import * as S from './Styles';
 
 export interface ProfileEditModalProps {

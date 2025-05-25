@@ -32,8 +32,30 @@ module.exports = {
     tsconfigRootDir: __dirname,
   },
   parser: '@typescript-eslint/parser',
-  plugins: ['react', '@typescript-eslint', 'jest', 'import'],
+  plugins: ['react', '@typescript-eslint', 'jest', 'import', 'simple-import-sort'],
   rules: {
+    'simple-import-sort/imports': [
+      'error',
+      {
+        groups: [
+          // Node.js builtins
+          ['^node:'],
+          // React and external packages
+          ['^react', '^@?\\w'],
+          // Internal packages
+          ['^(@|@company|@ui|components|utils|config|vendored-lib)(/.*|$)'],
+          // Side effect imports
+          ['^\\u0000'],
+          // Parent imports
+          ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
+          // Other relative imports
+          ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+          // Style imports
+          ['^.+\\.s?css$'],
+        ],
+      },
+    ],
+    'simple-import-sort/exports': 'error',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/lines-between-class-members': 'off',

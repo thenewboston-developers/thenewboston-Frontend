@@ -1,19 +1,20 @@
 import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Route, Routes, useParams} from 'react-router-dom';
+import {getInvitationLimit} from 'dispatchers/invitationLimits';
+import {getInvitations} from 'dispatchers/invitations';
+import {getUser} from 'dispatchers/users';
+import {getUserStats} from 'dispatchers/userStats';
+import {FollowerType} from 'enums';
+import {getSelf} from 'selectors/state';
+import {AppDispatch, SFC} from 'types';
+
+import {displayErrorToast} from 'utils/toasts';
 
 import Follower from './Follower';
 import Invitations from './Invitations';
 import Layout from './Layout';
 import Posts from './Posts';
-import {AppDispatch, SFC} from 'types';
-import {FollowerType} from 'enums';
-import {displayErrorToast} from 'utils/toasts';
-import {getInvitationLimit} from 'dispatchers/invitationLimits';
-import {getInvitations} from 'dispatchers/invitations';
-import {getSelf} from 'selectors/state';
-import {getUserStats} from 'dispatchers/userStats';
-import {getUser} from 'dispatchers/users';
 import * as S from './Styles';
 
 const Profile: SFC = ({className}) => {

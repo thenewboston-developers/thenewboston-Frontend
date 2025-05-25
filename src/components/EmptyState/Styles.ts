@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import {breakpoints, colors, fonts} from 'styles';
 
 export const Container = styled.div`

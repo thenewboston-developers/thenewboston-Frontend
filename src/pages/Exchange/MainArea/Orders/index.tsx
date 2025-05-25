@@ -1,22 +1,23 @@
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
-import {mdiPackageVariantClosed, mdiDotsVertical} from '@mdi/js';
+import {mdiDotsVertical, mdiPackageVariantClosed} from '@mdi/js';
 import Icon from '@mdi/react';
+import {updateExchangeOrder} from 'dispatchers/exchangeOrders';
+import {FillStatus} from 'enums';
+import {useToggle} from 'hooks';
+import orderBy from 'lodash/orderBy';
+import TradesModal from 'modals/TradesModal';
+import {getCurrencies, getExchangeOrders, getSelf} from 'selectors/state';
+import {colors} from 'styles';
+import {AppDispatch, ExchangeOrder, SFC} from 'types';
 
 import DropdownMenu from 'components/DropdownMenu';
 import EmptyText from 'components/EmptyText';
 import FillStatusBadge from 'components/FillStatusBadge';
 import SectionHeading from 'components/SectionHeading';
-import {updateExchangeOrder} from 'dispatchers/exchangeOrders';
-import {FillStatus} from 'enums';
-import {useToggle} from 'hooks';
-import TradesModal from 'modals/TradesModal';
-import {getCurrencies, getExchangeOrders, getSelf} from 'selectors/state';
-import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
+
 import * as S from './Styles';
-import {colors} from 'styles';
 
 const Orders: SFC = ({className}) => {
   const [selectedOrder, setSelectedOrder] = useState<ExchangeOrder | null>(null);

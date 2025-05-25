@@ -1,7 +1,7 @@
 import styled from 'styled-components';
+import {breakpoints, colors} from 'styles';
 
 import UButton from 'components/Button';
-import {breakpoints, colors} from 'styles';
 
 export const Button = styled(UButton)`
   width: 100%;

@@ -1,7 +1,8 @@
 import React, {useMemo} from 'react';
+import {SFC} from 'types';
 
 import Loader from 'components/Loader';
-import {SFC} from 'types';
+
 import * as S from './Styles';
 import {ButtonColor, ButtonType, IconColor} from './types';
 

@@ -1,5 +1,4 @@
 import styled, {keyframes} from 'styled-components';
-
 import {fonts} from 'styles';
 
 const addOverlay = keyframes`

@@ -1,8 +1,8 @@
 import {ReactNode, useCallback} from 'react';
 import {mdiAlertCircleOutline, mdiCheckCircle} from '@mdi/js';
-
 import {ToastType} from 'enums';
 import {SFC} from 'types';
+
 import * as S from './Styles';
 
 export interface ToastProps {

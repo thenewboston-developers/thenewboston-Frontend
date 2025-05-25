@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import {toolbarStyle} from 'styles';
 
 export const Center = styled.div`

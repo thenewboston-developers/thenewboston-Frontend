@@ -1,9 +1,9 @@
 import {ReactNode} from 'react';
 import {Link} from 'react-router-dom';
 import {mdiBrushOutline, mdiContentCopy} from '@mdi/js';
+import {Notification as TNotification, SFC} from 'types';
 
 import Avatar from 'components/Avatar';
-import {Notification as TNotification, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
 import * as S from './Styles';

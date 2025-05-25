@@ -1,13 +1,14 @@
 import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
-
-import FillStatusBadge from 'components/FillStatusBadge';
 import {ExchangeOrderType, FillStatus} from 'enums';
 import {useActiveAssetPair} from 'hooks';
+import orderBy from 'lodash/orderBy';
 import {getExchangeOrders} from 'selectors/state';
 import {SFC} from 'types';
+
+import FillStatusBadge from 'components/FillStatusBadge';
 import {longDate} from 'utils/dates';
+
 import * as S from './Styles';
 
 const OrderBook: SFC = ({className}) => {

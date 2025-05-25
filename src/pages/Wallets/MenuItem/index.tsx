@@ -1,9 +1,10 @@
 import {useDispatch, useSelector} from 'react-redux';
-
-import CurrencyLogo from 'components/CurrencyLogo';
 import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC, Wallet} from 'types';
+
+import CurrencyLogo from 'components/CurrencyLogo';
+
 import * as S from './Styles';
 
 export interface MenuItemProps {

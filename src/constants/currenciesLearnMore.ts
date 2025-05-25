@@ -1,6 +1,6 @@
+import SystemArc from 'assets/currenciesLearnMore/architecture.png';
 import BenefitImg from 'assets/currenciesLearnMore/benefit.png';
 import MissionImg from 'assets/currenciesLearnMore/mission-statement.png';
-import SystemArc from 'assets/currenciesLearnMore/architecture.png';
 import Tag from 'assets/currenciesLearnMore/tag-icon.png';
 import UseCaseImg from 'assets/currenciesLearnMore/use-cases.png';
 import VisionImg from 'assets/currenciesLearnMore/vision-statement.png';

@@ -1,8 +1,9 @@
 import styled from 'styled-components';
+import {breakpoints, colors, fonts} from 'styles';
+
+import UAvatar from 'components/Avatar';
 import UButton from 'components/Button';
 import UDropdownMenu from 'components/DropdownMenu';
-import {breakpoints, colors, fonts} from 'styles';
-import UAvatar from 'components/Avatar';
 
 export const Container = styled.div`
   background: #fff;

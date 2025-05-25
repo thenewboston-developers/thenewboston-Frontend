@@ -1,10 +1,11 @@
+import {useDispatch, useSelector} from 'react-redux';
 import {useActiveAssetPair, useToggle} from 'hooks';
 import AssetPairSelectModal from 'modals/AssetPairSelectModal';
-import {AppDispatch, SFC} from 'types';
-import * as S from './Styles';
-import {useDispatch, useSelector} from 'react-redux';
 import {getAssetPairs, getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
+import {AppDispatch, SFC} from 'types';
+
+import * as S from './Styles';
 
 const AssetPairSelector: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();

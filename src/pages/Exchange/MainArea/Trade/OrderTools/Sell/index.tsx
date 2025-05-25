@@ -1,17 +1,18 @@
 import {useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {createExchangeOrder} from 'dispatchers/exchangeOrders';
+import {ExchangeOrderType, ToastType} from 'enums';
 import {Form, Formik, FormikHelpers} from 'formik';
+import {useActiveAssetPair} from 'hooks';
+import {getWallets} from 'selectors/state';
+import {AppDispatch, SFC} from 'types';
 
 import AvailableTotal from 'components/AvailableTotal';
 import Button, {ButtonType} from 'components/Button';
 import {LogoInput} from 'components/FormElements';
-import {createExchangeOrder} from 'dispatchers/exchangeOrders';
-import {ExchangeOrderType, ToastType} from 'enums';
-import {useActiveAssetPair} from 'hooks';
-import {getWallets} from 'selectors/state';
-import {AppDispatch, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
+
 import * as S from './Styles';
 
 const Sell: SFC = ({className}) => {

@@ -1,16 +1,17 @@
 import {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {Field, Form, Formik} from 'formik';
-
-import Button, {ButtonType} from 'components/Button';
-import {FileInput} from 'components/FormElements';
-import ImagePreview from 'components/ImagePreview';
-import EmojiBox from 'components/EmojiPicker';
 import {createPost, updatePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
+import {Field, Form, Formik} from 'formik';
 import {AppDispatch, Post, SFC} from 'types';
+
+import Button, {ButtonType} from 'components/Button';
+import EmojiBox from 'components/EmojiPicker';
+import {FileInput} from 'components/FormElements';
+import ImagePreview from 'components/ImagePreview';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
+
 import * as S from './Styles';
 
 export interface PostModalProps {

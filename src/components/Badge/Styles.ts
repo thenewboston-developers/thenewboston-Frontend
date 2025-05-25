@@ -1,6 +1,6 @@
 import styled, {css} from 'styled-components';
-
 import {colors, fonts} from 'styles';
+
 import {BadgeStyle} from '.';
 
 const dangerMixin = css`

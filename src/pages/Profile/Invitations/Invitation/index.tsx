@@ -1,16 +1,17 @@
 import {useDispatch} from 'react-redux';
 import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
-
-import DropdownMenu from 'components/DropdownMenu';
-import InvitationStatusBadge from 'components/InvitationStatusBadge';
-import UserLabel from 'components/UserLabel';
 import {deleteInvitation} from 'dispatchers/invitations';
 import {InvitationStatus, ToastType} from 'enums';
 import {useToggle} from 'hooks';
 import InvitationModal from 'modals/InvitationModal';
 import {AppDispatch, Invitation as TInvitation, SFC} from 'types';
+
+import DropdownMenu from 'components/DropdownMenu';
+import InvitationStatusBadge from 'components/InvitationStatusBadge';
+import UserLabel from 'components/UserLabel';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
+
 import * as S from './Styles';
 
 export interface InvitationProps {

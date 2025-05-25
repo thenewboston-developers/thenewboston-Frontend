@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import {colors} from 'styles';
 
 const HEIGHT = 34;

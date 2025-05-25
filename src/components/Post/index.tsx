@@ -9,23 +9,23 @@ import {
   mdiDotsVertical,
   mdiSquareEditOutline,
 } from '@mdi/js';
-
-import Comments from './Comments';
+import {deletePost} from 'dispatchers/posts';
+import {ToastType} from 'enums';
+import {useToggle} from 'hooks';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
+import PostModal from 'modals/PostModal';
+import {getSelf} from 'selectors/state';
+import {AppDispatch, Post as TPost, SFC} from 'types';
+
+import {ButtonColor} from 'components/Button';
 import Line from 'components/Line';
 import Linkify from 'components/Linkify';
-import PostModal from 'modals/PostModal';
-import {AppDispatch, Post as TPost, SFC} from 'types';
-import {ButtonColor} from 'components/Button';
-import {ToastType} from 'enums';
-import {deletePost} from 'dispatchers/posts';
-import {displayErrorToast, displayToast} from 'utils/toasts';
-import {getSelf} from 'selectors/state';
 import {shortDate} from 'utils/dates';
-import {useToggle} from 'hooks';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 
-import * as S from './Styles';
+import Comments from './Comments';
 import Reaction from './Reaction';
+import * as S from './Styles';
 
 export interface PostProps {
   post: TPost;

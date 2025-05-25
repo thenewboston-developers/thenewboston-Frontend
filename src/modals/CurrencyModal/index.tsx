@@ -1,12 +1,13 @@
 import {useMemo} from 'react';
 import {useDispatch} from 'react-redux';
+import {createCurrency, updateCurrency} from 'dispatchers/currencies';
 import {Form, Formik} from 'formik';
+import {AppDispatch, Currency, SFC} from 'types';
 
 import Button, {ButtonType} from 'components/Button';
-import {createCurrency, updateCurrency} from 'dispatchers/currencies';
-import {AppDispatch, Currency, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
+
 import * as S from './Styles';
 
 export interface CurrencyModalProps {

@@ -1,5 +1,4 @@
 import {useSelector} from 'react-redux';
-
 import {getAssetPairs, getManager} from 'selectors/state';
 import {AssetPair} from 'types';
 

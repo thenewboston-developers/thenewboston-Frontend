@@ -1,6 +1,5 @@
 import {Field as UField} from 'formik';
 import styled from 'styled-components';
-
 import {colors} from 'styles';
 
 export const Container = styled.div`

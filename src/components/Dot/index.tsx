@@ -1,5 +1,6 @@
-import {SFC} from 'types';
 import {colors} from 'styles';
+import {SFC} from 'types';
+
 import * as S from './Styles';
 
 interface DotProps {

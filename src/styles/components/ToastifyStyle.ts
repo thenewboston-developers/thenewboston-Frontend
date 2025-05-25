@@ -1,5 +1,4 @@
 import {createGlobalStyle} from 'styled-components';
-
 import fonts from 'styles/fonts';
 
 const ToastifyStyle = createGlobalStyle`

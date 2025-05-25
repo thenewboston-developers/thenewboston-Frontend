@@ -1,10 +1,11 @@
 import {ReactNode, useMemo} from 'react';
-
-import Table from 'components/Table';
 import {useToggle} from 'hooks';
 import {Block, Dict, SFC, Wire} from 'types';
+
+import Table from 'components/Table';
 import {longDate} from 'utils/dates';
 import {snakeToTitle} from 'utils/strings';
+
 import * as S from './Styles';
 
 export interface ExpandableWireProps {

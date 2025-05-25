@@ -1,6 +1,7 @@
-import Badge, {BadgeStyle} from 'components/Badge';
 import {FillStatus} from 'enums';
 import {SFC} from 'types';
+
+import Badge, {BadgeStyle} from 'components/Badge';
 
 export interface FillStatusBadgeProps {
   fillStatus: FillStatus;

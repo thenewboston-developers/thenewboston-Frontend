@@ -1,5 +1,4 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-
 import {SELF} from 'constants/store';
 import {Self} from 'types';
 

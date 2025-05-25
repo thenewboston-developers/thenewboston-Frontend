@@ -1,19 +1,19 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
-import {mdiAccountPlusOutline, mdiAccountMinusOutline} from '@mdi/js';
+import {mdiAccountMinusOutline, mdiAccountPlusOutline} from '@mdi/js';
+import Icon from '@mdi/react';
+import {createFollower, deleteFollower, getFollowers, resetFollowers} from 'dispatchers/followers';
+import {deleteFollowing, getFollowings, resetFollowings} from 'dispatchers/followings';
+import {getUserStats} from 'dispatchers/userStats';
+import {FollowerType} from 'enums';
+import {getFollowers as getFollowersState, getFollowings as getFollowingsState, getSelf} from 'selectors/state';
+import {AppDispatch, SFC, UserReadSerializer} from 'types';
 
 import Avatar from 'components/Avatar';
 import EmptyText from 'components/EmptyText';
-import Icon from '@mdi/react';
 import InfiniteScroll from 'components/InfiniteScroll';
-import {AppDispatch, SFC, UserReadSerializer} from 'types';
-import {FollowerType} from 'enums';
-import {createFollower, deleteFollower, getFollowers, resetFollowers} from 'dispatchers/followers';
-import {deleteFollowing, getFollowings, resetFollowings} from 'dispatchers/followings';
 import {displayErrorToast} from 'utils/toasts';
-import {getFollowers as getFollowersState, getFollowings as getFollowingsState, getSelf} from 'selectors/state';
-import {getUserStats} from 'dispatchers/userStats';
 
 import * as S from './Styles';
 

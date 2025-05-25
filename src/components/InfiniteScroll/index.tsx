@@ -1,6 +1,8 @@
-import {ReactNode, forwardRef} from 'react';
+import {forwardRef, ReactNode} from 'react';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
+
 import Loader from 'components/Loader';
+
 import * as S from './Styles';
 
 interface InfiniteScrollProps {

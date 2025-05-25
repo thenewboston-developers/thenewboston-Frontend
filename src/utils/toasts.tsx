@@ -1,8 +1,8 @@
 import {ReactNode} from 'react';
 import {toast} from 'react-toastify';
+import {ToastType} from 'enums';
 
 import Toast from 'components/Toast';
-import {ToastType} from 'enums';
 
 export const displayErrorToast = (error: any) => {
   let errorStr: string;

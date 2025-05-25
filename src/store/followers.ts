@@ -1,6 +1,7 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {FOLLOWERS} from 'constants/store';
 import {Follower} from 'types';
+
 import {createItemSlice, CustomReducers, ItemSliceState} from 'utils/store';
 
 const updateSelfFollowing = (state: ItemSliceState<Follower>, followedUserId: number, selfFollowing: boolean) => {

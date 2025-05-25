@@ -1,26 +1,26 @@
 import {useCallback, useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import Icon from '@mdi/react';
 import {mdiBankTransferIn, mdiBankTransferOut} from '@mdi/js';
-import orderBy from 'lodash/orderBy';
-
+import Icon from '@mdi/react';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
-import EmptyPage from 'components/EmptyPage';
-import Tab from 'components/Tab';
-import Tabs from 'components/Tabs';
-import {AppDispatch, SFC} from 'types';
-import {WalletTab} from 'enums';
 import {getWallets as _getWallets} from 'dispatchers/wallets';
+import {WalletTab} from 'enums';
 import {useAvailableWalletCurrencies, useToggle} from 'hooks';
+import orderBy from 'lodash/orderBy';
 import WalletCreateModal from 'modals/WalletCreateModal';
 import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
+import {AppDispatch, SFC} from 'types';
+
+import EmptyPage from 'components/EmptyPage';
+import Tab from 'components/Tab';
+import Tabs from 'components/Tabs';
 import {displayErrorToast} from 'utils/toasts';
+
 import MenuItem from './MenuItem';
+import * as S from './Styles';
 import WalletDeposit from './WalletDeposit';
 import WalletWithdraw from './WalletWithdraw';
-
-import * as S from './Styles';
 
 const Wallets: SFC = ({className}) => {
   const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);

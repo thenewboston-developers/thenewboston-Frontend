@@ -1,7 +1,7 @@
 import styled from 'styled-components';
+import {breakpoints, colors, fonts} from 'styles';
 
 import UButton from 'components/Button';
-import {breakpoints, colors, fonts} from 'styles';
 
 const USER_IMAGE_SIZE = 110;
 

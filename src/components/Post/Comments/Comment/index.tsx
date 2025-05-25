@@ -1,17 +1,18 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {mdiDeleteOutline, mdiDotsHorizontal, mdiSquareEditOutline} from '@mdi/js';
-
-import Avatar from 'components/Avatar';
-import Linkify from 'components/Linkify';
 import {deleteComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
 import CommentEditModal from 'modals/CommentEditModal';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Comment as TComment, SFC} from 'types';
+
+import Avatar from 'components/Avatar';
+import Linkify from 'components/Linkify';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
+
 import * as S from './Styles';
 
 export interface CommentProps {

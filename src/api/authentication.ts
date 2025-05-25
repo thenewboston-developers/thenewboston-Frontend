@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import {LoginRequest, LoginResponse} from 'types';
 
 export const login = async (data: LoginRequest): Promise<LoginResponse> => {

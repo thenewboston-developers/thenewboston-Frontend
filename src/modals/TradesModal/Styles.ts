@@ -1,8 +1,8 @@
 import styled from 'styled-components';
+import {breakpoints, colors} from 'styles';
+import {Table as UTable, Tbody as UTbody, Thead as UThead} from 'styles/components/Table';
 
 import UModal from 'components/Modal';
-import {Table as UTable, Tbody as UTbody, Thead as UThead} from 'styles/components/Table';
-import {breakpoints, colors} from 'styles';
 
 export const Modal = styled(UModal)`
   display: flex;

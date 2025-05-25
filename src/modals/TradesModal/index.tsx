@@ -1,12 +1,13 @@
 import {useCallback, useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
-
 import {getTrades as _getTrades} from 'dispatchers/trades';
 import {ExchangeOrderType} from 'enums';
+import orderBy from 'lodash/orderBy';
 import {getCurrencies, getTrades} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
+
 import {getDateStr, getTimeStr} from 'utils/dates';
+
 import * as S from './Styles';
 
 export interface TradesModalProps {

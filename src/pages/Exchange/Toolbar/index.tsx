@@ -1,5 +1,7 @@
-import ToolbarMenuLink from 'components/ToolbarMenuLink';
 import {SFC} from 'types';
+
+import ToolbarMenuLink from 'components/ToolbarMenuLink';
+
 import * as S from './Styles';
 
 const Toolbar: SFC = ({className}) => {

@@ -1,14 +1,16 @@
 import {useState} from 'react';
-
-import Tab from 'components/Tab';
+import {mdiCartArrowDown, mdiCartArrowUp} from '@mdi/js';
+import Icon from '@mdi/react';
 import {useActiveAssetPair} from 'hooks';
 import {SFC} from 'types';
-import * as S from './Styles';
+
+import Tab from 'components/Tab';
+
+import AssetPairSelector from '../AssetPairSelector';
+
 import Buy from './Buy';
 import Sell from './Sell';
-import Icon from '@mdi/react';
-import {mdiCartArrowDown, mdiCartArrowUp} from '@mdi/js';
-import AssetPairSelector from '../AssetPairSelector';
+import * as S from './Styles';
 
 enum TradeTab {
   BUY = 'BUY',

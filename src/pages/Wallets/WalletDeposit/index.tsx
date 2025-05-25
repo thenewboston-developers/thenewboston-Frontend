@@ -2,19 +2,19 @@ import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiRefresh} from '@mdi/js';
 import MdiIcon from '@mdi/react';
+import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
+import {WireType} from 'enums';
+import {useActiveWallet} from 'hooks';
 import orderBy from 'lodash/orderBy';
+import {getWires} from 'selectors/state';
+import {colors} from 'styles';
+import {AppDispatch, SFC} from 'types';
 
 import Button, {ButtonColor} from 'components/Button';
 import ExpandableWire from 'components/ExpandableWire';
-import Loader from 'components/Loader';
 import Line from 'components/Line';
-import {AppDispatch, SFC} from 'types';
-import {WireType} from 'enums';
-import {colors} from 'styles';
-import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
+import Loader from 'components/Loader';
 import {displayErrorToast} from 'utils/toasts';
-import {getWires} from 'selectors/state';
-import {useActiveWallet} from 'hooks';
 
 import * as S from './Styles';
 

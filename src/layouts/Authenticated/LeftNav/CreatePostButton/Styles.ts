@@ -1,6 +1,5 @@
-import styled from 'styled-components';
 import UIcon from '@mdi/react';
-
+import styled from 'styled-components';
 import {breakpoints, colors, fonts} from 'styles';
 
 const HEIGHT = 48;

@@ -3,8 +3,8 @@ import FileInput from './FileInput';
 import InlineInput from './InlineInput';
 import Input from './Input';
 import LogoInput from './LogoInput';
+import ReactSelect from './ReactSelect';
 import Select from './Select';
 import Textarea from './Textarea';
-import ReactSelect from './ReactSelect';
 
-export {Checkbox, FileInput, InlineInput, Input, LogoInput, Select, Textarea, ReactSelect};
+export {Checkbox, FileInput, InlineInput, Input, LogoInput, ReactSelect, Select, Textarea};
