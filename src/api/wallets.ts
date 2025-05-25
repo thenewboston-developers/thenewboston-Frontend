@@ -38,7 +38,7 @@ export const createWalletWithdraw = async (walletId: number, data: WithdrawReque
 
 export const getWalletDepositBalance = async (walletId: number): Promise<Wallet> => {
   try {
-    const response = await axios.get<Wallet>(`${BASE_URL}/${walletId}/deposit_balance`, authorizationHeaders());
+    const response = await axios.get<Wallet>(`${BASE_URL}/${walletId}/deposit-balance`, authorizationHeaders());
     return response.data;
   } catch (error) {
     throw error;

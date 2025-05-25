@@ -28,7 +28,7 @@ export const updateNotification = async (
 
 export const markAllNotificationsAsRead = async (): Promise<void> => {
   try {
-    await axios.patch(`${BASE_URL}/mark_all_as_read`, {}, authorizationHeaders());
+    await axios.patch(`${BASE_URL}/mark-all-as-read`, {}, authorizationHeaders());
   } catch (error) {
     throw error;
   }

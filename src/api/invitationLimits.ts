@@ -3,7 +3,7 @@ import axios from 'axios';
 import {InvitationLimit} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
-const BASE_URL = `${process.env.REACT_APP_API_URL}/api/invitation_limits`;
+const BASE_URL = `${process.env.REACT_APP_API_URL}/api/invitation-limits`;
 
 export const getInvitationLimit = async (id: number): Promise<InvitationLimit> => {
   try {
