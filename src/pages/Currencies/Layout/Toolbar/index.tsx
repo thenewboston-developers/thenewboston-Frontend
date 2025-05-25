@@ -1,15 +1,15 @@
 import Button from 'components/Button';
-import CoreModal from 'modals/CoreModal';
+import CurrencyModal from 'modals/CurrencyModal';
 import ToolbarMenuLink from 'components/ToolbarMenuLink';
 import {SFC} from 'types';
 import {useToggle} from 'hooks';
 import * as S from './Styles';
 
 const Toolbar: SFC = ({className}) => {
-  const [coreModalIsOpen, toggleCoreModal] = useToggle(false);
+  const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
 
   const renderButton = () => {
-    return <Button onClick={toggleCoreModal} text="Add Currency" />;
+    return <Button onClick={toggleCurrencyModal} text="Add Currency" />;
   };
   return (
     <>
@@ -20,7 +20,7 @@ const Toolbar: SFC = ({className}) => {
         </S.Center>
         <S.ButtonContainer>{renderButton()}</S.ButtonContainer>
       </S.Container>
-      {coreModalIsOpen ? <CoreModal close={toggleCoreModal} /> : null}
+      {currencyModalIsOpen ? <CurrencyModal close={toggleCurrencyModal} /> : null}
     </>
   );
 };

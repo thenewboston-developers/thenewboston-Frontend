@@ -4,7 +4,7 @@ import orderBy from 'lodash/orderBy';
 
 import {getTrades as _getTrades} from 'dispatchers/trades';
 import {ExchangeOrderType} from 'enums';
-import {getCores, getTrades} from 'selectors/state';
+import {getCurrencies, getTrades} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {getDateStr, getTimeStr} from 'utils/dates';
 import * as S from './Styles';
@@ -15,7 +15,7 @@ export interface TradesModalProps {
 }
 
 const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
-  const cores = useSelector(getCores);
+  const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
   const trades = useSelector(getTrades);
 
@@ -37,7 +37,7 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
     );
   }, [order, trades]);
 
-  const getCurrencyTicker = useCallback((coreId: number) => cores[coreId]?.ticker || '-', [cores]);
+  const getCurrencyTicker = useCallback((currencyId: number) => currencies[currencyId]?.ticker || '-', [currencies]);
 
   const renderRows = useCallback(() => {
     if (!order) return null;

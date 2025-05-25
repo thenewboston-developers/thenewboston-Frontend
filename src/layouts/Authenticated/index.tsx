@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {getAssetPairs} from 'dispatchers/assetPairs';
-import {getCores} from 'dispatchers/cores';
+import {getCurrencies} from 'dispatchers/currencies';
 import {getExchangeOrders} from 'dispatchers/exchangeOrders';
 import {getWallets} from 'dispatchers/wallets';
 import {getWires} from 'dispatchers/wires';
@@ -20,7 +20,7 @@ const Authenticated: SFC = ({className}) => {
       try {
         await Promise.all([
           dispatch(getAssetPairs()),
-          dispatch(getCores()),
+          dispatch(getCurrencies()),
           dispatch(getExchangeOrders()),
           dispatch(getWallets()),
           dispatch(getWires()),

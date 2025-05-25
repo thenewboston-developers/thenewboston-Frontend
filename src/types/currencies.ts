@@ -1,7 +1,7 @@
 import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
 
-export interface Core extends CreatedModified {
+export interface Currency extends CreatedModified {
   domain: string;
   id: number;
   logo: string | null;
@@ -9,4 +9,4 @@ export interface Core extends CreatedModified {
   ticker: string;
 }
 
-export type Cores = Dict<Core>;
+export type Currencies = Dict<Currency>;

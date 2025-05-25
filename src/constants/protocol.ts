@@ -1,1 +1,1 @@
-export const CORE_TRANSACTION_FEE = 1;
+export const CURRENCY_TRANSACTION_FEE = 1;

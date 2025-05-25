@@ -3,7 +3,7 @@ import {Block} from 'types/blocks';
 import {Dict} from 'types/generic';
 
 export interface Wire extends Block {
-  core: number;
+  currency: number;
   created_date: string;
   owner: number;
   wire_type: WireType;

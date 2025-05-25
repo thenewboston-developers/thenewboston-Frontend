@@ -23,7 +23,7 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
-  const {content, created_date, id, owner, price_amount, price_core} = comment;
+  const {content, created_date, id, owner, price_amount, price_currency} = comment;
 
   const handleDelete = async () => {
     try {
@@ -65,8 +65,8 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
   };
 
   const renderPriceMini = () => {
-    if (!price_amount || !price_core) return null;
-    return <S.PriceMini price={price_amount} coreId={price_core} />;
+    if (!price_amount || !price_currency) return null;
+    return <S.PriceMini price={price_amount} currencyId={price_currency} />;
   };
 
   const renderContent = () => {

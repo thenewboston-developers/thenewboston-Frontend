@@ -1,9 +1,9 @@
 import {WalletTab} from 'enums';
-import {Core} from 'types/cores';
+import {Currency} from 'types/currencies';
 
 export interface Manager {
   activeAssetPairId: number | null;
-  activeCommentCore: Core | null;
+  activeCommentCurrency: Currency | null;
   activeWalletId: number | null;
   activeWalletTab: WalletTab | null;
 }

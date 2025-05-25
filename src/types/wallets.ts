@@ -1,10 +1,10 @@
-import {Core} from 'types/cores';
+import {Currency} from 'types/currencies';
 import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
 
 export interface Wallet extends CreatedModified {
   balance: number;
-  core: Core;
+  currency: Currency;
   deposit_account_number: string;
   deposit_balance: number;
   id: number;

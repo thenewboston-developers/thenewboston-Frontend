@@ -7,7 +7,7 @@ import {mdiChevronDown, mdiChevronUp, mdiEmoticonOutline, mdiPlusCircle, mdiSend
 
 import Coin from 'assets/coin.svg';
 import Comment from './Comment';
-import CoreSelectModal from 'modals/CoreSelectModal';
+import CurrencySelectModal from 'modals/CurrencySelectModal';
 import yup from 'utils/yup';
 import {AppDispatch, Comment as TComment, SFC} from 'types';
 import {ButtonColor, ButtonType} from 'components/Button';
@@ -27,7 +27,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   const [commentDetails, setCommentDetails] = useState<TComment[]>([]);
   const [startIndex, setStartIndex] = useState<number>(0);
   const [isOpenEmojiBox, setIsOpenEmojiBox] = useState(false);
-  const [coreSelectModalIsOpen, toggleCoreSelectModal] = useToggle(false);
+  const [currencySelectModalIsOpen, toggleCurrencySelectModal] = useToggle(false);
   const [isMobileDevice, setIsMobileDevice] = useState<boolean>(window.innerWidth <= parseInt(breakpoints.mini));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const emojiBoxRef = useRef<HTMLDivElement>(null);
@@ -51,18 +51,18 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
       let price_amount = values.price_amount === '' ? null : parseInt(values.price_amount, 10);
-      let price_core = manager.activeCommentCore?.id || null;
+      let price_currency = manager.activeCommentCurrency?.id || null;
 
-      if (!price_amount || !price_core) {
+      if (!price_amount || !price_currency) {
         price_amount = null;
-        price_core = null;
+        price_currency = null;
       }
 
       const requestData = {
         ...values,
         post: postId,
         price_amount,
-        price_core,
+        price_currency,
       };
       await dispatch(createComment(requestData));
       resetForm();
@@ -76,12 +76,12 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     return commentDetails.map((comment, index) => <Comment comment={comment} key={index} />);
   };
 
-  const renderSelectCoreElement = () => {
-    if (manager.activeCommentCore) {
+  const renderSelectCurrencyElement = () => {
+    if (manager.activeCommentCurrency) {
       return (
         <S.IconContainer onClick={toggleMenu}>
-          <S.Img alt="logo" src={manager.activeCommentCore.logo || Coin} />
-          {coreSelectModalIsOpen ? (
+          <S.Img alt="logo" src={manager.activeCommentCurrency.logo || Coin} />
+          {currencySelectModalIsOpen ? (
             <S.IconRight path={mdiChevronUp} size="20px" />
           ) : (
             <S.IconRight path={mdiChevronDown} size="20px" />
@@ -98,7 +98,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   };
 
   const toggleMenu = () => {
-    toggleCoreSelectModal();
+    toggleCurrencySelectModal();
     setIsMenuOpen(!isMenuOpen);
   };
 
@@ -203,7 +203,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
                   </S.EmojiButton>
                   {!isMobileDevice && (
                     <S.PriceAmountInputContainer>
-                      {renderSelectCoreElement()}
+                      {renderSelectCurrencyElement()}
                       <S.PriceAmountInput
                         errors={errors}
                         name="price_amount"
@@ -229,7 +229,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
               {isMobileDevice && (
                 <S.Box>
                   <S.PriceAmountInputContainer>
-                    {renderSelectCoreElement()}
+                    {renderSelectCurrencyElement()}
                     <S.PriceAmountInput
                       errors={errors}
                       name="price_amount"
@@ -256,7 +256,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
           </S.Content>
         )}
       </S.Container>
-      {coreSelectModalIsOpen ? <CoreSelectModal close={toggleCoreSelectModal} /> : null}
+      {currencySelectModalIsOpen ? <CurrencySelectModal close={toggleCurrencySelectModal} /> : null}
     </>
   );
 };

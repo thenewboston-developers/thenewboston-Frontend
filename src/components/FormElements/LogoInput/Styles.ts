@@ -1,10 +1,10 @@
 import {Field as UField} from 'formik';
 import styled from 'styled-components';
 
-import UCoreLogo from 'components/CoreLogo';
+import UCurrencyLogo from 'components/CurrencyLogo';
 import {colors, inputStyle} from 'styles';
 
-export const CoreLogo = styled(UCoreLogo)`
+export const CurrencyLogo = styled(UCurrencyLogo)`
   margin-left: 12px;
   position: absolute;
   right: 10px;

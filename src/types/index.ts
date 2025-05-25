@@ -14,7 +14,7 @@ import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {Comment, Comments} from 'types/comments';
-import {Core, Cores} from 'types/cores';
+import {Currencies, Currency} from 'types/currencies';
 import {CreatedModified} from 'types/createdModified';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
 import {SelectOption} from 'types/forms';
@@ -45,8 +45,8 @@ export {
   Comment,
   CommentReadSerializer,
   Comments,
-  Core,
-  Cores,
+  Currencies,
+  Currency,
   CreateCommentRequest,
   CreateExchangeOrderRequest,
   CreateFollowerRequest,

@@ -1,33 +1,33 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 import Line from 'components/Line';
-import CoreLogo from 'components/CoreLogo';
+import CurrencyLogo from 'components/CurrencyLogo';
 import DropdownMenu from 'components/DropdownMenu';
-import {deleteCore} from 'dispatchers/cores';
+import {deleteCurrency} from 'dispatchers/currencies';
 import {useToggle} from 'hooks';
-import CoreModal from 'modals/CoreModal';
+import CurrencyModal from 'modals/CurrencyModal';
 import {getSelf} from 'selectors/state';
-import {AppDispatch, Core, SFC} from 'types';
+import {AppDispatch, Currency, SFC} from 'types';
 import * as S from './Styles';
 
-export interface CoreDetailProps {
-  core: Core;
+export interface CurrencyDetailProps {
+  currency: Currency;
 }
 
-const CoreDetail: SFC<CoreDetailProps> = ({className, core}) => {
-  const [coreModalIsOpen, toggleCoreModal] = useToggle(false);
+const CurrencyDetail: SFC<CurrencyDetailProps> = ({className, currency}) => {
+  const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
   const handleDelete = async () => {
-    await dispatch(deleteCore(core.id));
+    await dispatch(deleteCurrency(currency.id));
   };
 
   const menuOptions = [
     {
       label: 'Edit',
       menuIcon: mdiSquareEditOutline,
-      onClick: toggleCoreModal,
+      onClick: toggleCurrencyModal,
     },
     {
       label: 'Delete',
@@ -37,7 +37,7 @@ const CoreDetail: SFC<CoreDetailProps> = ({className, core}) => {
   ];
 
   const renderDropdownMenu = () => {
-    if (core.owner !== self.id) return null;
+    if (currency.owner !== self.id) return null;
     return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
   return (
@@ -45,19 +45,19 @@ const CoreDetail: SFC<CoreDetailProps> = ({className, core}) => {
       <S.Container className={className}>
         <S.Box>
           <S.BoxLeft>
-            <CoreLogo logo={core.logo} />
+            <CurrencyLogo logo={currency.logo} />
             <S.Text>
-              <S.Ticker>{core.ticker}</S.Ticker>
+              <S.Ticker>{currency.ticker}</S.Ticker>
             </S.Text>
           </S.BoxLeft>
           {renderDropdownMenu()}
         </S.Box>
         <Line />
-        <S.Domain>{core.domain}</S.Domain>
+        <S.Domain>{currency.domain}</S.Domain>
       </S.Container>
-      {coreModalIsOpen ? <CoreModal close={toggleCoreModal} core={core} /> : null}
+      {currencyModalIsOpen ? <CurrencyModal close={toggleCurrencyModal} currency={currency} /> : null}
     </>
   );
 };
 
-export default CoreDetail;
+export default CurrencyDetail;

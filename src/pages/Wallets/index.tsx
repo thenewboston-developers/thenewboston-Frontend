@@ -11,7 +11,7 @@ import Tabs from 'components/Tabs';
 import {AppDispatch, SFC} from 'types';
 import {WalletTab} from 'enums';
 import {getWallets as _getWallets} from 'dispatchers/wallets';
-import {useAvailableWalletCores, useToggle} from 'hooks';
+import {useAvailableWalletCurrencies, useToggle} from 'hooks';
 import WalletCreateModal from 'modals/WalletCreateModal';
 import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
@@ -24,7 +24,7 @@ import * as S from './Styles';
 
 const Wallets: SFC = ({className}) => {
   const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
-  const availableWalletCores = useAvailableWalletCores();
+  const availableWalletCores = useAvailableWalletCurrencies();
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
   const wallets = useSelector(getWallets);
@@ -39,7 +39,7 @@ const Wallets: SFC = ({className}) => {
     })();
   }, [dispatch]);
 
-  const walletList = useMemo(() => orderBy(Object.values(wallets), [(wallet) => wallet.core.ticker]), [wallets]);
+  const walletList = useMemo(() => orderBy(Object.values(wallets), [(wallet) => wallet.currency.ticker]), [wallets]);
 
   useEffect(() => {
     (async () => {

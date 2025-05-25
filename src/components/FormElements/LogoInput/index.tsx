@@ -24,7 +24,7 @@ const LogoInput: SFC<LogoInputProps> = ({className, errors, label, logo, name, o
           onChange={onChange}
           type="number"
         />
-        <S.CoreLogo logo={logo} width="28px" />
+        <S.CurrencyLogo logo={logo} width="28px" />
       </S.FieldWrapper>
       <S.SecondaryContainer>
         {errors[name] && touched[name] ? <S.ErrorMessage>{errors[name]}</S.ErrorMessage> : null}

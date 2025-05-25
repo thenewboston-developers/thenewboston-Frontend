@@ -47,7 +47,7 @@ const Chart: SFC = ({className}) => {
     if (!activeAssetPair) return null;
     return (
       <S.LastPrice>
-        <Price price_amount={lastTradePrice} price_core={activeAssetPair.secondary_currency.id} />
+        <Price price_amount={lastTradePrice} price_currency={activeAssetPair.secondary_currency.id} />
       </S.LastPrice>
     );
   };

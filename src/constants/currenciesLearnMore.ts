@@ -1,9 +1,9 @@
-import BenefitImg from 'assets/coresLearnMore/benefit.png';
-import MissionImg from 'assets/coresLearnMore/mission-statement.png';
-import SystemArc from 'assets/coresLearnMore/architecture.png';
-import Tag from 'assets/coresLearnMore/tag-icon.png';
-import UseCaseImg from 'assets/coresLearnMore/use-cases.png';
-import VisionImg from 'assets/coresLearnMore/vision-statement.png';
+import BenefitImg from 'assets/currenciesLearnMore/benefit.png';
+import MissionImg from 'assets/currenciesLearnMore/mission-statement.png';
+import SystemArc from 'assets/currenciesLearnMore/architecture.png';
+import Tag from 'assets/currenciesLearnMore/tag-icon.png';
+import UseCaseImg from 'assets/currenciesLearnMore/use-cases.png';
+import VisionImg from 'assets/currenciesLearnMore/vision-statement.png';
 import {LearnMore} from 'types';
 
 export const VISION_STATEMENT: LearnMore = {
@@ -21,9 +21,9 @@ export const MISSION_STATEMENT: LearnMore = {
 };
 
 export const SYSTEM_ARCHITECTURE: LearnMore = {
-  detail: `The system operates as a decentralized network of networks, allowing individuals to create and distribute their own digital currency known as "coins." Each core server in the network maintains a separate ledger. The minting and distribution of new coins are determined by the server owner. Coins within the network serve various purposes. They enable secure messaging between devices and can also be transferred as a form of value between users. The network architecture permits devices to store data locally, removing the need for a centralized database and facilitating the development of distributed applications. \n
-    To enable messaging and value transfer, a standardized protocol is employed. Although core servers are not directly connected, clients can connect to multiple cores, effectively linking them through client devices.\n
-    Notably, messaging and value transfers take place only within the same core server. Each server maintains its independent ledger, ensuring that each users transaction history remains within a single server as the definitive record of truth.`,
+  detail: `The system operates as a decentralized network of networks, allowing individuals to create and distribute their own digital currency known as "coins." Each currency server in the network maintains a separate ledger. The minting and distribution of new coins are determined by the server owner. Coins within the network serve various purposes. They enable secure messaging between devices and can also be transferred as a form of value between users. The network architecture permits devices to store data locally, removing the need for a centralized database and facilitating the development of distributed applications. \n
+    To enable messaging and value transfer, a standardized protocol is employed. Although currency servers are not directly connected, clients can connect to multiple currencies, effectively linking them through client devices.\n
+    Notably, messaging and value transfers take place only within the same currency server. Each server maintains its independent ledger, ensuring that each users transaction history remains within a single server as the definitive record of truth.`,
   logo: SystemArc,
   title: 'System Architecture',
 };
@@ -102,7 +102,7 @@ export const USE_CASES: LearnMore = {
     ],
     8: [
       'Cross-Network Interoperability:',
-      'Connect core servers and devices to other networks, expanding integration opportunities with blockchains and third-party APIs.',
+      'Connect currency servers and devices to other networks, expanding integration opportunities with blockchains and third-party APIs.',
     ],
     9: [
       'Computing Resource Marketplace:',
@@ -117,7 +117,7 @@ export const USE_CASES: LearnMore = {
 };
 
 export const SYSTEM_ARCHITECTURE_CODE: LearnMore = {
-  detail: `All messages are signed using the Ed25519 public-key signature system to ensure authenticity and integrity. Since each core server maintains its ledger, there is no need for ledger syncronization across servers. This decentralized approach allows each server to autonomously mint and manage its currency, reducing the risk of double spending.`,
+  detail: `All messages are signed using the Ed25519 public-key signature system to ensure authenticity and integrity. Since each currency server maintains its ledger, there is no need for ledger syncronization across servers. This decentralized approach allows each server to autonomously mint and manage its currency, reducing the risk of double spending.`,
   logo: Tag,
   obj: {
     amount: 5,

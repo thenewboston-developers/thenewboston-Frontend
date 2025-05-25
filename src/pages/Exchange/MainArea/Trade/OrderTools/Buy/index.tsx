@@ -52,7 +52,9 @@ const Buy: SFC = ({className}) => {
   };
 
   const secondaryCurrencyBalance = useMemo(() => {
-    const wallet = Object.values(wallets).find((_wallet) => _wallet.core.id === activeAssetPair!.secondary_currency.id);
+    const wallet = Object.values(wallets).find(
+      (_wallet) => _wallet.currency.id === activeAssetPair!.secondary_currency.id,
+    );
     return wallet?.balance || 0;
   }, [activeAssetPair, wallets]);
 
