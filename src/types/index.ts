@@ -9,19 +9,18 @@ import {PostReadSerializer} from 'types/api/posts';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {UserStatsSerializer} from 'types/api/userStats';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
-
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {Comment, Comments} from 'types/comments';
-import {Currencies, Currency} from 'types/currencies';
 import {CreatedModified} from 'types/createdModified';
+import {Currencies, Currency} from 'types/currencies';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
-import {SelectOption} from 'types/forms';
 import {Follower, Followers} from 'types/follower';
+import {SelectOption} from 'types/forms';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
-import {Invitation, Invitations} from 'types/invitations';
 import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
+import {Invitation, Invitations} from 'types/invitations';
 import {LearnMore} from 'types/learnMore';
 import {Manager} from 'types/manager';
 import {Notification, Notifications} from 'types/notifications';
@@ -45,16 +44,16 @@ export {
   Comment,
   CommentReadSerializer,
   Comments,
-  Currencies,
-  Currency,
   CreateCommentRequest,
+  CreatedModified,
   CreateExchangeOrderRequest,
   CreateFollowerRequest,
   CreateInvitationRequest,
   CreateUserRequest,
   CreateUserResponse,
   CreateWalletRequest,
-  CreatedModified,
+  Currencies,
+  Currency,
   DepositResponse,
   Dict,
   ExchangeOrder,
@@ -81,16 +80,16 @@ export {
   PostReadSerializer,
   Posts,
   RootState,
-  SFC,
   SelectOption,
   Self,
+  SFC,
   Trade,
   Trades,
   UpdateNotificationRequest,
   UserReadSerializer,
+  Users,
   UserStats,
   UserStatsSerializer,
-  Users,
   Wallet,
   Wallets,
   Wire,

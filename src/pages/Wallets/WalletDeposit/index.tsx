@@ -6,15 +6,15 @@ import orderBy from 'lodash/orderBy';
 
 import Button, {ButtonColor} from 'components/Button';
 import ExpandableWire from 'components/ExpandableWire';
-import Loader from 'components/Loader';
 import Line from 'components/Line';
-import {AppDispatch, SFC} from 'types';
-import {WireType} from 'enums';
-import {colors} from 'styles';
+import Loader from 'components/Loader';
 import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
-import {displayErrorToast} from 'utils/toasts';
-import {getWires} from 'selectors/state';
+import {WireType} from 'enums';
 import {useActiveWallet} from 'hooks';
+import {getWires} from 'selectors/state';
+import {colors} from 'styles';
+import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 

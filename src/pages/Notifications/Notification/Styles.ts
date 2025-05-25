@@ -1,8 +1,8 @@
-import UIcon from '@mdi/react';
 import {Link as ULink} from 'react-router-dom';
+import UIcon from '@mdi/react';
+import styled from 'styled-components';
 
 import UDot from 'components/Dot';
-import styled from 'styled-components';
 import {colors, fonts} from 'styles';
 
 export const NotificationContainer = styled.div`

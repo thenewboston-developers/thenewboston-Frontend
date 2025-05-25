@@ -7,11 +7,11 @@ import wallet from 'assets/wallet.svg';
 import Button, {ButtonType} from 'components/Button';
 import ExpandableWire from 'components/ExpandableWire';
 import {CURRENCY_TRANSACTION_FEE} from 'constants/protocol';
-import {AppDispatch, SFC} from 'types';
 import {createWalletWithdraw} from 'dispatchers/wallets';
 import {WireType} from 'enums';
-import {getWires} from 'selectors/state';
 import {useActiveWallet} from 'hooks';
+import {getWires} from 'selectors/state';
+import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup, {accountNumberSchema} from 'utils/yup';
 

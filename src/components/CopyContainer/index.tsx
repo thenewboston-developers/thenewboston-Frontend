@@ -1,11 +1,11 @@
-import Icon from '@mdi/react';
 import {mdiContentCopy, mdiLink} from '@mdi/js';
+import Icon from '@mdi/react';
 
-import {SFC} from 'types';
 import {ToastType} from 'enums';
-import {displayToast} from 'utils/toasts';
 import {useResizeObserver} from 'hooks';
 import {breakpoints} from 'styles';
+import {SFC} from 'types';
+import {displayToast} from 'utils/toasts';
 
 import * as S from './Styles';
 

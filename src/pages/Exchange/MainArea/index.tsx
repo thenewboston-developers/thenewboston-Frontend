@@ -1,9 +1,10 @@
 import {Route, Routes} from 'react-router-dom';
 
 import {SFC} from 'types';
+
 import Orders from './Orders';
-import Trade from './Trade';
 import * as S from './Styles';
+import Trade from './Trade';
 
 const MainArea: SFC = ({className}) => {
   return (

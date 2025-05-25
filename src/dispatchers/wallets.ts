@@ -2,9 +2,9 @@ import {
   createWallet as _createWallet,
   createWalletDeposit as _createWalletDeposit,
   createWalletWithdraw as _createWalletWithdraw,
+  getDefaultWallet as _getDefaultWallet,
   getWalletDepositBalance as _getWalletDepositBalance,
   getWallets as _getWallets,
-  getDefaultWallet as _getDefaultWallet,
 } from 'api/wallets';
 import {setWallet, setWallets} from 'store/wallets';
 import {setWire} from 'store/wires';

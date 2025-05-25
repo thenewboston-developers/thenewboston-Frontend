@@ -1,5 +1,6 @@
-import styled, {keyframes} from 'styled-components';
 import UIcon from '@mdi/react';
+import styled, {keyframes} from 'styled-components';
+
 import {colors} from 'styles';
 
 export const IMG_HEIGHT = 24;

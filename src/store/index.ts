@@ -1,16 +1,16 @@
+import {AnyAction, combineReducers, configureStore} from '@reduxjs/toolkit';
 import {
+  createMigrate,
   FLUSH,
   PAUSE,
   PERSIST,
+  persistReducer,
+  persistStore,
   PURGE,
   REGISTER,
   REHYDRATE,
-  createMigrate,
-  persistReducer,
-  persistStore,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import {AnyAction, combineReducers, configureStore} from '@reduxjs/toolkit';
 
 import {LOGOUT_USER} from 'store/actions';
 import assetPairsReducer from 'store/assetPairs';
@@ -28,8 +28,8 @@ import notificationsReducer from 'store/notifications';
 import postsReducer from 'store/posts';
 import selfReducer from 'store/self';
 import tradesReducer from 'store/trades';
-import userStatsReducer from 'store/userStats';
 import usersReducer from 'store/users';
+import userStatsReducer from 'store/userStats';
 import walletsReducer from 'store/wallets';
 import wiresReducer from 'store/wires';
 

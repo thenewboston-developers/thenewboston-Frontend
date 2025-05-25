@@ -1,5 +1,6 @@
-import Icon from 'components/Icon';
 import styled from 'styled-components';
+
+import Icon from 'components/Icon';
 import {colors} from 'styles';
 import {Menu, Option} from 'styles/components/DropMenuStyle';
 

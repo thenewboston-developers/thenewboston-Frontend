@@ -1,4 +1,5 @@
 import {PostReactionSerializer, SFC} from 'types';
+
 import * as S from './Styles';
 
 export interface PostReactionModalProps {

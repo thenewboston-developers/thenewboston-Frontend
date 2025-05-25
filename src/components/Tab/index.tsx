@@ -1,4 +1,5 @@
 import {GenericVoidFunction, SFC} from 'types';
+
 import * as S from './Styles';
 
 export interface TabProps {

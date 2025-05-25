@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import {Col as UCol, Row as URow} from 'styles/components/GridStyle';
 
 import {breakpoints, colors, fonts} from 'styles';
+import {Col as UCol, Row as URow} from 'styles/components/GridStyle';
 
 export const Container = styled.div`
   padding: 24px 32px;

@@ -5,7 +5,6 @@ import fonts from 'styles/fonts';
 import {hiddenScroll, inputStyle, listItemDescription, listItemName, radioCardStyle, toolbarStyle} from 'styles/mixins';
 
 export {
-  TOOLBAR_HEIGHT,
   breakpoints,
   colors,
   fonts,
@@ -14,5 +13,6 @@ export {
   listItemDescription,
   listItemName,
   radioCardStyle,
+  TOOLBAR_HEIGHT,
   toolbarStyle,
 };

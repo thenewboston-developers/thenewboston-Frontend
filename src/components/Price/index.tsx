@@ -1,5 +1,6 @@
 import {useCurrencyLogo} from 'hooks';
 import {SFC} from 'types';
+
 import * as S from './Styles';
 
 export interface PriceProps {

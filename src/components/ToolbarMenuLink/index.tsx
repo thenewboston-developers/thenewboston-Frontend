@@ -1,6 +1,7 @@
 import {useLocation} from 'react-router-dom';
 
 import {SFC} from 'types';
+
 import * as S from './Styles';
 
 export interface ToolbarMenuLinkProps {

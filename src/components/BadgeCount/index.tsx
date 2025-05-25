@@ -2,6 +2,7 @@ import {useMemo} from 'react';
 
 import {BadgeStyle} from 'components/Badge';
 import {SFC} from 'types';
+
 import * as S from './Styles';
 
 interface BadgeCountProps<T> {

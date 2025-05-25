@@ -9,6 +9,7 @@ import {ToastType} from 'enums';
 import {AppDispatch, Invitation, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
+
 import * as S from './Styles';
 
 export interface InvitationModalProps {

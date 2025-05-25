@@ -1,18 +1,18 @@
 import {useEffect, useMemo, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import InfiniteScroll from 'components/InfiniteScroll';
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Post from 'components/Post';
 import PostSkeleton from 'components/Post/PostSkeleton';
-import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
+import ScrollToTopButton from 'components/ScrollUpButton';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
+import {AppDispatch, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
-import ScrollToTopButton from 'components/ScrollUpButton';
 
 const Feed: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();

@@ -4,6 +4,7 @@ import CurrencyLogo from 'components/CurrencyLogo';
 import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC, Wallet} from 'types';
+
 import * as S from './Styles';
 
 export interface MenuItemProps {

@@ -1,8 +1,8 @@
 import {useEffect, useRef, useState} from 'react';
 import {mdiEmoticonOutline} from '@mdi/js';
 import Icon from '@mdi/react';
-
 import EmojiPicker from 'emoji-picker-react';
+
 import {SFC} from 'types';
 
 import * as S from './Styles';

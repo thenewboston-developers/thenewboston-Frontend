@@ -1,6 +1,7 @@
 import {ReactNode} from 'react';
 
 import {SFC} from 'types';
+
 import * as S from './Styles';
 
 export interface TabsProps {

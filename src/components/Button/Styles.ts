@@ -1,7 +1,8 @@
-import styled, {css} from 'styled-components';
 import UIcon from '@mdi/react';
+import styled, {css} from 'styled-components';
 
 import {colors, fonts} from 'styles';
+
 import {ButtonColor} from './types';
 
 const BUTTON_HEIGHT = 44;

@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
-import Pattern from './profile-pattern.png';
 import {breakpoints} from 'styles';
+
+import Pattern from './profile-pattern.png';
 
 export const Container = styled.div`
   display: flex;

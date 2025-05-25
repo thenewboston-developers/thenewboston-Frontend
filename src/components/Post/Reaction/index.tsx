@@ -1,18 +1,18 @@
 import {useEffect, useRef, useState} from 'react';
-import EmojiPicker from 'emoji-picker-react';
+import {useDispatch} from 'react-redux';
 import {mdiThumbUpOutline} from '@mdi/js';
+import EmojiPicker from 'emoji-picker-react';
 
-import {SFC} from 'types';
-import {PostReactionSerializer, AppDispatch} from 'types';
 import {createPostReaction} from 'dispatchers/reactions';
+import {useToggle} from 'hooks';
+import {PostReactionModal} from 'modals/PostReactionsModal';
 import {breakpoints} from 'styles';
+import {SFC} from 'types';
+import {AppDispatch, PostReactionSerializer} from 'types';
+import {formatToDynamicDigits} from 'utils/numbers';
+import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
-import {useDispatch} from 'react-redux';
-import {displayErrorToast} from 'utils/toasts';
-import {formatToDynamicDigits} from 'utils/numbers';
-import {PostReactionModal} from 'modals/PostReactionsModal';
-import {useToggle} from 'hooks';
 
 export interface ReactionProps {
   postId: number;

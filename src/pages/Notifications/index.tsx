@@ -1,7 +1,7 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
 import {mdiCheckAll} from '@mdi/js';
+import orderBy from 'lodash/orderBy';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Button, {ButtonColor, IconColor} from 'components/Button';
@@ -10,8 +10,9 @@ import {getNotifications as _getNotifications, markAllNotificationsAsRead} from 
 import {ToastType} from 'enums';
 import {getNotifications} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayToast} from 'utils/toasts';
 import {getUnreadNotificationsCount} from 'utils/notifications';
+import {displayToast} from 'utils/toasts';
+
 import Notification from './Notification';
 import * as S from './Styles';
 

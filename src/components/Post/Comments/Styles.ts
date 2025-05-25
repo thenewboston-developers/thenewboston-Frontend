@@ -1,5 +1,6 @@
-import styled from 'styled-components';
 import UIcon from '@mdi/react';
+import styled from 'styled-components';
+
 import UButton from 'components/Button';
 import {InlineInput as UInlineInput} from 'components/FormElements';
 import {breakpoints, colors} from 'styles';

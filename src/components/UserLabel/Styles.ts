@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import UAvatar from 'components/Avatar';
 import {colors, fonts} from 'styles';
 

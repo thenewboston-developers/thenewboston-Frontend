@@ -1,13 +1,14 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
 import {Flip, ToastContainer} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import WebSocket from 'containers/WebSocket';
 import {useIsAuthenticated} from 'hooks';
 import Authenticated from 'layouts/Authenticated';
 import Unauthenticated from 'layouts/Unauthenticated';
 import {getSelf} from 'selectors/state';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const isAuthenticated = useIsAuthenticated();

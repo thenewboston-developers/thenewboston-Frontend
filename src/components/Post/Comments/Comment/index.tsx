@@ -12,6 +12,7 @@ import {getSelf} from 'selectors/state';
 import {AppDispatch, Comment as TComment, SFC} from 'types';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
+
 import * as S from './Styles';
 
 export interface CommentProps {

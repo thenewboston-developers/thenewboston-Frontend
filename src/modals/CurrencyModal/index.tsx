@@ -7,6 +7,7 @@ import {createCurrency, updateCurrency} from 'dispatchers/currencies';
 import {AppDispatch, Currency, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
+
 import * as S from './Styles';
 
 export interface CurrencyModalProps {

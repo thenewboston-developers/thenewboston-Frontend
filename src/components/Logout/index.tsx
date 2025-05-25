@@ -2,9 +2,9 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
-import {AppDispatch, SFC} from 'types';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {logout} from 'dispatchers/authentication';
+import {AppDispatch, SFC} from 'types';
 
 const Logout: SFC = () => {
   const dispatch = useDispatch<AppDispatch>();

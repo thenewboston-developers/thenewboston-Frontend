@@ -2,6 +2,7 @@ import {useSelector} from 'react-redux';
 
 import {getCurrencies} from 'selectors/state';
 import {SFC} from 'types';
+
 import * as S from './Styles';
 
 export interface CurrencySelectModalProps {

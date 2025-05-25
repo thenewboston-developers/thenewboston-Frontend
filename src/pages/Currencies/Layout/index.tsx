@@ -1,8 +1,9 @@
 import {Outlet} from 'react-router-dom';
 
 import {SFC} from 'types';
-import Toolbar from './Toolbar';
+
 import * as S from './Styles';
+import Toolbar from './Toolbar';
 
 const Layout: SFC = ({className}) => {
   return (

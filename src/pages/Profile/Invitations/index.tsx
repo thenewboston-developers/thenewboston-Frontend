@@ -9,6 +9,7 @@ import {useToggle} from 'hooks';
 import InvitationModal from 'modals/InvitationModal';
 import {getInvitationLimits, getInvitations, getSelf} from 'selectors/state';
 import {SFC} from 'types';
+
 import Invitation from './Invitation';
 import * as S from './Styles';
 

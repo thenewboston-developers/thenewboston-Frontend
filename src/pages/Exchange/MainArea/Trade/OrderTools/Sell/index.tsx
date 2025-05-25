@@ -12,6 +12,7 @@ import {getWallets} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
+
 import * as S from './Styles';
 
 const Sell: SFC = ({className}) => {

@@ -6,6 +6,7 @@ import {useAvailableWalletCurrencies} from 'hooks';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
+
 import * as S from './Styles';
 
 export interface WalletCreateModalProps {

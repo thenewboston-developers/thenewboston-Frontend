@@ -1,4 +1,4 @@
-import {PostReactionSerializer, CommentReadSerializer, UserReadSerializer} from 'types';
+import {CommentReadSerializer, PostReactionSerializer, UserReadSerializer} from 'types';
 import {CreatedModified} from 'types/createdModified';
 
 export interface PostReadSerializer extends CreatedModified {

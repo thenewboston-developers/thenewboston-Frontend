@@ -3,12 +3,12 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
-import {login} from 'dispatchers/authentication';
 import {ButtonType} from 'components/Button';
+import {PATH_AUTHENTICATION} from 'constants/paths';
+import {login} from 'dispatchers/authentication';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
-import {PATH_AUTHENTICATION} from 'constants/paths';
 
 import * as S from './Styles';
 

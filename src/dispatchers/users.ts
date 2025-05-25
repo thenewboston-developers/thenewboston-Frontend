@@ -1,8 +1,8 @@
 import {
   createUser as _createUser,
   getUser as _getUser,
-  updateUser as _updateUser,
   getUsers as _getUsers,
+  updateUser as _updateUser,
 } from 'api/users';
 import {setAuthentication} from 'store/authentication';
 import {setSelf} from 'store/self';

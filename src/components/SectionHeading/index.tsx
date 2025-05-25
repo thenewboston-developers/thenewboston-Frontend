@@ -2,6 +2,7 @@ import {ReactNode} from 'react';
 
 import Line from 'components/Line';
 import {SFC} from 'types';
+
 import * as S from './Styles';
 
 export interface SectionHeadingProps {

@@ -8,6 +8,7 @@ import {useActiveAssetPair} from 'hooks';
 import {getExchangeOrders} from 'selectors/state';
 import {SFC} from 'types';
 import {longDate} from 'utils/dates';
+
 import * as S from './Styles';
 
 const OrderBook: SFC = ({className}) => {

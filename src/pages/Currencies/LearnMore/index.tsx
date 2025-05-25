@@ -1,5 +1,8 @@
 import {useCallback} from 'react';
 
+import Code from 'components/Code';
+import LearnMoreCard from 'components/LearnMore/Card';
+import LearnMoreList from 'components/LearnMore/List';
 import {
   BENEFITS,
   MISSION_STATEMENT,
@@ -8,10 +11,7 @@ import {
   USE_CASES,
   VISION_STATEMENT,
 } from 'constants/currenciesLearnMore';
-import LearnMoreCard from 'components/LearnMore/Card';
-import LearnMoreList from 'components/LearnMore/List';
-import Code from 'components/Code';
-import {SFC, LearnMore as TLearnMore} from 'types';
+import {LearnMore as TLearnMore, SFC} from 'types';
 
 import * as S from './Styles';
 

@@ -1,7 +1,7 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 import orderBy from 'lodash/orderBy';
+import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
 import Price from 'components/Price';
 import {getTrades as _getTrades} from 'dispatchers/trades';
@@ -10,6 +10,7 @@ import {getTrades} from 'selectors/state';
 import {colors} from 'styles';
 import {AppDispatch, SFC} from 'types';
 import {chartDisplayDate} from 'utils/dates';
+
 import * as S from './Styles';
 
 const Chart: SFC = ({className}) => {

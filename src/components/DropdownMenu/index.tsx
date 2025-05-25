@@ -1,8 +1,10 @@
 import {CSSProperties, MouseEvent, ReactNode, useCallback, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
+
 import Icon from 'components/Icon';
 import {useEventListener, useToggle} from 'hooks';
 import {GenericVoidFunction, SFC} from 'types';
+
 import * as S from './Styles';
 
 export interface DropdownMenuOption {

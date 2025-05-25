@@ -1,22 +1,22 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import EmojiPicker from 'emoji-picker-react';
-import Icon from '@mdi/react';
-import {Formik, FormikHelpers, Form} from 'formik';
 import {mdiChevronDown, mdiChevronUp, mdiEmoticonOutline, mdiPlusCircle, mdiSend} from '@mdi/js';
+import Icon from '@mdi/react';
+import EmojiPicker from 'emoji-picker-react';
+import {Form, Formik, FormikHelpers} from 'formik';
 
 import Coin from 'assets/coin.svg';
-import Comment from './Comment';
-import CurrencySelectModal from 'modals/CurrencySelectModal';
-import yup from 'utils/yup';
-import {AppDispatch, Comment as TComment, SFC} from 'types';
 import {ButtonColor, ButtonType} from 'components/Button';
-import {breakpoints} from 'styles';
 import {createComment} from 'dispatchers/comments';
-import {displayErrorToast} from 'utils/toasts';
-import {getComments, getManager} from 'selectors/state';
 import {useToggle} from 'hooks';
+import CurrencySelectModal from 'modals/CurrencySelectModal';
+import {getComments, getManager} from 'selectors/state';
+import {breakpoints} from 'styles';
+import {AppDispatch, Comment as TComment, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
+import yup from 'utils/yup';
 
+import Comment from './Comment';
 import * as S from './Styles';
 
 export interface CommentsProps {

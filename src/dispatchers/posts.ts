@@ -1,4 +1,3 @@
-import {store} from 'store';
 import {
   createPost as _createPost,
   deletePost as _deletePost,
@@ -6,6 +5,7 @@ import {
   GetPostsParams,
   updatePost as _updatePost,
 } from 'api/posts';
+import {store} from 'store';
 import {setComments} from 'store/comments';
 import {resetPosts as _resetPosts, setPost, setPosts, startLoading, unsetPost} from 'store/posts';
 import {AppDispatch} from 'types';

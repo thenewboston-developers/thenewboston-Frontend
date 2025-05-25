@@ -5,6 +5,7 @@ import {useToggle} from 'hooks';
 import {Block, Dict, SFC, Wire} from 'types';
 import {longDate} from 'utils/dates';
 import {snakeToTitle} from 'utils/strings';
+
 import * as S from './Styles';
 
 export interface ExpandableWireProps {

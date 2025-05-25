@@ -7,6 +7,7 @@ import {ExchangeOrderType} from 'enums';
 import {getCurrencies, getTrades} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {getDateStr, getTimeStr} from 'utils/dates';
+
 import * as S from './Styles';
 
 export interface TradesModalProps {
