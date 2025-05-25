@@ -6,6 +6,7 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "start": "react-scripts start",
     "test": "react-scripts test"
   },
