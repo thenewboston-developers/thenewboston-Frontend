@@ -6,7 +6,7 @@ import {Self} from 'types';
 const initialState: Self = {
   avatar: null,
   id: null,
-  is_manual_contribution_allowed: false,
+  is_staff: false,
   username: null,
 };
 

@@ -63,6 +63,22 @@ const WalletWithdraw: SFC = ({className}) => {
 
   if (!activeWallet) return null;
 
+  const isInternalCurrency = activeWallet.currency.domain === null;
+
+  if (isInternalCurrency) {
+    return (
+      <S.Container className={className}>
+        <S.InternalCurrencyMessage>
+          <S.Title>Withdrawals Not Available</S.Title>
+          <S.Text>
+            This is an internal currency that exists only within our platform. Withdrawals to external addresses are not
+            supported.
+          </S.Text>
+        </S.InternalCurrencyMessage>
+      </S.Container>
+    );
+  }
+
   return (
     <S.Container className={className}>
       <S.Panel>

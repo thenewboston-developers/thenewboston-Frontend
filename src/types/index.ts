@@ -23,6 +23,7 @@ import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Invitation, Invitations} from 'types/invitations';
 import {LearnMore} from 'types/learnMore';
 import {Manager} from 'types/manager';
+import {Mint, Mints} from 'types/mints';
 import {Notification, Notifications} from 'types/notifications';
 import {PaginatedResponse} from 'types/pagination';
 import {Post, Posts} from 'types/posts';
@@ -71,6 +72,8 @@ export {
   LoginRequest,
   LoginResponse,
   Manager,
+  Mint,
+  Mints,
   Notification,
   Notifications,
   PaginatedResponse,

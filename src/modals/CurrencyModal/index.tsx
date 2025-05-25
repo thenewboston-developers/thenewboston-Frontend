@@ -1,11 +1,12 @@
 import {ChangeEvent, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Field, Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {createCurrency, updateCurrency} from 'dispatchers/currencies';
+import {getSelf} from 'selectors/state';
 import {AppDispatch, Currency, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
@@ -21,6 +22,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) =>
   const [isLogoCleared, setIsLogoCleared] = useState<boolean | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const self = useSelector(getSelf);
 
   const initialValues = useMemo(
     () => ({
@@ -67,7 +69,12 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) =>
   const handleSubmit = async (values: FormValues): Promise<void> => {
     try {
       const requestData = new FormData();
-      requestData.append('domain', values.domain);
+
+      // Only append domain if user is staff and domain is provided
+      if (self.is_staff && values.domain) {
+        requestData.append('domain', values.domain);
+      }
+
       requestData.append('ticker', values.ticker);
       requestData.append('is_logo_cleared', isLogoCleared ? 'True' : 'False');
 
@@ -86,19 +93,25 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) =>
   };
 
   const validationSchema = useMemo(() => {
-    return yup.object().shape({
-      domain: yup.string().required(),
+    const schema: any = {
       logo: yup.string().required('Logo is required (512x512 px)'),
       ticker: yup.string().required(),
-    });
-  }, []);
+    };
+
+    // Only require domain for staff users
+    if (self.is_staff) {
+      schema.domain = yup.string();
+    }
+
+    return yup.object().shape(schema);
+  }, [self.is_staff]);
 
   return (
     <S.Modal className={className} close={close} header={currency ? 'Edit Currency' : 'Add Currency'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid, setFieldValue, values}) => (
           <Form>
-            <S.Input errors={errors} label="Domain" name="domain" touched={touched} />
+            {self.is_staff && <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />}
             <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />
             {!values.logo && (
               <>
