@@ -50,7 +50,6 @@ const UserDetails: SFC = ({className}) => {
         }
       } catch (error) {
         setSelfFollowing(false);
-        console.error(error);
         displayErrorToast('Error fetching follow relationship');
       }
     })();
@@ -69,7 +68,6 @@ const UserDetails: SFC = ({className}) => {
         setSelfFollowing(false);
         updateUserStats();
       } catch (error) {
-        console.error(error);
         displayErrorToast('Error unfollowing user');
       }
     } else {
@@ -78,7 +76,6 @@ const UserDetails: SFC = ({className}) => {
         setSelfFollowing(true);
         updateUserStats();
       } catch (error) {
-        console.error(error);
         displayErrorToast('Error unfollowing user');
       }
     }

@@ -37,7 +37,6 @@ const Profile: SFC = ({className}) => {
       try {
         await Promise.all(promises.map(dispatch));
       } catch (error) {
-        console.error(error);
         displayErrorToast('Error fetching profile data');
       }
     })();

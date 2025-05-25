@@ -10,7 +10,6 @@ export const createComment = async (data: CreateCommentRequest): Promise<Comment
     const response = await axios.post<Comment>(BASE_URL, data, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -19,7 +18,6 @@ export const deleteComment = async (id: number): Promise<void> => {
   try {
     await axios.delete(`${BASE_URL}/${id}`, authorizationHeaders());
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -29,7 +27,6 @@ export const updateComment = async (id: number, data: Partial<CreateCommentReque
     const response = await axios.patch<Comment>(`${BASE_URL}/${id}`, data, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

@@ -68,7 +68,6 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
       resetForm();
       setIsOpenEmojiBox(false);
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error submitting the comment');
     }
   };

@@ -19,7 +19,7 @@ const Feed: SFC = ({className}) => {
   const posts = useSelector(getPosts);
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
-  const scrollableDivRef = useRef<HTMLDivElement | null>(null);
+  const scrollableDivRef = useRef<HTMLDivElement>(null!);
 
   const postList = useMemo(() => Object.values(posts), [posts]);
 
@@ -29,7 +29,6 @@ const Feed: SFC = ({className}) => {
         dispatch(_resetPosts());
         await dispatch(_getPosts());
       } catch (error) {
-        console.error(error);
         displayErrorToast('Error fetching posts');
       }
     })();

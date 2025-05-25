@@ -11,7 +11,6 @@ export const getUserStats = async (id: number): Promise<UserStatsSerializer> => 
     const response = await axios.get<UserStatsSerializer>(url, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

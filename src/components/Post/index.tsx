@@ -52,7 +52,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
       await dispatch(deletePost(id));
       displayToast('Post deleted!', ToastType.SUCCESS);
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error deleting post');
     }
   };

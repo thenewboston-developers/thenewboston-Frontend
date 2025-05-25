@@ -10,7 +10,6 @@ export const createExchangeOrder = async (data: CreateExchangeOrderRequest): Pro
     const response = await axios.post<ExchangeOrder>(BASE_URL, data, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -20,7 +19,6 @@ export const getExchangeOrders = async (): Promise<ExchangeOrder[]> => {
     const response = await axios.get<ExchangeOrder[]>(BASE_URL, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -30,7 +28,6 @@ export const updateExchangeOrder = async (id: number, data: Partial<ExchangeOrde
     const response = await axios.patch<ExchangeOrder>(`${BASE_URL}/${id}`, data, authorizationHeaders());
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

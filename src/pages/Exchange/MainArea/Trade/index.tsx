@@ -26,7 +26,6 @@ const Trade: SFC = ({className}) => {
       try {
         await dispatch(_getAssetPairs());
       } catch (error) {
-        console.error(error);
         displayErrorToast('Error fetching asset pairs');
       }
     })();

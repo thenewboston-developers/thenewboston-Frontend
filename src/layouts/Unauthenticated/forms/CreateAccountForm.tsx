@@ -35,7 +35,6 @@ const CreateAccountForm: SFC = () => {
       const user = await dispatch(createUser(requestData));
       navigate(`/profile/${user.id}`);
     } catch (error: any) {
-      console.error(error);
       displayErrorToast(error);
     }
   };

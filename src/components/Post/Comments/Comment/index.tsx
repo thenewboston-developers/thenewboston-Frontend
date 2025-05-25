@@ -30,7 +30,6 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
       await dispatch(deleteComment(id));
       displayToast('Comment deleted!', ToastType.SUCCESS);
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error deleting comment');
     }
   };

@@ -61,7 +61,6 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
         dispatch(reset());
         await dispatch(get(getParams(userId)));
       } catch (error) {
-        console.error(error);
         displayErrorToast(`Error fetching ${type.toLowerCase()}`);
       }
     })();

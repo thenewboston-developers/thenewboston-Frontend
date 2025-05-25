@@ -36,7 +36,9 @@ export const Wrapper = styled.div<WrapperProps>`
   border-radius: 50%;
   display: flex;
   justify-content: center;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 
   ${({$totalSize, size}) => $totalSize !== 'unset' && sizeStyle(size, $totalSize)};
   ${({$hasOnClickHandler}) => !!$hasOnClickHandler && buttonStyle};

@@ -29,7 +29,6 @@ const Invitation: SFC<InvitationProps> = ({invitation, index}) => {
       await dispatch(deleteInvitation(invitation.id));
       displayToast('Invitation deleted!', ToastType.SUCCESS);
     } catch (error) {
-      console.error(error);
       displayErrorToast('Error deleting invitation');
     }
   };

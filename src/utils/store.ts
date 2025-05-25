@@ -77,7 +77,7 @@ export const createItemSlice = <Item extends Identifiable>(
       },
       // Removes an item by ID.
       unsetItem: (state, {payload: id}: PayloadAction<number>) => {
-        state.count = state.count - 1;
+        state.count -= 1;
         state.items = state.items.filter((obj) => obj.id !== id);
       },
       ...customReducers,
