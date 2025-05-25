@@ -1,5 +1,6 @@
 import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
+
 import {getCurrencies, getWallets} from 'selectors/state';
 import {Currency} from 'types';
 

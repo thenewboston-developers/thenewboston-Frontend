@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
 import {TRADES} from 'constants/store';
 import {Trade, Trades} from 'types';
 

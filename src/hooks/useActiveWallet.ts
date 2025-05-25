@@ -1,4 +1,5 @@
 import {useSelector} from 'react-redux';
+
 import {getManager, getWallets} from 'selectors/state';
 import {Wallet} from 'types';
 

@@ -1,4 +1,5 @@
 import {useSelector} from 'react-redux';
+
 import UnknownCurrency from 'assets/unknown-currency.png';
 import {getCurrencies} from 'selectors/state';
 

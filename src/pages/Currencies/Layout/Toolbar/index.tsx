@@ -1,9 +1,8 @@
+import Button from 'components/Button';
+import ToolbarMenuLink from 'components/ToolbarMenuLink';
 import {useToggle} from 'hooks';
 import CurrencyModal from 'modals/CurrencyModal';
 import {SFC} from 'types';
-
-import Button from 'components/Button';
-import ToolbarMenuLink from 'components/ToolbarMenuLink';
 
 import * as S from './Styles';
 

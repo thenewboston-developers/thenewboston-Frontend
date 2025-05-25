@@ -2,19 +2,19 @@ import {useCallback, useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiBankTransferIn, mdiBankTransferOut} from '@mdi/js';
 import Icon from '@mdi/react';
+import orderBy from 'lodash/orderBy';
+
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
+import EmptyPage from 'components/EmptyPage';
+import Tab from 'components/Tab';
+import Tabs from 'components/Tabs';
 import {getWallets as _getWallets} from 'dispatchers/wallets';
 import {WalletTab} from 'enums';
 import {useAvailableWalletCurrencies, useToggle} from 'hooks';
-import orderBy from 'lodash/orderBy';
 import WalletCreateModal from 'modals/WalletCreateModal';
 import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
-
-import EmptyPage from 'components/EmptyPage';
-import Tab from 'components/Tab';
-import Tabs from 'components/Tabs';
 import {displayErrorToast} from 'utils/toasts';
 
 import MenuItem from './MenuItem';

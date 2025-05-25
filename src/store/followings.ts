@@ -1,6 +1,5 @@
 import {FOLLOWINGS} from 'constants/store';
 import {Follower} from 'types';
-
 import {createItemSlice} from 'utils/store';
 
 const followingsSlice = createItemSlice<Follower>(FOLLOWINGS, {

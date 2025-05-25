@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
 import {ASSET_PAIRS} from 'constants/store';
 import {AssetPair, AssetPairs} from 'types';
 

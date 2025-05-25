@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {Comment, CreateCommentRequest} from 'types';
 
+import {Comment, CreateCommentRequest} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/comments`;

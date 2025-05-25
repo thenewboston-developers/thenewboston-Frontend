@@ -9,7 +9,6 @@ import {store} from 'store';
 import {setComments} from 'store/comments';
 import {resetPosts as _resetPosts, setPost, setPosts, startLoading, unsetPost} from 'store/posts';
 import {AppDispatch} from 'types';
-
 import {getNextUrlFromState} from 'utils/urls';
 
 export const createPost = (data: FormData) => async (dispatch: AppDispatch) => {

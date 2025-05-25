@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import {colors, fonts} from 'styles';
 
 export const DottedLine = styled.div`

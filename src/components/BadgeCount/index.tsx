@@ -1,7 +1,7 @@
 import {useMemo} from 'react';
-import {SFC} from 'types';
 
 import {BadgeStyle} from 'components/Badge';
+import {SFC} from 'types';
 
 import * as S from './Styles';
 

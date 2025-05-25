@@ -1,10 +1,10 @@
 import {useState} from 'react';
 import {mdiCartArrowDown, mdiCartArrowUp} from '@mdi/js';
 import Icon from '@mdi/react';
-import {useActiveAssetPair} from 'hooks';
-import {SFC} from 'types';
 
 import Tab from 'components/Tab';
+import {useActiveAssetPair} from 'hooks';
+import {SFC} from 'types';
 
 import AssetPairSelector from '../AssetPairSelector';
 

@@ -1,5 +1,6 @@
 import UIcon from '@mdi/react';
 import styled, {css} from 'styled-components';
+
 import {colors, fonts} from 'styles';
 
 import {ButtonColor} from './types';

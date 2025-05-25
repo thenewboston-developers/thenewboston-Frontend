@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {mdiArrowUp} from '@mdi/js';
 import Icon from '@mdi/react';
+
 import {SFC} from 'types';
 
 import * as S from './Styles';

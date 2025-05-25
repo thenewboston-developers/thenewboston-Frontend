@@ -2,17 +2,17 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiChevronDown, mdiChevronUp, mdiEmoticonOutline, mdiPlusCircle, mdiSend} from '@mdi/js';
 import Icon from '@mdi/react';
-import Coin from 'assets/coin.svg';
-import {createComment} from 'dispatchers/comments';
 import EmojiPicker from 'emoji-picker-react';
 import {Form, Formik, FormikHelpers} from 'formik';
+
+import Coin from 'assets/coin.svg';
+import {ButtonColor, ButtonType} from 'components/Button';
+import {createComment} from 'dispatchers/comments';
 import {useToggle} from 'hooks';
 import CurrencySelectModal from 'modals/CurrencySelectModal';
 import {getComments, getManager} from 'selectors/state';
 import {breakpoints} from 'styles';
 import {AppDispatch, Comment as TComment, SFC} from 'types';
-
-import {ButtonColor, ButtonType} from 'components/Button';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 

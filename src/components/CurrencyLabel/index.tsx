@@ -1,14 +1,14 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
+
+import CurrencyLogo from 'components/CurrencyLogo';
+import DropdownMenu from 'components/DropdownMenu';
+import Line from 'components/Line';
 import {deleteCurrency} from 'dispatchers/currencies';
 import {useToggle} from 'hooks';
 import CurrencyModal from 'modals/CurrencyModal';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Currency, SFC} from 'types';
-
-import CurrencyLogo from 'components/CurrencyLogo';
-import DropdownMenu from 'components/DropdownMenu';
-import Line from 'components/Line';
 
 import * as S from './Styles';
 

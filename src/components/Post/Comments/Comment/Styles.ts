@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import {colors, fonts} from 'styles';
 
 import UDropdownMenu from 'components/DropdownMenu';
 import UPriceMini from 'components/PriceMini';
+import {colors, fonts} from 'styles';
 
 export const Container = styled.div`
   display: flex;

@@ -1,7 +1,7 @@
 import {mdiLoading} from '@mdi/js';
-import {SFC} from 'types';
 
 import {IconProps} from 'components/Icon';
+import {SFC} from 'types';
 
 import * as S from './Styles';
 

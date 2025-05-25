@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types';
 
+import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/users`;

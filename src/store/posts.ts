@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
 import {POSTS} from 'constants/store';
 import {PaginatedResponse, Post, PostReactionCreateRequest, Posts} from 'types';
 

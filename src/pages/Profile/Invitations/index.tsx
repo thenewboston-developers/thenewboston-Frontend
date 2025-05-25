@@ -1,14 +1,14 @@
 import {useCallback, useMemo} from 'react';
 import {useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
-import {useToggle} from 'hooks';
 import orderBy from 'lodash/orderBy';
-import InvitationModal from 'modals/InvitationModal';
-import {getInvitationLimits, getInvitations, getSelf} from 'selectors/state';
-import {SFC} from 'types';
 
 import Button from 'components/Button';
 import EmptyText from 'components/EmptyText';
+import {useToggle} from 'hooks';
+import InvitationModal from 'modals/InvitationModal';
+import {getInvitationLimits, getInvitations, getSelf} from 'selectors/state';
+import {SFC} from 'types';
 
 import Invitation from './Invitation';
 import * as S from './Styles';

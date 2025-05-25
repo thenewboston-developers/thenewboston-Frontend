@@ -1,9 +1,9 @@
 import {Link as ULink} from 'react-router-dom';
 import UIcon from '@mdi/react';
 import styled from 'styled-components';
-import {colors, fonts} from 'styles';
 
 import UDot from 'components/Dot';
+import {colors, fonts} from 'styles';
 
 export const NotificationContainer = styled.div`
   align-items: center;

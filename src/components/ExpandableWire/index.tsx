@@ -1,8 +1,8 @@
 import {ReactNode, useMemo} from 'react';
-import {useToggle} from 'hooks';
-import {Block, Dict, SFC, Wire} from 'types';
 
 import Table from 'components/Table';
+import {useToggle} from 'hooks';
+import {Block, Dict, SFC, Wire} from 'types';
 import {longDate} from 'utils/dates';
 import {snakeToTitle} from 'utils/strings';
 

@@ -1,6 +1,7 @@
 import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Route, Routes, useParams} from 'react-router-dom';
+
 import {getInvitationLimit} from 'dispatchers/invitationLimits';
 import {getInvitations} from 'dispatchers/invitations';
 import {getUser} from 'dispatchers/users';
@@ -8,7 +9,6 @@ import {getUserStats} from 'dispatchers/userStats';
 import {FollowerType} from 'enums';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-
 import {displayErrorToast} from 'utils/toasts';
 
 import Follower from './Follower';

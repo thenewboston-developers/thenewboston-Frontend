@@ -2,9 +2,11 @@ import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {mdiSquareEditOutline} from '@mdi/js';
+
 import {getFollowers} from 'api/followers';
 import DefaultAvatar from 'assets/default-avatar.svg';
 import logo from 'assets/logo192.png';
+import {ButtonColor} from 'components/Button';
 import {createFollower, deleteFollower} from 'dispatchers/followers';
 import {getUserStats} from 'dispatchers/userStats';
 import {useToggle, useUser} from 'hooks';
@@ -12,8 +14,6 @@ import FullScreenImageModal from 'modals/FullScreenImageModal';
 import ProfileEditModal from 'modals/ProfileEditModal';
 import {getSelf, getUserStats as getUserStatsState} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-
-import {ButtonColor} from 'components/Button';
 import {formatNumber} from 'utils/numbers';
 import {displayErrorToast} from 'utils/toasts';
 

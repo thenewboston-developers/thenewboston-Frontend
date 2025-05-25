@@ -43,7 +43,7 @@ module.exports = {
           // React and external packages
           ['^react', '^@?\\w'],
           // Internal packages
-          ['^(@|@company|@ui|components|utils|config|vendored-lib)(/.*|$)'],
+          ['^(api|assets|components|config|constants|containers|dispatchers|enums|hooks|layouts|modals|pages|routers|selectors|store|styles|types|utils)(/.*|$)'],
           // Side effect imports
           ['^\\u0000'],
           // Parent imports

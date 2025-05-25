@@ -1,4 +1,5 @@
 import {useDispatch, useSelector} from 'react-redux';
+
 import {useActiveAssetPair, useToggle} from 'hooks';
 import AssetPairSelectModal from 'modals/AssetPairSelectModal';
 import {getAssetPairs, getManager} from 'selectors/state';

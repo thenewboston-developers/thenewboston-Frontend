@@ -13,7 +13,6 @@ import {
   unsetSelfFollowing,
 } from 'store/followers';
 import {AppDispatch, CreateFollowerRequest} from 'types';
-
 import {getNextUrlFromState} from 'utils/urls';
 
 export const createFollower = (data: CreateFollowerRequest) => async (dispatch: AppDispatch) => {

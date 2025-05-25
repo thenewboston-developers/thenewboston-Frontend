@@ -1,5 +1,6 @@
 import {ReactNode} from 'react';
 import ReactLinkify from 'react-linkify';
+
 import {SFC} from 'types';
 
 import * as S from './Styles';

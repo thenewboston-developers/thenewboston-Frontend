@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
 import {COMMENTS} from 'constants/store';
 import {Comment, Comments} from 'types';
 

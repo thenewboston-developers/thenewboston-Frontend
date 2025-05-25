@@ -1,7 +1,7 @@
 import {ReactNode} from 'react';
-import {SFC} from 'types';
 
 import Line from 'components/Line';
+import {SFC} from 'types';
 
 import * as S from './Styles';
 

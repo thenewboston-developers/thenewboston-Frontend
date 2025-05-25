@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
 import {USER_STATS} from 'constants/store';
 import {UserStats, UserStatsSerializer} from 'types';
 

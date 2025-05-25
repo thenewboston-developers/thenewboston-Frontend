@@ -1,5 +1,6 @@
 import {ReactNode, useEffect, useState} from 'react';
 import QrCode from 'qrcode';
+
 import {SFC} from 'types';
 
 export interface QrProps {

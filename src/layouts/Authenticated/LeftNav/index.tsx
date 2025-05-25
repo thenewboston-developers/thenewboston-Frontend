@@ -9,11 +9,11 @@ import {
   mdiSwapHorizontalCircleOutline,
   mdiWalletBifoldOutline,
 } from '@mdi/js';
+
+import BadgeCount from 'components/BadgeCount';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {getNotifications, getSelf} from 'selectors/state';
 import {SFC} from 'types';
-
-import BadgeCount from 'components/BadgeCount';
 import {getUnreadNotificationsCount} from 'utils/notifications';
 
 import MenuLink from './MenuItem/MenuLink';

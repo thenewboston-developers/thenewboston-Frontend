@@ -1,8 +1,8 @@
 import {Field as UField} from 'formik';
 import styled from 'styled-components';
-import {colors, inputStyle} from 'styles';
 
 import UCurrencyLogo from 'components/CurrencyLogo';
+import {colors, inputStyle} from 'styles';
 
 export const CurrencyLogo = styled(UCurrencyLogo)`
   margin-left: 12px;

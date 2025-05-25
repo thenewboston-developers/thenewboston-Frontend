@@ -1,9 +1,9 @@
 import {Link as ULink} from 'react-router-dom';
 import styled from 'styled-components';
-import {fonts} from 'styles';
 
 import UButton from 'components/Button';
 import {Input as UInput} from 'components/FormElements';
+import {fonts} from 'styles';
 
 export const Button = styled(UButton)`
   width: 100%;

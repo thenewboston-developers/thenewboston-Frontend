@@ -1,5 +1,6 @@
 import {ChangeEvent, FocusEvent, forwardRef, ReactNode, useCallback} from 'react';
 import {Field, FieldInputProps} from 'formik';
+
 import {SelectOption} from 'types';
 
 import * as S from './Styles';

@@ -1,6 +1,7 @@
 import {FC, useEffect, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 import ReconnectingWebSocket from 'reconnecting-websocket';
+
 import rootRouter from 'routers/rootRouter';
 import {AppDispatch} from 'types';
 

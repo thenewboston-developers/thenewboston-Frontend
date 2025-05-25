@@ -1,4 +1,6 @@
 import {Navigate, Route, Routes} from 'react-router-dom';
+
+import Logout from 'components/Logout';
 import {
   PATH_AUTHENTICATION,
   PATH_CURRENCIES,
@@ -16,8 +18,6 @@ import Notifications from 'pages/Notifications';
 import Profile from 'pages/Profile';
 import Wallets from 'pages/Wallets';
 import {SFC} from 'types';
-
-import Logout from 'components/Logout';
 
 import * as S from './Styles';
 

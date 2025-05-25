@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {Currency} from 'types';
 
+import {Currency} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/currencies`;

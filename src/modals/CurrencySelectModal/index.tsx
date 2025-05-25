@@ -1,4 +1,5 @@
 import {useSelector} from 'react-redux';
+
 import {getCurrencies} from 'selectors/state';
 import {SFC} from 'types';
 

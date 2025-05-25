@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
 import {NOTIFICATIONS} from 'constants/store';
 import {Notification, Notifications} from 'types';
 

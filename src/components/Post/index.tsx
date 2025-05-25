@@ -9,6 +9,10 @@ import {
   mdiDotsVertical,
   mdiSquareEditOutline,
 } from '@mdi/js';
+
+import {ButtonColor} from 'components/Button';
+import Line from 'components/Line';
+import Linkify from 'components/Linkify';
 import {deletePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
@@ -16,10 +20,6 @@ import FullScreenImageModal from 'modals/FullScreenImageModal';
 import PostModal from 'modals/PostModal';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Post as TPost, SFC} from 'types';
-
-import {ButtonColor} from 'components/Button';
-import Line from 'components/Line';
-import Linkify from 'components/Linkify';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 

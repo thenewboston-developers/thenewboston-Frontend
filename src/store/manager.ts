@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
 import {MANAGER} from 'constants/store';
 import {Manager} from 'types';
 

@@ -2,7 +2,6 @@ import {deleteFollower as _deleteFollowing, getFollowers as _getFollowings, GetF
 import {store} from 'store';
 import {resetFollowing as _resetFollowing, setFollowings, startLoading, unsetFollowing} from 'store/followings';
 import {AppDispatch} from 'types';
-
 import {getNextUrlFromState} from 'utils/urls';
 
 export const deleteFollowing = (followerId: number, followingUserId: number) => async (dispatch: AppDispatch) => {

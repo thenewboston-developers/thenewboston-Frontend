@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import {colors, fonts} from 'styles';
 
 import UAvatar from 'components/Avatar';
+import {colors, fonts} from 'styles';
 
 export const Avatar = styled(UAvatar)`
   margin-right: 8px;

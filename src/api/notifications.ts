@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {Notification, UpdateNotificationRequest} from 'types';
 
+import {Notification, UpdateNotificationRequest} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/notifications`;

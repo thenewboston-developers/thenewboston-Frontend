@@ -1,4 +1,5 @@
 import {ReactNode} from 'react';
+
 import {LearnMore, SFC} from 'types';
 
 import * as S from './Styles';

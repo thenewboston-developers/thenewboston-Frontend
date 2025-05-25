@@ -3,16 +3,16 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {mdiAccountMinusOutline, mdiAccountPlusOutline} from '@mdi/js';
 import Icon from '@mdi/react';
+
+import Avatar from 'components/Avatar';
+import EmptyText from 'components/EmptyText';
+import InfiniteScroll from 'components/InfiniteScroll';
 import {createFollower, deleteFollower, getFollowers, resetFollowers} from 'dispatchers/followers';
 import {deleteFollowing, getFollowings, resetFollowings} from 'dispatchers/followings';
 import {getUserStats} from 'dispatchers/userStats';
 import {FollowerType} from 'enums';
 import {getFollowers as getFollowersState, getFollowings as getFollowingsState, getSelf} from 'selectors/state';
 import {AppDispatch, SFC, UserReadSerializer} from 'types';
-
-import Avatar from 'components/Avatar';
-import EmptyText from 'components/EmptyText';
-import InfiniteScroll from 'components/InfiniteScroll';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';

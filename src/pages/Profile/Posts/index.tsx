@@ -1,15 +1,15 @@
 import {useEffect, useMemo, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
-import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
-import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
-import {AppDispatch, SFC} from 'types';
 
 import EmptyText from 'components/EmptyText';
 import InfiniteScroll from 'components/InfiniteScroll';
 import Post from 'components/Post';
 import PostSkeleton from 'components/Post/PostSkeleton';
 import ScrollToTopButton from 'components/ScrollUpButton';
+import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
+import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
+import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';

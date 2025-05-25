@@ -1,4 +1,5 @@
 import {Route, Routes} from 'react-router-dom';
+
 import {PATH_AUTHENTICATION, WILDCARD} from 'constants/paths';
 import {SFC} from 'types';
 

@@ -1,12 +1,12 @@
 import React, {useMemo} from 'react';
 import {useDispatch} from 'react-redux';
-import {updateComment} from 'dispatchers/comments';
-import {ToastType} from 'enums';
 import {Form, Formik} from 'formik';
-import {AppDispatch, Comment, SFC} from 'types';
 
 import Button, {ButtonType} from 'components/Button';
 import {Input} from 'components/FormElements';
+import {updateComment} from 'dispatchers/comments';
+import {ToastType} from 'enums';
+import {AppDispatch, Comment, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 

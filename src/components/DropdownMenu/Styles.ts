@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import {colors} from 'styles';
-import {Menu, Option} from 'styles/components/DropMenuStyle';
 
 import Icon from 'components/Icon';
+import {colors} from 'styles';
+import {Menu, Option} from 'styles/components/DropMenuStyle';
 
 export const MenuIcon = styled(Icon)<{$isOpen: boolean}>`
   background: ${({$isOpen = false}) => ($isOpen ? colors.whiteHover : 'none')};

@@ -2,9 +2,9 @@ import {ReactNode} from 'react';
 import {createPortal} from 'react-dom';
 import {mdiClose} from '@mdi/js';
 import noop from 'lodash/noop';
-import {SFC} from 'types';
 
 import Icon from 'components/Icon';
+import {SFC} from 'types';
 
 import * as S from './Styles';
 

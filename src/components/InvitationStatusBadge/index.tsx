@@ -1,7 +1,6 @@
+import Badge, {BadgeStyle} from 'components/Badge';
 import {InvitationStatus} from 'enums';
 import {SFC} from 'types';
-
-import Badge, {BadgeStyle} from 'components/Badge';
 
 export interface InvitationStatusBadgeProps {
   invitationStatus: InvitationStatus;

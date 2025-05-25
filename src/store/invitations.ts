@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
 import {INVITATIONS} from 'constants/store';
 import {Invitation, Invitations} from 'types';
 

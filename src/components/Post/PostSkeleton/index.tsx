@@ -1,8 +1,7 @@
-import {Row} from 'styles/components/GridStyle';
-import {SFC} from 'types';
-
 import ListRenderer from 'components/ListRenderer';
 import Skeleton from 'components/Skeleton';
+import {Row} from 'styles/components/GridStyle';
+import {SFC} from 'types';
 
 import * as S from './Styles';
 

@@ -2,11 +2,11 @@ import {useSelector} from 'react-redux';
 import {Outlet, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {mdiAccountArrowDownOutline, mdiAccountArrowUpOutline, mdiAccountBoxPlusOutline, mdiCardsOutline} from '@mdi/js';
 import Icon from '@mdi/react';
-import {getSelf} from 'selectors/state';
-import {SFC} from 'types';
 
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
+import {getSelf} from 'selectors/state';
+import {SFC} from 'types';
 
 import * as S from './Styles';
 import UserDetails from './UserDetails';

@@ -1,9 +1,9 @@
 import UIcon from '@mdi/react';
 import styled from 'styled-components';
-import {breakpoints, colors} from 'styles';
 
 import UButton from 'components/Button';
 import {InlineInput as UInlineInput} from 'components/FormElements';
+import {breakpoints, colors} from 'styles';
 
 export const IMG_HEIGHT = 24;
 

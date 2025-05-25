@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import {breakpoints} from 'styles';
 
 import UButton from 'components/Button';
 import UModal from 'components/Modal';
+import {breakpoints} from 'styles';
 
 import RadioCard from './RadioCard';
 
