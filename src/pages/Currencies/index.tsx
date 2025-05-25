@@ -6,7 +6,7 @@ import Layout from './Layout';
 import LearnMore from './LearnMore';
 import * as S from './Styles';
 
-const Cores: SFC = ({className}) => {
+const Currencies: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <Routes>
@@ -21,4 +21,4 @@ const Cores: SFC = ({className}) => {
   );
 };
 
-export default Cores;
+export default Currencies;

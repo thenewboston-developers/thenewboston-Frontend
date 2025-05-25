@@ -10,7 +10,7 @@ import {
   PATH_PROFILE,
   PATH_WALLETS,
 } from 'constants/paths';
-import Cores from 'pages/Cores';
+import Currencies from 'pages/Currencies';
 import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
 import Logout from 'components/Logout';
@@ -26,7 +26,7 @@ const MainArea: SFC = ({className}) => {
     <S.Container className={className}>
       <Routes>
         <Route path="*" element={<Navigate to={PATH_DEFAULT} replace />} />
-        <Route path={PATH_CURRENCIES} element={<Cores />} />
+        <Route path={PATH_CURRENCIES} element={<Currencies />} />
         <Route path={PATH_EXCHANGE} element={<Exchange />} />
         <Route path={PATH_FEED} element={<Feed />} />
         <Route path={PATH_NOTIFICATIONS} element={<Notifications />} />

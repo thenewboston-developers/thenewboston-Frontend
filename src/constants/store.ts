@@ -1,7 +1,7 @@
 export const ASSET_PAIRS = 'assetPairs';
 export const AUTHENTICATION = 'authentication';
 export const COMMENTS = 'comments';
-export const CORES = 'cores';
+export const CURRENCIES = 'currencies';
 export const EXCHANGE_ORDERS = 'exchangeOrders';
 export const FOLLOWERS = 'followers';
 export const FOLLOWINGS = 'followings';

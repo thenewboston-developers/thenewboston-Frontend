@@ -1,18 +1,18 @@
-import {useCoreLogo} from 'hooks';
+import {useCurrencyLogo} from 'hooks';
 import {SFC} from 'types';
 import * as S from './Styles';
 
 export interface PriceProps {
   price_amount: number;
-  price_core: number;
+  price_currency: number;
 }
 
-const Price: SFC<PriceProps> = ({className, price_amount, price_core}) => {
-  const coreLogo = useCoreLogo(price_core);
+const Price: SFC<PriceProps> = ({className, price_amount, price_currency}) => {
+  const currencyLogo = useCurrencyLogo(price_currency);
 
   return (
     <S.Container className={className}>
-      <S.CoreLogo alt="core logo" src={coreLogo} />
+      <S.CurrencyLogo alt="currency logo" src={currencyLogo} />
       <S.Amount>{price_amount.toLocaleString()}</S.Amount>
     </S.Container>
   );

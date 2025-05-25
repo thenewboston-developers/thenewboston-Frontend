@@ -3,23 +3,23 @@ import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
-import {createCore, updateCore} from 'dispatchers/cores';
-import {AppDispatch, Core, SFC} from 'types';
+import {createCurrency, updateCurrency} from 'dispatchers/currencies';
+import {AppDispatch, Currency, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 import * as S from './Styles';
 
-export interface CoreModalProps {
+export interface CurrencyModalProps {
   close(): void;
-  core?: Core;
+  currency?: Currency;
 }
 
-const CoreModal: SFC<CoreModalProps> = ({className, close, core}) => {
+const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const initialValues = {
-    domain: core?.domain || '',
-    ticker: core?.ticker || '',
+    domain: currency?.domain || '',
+    ticker: currency?.ticker || '',
   };
 
   type FormValues = typeof initialValues;
@@ -30,10 +30,10 @@ const CoreModal: SFC<CoreModalProps> = ({className, close, core}) => {
       requestData.append('domain', values.domain);
       requestData.append('ticker', values.ticker);
 
-      if (core) {
-        await dispatch(updateCore(core.id, requestData));
+      if (currency) {
+        await dispatch(updateCurrency(currency.id, requestData));
       } else {
-        await dispatch(createCore(requestData));
+        await dispatch(createCurrency(requestData));
       }
 
       close();
@@ -50,7 +50,7 @@ const CoreModal: SFC<CoreModalProps> = ({className, close, core}) => {
   }, []);
 
   return (
-    <S.Modal className={className} close={close} header={core ? 'Edit Currency' : 'Add Currency'}>
+    <S.Modal className={className} close={close} header={currency ? 'Edit Currency' : 'Add Currency'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid}) => (
           <Form>
@@ -71,4 +71,4 @@ const CoreModal: SFC<CoreModalProps> = ({className, close, core}) => {
   );
 };
 
-export default CoreModal;
+export default CurrencyModal;

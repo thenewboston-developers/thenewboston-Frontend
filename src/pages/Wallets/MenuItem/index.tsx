@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from 'react-redux';
 
-import CoreLogo from 'components/CoreLogo';
+import CurrencyLogo from 'components/CurrencyLogo';
 import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC, Wallet} from 'types';
@@ -23,10 +23,10 @@ const MenuItem: SFC<MenuItemProps> = ({className, wallet}) => {
       <S.Container $isActive={manager.activeWalletId === wallet.id} className={className} onClick={handleClick}>
         <S.Text>
           <S.Div>
-            <S.Ticker $isActive={manager.activeWalletId === wallet.id}>{wallet.core.ticker}</S.Ticker>
-            <S.Domain>{wallet.core.domain}</S.Domain>
+            <S.Ticker $isActive={manager.activeWalletId === wallet.id}>{wallet.currency.ticker}</S.Ticker>
+            <S.Domain>{wallet.currency.domain}</S.Domain>
           </S.Div>
-          <CoreLogo logo={wallet.core.logo} />
+          <CurrencyLogo logo={wallet.currency.logo} />
         </S.Text>
         <S.Balance>
           Balance: <S.Span> {wallet.balance.toLocaleString()}</S.Span>

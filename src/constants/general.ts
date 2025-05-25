@@ -1,1 +1,1 @@
-export const DEFAULT_CORE_TICKER = 'TNB';
+export const DEFAULT_CURRENCY_TICKER = 'TNB';

@@ -7,7 +7,7 @@ import {
   SYSTEM_ARCHITECTURE_CODE,
   USE_CASES,
   VISION_STATEMENT,
-} from 'constants/coresLearnMore';
+} from 'constants/currenciesLearnMore';
 import LearnMoreCard from 'components/LearnMore/Card';
 import LearnMoreList from 'components/LearnMore/List';
 import Code from 'components/Code';

@@ -8,7 +8,7 @@ export interface Comment extends CreatedModified {
   owner: UserReadSerializer;
   post: number;
   price_amount: number | null;
-  price_core: number | null;
+  price_currency: number | null;
 }
 
 export type Comments = Dict<Comment>;

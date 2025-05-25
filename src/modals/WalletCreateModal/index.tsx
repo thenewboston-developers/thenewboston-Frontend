@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {createWallet} from 'dispatchers/wallets';
-import {useAvailableWalletCores} from 'hooks';
+import {useAvailableWalletCurrencies} from 'hooks';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -13,8 +13,8 @@ export interface WalletCreateModalProps {
 }
 
 const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
-  const [selectedCoreId, setSelectedCoreId] = useState<number | null>(null);
-  const availableWalletCores = useAvailableWalletCores();
+  const [selectedCurrencyId, setSelectedCurrencyId] = useState<number | null>(null);
+  const availableWalletCurrencies = useAvailableWalletCurrencies();
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
@@ -23,7 +23,7 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
       // TODO: Add loading state for the button
       await dispatch(
         createWallet({
-          core: selectedCoreId!,
+          currency: selectedCurrencyId!,
           owner: self.id!,
         }),
       );
@@ -33,17 +33,17 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
     }
   };
 
-  const handleRadioCardClick = (coreId: number) => {
-    setSelectedCoreId(coreId === selectedCoreId ? null : coreId);
+  const handleRadioCardClick = (currencyId: number) => {
+    setSelectedCurrencyId(currencyId === selectedCurrencyId ? null : currencyId);
   };
 
   const renderRadioCards = () => {
-    return availableWalletCores.map((core) => (
+    return availableWalletCurrencies.map((currency) => (
       <S.RadioCardWrapper
-        activeCoreId={selectedCoreId}
-        core={core}
-        handleRadioCardClick={() => handleRadioCardClick(core.id)}
-        key={core.id}
+        activeCurrencyId={selectedCurrencyId}
+        currency={currency}
+        handleRadioCardClick={() => handleRadioCardClick(currency.id)}
+        key={currency.id}
       />
     ));
   };
@@ -51,7 +51,7 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
   return (
     <S.Modal className={className} close={close} header="Create Wallet">
       <S.RadioCardContainer>{renderRadioCards()}</S.RadioCardContainer>
-      <S.Button disabled={selectedCoreId === null} onClick={handleButtonClick} text="Submit" />
+      <S.Button disabled={selectedCurrencyId === null} onClick={handleButtonClick} text="Submit" />
     </S.Modal>
   );
 };

@@ -2,7 +2,7 @@ import {Wallet} from 'types/wallets';
 import {Wire} from 'types/wires';
 
 export interface CreateWalletRequest {
-  core: number;
+  currency: number;
   owner: number;
 }
 

@@ -1,7 +1,7 @@
 import useActiveAssetPair from 'hooks/useActiveAssetPair';
 import useActiveWallet from 'hooks/useActiveWallet';
-import useAvailableWalletCores from 'hooks/useAvailableWalletCores';
-import useCoreLogo from 'hooks/useCoreLogo';
+import useAvailableWalletCurrencies from 'hooks/useAvailableWalletCurrencies';
+import useCurrencyLogo from 'hooks/useCurrencyLogo';
 import useEventListener from 'hooks/useEventListener';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useResizeObserver from 'hooks/useResizeObserver';
@@ -11,8 +11,8 @@ import useUser from 'hooks/useUser';
 export {
   useActiveAssetPair,
   useActiveWallet,
-  useAvailableWalletCores,
-  useCoreLogo,
+  useAvailableWalletCurrencies,
+  useCurrencyLogo,
   useEventListener,
   useIsAuthenticated,
   useResizeObserver,

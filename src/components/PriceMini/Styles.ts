@@ -11,7 +11,7 @@ export const Container = styled.div`
   display: flex;
 `;
 
-export const CoreLogo = styled.img`
+export const CurrencyLogo = styled.img`
   border-radius: 50%;
   height: 13px;
   width: 13px;

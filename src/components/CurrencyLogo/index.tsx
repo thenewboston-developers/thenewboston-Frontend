@@ -2,12 +2,12 @@ import Coin from 'assets/coin.svg';
 import {SFC} from 'types';
 import * as S from './Styles';
 
-export interface CoreLogoProps {
+export interface CurrencyLogoProps {
   logo: string | null;
   width?: string;
 }
 
-const CoreLogo: SFC<CoreLogoProps> = ({className, logo, width}) => {
+const CurrencyLogo: SFC<CurrencyLogoProps> = ({className, logo, width}) => {
   return (
     <S.Container className={className}>
       <S.ImgWrapper width={width}>
@@ -17,4 +17,4 @@ const CoreLogo: SFC<CoreLogoProps> = ({className, logo, width}) => {
   );
 };
 
-export default CoreLogo;
+export default CurrencyLogo;

@@ -67,7 +67,7 @@ const WalletDeposit: SFC = ({className}) => {
 
   const renderDeposits = () => {
     return orderBy(Object.values(wires), ['created_date'], ['desc'])
-      .filter((wire) => wire.core === activeWallet.core.id && wire.wire_type === WireType.DEPOSIT)
+      .filter((wire) => wire.currency === activeWallet.currency.id && wire.wire_type === WireType.DEPOSIT)
       .map((wire) => <ExpandableWire key={wire.id} wire={wire} />);
   };
 

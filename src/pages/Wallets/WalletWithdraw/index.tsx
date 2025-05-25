@@ -6,7 +6,7 @@ import orderBy from 'lodash/orderBy';
 import wallet from 'assets/wallet.svg';
 import Button, {ButtonType} from 'components/Button';
 import ExpandableWire from 'components/ExpandableWire';
-import {CORE_TRANSACTION_FEE} from 'constants/protocol';
+import {CURRENCY_TRANSACTION_FEE} from 'constants/protocol';
 import {AppDispatch, SFC} from 'types';
 import {createWalletWithdraw} from 'dispatchers/wallets';
 import {WireType} from 'enums';
@@ -30,7 +30,7 @@ const WalletWithdraw: SFC = ({className}) => {
   type FormValues = typeof initialValues;
 
   const getTotal = (amount: string): number => {
-    return parseInt(amount, 10) + CORE_TRANSACTION_FEE;
+    return parseInt(amount, 10) + CURRENCY_TRANSACTION_FEE;
   };
 
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
@@ -50,7 +50,7 @@ const WalletWithdraw: SFC = ({className}) => {
     if (!activeWallet) return [];
 
     return orderBy(Object.values(wires), ['created_date'], ['desc'])
-      .filter((wire) => wire.core === activeWallet.core.id && wire.wire_type === WireType.WITHDRAW)
+      .filter((wire) => wire.currency === activeWallet.currency.id && wire.wire_type === WireType.WITHDRAW)
       .map((wire) => <ExpandableWire key={wire.id} wire={wire} />);
   };
 
@@ -73,14 +73,14 @@ const WalletWithdraw: SFC = ({className}) => {
                 errors={errors}
                 label="Amount"
                 name="amount"
-                logo={activeWallet.core.logo}
+                logo={activeWallet.currency.logo}
                 touched={touched}
               />
               <S.Input errors={errors} label="Account Number" name="accountNumber" touched={touched} />
               <S.DetailRowContainer>
                 <S.DetailRow>
                   <S.Label>FEE</S.Label>
-                  <S.Value>{CORE_TRANSACTION_FEE}</S.Value>
+                  <S.Value>{CURRENCY_TRANSACTION_FEE}</S.Value>
                 </S.DetailRow>
                 <S.Line />
                 <S.DetailRow>
@@ -88,10 +88,10 @@ const WalletWithdraw: SFC = ({className}) => {
                   <S.Value>
                     {values.amount ? (
                       <span>
-                        {getTotal(values.amount).toLocaleString()} {activeWallet.core.ticker}
+                        {getTotal(values.amount).toLocaleString()} {activeWallet.currency.ticker}
                       </span>
                     ) : (
-                      `0 ${activeWallet.core.ticker}`
+                      `0 ${activeWallet.currency.ticker}`
                     )}
                   </S.Value>
                 </S.DetailRow>
@@ -101,7 +101,7 @@ const WalletWithdraw: SFC = ({className}) => {
                 disabled={isSubmitting}
                 isSubmitting={isSubmitting}
                 isValid={isValid}
-                text={`Withdraw ${activeWallet.core.ticker}`}
+                text={`Withdraw ${activeWallet.currency.ticker}`}
                 type={ButtonType.submit}
               />
             </S.Form>
