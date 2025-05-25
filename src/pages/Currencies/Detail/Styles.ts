@@ -164,3 +164,58 @@ export const InfoText = styled.div`
     line-height: 1.5;
   }
 `;
+
+export const MintsSection = styled.div`
+  background: white;
+  border: 1px solid ${colors.border};
+  border-radius: 8px;
+  padding: 24px;
+  margin-top: 24px;
+`;
+
+export const MintsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const MintItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: ${colors.palette.gray[100]};
+  border-radius: 6px;
+`;
+
+export const MintAmount = styled.div`
+  font-size: 18px;
+  font-weight: ${fonts.weight.semiBold};
+`;
+
+export const MintDate = styled.div`
+  font-size: 14px;
+  color: ${colors.palette.gray[600]};
+`;
+
+export const EmptyMints = styled.div`
+  text-align: center;
+  padding: 40px;
+  color: ${colors.palette.gray[500]};
+  font-size: 16px;
+`;
+
+export const Pagination = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid ${colors.border};
+`;
+
+export const PageInfo = styled.div`
+  font-size: 14px;
+  color: ${colors.palette.gray[600]};
+`;

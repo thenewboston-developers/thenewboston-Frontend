@@ -1,32 +1,36 @@
 import {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 import {mdiArrowLeft} from '@mdi/js';
 
-import {getCurrency, mintCurrency} from 'api/currencies';
+import {getCurrency} from 'api/currencies';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Button from 'components/Button';
 import CurrencyLogo from 'components/CurrencyLogo';
 import EmptyPage from 'components/EmptyPage';
 import Icon from 'components/Icon';
 import Loader from 'components/Loader';
-import {MAX_MINT_AMOUNT} from 'constants/general';
+import {createMint, getMints} from 'dispatchers/mints';
 import {ToastType} from 'enums';
-import {getSelf} from 'selectors/state';
-import {Currency, Mint, SFC} from 'types';
+import {getMints as getMintsSelector, getSelf} from 'selectors/state';
+import {AppDispatch, Currency, Mint, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
 const Detail: SFC = ({className}) => {
   const {id} = useParams<{id: string}>();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const self = useSelector(getSelf);
+  const mints = useSelector(getMintsSelector);
   const [currency, setCurrency] = useState<Currency | null>(null);
   const [loading, setLoading] = useState(true);
   const [mintAmount, setMintAmount] = useState<string>('');
   const [minting, setMinting] = useState(false);
-  const [totalMinted, setTotalMinted] = useState(0);
+  const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
+  const [loadingMints, setLoadingMints] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     if (!id) return;
@@ -43,6 +47,22 @@ const Detail: SFC = ({className}) => {
     })();
   }, [id]);
 
+  useEffect(() => {
+    if (!currency) return;
+
+    (async () => {
+      setLoadingMints(true);
+      try {
+        const data = await dispatch(getMints({currency: currency.id, page: currentPage})).unwrap();
+        setMintsData(data);
+      } catch (error) {
+        displayErrorToast('Error loading mints');
+      } finally {
+        setLoadingMints(false);
+      }
+    })();
+  }, [currency, currentPage, dispatch]);
+
   const handleMint = async () => {
     if (!currency || !mintAmount) return;
 
@@ -52,19 +72,13 @@ const Detail: SFC = ({className}) => {
       return;
     }
 
-    if (totalMinted + amount > MAX_MINT_AMOUNT) {
-      displayErrorToast(
-        `Total minted amount would exceed maximum of ${MAX_MINT_AMOUNT.toLocaleString()}. Current total: ${totalMinted.toLocaleString()}`,
-      );
-      return;
-    }
-
     setMinting(true);
     try {
-      const mint: Mint = await mintCurrency(currency.id, amount);
-      setTotalMinted(totalMinted + mint.amount);
+      await dispatch(createMint({currency: currency.id, amount})).unwrap();
       setMintAmount('');
       displayToast(`Successfully minted ${amount.toLocaleString()} ${currency.ticker}`, ToastType.SUCCESS);
+      // Refresh mints list
+      setCurrentPage(1); // Reset to first page
     } catch (error: any) {
       displayErrorToast(error.response?.data?.error || 'Error minting currency');
     } finally {
@@ -76,9 +90,44 @@ const Detail: SFC = ({className}) => {
     navigate('/currencies/home');
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const renderMintsList = () => {
+    if (loadingMints) return <Loader />;
+
+    if (!mintsData || mintsData.results.length === 0) {
+      return <S.EmptyMints>No mints yet</S.EmptyMints>;
+    }
+
+    const mintsList = Object.values(mints).filter((mint) => mint.currency === currency?.id);
+
+    return (
+      <>
+        <S.MintsList>
+          {mintsList.map((mint) => (
+            <S.MintItem key={mint.id}>
+              <S.MintAmount>{mint.amount.toLocaleString()}</S.MintAmount>
+              <S.MintDate>{new Date(mint.created_date).toLocaleString()}</S.MintDate>
+            </S.MintItem>
+          ))}
+        </S.MintsList>
+        {mintsData.count > 20 && (
+          <S.Pagination>
+            {mintsData.previous && <Button onClick={() => handlePageChange(currentPage - 1)} text="Previous" />}
+            <S.PageInfo>
+              Page {currentPage} of {Math.ceil(mintsData.count / 20)}
+            </S.PageInfo>
+            {mintsData.next && <Button onClick={() => handlePageChange(currentPage + 1)} text="Next" />}
+          </S.Pagination>
+        )}
+      </>
+    );
+  };
+
   const isInternalCurrency = currency?.domain === null;
   const isOwner = currency?.owner === self.id;
-  const remainingMintable = MAX_MINT_AMOUNT - totalMinted;
 
   if (loading) return <Loader />;
   if (!currency)
@@ -111,16 +160,6 @@ const Detail: SFC = ({className}) => {
       {isOwner && isInternalCurrency && (
         <S.MintSection>
           <S.SectionTitle>Mint New Coins</S.SectionTitle>
-          <S.MintInfo>
-            <S.InfoRow>
-              <span>Total Minted:</span>
-              <strong>{totalMinted.toLocaleString()}</strong>
-            </S.InfoRow>
-            <S.InfoRow>
-              <span>Remaining Mintable:</span>
-              <strong>{remainingMintable.toLocaleString()}</strong>
-            </S.InfoRow>
-          </S.MintInfo>
 
           <S.MintForm>
             <S.Input
@@ -130,17 +169,9 @@ const Detail: SFC = ({className}) => {
               onChange={(e) => setMintAmount(e.target.value)}
               disabled={minting}
               min="1"
-              max={remainingMintable}
             />
-            <Button
-              onClick={handleMint}
-              disabled={minting || !mintAmount || remainingMintable === 0}
-              isSubmitting={minting}
-              text="Mint"
-            />
+            <Button onClick={handleMint} disabled={minting || !mintAmount} isSubmitting={minting} text="Mint" />
           </S.MintForm>
-
-          {remainingMintable === 0 && <S.Warning>Maximum mint limit reached</S.Warning>}
         </S.MintSection>
       )}
 
@@ -163,6 +194,11 @@ const Detail: SFC = ({className}) => {
           </S.InfoText>
         </S.InfoSection>
       )}
+
+      <S.MintsSection>
+        <S.SectionTitle>Minting History</S.SectionTitle>
+        {renderMintsList()}
+      </S.MintsSection>
     </S.Container>
   );
 };

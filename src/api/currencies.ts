@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {Currency, Mint} from 'types';
+import {Currency} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/currencies`;
@@ -43,15 +43,6 @@ export const getCurrency = async (id: number): Promise<Currency> => {
 export const updateCurrency = async (id: number, data: FormData): Promise<Currency> => {
   try {
     const response = await axios.patch<Currency>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const mintCurrency = async (id: number, amount: number): Promise<Mint> => {
-  try {
-    const response = await axios.post<Mint>(`${BASE_URL}/${id}/mint/`, {amount}, authorizationHeaders());
     return response.data;
   } catch (error) {
     throw error;
