@@ -3,7 +3,7 @@ import axios from 'axios';
 import {PostReactionCreateRequest} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
-const BASE_URL = `${process.env.REACT_APP_API_URL}/api/post_reaction/`;
+const BASE_URL = `${process.env.REACT_APP_API_URL}/api/post-reaction/`;
 
 export const createPostReaction = async (data: PostReactionCreateRequest): Promise<PostReactionCreateRequest> => {
   try {

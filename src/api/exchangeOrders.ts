@@ -3,7 +3,7 @@ import axios from 'axios';
 import {CreateExchangeOrderRequest, ExchangeOrder} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
-const BASE_URL = `${process.env.REACT_APP_API_URL}/api/exchange_orders`;
+const BASE_URL = `${process.env.REACT_APP_API_URL}/api/exchange-orders`;
 
 export const createExchangeOrder = async (data: CreateExchangeOrderRequest): Promise<ExchangeOrder> => {
   try {
