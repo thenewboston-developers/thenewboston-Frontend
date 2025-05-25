@@ -7,7 +7,7 @@ import * as S from './Styles';
 export interface LogoInputProps {
   errors: {[field: string]: string};
   label: string;
-  logo: string | null;
+  logo: string;
   onChange?(e: ChangeEvent<HTMLInputElement>): void;
   name: string;
   touched: {[field: string]: boolean};
