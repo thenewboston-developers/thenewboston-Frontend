@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
-import {mdiSquareEditOutline} from '@mdi/js';
+import {mdiCashFast, mdiSquareEditOutline} from '@mdi/js';
 
 import {getFollowers} from 'api/followers';
 import DefaultAvatar from 'assets/default-avatar.svg';
@@ -12,6 +12,7 @@ import {getUserStats} from 'dispatchers/userStats';
 import {useToggle, useUser} from 'hooks';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
 import ProfileEditModal from 'modals/ProfileEditModal';
+import SendModal from 'modals/SendModal';
 import {getSelf, getUserStats as getUserStatsState} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {formatNumber} from 'utils/numbers';
@@ -23,6 +24,7 @@ const UserDetails: SFC = ({className}) => {
   const [selfFollowing, setSelfFollowing] = useState<boolean>(false);
   const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
   const [profileAvatarModalIsOpen, toggleProfileAvatarModal] = useToggle(false);
+  const [sendModalIsOpen, toggleSendModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
   const {id} = useParams();
@@ -118,6 +120,11 @@ const UserDetails: SFC = ({className}) => {
     );
   };
 
+  const renderSendButton = () => {
+    if (self.id === userId) return null;
+    return <S.Button color={ButtonColor.secondary} iconLeft={mdiCashFast} onClick={toggleSendModal} text="Send" />;
+  };
+
   const renderUsername = () => {
     if (!user) return null;
     return <S.Username>{user.username}</S.Username>;
@@ -156,11 +163,13 @@ const UserDetails: SFC = ({className}) => {
         <S.Wrapper>
           {renderStatsAndBalance()}
           {renderEditProfileButton()}
+          {renderSendButton()}
           {renderFollowButton()}
         </S.Wrapper>
       </S.Container>
       {profileEditModalIsOpen ? <ProfileEditModal close={toggleProfileEditModal} /> : null}
       {profileAvatarModalIsOpen ? <FullScreenImageModal imageSrc={userAvatar} close={handleClose} /> : null}
+      {sendModalIsOpen && user ? <SendModal close={toggleSendModal} recipient={user} /> : null}
     </>
   );
 };

@@ -8,6 +8,9 @@ export interface Post extends CreatedModified {
   id: number;
   image: string | null;
   owner: UserReadSerializer;
+  price_amount: number | null;
+  price_currency: number | null;
+  recipient: UserReadSerializer | null;
   user_reaction: string;
   user_reactions: PostReactionSerializer[];
 }
