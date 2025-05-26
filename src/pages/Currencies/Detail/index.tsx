@@ -77,8 +77,7 @@ const Detail: SFC = ({className}) => {
       await dispatch(createMint({currency: currency.id, amount}));
       setMintAmount('');
       displayToast(`Successfully minted ${amount.toLocaleString()} ${currency.ticker}`, ToastType.SUCCESS);
-      // Refresh mints list
-      setCurrentPage(1); // Reset to first page
+      setCurrentPage(1);
     } catch (error: any) {
       displayErrorToast(error.response?.data?.error || 'Error minting currency');
     } finally {

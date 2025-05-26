@@ -70,7 +70,6 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) =>
     try {
       const requestData = new FormData();
 
-      // Only append domain if user is staff and domain is provided
       if (self.is_staff && values.domain) {
         requestData.append('domain', values.domain);
       }
@@ -98,7 +97,6 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) =>
       ticker: yup.string().required(),
     };
 
-    // Only require domain for staff users
     if (self.is_staff) {
       schema.domain = yup.string();
     }
