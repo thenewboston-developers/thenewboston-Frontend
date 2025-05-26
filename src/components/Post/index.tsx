@@ -11,14 +11,16 @@ import {
 } from '@mdi/js';
 
 import {ButtonColor} from 'components/Button';
+import CurrencyLogo from 'components/CurrencyLogo';
 import Line from 'components/Line';
 import Linkify from 'components/Linkify';
+import UserLabel from 'components/UserLabel';
 import {deletePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
 import PostModal from 'modals/PostModal';
-import {getSelf} from 'selectors/state';
+import {getCurrencies, getSelf} from 'selectors/state';
 import {AppDispatch, Post as TPost, SFC} from 'types';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
@@ -44,8 +46,10 @@ const Post: SFC<PostProps> = ({className, post}) => {
 
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
+  const currencies = useSelector(getCurrencies);
 
-  const {content, created_date, id, image, owner} = post;
+  const {content, created_date, id, image, owner, price_amount, price_currency, recipient} = post;
+  const isTransferPost = !!(recipient && price_amount && price_currency);
 
   const handleDelete = async () => {
     try {
@@ -120,6 +124,26 @@ const Post: SFC<PostProps> = ({className, post}) => {
           </S.Text>
           {renderDropdownMenu()}
         </S.Top>
+        {isTransferPost && (
+          <S.TransferInfo>
+            <S.TransferHeader>Coin Transfer</S.TransferHeader>
+            <S.TransferDetails>
+              <UserLabel avatar={owner.avatar} description="" id={owner.id} username={owner.username} />
+              <S.TransferArrow>→</S.TransferArrow>
+              <UserLabel avatar={recipient!.avatar} description="" id={recipient!.id} username={recipient!.username} />
+            </S.TransferDetails>
+            <S.TransferAmount>
+              {price_currency && currencies[price_currency] && (
+                <>
+                  <CurrencyLogo logo={currencies[price_currency].logo} width="20px" />
+                  <span>
+                    {price_amount?.toLocaleString()} {currencies[price_currency].ticker}
+                  </span>
+                </>
+              )}
+            </S.TransferAmount>
+          </S.TransferInfo>
+        )}
         <S.Content>
           <Linkify>
             {!showFullContent || content.length <= 400 ? (

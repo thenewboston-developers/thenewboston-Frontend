@@ -20,7 +20,6 @@ export interface PostModalProps {
 }
 
 const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
-  const [isImageCleared, setIsImageCleared] = useState<boolean | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -46,7 +45,6 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       const reader = new FileReader();
       reader.onloadend = () => setPreview(reader.result as string);
       reader.readAsDataURL(file);
-      setIsImageCleared(false);
     }
   };
 
@@ -54,14 +52,25 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
     try {
       const requestData = new FormData();
       requestData.append('content', values.content);
-      requestData.append('is_image_cleared', isImageCleared ? 'True' : 'False');
-
-      if (initialValues.image !== values.image) requestData.append('image', values.image);
 
       if (post) {
+        // For updates, handle image changes
+        if (!values.image && initialValues.image) {
+          // Image was cleared
+          requestData.append('image', 'null');
+        } else if (values.image && values.image !== initialValues.image) {
+          // New image was selected
+          requestData.append('image', values.image);
+        }
+        // Otherwise, image remains unchanged (don't send)
+
         await dispatch(updatePost(post.id, requestData));
         displayToast('Post updated!', ToastType.SUCCESS);
       } else {
+        // For new posts, add image if present
+        if (values.image) {
+          requestData.append('image', values.image);
+        }
         await dispatch(createPost(requestData));
         displayToast('Post created!', ToastType.SUCCESS);
       }
@@ -96,7 +105,6 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
               onClear={async () => {
                 await setFieldValue('image', '');
                 setPreview(null);
-                setIsImageCleared(true);
               }}
               src={preview}
             />

@@ -123,3 +123,39 @@ export const Username = styled.div<{$id: number | null}>`
 export const Text = styled.div`
   display: flex;
 `;
+
+export const TransferAmount = styled.div`
+  align-items: center;
+  display: flex;
+  font-size: 18px;
+  font-weight: ${fonts.weight.semiBold};
+  gap: 8px;
+  margin-top: 12px;
+`;
+
+export const TransferArrow = styled.span`
+  color: ${colors.palette.gray['500']};
+  font-size: 20px;
+  margin: 0 12px;
+`;
+
+export const TransferDetails = styled.div`
+  align-items: center;
+  display: flex;
+  margin-top: 8px;
+`;
+
+export const TransferHeader = styled.div`
+  color: ${colors.palette.gray['600']};
+  font-size: 12px;
+  font-weight: ${fonts.weight.semiBold};
+  text-transform: uppercase;
+`;
+
+export const TransferInfo = styled.div`
+  background-color: ${colors.palette.gray['100']};
+  border-radius: 8px;
+  border: 1px solid ${colors.palette.gray['200']};
+  margin-top: 12px;
+  padding: 12px 16px;
+`;
