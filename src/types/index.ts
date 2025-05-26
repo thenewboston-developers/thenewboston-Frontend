@@ -1,11 +1,12 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
-import {CreateFollowerRequest, FollowerReadSerializer} from 'types/api/follower';
+import {CreateFollowerRequest, FollowerReadSerializer, GetFollowersParams} from 'types/api/follower';
 import {CreateInvitationRequest} from 'types/api/invitations';
-import {UpdateNotificationRequest} from 'types/api/notifications';
+import {CreateMintRequest, GetMintsParams} from 'types/api/mints';
 import {PostReactionCreateRequest, PostReactionSerializer} from 'types/api/postReaction';
-import {PostReadSerializer} from 'types/api/posts';
+import {GetPostsParams, PostReadSerializer} from 'types/api/posts';
+import {GetTradesParams} from 'types/api/trades';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {UserStatsSerializer} from 'types/api/userStats';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
@@ -50,6 +51,7 @@ export {
   CreateExchangeOrderRequest,
   CreateFollowerRequest,
   CreateInvitationRequest,
+  CreateMintRequest,
   CreateUserRequest,
   CreateUserResponse,
   CreateWalletRequest,
@@ -64,6 +66,10 @@ export {
   Followers,
   GenericFunction,
   GenericVoidFunction,
+  GetFollowersParams,
+  GetMintsParams,
+  GetPostsParams,
+  GetTradesParams,
   Invitation,
   InvitationLimit,
   InvitationLimits,
@@ -88,7 +94,6 @@ export {
   SFC,
   Trade,
   Trades,
-  UpdateNotificationRequest,
   UserReadSerializer,
   Users,
   UserStats,

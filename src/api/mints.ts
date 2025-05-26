@@ -1,20 +1,9 @@
 import axios from 'axios';
 
-import {Mint, PaginatedResponse} from 'types';
+import {CreateMintRequest, GetMintsParams, Mint, PaginatedResponse} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/mints`;
-
-export interface CreateMintRequest {
-  amount: number;
-  currency: number;
-}
-
-export interface GetMintsParams {
-  currency: number;
-  page?: number;
-  page_size?: number;
-}
 
 export const createMint = async (data: CreateMintRequest): Promise<Mint> => {
   try {
@@ -31,15 +20,6 @@ export const getMints = async (params: GetMintsParams): Promise<PaginatedRespons
       ...authorizationHeaders(),
       params,
     });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getMint = async (id: string): Promise<Mint> => {
-  try {
-    const response = await axios.get<Mint>(`${BASE_URL}/${id}`, authorizationHeaders());
     return response.data;
   } catch (error) {
     throw error;

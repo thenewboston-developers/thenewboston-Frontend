@@ -53,7 +53,7 @@ const Detail: SFC = ({className}) => {
     (async () => {
       setLoadingMints(true);
       try {
-        const data = await dispatch(getMints({currency: currency.id, page: currentPage})).unwrap();
+        const data = await dispatch(getMints({currency: currency.id, page: currentPage}));
         setMintsData(data);
       } catch (error) {
         displayErrorToast('Error loading mints');
@@ -74,7 +74,7 @@ const Detail: SFC = ({className}) => {
 
     setMinting(true);
     try {
-      await dispatch(createMint({currency: currency.id, amount})).unwrap();
+      await dispatch(createMint({currency: currency.id, amount}));
       setMintAmount('');
       displayToast(`Successfully minted ${amount.toLocaleString()} ${currency.ticker}`, ToastType.SUCCESS);
       // Refresh mints list

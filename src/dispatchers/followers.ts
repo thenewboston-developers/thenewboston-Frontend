@@ -2,7 +2,6 @@ import {
   createFollower as _createFollower,
   deleteFollower as _deleteFollower,
   getFollowers as _getFollowers,
-  GetFollowersParams,
 } from 'api/followers';
 import {store} from 'store';
 import {
@@ -12,7 +11,7 @@ import {
   startLoading,
   unsetSelfFollowing,
 } from 'store/followers';
-import {AppDispatch, CreateFollowerRequest} from 'types';
+import {AppDispatch, CreateFollowerRequest, GetFollowersParams} from 'types';
 import {getNextUrlFromState} from 'utils/urls';
 
 export const createFollower = (data: CreateFollowerRequest) => async (dispatch: AppDispatch) => {

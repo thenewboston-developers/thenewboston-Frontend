@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {CreateFollowerRequest, FollowerReadSerializer, PaginatedResponse} from 'types';
+import {CreateFollowerRequest, FollowerReadSerializer, GetFollowersParams, PaginatedResponse} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 import {getApiUrl} from 'utils/urls';
 
@@ -22,11 +22,6 @@ export const deleteFollower = async (id: number): Promise<void> => {
     throw error;
   }
 };
-
-export interface GetFollowersParams {
-  follower?: number;
-  following?: number;
-}
 
 export const getFollowers = async (
   url: string,

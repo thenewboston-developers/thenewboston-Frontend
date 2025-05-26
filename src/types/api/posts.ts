@@ -10,3 +10,7 @@ export interface PostReadSerializer extends CreatedModified {
   user_reaction: string;
   user_reactions: PostReactionSerializer[];
 }
+
+export interface GetPostsParams {
+  owner?: number;
+}

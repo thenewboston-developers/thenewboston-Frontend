@@ -2,13 +2,12 @@ import {
   createPost as _createPost,
   deletePost as _deletePost,
   getPosts as _getPosts,
-  GetPostsParams,
   updatePost as _updatePost,
 } from 'api/posts';
 import {store} from 'store';
 import {setComments} from 'store/comments';
 import {resetPosts as _resetPosts, setPost, setPosts, startLoading, unsetPost} from 'store/posts';
-import {AppDispatch} from 'types';
+import {AppDispatch, GetPostsParams} from 'types';
 import {getNextUrlFromState} from 'utils/urls';
 
 export const createPost = (data: FormData) => async (dispatch: AppDispatch) => {

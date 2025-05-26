@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {PaginatedResponse, PostReadSerializer} from 'types';
+import {GetPostsParams, PaginatedResponse, PostReadSerializer} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 import {getApiUrl} from 'utils/urls';
 
@@ -22,10 +22,6 @@ export const deletePost = async (id: number): Promise<void> => {
     throw error;
   }
 };
-
-export interface GetPostsParams {
-  owner?: number;
-}
 
 export const getPosts = async (
   url: string,
