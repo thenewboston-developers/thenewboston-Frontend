@@ -11,3 +11,8 @@ export interface FollowerReadSerializer extends CreatedModified {
   id: number;
   self_following: boolean;
 }
+
+export interface GetFollowersParams {
+  follower?: number;
+  following?: number;
+}

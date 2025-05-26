@@ -1,6 +1,6 @@
-import {getTrades as _getTrades, GetTradesParams} from 'api/trades';
+import {getTrades as _getTrades} from 'api/trades';
 import {setTrades} from 'store/trades';
-import {AppDispatch} from 'types';
+import {AppDispatch, GetTradesParams} from 'types';
 
 export const getTrades = (params?: GetTradesParams) => async (dispatch: AppDispatch) => {
   const responseData = await _getTrades(params);

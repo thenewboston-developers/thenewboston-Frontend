@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-import {PaginatedResponse, PostReadSerializer} from 'types';
+import {GetPostsParams, PaginatedResponse, PostReadSerializer} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
-import {getApiUrl} from 'utils/urls';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/posts`;
 
@@ -23,16 +22,12 @@ export const deletePost = async (id: number): Promise<void> => {
   }
 };
 
-export interface GetPostsParams {
-  owner?: number;
-}
-
 export const getPosts = async (
   url: string,
   params?: GetPostsParams,
 ): Promise<PaginatedResponse<PostReadSerializer>> => {
   try {
-    const apiURL = getApiUrl(BASE_URL, url);
+    const apiURL = url || BASE_URL;
     const response = await axios.get<PaginatedResponse<PostReadSerializer>>(apiURL, {
       params,
       ...authorizationHeaders(),

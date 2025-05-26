@@ -146,3 +146,19 @@ export const Title = styled.div`
   font-size: 18px;
   font-weight: ${fonts.weight.semiBold};
 `;
+
+export const InternalCurrencyMessage = styled.div`
+  padding: 40px;
+  text-align: center;
+
+  ${Title} {
+    margin-bottom: 16px;
+  }
+
+  ${Text} {
+    color: ${colors.palette.gray[600]};
+    font-weight: ${fonts.weight.regular};
+    font-size: 16px;
+    line-height: 1.5;
+  }
+`;

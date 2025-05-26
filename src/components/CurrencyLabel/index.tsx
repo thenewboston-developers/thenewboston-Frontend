@@ -1,4 +1,5 @@
 import {useDispatch, useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import {mdiDeleteOutline, mdiDotsVertical, mdiSquareEditOutline} from '@mdi/js';
 
 import CurrencyLogo from 'components/CurrencyLogo';
@@ -19,10 +20,15 @@ export interface CurrencyDetailProps {
 const CurrencyDetail: SFC<CurrencyDetailProps> = ({className, currency}) => {
   const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const self = useSelector(getSelf);
 
   const handleDelete = async () => {
     await dispatch(deleteCurrency(currency.id));
+  };
+
+  const handleTickerClick = () => {
+    navigate(`/currencies/${currency.id}`);
   };
 
   const menuOptions = [
@@ -49,13 +55,16 @@ const CurrencyDetail: SFC<CurrencyDetailProps> = ({className, currency}) => {
           <S.BoxLeft>
             <CurrencyLogo logo={currency.logo} />
             <S.Text>
-              <S.Ticker>{currency.ticker}</S.Ticker>
+              <S.Ticker onClick={handleTickerClick}>{currency.ticker}</S.Ticker>
             </S.Text>
           </S.BoxLeft>
           {renderDropdownMenu()}
         </S.Box>
         <Line />
-        <S.Domain>{currency.domain}</S.Domain>
+        <S.DomainRow>
+          <S.Domain>{currency.domain || 'Internal Currency'}</S.Domain>
+          {currency.domain === null && <S.InternalBadge>Internal</S.InternalBadge>}
+        </S.DomainRow>
       </S.Container>
       {currencyModalIsOpen ? <CurrencyModal close={toggleCurrencyModal} currency={currency} /> : null}
     </>

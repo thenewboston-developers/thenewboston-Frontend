@@ -8,6 +8,7 @@ export const FOLLOWINGS = 'followings';
 export const INVITATIONS = 'invitations';
 export const INVITATION_LIMITS = 'invitationLimits';
 export const MANAGER = 'manager';
+export const MINTS = 'mints';
 export const NOTIFICATIONS = 'notifications';
 export const POSTS = 'posts';
 export const SELF = 'self';

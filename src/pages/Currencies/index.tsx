@@ -2,6 +2,7 @@ import {Navigate, Route, Routes} from 'react-router-dom';
 
 import {SFC} from 'types';
 
+import Detail from './Detail';
 import Home from './Home';
 import Layout from './Layout';
 import LearnMore from './LearnMore';
@@ -17,6 +18,7 @@ const Currencies: SFC = ({className}) => {
           <Route path="/home" element={<Home />} />
           <Route path="/learn-more" element={<LearnMore />} />
         </Route>
+        <Route path="/:id" element={<Detail />} />
       </Routes>
     </S.Container>
   );

@@ -86,3 +86,24 @@ export const Img = styled.img`
     display: none;
   }
 `;
+
+export const Text = styled.div`
+  color: ${colors.gray};
+  font-weight: ${fonts.weight.bold};
+`;
+
+export const InternalCurrencyMessage = styled.div`
+  padding: 40px;
+  text-align: center;
+
+  ${Title} {
+    margin-bottom: 16px;
+  }
+
+  ${Text} {
+    color: ${colors.palette.gray[600]};
+    font-weight: ${fonts.weight.regular};
+    font-size: 16px;
+    line-height: 1.5;
+  }
+`;

@@ -31,6 +31,15 @@ export const getCurrencies = async (): Promise<Currency[]> => {
   }
 };
 
+export const getCurrency = async (id: number): Promise<Currency> => {
+  try {
+    const response = await axios.get<Currency>(`${BASE_URL}/${id}`, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const updateCurrency = async (id: number, data: FormData): Promise<Currency> => {
   try {
     const response = await axios.patch<Currency>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());

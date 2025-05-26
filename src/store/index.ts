@@ -24,6 +24,7 @@ import invitationLimitsReducer from 'store/invitationLimits';
 import invitationsReducer from 'store/invitations';
 import managerReducer from 'store/manager';
 import migrations from 'store/migrations';
+import mintsReducer from 'store/mints';
 import notificationsReducer from 'store/notifications';
 import postsReducer from 'store/posts';
 import selfReducer from 'store/self';
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
   invitationLimits: invitationLimitsReducer,
   invitations: invitationsReducer,
   manager: managerReducer,
+  mints: mintsReducer,
   notifications: notificationsReducer,
   posts: postsReducer,
   self: selfReducer,

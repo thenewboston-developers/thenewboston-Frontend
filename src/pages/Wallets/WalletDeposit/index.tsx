@@ -27,6 +27,22 @@ const WalletDeposit: SFC = ({className}) => {
 
   if (!activeWallet) return null;
 
+  const isInternalCurrency = activeWallet.currency.domain === null;
+
+  if (isInternalCurrency) {
+    return (
+      <S.Container className={className}>
+        <S.InternalCurrencyMessage>
+          <S.Title>Deposits Not Available</S.Title>
+          <S.Text>
+            This is an internal currency that exists only within our platform. Deposits from external sources are not
+            supported.
+          </S.Text>
+        </S.InternalCurrencyMessage>
+      </S.Container>
+    );
+  }
+
   const handleButtonClick = async () => {
     setCreateDepositRequestPending(true);
 
@@ -52,7 +68,7 @@ const WalletDeposit: SFC = ({className}) => {
   };
 
   const renderButton = () => {
-    if (activeWallet.deposit_balance <= 1) return null;
+    if (!activeWallet.deposit_balance || activeWallet.deposit_balance <= 1) return null;
 
     return (
       <Button
@@ -87,17 +103,17 @@ const WalletDeposit: SFC = ({className}) => {
     <S.Container className={className}>
       <S.Top>
         <S.QrWrapper>
-          <S.QR text={activeWallet.deposit_account_number} width={120} />
+          <S.QR text={activeWallet.deposit_account_number || ''} width={120} />
           <S.LeftCornerBorders />
           <S.RightCornerBorders />
         </S.QrWrapper>
-        <S.CopyContainer text={activeWallet.deposit_account_number} />
+        <S.CopyContainer text={activeWallet.deposit_account_number || ''} />
       </S.Top>
       <Line />
       <S.DepositAccountRow>
         <S.DepositLeft>
           <S.Text>Deposit Account Balance:</S.Text>
-          <S.Balance>{activeWallet.deposit_balance.toLocaleString()}</S.Balance>
+          <S.Balance>{(activeWallet.deposit_balance || 0).toLocaleString()}</S.Balance>
         </S.DepositLeft>
         {renderIcon()}
         {renderButton()}

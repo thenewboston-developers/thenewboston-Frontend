@@ -5,8 +5,9 @@ import {Dict} from 'types/generic';
 export interface Wallet extends CreatedModified {
   balance: number;
   currency: Currency;
-  deposit_account_number: string;
-  deposit_balance: number;
+  deposit_account_number: string | null;
+  deposit_balance: number | null;
+  deposit_signing_key: string | null;
   id: number;
   owner: number;
 }
