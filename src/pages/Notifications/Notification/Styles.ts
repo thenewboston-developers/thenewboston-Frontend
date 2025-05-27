@@ -14,9 +14,9 @@ export const NotificationContainer = styled.div`
 `;
 
 export const Container = styled.div<{$isRead: boolean}>`
-  background: ${({$isRead}) => ($isRead ? colors.white : colors.borderSecondary)};
+  background: ${({$isRead}) => ($isRead ? colors.white : colors.border)};
   border-radius: 16px;
-  border: 1px solid ${colors.backgroundDarker};
+  border: 1px solid ${colors.borderDarker};
   display: flex;
   gap: 16px;
   margin-top: 16px;
@@ -55,12 +55,10 @@ export const Link = styled(ULink)`
 `;
 
 export const TextContainer = styled.div`
-  margin-left: 24px;
+  margin-left: 15px;
 `;
 
 export const TimeStamp = styled.small`
   color: ${colors.gray};
   font-weight: ${fonts.weight.semiBold};
-  margin-top: 4px;
-  display: block;
 `;
