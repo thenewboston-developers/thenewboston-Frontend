@@ -4,7 +4,7 @@ import {mdiBrushOutline, mdiContentCopy} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import {Notification as TNotification, SFC} from 'types';
-import {longDate} from 'utils/dates';
+import {formatDateWithBar} from 'utils/dates';
 
 import * as S from './Styles';
 
@@ -37,7 +37,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
           <S.Link to={`/profile/${notification.payload.buyer.id}`}>{notification.payload.buyer.username}</S.Link>{' '}
           purchased your <S.Link to={`/art/artworks/${notification.payload.artwork_id}`}>artwork</S.Link>.
           <br />
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+          <S.TimeStamp>{formatDateWithBar(notification.created_date)}</S.TimeStamp>
         </S.TextContainer>
         {renderRedDot()}
       </S.NotificationContainer>
@@ -55,9 +55,9 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
           <S.Link to={`/profile/${notification.payload.commenter.id}`}>
             {notification.payload.commenter.username}
           </S.Link>{' '}
-          commented on your <strong>Post</strong>:"{notification.payload.comment}"
+          commented on your <strong>Post</strong> : "{notification.payload.comment}"
           <br />
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+          <S.TimeStamp>{formatDateWithBar(notification.created_date)}</S.TimeStamp>
         </S.TextContainer>
         {renderRedDot()}
       </S.NotificationContainer>

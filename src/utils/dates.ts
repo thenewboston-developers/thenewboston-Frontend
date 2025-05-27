@@ -65,11 +65,17 @@ export const getTimeStr = (date: Date, use12HourFormat = false): string => {
   return date.toLocaleTimeString(undefined, config);
 };
 
-export const longDate = (date: number | string | Date): string => {
+export const formatDateWithBar = (date: number | string | Date): string => {
   const customDate = new Date(date);
-  const dateStr = getDateStr(customDate);
-  const timeStr = getTimeStr(customDate);
-  return `${dateStr} at ${timeStr}`;
+  const month = customDate.toLocaleString('en-US', {month: 'short'});
+  const day = customDate.getDate();
+  const year = customDate.getFullYear();
+  const time = customDate.toLocaleString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+  return `${month} ${day}, ${year} | ${time}`;
 };
 
 export const shortDate = (date: Date | number | string, includeTodayAt: boolean): string => {
@@ -82,4 +88,11 @@ export const shortDate = (date: Date | number | string, includeTodayAt: boolean)
   }
 
   return getTimeAgo(_date);
+};
+
+export const longDate = (date: number | string | Date): string => {
+  const customDate = new Date(date);
+  const dateStr = getDateStr(customDate);
+  const timeStr = getTimeStr(customDate);
+  return `${dateStr} at ${timeStr}`;
 };
