@@ -56,8 +56,8 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       if (post) {
         // For updates, handle image changes
         if (!values.image && initialValues.image) {
-          // Image was cleared
-          requestData.append('image', 'null');
+          // Image was cleared - use the new clear_image field
+          requestData.append('clear_image', 'true');
         } else if (values.image && values.image !== initialValues.image) {
           // New image was selected
           requestData.append('image', values.image);
