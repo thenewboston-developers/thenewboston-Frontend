@@ -91,13 +91,3 @@ export const Box = styled.div`
   overflow-x: auto;
   padding: 26px 20px;
 `;
-
-export const TextAlignment = styled.span`
-  display: flex;
-  gap: 3px;
-  align-items: center;
-`;
-
-export const TextColor = styled.span`
-  color: ${colors.gray};
-`;

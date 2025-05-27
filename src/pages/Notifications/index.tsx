@@ -41,13 +41,7 @@ const Notifications: SFC = ({className}) => {
 
   const renderContent = () => {
     if (!!notificationList.length) return renderNotificationContainer();
-    return (
-      <EmptyPage
-        bottomText="Make a comment or sell some art or something."
-        graphic={LeavesEmptyState}
-        topText="Nothing here!"
-      />
-    );
+    return <EmptyPage bottomText="Create a post or something." graphic={LeavesEmptyState} topText="Nothing here!" />;
   };
 
   const renderNotificationContainer = () => {

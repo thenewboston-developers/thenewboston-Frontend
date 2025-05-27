@@ -1,7 +1,6 @@
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiDotsVertical, mdiPackageVariantClosed} from '@mdi/js';
-import Icon from '@mdi/react';
+import {mdiDotsVertical} from '@mdi/js';
 import orderBy from 'lodash/orderBy';
 
 import DropdownMenu from 'components/DropdownMenu';
@@ -13,7 +12,6 @@ import {FillStatus} from 'enums';
 import {useToggle} from 'hooks';
 import TradesModal from 'modals/TradesModal';
 import {getCurrencies, getExchangeOrders, getSelf} from 'selectors/state';
-import {colors} from 'styles';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
@@ -110,12 +108,7 @@ const Orders: SFC = ({className}) => {
       return (
         <tr key={id}>
           <td>{longDate(created_date)}</td>
-          <td>
-            <S.TextAlignment>
-              <Icon path={mdiPackageVariantClosed} size={1} color={`${colors.gray}`} />
-              {order_type}
-            </S.TextAlignment>
-          </td>
+          <td>{order_type}</td>
           <td>
             {quantity.toLocaleString()} {primaryCurrencyTicker}
           </td>
