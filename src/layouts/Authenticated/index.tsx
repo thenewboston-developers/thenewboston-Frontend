@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux';
 import {getAssetPairs} from 'dispatchers/assetPairs';
 import {getCurrencies} from 'dispatchers/currencies';
 import {getExchangeOrders} from 'dispatchers/exchangeOrders';
+import {getNotifications} from 'dispatchers/notifications';
 import {getWallets} from 'dispatchers/wallets';
 import {getWires} from 'dispatchers/wires';
 import {AppDispatch, SFC} from 'types';
@@ -23,6 +24,7 @@ const Authenticated: SFC = ({className}) => {
           dispatch(getAssetPairs()),
           dispatch(getCurrencies()),
           dispatch(getExchangeOrders()),
+          dispatch(getNotifications()),
           dispatch(getWallets()),
           dispatch(getWires()),
         ]);
