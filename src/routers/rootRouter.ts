@@ -1,6 +1,7 @@
 import {SocketDataType} from 'enums';
 import {setExchangeOrder} from 'store/exchangeOrders';
 import {setNotification} from 'store/notifications';
+import {setTrade} from 'store/trades';
 import {setWallet} from 'store/wallets';
 import {AppDispatch} from 'types';
 
@@ -12,6 +13,8 @@ const rootRouter = (dispatch: AppDispatch, event: MessageEvent) => {
     dispatch(setExchangeOrder(socketData.exchange_order));
   } else if (type === SocketDataType.CREATE_NOTIFICATION) {
     dispatch(setNotification(socketData.notification));
+  } else if (type === SocketDataType.CREATE_TRADE) {
+    dispatch(setTrade(socketData.trade));
   } else if (type === SocketDataType.UPDATE_WALLET) {
     dispatch(setWallet(socketData.wallet));
   }
