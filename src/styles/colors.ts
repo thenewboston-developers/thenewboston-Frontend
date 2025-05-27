@@ -6,6 +6,8 @@ const colors = {
   black: '#000000',
   border: '#efeff4',
   borderDarker: '#d7d7df',
+  borderSecondary: '#ECECEE',
+  backgroundDarker: '#D7D7D8',
   lightGreen: '#E1F6E1',
   lightRed: '#FBDEDE',
   gray: '#747474',
