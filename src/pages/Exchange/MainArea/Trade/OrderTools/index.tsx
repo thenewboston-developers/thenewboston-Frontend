@@ -35,16 +35,18 @@ const OrderTools: SFC = ({className}) => {
     if (!activeAssetPair) return null;
 
     return (
-      <S.Tabs>
-        <Tab isActive={activeTab === TradeTab.BUY} onClick={() => setActiveTab(TradeTab.BUY)}>
-          <Icon path={mdiCartArrowDown} size={'16px'} />
-          Buy
-        </Tab>
-        <Tab isActive={activeTab === TradeTab.SELL} onClick={() => setActiveTab(TradeTab.SELL)}>
-          <Icon path={mdiCartArrowUp} size={'16px'} />
-          Sell
-        </Tab>
-      </S.Tabs>
+      <S.TabsWrapper>
+        <S.Tabs>
+          <Tab isActive={activeTab === TradeTab.BUY} onClick={() => setActiveTab(TradeTab.BUY)}>
+            <Icon path={mdiCartArrowDown} size={'16px'} />
+            Buy
+          </Tab>
+          <Tab isActive={activeTab === TradeTab.SELL} onClick={() => setActiveTab(TradeTab.SELL)}>
+            <Icon path={mdiCartArrowUp} size={'16px'} />
+            Sell
+          </Tab>
+        </S.Tabs>
+      </S.TabsWrapper>
     );
   };
 

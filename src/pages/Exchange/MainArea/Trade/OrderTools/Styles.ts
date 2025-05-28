@@ -13,4 +13,11 @@ export const TabContent = styled.div`
   margin-top: 16px;
 `;
 
-export const Tabs = styled(UTabs)``;
+export const Tabs = styled(UTabs)`
+  margin: 0 auto;
+`;
+
+export const TabsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
