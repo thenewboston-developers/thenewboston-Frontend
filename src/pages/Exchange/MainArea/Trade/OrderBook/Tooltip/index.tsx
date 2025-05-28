@@ -13,38 +13,38 @@ interface TooltipProps {
 
 const Tooltip: SFC<TooltipProps> = ({order, activeAssetPair, date, time, type}) => {
   return (
-    <S.Tooltip>
-      <S.TooltipContent>
-        <S.TooltipRow>
-          <S.TooltipLabel>Date:</S.TooltipLabel>
-          <S.TooltipValue>
+    <S.Container>
+      <S.Content>
+        <S.Row>
+          <S.Label>Date:</S.Label>
+          <S.Value>
             {date.trim()} {time.trim()}
-          </S.TooltipValue>
-        </S.TooltipRow>
-        <S.TooltipRow>
-          <S.TooltipLabel>Order Type:</S.TooltipLabel>
-          <S.TooltipValue $type={type}>{order.order_type}</S.TooltipValue>
-        </S.TooltipRow>
-        <S.TooltipRow>
-          <S.TooltipLabel>Order Quantity:</S.TooltipLabel>
-          <S.TooltipValue>
+          </S.Value>
+        </S.Row>
+        <S.Row>
+          <S.Label>Order Type:</S.Label>
+          <S.Value $type={type}>{order.order_type}</S.Value>
+        </S.Row>
+        <S.Row>
+          <S.Label>Order Quantity:</S.Label>
+          <S.Value>
             {order.quantity.toLocaleString()} {activeAssetPair.primary_currency.ticker}
-          </S.TooltipValue>
-        </S.TooltipRow>
-        <S.TooltipRow>
-          <S.TooltipLabel>Filled Amount:</S.TooltipLabel>
-          <S.TooltipValue>
+          </S.Value>
+        </S.Row>
+        <S.Row>
+          <S.Label>Filled Amount:</S.Label>
+          <S.Value>
             {order.filled_amount.toLocaleString()} {activeAssetPair.primary_currency.ticker}
-          </S.TooltipValue>
-        </S.TooltipRow>
-        <S.TooltipRow>
-          <S.TooltipLabel>Status:</S.TooltipLabel>
-          <S.TooltipValue>
+          </S.Value>
+        </S.Row>
+        <S.Row>
+          <S.Label>Status:</S.Label>
+          <S.Value>
             <FillStatusBadge fillStatus={order.fill_status} />
-          </S.TooltipValue>
-        </S.TooltipRow>
-      </S.TooltipContent>
-    </S.Tooltip>
+          </S.Value>
+        </S.Row>
+      </S.Content>
+    </S.Container>
   );
 };
 

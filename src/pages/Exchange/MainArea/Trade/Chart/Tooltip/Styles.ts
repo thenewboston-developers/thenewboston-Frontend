@@ -13,7 +13,7 @@ const fadeIn = keyframes`
   }
 `;
 
-export const TooltipContainer = styled.div`
+export const Container = styled.div`
   animation: ${fadeIn} 0.2s ease-out;
   background: rgba(15, 20, 25, 0.95);
   backdrop-filter: blur(10px);
@@ -23,7 +23,7 @@ export const TooltipContainer = styled.div`
   padding: 12px 16px;
 `;
 
-export const TooltipDate = styled.div`
+export const Date = styled.div`
   color: ${colors.palette.gray['400']};
   font-size: 12px;
   letter-spacing: 0.05em;
@@ -31,18 +31,18 @@ export const TooltipDate = styled.div`
   text-transform: uppercase;
 `;
 
-export const TooltipLabel = styled.span`
+export const Label = styled.span`
   color: ${colors.palette.gray['300']};
   font-size: 12px;
 `;
 
-export const TooltipPrice = styled.div`
+export const PriceRow = styled.div`
   align-items: baseline;
   display: flex;
   gap: 8px;
 `;
 
-export const TooltipValue = styled.span`
+export const Value = styled.span`
   color: ${colors.white};
   font-size: 16px;
   font-weight: 600;

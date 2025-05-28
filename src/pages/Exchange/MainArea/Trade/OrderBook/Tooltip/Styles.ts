@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import {colors} from 'styles';
 
-export const Tooltip = styled.div`
+export const Container = styled.div`
   animation: fadeIn 0.3s ease-out;
   background: ${colors.primary};
   border-radius: 8px;
@@ -38,28 +38,28 @@ export const Tooltip = styled.div`
   }
 `;
 
-export const TooltipContent = styled.div`
+export const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 250px;
 `;
 
-export const TooltipLabel = styled.span`
+export const Label = styled.span`
   color: ${colors.palette.gray['400']};
   font-size: 12px;
   font-weight: 500;
   min-width: 100px;
 `;
 
-export const TooltipRow = styled.div`
+export const Row = styled.div`
   align-items: center;
   display: flex;
   gap: 12px;
   justify-content: space-between;
 `;
 
-export const TooltipValue = styled.span<{$type?: 'buy' | 'sell'}>`
+export const Value = styled.span<{$type?: 'buy' | 'sell'}>`
   color: ${({$type}) => {
     if ($type === 'buy') return colors.palette.green['300'];
     if ($type === 'sell') return colors.palette.red['300'];

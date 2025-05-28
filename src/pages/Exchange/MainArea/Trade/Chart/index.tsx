@@ -11,8 +11,8 @@ import {colors} from 'styles';
 import {AppDispatch, SFC} from 'types';
 import {chartDisplayDate} from 'utils/dates';
 
-import CustomTooltip from './CustomTooltip';
 import * as S from './Styles';
+import ChartTooltip from './Tooltip';
 
 const Chart: SFC = ({className}) => {
   const activeAssetPair = useActiveAssetPair();
@@ -201,7 +201,7 @@ const Chart: SFC = ({className}) => {
                   tickFormatter={(value) => Math.round(value).toString()}
                 />
                 <Tooltip
-                  content={<CustomTooltip currencyId={activeAssetPair?.secondary_currency.id} />}
+                  content={<ChartTooltip currencyId={activeAssetPair?.secondary_currency.id} />}
                   cursor={{stroke: colors.palette.gray['400'], strokeWidth: 1}}
                 />
                 <Area
@@ -235,7 +235,7 @@ const Chart: SFC = ({className}) => {
                   tickFormatter={(value) => Math.round(value).toString()}
                 />
                 <Tooltip
-                  content={<CustomTooltip currencyId={activeAssetPair?.secondary_currency.id} />}
+                  content={<ChartTooltip currencyId={activeAssetPair?.secondary_currency.id} />}
                   cursor={{stroke: colors.palette.gray['400'], strokeWidth: 1}}
                 />
                 <Line
