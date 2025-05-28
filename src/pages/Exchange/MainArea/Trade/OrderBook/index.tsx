@@ -36,31 +36,32 @@ const OrderBook: SFC = ({className}) => {
         <S.Thead>
           <S.Tr>
             <th>Date</th>
-            <th>Order Type</th>
-            <th>Order Quantity ({activeAssetPair.primary_currency.ticker})</th>
-            <th>Filled Amount ({activeAssetPair.primary_currency.ticker})</th>
+            <th>Type</th>
+            <th>Quantity ({activeAssetPair.primary_currency.ticker})</th>
+            <th>Filled ({activeAssetPair.primary_currency.ticker})</th>
             <th>Remaining ({activeAssetPair.primary_currency.ticker})</th>
             <th>Price ({activeAssetPair.secondary_currency.ticker})</th>
-            <th>Fill Status</th>
+            <th>Status</th>
           </S.Tr>
         </S.Thead>
         <S.Tbody>
           {filteredOrders.map((order) => {
             const [date, time] = longDate(order.created_date).split('at');
+            const remaining = order.quantity - order.filled_amount;
+
             return (
               <S.Tr key={order.id}>
                 <S.Td>
-                  {date}
-                  <br />
-                  <S.TextColor>{time}</S.TextColor>
+                  <div>{date.trim()}</div>
+                  <S.TextColor>{time.trim()}</S.TextColor>
                 </S.Td>
-                <S.Td>{order.order_type}</S.Td>
-                <S.Td>{order.quantity}</S.Td>
-                <S.Td>{order.filled_amount}</S.Td>
-                <S.Td>{(order.quantity - order.filled_amount).toLocaleString()}</S.Td>
                 <S.Td $orderType={ExchangeOrderType[order.order_type as keyof typeof ExchangeOrderType]}>
-                  {order.price.toLocaleString()}
+                  {order.order_type}
                 </S.Td>
+                <S.Td>{order.quantity.toLocaleString()}</S.Td>
+                <S.Td>{order.filled_amount.toLocaleString()}</S.Td>
+                <S.Td>{remaining.toLocaleString()}</S.Td>
+                <S.Td>{order.price.toLocaleString()}</S.Td>
                 <S.Td>
                   <S.FillStatusBadgeWrapper>
                     <FillStatusBadge fillStatus={order.fill_status} />

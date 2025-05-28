@@ -8,7 +8,7 @@ import EmptyText from 'components/EmptyText';
 import FillStatusBadge from 'components/FillStatusBadge';
 import SectionHeading from 'components/SectionHeading';
 import {updateExchangeOrder} from 'dispatchers/exchangeOrders';
-import {FillStatus} from 'enums';
+import {ExchangeOrderType, FillStatus} from 'enums';
 import {useToggle} from 'hooks';
 import TradesModal from 'modals/TradesModal';
 import {getCurrencies, getExchangeOrders, getSelf} from 'selectors/state';
@@ -39,11 +39,11 @@ const Orders: SFC = ({className}) => {
           <S.Thead>
             <tr>
               <th>Date</th>
-              <th>Order Type</th>
+              <th>Type</th>
               <th>Quantity</th>
               <th>Price</th>
-              <th>Filled Amount</th>
-              <th>Fill Status</th>
+              <th>Filled</th>
+              <th>Status</th>
               <th>Action</th>
             </tr>
           </S.Thead>
@@ -104,11 +104,21 @@ const Orders: SFC = ({className}) => {
 
       const primaryCurrencyTicker = getCurrencyTicker(primary_currency);
       const secondaryCurrencyTicker = getCurrencyTicker(secondary_currency);
+      const [date, time] = longDate(created_date).split('at');
 
       return (
         <tr key={id}>
-          <td>{longDate(created_date)}</td>
-          <td>{order_type}</td>
+          <td>
+            <S.DateWrapper>
+              <div>{date.trim()}</div>
+              <S.TimeText>{time.trim()}</S.TimeText>
+            </S.DateWrapper>
+          </td>
+          <td>
+            <S.OrderType $orderType={ExchangeOrderType[order_type as keyof typeof ExchangeOrderType]}>
+              {order_type}
+            </S.OrderType>
+          </td>
           <td>
             {quantity.toLocaleString()} {primaryCurrencyTicker}
           </td>
