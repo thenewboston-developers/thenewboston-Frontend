@@ -25,19 +25,17 @@ export const Header = styled.div`
 `;
 
 export const MarkAllButton = styled(UButton)`
-  && {
-    background: transparent;
-    border: 1px solid ${colors.borderDarker};
-    border-radius: 20px;
-    color: ${colors.primary};
-    font-size: 14px;
-    font-weight: ${fonts.weight.medium};
-    height: 36px;
-    padding: 0 16px;
+  background: transparent;
+  border: 1px solid ${colors.borderDarker};
+  border-radius: 20px;
+  color: ${colors.primary};
+  font-size: 14px;
+  font-weight: ${fonts.weight.medium};
+  height: 36px;
+  padding: 0 16px;
 
-    &:hover {
-      background: ${colors.whiteHover};
-    }
+  &:hover {
+    background: ${colors.whiteHover};
   }
 `;
 
