@@ -13,13 +13,12 @@ const fadeIn = keyframes`
   }
 `;
 
-export const Container = styled.div`
-  overflow: hidden;
-`;
+export const Container = styled.div``;
 
 export const ChartBackground = styled.div`
   background: linear-gradient(135deg, ${colors.white} 0%, #fafbfc 100%);
   border-radius: 20px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   padding: 24px;
   position: relative;
   transition: all 0.3s ease;
