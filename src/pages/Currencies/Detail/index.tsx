@@ -6,15 +6,18 @@ import {mdiArrowLeft} from '@mdi/js';
 import {getCurrency} from 'api/currencies';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Button from 'components/Button';
-import CurrencyLogo from 'components/CurrencyLogo';
+import {ButtonColor} from 'components/Button/types';
 import EmptyPage from 'components/EmptyPage';
 import Icon from 'components/Icon';
 import Loader from 'components/Loader';
-import {createMint, getMints} from 'dispatchers/mints';
-import {ToastType} from 'enums';
-import {getMints as getMintsSelector, getSelf} from 'selectors/state';
+import UserLabel from 'components/UserLabel';
+import {getMints} from 'dispatchers/mints';
+import {useToggle} from 'hooks';
+import MintModal from 'modals/MintModal';
+import {getMints as getMintsSelector, getSelf, getUsers} from 'selectors/state';
 import {AppDispatch, Currency, Mint, PaginatedResponse, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toasts';
+import {longDate} from 'utils/dates';
+import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
@@ -24,13 +27,13 @@ const Detail: SFC = ({className}) => {
   const navigate = useNavigate();
   const self = useSelector(getSelf);
   const mints = useSelector(getMintsSelector);
+  const users = useSelector(getUsers);
   const [currency, setCurrency] = useState<Currency | null>(null);
   const [loading, setLoading] = useState(true);
-  const [mintAmount, setMintAmount] = useState<string>('');
-  const [minting, setMinting] = useState(false);
   const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
   const [loadingMints, setLoadingMints] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [mintModalIsOpen, toggleMintModal] = useToggle(false);
 
   useEffect(() => {
     if (!id) return;
@@ -63,28 +66,11 @@ const Detail: SFC = ({className}) => {
     })();
   }, [currency, currentPage, dispatch]);
 
-  const handleMint = async () => {
-    if (!currency || !mintAmount) return;
-
-    const amount = parseInt(mintAmount);
-    if (isNaN(amount) || amount <= 0) {
-      displayErrorToast('Please enter a valid amount');
-      return;
-    }
-
-    setMinting(true);
-    try {
-      await dispatch(createMint({currency: currency.id, amount}));
-      setMintAmount('');
-      displayToast(`Successfully minted ${amount.toLocaleString()} ${currency.ticker}`, ToastType.SUCCESS);
-      const data = await dispatch(getMints({currency: currency.id, page: 1}));
-      setMintsData(data);
-      setCurrentPage(1);
-    } catch (error: any) {
-      displayErrorToast(error.response?.data?.error || 'Error minting currency');
-    } finally {
-      setMinting(false);
-    }
+  const handleMintSuccess = async () => {
+    if (!currency) return;
+    const data = await dispatch(getMints({currency: currency.id, page: 1}));
+    setMintsData(data);
+    setCurrentPage(1);
   };
 
   const handleBack = () => {
@@ -99,7 +85,12 @@ const Detail: SFC = ({className}) => {
     if (loadingMints) return <Loader />;
 
     if (!mintsData || mintsData.results.length === 0) {
-      return <S.EmptyMints>No mints yet</S.EmptyMints>;
+      return (
+        <S.EmptyMints>
+          <S.EmptyMintsText>No minting history yet</S.EmptyMintsText>
+          <S.EmptyMintsSubtext>Minted coins will appear here</S.EmptyMintsSubtext>
+        </S.EmptyMints>
+      );
     }
 
     const mintsList = Object.values(mints)
@@ -108,17 +99,42 @@ const Detail: SFC = ({className}) => {
 
     return (
       <>
-        <S.MintsList>
-          {mintsList.map((mint) => (
-            <S.MintItem key={mint.id}>
-              <S.MintAmount>{mint.amount.toLocaleString()}</S.MintAmount>
-              <S.MintDate>{new Date(mint.created_date).toLocaleString()}</S.MintDate>
-            </S.MintItem>
-          ))}
-        </S.MintsList>
+        <S.MintsTable>
+          <S.MintsTableHeader>
+            <S.MintsTableRow>
+              <S.MintsTableHead>Minter</S.MintsTableHead>
+              <S.MintsTableHead>Amount</S.MintsTableHead>
+              <S.MintsTableHead>Date</S.MintsTableHead>
+            </S.MintsTableRow>
+          </S.MintsTableHeader>
+          <S.MintsTableBody>
+            {mintsList.map((mint) => {
+              const user = users[mint.owner];
+              return (
+                <S.MintsTableRow key={mint.id}>
+                  <S.MintsTableData>
+                    {user ? (
+                      <UserLabel avatar={user.avatar} description="" username={user.username} id={user.id} />
+                    ) : (
+                      'Unknown'
+                    )}
+                  </S.MintsTableData>
+                  <S.MintsTableData>
+                    <S.MintAmount>{mint.amount.toLocaleString()}</S.MintAmount>
+                  </S.MintsTableData>
+                  <S.MintsTableData>
+                    <S.MintDate>{longDate(mint.created_date)}</S.MintDate>
+                  </S.MintsTableData>
+                </S.MintsTableRow>
+              );
+            })}
+          </S.MintsTableBody>
+        </S.MintsTable>
         {mintsData.count > 20 && (
           <S.Pagination>
-            {mintsData.previous && <Button onClick={() => handlePageChange(currentPage - 1)} text="Previous" />}
+            {mintsData.previous && (
+              <Button onClick={() => handlePageChange(currentPage - 1)} text="Previous" color={ButtonColor.secondary} />
+            )}
             <S.PageInfo>
               Page {currentPage} of {Math.ceil(mintsData.count / 20)}
             </S.PageInfo>
@@ -143,66 +159,45 @@ const Detail: SFC = ({className}) => {
     );
 
   return (
-    <S.Container className={className}>
-      <S.Header>
-        <S.BackButton onClick={handleBack}>
-          <Icon icon={mdiArrowLeft} />
-          <span>Back to Currencies</span>
-        </S.BackButton>
-      </S.Header>
+    <>
+      <S.Container className={className}>
+        <S.Header>
+          <S.BackButton onClick={handleBack}>
+            <Icon icon={mdiArrowLeft} size={20} />
+            <span>Back to Currencies</span>
+          </S.BackButton>
+        </S.Header>
 
-      <S.CurrencyInfo>
-        <CurrencyLogo logo={currency.logo} width="80px" />
-        <S.CurrencyDetails>
-          <S.Ticker>{currency.ticker}</S.Ticker>
-          <S.Domain>{currency.domain || 'Internal Currency'}</S.Domain>
-          <S.TypeBadge $internal={isInternalCurrency}>{isInternalCurrency ? 'Internal' : 'External'}</S.TypeBadge>
-        </S.CurrencyDetails>
-      </S.CurrencyInfo>
+        <S.Content>
+          <S.CurrencyPanel>
+            <S.CurrencyLogo logo={currency.logo} width="56px" />
+            <S.CurrencyContent>
+              <S.CurrencyHeader>
+                <S.CurrencyHeaderInfo>
+                  <S.CurrencyName>{currency.ticker}</S.CurrencyName>
+                  {currency.domain ? (
+                    <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
+                  ) : (
+                    <S.TypeBadge $internal={isInternalCurrency}>
+                      {isInternalCurrency ? 'Internal' : 'External'}
+                    </S.TypeBadge>
+                  )}
+                </S.CurrencyHeaderInfo>
+              </S.CurrencyHeader>
+            </S.CurrencyContent>
+          </S.CurrencyPanel>
 
-      {isOwner && isInternalCurrency && (
-        <S.MintSection>
-          <S.SectionTitle>Mint New Coins</S.SectionTitle>
-
-          <S.MintForm>
-            <S.Input
-              type="number"
-              placeholder="Amount to mint"
-              value={mintAmount}
-              onChange={(e) => setMintAmount(e.target.value)}
-              disabled={minting}
-              min="1"
-            />
-            <Button onClick={handleMint} disabled={minting || !mintAmount} isSubmitting={minting} text="Mint" />
-          </S.MintForm>
-        </S.MintSection>
-      )}
-
-      {!isInternalCurrency && (
-        <S.InfoSection>
-          <S.InfoText>
-            <strong>External Currency</strong>
-            <p>This currency interfaces with external blockchain networks and supports deposits and withdrawals.</p>
-          </S.InfoText>
-        </S.InfoSection>
-      )}
-
-      {isInternalCurrency && !isOwner && (
-        <S.InfoSection>
-          <S.InfoText>
-            <strong>Internal Currency</strong>
-            <p>
-              This is an internal currency that exists only within our platform. It cannot be deposited or withdrawn.
-            </p>
-          </S.InfoText>
-        </S.InfoSection>
-      )}
-
-      <S.MintsSection>
-        <S.SectionTitle>Minting History</S.SectionTitle>
-        {renderMintsList()}
-      </S.MintsSection>
-    </S.Container>
+          <S.SectionHeader>
+            <S.SectionTitle>Minting History</S.SectionTitle>
+            {isOwner && isInternalCurrency && <Button onClick={toggleMintModal} text="Mint" />}
+          </S.SectionHeader>
+          {renderMintsList()}
+        </S.Content>
+      </S.Container>
+      {mintModalIsOpen && currency ? (
+        <MintModal close={toggleMintModal} currency={currency} onSuccess={handleMintSuccess} />
+      ) : null}
+    </>
   );
 };
 
