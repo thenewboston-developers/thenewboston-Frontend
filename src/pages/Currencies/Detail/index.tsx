@@ -10,11 +10,10 @@ import {ButtonColor} from 'components/Button/types';
 import EmptyPage from 'components/EmptyPage';
 import Icon from 'components/Icon';
 import Loader from 'components/Loader';
-import UserLabel from 'components/UserLabel';
 import {getMints} from 'dispatchers/mints';
 import {useToggle} from 'hooks';
 import MintModal from 'modals/MintModal';
-import {getMints as getMintsSelector, getSelf, getUsers} from 'selectors/state';
+import {getMints as getMintsSelector, getSelf} from 'selectors/state';
 import {AppDispatch, Currency, Mint, PaginatedResponse, SFC} from 'types';
 import {longDate} from 'utils/dates';
 import {displayErrorToast} from 'utils/toasts';
@@ -27,7 +26,6 @@ const Detail: SFC = ({className}) => {
   const navigate = useNavigate();
   const self = useSelector(getSelf);
   const mints = useSelector(getMintsSelector);
-  const users = useSelector(getUsers);
   const [currency, setCurrency] = useState<Currency | null>(null);
   const [loading, setLoading] = useState(true);
   const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
@@ -102,32 +100,21 @@ const Detail: SFC = ({className}) => {
         <S.MintsTable>
           <S.MintsTableHeader>
             <S.MintsTableRow>
-              <S.MintsTableHead>Minter</S.MintsTableHead>
               <S.MintsTableHead>Amount</S.MintsTableHead>
               <S.MintsTableHead>Date</S.MintsTableHead>
             </S.MintsTableRow>
           </S.MintsTableHeader>
           <S.MintsTableBody>
-            {mintsList.map((mint) => {
-              const user = users[mint.owner];
-              return (
-                <S.MintsTableRow key={mint.id}>
-                  <S.MintsTableData>
-                    {user ? (
-                      <UserLabel avatar={user.avatar} description="" username={user.username} id={user.id} />
-                    ) : (
-                      'Unknown'
-                    )}
-                  </S.MintsTableData>
-                  <S.MintsTableData>
-                    <S.MintAmount>{mint.amount.toLocaleString()}</S.MintAmount>
-                  </S.MintsTableData>
-                  <S.MintsTableData>
-                    <S.MintDate>{longDate(mint.created_date)}</S.MintDate>
-                  </S.MintsTableData>
-                </S.MintsTableRow>
-              );
-            })}
+            {mintsList.map((mint) => (
+              <S.MintsTableRow key={mint.id}>
+                <S.MintsTableData>
+                  <S.MintAmount>{mint.amount.toLocaleString()}</S.MintAmount>
+                </S.MintsTableData>
+                <S.MintsTableData>
+                  <S.MintDate>{longDate(mint.created_date)}</S.MintDate>
+                </S.MintsTableData>
+              </S.MintsTableRow>
+            ))}
           </S.MintsTableBody>
         </S.MintsTable>
         {mintsData.count > 20 && (
@@ -170,7 +157,7 @@ const Detail: SFC = ({className}) => {
 
         <S.Content>
           <S.CurrencyPanel>
-            <S.CurrencyLogo logo={currency.logo} width="56px" />
+            <S.CurrencyLogo logo={currency.logo} width="96px" />
             <S.CurrencyContent>
               <S.CurrencyHeader>
                 <S.CurrencyHeaderInfo>
@@ -182,6 +169,7 @@ const Detail: SFC = ({className}) => {
                       {isInternalCurrency ? 'Internal' : 'External'}
                     </S.TypeBadge>
                   )}
+                  <S.OwnerInfo>Owner ID: {currency.owner}</S.OwnerInfo>
                 </S.CurrencyHeaderInfo>
               </S.CurrencyHeader>
             </S.CurrencyContent>

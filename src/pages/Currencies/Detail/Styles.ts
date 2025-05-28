@@ -49,7 +49,7 @@ export const CurrencyPanel = styled.div`
   border: 1px solid ${colors.border};
   border-radius: 12px;
   padding: 0;
-  margin-top: 24px;
+  margin-top: 48px;
   margin-bottom: 32px;
   position: relative;
   display: flex;
@@ -58,9 +58,9 @@ export const CurrencyPanel = styled.div`
 
 export const CurrencyLogo = styled(UCurrencyLogo)`
   position: absolute;
-  top: -28px;
+  top: -48px;
   left: 24px;
-  border: 3px solid ${colors.white};
+  border: 4px solid ${colors.white};
   border-radius: 50%;
   background: ${colors.white};
 `;
@@ -68,7 +68,7 @@ export const CurrencyLogo = styled(UCurrencyLogo)`
 export const CurrencyContent = styled.div`
   flex: 1;
   padding: 24px;
-  padding-top: 36px;
+  padding-top: 56px;
 `;
 
 export const CurrencyHeader = styled.div`
@@ -111,6 +111,12 @@ export const TypeBadge = styled.span<{$internal: boolean}>`
           background: ${colors.palette.green[200]};
           color: ${colors.palette.green[600]};
         `}
+`;
+
+export const OwnerInfo = styled.div`
+  font-size: 14px;
+  color: ${colors.secondary};
+  margin-top: 12px;
 `;
 
 export const SectionHeader = styled.div`
