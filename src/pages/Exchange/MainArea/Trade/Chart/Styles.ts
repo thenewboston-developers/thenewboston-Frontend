@@ -20,18 +20,9 @@ export const Container = styled.div`
 export const ChartBackground = styled.div`
   background: linear-gradient(135deg, ${colors.white} 0%, #fafbfc 100%);
   border-radius: 20px;
-  box-shadow:
-    0 10px 40px rgba(0, 0, 0, 0.08),
-    0 2px 8px rgba(0, 0, 0, 0.04);
   padding: 24px;
   position: relative;
   transition: all 0.3s ease;
-
-  &:hover {
-    box-shadow:
-      0 12px 48px rgba(0, 0, 0, 0.12),
-      0 4px 12px rgba(0, 0, 0, 0.06);
-  }
 `;
 
 export const ChartHeader = styled.div`
@@ -198,7 +189,6 @@ export const ChartWrapper = styled.div`
   background: white;
   border-radius: 16px;
   padding: 20px 10px 10px 0;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
 
   .recharts-cartesian-grid-horizontal line {
     stroke-dasharray: 0;
