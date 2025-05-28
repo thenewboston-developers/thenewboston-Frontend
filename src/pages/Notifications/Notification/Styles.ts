@@ -5,18 +5,10 @@ import styled from 'styled-components';
 import UDot from 'components/Dot';
 import {colors, fonts} from 'styles';
 
-export const NotificationContainer = styled.div`
-  align-items: flex-start;
-  display: flex;
-  gap: 16px;
-  position: relative;
-  width: 100%;
-`;
-
 export const Container = styled.div<{$isRead: boolean}>`
   background: ${({$isRead}) => ($isRead ? colors.background : colors.white)};
-  border-radius: 8px;
   border: 1px solid ${({$isRead}) => ($isRead ? colors.borderDarker : colors.border)};
+  border-radius: 8px;
   box-shadow: ${({$isRead}) => ($isRead ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.08)')};
   display: flex;
   gap: 16px;
@@ -30,6 +22,12 @@ export const Container = styled.div<{$isRead: boolean}>`
   }
 `;
 
+export const Dot = styled(UDot)`
+  background: ${colors.palette.blue['700']};
+  height: 8px;
+  width: 8px;
+`;
+
 export const DotContainer = styled.div`
   align-items: center;
   display: flex;
@@ -37,16 +35,10 @@ export const DotContainer = styled.div`
   padding-right: 8px;
 `;
 
-export const Dot = styled(UDot)`
-  background: ${colors.palette.blue['700']};
-  height: 8px;
-  width: 8px;
-`;
-
 export const Icon = styled(UIcon)`
   background: ${colors.backgroundDark};
-  border-radius: 50%;
   border: 2px solid ${colors.white};
+  border-radius: 50%;
   color: ${colors.white};
   margin-left: 32px;
   margin-top: -18px;
@@ -64,6 +56,14 @@ export const Link = styled(ULink)`
     cursor: pointer;
     text-decoration: underline;
   }
+`;
+
+export const NotificationContainer = styled.div`
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  position: relative;
+  width: 100%;
 `;
 
 export const TextContainer = styled.div`

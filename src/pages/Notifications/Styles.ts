@@ -12,29 +12,16 @@ export const Container = styled.div`
   overflow: hidden;
 `;
 
-export const Header = styled.div`
-  background: ${colors.white};
-  border-bottom: 1px solid ${colors.border};
-  padding: 20px 24px;
-`;
-
 export const Content = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 24px;
 `;
 
-export const NotificationContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-export const SectionHeading = styled(USectionHeading)`
-  margin: 0;
-
-  ${Contents} {
-    padding-bottom: 0;
-  }
+export const Header = styled.div`
+  background: ${colors.white};
+  border-bottom: 1px solid ${colors.border};
+  padding: 20px 24px;
 `;
 
 export const MarkAllButton = styled(UButton)`
@@ -51,5 +38,18 @@ export const MarkAllButton = styled(UButton)`
     &:hover {
       background: ${colors.whiteHover};
     }
+  }
+`;
+
+export const NotificationContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const SectionHeading = styled(USectionHeading)`
+  margin: 0;
+
+  ${Contents} {
+    padding-bottom: 0;
   }
 `;
