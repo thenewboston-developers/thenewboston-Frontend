@@ -27,7 +27,7 @@ const AssetPairSelector: SFC = ({className}) => {
         <S.ImageStyle>
           <S.Img src={activeAssetPair?.primary_currency.logo} height={20} width={20} />
         </S.ImageStyle>
-        <S.Select onChange={(e) => handleOptionClick(+e.target.value)}>
+        <S.Select value={manager.activeAssetPairId || ''} onChange={(e) => handleOptionClick(+e.target.value)}>
           {updatedAssetsParis.map((assetsValue, index) => {
             return (
               <option key={index} value={assetsValue[1].id}>
