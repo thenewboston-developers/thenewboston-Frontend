@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import {useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
@@ -13,6 +13,7 @@ import * as S from './Styles';
 
 const OrderBook: SFC = ({className}) => {
   const [hoveredOrder, setHoveredOrder] = useState<ExchangeOrder | null>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const activeAssetPair = useActiveAssetPair();
   const orders = useSelector(getExchangeOrders);
 
@@ -69,8 +70,21 @@ const OrderBook: SFC = ({className}) => {
               <S.OrderRow
                 key={order.id}
                 $type={type}
-                onMouseEnter={() => setHoveredOrder(order)}
-                onMouseLeave={() => setHoveredOrder(null)}
+                onMouseEnter={() => {
+                  if (hoverTimeoutRef.current) {
+                    clearTimeout(hoverTimeoutRef.current);
+                  }
+                  hoverTimeoutRef.current = setTimeout(() => {
+                    setHoveredOrder(order);
+                  }, 500);
+                }}
+                onMouseLeave={() => {
+                  if (hoverTimeoutRef.current) {
+                    clearTimeout(hoverTimeoutRef.current);
+                    hoverTimeoutRef.current = null;
+                  }
+                  setHoveredOrder(null);
+                }}
               >
                 <S.OrderPrice $type={type}>{order.price.toLocaleString()}</S.OrderPrice>
                 <S.OrderQuantity>{remaining.toLocaleString()}</S.OrderQuantity>
