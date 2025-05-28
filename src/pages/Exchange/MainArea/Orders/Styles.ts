@@ -3,19 +3,99 @@ import styled, {css} from 'styled-components';
 import {ExchangeOrderType} from 'enums';
 import {breakpoints, colors} from 'styles';
 
+const buyMixin = css`
+  color: ${colors.palette.green['600']};
+`;
+
+const sellMixin = css`
+  color: ${colors.palette.red['700']};
+`;
+
 export const Container = styled.div`
   height: 100%;
   overflow-y: auto;
 `;
 
-export const OrdersList = styled.div`
+export const CurrencyTicker = styled.span`
+  color: ${colors.secondary};
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 2px;
+`;
+
+export const DateTime = styled.div`
+  align-items: center;
+  color: ${colors.secondary};
+  display: flex;
+  font-size: 13px;
+  gap: 6px;
+`;
+
+export const DropdownMenuWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+
+  button {
+    border-radius: 6px;
+    padding: 6px;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: ${colors.palette.gray['100']};
+    }
+  }
+`;
+
+export const EmptyState = styled.div`
+  color: ${colors.secondary};
+  padding: 60px 20px;
+  text-align: center;
+
+  p {
+    font-size: 14px;
+    margin: 0;
+  }
+`;
+
+export const FillProgress = styled.div`
+  margin-top: 12px;
+`;
+
+export const FillStatusBadgeWrapper = styled.div`
+  align-items: center;
+  display: inline-flex;
+`;
+
+export const MetricItem = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  gap: 4px;
+`;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 16px;
+export const MetricLabel = styled.span`
+  color: ${colors.secondary};
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+`;
+
+export const MetricValue = styled.span`
+  color: ${colors.primary};
+  font-size: 15px;
+  font-weight: 600;
+
+  &.price {
+    font-size: 16px;
+    font-weight: 700;
   }
+`;
+
+export const OrderActions = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 8px;
 `;
 
 export const OrderCard = styled.div`
@@ -23,9 +103,9 @@ export const OrderCard = styled.div`
   border: 1px solid ${colors.border};
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-bottom: 8px;
   padding: 20px;
   transition: all 0.2s ease;
-  margin-bottom: 8px;
 
   &:last-child {
     margin-bottom: 0;
@@ -42,10 +122,10 @@ export const OrderCard = styled.div`
 `;
 
 export const OrderHeader = styled.div`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 16px;
   align-items: start;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr auto;
   margin-bottom: 12px;
 `;
 
@@ -55,19 +135,32 @@ export const OrderMainInfo = styled.div`
   gap: 8px;
 `;
 
-export const OrderTopLine = styled.div`
+export const OrderMetrics = styled.div`
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: 12px;
+
+  @media (min-width: ${breakpoints.mobile}) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+`;
+
+export const OrdersList = styled.div`
   display: flex;
+  flex-direction: column;
+  padding: 24px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 16px;
+  }
+`;
+
+export const OrderTopLine = styled.div`
   align-items: center;
-  gap: 12px;
+  display: flex;
   flex-wrap: wrap;
-`;
-
-const buyMixin = css`
-  color: ${colors.palette.green['600']};
-`;
-
-const sellMixin = css`
-  color: ${colors.palette.red['700']};
+  gap: 12px;
 `;
 
 export const OrderTypeBadge = styled.div<{$orderType: ExchangeOrderType}>`
@@ -76,142 +169,49 @@ export const OrderTypeBadge = styled.div<{$orderType: ExchangeOrderType}>`
     if ($orderType === ExchangeOrderType.SELL) return sellMixin;
     return;
   }}
+  align-items: center;
   background-color: ${({$orderType}) =>
     $orderType === ExchangeOrderType.BUY ? colors.palette.green['600'] + '15' : colors.palette.red['700'] + '15'};
-  padding: 4px 10px;
   border-radius: 4px;
+  display: inline-flex;
   font-size: 12px;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
-  display: inline-flex;
-  align-items: center;
-`;
-
-export const DateTime = styled.div`
-  font-size: 13px;
-  color: ${colors.secondary};
-  display: flex;
-  align-items: center;
-  gap: 6px;
-`;
-
-export const OrderActions = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-export const OrderMetrics = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  margin-bottom: 12px;
-
-  @media (min-width: ${breakpoints.mobile}) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-`;
-
-export const MetricItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
-export const MetricLabel = styled.span`
-  font-size: 11px;
-  color: ${colors.secondary};
+  padding: 4px 10px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-`;
-
-export const MetricValue = styled.span`
-  font-size: 15px;
-  font-weight: 600;
-  color: ${colors.primary};
-
-  &.price {
-    font-size: 16px;
-    font-weight: 700;
-  }
-`;
-
-export const CurrencyTicker = styled.span`
-  font-size: 12px;
-  color: ${colors.secondary};
-  font-weight: 500;
-  margin-left: 2px;
-`;
-
-export const FillProgress = styled.div`
-  margin-top: 12px;
-`;
-
-export const ProgressHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
-`;
-
-export const ProgressLabel = styled.span`
-  font-size: 12px;
-  color: ${colors.secondary};
-  font-weight: 600;
-`;
-
-export const ProgressValue = styled.span`
-  font-size: 12px;
-  color: ${colors.primary};
-  font-weight: 600;
 `;
 
 export const ProgressBar = styled.div`
-  height: 4px;
   background-color: ${colors.palette.gray['200']};
   border-radius: 2px;
+  height: 4px;
   overflow: hidden;
   position: relative;
 `;
 
 export const ProgressFill = styled.div<{$percentage: number; $orderType: ExchangeOrderType}>`
-  height: 100%;
-  width: ${({$percentage}) => $percentage}%;
   background-color: ${({$orderType}) =>
     $orderType === ExchangeOrderType.BUY ? colors.palette.green['500'] : colors.palette.red['500']};
+  height: 100%;
   transition: width 0.3s ease;
+  width: ${({$percentage}) => $percentage}%;
 `;
 
-export const FillStatusBadgeWrapper = styled.div`
-  display: inline-flex;
+export const ProgressHeader = styled.div`
   align-items: center;
-`;
-
-export const DropdownMenuWrapper = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-
-  button {
-    padding: 6px;
-    border-radius: 6px;
-    transition: all 0.15s ease;
-
-    &:hover {
-      background-color: ${colors.palette.gray['100']};
-    }
-  }
+  justify-content: space-between;
+  margin-bottom: 6px;
 `;
 
-export const EmptyState = styled.div`
-  text-align: center;
-  padding: 60px 20px;
+export const ProgressLabel = styled.span`
   color: ${colors.secondary};
+  font-size: 12px;
+  font-weight: 600;
+`;
 
-  p {
-    font-size: 14px;
-    margin: 0;
-  }
+export const ProgressValue = styled.span`
+  color: ${colors.primary};
+  font-size: 12px;
+  font-weight: 600;
 `;
