@@ -30,4 +30,6 @@ yarn-error.log*
 
 # Webstorm
 .idea/
-/designs/
+
+# Design files
+designs/
