@@ -4,6 +4,11 @@ import {breakpoints} from 'styles';
 
 export const Container = styled.div`
   height: 100%;
+  padding: 24px 32px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 16px 24px;
+  }
 `;
 
 export const Grid = styled.div`
