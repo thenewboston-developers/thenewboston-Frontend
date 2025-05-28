@@ -205,7 +205,7 @@ const Chart: SFC = ({className}) => {
                     />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="0" stroke={colors.palette.gray['200']} vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke={colors.palette.gray['200']} />
                 <XAxis
                   dataKey="display_date"
                   axisLine={false}
@@ -216,7 +216,13 @@ const Chart: SFC = ({className}) => {
                   axisLine={false}
                   tickLine={false}
                   tick={{fontSize: 12, fill: colors.palette.gray['600']}}
-                  domain={[(dataMin: number) => Math.max(0, dataMin - 5), 'dataMax + 5']}
+                  domain={[
+                    (dataMin: number) => Math.max(0, Math.floor(dataMin * 0.95)),
+                    (dataMax: number) => Math.ceil(dataMax * 1.05),
+                  ]}
+                  tickCount={8}
+                  allowDecimals={false}
+                  tickFormatter={(value) => Math.round(value).toString()}
                 />
                 <Tooltip
                   content={<CustomTooltip currencyId={activeAssetPair?.secondary_currency.id} />}
@@ -233,7 +239,7 @@ const Chart: SFC = ({className}) => {
               </AreaChart>
             ) : (
               <LineChart data={filteredTradeList} margin={{top: 10, right: 30, left: 0, bottom: 0}}>
-                <CartesianGrid strokeDasharray="0" stroke={colors.palette.gray['200']} vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke={colors.palette.gray['200']} />
                 <XAxis
                   dataKey="display_date"
                   axisLine={false}
@@ -244,7 +250,13 @@ const Chart: SFC = ({className}) => {
                   axisLine={false}
                   tickLine={false}
                   tick={{fontSize: 12, fill: colors.palette.gray['600']}}
-                  domain={[(dataMin: number) => Math.max(0, dataMin - 5), 'dataMax + 5']}
+                  domain={[
+                    (dataMin: number) => Math.max(0, Math.floor(dataMin * 0.95)),
+                    (dataMax: number) => Math.ceil(dataMax * 1.05),
+                  ]}
+                  tickCount={8}
+                  allowDecimals={false}
+                  tickFormatter={(value) => Math.round(value).toString()}
                 />
                 <Tooltip
                   content={<CustomTooltip currencyId={activeAssetPair?.secondary_currency.id} />}
