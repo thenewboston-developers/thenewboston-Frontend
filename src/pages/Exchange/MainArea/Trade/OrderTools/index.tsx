@@ -6,8 +6,7 @@ import Tab from 'components/Tab';
 import {useActiveAssetPair} from 'hooks';
 import {SFC} from 'types';
 
-import AssetPairSelector from '../AssetPairSelector';
-
+import AssetPairSelector from './AssetPairSelector';
 import Buy from './Buy';
 import Sell from './Sell';
 import * as S from './Styles';
