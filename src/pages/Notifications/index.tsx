@@ -1,10 +1,8 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiCheckAll} from '@mdi/js';
 import orderBy from 'lodash/orderBy';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
-import Button, {ButtonColor, IconColor} from 'components/Button';
 import EmptyPage from 'components/EmptyPage';
 import {getNotifications as _getNotifications, markAllNotificationsAsRead} from 'dispatchers/notifications';
 import {ToastType} from 'enums';
@@ -55,25 +53,17 @@ const Notifications: SFC = ({className}) => {
     const unreadCount = getUnreadNotificationsCount(notificationList);
     const sectionTitle = `Notifications${unreadCount > 0 ? ` - ${unreadCount}` : ''}`;
     const rightContent = unreadCount > 0 ? renderMarkAllAsReadButton() : null;
-    return <S.SectionHeading heading={sectionTitle} rightContent={rightContent} />;
+    return <S.SectionHeading heading={sectionTitle} rightContent={rightContent} renderLine={false} />;
   };
 
   const renderMarkAllAsReadButton = () => {
-    return (
-      <Button
-        color={ButtonColor.secondary}
-        iconColor={IconColor.black}
-        iconLeft={mdiCheckAll}
-        onClick={handleMarkAllAsRead}
-        text="Mark all as read"
-      />
-    );
+    return <S.MarkAllButton onClick={handleMarkAllAsRead} text="Mark all as read" />;
   };
 
   return (
     <S.Container className={className}>
-      {renderSectionHeading()}
-      {renderContent()}
+      <S.Header>{renderSectionHeading()}</S.Header>
+      <S.Content>{renderContent()}</S.Content>
     </S.Container>
   );
 };

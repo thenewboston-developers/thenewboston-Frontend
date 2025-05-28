@@ -1,6 +1,6 @@
 import {ReactNode} from 'react';
 import {Link} from 'react-router-dom';
-import {mdiBrushOutline, mdiContentCopy} from '@mdi/js';
+import {mdiContentCopy} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import {Notification as TNotification, SFC} from 'types';
@@ -9,7 +9,6 @@ import {longDate} from 'utils/dates';
 import * as S from './Styles';
 
 enum NotificationType {
-  ARTWORK_PURCHASE = 'ARTWORK_PURCHASE',
   POST_COMMENT = 'POST_COMMENT',
 }
 
@@ -26,24 +25,6 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     );
   };
 
-  const renderArtworkPurchaseNotification = () => {
-    return (
-      <S.NotificationContainer>
-        <Link to={`/profile/${notification.payload.buyer.id}`}>
-          <Avatar src={notification.payload.buyer.avatar} size="45px" />
-          <S.Icon path={mdiBrushOutline} size="23px" />
-        </Link>
-        <S.TextContainer>
-          <S.Link to={`/profile/${notification.payload.buyer.id}`}>{notification.payload.buyer.username}</S.Link>{' '}
-          purchased your <S.Link to={`/art/artworks/${notification.payload.artwork_id}`}>artwork</S.Link>.
-          <br />
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
-        </S.TextContainer>
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
   const renderPostCommentNotification = () => {
     return (
       <S.NotificationContainer>
@@ -52,11 +33,12 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
           <S.Icon path={mdiContentCopy} size="23px" />
         </Link>
         <S.TextContainer>
-          <S.Link to={`/profile/${notification.payload.commenter.id}`}>
-            {notification.payload.commenter.username}
-          </S.Link>{' '}
-          commented on your <strong>Post</strong>:"{notification.payload.comment}"
-          <br />
+          <div>
+            <S.Link to={`/profile/${notification.payload.commenter.id}`}>
+              {notification.payload.commenter.username}
+            </S.Link>{' '}
+            commented on your <strong>Post</strong>: "{notification.payload.comment}"
+          </div>
           <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
         </S.TextContainer>
         {renderRedDot()}
@@ -66,7 +48,6 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
 
   const renderContent = () => {
     const notificationTypes: {[key in NotificationType]: () => ReactNode} = {
-      [NotificationType.ARTWORK_PURCHASE]: renderArtworkPurchaseNotification,
       [NotificationType.POST_COMMENT]: renderPostCommentNotification,
     };
 
