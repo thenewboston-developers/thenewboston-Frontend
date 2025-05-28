@@ -1,15 +1,18 @@
-import {useMemo} from 'react';
+import {useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
+import FillStatusBadge from 'components/FillStatusBadge';
 import {ExchangeOrderType, FillStatus} from 'enums';
 import {useActiveAssetPair} from 'hooks';
 import {getExchangeOrders} from 'selectors/state';
-import {SFC} from 'types';
+import {ExchangeOrder, SFC} from 'types';
+import {longDate} from 'utils/dates';
 
 import * as S from './Styles';
 
 const OrderBook: SFC = ({className}) => {
+  const [hoveredOrder, setHoveredOrder] = useState<ExchangeOrder | null>(null);
   const activeAssetPair = useActiveAssetPair();
   const orders = useSelector(getExchangeOrders);
 
@@ -60,12 +63,53 @@ const OrderBook: SFC = ({className}) => {
           {sectionOrders.map((order) => {
             const remaining = order.quantity - order.filled_amount;
             const total = remaining * order.price;
+            const [date, time] = longDate(order.created_date).split('at');
 
             return (
-              <S.OrderRow key={order.id} $type={type}>
+              <S.OrderRow
+                key={order.id}
+                $type={type}
+                onMouseEnter={() => setHoveredOrder(order)}
+                onMouseLeave={() => setHoveredOrder(null)}
+              >
                 <S.OrderPrice $type={type}>{order.price.toLocaleString()}</S.OrderPrice>
                 <S.OrderQuantity>{remaining.toLocaleString()}</S.OrderQuantity>
                 <S.OrderTotal>{total.toLocaleString(undefined, {maximumFractionDigits: 2})}</S.OrderTotal>
+
+                {hoveredOrder?.id === order.id && (
+                  <S.Tooltip>
+                    <S.TooltipContent>
+                      <S.TooltipRow>
+                        <S.TooltipLabel>Date:</S.TooltipLabel>
+                        <S.TooltipValue>
+                          {date.trim()} {time.trim()}
+                        </S.TooltipValue>
+                      </S.TooltipRow>
+                      <S.TooltipRow>
+                        <S.TooltipLabel>Order Type:</S.TooltipLabel>
+                        <S.TooltipValue $type={type}>{order.order_type}</S.TooltipValue>
+                      </S.TooltipRow>
+                      <S.TooltipRow>
+                        <S.TooltipLabel>Order Quantity:</S.TooltipLabel>
+                        <S.TooltipValue>
+                          {order.quantity.toLocaleString()} {activeAssetPair.primary_currency.ticker}
+                        </S.TooltipValue>
+                      </S.TooltipRow>
+                      <S.TooltipRow>
+                        <S.TooltipLabel>Filled Amount:</S.TooltipLabel>
+                        <S.TooltipValue>
+                          {order.filled_amount.toLocaleString()} {activeAssetPair.primary_currency.ticker}
+                        </S.TooltipValue>
+                      </S.TooltipRow>
+                      <S.TooltipRow>
+                        <S.TooltipLabel>Status:</S.TooltipLabel>
+                        <S.TooltipValue>
+                          <FillStatusBadge fillStatus={order.fill_status} />
+                        </S.TooltipValue>
+                      </S.TooltipRow>
+                    </S.TooltipContent>
+                  </S.Tooltip>
+                )}
               </S.OrderRow>
             );
           })}
