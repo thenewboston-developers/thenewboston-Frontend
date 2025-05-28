@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Form, Formik, FormikHelpers} from 'formik';
 
 import AvailableTotal from 'components/AvailableTotal';
-import Button, {ButtonType} from 'components/Button';
+import {ButtonType} from 'components/Button';
 import {LogoInput} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
 import {ExchangeOrderType, ToastType} from 'enums';
@@ -107,7 +107,7 @@ const Sell: SFC = ({className}) => {
               total={total}
               totalTicker={activeAssetPair!.secondary_currency.ticker}
             />
-            <Button
+            <S.Button
               dirty={dirty}
               disabled={isSubmitting}
               isSubmitting={isSubmitting}

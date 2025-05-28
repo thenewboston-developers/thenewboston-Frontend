@@ -10,7 +10,6 @@ const MainArea: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <Routes>
-        {/* TODO: replace these hardcoded paths with those in constants/paths.ts */}
         <Route path="/orders" element={<Orders />} />
         <Route path="/trade" element={<Trade />} />
       </Routes>

@@ -4,11 +4,9 @@ import {mdiDotsVertical} from '@mdi/js';
 import orderBy from 'lodash/orderBy';
 
 import DropdownMenu from 'components/DropdownMenu';
-import EmptyText from 'components/EmptyText';
 import FillStatusBadge from 'components/FillStatusBadge';
-import SectionHeading from 'components/SectionHeading';
 import {updateExchangeOrder} from 'dispatchers/exchangeOrders';
-import {FillStatus} from 'enums';
+import {ExchangeOrderType, FillStatus} from 'enums';
 import {useToggle} from 'hooks';
 import TradesModal from 'modals/TradesModal';
 import {getCurrencies, getExchangeOrders, getSelf} from 'selectors/state';
@@ -31,30 +29,6 @@ const Orders: SFC = ({className}) => {
     const orderedOrders = orderBy(Object.values(orders), ['created_date'], ['desc']);
     return orderedOrders.filter((order) => order.owner === self.id);
   }, [orders, self.id]);
-
-  const renderContent = () => {
-    if (!!ordersList.length) {
-      return (
-        <S.Table>
-          <S.Thead>
-            <tr>
-              <th>Date</th>
-              <th>Order Type</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Filled Amount</th>
-              <th>Fill Status</th>
-              <th>Action</th>
-            </tr>
-          </S.Thead>
-
-          <S.Tbody>{renderRows()}</S.Tbody>
-        </S.Table>
-      );
-    }
-
-    return <EmptyText>No orders to display.</EmptyText>;
-  };
 
   const renderDropdownMenu = useCallback(
     (order: ExchangeOrder) => {
@@ -88,7 +62,7 @@ const Orders: SFC = ({className}) => {
     [dispatch, toggleTradesModal],
   );
 
-  const renderRows = useCallback(() => {
+  const renderOrders = useCallback(() => {
     return ordersList.map((order) => {
       const {
         created_date,
@@ -104,39 +78,101 @@ const Orders: SFC = ({className}) => {
 
       const primaryCurrencyTicker = getCurrencyTicker(primary_currency);
       const secondaryCurrencyTicker = getCurrencyTicker(secondary_currency);
+      const [date, time] = longDate(created_date).split('at');
+      const fillPercentage = quantity > 0 ? (filled_amount / quantity) * 100 : 0;
+      const totalValue = quantity * price;
 
       return (
-        <tr key={id}>
-          <td>{longDate(created_date)}</td>
-          <td>{order_type}</td>
-          <td>
-            {quantity.toLocaleString()} {primaryCurrencyTicker}
-          </td>
-          <td>
-            {price.toLocaleString()} {secondaryCurrencyTicker}
-          </td>
-          <td>
-            {filled_amount.toLocaleString()} {primaryCurrencyTicker}
-          </td>
-          <td>
-            <S.FillStatusBadgeWrapper>
-              <FillStatusBadge fillStatus={fill_status} />
-            </S.FillStatusBadgeWrapper>
-          </td>
-          <td>{renderDropdownMenu(order)}</td>
-        </tr>
+        <S.OrderCard key={id}>
+          <S.OrderHeader>
+            <S.OrderMainInfo>
+              <S.OrderTopLine>
+                <S.OrderTypeBadge $orderType={ExchangeOrderType[order_type as keyof typeof ExchangeOrderType]}>
+                  {order_type}
+                </S.OrderTypeBadge>
+                <S.DateTime>
+                  {date.trim()} • {time.trim()}
+                </S.DateTime>
+              </S.OrderTopLine>
+            </S.OrderMainInfo>
+            <S.OrderActions>
+              <S.FillStatusBadgeWrapper>
+                <FillStatusBadge fillStatus={fill_status} />
+              </S.FillStatusBadgeWrapper>
+              {renderDropdownMenu(order)}
+            </S.OrderActions>
+          </S.OrderHeader>
+
+          <S.OrderMetrics>
+            <S.MetricItem>
+              <S.MetricLabel>Price</S.MetricLabel>
+              <S.MetricValue className="price">
+                {price.toLocaleString()}
+                <S.CurrencyTicker>{secondaryCurrencyTicker}</S.CurrencyTicker>
+              </S.MetricValue>
+            </S.MetricItem>
+
+            <S.MetricItem>
+              <S.MetricLabel>Quantity</S.MetricLabel>
+              <S.MetricValue>
+                {quantity.toLocaleString()}
+                <S.CurrencyTicker>{primaryCurrencyTicker}</S.CurrencyTicker>
+              </S.MetricValue>
+            </S.MetricItem>
+
+            <S.MetricItem>
+              <S.MetricLabel>Filled</S.MetricLabel>
+              <S.MetricValue>
+                {filled_amount.toLocaleString()}
+                <S.CurrencyTicker>{primaryCurrencyTicker}</S.CurrencyTicker>
+              </S.MetricValue>
+            </S.MetricItem>
+
+            <S.MetricItem>
+              <S.MetricLabel>Total Value</S.MetricLabel>
+              <S.MetricValue>
+                {totalValue.toLocaleString(undefined, {maximumFractionDigits: 2})}
+                <S.CurrencyTicker>{secondaryCurrencyTicker}</S.CurrencyTicker>
+              </S.MetricValue>
+            </S.MetricItem>
+          </S.OrderMetrics>
+
+          {fillPercentage > 0 && fillPercentage < 100 && (
+            <S.FillProgress>
+              <S.ProgressHeader>
+                <S.ProgressLabel>Fill Progress</S.ProgressLabel>
+                <S.ProgressValue>{fillPercentage.toFixed(1)}%</S.ProgressValue>
+              </S.ProgressHeader>
+              <S.ProgressBar>
+                <S.ProgressFill
+                  $percentage={fillPercentage}
+                  $orderType={ExchangeOrderType[order_type as keyof typeof ExchangeOrderType]}
+                />
+              </S.ProgressBar>
+            </S.FillProgress>
+          )}
+        </S.OrderCard>
       );
     });
   }, [ordersList, getCurrencyTicker, renderDropdownMenu]);
 
+  const renderContent = () => {
+    return (
+      <S.OrdersList>
+        {ordersList.length === 0 ? (
+          <S.EmptyState>
+            <p>No orders to display.</p>
+          </S.EmptyState>
+        ) : (
+          renderOrders()
+        )}
+      </S.OrdersList>
+    );
+  };
+
   return (
     <>
-      <S.Container className={className}>
-        <S.Box>
-          <SectionHeading heading="Orders" renderLine={false} />
-          <S.TableStyle>{renderContent()}</S.TableStyle>
-        </S.Box>
-      </S.Container>
+      <S.Container className={className}>{renderContent()}</S.Container>
       {tradesModalIsOpen ? <TradesModal close={toggleTradesModal} order={selectedOrder} /> : null}
     </>
   );

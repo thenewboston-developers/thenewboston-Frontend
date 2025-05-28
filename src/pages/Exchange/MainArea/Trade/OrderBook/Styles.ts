@@ -1,112 +1,175 @@
-import styled, {css} from 'styled-components';
+import styled from 'styled-components';
 
-import {ExchangeOrderType} from 'enums';
-import {colors} from 'styles';
-
-const buyMixin = css`
-  color: ${colors.palette.green['300']};
-`;
-
-const sellMixin = css`
-  color: ${colors.palette.red['300']};
-`;
-
-export const Container = styled.div`
-  margin-top: 10px;
-`;
-
-export const FillStatusBadgeWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-export const Table = styled.table`
-  margin-top: 16px;
-  width: 100%;
-  border-collapse: collapse;
-
-  thead,
-  tbody {
-    display: table;
-    table-layout: fixed;
-    width: 100%;
-  }
-
-  th,
-  td {
-    padding: 2px 0;
-    text-align: left;
-  }
-
-  th:nth-child(3),
-  td:nth-child(3),
-  th:nth-child(4),
-  td:nth-child(4),
-  th:nth-child(5),
-  td:nth-child(5),
-  th:nth-child(6),
-  td:nth-child(6) {
-    text-align: right;
-  }
-
-  th:nth-child(7),
-  td:nth-child(7) {
-    text-align: center;
-  }
-  tr {
-    border-bottom: 1px solid ${colors.border};
-  }
-
-  tbody {
-    display: block;
-    width: 100%;
-  }
-`;
-
-export const Tbody = styled.tbody`
-  & > tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
-  }
-  & > tr > td {
-    font-weight: 600;
-    padding: 10px 0;
-  }
-`;
-
-export const Thead = styled.thead`
-  & > tr > th {
-    color: ${colors.gray};
-    text-transform: uppercase;
-    padding-bottom: 12px;
-  }
-`;
-
-export const TableStyle = styled.div`
-  min-width: 700px;
-`;
+import {breakpoints, colors} from 'styles';
 
 export const Box = styled.div`
   background-color: ${colors.white};
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 20px;
   width: 100%;
-  max-width: 100%;
-  border-radius: 16px;
-  overflow-x: auto;
-  padding: 20px 20px 0px 20px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 16px;
+  }
+
+  h2 {
+    color: ${colors.primary};
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+  }
 `;
 
-export const TextColor = styled.span`
-  color: ${colors.gray};
+export const ColumnHeader = styled.span`
+  color: ${colors.secondary};
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+
+  &:nth-child(2),
+  &:nth-child(3) {
+    text-align: right;
+  }
 `;
 
-export const Tr = styled.tr``;
+export const ColumnHeaders = styled.div`
+  background-color: ${colors.palette.gray['100']};
+  border-radius: 6px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin-bottom: 8px;
+  padding: 8px 12px;
 
-export const Td = styled.td<{$orderType?: ExchangeOrderType}>`
-  ${({$orderType}) => {
-    if ($orderType === ExchangeOrderType.BUY) return buyMixin;
-    if ($orderType === ExchangeOrderType.SELL) return sellMixin;
-    return;
-  }}
+  @media (max-width: ${breakpoints.mobile}) {
+    gap: 8px;
+    padding: 6px 8px;
+  }
+`;
+
+export const Container = styled.div`
+  margin-bottom: 24px;
+  margin-top: 16px;
+`;
+
+export const EmptyState = styled.div`
+  color: ${colors.secondary};
+  font-size: 14px;
+  padding: 40px 20px;
+  text-align: center;
+`;
+
+export const OrderBookContainer = styled.div`
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr 1fr;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+`;
+
+export const OrderCount = styled.span`
+  color: ${colors.secondary};
+  font-size: 12px;
+  font-weight: 500;
+`;
+
+export const OrderList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+export const OrderPrice = styled.span<{$type: 'buy' | 'sell'}>`
+  color: ${({$type}) => ($type === 'buy' ? colors.palette.green['600'] : colors.palette.red['700'])};
+  font-size: 14px;
+  font-weight: 600;
+`;
+
+export const OrderQuantity = styled.span`
+  color: ${colors.primary};
+  font-size: 14px;
+  font-weight: 500;
+  text-align: right;
+`;
+
+export const OrderRow = styled.div<{$type: 'buy' | 'sell'}>`
+  border-radius: 6px;
+  cursor: pointer;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 8px 12px;
+  position: relative;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: ${({$type}) =>
+      $type === 'buy' ? colors.palette.green['600'] + '10' : colors.palette.red['700'] + '10'};
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    gap: 8px;
+    padding: 6px 8px;
+  }
+`;
+
+export const OrderSection = styled.div``;
+
+export const OrderTotal = styled.span`
+  color: ${colors.secondary};
+  font-size: 14px;
+  font-weight: 500;
+  text-align: right;
+`;
+
+export const SectionHeader = styled.div`
+  align-items: center;
+  border-bottom: 1px solid ${colors.border};
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+`;
+
+export const SectionTitle = styled.h3<{$type: 'buy' | 'sell'}>`
+  color: ${({$type}) => ($type === 'buy' ? colors.palette.green['600'] : colors.palette.red['700'])};
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin: 0;
+  text-transform: uppercase;
+`;
+
+export const Spread = styled.div`
+  align-items: center;
+  background-color: ${colors.palette.gray['100']};
+  border-radius: 6px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 16px 0;
+  padding: 12px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    margin: 12px 0;
+  }
+`;
+
+export const SpreadLabel = styled.span`
+  color: ${colors.secondary};
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+`;
+
+export const SpreadValue = styled.span`
+  color: ${colors.primary};
+  font-size: 14px;
+  font-weight: 700;
 `;
