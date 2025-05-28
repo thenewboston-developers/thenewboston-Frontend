@@ -2,7 +2,6 @@ import {useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
-import FillStatusBadge from 'components/FillStatusBadge';
 import {ExchangeOrderType, FillStatus} from 'enums';
 import {useActiveAssetPair} from 'hooks';
 import {getExchangeOrders} from 'selectors/state';
@@ -10,6 +9,7 @@ import {ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
 import * as S from './Styles';
+import Tooltip from './Tooltip';
 
 const OrderBook: SFC = ({className}) => {
   const [hoveredOrder, setHoveredOrder] = useState<ExchangeOrder | null>(null);
@@ -91,38 +91,7 @@ const OrderBook: SFC = ({className}) => {
                 <S.OrderTotal>{total.toLocaleString(undefined, {maximumFractionDigits: 2})}</S.OrderTotal>
 
                 {hoveredOrder?.id === order.id && (
-                  <S.Tooltip>
-                    <S.TooltipContent>
-                      <S.TooltipRow>
-                        <S.TooltipLabel>Date:</S.TooltipLabel>
-                        <S.TooltipValue>
-                          {date.trim()} {time.trim()}
-                        </S.TooltipValue>
-                      </S.TooltipRow>
-                      <S.TooltipRow>
-                        <S.TooltipLabel>Order Type:</S.TooltipLabel>
-                        <S.TooltipValue $type={type}>{order.order_type}</S.TooltipValue>
-                      </S.TooltipRow>
-                      <S.TooltipRow>
-                        <S.TooltipLabel>Order Quantity:</S.TooltipLabel>
-                        <S.TooltipValue>
-                          {order.quantity.toLocaleString()} {activeAssetPair.primary_currency.ticker}
-                        </S.TooltipValue>
-                      </S.TooltipRow>
-                      <S.TooltipRow>
-                        <S.TooltipLabel>Filled Amount:</S.TooltipLabel>
-                        <S.TooltipValue>
-                          {order.filled_amount.toLocaleString()} {activeAssetPair.primary_currency.ticker}
-                        </S.TooltipValue>
-                      </S.TooltipRow>
-                      <S.TooltipRow>
-                        <S.TooltipLabel>Status:</S.TooltipLabel>
-                        <S.TooltipValue>
-                          <FillStatusBadge fillStatus={order.fill_status} />
-                        </S.TooltipValue>
-                      </S.TooltipRow>
-                    </S.TooltipContent>
-                  </S.Tooltip>
+                  <Tooltip order={order} activeAssetPair={activeAssetPair} date={date} time={time} type={type} />
                 )}
               </S.OrderRow>
             );

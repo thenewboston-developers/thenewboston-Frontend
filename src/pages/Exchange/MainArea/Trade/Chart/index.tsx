@@ -4,7 +4,6 @@ import orderBy from 'lodash/orderBy';
 import {Area, AreaChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
 import CurrencyLogo from 'components/CurrencyLogo';
-import Price from 'components/Price';
 import {getTrades as _getTrades} from 'dispatchers/trades';
 import {useActiveAssetPair} from 'hooks';
 import {getTrades} from 'selectors/state';
@@ -12,31 +11,8 @@ import {colors} from 'styles';
 import {AppDispatch, SFC} from 'types';
 import {chartDisplayDate} from 'utils/dates';
 
+import CustomTooltip from './CustomTooltip';
 import * as S from './Styles';
-
-interface CustomTooltipProps {
-  active?: boolean;
-  payload?: any[];
-  label?: string;
-  currencyId?: number;
-}
-
-const CustomTooltip = ({active, payload, label, currencyId}: CustomTooltipProps) => {
-  if (active && payload && payload.length && currencyId) {
-    return (
-      <S.TooltipContainer>
-        <S.TooltipDate>{label}</S.TooltipDate>
-        <S.TooltipPrice>
-          <S.TooltipLabel>Price:</S.TooltipLabel>
-          <S.TooltipValue>
-            <Price price_amount={Number(payload[0].value)} price_currency={currencyId} />
-          </S.TooltipValue>
-        </S.TooltipPrice>
-      </S.TooltipContainer>
-    );
-  }
-  return null;
-};
 
 const Chart: SFC = ({className}) => {
   const activeAssetPair = useActiveAssetPair();
@@ -128,8 +104,8 @@ const Chart: SFC = ({className}) => {
                 )}
               </S.CurrentPrice>
 
-              <S.PriceChange isPositive={isPositive}>
-                <S.ChangeArrow isPositive={isPositive}>{isPositive ? '▲' : '▼'}</S.ChangeArrow>
+              <S.PriceChange $isPositive={isPositive}>
+                <S.ChangeArrow $isPositive={isPositive}>{isPositive ? '▲' : '▼'}</S.ChangeArrow>
                 {Math.abs(priceChange).toFixed(2)}%
               </S.PriceChange>
             </S.PriceWrapper>
@@ -153,14 +129,14 @@ const Chart: SFC = ({className}) => {
           <S.ChartControls>
             <S.TimeframeButtons>
               {(['1D', '1W', '1M', '3M', 'ALL'] as const).map((tf) => (
-                <S.TimeframeButton key={tf} active={timeframe === tf} onClick={() => setTimeframe(tf)}>
+                <S.TimeframeButton key={tf} $active={timeframe === tf} onClick={() => setTimeframe(tf)}>
                   {tf}
                 </S.TimeframeButton>
               ))}
             </S.TimeframeButtons>
 
             <S.ChartTypeButtons>
-              <S.ChartTypeButton active={chartType === 'line'} onClick={() => setChartType('line')} title="Line Chart">
+              <S.ChartTypeButton $active={chartType === 'line'} onClick={() => setChartType('line')} title="Line Chart">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path
                     d="M3 17L7 13L11 15L17 9"
@@ -171,7 +147,7 @@ const Chart: SFC = ({className}) => {
                   />
                 </svg>
               </S.ChartTypeButton>
-              <S.ChartTypeButton active={chartType === 'area'} onClick={() => setChartType('area')} title="Area Chart">
+              <S.ChartTypeButton $active={chartType === 'area'} onClick={() => setChartType('area')} title="Area Chart">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path d="M3 17L7 13L11 15L17 9V17H3Z" fill="currentColor" opacity="0.3" />
                   <path
