@@ -4,6 +4,7 @@ import {breakpoints, colors} from 'styles';
 
 export const Container = styled.div`
   margin-top: 16px;
+  margin-bottom: 24px;
 `;
 
 export const Box = styled.div`
