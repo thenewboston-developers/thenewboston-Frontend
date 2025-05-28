@@ -11,20 +11,19 @@ interface TooltipProps {
 }
 
 const Tooltip: SFC<TooltipProps> = ({active, payload, label, currencyId}) => {
-  if (active && payload && payload.length && currencyId) {
-    return (
-      <S.Container>
-        <S.Date>{label}</S.Date>
-        <S.PriceRow>
-          <S.Label>Price:</S.Label>
-          <S.Value>
-            <Price price_amount={Number(payload[0].value)} price_currency={currencyId} />
-          </S.Value>
-        </S.PriceRow>
-      </S.Container>
-    );
-  }
-  return null;
+  if (!active || !payload || !payload.length || !currencyId) return null;
+
+  return (
+    <S.Container>
+      <S.Date>{label}</S.Date>
+      <S.PriceRow>
+        <S.Label>Price:</S.Label>
+        <S.Value>
+          <Price price_amount={Number(payload[0].value)} price_currency={currencyId} />
+        </S.Value>
+      </S.PriceRow>
+    </S.Container>
+  );
 };
 
 export default Tooltip;
