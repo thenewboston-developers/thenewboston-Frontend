@@ -2,7 +2,10 @@ import styled from 'styled-components';
 
 import UButton from 'components/Button';
 import UModal from 'components/Modal';
-import {colors, fonts} from 'styles';
+
+export const FooterButton = styled(UButton)`
+  min-width: 80px;
+`;
 
 export const Modal = styled(UModal)`
   width: 360px;
@@ -17,8 +20,4 @@ export const ModalFooter = styled.div`
   gap: 12px;
   justify-content: flex-end;
   margin-top: 24px;
-`;
-
-export const FooterButton = styled(UButton)`
-  min-width: 80px;
 `;
