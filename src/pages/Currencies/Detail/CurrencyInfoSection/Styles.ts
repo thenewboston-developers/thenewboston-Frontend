@@ -18,10 +18,10 @@ export const CurrencyInfo = styled.div`
 `;
 
 export const CurrencyInfoContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
   align-items: flex-start;
+  display: flex;
   gap: 48px;
+  justify-content: space-between;
 `;
 
 export const CurrencyLogo = styled(UCurrencyLogo)`
@@ -55,9 +55,9 @@ export const OwnerInfo = styled.div`
 `;
 
 export const TotalMintedInfo = styled.div`
+  align-items: flex-end;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
 `;
 
 export const TotalMintedLabel = styled.span`
