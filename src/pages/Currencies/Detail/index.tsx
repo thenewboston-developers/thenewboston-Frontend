@@ -8,11 +8,11 @@ import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import Icon from 'components/Icon';
 import Loader from 'components/Loader';
-import UserLabel from 'components/UserLabel';
 import {getMints} from 'dispatchers/mints';
 import {AppDispatch, CurrencyReadDetailSerializer, Mint, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
+import CurrencyInfoSection from './CurrencyInfoSection';
 import MintSection from './MintSection';
 import * as S from './Styles';
 
@@ -72,8 +72,6 @@ const Detail: SFC = ({className}) => {
     setCurrentPage(page);
   };
 
-  const isInternalCurrency = currency?.domain === null;
-
   if (loading) return <Loader />;
   if (!currency)
     return (
@@ -95,36 +93,7 @@ const Detail: SFC = ({className}) => {
         </S.Header>
 
         <S.Content>
-          <S.CurrencyPanel>
-            <S.CurrencyLogo logo={currency.logo} width="96px" />
-            <S.CurrencyContent>
-              <S.CurrencyInfoContainer>
-                <S.CurrencyInfo>
-                  <S.CurrencyName>{currency.ticker}</S.CurrencyName>
-                  {currency.domain ? (
-                    <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
-                  ) : (
-                    <S.TypeBadge $internal={isInternalCurrency}>
-                      {isInternalCurrency ? 'Internal' : 'External'}
-                    </S.TypeBadge>
-                  )}
-                  <S.OwnerInfo>
-                    <UserLabel
-                      avatar={currency.owner.avatar}
-                      description="Owner"
-                      id={currency.owner.id}
-                      username={currency.owner.username}
-                    />
-                  </S.OwnerInfo>
-                </S.CurrencyInfo>
-                <S.TotalMintedInfo>
-                  <S.TotalMintedLabel>Total Minted</S.TotalMintedLabel>
-                  <S.TotalMintedValue>{currency.total_amount_minted.toLocaleString()}</S.TotalMintedValue>
-                </S.TotalMintedInfo>
-              </S.CurrencyInfoContainer>
-            </S.CurrencyContent>
-          </S.CurrencyPanel>
-
+          <CurrencyInfoSection currency={currency} />
           <MintSection
             currency={currency}
             mintsData={mintsData}
