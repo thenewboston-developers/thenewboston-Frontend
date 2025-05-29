@@ -1,5 +1,6 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
+import {CurrencyReadDetailSerializer} from 'types/api/currencies';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer, GetFollowersParams} from 'types/api/follower';
 import {CreateInvitationRequest} from 'types/api/invitations';
@@ -15,7 +16,7 @@ import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {Comment, Comments} from 'types/comments';
 import {CreatedModified} from 'types/createdModified';
-import {Currencies, Currency, CurrencyReadDetailSerializer} from 'types/currencies';
+import {Currencies, Currency} from 'types/currencies';
 import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
 import {Follower, Followers} from 'types/follower';
 import {SelectOption} from 'types/forms';
