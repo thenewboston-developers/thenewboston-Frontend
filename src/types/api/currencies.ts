@@ -7,4 +7,5 @@ export interface CurrencyReadDetailSerializer extends CreatedModified {
   logo: string;
   owner: UserReadSerializer;
   ticker: string;
+  total_amount_minted: number;
 }

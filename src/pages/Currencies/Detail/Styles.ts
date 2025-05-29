@@ -39,9 +39,7 @@ export const Content = styled.div`
 `;
 
 export const CurrencyContent = styled.div`
-  flex: 1;
-  padding: 24px;
-  padding-top: 56px;
+  padding: 56px 24px 24px 24px; /* Top padding for logo overlap */
 `;
 
 export const CurrencyDomain = styled.p`
@@ -50,14 +48,16 @@ export const CurrencyDomain = styled.p`
   margin: 0;
 `;
 
-export const CurrencyHeader = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 16px;
+export const CurrencyInfo = styled.div`
+  flex: 1;
 `;
 
-export const CurrencyHeaderInfo = styled.div``;
+export const CurrencyInfoContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 48px;
+`;
 
 export const CurrencyLogo = styled(UCurrencyLogo)`
   background: ${colors.white};
@@ -76,11 +76,9 @@ export const CurrencyName = styled.h1`
 `;
 
 export const CurrencyPanel = styled.div`
-  align-items: flex-start;
   background: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 12px;
-  display: flex;
   margin-bottom: 32px;
   margin-top: 48px;
   padding: 0;
@@ -95,6 +93,25 @@ export const Header = styled.div`
 
 export const OwnerInfo = styled.div`
   margin-top: 16px;
+`;
+
+export const TotalMintedInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+`;
+
+export const TotalMintedLabel = styled.span`
+  color: ${colors.secondary};
+  font-size: 14px;
+  font-weight: ${fonts.weight.regular};
+  margin-bottom: 4px;
+`;
+
+export const TotalMintedValue = styled.span`
+  color: ${colors.primary};
+  font-size: 24px;
+  font-weight: ${fonts.weight.semiBold};
 `;
 
 export const TypeBadge = styled.span<{$internal: boolean}>`

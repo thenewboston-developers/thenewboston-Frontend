@@ -98,8 +98,8 @@ const Detail: SFC = ({className}) => {
           <S.CurrencyPanel>
             <S.CurrencyLogo logo={currency.logo} width="96px" />
             <S.CurrencyContent>
-              <S.CurrencyHeader>
-                <S.CurrencyHeaderInfo>
+              <S.CurrencyInfoContainer>
+                <S.CurrencyInfo>
                   <S.CurrencyName>{currency.ticker}</S.CurrencyName>
                   {currency.domain ? (
                     <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
@@ -116,8 +116,12 @@ const Detail: SFC = ({className}) => {
                       username={currency.owner.username}
                     />
                   </S.OwnerInfo>
-                </S.CurrencyHeaderInfo>
-              </S.CurrencyHeader>
+                </S.CurrencyInfo>
+                <S.TotalMintedInfo>
+                  <S.TotalMintedLabel>Total Minted</S.TotalMintedLabel>
+                  <S.TotalMintedValue>{currency.total_amount_minted.toLocaleString()}</S.TotalMintedValue>
+                </S.TotalMintedInfo>
+              </S.CurrencyInfoContainer>
             </S.CurrencyContent>
           </S.CurrencyPanel>
 
