@@ -1,65 +1,111 @@
 import styled, {css} from 'styled-components';
 
+import UCurrencyLogo from 'components/CurrencyLogo';
 import {colors, fonts} from 'styles';
 
-export const Container = styled.div`
-  padding: 24px;
-  max-width: 800px;
-  margin: 0 auto;
-`;
-
-export const Header = styled.div`
-  margin-bottom: 32px;
-`;
-
 export const BackButton = styled.button`
-  display: flex;
   align-items: center;
-  gap: 8px;
   background: none;
   border: none;
-  color: ${colors.palette.gray[600]};
+  color: ${colors.secondary};
   cursor: pointer;
+  display: flex;
   font-size: 14px;
+  font-weight: ${fonts.weight.medium};
+  gap: 8px;
   padding: 0;
+  transition: color 0.2s;
 
   &:hover {
-    color: ${colors.palette.gray[700]};
+    color: ${colors.primary};
+  }
+
+  span {
+    font-family: ${fonts.family.default};
   }
 `;
 
-export const CurrencyInfo = styled.div`
+export const Container = styled.div`
   display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 48px;
-  padding: 24px;
-  background: ${colors.palette.gray[100]};
-  border-radius: 8px;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 `;
 
-export const CurrencyDetails = styled.div`
+export const Content = styled.div`
   flex: 1;
+  overflow-y: auto;
+  padding: 24px;
 `;
 
-export const Ticker = styled.h1`
-  margin: 0 0 8px 0;
-  font-size: 32px;
-  font-weight: ${fonts.weight.bold};
+export const CurrencyContent = styled.div`
+  flex: 1;
+  padding: 24px;
+  padding-top: 56px;
 `;
 
-export const Domain = styled.p`
-  margin: 0 0 12px 0;
-  color: ${colors.palette.gray[600]};
+export const CurrencyDomain = styled.p`
+  color: ${colors.secondary};
   font-size: 16px;
+  margin: 0;
+`;
+
+export const CurrencyHeader = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+`;
+
+export const CurrencyHeaderInfo = styled.div``;
+
+export const CurrencyLogo = styled(UCurrencyLogo)`
+  background: ${colors.white};
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  left: 24px;
+  position: absolute;
+  top: -48px;
+`;
+
+export const CurrencyName = styled.h1`
+  color: ${colors.primary};
+  font-size: 28px;
+  font-weight: ${fonts.weight.bold};
+  margin: 0 0 8px 0;
+`;
+
+export const CurrencyPanel = styled.div`
+  align-items: flex-start;
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 12px;
+  display: flex;
+  margin-bottom: 32px;
+  margin-top: 48px;
+  padding: 0;
+  position: relative;
+`;
+
+export const Header = styled.div`
+  background: ${colors.white};
+  border-bottom: 1px solid ${colors.border};
+  padding: 20px 24px;
+`;
+
+export const OwnerInfo = styled.div`
+  color: ${colors.secondary};
+  font-size: 14px;
+  margin-top: 12px;
 `;
 
 export const TypeBadge = styled.span<{$internal: boolean}>`
-  display: inline-block;
-  padding: 4px 12px;
   border-radius: 4px;
-  font-size: 12px;
+  display: inline-block;
+  font-size: 11px;
   font-weight: ${fonts.weight.semiBold};
+  margin-top: 8px;
+  padding: 2px 8px;
 
   ${({$internal}) =>
     $internal
@@ -71,151 +117,4 @@ export const TypeBadge = styled.span<{$internal: boolean}>`
           background: ${colors.palette.green[100]};
           color: ${colors.palette.green[600]};
         `}
-`;
-
-export const MintSection = styled.div`
-  background: white;
-  border: 1px solid ${colors.border};
-  border-radius: 8px;
-  padding: 24px;
-  margin-bottom: 24px;
-`;
-
-export const SectionTitle = styled.h2`
-  margin: 0 0 24px 0;
-  font-size: 20px;
-  font-weight: ${fonts.weight.semiBold};
-`;
-
-export const MintInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 24px;
-`;
-
-export const InfoRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-
-  span {
-    color: ${colors.palette.gray[600]};
-  }
-
-  strong {
-    font-weight: ${fonts.weight.semiBold};
-  }
-`;
-
-export const MintForm = styled.div`
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-`;
-
-export const Input = styled.input`
-  flex: 1;
-  padding: 10px 12px;
-  border: 1px solid ${colors.border};
-  border-radius: 4px;
-  font-size: 14px;
-
-  &:focus {
-    outline: none;
-    border-color: ${colors.palette.blue[500]};
-  }
-
-  &:disabled {
-    background: ${colors.palette.gray[100]};
-    cursor: not-allowed;
-  }
-`;
-
-export const Warning = styled.p`
-  margin: 16px 0 0 0;
-  padding: 12px;
-  background: ${colors.palette.orange[100]};
-  color: ${colors.palette.orange[500]};
-  border-radius: 4px;
-  font-size: 14px;
-`;
-
-export const InfoSection = styled.div`
-  margin-bottom: 24px;
-`;
-
-export const InfoText = styled.div`
-  padding: 24px;
-  background: ${colors.palette.gray[100]};
-  border-radius: 8px;
-
-  strong {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: ${fonts.weight.semiBold};
-    font-size: 16px;
-  }
-
-  p {
-    margin: 0;
-    color: ${colors.palette.gray[600]};
-    font-size: 14px;
-    line-height: 1.5;
-  }
-`;
-
-export const MintsSection = styled.div`
-  background: white;
-  border: 1px solid ${colors.border};
-  border-radius: 8px;
-  padding: 24px;
-  margin-top: 24px;
-`;
-
-export const MintsList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-export const MintItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  background: ${colors.palette.gray[100]};
-  border-radius: 6px;
-`;
-
-export const MintAmount = styled.div`
-  font-size: 18px;
-  font-weight: ${fonts.weight.semiBold};
-`;
-
-export const MintDate = styled.div`
-  font-size: 14px;
-  color: ${colors.palette.gray[600]};
-`;
-
-export const EmptyMints = styled.div`
-  text-align: center;
-  padding: 40px;
-  color: ${colors.palette.gray[500]};
-  font-size: 16px;
-`;
-
-export const Pagination = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid ${colors.border};
-`;
-
-export const PageInfo = styled.div`
-  font-size: 14px;
-  color: ${colors.palette.gray[600]};
 `;

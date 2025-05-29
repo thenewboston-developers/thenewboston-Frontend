@@ -7,8 +7,7 @@ import SectionHeading from 'components/SectionHeading';
 import {getCurrencies} from 'selectors/state';
 import {SFC} from 'types';
 
-import CurrencyCard from '../CurrencyCard';
-
+import CurrencyCard from './CurrencyCard';
 import * as S from './Styles';
 
 const Home: SFC = ({className}) => {
