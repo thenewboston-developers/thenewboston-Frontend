@@ -20,10 +20,10 @@ const Detail: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [currency, setCurrency] = useState<Currency | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
-  const [loadingMints, setLoadingMints] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [loadingMints, setLoadingMints] = useState(false);
+  const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
 
   useEffect(() => {
     if (!id) return;
