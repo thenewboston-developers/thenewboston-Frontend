@@ -6,10 +6,12 @@ import CurrencyLogo from 'components/CurrencyLogo';
 import DropdownMenu from 'components/DropdownMenu';
 import Line from 'components/Line';
 import {deleteCurrency} from 'dispatchers/currencies';
+import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
 import CurrencyModal from 'modals/CurrencyModal';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Currency, SFC} from 'types';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
@@ -24,7 +26,12 @@ const CurrencyDetail: SFC<CurrencyDetailProps> = ({className, currency}) => {
   const self = useSelector(getSelf);
 
   const handleDelete = async () => {
-    await dispatch(deleteCurrency(currency.id));
+    try {
+      await dispatch(deleteCurrency(currency.id));
+      displayToast('Currency deleted!', ToastType.SUCCESS);
+    } catch (error) {
+      displayErrorToast('Error deleting currency');
+    }
   };
 
   const handleTickerClick = () => {
