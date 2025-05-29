@@ -58,7 +58,17 @@ const Detail: SFC = ({className}) => {
   }, [currency, currentPage, dispatch]);
 
   const handleMintSuccess = async () => {
-    if (!currency) return;
+    if (!currency || !id) return;
+
+    // Refetch currency details to update total_amount_minted
+    try {
+      const updatedCurrency = await getCurrency(parseInt(id));
+      setCurrency(updatedCurrency);
+    } catch (error) {
+      displayErrorToast('Error updating currency details');
+    }
+
+    // Refetch mints list
     const data = await dispatch(getMints({currency: currency.id, page: 1}));
     setMintsData(data);
     setCurrentPage(1);
