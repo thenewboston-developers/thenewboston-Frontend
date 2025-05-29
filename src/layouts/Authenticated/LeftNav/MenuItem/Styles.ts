@@ -35,8 +35,8 @@ export const MenuLink = styled(ULink)<{$isActive: boolean}>`
 `;
 
 export const Text = styled.div`
-  font-size: 20px;
-  margin-left: 20px;
+  font-size: 18px;
+  margin-left: 16px;
 
   @media (max-width: ${breakpoints.tablet}) {
     display: none;
