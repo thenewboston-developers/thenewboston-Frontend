@@ -1,5 +1,6 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
+import {CurrencyReadDetailSerializer} from 'types/api/currencies';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer, GetFollowersParams} from 'types/api/follower';
 import {CreateInvitationRequest} from 'types/api/invitations';
@@ -57,6 +58,7 @@ export {
   CreateWalletRequest,
   Currencies,
   Currency,
+  CurrencyReadDetailSerializer,
   DepositResponse,
   Dict,
   ExchangeOrder,

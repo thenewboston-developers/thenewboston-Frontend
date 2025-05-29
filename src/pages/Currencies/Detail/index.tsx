@@ -9,9 +9,10 @@ import EmptyPage from 'components/EmptyPage';
 import Icon from 'components/Icon';
 import Loader from 'components/Loader';
 import {getMints} from 'dispatchers/mints';
-import {AppDispatch, Currency, Mint, PaginatedResponse, SFC} from 'types';
+import {AppDispatch, CurrencyReadDetailSerializer, Mint, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
+import CurrencyInfoSection from './CurrencyInfoSection';
 import MintSection from './MintSection';
 import * as S from './Styles';
 
@@ -19,7 +20,7 @@ const Detail: SFC = ({className}) => {
   const {id} = useParams<{id: string}>();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [currency, setCurrency] = useState<Currency | null>(null);
+  const [currency, setCurrency] = useState<CurrencyReadDetailSerializer | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
@@ -57,7 +58,17 @@ const Detail: SFC = ({className}) => {
   }, [currency, currentPage, dispatch]);
 
   const handleMintSuccess = async () => {
-    if (!currency) return;
+    if (!currency || !id) return;
+
+    // Refetch currency details to update total_amount_minted
+    try {
+      const updatedCurrency = await getCurrency(parseInt(id));
+      setCurrency(updatedCurrency);
+    } catch (error) {
+      displayErrorToast('Error updating currency details');
+    }
+
+    // Refetch mints list
     const data = await dispatch(getMints({currency: currency.id, page: 1}));
     setMintsData(data);
     setCurrentPage(1);
@@ -70,8 +81,6 @@ const Detail: SFC = ({className}) => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
-  const isInternalCurrency = currency?.domain === null;
 
   if (loading) return <Loader />;
   if (!currency)
@@ -94,25 +103,7 @@ const Detail: SFC = ({className}) => {
         </S.Header>
 
         <S.Content>
-          <S.CurrencyPanel>
-            <S.CurrencyLogo logo={currency.logo} width="96px" />
-            <S.CurrencyContent>
-              <S.CurrencyHeader>
-                <S.CurrencyHeaderInfo>
-                  <S.CurrencyName>{currency.ticker}</S.CurrencyName>
-                  {currency.domain ? (
-                    <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
-                  ) : (
-                    <S.TypeBadge $internal={isInternalCurrency}>
-                      {isInternalCurrency ? 'Internal' : 'External'}
-                    </S.TypeBadge>
-                  )}
-                  <S.OwnerInfo>Owner ID: {currency.owner}</S.OwnerInfo>
-                </S.CurrencyHeaderInfo>
-              </S.CurrencyHeader>
-            </S.CurrencyContent>
-          </S.CurrencyPanel>
-
+          <CurrencyInfoSection currency={currency} />
           <MintSection
             currency={currency}
             mintsData={mintsData}

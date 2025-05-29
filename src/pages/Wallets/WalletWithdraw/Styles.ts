@@ -1,8 +1,7 @@
 import {Form as UForm} from 'formik';
 import styled from 'styled-components';
 
-import {Input as UInput} from 'components/FormElements';
-import {LogoInput} from 'components/FormElements';
+import {Input as UInput, LogoInput} from 'components/FormElements';
 import ULine from 'components/Line';
 import {breakpoints, colors, fonts} from 'styles';
 

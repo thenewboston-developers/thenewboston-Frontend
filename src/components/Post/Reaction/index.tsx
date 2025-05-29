@@ -7,8 +7,7 @@ import {createPostReaction} from 'dispatchers/reactions';
 import {useToggle} from 'hooks';
 import {PostReactionModal} from 'modals/PostReactionsModal';
 import {breakpoints} from 'styles';
-import {SFC} from 'types';
-import {AppDispatch, PostReactionSerializer} from 'types';
+import {AppDispatch, PostReactionSerializer, SFC} from 'types';
 import {formatToDynamicDigits} from 'utils/numbers';
 import {displayErrorToast} from 'utils/toasts';
 

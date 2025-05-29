@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {Currency} from 'types';
+import {Currency, CurrencyReadDetailSerializer} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/currencies`;
@@ -31,9 +31,9 @@ export const getCurrencies = async (): Promise<Currency[]> => {
   }
 };
 
-export const getCurrency = async (id: number): Promise<Currency> => {
+export const getCurrency = async (id: number): Promise<CurrencyReadDetailSerializer> => {
   try {
-    const response = await axios.get<Currency>(`${BASE_URL}/${id}`, authorizationHeaders());
+    const response = await axios.get<CurrencyReadDetailSerializer>(`${BASE_URL}/${id}`, authorizationHeaders());
     return response.data;
   } catch (error) {
     throw error;
