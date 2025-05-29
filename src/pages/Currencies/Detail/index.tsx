@@ -8,8 +8,9 @@ import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import Icon from 'components/Icon';
 import Loader from 'components/Loader';
+import UserLabel from 'components/UserLabel';
 import {getMints} from 'dispatchers/mints';
-import {AppDispatch, Currency, Mint, PaginatedResponse, SFC} from 'types';
+import {AppDispatch, CurrencyReadDetailSerializer, Mint, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
 import MintSection from './MintSection';
@@ -19,7 +20,7 @@ const Detail: SFC = ({className}) => {
   const {id} = useParams<{id: string}>();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [currency, setCurrency] = useState<Currency | null>(null);
+  const [currency, setCurrency] = useState<CurrencyReadDetailSerializer | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
@@ -107,7 +108,14 @@ const Detail: SFC = ({className}) => {
                       {isInternalCurrency ? 'Internal' : 'External'}
                     </S.TypeBadge>
                   )}
-                  <S.OwnerInfo>Owner ID: {currency.owner}</S.OwnerInfo>
+                  <S.OwnerInfo>
+                    <UserLabel
+                      avatar={currency.owner.avatar}
+                      description="Owner"
+                      id={currency.owner.id}
+                      username={currency.owner.username}
+                    />
+                  </S.OwnerInfo>
                 </S.CurrencyHeaderInfo>
               </S.CurrencyHeader>
             </S.CurrencyContent>

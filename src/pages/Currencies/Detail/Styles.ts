@@ -94,9 +94,7 @@ export const Header = styled.div`
 `;
 
 export const OwnerInfo = styled.div`
-  color: ${colors.secondary};
-  font-size: 14px;
-  margin-top: 12px;
+  margin-top: 16px;
 `;
 
 export const TypeBadge = styled.span<{$internal: boolean}>`

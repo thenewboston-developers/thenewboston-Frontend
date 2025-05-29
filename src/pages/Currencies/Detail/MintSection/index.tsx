@@ -6,13 +6,13 @@ import Loader from 'components/Loader';
 import {useToggle} from 'hooks';
 import MintModal from 'modals/MintModal';
 import {getMints as getMintsSelector, getSelf} from 'selectors/state';
-import {Currency, Mint, PaginatedResponse, SFC} from 'types';
+import {CurrencyReadDetailSerializer, Mint, PaginatedResponse, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
 import * as S from './Styles';
 
 interface MintSectionProps {
-  currency: Currency;
+  currency: CurrencyReadDetailSerializer;
   mintsData: PaginatedResponse<Mint> | null;
   loadingMints: boolean;
   currentPage: number;
@@ -34,7 +34,7 @@ const MintSection: SFC<MintSectionProps> = ({
   const [mintModalIsOpen, toggleMintModal] = useToggle(false);
 
   const isInternalCurrency = currency.domain === null;
-  const isOwner = currency.owner === self.id;
+  const isOwner = currency.owner.id === self.id;
 
   const handleMintSuccess = () => {
     onMintSuccess();

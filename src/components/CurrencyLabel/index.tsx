@@ -55,6 +55,7 @@ const CurrencyDetail: SFC<CurrencyDetailProps> = ({className, currency}) => {
     if (currency.owner !== self.id) return null;
     return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
+
   return (
     <>
       <S.Container className={className}>
