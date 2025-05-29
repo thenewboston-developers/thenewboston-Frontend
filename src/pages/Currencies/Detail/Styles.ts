@@ -61,8 +61,8 @@ export const CurrencyHeaderInfo = styled.div``;
 
 export const CurrencyLogo = styled(UCurrencyLogo)`
   background: ${colors.white};
-  border: 4px solid ${colors.white};
   border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   left: 24px;
   position: absolute;
   top: -48px;
@@ -100,21 +100,21 @@ export const OwnerInfo = styled.div`
 `;
 
 export const TypeBadge = styled.span<{$internal: boolean}>`
-  border-radius: 12px;
+  border-radius: 4px;
   display: inline-block;
-  font-size: 14px;
-  font-weight: ${fonts.weight.medium};
+  font-size: 11px;
+  font-weight: ${fonts.weight.semiBold};
   margin-top: 8px;
-  padding: 4px 12px;
+  padding: 2px 8px;
 
   ${({$internal}) =>
     $internal
       ? css`
-          background: ${colors.palette.blue[200]};
+          background: ${colors.palette.blue[100]};
           color: ${colors.palette.blue[700]};
         `
       : css`
-          background: ${colors.palette.green[200]};
+          background: ${colors.palette.green[100]};
           color: ${colors.palette.green[600]};
         `}
 `;
