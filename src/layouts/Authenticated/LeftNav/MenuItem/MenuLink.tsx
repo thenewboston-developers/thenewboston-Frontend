@@ -18,7 +18,7 @@ const MenuLink: SFC<MenuLinkProps> = ({className, children, icon, rootPath, text
 
   return (
     <S.MenuLink $isActive={location.pathname.includes(rootPath)} className={className} to={to}>
-      <S.Icon path={icon} size="26px" />
+      <S.Icon path={icon} size="22px" />
       {text && <S.Text>{text}</S.Text>}
       {children}
     </S.MenuLink>

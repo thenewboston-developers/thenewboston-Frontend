@@ -5,7 +5,7 @@ import {colors, fonts} from 'styles';
 import {BadgeStyle} from '.';
 
 const dangerMixin = css`
-  background-color: ${colors.palette.red['300']};
+  background-color: #e53e3e;
 `;
 
 const draftMixin = css`
