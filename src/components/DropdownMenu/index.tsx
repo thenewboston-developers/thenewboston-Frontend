@@ -60,7 +60,7 @@ const DropdownMenu: SFC<DropdownMenuProps> = ({className, icon, options}) => {
   };
 
   const renderMenu = () => (
-    <S.DropMenu style={menuPosition}>
+    <S.DropMenu style={menuPosition} $isOpen={isOpen}>
       {options.map(({label, onClick: optionOnClick}, index) => (
         <S.MenuOption
           key={index}
