@@ -49,24 +49,24 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
     return filteredTrades.map(({created_date, fill_quantity, id, overpayment_amount, trade_price}, index) => {
       const createdAt = new Date(created_date);
       return (
-        <tr key={id}>
-          <td>
-            <S.TextMuted>{index + 1}</S.TextMuted>
-          </td>
-          <td>
-            {getDateStr(createdAt)}
-            <S.TextMuted>{getTimeStr(createdAt, true)}</S.TextMuted>
-          </td>
-          <td>
-            {fill_quantity.toLocaleString()} {primaryCurrencyTicker}
-          </td>
-          <td>
-            {trade_price.toLocaleString()} {secondaryCurrencyTicker}
-          </td>
-          <td>
+        <S.TableRow key={id}>
+          <S.TableData>{index + 1}</S.TableData>
+          <S.TableData>
+            <S.DateContainer>
+              <div>{getDateStr(createdAt)}</div>
+              <S.TextMuted>{getTimeStr(createdAt, true)}</S.TextMuted>
+            </S.DateContainer>
+          </S.TableData>
+          <S.TableData>
+            <S.Amount>{fill_quantity.toLocaleString()}</S.Amount> {primaryCurrencyTicker}
+          </S.TableData>
+          <S.TableData>
+            <S.Price>{trade_price.toLocaleString()}</S.Price> {secondaryCurrencyTicker}
+          </S.TableData>
+          <S.TableData>
             {overpayment_amount.toLocaleString()} {secondaryCurrencyTicker}
-          </td>
-        </tr>
+          </S.TableData>
+        </S.TableRow>
       );
     });
   }, [filteredTrades, getCurrencyTicker, order]);
@@ -76,16 +76,16 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
   return (
     <S.Modal className={className} close={close} header="Trades">
       <S.Table>
-        <S.Thead>
-          <tr>
-            <th>No.</th>
-            <th>Date</th>
-            <th>Fill Quantity</th>
-            <th>Trade Price</th>
-            <th>Overpayment Amount</th>
-          </tr>
-        </S.Thead>
-        <S.Tbody>{renderRows()}</S.Tbody>
+        <S.TableHeader>
+          <S.TableRow>
+            <S.TableHead>No.</S.TableHead>
+            <S.TableHead>Date</S.TableHead>
+            <S.TableHead>Fill Quantity</S.TableHead>
+            <S.TableHead>Trade Price</S.TableHead>
+            <S.TableHead>Overpayment Amount</S.TableHead>
+          </S.TableRow>
+        </S.TableHeader>
+        <S.TableBody>{renderRows()}</S.TableBody>
       </S.Table>
     </S.Modal>
   );
