@@ -1,14 +1,7 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
-import {
-  mdiChevronDown,
-  mdiChevronUp,
-  mdiCommentTextOutline,
-  mdiDeleteOutline,
-  mdiDotsVertical,
-  mdiSquareEditOutline,
-} from '@mdi/js';
+import {mdiChevronDown, mdiChevronUp, mdiCommentTextOutline, mdiDotsVertical} from '@mdi/js';
 
 import {ButtonColor} from 'components/Button';
 import CurrencyLogo from 'components/CurrencyLogo';
@@ -63,12 +56,10 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const menuOptions = [
     {
       label: 'Edit',
-      menuIcon: mdiSquareEditOutline,
       onClick: togglePostModal,
     },
     {
       label: 'Delete',
-      menuIcon: mdiDeleteOutline,
       onClick: handleDelete,
     },
   ];

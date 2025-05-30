@@ -1,7 +1,6 @@
 import {CSSProperties, MouseEvent, ReactNode, useCallback, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
 
-import Icon from 'components/Icon';
 import {useEventListener, useToggle} from 'hooks';
 import {GenericVoidFunction, SFC} from 'types';
 
@@ -10,7 +9,6 @@ import * as S from './Styles';
 export interface DropdownMenuOption {
   label: ReactNode;
   onClick: GenericVoidFunction;
-  menuIcon: string;
 }
 
 export interface DropdownMenuProps {
@@ -63,7 +61,7 @@ const DropdownMenu: SFC<DropdownMenuProps> = ({className, icon, options}) => {
 
   const renderMenu = () => (
     <S.DropMenu style={menuPosition}>
-      {options.map(({label, onClick: optionOnClick, menuIcon}, index) => (
+      {options.map(({label, onClick: optionOnClick}, index) => (
         <S.MenuOption
           key={index}
           onClick={handleOptionClick(optionOnClick)}
@@ -73,10 +71,7 @@ const DropdownMenu: SFC<DropdownMenuProps> = ({className, icon, options}) => {
           role="button"
           $MenuIndex={index}
         >
-          <S.Div $label={label!.toString()}>
-            {menuIcon !== '' && <Icon icon={menuIcon} />}
-            {label}
-          </S.Div>
+          <S.Div $label={label!.toString()}>{label}</S.Div>
         </S.MenuOption>
       ))}
     </S.DropMenu>
