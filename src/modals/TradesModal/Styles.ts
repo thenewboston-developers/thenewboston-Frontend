@@ -3,6 +3,16 @@ import styled from 'styled-components';
 import UModal from 'components/Modal';
 import {breakpoints, colors, fonts} from 'styles';
 
+export const Amount = styled.span`
+  font-weight: ${fonts.weight.semiBold};
+`;
+
+export const DateContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
 export const Modal = styled(UModal)`
   display: flex;
   flex-direction: column;
@@ -13,18 +23,16 @@ export const Modal = styled(UModal)`
   }
 `;
 
-export const TextMuted = styled.div`
-  color: ${colors.secondary};
-  font-size: 12px;
-  margin-top: 2px;
+export const Price = styled.span`
+  font-weight: ${fonts.weight.medium};
 `;
 
 export const Table = styled.table`
   background-color: ${colors.white};
   border-radius: 12px;
+  margin-top: 0;
   overflow: hidden;
   width: 100%;
-  margin-top: 0;
 `;
 
 export const TableBody = styled.tbody``;
@@ -35,8 +43,8 @@ export const TableData = styled.td`
   padding: 16px;
 
   &:first-child {
-    width: 60px;
     font-weight: ${fonts.weight.semiBold};
+    width: 60px;
   }
 `;
 
@@ -64,16 +72,8 @@ export const TableRow = styled.tr`
   }
 `;
 
-export const DateContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-`;
-
-export const Amount = styled.span`
-  font-weight: ${fonts.weight.semiBold};
-`;
-
-export const Price = styled.span`
-  font-weight: ${fonts.weight.medium};
+export const TextMuted = styled.div`
+  color: ${colors.secondary};
+  font-size: 12px;
+  margin-top: 2px;
 `;
