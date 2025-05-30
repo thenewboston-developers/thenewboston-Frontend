@@ -3,64 +3,82 @@ import styled from 'styled-components';
 import UAvatar from 'components/Avatar';
 import UButton from 'components/Button';
 import UDropdownMenu from 'components/DropdownMenu';
+import ULine from 'components/Line';
 import {breakpoints, colors, fonts} from 'styles';
 
-export const Container = styled.div`
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid ${colors.border};
-  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
-  padding: 16px 20px;
+export const Avatar = styled(UAvatar)`
+  height: 44px;
+  margin-right: 12px;
+  width: 44px;
 `;
 
-export const Content = styled.div`
-  font-size: 15px;
-  margin-bottom: 16px;
-  margin-top: 8px;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-`;
-
-export const TextContent = styled.div`
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-`;
-
-export const LongContent = styled.span`
-  word-break: break-all;
-`;
-
-export const DropdownMenu = styled(UDropdownMenu)`
-  margin-right: -8px;
-`;
-
-export const Img = styled.img`
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 12px;
-  max-height: 600px;
-  max-width: 100%;
-`;
-
-export const Top = styled.div`
+export const BoxLeft = styled.div`
   align-items: center;
   display: flex;
-  justify-content: space-between;
+  gap: 8px;
+  margin: 12px 0 8px;
 `;
 
 export const Button = styled(UButton)<{$isOpenCommentBox?: boolean | false}>`
-  background-color: ${colors.background};
-  border-radius: 8px;
-  border: none;
-  color: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? '#5a80ab' : `${colors.black}`)};
+  background-color: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.blue['100'] : 'transparent')};
+  border: 1px solid
+    ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.blue['200'] : colors.palette.gray['200'])};
+  border-radius: 24px;
+  color: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.blue['700'] : colors.palette.gray['700'])};
+  font-size: 14px;
+  font-weight: ${fonts.weight.semiBold};
   height: 40px;
-  font-weight: ${fonts.weight.regular};
+  padding: 0 20px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background-color: ${({$isOpenCommentBox}) =>
+      $isOpenCommentBox ? colors.palette.blue['200'] : colors.palette.gray['100']};
+    border-color: ${({$isOpenCommentBox}) =>
+      $isOpenCommentBox ? colors.palette.blue['300'] : colors.palette.gray['300']};
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
   & svg {
     & path {
-      fill: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? '#5a80ab !important' : `${colors.black} !important`)};
+      fill: ${({$isOpenCommentBox}) =>
+        $isOpenCommentBox ? `${colors.palette.blue['700']} !important` : `${colors.palette.gray['600']} !important`};
     }
   }
+`;
+
+export const Container = styled.div`
+  background: #fff;
+  border: 1px solid ${colors.palette.gray['200']};
+  border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 20px 24px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+export const Content = styled.div`
+  color: ${colors.palette.gray['800']};
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  margin-top: 12px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+`;
+
+export const Description = styled.div`
+  color: ${colors.palette.gray['500']};
+  font-size: 14px;
+  font-weight: ${fonts.weight.regular};
+  line-height: 1.2;
 `;
 
 export const Div = styled.div`
@@ -68,67 +86,88 @@ export const Div = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
   @media (max-width: ${breakpoints.mini}) {
     justify-content: center;
   }
 `;
 
 export const Dot = styled.div`
-  color: ${colors.secondary};
-  font-size: 16px;
+  color: ${colors.palette.gray['400']};
+  font-size: 14px;
+  margin: 0 4px;
 `;
 
-export const BoxLeft = styled.div`
-  display: flex;
-  gap: 10px;
-  margin: 10px 0;
+export const DropdownMenu = styled(UDropdownMenu)`
+  margin-right: -8px;
+  margin-top: -4px;
 `;
 
-export const TextLink = styled.button`
-  background: none;
-  border: none;
-  color: #5a80ab;
+export const Img = styled.img`
+  border-radius: 12px;
   cursor: pointer;
-  font-weight: 600;
-  outline: none;
+  margin-bottom: 16px;
+  margin-top: 12px;
+  max-height: 600px;
+  max-width: 100%;
+  object-fit: cover;
 `;
 
-export const Avatar = styled(UAvatar)`
-  margin-right: 8px;
+export const Line = styled(ULine)`
+  border-color: ${colors.palette.gray[200]};
+  margin: 16px 0 8px;
 `;
 
-export const Description = styled.div`
-  color: ${colors.palette.gray[500]};
-  font-size: 12px;
-  font-weight: ${fonts.weight.semiBold};
+export const LongContent = styled.span`
+  word-break: break-all;
 `;
 
 export const Right = styled.div`
-  align-items: center;
   display: flex;
-  flex-direction: row;
-  gap: 5px;
-`;
-
-export const Username = styled.div<{$id: number | null}>`
-  color: ${colors.black};
-  font-size: 14px;
-  font-weight: ${fonts.weight.semiBold};
-
-  &:hover {
-    cursor: ${({$id}) => ($id ? 'pointer' : 'default')};
-  }
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
 `;
 
 export const Text = styled.div`
   display: flex;
 `;
 
+export const TextContent = styled.div`
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+`;
+
+export const TextLink = styled.button`
+  background: none;
+  border: none;
+  color: ${colors.palette.blue['700']};
+  cursor: pointer;
+  font-weight: ${fonts.weight.medium};
+  margin-left: 4px;
+  outline: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${colors.palette.blue['800']};
+    text-decoration: underline;
+  }
+`;
+
+export const Top = styled.div`
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+`;
+
 export const TransferAmount = styled.div`
   align-items: center;
+  color: ${colors.palette.gray['900']};
   display: flex;
-  font-size: 18px;
-  font-weight: ${fonts.weight.semiBold};
+  font-size: 20px;
+  font-weight: ${fonts.weight.bold};
   gap: 8px;
   margin-top: 12px;
 `;
@@ -154,8 +193,20 @@ export const TransferHeader = styled.div`
 
 export const TransferInfo = styled.div`
   background-color: ${colors.palette.gray['100']};
-  border-radius: 8px;
   border: 1px solid ${colors.palette.gray['200']};
-  margin-top: 12px;
-  padding: 12px 16px;
+  border-radius: 12px;
+  margin-top: 16px;
+  padding: 16px;
+`;
+
+export const Username = styled.div<{$id: number | null}>`
+  color: ${colors.palette.gray['900']};
+  font-size: 16px;
+  font-weight: ${fonts.weight.bold};
+  line-height: 1.2;
+
+  &:hover {
+    cursor: ${({$id}) => ($id ? 'pointer' : 'default')};
+    text-decoration: ${({$id}) => ($id ? 'underline' : 'none')};
+  }
 `;

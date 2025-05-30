@@ -1,4 +1,4 @@
-import {CommentReadSerializer, PostReactionSerializer, UserReadSerializer} from 'types';
+import {CommentReadSerializer, UserReadSerializer} from 'types';
 import {CreatedModified} from 'types/createdModified';
 
 export interface PostReadSerializer extends CreatedModified {
@@ -10,8 +10,6 @@ export interface PostReadSerializer extends CreatedModified {
   price_amount: number | null;
   price_currency: number | null;
   recipient: UserReadSerializer | null;
-  user_reaction: string;
-  user_reactions: PostReactionSerializer[];
 }
 
 export interface GetPostsParams {

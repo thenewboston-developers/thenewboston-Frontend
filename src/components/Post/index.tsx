@@ -5,7 +5,6 @@ import {mdiChevronDown, mdiChevronUp, mdiCommentTextOutline, mdiDotsVertical} fr
 
 import {ButtonColor} from 'components/Button';
 import CurrencyLogo from 'components/CurrencyLogo';
-import Line from 'components/Line';
 import Linkify from 'components/Linkify';
 import UserLabel from 'components/UserLabel';
 import {deletePost} from 'dispatchers/posts';
@@ -19,7 +18,6 @@ import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import Comments from './Comments';
-import Reaction from './Reaction';
 import * as S from './Styles';
 
 export interface PostProps {
@@ -30,7 +28,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const navigate = useNavigate();
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
-  const [showFullContent, setShowFullContent] = useState(true);
+  const [showFullContent, setShowFullContent] = useState(false);
   const [imageModalIsOpen, toggleImageModal] = useToggle(false);
 
   const toggleShowFullContent = () => {
@@ -109,7 +107,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
               <S.Username $id={owner.id} onClick={handleClick}>
                 {owner.username}
               </S.Username>
-              <S.Dot>·</S.Dot>
               <S.Description>{shortDate(created_date, true)}</S.Description>
             </S.Right>
           </S.Text>
@@ -137,7 +134,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         )}
         <S.Content>
           <Linkify>
-            {!showFullContent || content.length <= 400 ? (
+            {showFullContent || content.length <= 400 ? (
               <>
                 <S.TextContent>
                   {renderContent()}
@@ -156,10 +153,9 @@ const Post: SFC<PostProps> = ({className, post}) => {
         </S.Content>
 
         {image ? <S.Img onClick={handlePostImageClick} alt="image" src={image} /> : null}
-        <Line />
+        <S.Line />
         <S.Div>
           <S.BoxLeft>
-            <Reaction postId={post.id} userReaction={post.user_reaction} userReactions={post.user_reactions} />
             <S.Button
               text="Comment"
               color={ButtonColor.secondary}

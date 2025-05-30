@@ -1,4 +1,3 @@
-import {PostReactionSerializer} from 'types';
 import {UserReadSerializer} from 'types/api/users';
 import {CreatedModified} from 'types/createdModified';
 import {Pagination} from 'types/pagination';
@@ -11,8 +10,6 @@ export interface Post extends CreatedModified {
   price_amount: number | null;
   price_currency: number | null;
   recipient: UserReadSerializer | null;
-  user_reaction: string;
-  user_reactions: PostReactionSerializer[];
 }
 
 export interface Posts extends Pagination {
