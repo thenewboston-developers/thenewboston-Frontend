@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import UButton from 'components/Button';
 import {breakpoints, colors, fonts} from 'styles';
 
-const USER_IMAGE_SIZE = 110;
+const USER_IMAGE_SIZE = 180;
 
 export const Button = styled(UButton)`
   border: none;
@@ -19,10 +19,21 @@ export const Button = styled(UButton)`
   }
 `;
 
+export const ButtonGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  @media (min-width: ${breakpoints.mobile}) {
+    flex-direction: row;
+  }
+`;
+
 export const Container = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
   margin-top: 50px;
 
   @media (min-width: ${breakpoints.tablet}) {
@@ -35,7 +46,7 @@ export const Flex = styled.div`
   display: flex;
 `;
 
-export const Img = styled.img`
+export const Image = styled.img`
   border-radius: 50%;
   cursor: pointer;
   height: 100%;
@@ -44,7 +55,7 @@ export const Img = styled.img`
   width: 100%;
 `;
 
-export const ImgWrapper = styled.div`
+export const ImageWrapper = styled.div`
   background-color: ${colors.white};
   border-radius: 50%;
   cursor: pointer;
@@ -96,7 +107,6 @@ export const Username = styled.h1`
   font-size: 24px;
   font-weight: ${fonts.weight.bold};
   margin-top: 16px;
-  text-transform: capitalize;
 `;
 
 export const Value = styled.span<{$flex?: boolean}>`

@@ -1,12 +1,11 @@
-import {useEffect, useMemo, useRef} from 'react';
+import {useEffect, useMemo} from 'react';
+import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 
 import EmptyText from 'components/EmptyText';
-import InfiniteScroll from 'components/InfiniteScroll';
 import Post from 'components/Post';
 import PostSkeleton from 'components/Post/PostSkeleton';
-import ScrollToTopButton from 'components/ScrollUpButton';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
@@ -20,7 +19,6 @@ const Posts: SFC = ({className}) => {
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
   const posts = useSelector(getPosts);
-  const scrollableDivRef = useRef<HTMLDivElement>(null!);
   const userId = id ? parseInt(id, 10) : null;
 
   const postList = useMemo(() => {
@@ -40,8 +38,12 @@ const Posts: SFC = ({className}) => {
   }, [dispatch, userId]);
 
   const fetchMorePosts = async () => {
-    if (!isLoading) {
-      await dispatch(_getPosts());
+    if (!isLoading && userId) {
+      try {
+        await dispatch(_getPosts({owner: userId}));
+      } catch (error) {
+        displayErrorToast('Error fetching more posts');
+      }
     }
   };
 
@@ -52,25 +54,29 @@ const Posts: SFC = ({className}) => {
   );
 
   const renderContent = () => {
-    if (isLoading && !postList.length) {
-      return getSkeleton(3);
-    }
+    if (isLoading && !postList.length) return getSkeleton(3);
+
     if (postList.length) {
       return (
-        <InfiniteScroll
-          ref={scrollableDivRef}
+        <InfiniteScrollComponent
           dataLength={postList.length}
+          endMessage={
+            <S.EndMessageContainer>
+              <EmptyText>No more posts to show.</EmptyText>
+            </S.EndMessageContainer>
+          }
           hasMore={hasMore}
-          next={fetchMorePosts}
           loader={getSkeleton(1)}
+          next={fetchMorePosts}
+          scrollThreshold={0.9}
+          scrollableTarget="main-scrollable-area"
         >
-          <ScrollToTopButton targetRef={scrollableDivRef} />
           <S.PostContainer>
             {postList.map((post) => (
               <Post key={post.id} post={post} />
             ))}
           </S.PostContainer>
-        </InfiniteScroll>
+        </InfiniteScrollComponent>
       );
     }
 

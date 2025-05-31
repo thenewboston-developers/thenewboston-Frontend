@@ -1,16 +1,9 @@
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 
-import UAvatar from 'components/Avatar';
 import UDropdownMenu from 'components/DropdownMenu';
 import UIcon from 'components/Icon';
 import {breakpoints, colors, fonts} from 'styles';
-
-export const Avatar = styled(UAvatar)`
-  height: 44px;
-  margin-right: 12px;
-  width: 44px;
-`;
 
 export const BoxLeft = styled.div`
   align-items: center;
@@ -183,17 +176,5 @@ export const TransferText = styled.div`
   strong {
     color: ${colors.palette.gray[900]};
     font-weight: ${fonts.weight.bold};
-  }
-`;
-
-export const Username = styled.div<{$id: number | null}>`
-  color: ${colors.palette.gray[900]};
-  font-size: 15px;
-  font-weight: ${fonts.weight.bold};
-  line-height: 1.2;
-
-  &:hover {
-    cursor: ${({$id}) => ($id ? 'pointer' : 'default')};
-    text-decoration: ${({$id}) => ($id ? 'underline' : 'none')};
   }
 `;

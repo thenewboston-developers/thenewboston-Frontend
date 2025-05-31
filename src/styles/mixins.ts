@@ -6,17 +6,11 @@ import fonts from 'styles/fonts';
 
 export const hiddenScroll = css`
   overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 
   &::-webkit-scrollbar {
-    width: 0;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
+    display: none; /* Chrome, Safari, Opera */
   }
 `;
 

@@ -1,12 +1,6 @@
-import {Link as ULink} from 'react-router-dom';
 import styled from 'styled-components';
 
 import {colors, fonts} from 'styles';
-
-export const AvatarLink = styled(ULink)`
-  align-items: center;
-  display: flex;
-`;
 
 export const ButtonContainer = styled.div`
   display: flex;
@@ -17,8 +11,10 @@ export const Container = styled.div`
   background: ${colors.white};
   border-radius: 14px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-  margin-top: 16px;
-  padding: 20px;
+  margin: 16px auto 0;
+  max-width: 720px;
+  padding: 20px 24px;
+  width: 100%;
 `;
 
 export const Counter = styled.div`
@@ -29,20 +25,11 @@ export const Counter = styled.div`
   font-weight: ${fonts.weight.medium};
 `;
 
-export const DateContainer = styled.div`
-  align-items: center;
-  color: ${colors.secondary};
-  display: flex;
-  font-size: 13px;
-  gap: 8px;
-`;
-
 export const FollowerContainer = styled.div`
   align-items: center;
   border-bottom: 1px solid ${colors.border};
   display: flex;
   justify-content: space-between;
-  margin: 0 20px;
   padding: 8px 0;
 
   &:first-child {
@@ -58,9 +45,20 @@ export const FollowerContainer = styled.div`
 export const Grid = styled.div`
   align-items: center;
   display: grid;
-  gap: 16px;
-  grid-template-columns: 40px 48px 1fr auto;
+  grid-template-columns: 24px 8px 1fr 16px auto;
   width: 100%;
+
+  & > :nth-child(1) {
+    grid-column: 1;
+  }
+
+  & > :nth-child(2) {
+    grid-column: 3;
+  }
+
+  & > :nth-child(3) {
+    grid-column: 5;
+  }
 `;
 
 export const Header = styled.div`
@@ -76,34 +74,5 @@ export const Heading = styled.div`
 
   & span {
     color: ${colors.black};
-  }
-`;
-
-export const TextMuted = styled.span`
-  color: ${colors.secondary};
-  font-size: 12px;
-`;
-
-export const UserInfo = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 4px;
-`;
-
-export const Username = styled.div`
-  font-size: 16px;
-  font-weight: ${fonts.weight.semiBold};
-  text-transform: capitalize;
-`;
-
-export const UsernameLink = styled(ULink)`
-  align-items: center;
-  color: inherit;
-  display: inline-flex;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
   }
 `;

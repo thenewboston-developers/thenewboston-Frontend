@@ -4,7 +4,7 @@ import UAvatar from 'components/Avatar';
 import {colors, fonts} from 'styles';
 
 export const Avatar = styled(UAvatar)`
-  margin-right: 8px;
+  margin-right: 12px;
 `;
 
 export const Container = styled.div`
