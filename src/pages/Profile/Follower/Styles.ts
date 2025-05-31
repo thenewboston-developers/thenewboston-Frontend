@@ -73,24 +73,38 @@ export const DateContainer = styled.div`
 
 export const FollowButton = styled.button`
   align-items: center;
-  background-color: ${colors.palette.blue['500']};
-  border: none;
-  border-radius: 6px;
-  color: ${colors.white};
+  background-color: transparent;
+  border: 1px solid ${colors.palette.gray[200]};
+  border-radius: 24px;
+  color: ${colors.palette.gray[700]};
   cursor: pointer;
   display: flex;
   font-size: 13px;
   font-weight: ${fonts.weight.medium};
   gap: 5px;
-  padding: 6px 12px;
-  transition: all 0.15s ease;
+  height: 34px;
+  padding: 0 18px;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    background-color: ${colors.palette.blue['600']};
+    background-color: ${colors.palette.gray[100]};
+    border-color: ${colors.palette.gray[300]};
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    color: ${colors.palette.gray[900]};
+  }
+
+  &:active {
+    background-color: ${colors.palette.gray[200]};
+    box-shadow: none;
   }
 
   svg {
-    fill: ${colors.white};
+    fill: ${colors.palette.gray[600]};
+    transition: fill 0.15s ease;
+  }
+
+  &:hover svg {
+    fill: ${colors.palette.gray[800]};
   }
 `;
 
@@ -125,30 +139,38 @@ export const TextMuted = styled.span`
 
 export const UnFollowButton = styled.button`
   align-items: center;
-  background-color: ${colors.palette.gray['50']};
-  border: 1px solid ${colors.palette.gray['300']};
-  border-radius: 8px;
-  color: ${colors.primary};
+  background-color: transparent;
+  border: 1px solid ${colors.palette.gray[200]};
+  border-radius: 24px;
+  color: ${colors.palette.gray[700]};
   cursor: pointer;
   display: flex;
   font-size: 13px;
   font-weight: ${fonts.weight.medium};
   gap: 5px;
-  padding: 8px 16px;
-  transition: all 0.15s ease;
+  height: 34px;
+  padding: 0 18px;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    background-color: ${colors.palette.red['50']};
-    border-color: ${colors.palette.red['200']};
-    color: ${colors.palette.red['600']};
+    background-color: ${colors.palette.gray[100]};
+    border-color: ${colors.palette.gray[300]};
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    color: ${colors.palette.gray[900]};
+  }
+
+  &:active {
+    background-color: ${colors.palette.gray[200]};
+    box-shadow: none;
   }
 
   svg {
-    fill: ${colors.primary};
+    fill: ${colors.palette.gray[600]};
+    transition: fill 0.15s ease;
   }
 
   &:hover svg {
-    fill: ${colors.palette.red['600']};
+    fill: ${colors.palette.gray[800]};
   }
 `;
 
