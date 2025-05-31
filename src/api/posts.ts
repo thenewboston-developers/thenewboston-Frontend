@@ -27,6 +27,26 @@ export const getPosts = async (
   params?: GetPostsParams,
 ): Promise<PaginatedResponse<PostReadSerializer>> => {
   try {
+    // If we have a full URL (pagination), we need to preserve any params
+    if (url && params) {
+      // Parse existing URL to get its params
+      const urlObj = new URL(url);
+
+      // Add our params to the URL's search params
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          urlObj.searchParams.set(key, String(value));
+        }
+      });
+
+      const response = await axios.get<PaginatedResponse<PostReadSerializer>>(
+        urlObj.toString(),
+        authorizationHeaders(),
+      );
+      return response.data;
+    }
+
+    // Standard request without pagination URL
     const apiURL = url || BASE_URL;
     const response = await axios.get<PaginatedResponse<PostReadSerializer>>(apiURL, {
       params,

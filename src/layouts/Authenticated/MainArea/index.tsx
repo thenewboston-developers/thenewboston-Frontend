@@ -23,7 +23,7 @@ import * as S from './Styles';
 
 const MainArea: SFC = ({className}) => {
   return (
-    <S.Container className={className}>
+    <S.Container className={className} id="main-scrollable-area">
       <Routes>
         <Route path="*" element={<Navigate to={PATH_DEFAULT} replace />} />
         <Route path={PATH_CURRENCIES} element={<Currencies />} />

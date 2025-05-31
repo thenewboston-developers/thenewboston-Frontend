@@ -51,9 +51,13 @@ const Layout: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <UserDetails />
+      <S.TopSection>
+        <S.ContentWrapper>
+          <UserDetails />
+          {renderTabs()}
+        </S.ContentWrapper>
+      </S.TopSection>
       <S.OutletContainer>
-        {renderTabs()}
         <Outlet />
       </S.OutletContainer>
     </S.Container>
