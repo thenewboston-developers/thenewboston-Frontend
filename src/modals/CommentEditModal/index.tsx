@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
-import {Input} from 'components/FormElements';
+import EmojiBox from 'components/EmojiPicker';
 import {updateComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
 import {AppDispatch, Comment, SFC} from 'types';
@@ -48,9 +48,12 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
   return (
     <S.Modal className={className} close={close} header="Update Comment">
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
-        {({dirty, errors, isSubmitting, isValid, touched}) => (
+        {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <Input errors={errors} label="Content" name="content" touched={touched} />
+            <S.Div>
+              <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
+              <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
+            </S.Div>
             <Button
               dirty={dirty}
               disabled={isSubmitting}

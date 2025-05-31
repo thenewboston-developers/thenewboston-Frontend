@@ -1,9 +1,10 @@
+import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 
 import UAvatar from 'components/Avatar';
 import UButton from 'components/Button';
 import UDropdownMenu from 'components/DropdownMenu';
-import ULine from 'components/Line';
+import UIcon from 'components/Icon';
 import {breakpoints, colors, fonts} from 'styles';
 
 export const Avatar = styled(UAvatar)`
@@ -16,44 +17,47 @@ export const BoxLeft = styled.div`
   align-items: center;
   display: flex;
   gap: 8px;
-  margin: 12px 0 8px;
+  margin: 8px 0;
 `;
 
 export const Button = styled(UButton)<{$isOpenCommentBox?: boolean | false}>`
-  background-color: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.blue['100'] : 'transparent')};
-  border: 1px solid
-    ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.blue['200'] : colors.palette.gray['200'])};
+  background-color: transparent;
+  border: 1px solid ${colors.palette.gray[200]};
   border-radius: 24px;
-  color: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.blue['700'] : colors.palette.gray['700'])};
-  font-size: 14px;
-  font-weight: ${fonts.weight.semiBold};
-  height: 40px;
-  padding: 0 20px;
-  transition: all 0.15s ease;
+  color: ${colors.palette.gray[700]};
+  font-size: 13px;
+  font-weight: ${fonts.weight.medium};
+  height: 34px;
+  padding: 0 18px;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    background-color: ${({$isOpenCommentBox}) =>
-      $isOpenCommentBox ? colors.palette.blue['200'] : colors.palette.gray['100']};
-    border-color: ${({$isOpenCommentBox}) =>
-      $isOpenCommentBox ? colors.palette.blue['300'] : colors.palette.gray['300']};
-    transform: translateY(-1px);
+    background-color: ${colors.palette.gray[100]};
+    border-color: ${colors.palette.gray[300]};
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    color: ${colors.palette.gray[900]};
   }
 
   &:active {
-    transform: translateY(0);
+    background-color: ${colors.palette.gray[200]};
+    box-shadow: none;
   }
 
   & svg {
     & path {
-      fill: ${({$isOpenCommentBox}) =>
-        $isOpenCommentBox ? `${colors.palette.blue['700']} !important` : `${colors.palette.gray['600']} !important`};
+      fill: ${colors.palette.gray[600]} !important;
+      transition: fill 0.15s ease;
     }
+  }
+
+  &:hover svg path {
+    fill: ${colors.palette.gray[800]} !important;
   }
 `;
 
 export const Container = styled.div`
   background: #fff;
-  border: 1px solid ${colors.palette.gray['200']};
+  border: 1px solid ${colors.palette.gray[200]};
   border-radius: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   padding: 20px 24px;
@@ -65,18 +69,18 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
-  color: ${colors.palette.gray['800']};
-  font-size: 16px;
-  line-height: 1.6;
+  color: ${colors.palette.gray[800]};
+  font-size: 15px;
+  line-height: 1.4;
   margin-bottom: 16px;
   margin-top: 12px;
   overflow-wrap: break-word;
   word-wrap: break-word;
 `;
 
-export const Description = styled.div`
-  color: ${colors.palette.gray['500']};
-  font-size: 14px;
+export const Date = styled.div`
+  color: ${colors.palette.gray[500]};
+  font-size: 13px;
   font-weight: ${fonts.weight.regular};
   line-height: 1.2;
 `;
@@ -92,12 +96,6 @@ export const Div = styled.div`
   }
 `;
 
-export const Dot = styled.div`
-  color: ${colors.palette.gray['400']};
-  font-size: 14px;
-  margin: 0 4px;
-`;
-
 export const DropdownMenu = styled(UDropdownMenu)`
   margin-right: -8px;
   margin-top: -4px;
@@ -111,11 +109,6 @@ export const Img = styled.img`
   max-height: 600px;
   max-width: 100%;
   object-fit: cover;
-`;
-
-export const Line = styled(ULine)`
-  border-color: ${colors.palette.gray[200]};
-  margin: 16px 0 8px;
 `;
 
 export const LongContent = styled.span`
@@ -142,16 +135,22 @@ export const TextContent = styled.div`
 export const TextLink = styled.button`
   background: none;
   border: none;
-  color: ${colors.palette.blue['700']};
+  color: ${colors.palette.blue[600]};
   cursor: pointer;
+  font-size: 14px;
   font-weight: ${fonts.weight.medium};
   margin-left: 4px;
   outline: none;
+  padding: 0;
   transition: color 0.2s ease;
 
   &:hover {
-    color: ${colors.palette.blue['800']};
+    color: ${colors.palette.blue[700]};
     text-decoration: underline;
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 
@@ -162,46 +161,70 @@ export const Top = styled.div`
   margin-bottom: 4px;
 `;
 
-export const TransferAmount = styled.div`
-  align-items: center;
-  color: ${colors.palette.gray['900']};
+export const TransferContent = styled.div`
   display: flex;
-  font-size: 20px;
-  font-weight: ${fonts.weight.bold};
-  gap: 8px;
-  margin-top: 12px;
+  flex: 1;
+  flex-direction: column;
 `;
 
-export const TransferArrow = styled.span`
-  color: ${colors.palette.gray['500']};
-  font-size: 20px;
-  margin: 0 12px;
+export const TransferDate = styled.div`
+  color: ${colors.palette.gray[500]};
+  font-size: 13px;
+  margin-top: 4px;
 `;
 
-export const TransferDetails = styled.div`
+export const TransferIcon = styled(UIcon)`
+  & path {
+    fill: ${colors.palette.gray[600]} !important;
+  }
+`;
+
+export const TransferIconWrapper = styled.div`
   align-items: center;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
-  margin-top: 8px;
-`;
-
-export const TransferHeader = styled.div`
-  color: ${colors.palette.gray['600']};
-  font-size: 12px;
-  font-weight: ${fonts.weight.semiBold};
-  text-transform: uppercase;
+  height: 48px;
+  justify-content: center;
+  margin-right: 16px;
+  width: 48px;
 `;
 
 export const TransferInfo = styled.div`
-  background-color: ${colors.palette.gray['100']};
-  border: 1px solid ${colors.palette.gray['200']};
+  align-items: center;
+  background: ${colors.palette.gray[100]};
+  border: 1px solid ${colors.palette.gray[200]};
   border-radius: 12px;
-  margin-top: 16px;
+  display: flex;
+  margin-top: 12px;
   padding: 16px;
 `;
 
+export const TransferLink = styled(Link)`
+  color: ${colors.palette.gray[900]};
+  font-weight: ${fonts.weight.bold};
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+export const TransferText = styled.div`
+  color: ${colors.palette.gray[700]};
+  font-size: 15px;
+  line-height: 1.4;
+
+  strong {
+    color: ${colors.palette.gray[900]};
+    font-weight: ${fonts.weight.bold};
+  }
+`;
+
 export const Username = styled.div<{$id: number | null}>`
-  color: ${colors.palette.gray['900']};
-  font-size: 16px;
+  color: ${colors.palette.gray[900]};
+  font-size: 15px;
   font-weight: ${fonts.weight.bold};
   line-height: 1.2;
 

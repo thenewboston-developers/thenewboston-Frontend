@@ -1,12 +1,11 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
-import {mdiChevronDown, mdiChevronUp, mdiCommentTextOutline, mdiDotsVertical} from '@mdi/js';
+import {mdiCommentTextOutline, mdiDotsVertical, mdiSwapHorizontal} from '@mdi/js';
 
 import {ButtonColor} from 'components/Button';
 import CurrencyLogo from 'components/CurrencyLogo';
 import Linkify from 'components/Linkify';
-import UserLabel from 'components/UserLabel';
 import {deletePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
@@ -25,17 +24,22 @@ export interface PostProps {
 }
 
 const Post: SFC<PostProps> = ({className, post}) => {
-  const currencies = useSelector(getCurrencies);
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const self = useSelector(getSelf);
   const [imageModalIsOpen, toggleImageModal] = useToggle(false);
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [showFullContent, setShowFullContent] = useState(false);
+  const currencies = useSelector(getCurrencies);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const self = useSelector(getSelf);
 
   const {content, created_date, id, image, owner, price_amount, price_currency, recipient} = post;
   const isTransferPost = !!(recipient && price_amount && price_currency);
+
+  const handleClick = () => {
+    if (!owner.id) return;
+    navigate(`/profile/${owner.id}`);
+  };
 
   const handleDelete = async () => {
     try {
@@ -44,11 +48,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
     } catch (error) {
       displayErrorToast('Error deleting post');
     }
-  };
-
-  const handleClick = () => {
-    if (!owner.id) return;
-    navigate(`/profile/${owner.id}`);
   };
 
   const handlePostImageClick = () => {
@@ -93,42 +92,44 @@ const Post: SFC<PostProps> = ({className, post}) => {
     setShowFullContent(!showFullContent);
   };
 
+  const renderTransferInfo = () => {
+    if (!isTransferPost) return null;
+
+    return (
+      <S.TransferInfo>
+        <S.TransferIconWrapper>
+          <S.TransferIcon icon={mdiSwapHorizontal} size={24} />
+        </S.TransferIconWrapper>
+        <S.TransferContent>
+          <S.TransferText>
+            <S.TransferLink to={`/profile/${owner.id}`}>{owner.username}</S.TransferLink> sent{' '}
+            <strong>
+              {price_amount?.toLocaleString()} {currencies[price_currency!]?.ticker}
+            </strong>{' '}
+            to <S.TransferLink to={`/profile/${recipient!.id}`}>{recipient!.username}</S.TransferLink>
+          </S.TransferText>
+          <S.TransferDate>{shortDate(created_date, true)}</S.TransferDate>
+        </S.TransferContent>
+      </S.TransferInfo>
+    );
+  };
+
   return (
     <>
       <S.Container className={className}>
         <S.Top>
           <S.Text>
             {renderAvatar()}
-
             <S.Right>
               <S.Username $id={owner.id} onClick={handleClick}>
                 {owner.username}
               </S.Username>
-              <S.Description>{shortDate(created_date, true)}</S.Description>
+              <S.Date>{shortDate(created_date, true)}</S.Date>
             </S.Right>
           </S.Text>
           {renderDropdownMenu()}
         </S.Top>
-        {isTransferPost && (
-          <S.TransferInfo>
-            <S.TransferHeader>Coin Transfer</S.TransferHeader>
-            <S.TransferDetails>
-              <UserLabel avatar={owner.avatar} description="" id={owner.id} username={owner.username} />
-              <S.TransferArrow>→</S.TransferArrow>
-              <UserLabel avatar={recipient!.avatar} description="" id={recipient!.id} username={recipient!.username} />
-            </S.TransferDetails>
-            <S.TransferAmount>
-              {price_currency && currencies[price_currency] && (
-                <>
-                  <CurrencyLogo logo={currencies[price_currency].logo} width="20px" />
-                  <span>
-                    {price_amount?.toLocaleString()} {currencies[price_currency].ticker}
-                  </span>
-                </>
-              )}
-            </S.TransferAmount>
-          </S.TransferInfo>
-        )}
+        {renderTransferInfo()}
         <S.Content>
           <Linkify>
             {showFullContent || content.length <= 400 ? (
@@ -141,32 +142,28 @@ const Post: SFC<PostProps> = ({className, post}) => {
             ) : (
               <>
                 <S.TextContent>
-                  {renderContent().slice(0, 400)}...
-                  <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
+                  {renderContent().slice(0, 400)}... <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
                 </S.TextContent>
               </>
             )}
           </Linkify>
         </S.Content>
-
-        {image ? <S.Img onClick={handlePostImageClick} alt="image" src={image} /> : null}
-        <S.Line />
+        {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
         <S.Div>
           <S.BoxLeft>
             <S.Button
-              text="Comment"
+              $isOpenCommentBox={isOpenCommentBox}
               color={ButtonColor.secondary}
               iconLeft={mdiCommentTextOutline}
-              iconRight={isOpenCommentBox ? mdiChevronUp : mdiChevronDown}
               onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
-              $isOpenCommentBox={isOpenCommentBox}
+              text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
             />
           </S.BoxLeft>
         </S.Div>
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
-      {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
       {imageModalIsOpen && image ? <FullScreenImageModal close={toggleImageModal} imageSrc={image} /> : null}
+      {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
     </>
   );
 };

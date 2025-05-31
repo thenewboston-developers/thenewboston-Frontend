@@ -1,8 +1,19 @@
 import styled from 'styled-components';
 
-import UDropdownMenu from 'components/DropdownMenu';
 import UPriceMini from 'components/PriceMini';
 import {colors, fonts} from 'styles';
+
+export const ActionsContainer = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+export const CommentSection = styled.div`
+  background: ${colors.background};
+  border-radius: 0 14px 14px 14px;
+  flex-grow: 1;
+  padding: 10px 14px 14px 14px;
+`;
 
 export const Container = styled.div`
   display: flex;
@@ -12,14 +23,11 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
-  line-height: 1.3;
-  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-top: 8px;
   overflow-wrap: break-word;
   word-wrap: break-word;
-`;
-
-export const LongContent = styled.span`
-  word-break: break-all;
 `;
 
 export const Date = styled.div`
@@ -33,19 +41,14 @@ export const Dot = styled.div`
   margin: 0 4px;
 `;
 
-export const DropdownMenu = styled(UDropdownMenu)``;
-
-export const CommentSection = styled.div`
-  background: ${colors.background};
-  border-radius: 0 14px 14px 14px;
-  flex-grow: 1;
-  padding: 14px;
-`;
-
 export const HeadSection = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
+`;
+
+export const LongContent = styled.span`
+  word-break: break-all;
 `;
 
 export const PriceMini = styled(UPriceMini)`
@@ -57,15 +60,11 @@ export const Right = styled.div`
 `;
 
 export const Username = styled.div`
+  font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
 `;
 
 export const UsernameDateContainer = styled.div`
   align-items: baseline;
   display: flex;
-`;
-
-export const Text = styled.div`
-  display: flex;
-  gap: 20px;
 `;

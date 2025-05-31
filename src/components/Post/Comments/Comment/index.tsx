@@ -1,8 +1,9 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {mdiDotsHorizontal} from '@mdi/js';
+import {mdiDotsVertical} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
+import DropdownMenu from 'components/DropdownMenu';
 import Linkify from 'components/Linkify';
 import {deleteComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
@@ -35,6 +36,16 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
     }
   };
 
+  const renderContent = () => {
+    const words = content.split(' ');
+    return words.map((word, index) => {
+      if (word.length > 30) {
+        return <S.LongContent key={index}>{word} </S.LongContent>;
+      }
+      return word + ' ';
+    });
+  };
+
   const menuOptions = [
     {
       label: 'Edit',
@@ -48,7 +59,7 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
 
   const renderDropdownMenu = () => {
     if (self.id !== owner.id) return null;
-    return <S.DropdownMenu icon={mdiDotsHorizontal} options={menuOptions} />;
+    return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
 
   const renderNameDateContainer = () => {
@@ -65,17 +76,7 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
 
   const renderPriceMini = () => {
     if (!price_amount || !price_currency) return null;
-    return <S.PriceMini price={price_amount} currencyId={price_currency} />;
-  };
-
-  const renderContent = () => {
-    const words = content.split(' ');
-    return words.map((word, index) => {
-      if (word.length > 30) {
-        return <S.LongContent key={index}>{word} </S.LongContent>;
-      }
-      return word + ' ';
-    });
+    return <S.PriceMini currencyId={price_currency} price={price_amount} />;
   };
 
   return (
@@ -84,14 +85,13 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
         <Link to={`/profile/${owner.id}`}>
           <Avatar src={owner.avatar} />
         </Link>
-
         <S.CommentSection>
           <S.HeadSection>
             {renderNameDateContainer()}
-            <S.Text>
+            <S.ActionsContainer>
               {renderPriceMini()}
               {renderDropdownMenu()}
-            </S.Text>
+            </S.ActionsContainer>
           </S.HeadSection>
           <S.Content>
             <Linkify>{renderContent()}</Linkify>
