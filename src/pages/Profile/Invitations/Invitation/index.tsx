@@ -16,10 +16,9 @@ import * as S from './Styles';
 
 export interface InvitationProps {
   invitation: TInvitation;
-  index: number;
 }
 
-const Invitation: SFC<InvitationProps> = ({invitation, index}) => {
+const Invitation: SFC<InvitationProps> = ({invitation}) => {
   const [invitationModalIsOpen, toggleInvitationModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -70,18 +69,29 @@ const Invitation: SFC<InvitationProps> = ({invitation, index}) => {
 
   return (
     <>
-      <tr>
-        <td className="fixed-width">{index + 1}</td>
-        <td>{renderUserLabel()}</td>
-        <td>{invitation.note}</td>
-        <td>{invitation.code}</td>
-        <td>
-          <S.InvitationStatusBadgeContainer>{renderInvitationStatusBadge()}</S.InvitationStatusBadgeContainer>
-        </td>
-        <td>
-          <S.DropdownMenuContainer>{renderDropdownMenu()}</S.DropdownMenuContainer>
-        </td>
-      </tr>
+      <S.InvitationCard>
+        <S.InvitationHeader>
+          <S.InvitationMainInfo>{renderUserLabel()}</S.InvitationMainInfo>
+          <S.InvitationActions>
+            <S.StatusBadgeWrapper>{renderInvitationStatusBadge()}</S.StatusBadgeWrapper>
+            <S.DropdownMenuWrapper>{renderDropdownMenu()}</S.DropdownMenuWrapper>
+          </S.InvitationActions>
+        </S.InvitationHeader>
+
+        <S.InvitationDetails>
+          <S.DetailItem>
+            <S.DetailLabel>Invitation Code</S.DetailLabel>
+            <S.DetailValue className="code">{invitation.code}</S.DetailValue>
+          </S.DetailItem>
+
+          {invitation.note && (
+            <S.DetailItem className="note">
+              <S.DetailLabel>Note</S.DetailLabel>
+              <S.DetailValue>{invitation.note}</S.DetailValue>
+            </S.DetailItem>
+          )}
+        </S.InvitationDetails>
+      </S.InvitationCard>
 
       {invitationModalIsOpen ? <InvitationModal close={toggleInvitationModal} invitation={invitation} /> : null}
     </>

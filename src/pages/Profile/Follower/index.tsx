@@ -155,13 +155,6 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
         <S.Heading>
           {title} — {count}
         </S.Heading>
-        {/* 
-          TODO(muhammad) MEDIUM: Implement search functionality
-          <S.Search>
-            <Icon path={mdiMagnify} />
-            <input type="text" placeholder="Search" />
-          </S.Search>
-        */}
       </S.Header>
       {renderContent()}
     </S.Container>
