@@ -33,7 +33,7 @@ const followerTypeConfig = {
     title: 'Followers',
   },
   [FollowerType.FOLLOWING]: {
-    emptyText: 'No followings to display.',
+    emptyText: 'Not following anyone yet.',
     extractObject: (item: any) => item.following,
     get: getFollowings,
     getParams: (userId?: number) => ({follower: userId}),
@@ -95,17 +95,17 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
 
   const handleFollowerFollowBtnClick = async (userID: number) => {
     await dispatch(createFollower({following: userID}));
-    updateUserStats();
+    await updateUserStats();
   };
 
   const handleFollowerUnFollowBtnClick = async (followingUserID: number) => {
-    dispatch(deleteFollower(followingUserID));
-    updateUserStats();
+    await dispatch(deleteFollower(followingUserID));
+    await updateUserStats();
   };
 
   const handleFollowingUnFollowBtnClick = async (followerId: number, followingUserID: number) => {
-    dispatch(deleteFollowing(followerId, followingUserID));
-    updateUserStats();
+    await dispatch(deleteFollowing(followerId, followingUserID));
+    await updateUserStats();
   };
 
   const renderFollowButton = (followerId: number, user: UserReadSerializer, selfFollowing: boolean) => {
