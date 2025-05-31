@@ -41,7 +41,7 @@ export const DropdownMenuWrapper = styled.div`
     transition: all 0.15s ease;
 
     &:hover {
-      background-color: ${colors.palette.gray['100']};
+      background-color: ${colors.palette.gray[100]};
     }
   }
 `;
@@ -85,8 +85,8 @@ export const InvitationDetails = styled.div`
 export const InvitationHeader = styled.div`
   align-items: center;
   display: flex;
-  justify-content: space-between;
   gap: 16px;
+  justify-content: space-between;
 
   @media (max-width: ${breakpoints.mobile}) {
     align-items: flex-start;

@@ -112,26 +112,26 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
     if (self.id !== userId) return null;
 
     return type === FollowerType.FOLLOWERS ? (
-      <S.BtnContainer>
+      <S.ButtonContainer>
         {selfFollowing ? (
-          <S.UnFollowButton onClick={() => handleFollowerUnFollowBtnClick(user.id)}>
+          <S.UnfollowButton onClick={() => handleFollowerUnFollowBtnClick(user.id)}>
             <Icon path={mdiAccountMinusOutline} size="18px" />
-            <S.BtnText>Unfollow</S.BtnText>
-          </S.UnFollowButton>
+            <S.ButtonText>Unfollow</S.ButtonText>
+          </S.UnfollowButton>
         ) : (
           <S.FollowButton onClick={() => handleFollowerFollowBtnClick(user.id)}>
             <Icon path={mdiAccountPlusOutline} size="18px" />
-            <S.BtnText>Follow</S.BtnText>
+            <S.ButtonText>Follow</S.ButtonText>
           </S.FollowButton>
         )}
-      </S.BtnContainer>
+      </S.ButtonContainer>
     ) : (
-      <S.BtnContainer>
-        <S.UnFollowButton onClick={() => handleFollowingUnFollowBtnClick(followerId, user.id)}>
+      <S.ButtonContainer>
+        <S.UnfollowButton onClick={() => handleFollowingUnFollowBtnClick(followerId, user.id)}>
           <Icon path={mdiAccountMinusOutline} size="18px" />
-          <S.BtnText>Unfollow</S.BtnText>
-        </S.UnFollowButton>
-      </S.BtnContainer>
+          <S.ButtonText>Unfollow</S.ButtonText>
+        </S.UnfollowButton>
+      </S.ButtonContainer>
     );
   };
 

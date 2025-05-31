@@ -21,6 +21,7 @@ export const Container = styled.div`
     width: 100%;
     z-index: -1;
   }
+
   @media (max-width: ${breakpoints.mini}) {
     padding: 24px 16px;
   }

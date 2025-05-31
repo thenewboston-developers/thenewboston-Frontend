@@ -3,12 +3,17 @@ import styled from 'styled-components';
 
 import {colors, fonts} from 'styles';
 
-export const BtnContainer = styled.div`
+export const AvatarLink = styled(ULink)`
+  align-items: center;
+  display: flex;
+`;
+
+export const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
 
-export const BtnText = styled.div`
+export const ButtonText = styled.div`
   font-size: 13px;
   font-weight: ${fonts.weight.medium};
 `;
@@ -29,46 +34,12 @@ export const Counter = styled.div`
   font-weight: ${fonts.weight.medium};
 `;
 
-export const AvatarLink = styled(ULink)`
-  display: flex;
-  align-items: center;
-`;
-
-export const UsernameLink = styled(ULink)`
-  display: inline-flex;
-  align-items: center;
-  color: inherit;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-export const FollowerContainer = styled.div`
-  align-items: center;
-  border-bottom: 1px solid ${colors.border};
-  display: flex;
-  justify-content: space-between;
-  margin: 0 20px;
-  padding: 8px 0;
-
-  &:first-child {
-    padding-top: 20px;
-  }
-
-  &:last-child {
-    border-bottom: none;
-    padding-bottom: 20px;
-  }
-`;
-
 export const DateContainer = styled.div`
-  display: flex;
-  gap: 8px;
   align-items: center;
-  font-size: 13px;
   color: ${colors.secondary};
+  display: flex;
+  font-size: 13px;
+  gap: 8px;
 `;
 
 export const FollowButton = styled.button`
@@ -108,6 +79,24 @@ export const FollowButton = styled.button`
   }
 `;
 
+export const FollowerContainer = styled.div`
+  align-items: center;
+  border-bottom: 1px solid ${colors.border};
+  display: flex;
+  justify-content: space-between;
+  margin: 0 20px;
+  padding: 8px 0;
+
+  &:first-child {
+    padding-top: 20px;
+  }
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 20px;
+  }
+`;
+
 export const Grid = styled.div`
   align-items: center;
   display: grid;
@@ -137,7 +126,7 @@ export const TextMuted = styled.span`
   font-size: 12px;
 `;
 
-export const UnFollowButton = styled.button`
+export const UnfollowButton = styled.button`
   align-items: center;
   background-color: transparent;
   border: 1px solid ${colors.palette.gray[200]};
@@ -176,13 +165,24 @@ export const UnFollowButton = styled.button`
 
 export const UserInfo = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 4px;
-  flex: 1;
 `;
 
 export const Username = styled.div`
   font-size: 16px;
   font-weight: ${fonts.weight.semiBold};
   text-transform: capitalize;
+`;
+
+export const UsernameLink = styled(ULink)`
+  align-items: center;
+  color: inherit;
+  display: inline-flex;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
