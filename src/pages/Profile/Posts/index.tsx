@@ -64,7 +64,11 @@ const Posts: SFC = ({className}) => {
           hasMore={hasMore}
           next={fetchMorePosts}
           loader={getSkeleton(1)}
-          endMessage={<p style={{textAlign: 'center', marginTop: '20px'}}>No more posts to show</p>}
+          endMessage={
+            <div style={{marginTop: '32px'}}>
+              <EmptyText>No more posts to show.</EmptyText>
+            </div>
+          }
           scrollThreshold={0.9}
           scrollableTarget="main-scrollable-area"
         >
