@@ -1,12 +1,8 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-  overflow-y: auto;
-  height: 100vh;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+import {hiddenScroll} from 'styles';
 
-  &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
+export const Container = styled.div`
+  ${hiddenScroll};
+  height: 100vh;
 `;
