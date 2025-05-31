@@ -34,9 +34,9 @@ export const Button = styled(UButton)`
 
 export const CommentButton = styled(UButton)`
   background-color: transparent;
-  border: 1px solid ${colors.palette.gray['200']};
+  border: 1px solid ${colors.palette.gray[200]};
   border-radius: 24px;
-  color: ${colors.palette.gray['700']};
+  color: ${colors.palette.gray[700]};
   font-size: 13px;
   font-weight: 500;
   height: 34px;
@@ -44,14 +44,14 @@ export const CommentButton = styled(UButton)`
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    background-color: ${colors.palette.gray['100']};
-    border-color: ${colors.palette.gray['300']};
-    color: ${colors.palette.gray['900']};
+    background-color: ${colors.palette.gray[100]};
+    border-color: ${colors.palette.gray[300]};
+    color: ${colors.palette.gray[900]};
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   &:active {
-    background-color: ${colors.palette.gray['200']};
+    background-color: ${colors.palette.gray[200]};
     box-shadow: none;
   }
 `;
@@ -84,7 +84,7 @@ export const ContentInput = styled(UInlineInput)<{$isMobileDevice: boolean | fal
 
 export const Div = styled.div`
   border: 0;
-  border-top: 1px solid ${colors.palette.gray['200']};
+  border-top: 1px solid ${colors.palette.gray[200]};
   flex: 1;
   margin: 0 16px;
 `;
