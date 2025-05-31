@@ -1,12 +1,11 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
-import {mdiCommentTextOutline, mdiDotsVertical} from '@mdi/js';
+import {mdiArrowDownThin, mdiArrowUpThin, mdiCommentTextOutline, mdiDotsVertical} from '@mdi/js';
 
 import {ButtonColor} from 'components/Button';
 import CurrencyLogo from 'components/CurrencyLogo';
 import Linkify from 'components/Linkify';
-import UserLabel from 'components/UserLabel';
 import {deletePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
@@ -96,24 +95,24 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const renderTransferInfo = () => {
     if (!isTransferPost) return null;
 
+    const isReceived = recipient?.id === self.id;
+    const icon = isReceived ? mdiArrowDownThin : mdiArrowUpThin;
+
     return (
       <S.TransferInfo>
-        <S.TransferHeader>Coin Transfer</S.TransferHeader>
-        <S.TransferDetails>
-          <UserLabel avatar={owner.avatar} description="" id={owner.id} username={owner.username} />
-          <S.TransferArrow>→</S.TransferArrow>
-          <UserLabel avatar={recipient!.avatar} description="" id={recipient!.id} username={recipient!.username} />
-        </S.TransferDetails>
-        <S.TransferAmount>
-          {price_currency && currencies[price_currency] && (
-            <>
-              <CurrencyLogo logo={currencies[price_currency].logo} width="20px" />
-              <span>
-                {price_amount?.toLocaleString()} {currencies[price_currency].ticker}
-              </span>
-            </>
-          )}
-        </S.TransferAmount>
+        <S.TransferIconWrapper>
+          <S.TransferIcon icon={icon} size={24} />
+        </S.TransferIconWrapper>
+        <S.TransferContent>
+          <S.TransferText>
+            <strong>{owner.username}</strong> sent{' '}
+            <strong>
+              {price_amount?.toLocaleString()} {currencies[price_currency!]?.ticker}
+            </strong>{' '}
+            to <strong>{recipient!.username}</strong>
+          </S.TransferText>
+          <S.TransferDate>{shortDate(created_date, true)}</S.TransferDate>
+        </S.TransferContent>
       </S.TransferInfo>
     );
   };

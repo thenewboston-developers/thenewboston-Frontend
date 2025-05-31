@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import UAvatar from 'components/Avatar';
 import UButton from 'components/Button';
 import UDropdownMenu from 'components/DropdownMenu';
+import UIcon from 'components/Icon';
 import {breakpoints, colors, fonts} from 'styles';
 
 export const Avatar = styled(UAvatar)`
@@ -159,40 +160,48 @@ export const Top = styled.div`
   margin-bottom: 4px;
 `;
 
-export const TransferAmount = styled.div`
+export const TransferIconWrapper = styled.div`
   align-items: center;
-  color: ${colors.palette.gray[900]};
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
-  font-size: 15px;
-  font-weight: ${fonts.weight.bold};
-  gap: 8px;
-  margin-top: 12px;
+  height: 48px;
+  justify-content: center;
+  margin-right: 16px;
+  width: 48px;
 `;
 
-export const TransferArrow = styled.span`
+export const TransferContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+export const TransferText = styled.div`
+  color: ${colors.palette.gray[700]};
+  font-size: 15px;
+  line-height: 1.4;
+
+  strong {
+    color: ${colors.palette.gray[900]};
+    font-weight: ${fonts.weight.bold};
+  }
+`;
+
+export const TransferDate = styled.div`
   color: ${colors.palette.gray[500]};
-  font-size: 15px;
-  margin: 0 12px;
-`;
-
-export const TransferDetails = styled.div`
-  align-items: center;
-  display: flex;
-  margin-top: 8px;
-`;
-
-export const TransferHeader = styled.div`
-  color: ${colors.palette.gray[600]};
-  font-size: 12px;
-  font-weight: ${fonts.weight.semiBold};
-  text-transform: uppercase;
+  font-size: 13px;
+  margin-top: 4px;
 `;
 
 export const TransferInfo = styled.div`
-  background-color: ${colors.palette.gray[100]};
+  align-items: center;
+  background: ${colors.palette.gray[100]};
   border: 1px solid ${colors.palette.gray[200]};
   border-radius: 12px;
-  margin-top: 16px;
+  display: flex;
+  margin-top: 12px;
   padding: 16px;
 `;
 
@@ -205,5 +214,11 @@ export const Username = styled.div<{$id: number | null}>`
   &:hover {
     cursor: ${({$id}) => ($id ? 'pointer' : 'default')};
     text-decoration: ${({$id}) => ($id ? 'underline' : 'none')};
+  }
+`;
+
+export const TransferIcon = styled(UIcon)`
+  & path {
+    fill: ${colors.palette.gray[600]} !important;
   }
 `;
