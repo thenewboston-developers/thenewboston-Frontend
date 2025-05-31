@@ -25,17 +25,22 @@ export interface PostProps {
 }
 
 const Post: SFC<PostProps> = ({className, post}) => {
-  const currencies = useSelector(getCurrencies);
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const self = useSelector(getSelf);
   const [imageModalIsOpen, toggleImageModal] = useToggle(false);
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [showFullContent, setShowFullContent] = useState(false);
+  const currencies = useSelector(getCurrencies);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const self = useSelector(getSelf);
 
   const {content, created_date, id, image, owner, price_amount, price_currency, recipient} = post;
   const isTransferPost = !!(recipient && price_amount && price_currency);
+
+  const handleClick = () => {
+    if (!owner.id) return;
+    navigate(`/profile/${owner.id}`);
+  };
 
   const handleDelete = async () => {
     try {
@@ -44,11 +49,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
     } catch (error) {
       displayErrorToast('Error deleting post');
     }
-  };
-
-  const handleClick = () => {
-    if (!owner.id) return;
-    navigate(`/profile/${owner.id}`);
   };
 
   const handlePostImageClick = () => {
@@ -149,17 +149,17 @@ const Post: SFC<PostProps> = ({className, post}) => {
           </Linkify>
         </S.Content>
 
-        {image ? <S.Img onClick={handlePostImageClick} alt="image" src={image} /> : null}
+        {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
         <S.Line />
         <S.Div>
           <S.BoxLeft>
             <S.Button
-              text="Comment"
+              $isOpenCommentBox={isOpenCommentBox}
               color={ButtonColor.secondary}
               iconLeft={mdiCommentTextOutline}
               iconRight={isOpenCommentBox ? mdiChevronUp : mdiChevronDown}
               onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
-              $isOpenCommentBox={isOpenCommentBox}
+              text="Comment"
             />
           </S.BoxLeft>
         </S.Div>

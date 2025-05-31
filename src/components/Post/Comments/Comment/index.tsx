@@ -35,6 +35,16 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
     }
   };
 
+  const renderContent = () => {
+    const words = content.split(' ');
+    return words.map((word, index) => {
+      if (word.length > 30) {
+        return <S.LongContent key={index}>{word} </S.LongContent>;
+      }
+      return word + ' ';
+    });
+  };
+
   const menuOptions = [
     {
       label: 'Edit',
@@ -65,17 +75,7 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
 
   const renderPriceMini = () => {
     if (!price_amount || !price_currency) return null;
-    return <S.PriceMini price={price_amount} currencyId={price_currency} />;
-  };
-
-  const renderContent = () => {
-    const words = content.split(' ');
-    return words.map((word, index) => {
-      if (word.length > 30) {
-        return <S.LongContent key={index}>{word} </S.LongContent>;
-      }
-      return word + ' ';
-    });
+    return <S.PriceMini currencyId={price_currency} price={price_amount} />;
   };
 
   return (

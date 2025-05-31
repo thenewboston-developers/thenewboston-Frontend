@@ -14,7 +14,7 @@ const PostSkeleton: SFC<PostSkeletonProps> = ({dataLength}) => {
     <S.Container>
       <S.AvatarContainer>
         <S.Avatar>
-          <Skeleton circle width={50} height={50} />
+          <Skeleton circle height={50} width={50} />
         </S.Avatar>
         <Row>
           <Skeleton width={100} />
@@ -26,10 +26,10 @@ const PostSkeleton: SFC<PostSkeletonProps> = ({dataLength}) => {
         <Skeleton width="60%" />
       </S.Div>
       <S.Div>
-        <Skeleton width="20%" height={30} />
+        <Skeleton height={30} width="20%" />
       </S.Div>
       <S.Div>
-        <Skeleton width="100%" height={80} />
+        <Skeleton height={80} width="100%" />
       </S.Div>
     </S.Container>
   );
