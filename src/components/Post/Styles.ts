@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import UAvatar from 'components/Avatar';
 import UButton from 'components/Button';
 import UDropdownMenu from 'components/DropdownMenu';
-import ULine from 'components/Line';
 import {breakpoints, colors, fonts} from 'styles';
 
 export const Avatar = styled(UAvatar)`
@@ -20,33 +19,37 @@ export const BoxLeft = styled.div`
 `;
 
 export const Button = styled(UButton)<{$isOpenCommentBox?: boolean | false}>`
-  background-color: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.gray['100'] : 'transparent')};
-  border: 1px solid ${colors.palette.gray['200']};
-  border-radius: 20px;
-  color: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.gray['900'] : colors.palette.gray['700'])};
-  font-size: 14px;
-  font-weight: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? fonts.weight.semiBold : fonts.weight.medium)};
-  height: 36px;
-  padding: 0 16px;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+  background-color: transparent;
+  border: 1px solid ${colors.palette.gray[200]};
+  border-radius: 24px;
+  color: ${colors.palette.gray['700']};
+  font-size: 13px;
+  font-weight: ${fonts.weight.medium};
+  height: 34px;
+  padding: 0 18px;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
     background-color: ${colors.palette.gray['100']};
     border-color: ${colors.palette.gray['300']};
     color: ${colors.palette.gray['900']};
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   &:active {
     background-color: ${colors.palette.gray['200']};
+    box-shadow: none;
   }
 
   & svg {
     & path {
-      fill: ${({$isOpenCommentBox}) =>
-        $isOpenCommentBox ? `${colors.palette.gray['700']} !important` : `${colors.palette.gray['600']} !important`};
+      fill: ${colors.palette.gray['600']} !important;
+      transition: fill 0.15s ease;
     }
+  }
+
+  &:hover svg path {
+    fill: ${colors.palette.gray['800']} !important;
   }
 `;
 
@@ -91,12 +94,6 @@ export const Div = styled.div`
   }
 `;
 
-export const Dot = styled.div`
-  color: ${colors.palette.gray['400']};
-  font-size: 14px;
-  margin: 0 4px;
-`;
-
 export const DropdownMenu = styled(UDropdownMenu)`
   margin-right: -8px;
   margin-top: -4px;
@@ -110,11 +107,6 @@ export const Img = styled.img`
   max-height: 600px;
   max-width: 100%;
   object-fit: cover;
-`;
-
-export const Line = styled(ULine)`
-  border-color: ${colors.palette.gray[200]};
-  margin: 16px 0 8px;
 `;
 
 export const LongContent = styled.span`

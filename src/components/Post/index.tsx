@@ -167,8 +167,8 @@ const Post: SFC<PostProps> = ({className, post}) => {
         </S.Div>
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
-      {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
       {imageModalIsOpen && image ? <FullScreenImageModal close={toggleImageModal} imageSrc={image} /> : null}
+      {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
     </>
   );
 };

@@ -246,7 +246,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
         {commentList.length > commentDetails.length && (
           <S.Content>
             <S.Div />
-            <S.CommentBtn
+            <S.CommentButton
               color={ButtonColor.secondary}
               onClick={handleComment}
               text={`Show ${Math.min(4, commentList.length - commentDetails.length)} more comments`}

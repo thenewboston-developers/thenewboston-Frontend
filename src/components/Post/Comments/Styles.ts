@@ -32,26 +32,27 @@ export const Button = styled(UButton)`
   }
 `;
 
-export const CommentBtn = styled(UButton)`
+export const CommentButton = styled(UButton)`
   background-color: transparent;
   border: 1px solid ${colors.palette.gray['200']};
   border-radius: 24px;
-  color: ${colors.palette.blue['700']};
-  font-size: 14px;
-  font-weight: 600;
-  height: 36px;
-  padding: 0 24px;
-  transition: all 0.15s ease;
-  width: auto;
+  color: ${colors.palette.gray['700']};
+  font-size: 13px;
+  font-weight: 500;
+  height: 34px;
+  padding: 0 18px;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    background-color: ${colors.palette.blue['100']};
-    border-color: ${colors.palette.blue['200']};
-    transform: translateY(-1px);
+    background-color: ${colors.palette.gray['100']};
+    border-color: ${colors.palette.gray['300']};
+    color: ${colors.palette.gray['900']};
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   &:active {
-    transform: translateY(0);
+    background-color: ${colors.palette.gray['200']};
+    box-shadow: none;
   }
 `;
 
