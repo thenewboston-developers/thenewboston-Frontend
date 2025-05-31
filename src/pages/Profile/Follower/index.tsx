@@ -114,10 +114,10 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
     return type === FollowerType.FOLLOWERS ? (
       <S.ButtonContainer>
         {selfFollowing ? (
-          <S.UnfollowButton onClick={() => handleFollowerUnFollowBtnClick(user.id)}>
+          <S.FollowButton onClick={() => handleFollowerUnFollowBtnClick(user.id)}>
             <Icon path={mdiAccountMinusOutline} size="18px" />
             <S.ButtonText>Unfollow</S.ButtonText>
-          </S.UnfollowButton>
+          </S.FollowButton>
         ) : (
           <S.FollowButton onClick={() => handleFollowerFollowBtnClick(user.id)}>
             <Icon path={mdiAccountPlusOutline} size="18px" />
@@ -127,10 +127,10 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
       </S.ButtonContainer>
     ) : (
       <S.ButtonContainer>
-        <S.UnfollowButton onClick={() => handleFollowingUnFollowBtnClick(followerId, user.id)}>
+        <S.FollowButton onClick={() => handleFollowingUnFollowBtnClick(followerId, user.id)}>
           <Icon path={mdiAccountMinusOutline} size="18px" />
           <S.ButtonText>Unfollow</S.ButtonText>
-        </S.UnfollowButton>
+        </S.FollowButton>
       </S.ButtonContainer>
     );
   };
