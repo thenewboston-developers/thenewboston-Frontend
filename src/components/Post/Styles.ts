@@ -161,6 +161,24 @@ export const Top = styled.div`
   margin-bottom: 4px;
 `;
 
+export const TransferContent = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+`;
+
+export const TransferDate = styled.div`
+  color: ${colors.palette.gray[500]};
+  font-size: 13px;
+  margin-top: 4px;
+`;
+
+export const TransferIcon = styled(UIcon)`
+  & path {
+    fill: ${colors.palette.gray[600]} !important;
+  }
+`;
+
 export const TransferIconWrapper = styled.div`
   align-items: center;
   background: white;
@@ -173,10 +191,24 @@ export const TransferIconWrapper = styled.div`
   width: 48px;
 `;
 
-export const TransferContent = styled.div`
+export const TransferInfo = styled.div`
+  align-items: center;
+  background: ${colors.palette.gray[100]};
+  border: 1px solid ${colors.palette.gray[200]};
+  border-radius: 12px;
   display: flex;
-  flex-direction: column;
-  flex: 1;
+  margin-top: 12px;
+  padding: 16px;
+`;
+
+export const TransferLink = styled(Link)`
+  color: ${colors.palette.gray[900]};
+  font-weight: ${fonts.weight.bold};
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 export const TransferText = styled.div`
@@ -190,22 +222,6 @@ export const TransferText = styled.div`
   }
 `;
 
-export const TransferDate = styled.div`
-  color: ${colors.palette.gray[500]};
-  font-size: 13px;
-  margin-top: 4px;
-`;
-
-export const TransferInfo = styled.div`
-  align-items: center;
-  background: ${colors.palette.gray[100]};
-  border: 1px solid ${colors.palette.gray[200]};
-  border-radius: 12px;
-  display: flex;
-  margin-top: 12px;
-  padding: 16px;
-`;
-
 export const Username = styled.div<{$id: number | null}>`
   color: ${colors.palette.gray[900]};
   font-size: 15px;
@@ -215,21 +231,5 @@ export const Username = styled.div<{$id: number | null}>`
   &:hover {
     cursor: ${({$id}) => ($id ? 'pointer' : 'default')};
     text-decoration: ${({$id}) => ($id ? 'underline' : 'none')};
-  }
-`;
-
-export const TransferIcon = styled(UIcon)`
-  & path {
-    fill: ${colors.palette.gray[600]} !important;
-  }
-`;
-
-export const TransferLink = styled(Link)`
-  color: ${colors.palette.gray[900]};
-  font-weight: ${fonts.weight.bold};
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
   }
 `;
