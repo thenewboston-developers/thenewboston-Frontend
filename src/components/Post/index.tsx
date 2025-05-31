@@ -5,7 +5,6 @@ import {mdiChevronDown, mdiChevronUp, mdiCommentTextOutline, mdiDotsVertical} fr
 
 import {ButtonColor} from 'components/Button';
 import CurrencyLogo from 'components/CurrencyLogo';
-import Line from 'components/Line';
 import Linkify from 'components/Linkify';
 import UserLabel from 'components/UserLabel';
 import {deletePost} from 'dispatchers/posts';
@@ -19,7 +18,6 @@ import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import Comments from './Comments';
-import Reaction from './Reaction';
 import * as S from './Styles';
 
 export interface PostProps {
@@ -27,19 +25,14 @@ export interface PostProps {
 }
 
 const Post: SFC<PostProps> = ({className, post}) => {
+  const currencies = useSelector(getCurrencies);
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const self = useSelector(getSelf);
+  const [imageModalIsOpen, toggleImageModal] = useToggle(false);
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
-  const [showFullContent, setShowFullContent] = useState(true);
-  const [imageModalIsOpen, toggleImageModal] = useToggle(false);
-
-  const toggleShowFullContent = () => {
-    setShowFullContent(!showFullContent);
-  };
-
-  const dispatch = useDispatch<AppDispatch>();
-  const self = useSelector(getSelf);
-  const currencies = useSelector(getCurrencies);
+  const [showFullContent, setShowFullContent] = useState(false);
 
   const {content, created_date, id, image, owner, price_amount, price_currency, recipient} = post;
   const isTransferPost = !!(recipient && price_amount && price_currency);
@@ -51,22 +44,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
     } catch (error) {
       displayErrorToast('Error deleting post');
     }
-  };
-
-  const menuOptions = [
-    {
-      label: 'Edit',
-      onClick: togglePostModal,
-    },
-    {
-      label: 'Delete',
-      onClick: handleDelete,
-    },
-  ];
-
-  const renderDropdownMenu = () => {
-    if (post.owner.id !== self.id) return null;
-    return <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
 
   const handleClick = () => {
@@ -91,11 +68,29 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const renderContent = () => {
     const words = content.split(' ');
     return words.map((word, index) => {
-      if (word.length > 30) {
-        return <S.LongContent key={index}>{word} </S.LongContent>;
-      }
+      if (word.length > 30) return <S.LongContent key={index}>{word} </S.LongContent>;
       return word + ' ';
     });
+  };
+
+  const menuOptions = [
+    {
+      label: 'Edit',
+      onClick: togglePostModal,
+    },
+    {
+      label: 'Delete',
+      onClick: handleDelete,
+    },
+  ];
+
+  const renderDropdownMenu = () => {
+    if (post.owner.id !== self.id) return null;
+    return <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
+  };
+
+  const toggleShowFullContent = () => {
+    setShowFullContent(!showFullContent);
   };
 
   return (
@@ -109,7 +104,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
               <S.Username $id={owner.id} onClick={handleClick}>
                 {owner.username}
               </S.Username>
-              <S.Dot>·</S.Dot>
               <S.Description>{shortDate(created_date, true)}</S.Description>
             </S.Right>
           </S.Text>
@@ -137,7 +131,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         )}
         <S.Content>
           <Linkify>
-            {!showFullContent || content.length <= 400 ? (
+            {showFullContent || content.length <= 400 ? (
               <>
                 <S.TextContent>
                   {renderContent()}
@@ -156,10 +150,9 @@ const Post: SFC<PostProps> = ({className, post}) => {
         </S.Content>
 
         {image ? <S.Img onClick={handlePostImageClick} alt="image" src={image} /> : null}
-        <Line />
+        <S.Line />
         <S.Div>
           <S.BoxLeft>
-            <Reaction postId={post.id} userReaction={post.user_reaction} userReactions={post.user_reactions} />
             <S.Button
               text="Comment"
               color={ButtonColor.secondary}

@@ -22,7 +22,3 @@ export const Container = styled.div`
 export const Div = styled.div`
   margin: 10px 0 10px 0;
 `;
-
-export const Left = styled.div`
-  margin-right: 10px;
-`;
