@@ -97,7 +97,6 @@ export const Username = styled.h1`
   font-size: 24px;
   font-weight: ${fonts.weight.bold};
   margin-top: 16px;
-  text-transform: capitalize;
 `;
 
 export const Value = styled.span<{$flex?: boolean}>`

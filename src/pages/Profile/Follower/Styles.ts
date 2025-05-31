@@ -96,7 +96,6 @@ export const UserInfo = styled.div`
 export const Username = styled.div`
   font-size: 16px;
   font-weight: ${fonts.weight.semiBold};
-  text-transform: capitalize;
 `;
 
 export const UsernameLink = styled(ULink)`

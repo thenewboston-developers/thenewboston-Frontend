@@ -164,8 +164,8 @@ const UserDetails: SFC = ({className}) => {
           {renderStatsAndBalance()}
           <S.ButtonGroup>
             {renderEditProfileButton()}
-            {renderFollowButton()}
             {renderSendButton()}
+            {renderFollowButton()}
           </S.ButtonGroup>
         </S.Wrapper>
       </S.Container>
