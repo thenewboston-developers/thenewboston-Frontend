@@ -2,11 +2,11 @@ import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {mdiAccountMinusOutline, mdiAccountPlusOutline} from '@mdi/js';
-import Icon from '@mdi/react';
 
 import Avatar from 'components/Avatar';
 import EmptyText from 'components/EmptyText';
 import InfiniteScroll from 'components/InfiniteScroll';
+import OutlineButton from 'components/OutlineButton';
 import {createFollower, deleteFollower, getFollowers, resetFollowers} from 'dispatchers/followers';
 import {deleteFollowing, getFollowings, resetFollowings} from 'dispatchers/followings';
 import {getUserStats} from 'dispatchers/userStats';
@@ -140,23 +140,26 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
     return type === FollowerType.FOLLOWERS ? (
       <S.ButtonContainer>
         {selfFollowing ? (
-          <S.FollowButton onClick={() => handleFollowerUnfollowButtonClick(user.id)}>
-            <Icon path={mdiAccountMinusOutline} size="18px" />
-            <S.ButtonText>Unfollow</S.ButtonText>
-          </S.FollowButton>
+          <OutlineButton
+            iconLeft={mdiAccountMinusOutline}
+            onClick={() => handleFollowerUnfollowButtonClick(user.id)}
+            text="Unfollow"
+          />
         ) : (
-          <S.FollowButton onClick={() => handleFollowerFollowButtonClick(user.id)}>
-            <Icon path={mdiAccountPlusOutline} size="18px" />
-            <S.ButtonText>Follow</S.ButtonText>
-          </S.FollowButton>
+          <OutlineButton
+            iconLeft={mdiAccountPlusOutline}
+            onClick={() => handleFollowerFollowButtonClick(user.id)}
+            text="Follow"
+          />
         )}
       </S.ButtonContainer>
     ) : (
       <S.ButtonContainer>
-        <S.FollowButton onClick={() => handleFollowingUnfollowButtonClick(followerId, user.id)}>
-          <Icon path={mdiAccountMinusOutline} size="18px" />
-          <S.ButtonText>Unfollow</S.ButtonText>
-        </S.FollowButton>
+        <OutlineButton
+          iconLeft={mdiAccountMinusOutline}
+          onClick={() => handleFollowingUnfollowButtonClick(followerId, user.id)}
+          text="Unfollow"
+        />
       </S.ButtonContainer>
     );
   };

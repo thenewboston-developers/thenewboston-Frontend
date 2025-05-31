@@ -2,7 +2,6 @@ import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 
 import UAvatar from 'components/Avatar';
-import UButton from 'components/Button';
 import UDropdownMenu from 'components/DropdownMenu';
 import UIcon from 'components/Icon';
 import {breakpoints, colors, fonts} from 'styles';
@@ -18,41 +17,6 @@ export const BoxLeft = styled.div`
   display: flex;
   gap: 8px;
   margin: 8px 0;
-`;
-
-export const Button = styled(UButton)<{$isOpenCommentBox?: boolean | false}>`
-  background-color: transparent;
-  border: 1px solid ${colors.palette.gray[200]};
-  border-radius: 24px;
-  color: ${colors.palette.gray[700]};
-  font-size: 13px;
-  font-weight: ${fonts.weight.medium};
-  height: 34px;
-  padding: 0 18px;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-
-  &:hover {
-    background-color: ${colors.palette.gray[100]};
-    border-color: ${colors.palette.gray[300]};
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    color: ${colors.palette.gray[900]};
-  }
-
-  &:active {
-    background-color: ${colors.palette.gray[200]};
-    box-shadow: none;
-  }
-
-  & svg {
-    & path {
-      fill: ${colors.palette.gray[600]} !important;
-      transition: fill 0.15s ease;
-    }
-  }
-
-  &:hover svg path {
-    fill: ${colors.palette.gray[800]} !important;
-  }
 `;
 
 export const Container = styled.div`

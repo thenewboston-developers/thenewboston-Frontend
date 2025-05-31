@@ -3,9 +3,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
 import {mdiCommentTextOutline, mdiDotsVertical, mdiSwapHorizontal} from '@mdi/js';
 
-import {ButtonColor} from 'components/Button';
-import CurrencyLogo from 'components/CurrencyLogo';
 import Linkify from 'components/Linkify';
+import OutlineButton from 'components/OutlineButton';
 import {deletePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
@@ -151,9 +150,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
         <S.Div>
           <S.BoxLeft>
-            <S.Button
-              $isOpenCommentBox={isOpenCommentBox}
-              color={ButtonColor.secondary}
+            <OutlineButton
               iconLeft={mdiCommentTextOutline}
               onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
               text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
