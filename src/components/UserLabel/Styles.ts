@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import UAvatar from 'components/Avatar';
 import {colors, fonts} from 'styles';
 
-export const Avatar = styled(UAvatar)`
-  margin-right: 8px;
+export const Avatar = styled(UAvatar)<{$spacing?: number}>`
+  margin-right: ${({$spacing}) => $spacing || 12}px;
 `;
 
 export const Container = styled.div`

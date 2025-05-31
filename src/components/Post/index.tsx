@@ -1,10 +1,10 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useNavigate} from 'react-router-dom';
 import {mdiCommentTextOutline, mdiDotsVertical, mdiSwapHorizontal} from '@mdi/js';
 
 import Linkify from 'components/Linkify';
 import OutlineButton from 'components/OutlineButton';
+import UserLabel from 'components/UserLabel';
 import {deletePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
@@ -29,16 +29,10 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const [showFullContent, setShowFullContent] = useState(false);
   const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
   const self = useSelector(getSelf);
 
   const {content, created_date, id, image, owner, price_amount, price_currency, recipient} = post;
   const isTransferPost = !!(recipient && price_amount && price_currency);
-
-  const handleClick = () => {
-    if (!owner.id) return;
-    navigate(`/profile/${owner.id}`);
-  };
 
   const handleDelete = async () => {
     try {
@@ -51,16 +45,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
 
   const handlePostImageClick = () => {
     toggleImageModal();
-  };
-
-  const renderAvatar = () => {
-    if (!owner.id) return <S.Avatar src={owner.avatar} />;
-
-    return (
-      <S.AvatarLink to={`/profile/${owner.id}`}>
-        <S.Avatar src={owner.avatar} />
-      </S.AvatarLink>
-    );
   };
 
   const renderContent = () => {
@@ -117,15 +101,12 @@ const Post: SFC<PostProps> = ({className, post}) => {
     <>
       <S.Container className={className}>
         <S.Top>
-          <S.Text>
-            {renderAvatar()}
-            <S.Right>
-              <S.Username $id={owner.id} onClick={handleClick}>
-                {owner.username}
-              </S.Username>
-              <S.Date>{shortDate(created_date, true)}</S.Date>
-            </S.Right>
-          </S.Text>
+          <UserLabel
+            avatar={owner.avatar}
+            description={shortDate(created_date, true)}
+            id={owner.id}
+            username={owner.username}
+          />
           {renderDropdownMenu()}
         </S.Top>
         {renderTransferInfo()}

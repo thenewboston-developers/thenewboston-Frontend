@@ -3,17 +3,17 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {mdiAccountMinusOutline, mdiAccountPlusOutline} from '@mdi/js';
 
-import Avatar from 'components/Avatar';
 import EmptyText from 'components/EmptyText';
 import InfiniteScroll from 'components/InfiniteScroll';
 import OutlineButton from 'components/OutlineButton';
+import UserLabel from 'components/UserLabel';
 import {createFollower, deleteFollower, getFollowers, resetFollowers} from 'dispatchers/followers';
 import {deleteFollowing, getFollowings, resetFollowings} from 'dispatchers/followings';
 import {getUserStats} from 'dispatchers/userStats';
 import {FollowerType} from 'enums';
 import {getFollowers as getFollowersState, getFollowings as getFollowingsState, getSelf} from 'selectors/state';
 import {AppDispatch, SFC, UserReadSerializer} from 'types';
-import {getDateStr, getTimeStr} from 'utils/dates';
+import {shortDate} from 'utils/dates';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
@@ -80,23 +80,16 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
     user: UserReadSerializer,
     createdDate: Date,
   ) => {
-    const createdAt = new Date(createdDate);
     return (
       <S.FollowerContainer key={index}>
         <S.Grid>
           <S.Counter>{index + 1}</S.Counter>
-          <S.AvatarLink to={`/profile/${user.id}`}>
-            <Avatar src={user.avatar} />
-          </S.AvatarLink>
-          <S.UserInfo>
-            <S.UsernameLink to={`/profile/${user.id}`}>
-              <S.Username>{user.username}</S.Username>
-            </S.UsernameLink>
-            <S.DateContainer>
-              <div>{getDateStr(createdAt)}</div>
-              <S.TextMuted>{getTimeStr(createdAt, true)}</S.TextMuted>
-            </S.DateContainer>
-          </S.UserInfo>
+          <UserLabel
+            avatar={user.avatar}
+            description={shortDate(createdDate, true)}
+            id={user.id}
+            username={user.username}
+          />
           {renderFollowButton(followerId, user, selfFollowing)}
         </S.Grid>
       </S.FollowerContainer>
