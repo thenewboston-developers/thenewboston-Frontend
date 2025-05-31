@@ -13,6 +13,7 @@ import {getUserStats} from 'dispatchers/userStats';
 import {FollowerType} from 'enums';
 import {getFollowers as getFollowersState, getFollowings as getFollowingsState, getSelf} from 'selectors/state';
 import {AppDispatch, SFC, UserReadSerializer} from 'types';
+import {getDateStr, getTimeStr} from 'utils/dates';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
@@ -82,7 +83,7 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
       <InfiniteScroll dataLength={followerList.length} hasMore={hasMore} heightMargin={200} next={fetchMoreFollowers}>
         {followerList.map((item, index) => {
           const user = extractObject(item);
-          return getFollowerCard(index, item.id, item.self_following, user);
+          return getFollowerCard(index, item.id, item.self_following, user, item.created_date);
         })}
       </InfiniteScroll>
     );
@@ -134,15 +135,30 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
     );
   };
 
-  const getFollowerCard = (index: number, followerId: number, selfFollowing: boolean, user: UserReadSerializer) => {
+  const getFollowerCard = (
+    index: number,
+    followerId: number,
+    selfFollowing: boolean,
+    user: UserReadSerializer,
+    createdDate: Date,
+  ) => {
+    const createdAt = new Date(createdDate);
     return (
       <S.FollowerContainer key={index}>
         <S.Grid>
           <S.Counter>{index + 1}</S.Counter>
-          <S.FollowerLink to={`/profile/${user.id}`}>
+          <S.AvatarLink to={`/profile/${user.id}`}>
             <Avatar src={user.avatar} />
-            <S.Username>{user.username}</S.Username>
-          </S.FollowerLink>
+          </S.AvatarLink>
+          <S.UserInfo>
+            <S.UsernameLink to={`/profile/${user.id}`}>
+              <S.Username>{user.username}</S.Username>
+            </S.UsernameLink>
+            <S.DateContainer>
+              <div>{getDateStr(createdAt)}</div>
+              <S.TextMuted>{getTimeStr(createdAt, true)}</S.TextMuted>
+            </S.DateContainer>
+          </S.UserInfo>
           {renderFollowButton(followerId, user, selfFollowing)}
         </S.Grid>
       </S.FollowerContainer>
@@ -153,7 +169,7 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
     <S.Container className={className}>
       <S.Header>
         <S.Heading>
-          {title} — {count}
+          {title} — <span>{count}</span>
         </S.Heading>
       </S.Header>
       {renderContent()}
