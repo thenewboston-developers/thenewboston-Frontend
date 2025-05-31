@@ -32,8 +32,8 @@ export const Button = styled(UButton)<{$isOpenCommentBox?: boolean | false}>`
   &:hover {
     background-color: ${colors.palette.gray[100]};
     border-color: ${colors.palette.gray[300]};
-    color: ${colors.palette.gray[900]};
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    color: ${colors.palette.gray[900]};
   }
 
   &:active {
