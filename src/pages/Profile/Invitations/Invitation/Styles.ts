@@ -2,14 +2,18 @@ import styled from 'styled-components';
 
 import {breakpoints, colors} from 'styles';
 
+export const CodeValue = styled.span`
+  color: ${colors.primary};
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+`;
+
 export const DetailItem = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-
-  &.note {
-    grid-column: 1 / -1;
-  }
 `;
 
 export const DetailLabel = styled.span`
@@ -24,12 +28,6 @@ export const DetailValue = styled.span`
   color: ${colors.primary};
   font-size: 14px;
   font-weight: 600;
-
-  &.code {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 13px;
-    letter-spacing: 0.05em;
-  }
 `;
 
 export const DropdownMenuWrapper = styled.div`
@@ -100,6 +98,13 @@ export const InvitationHeader = styled.div`
 export const InvitationMainInfo = styled.div`
   display: flex;
   flex: 1;
+`;
+
+export const NoteItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  grid-column: 1 / -1;
 `;
 
 export const StatusBadgeWrapper = styled.div`

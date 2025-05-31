@@ -81,14 +81,14 @@ const Invitation: SFC<InvitationProps> = ({invitation}) => {
         <S.InvitationDetails>
           <S.DetailItem>
             <S.DetailLabel>Invitation Code</S.DetailLabel>
-            <S.DetailValue className="code">{invitation.code}</S.DetailValue>
+            <S.CodeValue>{invitation.code}</S.CodeValue>
           </S.DetailItem>
 
           {invitation.note && (
-            <S.DetailItem className="note">
+            <S.NoteItem>
               <S.DetailLabel>Note</S.DetailLabel>
               <S.DetailValue>{invitation.note}</S.DetailValue>
-            </S.DetailItem>
+            </S.NoteItem>
           )}
         </S.InvitationDetails>
       </S.InvitationCard>
