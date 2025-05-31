@@ -60,14 +60,14 @@ const Posts: SFC = ({className}) => {
       return (
         <InfiniteScrollComponent
           dataLength={postList.length}
-          hasMore={hasMore}
-          next={fetchMorePosts}
-          loader={getSkeleton(1)}
           endMessage={
             <S.EndMessageContainer>
               <EmptyText>No more posts to show.</EmptyText>
             </S.EndMessageContainer>
           }
+          hasMore={hasMore}
+          loader={getSkeleton(1)}
+          next={fetchMorePosts}
           scrollThreshold={0.9}
           scrollableTarget="main-scrollable-area"
         >
