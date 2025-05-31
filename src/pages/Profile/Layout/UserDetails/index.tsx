@@ -87,9 +87,9 @@ const UserDetails: SFC = ({className}) => {
   const renderAvatar = () => {
     if (!user) return;
     return (
-      <S.ImgWrapper>
-        <S.Img alt="image" onClick={toggleProfileAvatarModal} src={userAvatar} />
-      </S.ImgWrapper>
+      <S.ImageWrapper>
+        <S.Image alt="image" onClick={toggleProfileAvatarModal} src={userAvatar} />
+      </S.ImageWrapper>
     );
   };
 

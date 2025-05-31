@@ -19,12 +19,22 @@ export const Button = styled(UButton)`
   }
 `;
 
+export const ButtonGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  @media (min-width: ${breakpoints.mobile}) {
+    flex-direction: row;
+  }
+`;
+
 export const Container = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
   margin-bottom: 20px;
+  margin-top: 50px;
 
   @media (min-width: ${breakpoints.tablet}) {
     display: block;
@@ -36,7 +46,7 @@ export const Flex = styled.div`
   display: flex;
 `;
 
-export const Img = styled.img`
+export const Image = styled.img`
   border-radius: 50%;
   cursor: pointer;
   height: 100%;
@@ -45,7 +55,7 @@ export const Img = styled.img`
   width: 100%;
 `;
 
-export const ImgWrapper = styled.div`
+export const ImageWrapper = styled.div`
   background-color: ${colors.white};
   border-radius: 50%;
   cursor: pointer;
@@ -117,15 +127,5 @@ export const Wrapper = styled.div`
     flex-direction: row;
     gap: 0;
     justify-content: space-between;
-  }
-`;
-
-export const ButtonGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  @media (min-width: ${breakpoints.mobile}) {
-    flex-direction: row;
   }
 `;
