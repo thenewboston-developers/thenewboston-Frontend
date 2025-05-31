@@ -25,19 +25,14 @@ export interface PostProps {
 }
 
 const Post: SFC<PostProps> = ({className, post}) => {
+  const currencies = useSelector(getCurrencies);
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const self = useSelector(getSelf);
+  const [imageModalIsOpen, toggleImageModal] = useToggle(false);
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [showFullContent, setShowFullContent] = useState(false);
-  const [imageModalIsOpen, toggleImageModal] = useToggle(false);
-
-  const toggleShowFullContent = () => {
-    setShowFullContent(!showFullContent);
-  };
-
-  const dispatch = useDispatch<AppDispatch>();
-  const self = useSelector(getSelf);
-  const currencies = useSelector(getCurrencies);
 
   const {content, created_date, id, image, owner, price_amount, price_currency, recipient} = post;
   const isTransferPost = !!(recipient && price_amount && price_currency);
@@ -49,22 +44,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
     } catch (error) {
       displayErrorToast('Error deleting post');
     }
-  };
-
-  const menuOptions = [
-    {
-      label: 'Edit',
-      onClick: togglePostModal,
-    },
-    {
-      label: 'Delete',
-      onClick: handleDelete,
-    },
-  ];
-
-  const renderDropdownMenu = () => {
-    if (post.owner.id !== self.id) return null;
-    return <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
 
   const handleClick = () => {
@@ -89,11 +68,29 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const renderContent = () => {
     const words = content.split(' ');
     return words.map((word, index) => {
-      if (word.length > 30) {
-        return <S.LongContent key={index}>{word} </S.LongContent>;
-      }
+      if (word.length > 30) return <S.LongContent key={index}>{word} </S.LongContent>;
       return word + ' ';
     });
+  };
+
+  const menuOptions = [
+    {
+      label: 'Edit',
+      onClick: togglePostModal,
+    },
+    {
+      label: 'Delete',
+      onClick: handleDelete,
+    },
+  ];
+
+  const renderDropdownMenu = () => {
+    if (post.owner.id !== self.id) return null;
+    return <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
+  };
+
+  const toggleShowFullContent = () => {
+    setShowFullContent(!showFullContent);
   };
 
   return (
