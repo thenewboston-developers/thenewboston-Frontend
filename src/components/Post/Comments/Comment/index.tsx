@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import {mdiDotsVertical} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
+import DropdownMenu from 'components/DropdownMenu';
 import Linkify from 'components/Linkify';
 import {deleteComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
@@ -58,7 +59,7 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
 
   const renderDropdownMenu = () => {
     if (self.id !== owner.id) return null;
-    return <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
+    return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
 
   const renderNameDateContainer = () => {

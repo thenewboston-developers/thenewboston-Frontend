@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import UDropdownMenu from 'components/DropdownMenu';
 import UPriceMini from 'components/PriceMini';
 import {colors, fonts} from 'styles';
 
@@ -36,8 +35,6 @@ export const Dot = styled.div`
   font-size: 12px;
   margin: 0 4px;
 `;
-
-export const DropdownMenu = styled(UDropdownMenu)``;
 
 export const HeadSection = styled.div`
   align-items: center;
