@@ -93,6 +93,31 @@ const Post: SFC<PostProps> = ({className, post}) => {
     setShowFullContent(!showFullContent);
   };
 
+  const renderTransferInfo = () => {
+    if (!isTransferPost) return null;
+
+    return (
+      <S.TransferInfo>
+        <S.TransferHeader>Coin Transfer</S.TransferHeader>
+        <S.TransferDetails>
+          <UserLabel avatar={owner.avatar} description="" id={owner.id} username={owner.username} />
+          <S.TransferArrow>→</S.TransferArrow>
+          <UserLabel avatar={recipient!.avatar} description="" id={recipient!.id} username={recipient!.username} />
+        </S.TransferDetails>
+        <S.TransferAmount>
+          {price_currency && currencies[price_currency] && (
+            <>
+              <CurrencyLogo logo={currencies[price_currency].logo} width="20px" />
+              <span>
+                {price_amount?.toLocaleString()} {currencies[price_currency].ticker}
+              </span>
+            </>
+          )}
+        </S.TransferAmount>
+      </S.TransferInfo>
+    );
+  };
+
   return (
     <>
       <S.Container className={className}>
@@ -109,26 +134,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
           </S.Text>
           {renderDropdownMenu()}
         </S.Top>
-        {isTransferPost && (
-          <S.TransferInfo>
-            <S.TransferHeader>Coin Transfer</S.TransferHeader>
-            <S.TransferDetails>
-              <UserLabel avatar={owner.avatar} description="" id={owner.id} username={owner.username} />
-              <S.TransferArrow>→</S.TransferArrow>
-              <UserLabel avatar={recipient!.avatar} description="" id={recipient!.id} username={recipient!.username} />
-            </S.TransferDetails>
-            <S.TransferAmount>
-              {price_currency && currencies[price_currency] && (
-                <>
-                  <CurrencyLogo logo={currencies[price_currency].logo} width="20px" />
-                  <span>
-                    {price_amount?.toLocaleString()} {currencies[price_currency].ticker}
-                  </span>
-                </>
-              )}
-            </S.TransferAmount>
-          </S.TransferInfo>
-        )}
+        {renderTransferInfo()}
         <S.Content>
           <Linkify>
             {showFullContent || content.length <= 400 ? (

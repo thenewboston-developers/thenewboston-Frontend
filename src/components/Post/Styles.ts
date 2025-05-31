@@ -66,8 +66,8 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   color: ${colors.palette.gray['800']};
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.4;
   margin-bottom: 16px;
   margin-top: 12px;
   overflow-wrap: break-word;
@@ -166,7 +166,7 @@ export const TransferAmount = styled.div`
   align-items: center;
   color: ${colors.palette.gray['900']};
   display: flex;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: ${fonts.weight.bold};
   gap: 8px;
   margin-top: 12px;
@@ -174,7 +174,7 @@ export const TransferAmount = styled.div`
 
 export const TransferArrow = styled.span`
   color: ${colors.palette.gray['500']};
-  font-size: 20px;
+  font-size: 15px;
   margin: 0 12px;
 `;
 
@@ -201,7 +201,7 @@ export const TransferInfo = styled.div`
 
 export const Username = styled.div<{$id: number | null}>`
   color: ${colors.palette.gray['900']};
-  font-size: 16px;
+  font-size: 15px;
   font-weight: ${fonts.weight.bold};
   line-height: 1.2;
 

@@ -12,7 +12,8 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
-  line-height: 1.3;
+  font-size: 14px;
+  line-height: 1.4;
   margin-top: 12px;
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -57,6 +58,7 @@ export const Right = styled.div`
 `;
 
 export const Username = styled.div`
+  font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
 `;
 
