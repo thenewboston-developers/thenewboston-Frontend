@@ -54,9 +54,8 @@ const Posts: SFC = ({className}) => {
   );
 
   const renderContent = () => {
-    if (isLoading && !postList.length) {
-      return getSkeleton(3);
-    }
+    if (isLoading && !postList.length) return getSkeleton(3);
+
     if (postList.length) {
       return (
         <InfiniteScrollComponent
@@ -65,9 +64,9 @@ const Posts: SFC = ({className}) => {
           next={fetchMorePosts}
           loader={getSkeleton(1)}
           endMessage={
-            <div style={{marginTop: '32px'}}>
+            <S.EndMessageContainer>
               <EmptyText>No more posts to show.</EmptyText>
-            </div>
+            </S.EndMessageContainer>
           }
           scrollThreshold={0.9}
           scrollableTarget="main-scrollable-area"

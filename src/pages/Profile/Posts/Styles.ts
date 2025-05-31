@@ -12,3 +12,7 @@ export const PostContainer = styled.div`
   gap: 16px;
   margin: 1rem 0;
 `;
+
+export const EndMessageContainer = styled.div`
+  margin-top: 32px;
+`;

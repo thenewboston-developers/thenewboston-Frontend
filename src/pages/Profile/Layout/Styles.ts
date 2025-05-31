@@ -40,9 +40,9 @@ export const ContentWrapper = styled.div`
 `;
 
 export const OutletContainer = styled.div`
-  padding: 33px 32px;
+  padding: 0 32px 32px;
 
   @media (max-width: ${breakpoints.mini}) {
-    padding: 33px 16px;
+    padding: 0 16px 16px;
   }
 `;
