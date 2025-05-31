@@ -6,6 +6,7 @@ import EmojiPicker from 'emoji-picker-react';
 import {Form, Formik, FormikHelpers} from 'formik';
 
 import {ButtonColor, ButtonType} from 'components/Button';
+import OutlineButton from 'components/OutlineButton';
 import {createComment} from 'dispatchers/comments';
 import {useToggle} from 'hooks';
 import CurrencySelectModal from 'modals/CurrencySelectModal';
@@ -246,8 +247,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
         {commentList.length > commentDetails.length && (
           <S.Content>
             <S.Div />
-            <S.CommentButton
-              color={ButtonColor.secondary}
+            <OutlineButton
               onClick={handleComment}
               text={`Show ${Math.min(4, commentList.length - commentDetails.length)} more comments`}
             />

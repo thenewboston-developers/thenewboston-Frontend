@@ -21,7 +21,6 @@ const Posts: SFC = ({className}) => {
   const isLoading = useSelector(isLoadingPosts);
   const posts = useSelector(getPosts);
   const scrollableDivRef = useRef<HTMLDivElement>(null!);
-
   const userId = id ? parseInt(id, 10) : null;
 
   const postList = useMemo(() => {
@@ -40,17 +39,17 @@ const Posts: SFC = ({className}) => {
     })();
   }, [dispatch, userId]);
 
-  const getSkeleton = (n: number) => (
-    <S.PostContainer>
-      <PostSkeleton dataLength={n} />
-    </S.PostContainer>
-  );
-
   const fetchMorePosts = async () => {
     if (!isLoading) {
       await dispatch(_getPosts());
     }
   };
+
+  const getSkeleton = (n: number) => (
+    <S.PostContainer>
+      <PostSkeleton dataLength={n} />
+    </S.PostContainer>
+  );
 
   const renderContent = () => {
     if (isLoading && !postList.length) {
