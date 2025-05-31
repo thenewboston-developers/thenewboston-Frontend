@@ -128,7 +128,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
               <S.Username $id={owner.id} onClick={handleClick}>
                 {owner.username}
               </S.Username>
-              <S.Description>{shortDate(created_date, true)}</S.Description>
+              <S.Date>{shortDate(created_date, true)}</S.Date>
             </S.Right>
           </S.Text>
           {renderDropdownMenu()}

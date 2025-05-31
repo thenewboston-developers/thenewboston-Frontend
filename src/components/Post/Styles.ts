@@ -76,9 +76,9 @@ export const Content = styled.div`
   word-wrap: break-word;
 `;
 
-export const Description = styled.div`
+export const Date = styled.div`
   color: ${colors.palette.gray[500]};
-  font-size: 14px;
+  font-size: 13px;
   font-weight: ${fonts.weight.regular};
   line-height: 1.2;
 `;
