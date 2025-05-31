@@ -18,7 +18,6 @@ const Invitations: SFC = ({className}) => {
   const invitationLimits = useSelector(getInvitationLimits);
   const invitations = useSelector(getInvitations);
   const self = useSelector(getSelf);
-
   const userId = id ? parseInt(id, 10) : null;
 
   const invitationLimitAmount = useMemo(() => {
@@ -33,16 +32,6 @@ const Invitations: SFC = ({className}) => {
     return orderBy(_invitations, ['created_date'], ['desc']);
   }, [invitations, userId]);
 
-  const renderCreateInvitationButton = () => {
-    if (userId !== self.id) return null;
-    if (invitationList.length >= invitationLimitAmount) return null;
-    return <Button onClick={toggleInvitationModal} text="Create" />;
-  };
-
-  const renderInvitations = useCallback(() => {
-    return invitationList.map((invitation) => <Invitation invitation={invitation} key={invitation.id} />);
-  }, [invitationList]);
-
   const renderContent = () => {
     return (
       <S.InvitationsList>
@@ -56,6 +45,16 @@ const Invitations: SFC = ({className}) => {
       </S.InvitationsList>
     );
   };
+
+  const renderCreateInvitationButton = () => {
+    if (userId !== self.id) return null;
+    if (invitationList.length >= invitationLimitAmount) return null;
+    return <Button onClick={toggleInvitationModal} text="Create" />;
+  };
+
+  const renderInvitations = useCallback(() => {
+    return invitationList.map((invitation) => <Invitation invitation={invitation} key={invitation.id} />);
+  }, [invitationList]);
 
   return (
     <>

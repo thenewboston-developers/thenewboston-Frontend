@@ -21,7 +21,6 @@ export interface InvitationProps {
 const Invitation: SFC<InvitationProps> = ({invitation}) => {
   const [invitationModalIsOpen, toggleInvitationModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
-
   const {recipient} = invitation;
 
   const handleDelete = async () => {

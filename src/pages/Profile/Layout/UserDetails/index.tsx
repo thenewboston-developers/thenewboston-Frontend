@@ -21,21 +21,21 @@ import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const UserDetails: SFC = ({className}) => {
-  const [selfFollowing, setSelfFollowing] = useState<boolean>(false);
-  const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
   const [profileAvatarModalIsOpen, toggleProfileAvatarModal] = useToggle(false);
+  const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
+  const [selfFollowing, setSelfFollowing] = useState<boolean>(false);
   const [sendModalIsOpen, toggleSendModal] = useToggle(false);
+  const {id} = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
-  const {id} = useParams();
   const user = useUser(id);
-  const userStats = useSelector(getUserStatsState);
-  const userId = id ? parseInt(id, 10) : null;
   const userAvatar = user?.avatar || DefaultAvatar;
+  const userId = id ? parseInt(id, 10) : null;
+  const userStats = useSelector(getUserStatsState);
   const {
-    following_count = 0,
-    followers_count = 0,
     default_wallet_balance = 0,
+    followers_count = 0,
+    following_count = 0,
   } = id && userStats[id] ? userStats[id] : {};
 
   useEffect(() => {
@@ -57,8 +57,9 @@ const UserDetails: SFC = ({className}) => {
     })();
   }, [dispatch, self.id, userId]);
 
-  const updateUserStats = async () => {
-    if (userId) await dispatch(getUserStats(userId));
+  const handleClose = () => {
+    toggleProfileAvatarModal();
+    close();
   };
 
   const handleFollowButtonClick = async () => {
@@ -96,17 +97,12 @@ const UserDetails: SFC = ({className}) => {
     if (self.id !== userId) return null;
     return (
       <S.Button
-        onClick={toggleProfileEditModal}
-        text="Edit Profile"
         color={ButtonColor.secondary}
         iconLeft={mdiSquareEditOutline}
+        onClick={toggleProfileEditModal}
+        text="Edit Profile"
       />
     );
-  };
-
-  const handleClose = () => {
-    toggleProfileAvatarModal();
-    close();
   };
 
   const renderFollowButton = () => {
@@ -123,11 +119,6 @@ const UserDetails: SFC = ({className}) => {
   const renderSendButton = () => {
     if (self.id === userId) return null;
     return <S.Button color={ButtonColor.secondary} iconLeft={mdiCashFast} onClick={toggleSendModal} text="Send" />;
-  };
-
-  const renderUsername = () => {
-    if (!user) return null;
-    return <S.Username>{user.username}</S.Username>;
   };
 
   const renderStatsAndBalance = () => {
@@ -155,6 +146,15 @@ const UserDetails: SFC = ({className}) => {
     );
   };
 
+  const renderUsername = () => {
+    if (!user) return null;
+    return <S.Username>{user.username}</S.Username>;
+  };
+
+  const updateUserStats = async () => {
+    if (userId) await dispatch(getUserStats(userId));
+  };
+
   return (
     <>
       <S.Container className={className}>
@@ -168,7 +168,7 @@ const UserDetails: SFC = ({className}) => {
         </S.Wrapper>
       </S.Container>
       {profileEditModalIsOpen ? <ProfileEditModal close={toggleProfileEditModal} /> : null}
-      {profileAvatarModalIsOpen ? <FullScreenImageModal imageSrc={userAvatar} close={handleClose} /> : null}
+      {profileAvatarModalIsOpen ? <FullScreenImageModal close={handleClose} imageSrc={userAvatar} /> : null}
       {sendModalIsOpen && user ? <SendModal close={toggleSendModal} recipient={user} /> : null}
     </>
   );

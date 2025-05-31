@@ -21,7 +21,6 @@ const Profile: SFC = ({className}) => {
   const {id} = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
-
   const userId = id ? parseInt(id, 10) : null;
 
   useEffect(() => {

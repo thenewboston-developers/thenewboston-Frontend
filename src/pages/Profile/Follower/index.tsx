@@ -44,13 +44,13 @@ const followerTypeConfig = {
 };
 
 const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}) => {
-  const dispatch = useDispatch<AppDispatch>();
   const {id} = useParams();
+  const dispatch = useDispatch<AppDispatch>();
+  const self = useSelector(getSelf);
   const userId = id ? parseInt(id, 10) : undefined;
 
   const {emptyText, extractObject, get, getParams, getState, reset, title} = followerTypeConfig[type as FollowerType];
-  const self = useSelector(getSelf);
-  const {count, items, hasMore, isLoading} = useSelector(getState);
+  const {count, hasMore, isLoading, items} = useSelector(getState);
 
   const followerList = useMemo(() => {
     return items;
@@ -71,68 +71,6 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
     if (!isLoading && hasMore) {
       await dispatch(get());
     }
-  };
-
-  const renderContent = () => {
-    if (followerList.length) return renderFollowerCards();
-    return <EmptyText>{emptyText}</EmptyText>;
-  };
-
-  const renderFollowerCards = () => {
-    return (
-      <InfiniteScroll dataLength={followerList.length} hasMore={hasMore} heightMargin={200} next={fetchMoreFollowers}>
-        {followerList.map((item, index) => {
-          const user = extractObject(item);
-          return getFollowerCard(index, item.id, item.self_following, user, item.created_date);
-        })}
-      </InfiniteScroll>
-    );
-  };
-
-  const updateUserStats = async () => {
-    if (self.id) await dispatch(getUserStats(self.id));
-  };
-
-  const handleFollowerFollowBtnClick = async (userID: number) => {
-    await dispatch(createFollower({following: userID}));
-    await updateUserStats();
-  };
-
-  const handleFollowerUnFollowBtnClick = async (followingUserID: number) => {
-    await dispatch(deleteFollower(followingUserID));
-    await updateUserStats();
-  };
-
-  const handleFollowingUnFollowBtnClick = async (followerId: number, followingUserID: number) => {
-    await dispatch(deleteFollowing(followerId, followingUserID));
-    await updateUserStats();
-  };
-
-  const renderFollowButton = (followerId: number, user: UserReadSerializer, selfFollowing: boolean) => {
-    if (self.id !== userId) return null;
-
-    return type === FollowerType.FOLLOWERS ? (
-      <S.ButtonContainer>
-        {selfFollowing ? (
-          <S.FollowButton onClick={() => handleFollowerUnFollowBtnClick(user.id)}>
-            <Icon path={mdiAccountMinusOutline} size="18px" />
-            <S.ButtonText>Unfollow</S.ButtonText>
-          </S.FollowButton>
-        ) : (
-          <S.FollowButton onClick={() => handleFollowerFollowBtnClick(user.id)}>
-            <Icon path={mdiAccountPlusOutline} size="18px" />
-            <S.ButtonText>Follow</S.ButtonText>
-          </S.FollowButton>
-        )}
-      </S.ButtonContainer>
-    ) : (
-      <S.ButtonContainer>
-        <S.FollowButton onClick={() => handleFollowingUnFollowBtnClick(followerId, user.id)}>
-          <Icon path={mdiAccountMinusOutline} size="18px" />
-          <S.ButtonText>Unfollow</S.ButtonText>
-        </S.FollowButton>
-      </S.ButtonContainer>
-    );
   };
 
   const getFollowerCard = (
@@ -163,6 +101,68 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
         </S.Grid>
       </S.FollowerContainer>
     );
+  };
+
+  const handleFollowerFollowButtonClick = async (userID: number) => {
+    await dispatch(createFollower({following: userID}));
+    await updateUserStats();
+  };
+
+  const handleFollowerUnfollowButtonClick = async (followingUserID: number) => {
+    await dispatch(deleteFollower(followingUserID));
+    await updateUserStats();
+  };
+
+  const handleFollowingUnfollowButtonClick = async (followerId: number, followingUserID: number) => {
+    await dispatch(deleteFollowing(followerId, followingUserID));
+    await updateUserStats();
+  };
+
+  const renderContent = () => {
+    if (followerList.length) return renderFollowerCards();
+    return <EmptyText>{emptyText}</EmptyText>;
+  };
+
+  const renderFollowerCards = () => {
+    return (
+      <InfiniteScroll dataLength={followerList.length} hasMore={hasMore} heightMargin={200} next={fetchMoreFollowers}>
+        {followerList.map((item, index) => {
+          const user = extractObject(item);
+          return getFollowerCard(index, item.id, item.self_following, user, item.created_date);
+        })}
+      </InfiniteScroll>
+    );
+  };
+
+  const renderFollowButton = (followerId: number, user: UserReadSerializer, selfFollowing: boolean) => {
+    if (self.id !== userId) return null;
+
+    return type === FollowerType.FOLLOWERS ? (
+      <S.ButtonContainer>
+        {selfFollowing ? (
+          <S.FollowButton onClick={() => handleFollowerUnfollowButtonClick(user.id)}>
+            <Icon path={mdiAccountMinusOutline} size="18px" />
+            <S.ButtonText>Unfollow</S.ButtonText>
+          </S.FollowButton>
+        ) : (
+          <S.FollowButton onClick={() => handleFollowerFollowButtonClick(user.id)}>
+            <Icon path={mdiAccountPlusOutline} size="18px" />
+            <S.ButtonText>Follow</S.ButtonText>
+          </S.FollowButton>
+        )}
+      </S.ButtonContainer>
+    ) : (
+      <S.ButtonContainer>
+        <S.FollowButton onClick={() => handleFollowingUnfollowButtonClick(followerId, user.id)}>
+          <Icon path={mdiAccountMinusOutline} size="18px" />
+          <S.ButtonText>Unfollow</S.ButtonText>
+        </S.FollowButton>
+      </S.ButtonContainer>
+    );
+  };
+
+  const updateUserStats = async () => {
+    if (self.id) await dispatch(getUserStats(self.id));
   };
 
   return (
