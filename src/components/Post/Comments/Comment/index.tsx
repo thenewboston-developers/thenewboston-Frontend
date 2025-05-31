@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {mdiDotsHorizontal} from '@mdi/js';
+import {mdiDotsVertical} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import Linkify from 'components/Linkify';
@@ -58,7 +58,7 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
 
   const renderDropdownMenu = () => {
     if (self.id !== owner.id) return null;
-    return <S.DropdownMenu icon={mdiDotsHorizontal} options={menuOptions} />;
+    return <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
 
   const renderNameDateContainer = () => {
@@ -84,7 +84,6 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
         <Link to={`/profile/${owner.id}`}>
           <Avatar src={owner.avatar} />
         </Link>
-
         <S.CommentSection>
           <S.HeadSection>
             {renderNameDateContainer()}

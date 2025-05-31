@@ -14,7 +14,7 @@ export const Container = styled.div`
 export const Content = styled.div`
   font-size: 14px;
   line-height: 1.4;
-  margin-top: 12px;
+  margin-top: 8px;
   overflow-wrap: break-word;
   word-wrap: break-word;
 `;
@@ -40,7 +40,7 @@ export const CommentSection = styled.div`
   background: ${colors.background};
   border-radius: 0 14px 14px 14px;
   flex-grow: 1;
-  padding: 14px;
+  padding: 10px 14px 14px 14px;
 `;
 
 export const HeadSection = styled.div`
