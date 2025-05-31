@@ -6,13 +6,12 @@ import * as S from './Styles';
 
 export interface UserLabelProps {
   avatar: string | null;
-  avatarSpacing?: number;
   description: string;
   id: number | null;
   username: string;
 }
 
-const UserLabel: SFC<UserLabelProps> = ({avatar, avatarSpacing = 12, className, description, id, username}) => {
+const UserLabel: SFC<UserLabelProps> = ({avatar, className, description, id, username}) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -21,11 +20,11 @@ const UserLabel: SFC<UserLabelProps> = ({avatar, avatarSpacing = 12, className, 
   };
 
   const renderAvatar = () => {
-    if (!id) return <S.Avatar $spacing={avatarSpacing} src={avatar} />;
+    if (!id) return <S.Avatar src={avatar} />;
 
     return (
       <Link to={`/profile/${id}`}>
-        <S.Avatar $spacing={avatarSpacing} src={avatar} size={'44px'} />
+        <S.Avatar src={avatar} size={'44px'} />
       </Link>
     );
   };

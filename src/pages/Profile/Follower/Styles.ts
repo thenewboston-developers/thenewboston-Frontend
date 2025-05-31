@@ -13,7 +13,7 @@ export const Container = styled.div`
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   margin: 16px auto 0;
   max-width: 720px;
-  padding: 20px;
+  padding: 20px 24px;
   width: 100%;
 `;
 
@@ -30,7 +30,6 @@ export const FollowerContainer = styled.div`
   border-bottom: 1px solid ${colors.border};
   display: flex;
   justify-content: space-between;
-  margin: 0 20px;
   padding: 8px 0;
 
   &:first-child {
@@ -46,9 +45,20 @@ export const FollowerContainer = styled.div`
 export const Grid = styled.div`
   align-items: center;
   display: grid;
-  gap: 16px;
-  grid-template-columns: 40px 1fr auto;
+  grid-template-columns: 24px 8px 1fr 16px auto;
   width: 100%;
+
+  & > :nth-child(1) {
+    grid-column: 1;
+  }
+
+  & > :nth-child(2) {
+    grid-column: 3;
+  }
+
+  & > :nth-child(3) {
+    grid-column: 5;
+  }
 `;
 
 export const Header = styled.div`

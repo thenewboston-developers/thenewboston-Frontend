@@ -8,7 +8,7 @@ export const Container = styled.div`
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   margin: 16px auto 0;
   max-width: 720px;
-  padding: 24px;
+  padding: 20px 24px;
   width: 100%;
 
   @media (max-width: ${breakpoints.mobile}) {
