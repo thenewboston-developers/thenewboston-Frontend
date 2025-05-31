@@ -88,10 +88,10 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
         <S.CommentSection>
           <S.HeadSection>
             {renderNameDateContainer()}
-            <S.Text>
+            <S.ActionsContainer>
               {renderPriceMini()}
               {renderDropdownMenu()}
-            </S.Text>
+            </S.ActionsContainer>
           </S.HeadSection>
           <S.Content>
             <Linkify>{renderContent()}</Linkify>

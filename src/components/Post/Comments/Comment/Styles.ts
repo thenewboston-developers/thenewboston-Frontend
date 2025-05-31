@@ -3,6 +3,11 @@ import styled from 'styled-components';
 import UPriceMini from 'components/PriceMini';
 import {colors, fonts} from 'styles';
 
+export const ActionsContainer = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
 export const CommentSection = styled.div`
   background: ${colors.background};
   border-radius: 0 14px 14px 14px;
@@ -52,11 +57,6 @@ export const PriceMini = styled(UPriceMini)`
 
 export const Right = styled.div`
   margin-left: 10px;
-`;
-
-export const Text = styled.div`
-  display: flex;
-  gap: 20px;
 `;
 
 export const Username = styled.div`
