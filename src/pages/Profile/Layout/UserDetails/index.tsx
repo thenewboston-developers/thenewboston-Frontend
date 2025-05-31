@@ -162,9 +162,11 @@ const UserDetails: SFC = ({className}) => {
         {renderUsername()}
         <S.Wrapper>
           {renderStatsAndBalance()}
-          {renderEditProfileButton()}
-          {renderSendButton()}
-          {renderFollowButton()}
+          <S.ButtonGroup>
+            {renderEditProfileButton()}
+            {renderFollowButton()}
+            {renderSendButton()}
+          </S.ButtonGroup>
         </S.Wrapper>
       </S.Container>
       {profileEditModalIsOpen ? <ProfileEditModal close={toggleProfileEditModal} /> : null}

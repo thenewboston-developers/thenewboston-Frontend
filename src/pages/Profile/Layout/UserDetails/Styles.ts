@@ -120,3 +120,13 @@ export const Wrapper = styled.div`
     justify-content: space-between;
   }
 `;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  @media (min-width: ${breakpoints.mobile}) {
+    flex-direction: row;
+  }
+`;
