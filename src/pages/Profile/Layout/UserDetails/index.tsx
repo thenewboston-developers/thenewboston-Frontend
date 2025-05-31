@@ -69,7 +69,7 @@ const UserDetails: SFC = ({className}) => {
       try {
         await dispatch(deleteFollower(userId));
         setSelfFollowing(false);
-        updateUserStats();
+        await updateUserStats();
       } catch (error) {
         displayErrorToast('Error unfollowing user');
       }
@@ -77,7 +77,7 @@ const UserDetails: SFC = ({className}) => {
       try {
         await dispatch(createFollower({following: userId}));
         setSelfFollowing(true);
-        updateUserStats();
+        await updateUserStats();
       } catch (error) {
         displayErrorToast('Error unfollowing user');
       }
