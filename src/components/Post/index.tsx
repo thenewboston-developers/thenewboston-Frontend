@@ -146,8 +146,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
             ) : (
               <>
                 <S.TextContent>
-                  {renderContent().slice(0, 400)}...
-                  <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
+                  {renderContent().slice(0, 400)}... <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
                 </S.TextContent>
               </>
             )}

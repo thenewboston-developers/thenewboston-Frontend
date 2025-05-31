@@ -15,7 +15,7 @@ export const BoxLeft = styled.div`
   align-items: center;
   display: flex;
   gap: 8px;
-  margin: 12px 0 8px;
+  margin: 8px 0;
 `;
 
 export const Button = styled(UButton)<{$isOpenCommentBox?: boolean | false}>`
@@ -133,16 +133,22 @@ export const TextContent = styled.div`
 export const TextLink = styled.button`
   background: none;
   border: none;
-  color: ${colors.palette.blue[700]};
+  color: ${colors.palette.blue[600]};
   cursor: pointer;
+  font-size: 14px;
   font-weight: ${fonts.weight.medium};
   margin-left: 4px;
   outline: none;
+  padding: 0;
   transition: color 0.2s ease;
 
   &:hover {
-    color: ${colors.palette.blue[800]};
+    color: ${colors.palette.blue[700]};
     text-decoration: underline;
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 
