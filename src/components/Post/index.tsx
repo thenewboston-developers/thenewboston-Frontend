@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
-import {mdiArrowDownThin, mdiArrowUpThin, mdiCommentTextOutline, mdiDotsVertical} from '@mdi/js';
+import {mdiCommentTextOutline, mdiDotsVertical, mdiSwapHorizontal} from '@mdi/js';
 
 import {ButtonColor} from 'components/Button';
 import CurrencyLogo from 'components/CurrencyLogo';
@@ -95,21 +95,18 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const renderTransferInfo = () => {
     if (!isTransferPost) return null;
 
-    const isReceived = recipient?.id === self.id;
-    const icon = isReceived ? mdiArrowDownThin : mdiArrowUpThin;
-
     return (
       <S.TransferInfo>
         <S.TransferIconWrapper>
-          <S.TransferIcon icon={icon} size={24} />
+          <S.TransferIcon icon={mdiSwapHorizontal} size={24} />
         </S.TransferIconWrapper>
         <S.TransferContent>
           <S.TransferText>
-            <strong>{owner.username}</strong> sent{' '}
+            <S.TransferLink to={`/profile/${owner.id}`}>{owner.username}</S.TransferLink> sent{' '}
             <strong>
               {price_amount?.toLocaleString()} {currencies[price_currency!]?.ticker}
             </strong>{' '}
-            to <strong>{recipient!.username}</strong>
+            to <S.TransferLink to={`/profile/${recipient!.id}`}>{recipient!.username}</S.TransferLink>
           </S.TransferText>
           <S.TransferDate>{shortDate(created_date, true)}</S.TransferDate>
         </S.TransferContent>

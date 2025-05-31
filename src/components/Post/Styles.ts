@@ -1,3 +1,4 @@
+import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 
 import UAvatar from 'components/Avatar';
@@ -220,5 +221,15 @@ export const Username = styled.div<{$id: number | null}>`
 export const TransferIcon = styled(UIcon)`
   & path {
     fill: ${colors.palette.gray[600]} !important;
+  }
+`;
+
+export const TransferLink = styled(Link)`
+  color: ${colors.palette.gray[900]};
+  font-weight: ${fonts.weight.bold};
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
 `;
