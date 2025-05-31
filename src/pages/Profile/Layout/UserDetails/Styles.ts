@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import UButton from 'components/Button';
 import {breakpoints, colors, fonts} from 'styles';
 
-const USER_IMAGE_SIZE = 110;
+const USER_IMAGE_SIZE = 180;
 
 export const Button = styled(UButton)`
   border: none;

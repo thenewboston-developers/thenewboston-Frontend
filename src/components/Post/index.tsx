@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Link, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {mdiCommentTextOutline, mdiDotsVertical, mdiSwapHorizontal} from '@mdi/js';
 
 import Linkify from 'components/Linkify';
@@ -57,9 +57,9 @@ const Post: SFC<PostProps> = ({className, post}) => {
     if (!owner.id) return <S.Avatar src={owner.avatar} />;
 
     return (
-      <Link to={`/profile/${owner.id}`}>
+      <S.AvatarLink to={`/profile/${owner.id}`}>
         <S.Avatar src={owner.avatar} />
-      </Link>
+      </S.AvatarLink>
     );
   };
 

@@ -7,9 +7,12 @@ import UIcon from 'components/Icon';
 import {breakpoints, colors, fonts} from 'styles';
 
 export const Avatar = styled(UAvatar)`
-  height: 44px;
   margin-right: 12px;
-  width: 44px;
+`;
+
+export const AvatarLink = styled(Link)`
+  display: flex;
+  text-decoration: none;
 `;
 
 export const BoxLeft = styled.div`
