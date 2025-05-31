@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
-import {mdiChevronDown, mdiChevronUp, mdiCommentTextOutline, mdiDotsVertical} from '@mdi/js';
+import {mdiCommentTextOutline, mdiDotsVertical} from '@mdi/js';
 
 import {ButtonColor} from 'components/Button';
 import CurrencyLogo from 'components/CurrencyLogo';
@@ -124,7 +124,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
         <S.Top>
           <S.Text>
             {renderAvatar()}
-
             <S.Right>
               <S.Username $id={owner.id} onClick={handleClick}>
                 {owner.username}
@@ -154,18 +153,15 @@ const Post: SFC<PostProps> = ({className, post}) => {
             )}
           </Linkify>
         </S.Content>
-
         {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
-        <S.Line />
         <S.Div>
           <S.BoxLeft>
             <S.Button
               $isOpenCommentBox={isOpenCommentBox}
               color={ButtonColor.secondary}
               iconLeft={mdiCommentTextOutline}
-              iconRight={isOpenCommentBox ? mdiChevronUp : mdiChevronDown}
               onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
-              text="Comment"
+              text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
             />
           </S.BoxLeft>
         </S.Div>

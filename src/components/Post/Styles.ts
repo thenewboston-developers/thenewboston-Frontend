@@ -20,33 +20,32 @@ export const BoxLeft = styled.div`
 `;
 
 export const Button = styled(UButton)<{$isOpenCommentBox?: boolean | false}>`
-  background-color: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.blue['100'] : 'transparent')};
-  border: 1px solid
-    ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.blue['200'] : colors.palette.gray['200'])};
-  border-radius: 24px;
-  color: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.blue['700'] : colors.palette.gray['700'])};
+  background-color: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.gray['100'] : 'transparent')};
+  border: 1px solid ${colors.palette.gray['200']};
+  border-radius: 20px;
+  color: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? colors.palette.gray['900'] : colors.palette.gray['700'])};
   font-size: 14px;
-  font-weight: ${fonts.weight.semiBold};
-  height: 40px;
-  padding: 0 20px;
-  transition: all 0.15s ease;
+  font-weight: ${({$isOpenCommentBox}) => ($isOpenCommentBox ? fonts.weight.semiBold : fonts.weight.medium)};
+  height: 36px;
+  padding: 0 16px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 
   &:hover {
-    background-color: ${({$isOpenCommentBox}) =>
-      $isOpenCommentBox ? colors.palette.blue['200'] : colors.palette.gray['100']};
-    border-color: ${({$isOpenCommentBox}) =>
-      $isOpenCommentBox ? colors.palette.blue['300'] : colors.palette.gray['300']};
-    transform: translateY(-1px);
+    background-color: ${colors.palette.gray['100']};
+    border-color: ${colors.palette.gray['300']};
+    color: ${colors.palette.gray['900']};
   }
 
   &:active {
-    transform: translateY(0);
+    background-color: ${colors.palette.gray['200']};
   }
 
   & svg {
     & path {
       fill: ${({$isOpenCommentBox}) =>
-        $isOpenCommentBox ? `${colors.palette.blue['700']} !important` : `${colors.palette.gray['600']} !important`};
+        $isOpenCommentBox ? `${colors.palette.gray['700']} !important` : `${colors.palette.gray['600']} !important`};
     }
   }
 `;
