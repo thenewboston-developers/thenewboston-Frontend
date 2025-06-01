@@ -1,6 +1,6 @@
 import styled, {css, keyframes} from 'styled-components';
 
-import {radioCardStyle} from 'styles';
+import {colors, radioCardStyle} from 'styles';
 
 export const IMG_HEIGHT = 32;
 
@@ -25,32 +25,22 @@ const smoothBounceIn = keyframes`
 export const Container = styled.div<{$isActive: boolean; $isAnimating?: boolean}>`
   ${radioCardStyle};
   position: relative;
-  background-color: ${(props) => {
-    if (props.$isAnimating) return '#f3f5f7';
-    if (props.$isActive) return '#f3f5f7';
-    return '#ffffff';
+  background: ${(props) => {
+    if (props.$isAnimating) return colors.whiteHover;
+    if (props.$isActive) return colors.whiteHover;
+    return colors.white;
   }};
-  border-radius: 16px;
+  border: 1px solid ${colors.border};
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   gap: 8px;
   padding: 16px 20px;
   justify-content: flex-start;
   transition: all 0.2s ease;
-  box-shadow: ${(props) =>
-    props.$isActive
-      ? '0 4px 12px rgba(98, 135, 177, 0.15), 0 2px 4px rgba(98, 135, 177, 0.1)'
-      : '0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)'};
-  border: 2px solid ${(props) => (props.$isActive ? '#e3ecf3' : 'transparent')};
 
   &:hover {
-    box-shadow: ${(props) =>
-      props.$isActive
-        ? '0 6px 16px rgba(98, 135, 177, 0.2), 0 3px 6px rgba(98, 135, 177, 0.12)'
-        : '0 4px 12px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.06)'};
-    background-color: ${(props) => {
-      if (props.$isAnimating) return '#f3f5f7';
-      if (props.$isActive) return '#eef1f4';
-      return '#fafbfc';
-    }};
+    background: ${colors.whiteHover};
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
   }
 `;
 
@@ -82,14 +72,11 @@ export const CheckIcon = styled.div<{$isAnimating?: boolean}>`
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background-color: #4caf50;
+  background-color: ${colors.palette.green['600']};
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 0 0 auto;
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
   opacity: ${(props) => (props.$isAnimating ? 0 : 1)};
   box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
 
@@ -99,9 +86,7 @@ export const CheckIcon = styled.div<{$isAnimating?: boolean}>`
       animation: ${smoothBounceIn} 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     `}
 
-  &::after {
-    content: '✔';
-    font-size: 12px;
-    line-height: 1;
+  svg {
+    color: ${colors.white};
   }
 `;

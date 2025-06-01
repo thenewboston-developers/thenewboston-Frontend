@@ -1,6 +1,8 @@
 import {useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {mdiCheck} from '@mdi/js';
 
+import Icon from 'components/Icon';
 import {ToastType} from 'enums';
 import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
@@ -59,7 +61,11 @@ const RadioCard: SFC<RadioCardProps> = ({className, close, currency}) => {
         <S.Img alt={`${currency.ticker} logo`} src={currency.logo} />
         <S.Title>{currency.ticker}</S.Title>
       </S.ImageContainer>
-      {isActiveCommentCurrency && <S.CheckIcon $isAnimating={isAnimating} />}
+      {isActiveCommentCurrency && (
+        <S.CheckIcon $isAnimating={isAnimating}>
+          <Icon icon={mdiCheck} size={14} />
+        </S.CheckIcon>
+      )}
     </S.Container>
   );
 };
