@@ -15,9 +15,9 @@ const Toast: SFC<ToastProps> = ({children, className, type = ToastType.ERROR}) =
   const renderIcon = useCallback((): ReactNode => {
     switch (type) {
       case ToastType.SUCCESS:
-        return <S.CheckCircleIcon icon={mdiCheckCircle} />;
+        return <S.CheckCircleIcon icon={mdiCheckCircle} type={type} />;
       default:
-        return <S.AlertCircleOutlineIcon icon={mdiAlertCircleOutline} />;
+        return <S.AlertCircleOutlineIcon icon={mdiAlertCircleOutline} type={type} />;
     }
   }, [type]);
 
