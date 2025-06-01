@@ -27,14 +27,23 @@ export const ListContainer = styled.div`
 
 export const ListDetail = styled.div``;
 
-export const ListTitle = styled.div`
-  font-size: 14px;
-  font-weight: ${fonts.weight.bold};
-`;
-
 export const ListItem = styled.div`
   display: flex;
   margin: 10px 0;
+`;
+
+export const ListItemNumber = styled.div`
+  align-items: center;
+  background-color: ${colors.lightBlue};
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  flex-shrink: 0;
+  height: 35px;
+  justify-content: center;
+  position: relative;
+  width: 35px;
+  z-index: 0;
 `;
 
 export const ListLine = styled.div`
@@ -46,15 +55,7 @@ export const ListLine = styled.div`
   width: 100%;
 `;
 
-export const ListItemNumber = styled.div`
-  align-items: center;
-  background-color: ${colors.lightBlue};
-  border-radius: 50%;
-  color: white;
-  display: flex;
-  height: 35px;
-  justify-content: center;
-  position: relative;
-  width: 35px;
-  z-index: 0;
+export const ListTitle = styled.div`
+  font-size: 14px;
+  font-weight: ${fonts.weight.bold};
 `;

@@ -22,7 +22,6 @@ import {SelectOption} from 'types/forms';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Invitation, Invitations} from 'types/invitations';
-import {LearnMore} from 'types/learnMore';
 import {Manager} from 'types/manager';
 import {Mint, Mints} from 'types/mints';
 import {Notification, Notifications} from 'types/notifications';
@@ -75,7 +74,6 @@ export {
   InvitationLimit,
   InvitationLimits,
   Invitations,
-  LearnMore,
   LoginRequest,
   LoginResponse,
   Manager,
