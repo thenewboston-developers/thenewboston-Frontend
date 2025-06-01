@@ -30,6 +30,14 @@ export const ContentContainer = styled.div<{$width?: string}>`
 export const Content = styled.div`
   font-size: 14px;
   margin: 10px 0px;
+  word-wrap: normal;
+  word-break: normal;
+  white-space: normal;
+`;
+
+export const DetailText = styled.p`
+  white-space: pre-line;
+  margin: 0;
 `;
 
 export const Img = styled.img`

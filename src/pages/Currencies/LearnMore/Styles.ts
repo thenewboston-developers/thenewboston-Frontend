@@ -13,14 +13,18 @@ export const CodeContainer = styled.div`
   flex: 1;
   margin-left: 15px;
   padding: 5px 5px;
-  white-space: pre-wrap;
-  word-break: break-all;
-  word-wrap: break-word;
   @media (max-width: ${breakpoints.mobile}) {
     margin: 0;
     padding: 0;
     width: 100%;
   }
+`;
+
+export const CodeBlock = styled.div`
+  font-family: monospace;
+  padding: 0 15px;
+  word-break: break-word;
+  overflow-wrap: break-word;
 `;
 
 export const CodeDetail = styled.div`
@@ -38,14 +42,6 @@ export const CodeTitle = styled.div`
   font-size: 14px;
   font-weight: ${fonts.weight.bold};
   margin-left: 20px;
-`;
-
-export const CodeValueWrapper = styled.div`
-  margin-bottom: 4px;
-`;
-
-export const ContentDetail = styled.div`
-  margin-left: 25px;
 `;
 
 export const Col = styled(UCol)``;

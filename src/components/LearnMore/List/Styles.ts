@@ -52,6 +52,7 @@ export const ListItemNumber = styled.div`
   border-radius: 50%;
   color: white;
   display: flex;
+  flex-shrink: 0;
   height: 35px;
   justify-content: center;
   position: relative;
