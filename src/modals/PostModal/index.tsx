@@ -99,7 +99,9 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
             </S.Div>
 
             {!values.image && (
-              <Field component={FileInput} name="image" onChange={handleFileChange} touched={touched} />
+              <S.FileInputWrapper>
+                <Field component={FileInput} name="image" onChange={handleFileChange} touched={touched} />
+              </S.FileInputWrapper>
             )}
             <ImagePreview
               onClear={async () => {

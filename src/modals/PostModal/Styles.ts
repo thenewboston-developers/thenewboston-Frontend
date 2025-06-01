@@ -19,3 +19,8 @@ export const Textarea = styled(UTextarea)`
 export const Div = styled.div`
   position: relative;
 `;
+
+export const FileInputWrapper = styled.div`
+  margin-top: 16px;
+  margin-bottom: 12px;
+`;

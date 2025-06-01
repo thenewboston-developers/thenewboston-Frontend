@@ -1,14 +1,20 @@
-import {ChangeEvent, FC, useRef} from 'react';
+import {ChangeEvent, FC, MouseEvent, useRef} from 'react';
+import {mdiImagePlus} from '@mdi/js';
 import {ErrorMessage, FieldProps, useField} from 'formik';
 
 import * as S from './Styles';
 
 const FileInput: FC<
-  FieldProps<File | null> & {asLink?: boolean; onChange: (event: ChangeEvent<HTMLInputElement>) => void}
-> = ({asLink, field, form, onChange, ...props}) => {
+  FieldProps<File | null> & {
+    asLink?: boolean;
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    buttonText?: string;
+  }
+> = ({asLink, buttonText = 'Add image', field, form, onChange, ...props}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, __, helpers] = useField<File | null>(field.name);
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.currentTarget.files && event.currentTarget.files[0];
     form.setFieldValue(field.name, file);
@@ -17,7 +23,7 @@ const FileInput: FC<
     if (onChange) onChange(event);
   };
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     fileInputRef.current?.click();
   };
@@ -39,7 +45,20 @@ const FileInput: FC<
           />
         </S.Span>
       ) : (
-        <input {...field} {...props} accept="image/*" onChange={handleChange} type="file" value={undefined} />
+        <S.UploadButton htmlFor={field.name}>
+          <S.UploadIcon path={mdiImagePlus} size={0.75} />
+          <S.UploadText>{buttonText}</S.UploadText>
+          <S.FileInput
+            ref={fileInputRef}
+            {...field}
+            {...props}
+            accept="image/*"
+            id={field.name}
+            onChange={handleChange}
+            type="file"
+            value={undefined}
+          />
+        </S.UploadButton>
       )}
       <S.SecondaryContainer>
         <ErrorMessage component={S.ErrorMessage} name={field.name} />
