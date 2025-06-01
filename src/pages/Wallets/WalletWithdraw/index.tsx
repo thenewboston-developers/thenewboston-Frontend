@@ -49,9 +49,19 @@ const WalletWithdraw: SFC = ({className}) => {
   const renderWithdraws = () => {
     if (!activeWallet) return [];
 
-    return orderBy(Object.values(wires), ['created_date'], ['desc'])
-      .filter((wire) => wire.currency === activeWallet.currency.id && wire.wire_type === WireType.WITHDRAW)
-      .map((wire) => <ExpandableWire key={wire.id} wire={wire} />);
+    const withdrawals = orderBy(Object.values(wires), ['created_date'], ['desc']).filter(
+      (wire) => wire.currency === activeWallet.currency.id && wire.wire_type === WireType.WITHDRAW,
+    );
+
+    if (withdrawals.length === 0) {
+      return (
+        <S.EmptyState>
+          <p>No withdrawals yet</p>
+        </S.EmptyState>
+      );
+    }
+
+    return withdrawals.map((wire) => <ExpandableWire key={wire.id} wire={wire} />);
   };
 
   const validationSchema = useMemo(() => {
@@ -123,13 +133,13 @@ const WalletWithdraw: SFC = ({className}) => {
             </S.Form>
           )}
         </Formik>
-        <S.Img alt="wallet" src={wallet} />
+        <S.Image alt="wallet" src={wallet} />
       </S.Panel>
 
-      <S.Div>
+      <S.WithdrawSection>
         <S.Title>Withdrawal History</S.Title>
         {renderWithdraws()}
-      </S.Div>
+      </S.WithdrawSection>
     </S.Container>
   );
 };
