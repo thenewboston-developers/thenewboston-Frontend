@@ -22,63 +22,17 @@ const smoothBounceIn = keyframes`
   }
 `;
 
-export const Container = styled.div<{$isActive: boolean; $isAnimating?: boolean}>`
-  ${radioCardStyle};
-  position: relative;
-  background: ${(props) => {
-    if (props.$isAnimating) return colors.whiteHover;
-    if (props.$isActive) return colors.whiteHover;
-    return colors.white;
-  }};
-  border: 1px solid ${colors.border};
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  gap: 8px;
-  padding: 16px 20px;
-  justify-content: flex-start;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${colors.whiteHover};
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  }
-`;
-
-export const Img = styled.img`
-  border-radius: 50%;
-  height: ${`${IMG_HEIGHT}px`};
-  width: ${`${IMG_HEIGHT}px`};
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-`;
-
-export const ImageContainer = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-`;
-
-export const Title = styled.div`
-  font-size: 16px;
-  font-weight: 600;
-  color: #2c3e50;
-  letter-spacing: -0.01em;
-`;
-
 export const CheckIcon = styled.div<{$isAnimating?: boolean}>`
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background-color: ${colors.palette.green['600']};
-  display: flex;
   align-items: center;
+  background-color: ${colors.palette.green[600]};
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+  display: flex;
+  height: 22px;
   justify-content: center;
   margin: 0 0 0 auto;
   opacity: ${(props) => (props.$isAnimating ? 0 : 1)};
-  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+  width: 22px;
 
   ${(props) =>
     props.$isAnimating &&
@@ -89,4 +43,50 @@ export const CheckIcon = styled.div<{$isAnimating?: boolean}>`
   svg {
     color: ${colors.white};
   }
+`;
+
+export const Container = styled.div<{$isActive: boolean; $isAnimating?: boolean}>`
+  ${radioCardStyle};
+  background: ${(props) => {
+    if (props.$isAnimating) return colors.whiteHover;
+    if (props.$isActive) return colors.whiteHover;
+    return colors.white;
+  }};
+  border: 1px solid ${colors.border};
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  gap: 8px;
+  justify-content: flex-start;
+  padding: 16px 20px;
+  position: relative;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${colors.whiteHover};
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  }
+`;
+
+export const Image = styled.img`
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: ${`${IMG_HEIGHT}px`};
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  width: ${`${IMG_HEIGHT}px`};
+`;
+
+export const ImageContainer = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+`;
+
+export const Title = styled.div`
+  color: #2c3e50;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 `;

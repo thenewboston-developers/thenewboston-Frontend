@@ -143,7 +143,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     if (manager.activeCommentCurrency) {
       return (
         <S.IconContainer onClick={toggleMenu}>
-          <S.Img alt="logo" src={manager.activeCommentCurrency.logo} />
+          <S.Image alt="logo" src={manager.activeCommentCurrency.logo} />
         </S.IconContainer>
       );
     }

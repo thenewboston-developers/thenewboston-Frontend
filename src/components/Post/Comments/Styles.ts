@@ -115,20 +115,20 @@ export const Icon = styled(UIcon)`
 
 export const IconContainer = styled.div`
   align-items: center;
+  background-color: ${colors.palette.gray[100]};
+  border-radius: 8px;
+  cursor: pointer;
   display: flex;
   justify-content: center;
-  border-radius: 8px;
   padding: 4px;
   transition: all 0.2s ease;
-  cursor: pointer;
-  background-color: ${colors.palette.gray[100]};
 
   &:hover {
     background-color: ${colors.palette.gray[200]};
   }
 `;
 
-export const Img = styled.img`
+export const Image = styled.img`
   border-radius: 50%;
   height: ${`${IMG_HEIGHT}px`};
   margin-left: 12px;

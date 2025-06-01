@@ -58,7 +58,7 @@ const RadioCard: SFC<RadioCardProps> = ({className, close, currency}) => {
       onClick={handleRadioCardClick}
     >
       <S.ImageContainer>
-        <S.Img alt={`${currency.ticker} logo`} src={currency.logo} />
+        <S.Image alt={`${currency.ticker} logo`} src={currency.logo} />
         <S.Title>{currency.ticker}</S.Title>
       </S.ImageContainer>
       {isActiveCommentCurrency && (
