@@ -4,10 +4,7 @@ import {breakpoints, colors, fonts} from 'styles';
 import {Col as UCol, Row as URow} from 'styles/components/GridStyle';
 
 export const CodeBlock = styled.div`
-  font-family: monospace;
-  overflow-wrap: break-word;
   padding: 0 15px;
-  word-break: break-word;
 `;
 
 export const CodeContainer = styled.div`
