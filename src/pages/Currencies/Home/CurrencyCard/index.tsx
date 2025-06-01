@@ -69,8 +69,7 @@ const CurrencyCard: SFC<CurrencyCardProps> = ({className, currency}) => {
           </S.Box>
           <Line />
           <S.DomainRow>
-            <S.Domain>{currency.domain || 'Internal Currency'}</S.Domain>
-            {currency.domain === null && <S.InternalBadge>Internal</S.InternalBadge>}
+            {currency.domain ? <S.Domain>{currency.domain}</S.Domain> : <S.InternalBadge>Internal</S.InternalBadge>}
           </S.DomainRow>
         </S.LabelContainer>
       </S.Container>

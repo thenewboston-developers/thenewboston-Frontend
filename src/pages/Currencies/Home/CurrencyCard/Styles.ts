@@ -26,7 +26,6 @@ export const Container = styled.div`
 
 export const Domain = styled.div`
   font-size: 12px;
-  margin: 10px 0;
 `;
 
 export const DomainRow = styled.div`
