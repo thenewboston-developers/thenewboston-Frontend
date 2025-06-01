@@ -11,21 +11,19 @@ import * as S from './Styles';
 
 interface MintSectionProps {
   currency: CurrencyReadDetailSerializer;
-  mintsData: PaginatedResponse<Mint> | null;
-  loadingMints: boolean;
   currentPage: number;
+  loadingMints: boolean;
+  mintsData: PaginatedResponse<Mint> | null;
   onPageChange: (page: number) => void;
-  onMintSuccess: () => void;
 }
 
 const MintSection: SFC<MintSectionProps> = ({
   className,
   currency,
-  mintsData,
-  loadingMints,
   currentPage,
+  loadingMints,
+  mintsData,
   onPageChange,
-  onMintSuccess,
 }) => {
   const mints = useSelector(getMintsSelector);
 

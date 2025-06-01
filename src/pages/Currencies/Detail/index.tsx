@@ -139,7 +139,6 @@ const Detail: SFC = ({className}) => {
                   loadingMints={loadingMints}
                   currentPage={currentPage}
                   onPageChange={handlePageChange}
-                  onMintSuccess={handleMintSuccess}
                 />
               ) : (
                 <BalancesSection currency={currency} />
