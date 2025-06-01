@@ -3,9 +3,7 @@ import {useSelector} from 'react-redux';
 import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
 import Loader from 'components/Loader';
-import {useToggle} from 'hooks';
-import MintModal from 'modals/MintModal';
-import {getMints as getMintsSelector, getSelf} from 'selectors/state';
+import {getMints as getMintsSelector} from 'selectors/state';
 import {CurrencyReadDetailSerializer, Mint, PaginatedResponse, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
@@ -29,16 +27,7 @@ const MintSection: SFC<MintSectionProps> = ({
   onPageChange,
   onMintSuccess,
 }) => {
-  const self = useSelector(getSelf);
   const mints = useSelector(getMintsSelector);
-  const [mintModalIsOpen, toggleMintModal] = useToggle(false);
-
-  const isInternalCurrency = currency.domain === null;
-  const isOwner = currency.owner.id === self.id;
-
-  const handleMintSuccess = () => {
-    onMintSuccess();
-  };
 
   const renderMintsList = () => {
     if (loadingMints) return <Loader />;
@@ -93,18 +82,7 @@ const MintSection: SFC<MintSectionProps> = ({
     );
   };
 
-  return (
-    <>
-      <S.Container className={className}>
-        <S.SectionHeader>
-          <S.SectionTitle>Minting History</S.SectionTitle>
-          {isOwner && isInternalCurrency && <Button onClick={toggleMintModal} text="Mint" />}
-        </S.SectionHeader>
-        {renderMintsList()}
-      </S.Container>
-      {mintModalIsOpen && <MintModal close={toggleMintModal} currency={currency} onSuccess={handleMintSuccess} />}
-    </>
-  );
+  return <S.Container className={className}>{renderMintsList()}</S.Container>;
 };
 
 export default MintSection;

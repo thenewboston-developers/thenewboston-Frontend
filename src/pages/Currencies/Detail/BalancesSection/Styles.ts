@@ -2,16 +2,13 @@ import styled from 'styled-components';
 
 import {colors, fonts} from 'styles';
 
-export const Amount = styled.div`
+export const Balance = styled.div`
   font-size: 16px;
   font-weight: ${fonts.weight.semiBold};
+  text-align: right;
 `;
 
 export const Container = styled.div``;
-
-export const Date = styled.div`
-  color: ${colors.secondary};
-`;
 
 export const EmptyState = styled.div`
   background-color: ${colors.white};
@@ -70,6 +67,10 @@ export const TableHead = styled.th`
   padding: 12px 20px;
   text-align: left;
   text-transform: uppercase;
+
+  &:last-child {
+    text-align: right;
+  }
 `;
 
 export const TableHeader = styled.thead``;

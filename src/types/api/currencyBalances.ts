@@ -1,0 +1,6 @@
+import {UserReadSerializer} from 'types/api/users';
+
+export interface CurrencyBalance {
+  owner: UserReadSerializer;
+  balance: number;
+}

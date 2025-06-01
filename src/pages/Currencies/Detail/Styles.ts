@@ -42,3 +42,17 @@ export const Header = styled.div`
   border-bottom: 1px solid ${colors.border};
   padding: 20px 24px;
 `;
+
+export const TabSection = styled.div`
+  margin-top: 32px;
+`;
+
+export const TabHeader = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const TabContent = styled.div`
+  margin-top: 24px;
+`;
