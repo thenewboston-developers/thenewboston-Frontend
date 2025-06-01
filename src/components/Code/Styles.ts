@@ -5,7 +5,7 @@ import {colors} from 'styles';
 export const Container = styled.div`
   background-color: ${colors.white};
   border-radius: 10px;
-  color: ${colors.palette.darkGray['400']};
+  color: ${colors.palette.darkGray[400]};
   font-size: 12px;
   line-height: 1.5;
   margin: 0 10px;
@@ -14,8 +14,8 @@ export const Container = styled.div`
   pre {
     font-family: monospace;
     margin: 0;
+    overflow-wrap: break-word;
     white-space: pre-wrap;
     word-break: break-word;
-    overflow-wrap: break-word;
   }
 `;
