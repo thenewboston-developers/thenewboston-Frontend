@@ -4,11 +4,11 @@ import {ExchangeOrderType} from 'enums';
 import {breakpoints, colors} from 'styles';
 
 const buyMixin = css`
-  color: ${colors.palette.green['600']};
+  color: ${colors.palette.green[600]};
 `;
 
 const sellMixin = css`
-  color: ${colors.palette.red['700']};
+  color: ${colors.palette.red[700]};
 `;
 
 export const Container = styled.div`
@@ -42,7 +42,7 @@ export const DropdownMenuWrapper = styled.div`
     transition: all 0.15s ease;
 
     &:hover {
-      background-color: ${colors.palette.gray['100']};
+      background-color: ${colors.palette.gray[100]};
     }
   }
 `;
@@ -171,7 +171,7 @@ export const OrderTypeBadge = styled.div<{$orderType: ExchangeOrderType}>`
   }}
   align-items: center;
   background-color: ${({$orderType}) =>
-    $orderType === ExchangeOrderType.BUY ? colors.palette.green['600'] + '15' : colors.palette.red['700'] + '15'};
+    $orderType === ExchangeOrderType.BUY ? colors.palette.green[600] + '15' : colors.palette.red[700] + '15'};
   border-radius: 4px;
   display: inline-flex;
   font-size: 12px;
@@ -182,7 +182,7 @@ export const OrderTypeBadge = styled.div<{$orderType: ExchangeOrderType}>`
 `;
 
 export const ProgressBar = styled.div`
-  background-color: ${colors.palette.gray['200']};
+  background-color: ${colors.palette.gray[200]};
   border-radius: 2px;
   height: 4px;
   overflow: hidden;
@@ -191,7 +191,7 @@ export const ProgressBar = styled.div`
 
 export const ProgressFill = styled.div<{$percentage: number; $orderType: ExchangeOrderType}>`
   background-color: ${({$orderType}) =>
-    $orderType === ExchangeOrderType.BUY ? colors.palette.green['500'] : colors.palette.red['500']};
+    $orderType === ExchangeOrderType.BUY ? colors.palette.green[500] : colors.palette.blue[500]};
   height: 100%;
   transition: width 0.3s ease;
   width: ${({$percentage}) => $percentage}%;

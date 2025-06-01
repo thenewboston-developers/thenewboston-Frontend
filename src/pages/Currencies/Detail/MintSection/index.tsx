@@ -3,9 +3,7 @@ import {useSelector} from 'react-redux';
 import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
 import Loader from 'components/Loader';
-import {useToggle} from 'hooks';
-import MintModal from 'modals/MintModal';
-import {getMints as getMintsSelector, getSelf} from 'selectors/state';
+import {getMints as getMintsSelector} from 'selectors/state';
 import {CurrencyReadDetailSerializer, Mint, PaginatedResponse, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
@@ -13,32 +11,21 @@ import * as S from './Styles';
 
 interface MintSectionProps {
   currency: CurrencyReadDetailSerializer;
-  mintsData: PaginatedResponse<Mint> | null;
-  loadingMints: boolean;
   currentPage: number;
+  loadingMints: boolean;
+  mintsData: PaginatedResponse<Mint> | null;
   onPageChange: (page: number) => void;
-  onMintSuccess: () => void;
 }
 
 const MintSection: SFC<MintSectionProps> = ({
   className,
   currency,
-  mintsData,
-  loadingMints,
   currentPage,
+  loadingMints,
+  mintsData,
   onPageChange,
-  onMintSuccess,
 }) => {
-  const self = useSelector(getSelf);
   const mints = useSelector(getMintsSelector);
-  const [mintModalIsOpen, toggleMintModal] = useToggle(false);
-
-  const isInternalCurrency = currency.domain === null;
-  const isOwner = currency.owner.id === self.id;
-
-  const handleMintSuccess = () => {
-    onMintSuccess();
-  };
 
   const renderMintsList = () => {
     if (loadingMints) return <Loader />;
@@ -81,7 +68,7 @@ const MintSection: SFC<MintSectionProps> = ({
         {mintsData.count > 20 && (
           <S.Pagination>
             {mintsData.previous && (
-              <Button onClick={() => onPageChange(currentPage - 1)} text="Previous" color={ButtonColor.secondary} />
+              <Button color={ButtonColor.secondary} onClick={() => onPageChange(currentPage - 1)} text="Previous" />
             )}
             <S.PageInfo>
               Page {currentPage} of {Math.ceil(mintsData.count / 20)}
@@ -93,18 +80,7 @@ const MintSection: SFC<MintSectionProps> = ({
     );
   };
 
-  return (
-    <>
-      <S.Container className={className}>
-        <S.SectionHeader>
-          <S.SectionTitle>Minting History</S.SectionTitle>
-          {isOwner && isInternalCurrency && <Button onClick={toggleMintModal} text="Mint" />}
-        </S.SectionHeader>
-        {renderMintsList()}
-      </S.Container>
-      {mintModalIsOpen && <MintModal close={toggleMintModal} currency={currency} onSuccess={handleMintSuccess} />}
-    </>
-  );
+  return <S.Container className={className}>{renderMintsList()}</S.Container>;
 };
 
 export default MintSection;
