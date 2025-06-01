@@ -117,10 +117,15 @@ export const IconContainer = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
-`;
+  border-radius: 8px;
+  padding: 4px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background-color: ${colors.palette.gray[100]};
 
-export const IconRight = styled(UIcon)`
-  margin-left: 6px;
+  &:hover {
+    background-color: ${colors.palette.gray[200]};
+  }
 `;
 
 export const Img = styled.img`
@@ -128,11 +133,6 @@ export const Img = styled.img`
   height: ${`${IMG_HEIGHT}px`};
   margin-left: 12px;
   width: ${`${IMG_HEIGHT}px`};
-
-  &:hover {
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.16);
-    cursor: pointer;
-  }
 `;
 
 export const InputBox = styled.div`

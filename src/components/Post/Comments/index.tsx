@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiChevronDown, mdiChevronUp, mdiEmoticonOutline, mdiPlusCircle, mdiSend} from '@mdi/js';
+import {mdiEmoticonOutline, mdiPlusCircle, mdiSend} from '@mdi/js';
 import Icon from '@mdi/react';
 import EmojiPicker from 'emoji-picker-react';
 import {Form, Formik, FormikHelpers} from 'formik';
@@ -144,11 +144,6 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
       return (
         <S.IconContainer onClick={toggleMenu}>
           <S.Img alt="logo" src={manager.activeCommentCurrency.logo} />
-          {currencySelectModalIsOpen ? (
-            <S.IconRight path={mdiChevronUp} size="20px" />
-          ) : (
-            <S.IconRight path={mdiChevronDown} size="20px" />
-          )}
         </S.IconContainer>
       );
     }
