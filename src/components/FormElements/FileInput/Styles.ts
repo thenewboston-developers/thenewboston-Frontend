@@ -9,29 +9,18 @@ export const ErrorMessage = styled.div`
   margin-top: 6px;
 `;
 
-export const SecondaryContainer = styled.div``;
-
-export const Span = styled.span`
-  cursor: pointer;
-`;
-
-export const Link = styled.a`
-  color: ${colors.palette.blue[300]};
-  overflow: hidden;
-  position: relative;
-  text-decoration: underline;
-
-  &:hover {
-    color: ${colors.palette.blue[700]};
-  }
-`;
-
 export const FileInput = styled.input`
-  left: 0;
-  opacity: 0;
-  position: absolute;
-  top: 0;
+  display: none;
 `;
+
+export const Label = styled.div`
+  color: ${colors.palette.gray['900']};
+  font-size: 14px;
+  font-weight: ${fonts.weight.medium};
+  margin-bottom: 8px;
+`;
+
+export const SecondaryContainer = styled.div``;
 
 export const UploadButton = styled.label`
   align-items: center;

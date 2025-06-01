@@ -1,6 +1,6 @@
 import {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {Field, Form, Formik} from 'formik';
+import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
 import EmojiBox from 'components/EmojiPicker';
@@ -100,7 +100,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
 
             {!values.image && (
               <S.FileInputWrapper>
-                <Field component={FileInput} name="image" onChange={handleFileChange} touched={touched} />
+                <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />
               </S.FileInputWrapper>
             )}
             <ImagePreview

@@ -1,67 +1,50 @@
-import {ChangeEvent, FC, MouseEvent, useRef} from 'react';
+import {ChangeEvent} from 'react';
 import {mdiImagePlus} from '@mdi/js';
-import {ErrorMessage, FieldProps, useField} from 'formik';
+import {useField} from 'formik';
+
+import {SFC} from 'types';
 
 import * as S from './Styles';
 
-const FileInput: FC<
-  FieldProps<File | null> & {
-    asLink?: boolean;
-    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-    buttonText?: string;
-  }
-> = ({asLink, buttonText = 'Add image', field, form, onChange, ...props}) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, __, helpers] = useField<File | null>(field.name);
+export interface FileInputProps {
+  errors: {[field: string]: string};
+  label?: string;
+  name: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  touched: {[field: string]: boolean};
+}
+
+const FileInput: SFC<FileInputProps> = ({className, errors, label, name, onChange, touched}) => {
+  const [field, , helpers] = useField<File | string>(name);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.currentTarget.files && event.currentTarget.files[0];
-    form.setFieldValue(field.name, file);
-    helpers.setValue(file);
-
-    if (onChange) onChange(event);
+    const file = event.currentTarget.files?.[0];
+    if (file) {
+      helpers.setValue(file);
+    }
+    if (onChange) {
+      onChange(event);
+    }
   };
 
-  const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    fileInputRef.current?.click();
-  };
   return (
     <>
-      {asLink ? (
-        <S.Span>
-          <S.Link href="#" onClick={handleLinkClick}>
-            choose here
-          </S.Link>
-          <S.FileInput
-            ref={fileInputRef}
-            {...field}
-            {...props}
-            accept="image/*"
-            onChange={handleChange}
-            type="file"
-            value={undefined}
-          />
-        </S.Span>
-      ) : (
-        <S.UploadButton htmlFor={field.name}>
-          <S.UploadIcon path={mdiImagePlus} size={0.75} />
-          <S.UploadText>{buttonText}</S.UploadText>
-          <S.FileInput
-            ref={fileInputRef}
-            {...field}
-            {...props}
-            accept="image/*"
-            id={field.name}
-            onChange={handleChange}
-            type="file"
-            value={undefined}
-          />
-        </S.UploadButton>
-      )}
+      {label && <S.Label>{label}</S.Label>}
+      <S.UploadButton htmlFor={name}>
+        <S.UploadIcon path={mdiImagePlus} size={0.75} />
+        <S.UploadText>Add image</S.UploadText>
+        <S.FileInput
+          {...field}
+          accept="image/*"
+          className={className}
+          id={name}
+          onChange={handleChange}
+          type="file"
+          value=""
+        />
+      </S.UploadButton>
       <S.SecondaryContainer>
-        <ErrorMessage component={S.ErrorMessage} name={field.name} />
+        {errors[name] && touched[name] ? <S.ErrorMessage>{errors[name]}</S.ErrorMessage> : null}
       </S.SecondaryContainer>
     </>
   );
