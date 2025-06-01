@@ -33,11 +33,12 @@ export const Date = styled.div`
 
 export const Label = styled.span`
   color: ${colors.palette.gray['300']};
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 500;
 `;
 
 export const PriceRow = styled.div`
-  align-items: baseline;
+  align-items: center;
   display: flex;
   gap: 8px;
 `;
