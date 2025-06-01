@@ -82,9 +82,19 @@ const WalletDeposit: SFC = ({className}) => {
   };
 
   const renderDeposits = () => {
-    return orderBy(Object.values(wires), ['created_date'], ['desc'])
-      .filter((wire) => wire.currency === activeWallet.currency.id && wire.wire_type === WireType.DEPOSIT)
-      .map((wire) => <ExpandableWire key={wire.id} wire={wire} />);
+    const deposits = orderBy(Object.values(wires), ['created_date'], ['desc']).filter(
+      (wire) => wire.currency === activeWallet.currency.id && wire.wire_type === WireType.DEPOSIT,
+    );
+
+    if (deposits.length === 0) {
+      return (
+        <S.EmptyState>
+          <p>No deposits yet</p>
+        </S.EmptyState>
+      );
+    }
+
+    return deposits.map((wire) => <ExpandableWire key={wire.id} wire={wire} />);
   };
 
   const renderIcon = () => {
