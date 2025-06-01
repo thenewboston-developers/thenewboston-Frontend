@@ -59,7 +59,7 @@ const MintModal: SFC<ComponentProps> = ({className, close, currency, onSuccess})
   };
 
   return (
-    <S.Modal className={className} close={close} header="Mint Currency">
+    <S.Modal className={className} close={close} header={`Mint ${currency.ticker}`}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isValid, touched}) => (
           <Form>
