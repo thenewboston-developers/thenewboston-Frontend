@@ -16,7 +16,7 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
     return (
       <>
         {Object.values(currencies).map((_currency) => {
-          return <S.RadioCardWrapper currency={_currency} key={_currency.id} />;
+          return <S.RadioCardWrapper close={close} currency={_currency} key={_currency.id} />;
         })}
       </>
     );
@@ -25,7 +25,6 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
   return (
     <S.Modal className={className} close={close} header="Currencies">
       <S.RadioCardContainer>{renderRadioCards()}</S.RadioCardContainer>
-      <S.Button text="Apply" />
     </S.Modal>
   );
 };

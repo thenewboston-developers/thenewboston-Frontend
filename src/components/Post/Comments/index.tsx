@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiChevronDown, mdiChevronUp, mdiEmoticonOutline, mdiPlusCircle, mdiSend} from '@mdi/js';
+import {mdiEmoticonOutline, mdiPlusCircle, mdiSend} from '@mdi/js';
 import Icon from '@mdi/react';
 import EmojiPicker from 'emoji-picker-react';
 import {Form, Formik, FormikHelpers} from 'formik';
@@ -143,12 +143,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     if (manager.activeCommentCurrency) {
       return (
         <S.IconContainer onClick={toggleMenu}>
-          <S.Img alt="logo" src={manager.activeCommentCurrency.logo} />
-          {currencySelectModalIsOpen ? (
-            <S.IconRight path={mdiChevronUp} size="20px" />
-          ) : (
-            <S.IconRight path={mdiChevronDown} size="20px" />
-          )}
+          <S.Image alt="logo" src={manager.activeCommentCurrency.logo} />
         </S.IconContainer>
       );
     }
@@ -255,7 +250,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
           </S.Content>
         )}
       </S.Container>
-      {currencySelectModalIsOpen ? <CurrencySelectModal close={toggleCurrencySelectModal} /> : null}
+      {currencySelectModalIsOpen ? <CurrencySelectModal close={() => toggleCurrencySelectModal(false)} /> : null}
     </>
   );
 };

@@ -115,24 +115,24 @@ export const Icon = styled(UIcon)`
 
 export const IconContainer = styled.div`
   align-items: center;
+  background-color: ${colors.palette.gray[100]};
+  border-radius: 8px;
+  cursor: pointer;
   display: flex;
   justify-content: center;
+  padding: 4px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: ${colors.palette.gray[200]};
+  }
 `;
 
-export const IconRight = styled(UIcon)`
-  margin-left: 6px;
-`;
-
-export const Img = styled.img`
+export const Image = styled.img`
   border-radius: 50%;
   height: ${`${IMG_HEIGHT}px`};
   margin-left: 12px;
   width: ${`${IMG_HEIGHT}px`};
-
-  &:hover {
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.16);
-    cursor: pointer;
-  }
 `;
 
 export const InputBox = styled.div`

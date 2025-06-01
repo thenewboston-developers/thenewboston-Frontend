@@ -28,9 +28,11 @@ export const Modal = styled(UModal)`
 export const RadioCardContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+
   @media (max-width: ${breakpoints.mini}) {
     grid-template-columns: 1fr;
   }
+
   @media (min-width: ${breakpoints.mini}) and (max-width: ${breakpoints.mobile}) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -39,6 +41,7 @@ export const RadioCardContainer = styled.div`
 export const RadioCardWrapper = styled(RadioCard)`
   border-radius: 14px;
   width: 224px;
+
   @media (max-width: ${breakpoints.mini}) {
     width: 100%;
   }
