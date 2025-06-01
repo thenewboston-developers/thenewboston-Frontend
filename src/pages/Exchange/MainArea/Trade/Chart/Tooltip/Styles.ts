@@ -24,7 +24,7 @@ export const Container = styled.div`
 `;
 
 export const Date = styled.div`
-  color: ${colors.palette.gray['400']};
+  color: ${colors.palette.gray[400]};
   font-size: 12px;
   letter-spacing: 0.05em;
   margin-bottom: 8px;
@@ -32,12 +32,13 @@ export const Date = styled.div`
 `;
 
 export const Label = styled.span`
-  color: ${colors.palette.gray['300']};
-  font-size: 12px;
+  color: ${colors.palette.gray[300]};
+  font-size: 14px;
+  font-weight: 500;
 `;
 
 export const PriceRow = styled.div`
-  align-items: baseline;
+  align-items: center;
   display: flex;
   gap: 8px;
 `;
