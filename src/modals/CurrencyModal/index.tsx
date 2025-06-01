@@ -1,6 +1,6 @@
 import {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Field, Form, Formik} from 'formik';
+import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
 import {FileInput} from 'components/FormElements';
@@ -105,22 +105,20 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) =>
   }, [self.is_staff]);
 
   return (
-    <S.Modal className={className} close={close} header={currency ? 'Edit Currency' : 'Add Currency'}>
+    <S.Modal className={className} close={close} header={currency ? 'Edit Currency' : 'Create Currency'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid, setFieldValue, values}) => (
           <Form>
             {self.is_staff && <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />}
             <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />
             {!values.logo && (
-              <>
-                <S.Label>Logo (required, 512x512 px)</S.Label>
-                <Field
-                  component={FileInput}
-                  name="logo"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
-                  touched={touched}
-                />
-              </>
+              <FileInput
+                errors={errors}
+                label="Logo (required, 512x512 px)"
+                name="logo"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
+                touched={touched}
+              />
             )}
             <ImagePreview
               onClear={async () => {

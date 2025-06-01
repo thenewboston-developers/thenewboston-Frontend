@@ -1,6 +1,6 @@
 import {ChangeEvent, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Field, Form, Formik} from 'formik';
+import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
 import EmojiBox from 'components/EmojiPicker';
@@ -137,7 +137,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
 
             <Input errors={errors} label="Amount" name="price_amount" touched={touched} type="number" />
 
-            <S.Div>
+            <S.TextareaContainer>
               <S.Textarea
                 errors={errors}
                 label="Message (optional)"
@@ -146,11 +146,9 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
                 touched={touched}
               />
               <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
-            </S.Div>
+            </S.TextareaContainer>
 
-            {!values.image && (
-              <Field component={FileInput} name="image" onChange={handleFileChange} touched={touched} />
-            )}
+            {!values.image && <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />}
             <ImagePreview
               onClear={async () => {
                 await setFieldValue('image', '');

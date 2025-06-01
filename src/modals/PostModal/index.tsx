@@ -1,6 +1,6 @@
 import {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {Field, Form, Formik} from 'formik';
+import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
 import EmojiBox from 'components/EmojiPicker';
@@ -93,13 +93,15 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <S.Div>
+            <S.TextareaContainer>
               <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
               <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
-            </S.Div>
+            </S.TextareaContainer>
 
             {!values.image && (
-              <Field component={FileInput} name="image" onChange={handleFileChange} touched={touched} />
+              <S.FileInputWrapper>
+                <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />
+              </S.FileInputWrapper>
             )}
             <ImagePreview
               onClear={async () => {

@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Field, Form, Formik} from 'formik';
+import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
 import {FileInput} from 'components/FormElements';
@@ -59,10 +59,10 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
   return (
     <S.Modal className={className} close={close} header="Edit Profile">
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {({dirty, isSubmitting, isValid, setFieldValue, touched, values}) => (
+        {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
             {!values.avatar && (
-              <Field component={FileInput} name="avatar" onChange={handleFileChange} touched={touched} />
+              <FileInput errors={errors} name="avatar" onChange={handleFileChange} touched={touched} />
             )}
             <ImagePreview
               onClear={async () => {

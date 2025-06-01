@@ -7,15 +7,21 @@ export const Bumper = styled.div`
   margin-bottom: 24px;
 `;
 
+export const FileInputWrapper = styled.div`
+  margin-bottom: 12px;
+  margin-top: 16px;
+`;
+
 export const Modal = styled(UModal)`
   width: 360px;
 `;
+
 export const Textarea = styled(UTextarea)`
-  padding-right: 43px;
   max-height: 350px;
   overflow-y: auto;
+  padding-right: 43px;
 `;
 
-export const Div = styled.div`
+export const TextareaContainer = styled.div`
   position: relative;
 `;
