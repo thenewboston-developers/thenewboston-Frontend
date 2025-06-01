@@ -24,17 +24,17 @@ import MintSection from './MintSection';
 import * as S from './Styles';
 
 const Detail: SFC = ({className}) => {
-  const {id} = useParams<{id: string}>();
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const self = useSelector(getSelf);
+  const [activeTab, setActiveTab] = useState<'minting' | 'balances'>('minting');
   const [currency, setCurrency] = useState<CurrencyReadDetailSerializer | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
   const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
-  const [activeTab, setActiveTab] = useState<'minting' | 'balances'>('minting');
   const [mintModalIsOpen, toggleMintModal] = useToggle(false);
+  const {id} = useParams<{id: string}>();
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const self = useSelector(getSelf);
 
   useEffect(() => {
     if (!id) return;
@@ -67,7 +67,14 @@ const Detail: SFC = ({className}) => {
     })();
   }, [currency, currentPage, dispatch]);
 
-  const handleMintSuccess = async () => {
+  const isInternalCurrency = currency?.domain === null;
+  const isOwner = currency?.owner.id === self.id;
+
+  const handleBackClick = () => {
+    navigate('/currencies/home');
+  };
+
+  const handleMintModalSuccess = async () => {
     if (!currency || !id) return;
 
     // Refetch currency details to update total_amount_minted
@@ -84,16 +91,9 @@ const Detail: SFC = ({className}) => {
     setCurrentPage(1);
   };
 
-  const handleBack = () => {
-    navigate('/currencies/home');
-  };
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
-  const isInternalCurrency = currency?.domain === null;
-  const isOwner = currency?.owner.id === self.id;
 
   if (loading) return <Loader />;
   if (!currency)
@@ -109,7 +109,7 @@ const Detail: SFC = ({className}) => {
     <>
       <S.Container className={className}>
         <S.Header>
-          <S.BackButton onClick={handleBack}>
+          <S.BackButton onClick={handleBackClick}>
             <Icon icon={mdiArrowLeft} size={20} />
             <span>Back to Currencies</span>
           </S.BackButton>
@@ -147,7 +147,7 @@ const Detail: SFC = ({className}) => {
           </S.TabSection>
         </S.Content>
       </S.Container>
-      {mintModalIsOpen && <MintModal close={toggleMintModal} currency={currency} onSuccess={handleMintSuccess} />}
+      {mintModalIsOpen && <MintModal close={toggleMintModal} currency={currency} onSuccess={handleMintModalSuccess} />}
     </>
   );
 };

@@ -68,7 +68,7 @@ const MintSection: SFC<MintSectionProps> = ({
         {mintsData.count > 20 && (
           <S.Pagination>
             {mintsData.previous && (
-              <Button onClick={() => onPageChange(currentPage - 1)} text="Previous" color={ButtonColor.secondary} />
+              <Button color={ButtonColor.secondary} onClick={() => onPageChange(currentPage - 1)} text="Previous" />
             )}
             <S.PageInfo>
               Page {currentPage} of {Math.ceil(mintsData.count / 20)}

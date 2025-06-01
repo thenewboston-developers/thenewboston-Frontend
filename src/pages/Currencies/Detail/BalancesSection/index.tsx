@@ -37,7 +37,7 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {
     })();
   }, [currency.id, currentPage]);
 
-  const handlePageChange = (page: number) => {
+  const handlePageButtonClick = (page: number) => {
     setCurrentPage(page);
   };
 
@@ -83,12 +83,16 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {
         {balancesData.count > 20 && (
           <S.Pagination>
             {balancesData.previous && (
-              <Button onClick={() => handlePageChange(currentPage - 1)} text="Previous" color={ButtonColor.secondary} />
+              <Button
+                color={ButtonColor.secondary}
+                onClick={() => handlePageButtonClick(currentPage - 1)}
+                text="Previous"
+              />
             )}
             <S.PageInfo>
               Page {currentPage} of {Math.ceil(balancesData.count / 20)}
             </S.PageInfo>
-            {balancesData.next && <Button onClick={() => handlePageChange(currentPage + 1)} text="Next" />}
+            {balancesData.next && <Button onClick={() => handlePageButtonClick(currentPage + 1)} text="Next" />}
           </S.Pagination>
         )}
       </>
