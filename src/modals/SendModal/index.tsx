@@ -137,7 +137,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
 
             <Input errors={errors} label="Amount" name="price_amount" touched={touched} type="number" />
 
-            <S.Div>
+            <S.TextareaContainer>
               <S.Textarea
                 errors={errors}
                 label="Message (optional)"
@@ -146,7 +146,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
                 touched={touched}
               />
               <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
-            </S.Div>
+            </S.TextareaContainer>
 
             {!values.image && <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />}
             <ImagePreview

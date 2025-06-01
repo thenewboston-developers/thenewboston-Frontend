@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import {colors, fonts} from 'styles';
 
 export const ErrorMessage = styled.div`
-  color: ${colors.palette.red['400']};
+  color: ${colors.palette.red[400]};
   font-size: 12px;
   margin-top: 6px;
 `;
@@ -14,7 +14,7 @@ export const FileInput = styled.input`
 `;
 
 export const Label = styled.div`
-  color: ${colors.palette.gray['900']};
+  color: ${colors.palette.gray[900]};
   font-size: 14px;
   font-weight: ${fonts.weight.medium};
   margin-bottom: 8px;

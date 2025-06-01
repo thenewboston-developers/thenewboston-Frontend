@@ -93,10 +93,10 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <S.Div>
+            <S.TextareaContainer>
               <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
               <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
-            </S.Div>
+            </S.TextareaContainer>
 
             {!values.image && (
               <S.FileInputWrapper>
