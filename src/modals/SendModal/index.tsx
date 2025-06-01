@@ -1,6 +1,6 @@
 import {ChangeEvent, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Field, Form, Formik} from 'formik';
+import {Form, Formik} from 'formik';
 
 import Button, {ButtonType} from 'components/Button';
 import EmojiBox from 'components/EmojiPicker';
@@ -148,9 +148,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
               <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
             </S.Div>
 
-            {!values.image && (
-              <Field component={FileInput} name="image" onChange={handleFileChange} touched={touched} />
-            )}
+            {!values.image && <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />}
             <ImagePreview
               onClear={async () => {
                 await setFieldValue('image', '');
