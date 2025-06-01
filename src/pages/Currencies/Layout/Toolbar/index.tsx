@@ -10,8 +10,9 @@ const Toolbar: SFC = ({className}) => {
   const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
 
   const renderButton = () => {
-    return <Button onClick={toggleCurrencyModal} text="Add Currency" />;
+    return <Button onClick={toggleCurrencyModal} text="Create Currency" />;
   };
+
   return (
     <>
       <S.Container className={className}>

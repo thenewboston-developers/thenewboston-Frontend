@@ -105,7 +105,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) =>
   }, [self.is_staff]);
 
   return (
-    <S.Modal className={className} close={close} header={currency ? 'Edit Currency' : 'Add Currency'}>
+    <S.Modal className={className} close={close} header={currency ? 'Edit Currency' : 'Create Currency'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid, setFieldValue, values}) => (
           <Form>
