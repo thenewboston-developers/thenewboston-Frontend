@@ -126,7 +126,7 @@ const Wallets: SFC = ({className}) => {
     <>
       <S.Container className={className}>
         <S.LeftMenu>
-          <S.Div>{renderButtonContainer()}</S.Div>
+          <S.FlexContainer>{renderButtonContainer()}</S.FlexContainer>
           <S.Box>{renderMenuItems()}</S.Box>
         </S.LeftMenu>
         <S.Right>{renderRightContent()}</S.Right>

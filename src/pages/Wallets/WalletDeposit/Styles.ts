@@ -4,6 +4,12 @@ import UCopyContainer from 'components/CopyContainer';
 import Qr from 'components/Qr';
 import {colors, fonts} from 'styles';
 
+export const Balance = styled.div`
+  color: ${colors.primary};
+  font-size: 16px;
+  font-weight: 700;
+`;
+
 export const Container = styled.div`
   margin-top: 16px;
 `;
@@ -12,11 +18,39 @@ export const CopyContainer = styled(UCopyContainer)`
   margin-top: 16px;
 `;
 
-export const QR = styled(Qr)`
-  display: block;
-  height: auto;
+export const DepositAccountRow = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 12px 0;
   width: 100%;
 `;
+
+export const DepositLeft = styled.div`
+  width: 100%;
+`;
+
+export const DepositSection = styled.div`
+  padding: 24px 0;
+`;
+
+export const EmptyState = styled.div`
+  color: ${colors.secondary};
+  padding: 60px 20px;
+  text-align: center;
+
+  p {
+    font-size: 14px;
+    margin: 0;
+  }
+`;
+
+export const IconWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  margin-left: 6px;
+`;
+
 export const LeftCornerBorders = styled.div`
   height: 100%;
   left: 0;
@@ -50,6 +84,33 @@ export const LeftCornerBorders = styled.div`
   }
 `;
 
+export const QR = styled(Qr)`
+  display: block;
+  height: auto;
+  width: 100%;
+`;
+
+export const QrWrapper = styled.div`
+  background: ${colors.background};
+  border: 2px solid ${colors.border};
+  border-radius: 16px;
+  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
+  display: inline-block;
+  padding: 25px;
+  position: relative;
+`;
+
+export const RefreshIconContainer = styled.div`
+  align-items: center;
+  background: ${colors.background};
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 12px;
+`;
+
 export const RightCornerBorders = styled.div`
   height: 100%;
   position: absolute;
@@ -69,7 +130,7 @@ export const RightCornerBorders = styled.div`
   &::before {
     border-bottom: none;
     border-left: none;
-    border-radius: 0px 15px 0 0;
+    border-radius: 0 15px 0 0;
     right: 10px;
     top: 10px;
   }
@@ -82,51 +143,6 @@ export const RightCornerBorders = styled.div`
     left: 10px;
   }
 `;
-export const QrWrapper = styled.div`
-  background: ${colors.background};
-  border-radius: 16px;
-  border: 2px solid ${colors.border};
-  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
-  display: inline-block;
-  padding: 25px;
-  position: relative;
-`;
-
-export const DepositAccountRow = styled.div`
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
-  padding: 12px 0px;
-  width: 100%;
-`;
-
-export const DepositLeft = styled.div`
-  width: 100%;
-`;
-
-export const IconWrapper = styled.div`
-  align-items: center;
-  display: flex;
-  margin-left: 6px;
-`;
-
-export const RefreshIconContainer = styled.div`
-  align-items: center;
-  background: ${colors.background};
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  padding: 12px;
-`;
-
-export const Top = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 24px;
-`;
 
 export const Text = styled.div`
   color: ${colors.secondary};
@@ -136,19 +152,17 @@ export const Text = styled.div`
   text-transform: uppercase;
 `;
 
-export const Balance = styled.div`
-  color: ${colors.primary};
-  font-size: 16px;
-  font-weight: 700;
-`;
-export const Div = styled.div`
-  padding: 24px 0px;
-`;
-
 export const Title = styled.div`
   color: ${colors.primary};
   font-size: 15px;
   font-weight: 600;
+`;
+
+export const Top = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
 `;
 
 export const InternalCurrencyMessage = styled.div`
@@ -164,21 +178,10 @@ export const InternalCurrencyMessage = styled.div`
 
   ${Text} {
     color: ${colors.secondary};
-    font-weight: 400;
     font-size: 14px;
+    font-weight: 400;
+    letter-spacing: normal;
     line-height: 1.5;
     text-transform: none;
-    letter-spacing: normal;
-  }
-`;
-
-export const EmptyState = styled.div`
-  color: ${colors.secondary};
-  padding: 60px 20px;
-  text-align: center;
-
-  p {
-    font-size: 14px;
-    margin: 0;
   }
 `;

@@ -133,13 +133,13 @@ const WalletWithdraw: SFC = ({className}) => {
             </S.Form>
           )}
         </Formik>
-        <S.Img alt="wallet" src={wallet} />
+        <S.Image alt="wallet" src={wallet} />
       </S.Panel>
 
-      <S.Div>
+      <S.WithdrawSection>
         <S.Title>Withdrawal History</S.Title>
         {renderWithdraws()}
-      </S.Div>
+      </S.WithdrawSection>
     </S.Container>
   );
 };

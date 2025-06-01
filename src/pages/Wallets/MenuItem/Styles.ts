@@ -8,6 +8,11 @@ export const Balance = styled.div`
   margin-top: 8px;
 `;
 
+export const BalanceAmount = styled.span`
+  color: ${colors.primary};
+  font-weight: ${fonts.weight.semiBold};
+`;
+
 export const Container = styled.div<{$isActive: boolean}>`
   background: ${({$isActive}) => ($isActive ? colors.palette.blue[100] : 'transparent')};
   border-bottom: 1px solid ${colors.border};
@@ -20,9 +25,9 @@ export const Container = styled.div<{$isActive: boolean}>`
   }
 
   &:last-child {
+    border-bottom: none;
     border-bottom-left-radius: 14px;
     border-bottom-right-radius: 14px;
-    border-bottom: none;
   }
 
   &:hover {
@@ -31,10 +36,8 @@ export const Container = styled.div<{$isActive: boolean}>`
   }
 `;
 
-export const Domain = styled.div`
-  color: ${colors.secondary};
-  font-size: 12px;
-  margin-top: 2px;
+export const CurrencyDetails = styled.div`
+  flex: 1;
 `;
 
 export const CurrencyInfo = styled.div`
@@ -43,17 +46,14 @@ export const CurrencyInfo = styled.div`
   gap: 8px;
 `;
 
+export const Domain = styled.div`
+  color: ${colors.secondary};
+  font-size: 12px;
+  margin-top: 2px;
+`;
+
 export const Ticker = styled.div<{$isActive: boolean}>`
   color: ${colors.black};
   font-size: 16px;
   font-weight: ${fonts.weight.semiBold};
-`;
-
-export const BalanceAmount = styled.span`
-  color: ${colors.primary};
-  font-weight: ${fonts.weight.semiBold};
-`;
-
-export const CurrencyDetails = styled.div`
-  flex: 1;
 `;
