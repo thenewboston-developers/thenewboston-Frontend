@@ -9,7 +9,7 @@ export const Balance = styled.div`
 `;
 
 export const Container = styled.div<{$isActive: boolean}>`
-  background: ${({$isActive}) => ($isActive ? colors.palette.gray[100] : 'transparent')};
+  background: ${({$isActive}) => ($isActive ? colors.palette.blue[100] : 'transparent')};
   border-bottom: 1px solid ${colors.border};
   padding: 12px 16px;
   transition: background 0.2s ease;
@@ -26,7 +26,7 @@ export const Container = styled.div<{$isActive: boolean}>`
   }
 
   &:hover {
-    background: ${colors.whiteHover};
+    background: ${colors.palette.blue[50]};
     cursor: pointer;
   }
 `;

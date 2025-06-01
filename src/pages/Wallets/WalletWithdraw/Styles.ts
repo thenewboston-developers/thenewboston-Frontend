@@ -3,11 +3,13 @@ import styled from 'styled-components';
 
 import {Input as UInput, LogoInput} from 'components/FormElements';
 import ULine from 'components/Line';
-import {breakpoints, colors, fonts} from 'styles';
+import {breakpoints, colors} from 'styles';
 
 const WITHDRAW_IMAGE_SIZE = 363;
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  margin-top: 16px;
+`;
 
 export const DetailRow = styled.div`
   display: flex;
@@ -35,8 +37,11 @@ export const Input = styled(UInput)`
 `;
 
 export const Label = styled.div`
-  color: ${colors.gray};
-  font-weight: ${fonts.weight.bold};
+  color: ${colors.secondary};
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 `;
 
 export const Line = styled(ULine)`
@@ -44,7 +49,6 @@ export const Line = styled(ULine)`
   margin: 4px 0;
 `;
 
-// TODO: Standardize
 export const Panel = styled.div`
   background: ${colors.background};
   border-radius: 16px;
@@ -57,8 +61,9 @@ export const Panel = styled.div`
 `;
 
 export const Value = styled.div`
-  font-size: 16px;
-  font-weight: ${fonts.weight.semiBold};
+  color: ${colors.primary};
+  font-size: 15px;
+  font-weight: 600;
 `;
 
 export const AmountLogoInput = styled(LogoInput)`
@@ -66,12 +71,12 @@ export const AmountLogoInput = styled(LogoInput)`
   width: 100%;
 `;
 export const Div = styled.div`
-  padding: 16px 0px;
+  padding: 24px 0px;
 `;
 export const Title = styled.div`
-  color: ${colors.gray};
-  font-size: 18px;
-  font-weight: ${fonts.weight.semiBold};
+  color: ${colors.primary};
+  font-size: 15px;
+  font-weight: 600;
 `;
 
 export const Img = styled.img`
@@ -87,8 +92,11 @@ export const Img = styled.img`
 `;
 
 export const Text = styled.div`
-  color: ${colors.gray};
-  font-weight: ${fonts.weight.bold};
+  color: ${colors.secondary};
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 `;
 
 export const InternalCurrencyMessage = styled.div`
@@ -96,13 +104,18 @@ export const InternalCurrencyMessage = styled.div`
   text-align: center;
 
   ${Title} {
+    color: ${colors.primary};
+    font-size: 16px;
+    font-weight: 600;
     margin-bottom: 16px;
   }
 
   ${Text} {
-    color: ${colors.palette.gray[600]};
-    font-weight: ${fonts.weight.regular};
-    font-size: 16px;
+    color: ${colors.secondary};
+    font-weight: 400;
+    font-size: 14px;
     line-height: 1.5;
+    text-transform: none;
+    letter-spacing: normal;
   }
 `;

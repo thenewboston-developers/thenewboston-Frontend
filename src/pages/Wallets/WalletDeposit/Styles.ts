@@ -129,22 +129,26 @@ export const Top = styled.div`
 `;
 
 export const Text = styled.div`
-  color: ${colors.gray};
-  font-weight: ${fonts.weight.bold};
+  color: ${colors.secondary};
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 `;
 
 export const Balance = styled.div`
-  font-size: 24px;
-  font-weight: ${fonts.weight.semiBold};
+  color: ${colors.primary};
+  font-size: 16px;
+  font-weight: 700;
 `;
 export const Div = styled.div`
-  padding: 20px 0px;
+  padding: 24px 0px;
 `;
 
 export const Title = styled.div`
-  color: ${colors.gray};
-  font-size: 18px;
-  font-weight: ${fonts.weight.semiBold};
+  color: ${colors.primary};
+  font-size: 15px;
+  font-weight: 600;
 `;
 
 export const InternalCurrencyMessage = styled.div`
@@ -152,13 +156,18 @@ export const InternalCurrencyMessage = styled.div`
   text-align: center;
 
   ${Title} {
+    color: ${colors.primary};
+    font-size: 16px;
+    font-weight: 600;
     margin-bottom: 16px;
   }
 
   ${Text} {
-    color: ${colors.palette.gray[600]};
-    font-weight: ${fonts.weight.regular};
-    font-size: 16px;
+    color: ${colors.secondary};
+    font-weight: 400;
+    font-size: 14px;
     line-height: 1.5;
+    text-transform: none;
+    letter-spacing: normal;
   }
 `;
