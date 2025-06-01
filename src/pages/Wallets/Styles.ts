@@ -15,12 +15,12 @@ export const ButtonContainer = styled.div`
 `;
 
 export const Container = styled.div`
-  display: grid;
+  display: flex;
   gap: 10px;
-  grid-template-columns: min-content auto;
   padding: 24px;
+  align-items: flex-start;
   @media (max-width: ${breakpoints.tablet}) {
-    grid-template-columns: auto;
+    flex-direction: column;
     padding: 10px;
   }
 `;
@@ -45,7 +45,7 @@ export const Right = styled.div`
   border-radius: 14px;
   border: 1px solid ${colors.border};
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
-  flex-grow: 1;
+  flex: 1;
   padding: 24px 16px;
   @media (max-width: ${breakpoints.mobile}) {
     padding: 18px 10px;

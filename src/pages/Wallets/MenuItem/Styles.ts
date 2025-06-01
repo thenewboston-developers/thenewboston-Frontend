@@ -3,43 +3,57 @@ import styled from 'styled-components';
 import {colors, fonts} from 'styles';
 
 export const Balance = styled.div`
-  font-size: 14px;
-  padding: 7px 4px;
+  color: ${colors.secondary};
+  font-size: 13px;
+  margin-top: 8px;
 `;
 
 export const Container = styled.div<{$isActive: boolean}>`
-  background: ${({$isActive}) => ($isActive ? `${colors.palette.blue[600]}` : 'transparent')};
+  background: ${({$isActive}) => ($isActive ? colors.palette.gray[100] : 'transparent')};
   border-bottom: 1px solid ${colors.border};
-  padding: 8px 12px;
-  transition: background 0.3s ease;
+  padding: 12px 16px;
+  transition: background 0.2s ease;
+
+  &:first-child {
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+  }
+
+  &:last-child {
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+    border-bottom: none;
+  }
+
   &:hover {
-    background: ${colors.palette.blue[600]};
+    background: ${colors.whiteHover};
     cursor: pointer;
-    text-decoration: none;
   }
 `;
 
 export const Domain = styled.div`
-  color: ${colors.palette.darkGray['300']};
+  color: ${colors.secondary};
   font-size: 12px;
+  margin-top: 2px;
 `;
 
-export const Text = styled.div`
+export const CurrencyInfo = styled.div`
   align-items: center;
   display: flex;
-  justify-content: space-between;
-  padding: 0px 4px;
+  gap: 8px;
 `;
 
 export const Ticker = styled.div<{$isActive: boolean}>`
-  color: ${({$isActive}) => ($isActive ? colors.palette.blue[700] : `${colors.black}`)};
-  font-size: 18px;
+  color: ${colors.black};
+  font-size: 16px;
   font-weight: ${fonts.weight.semiBold};
 `;
 
-export const Span = styled.span`
+export const BalanceAmount = styled.span`
+  color: ${colors.primary};
   font-weight: ${fonts.weight.semiBold};
-  margin-left: 5px;
 `;
 
-export const Div = styled.div``;
+export const CurrencyDetails = styled.div`
+  flex: 1;
+`;

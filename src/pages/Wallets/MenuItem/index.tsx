@@ -22,15 +22,15 @@ const MenuItem: SFC<MenuItemProps> = ({className, wallet}) => {
   return (
     <>
       <S.Container $isActive={manager.activeWalletId === wallet.id} className={className} onClick={handleClick}>
-        <S.Text>
-          <S.Div>
+        <S.CurrencyInfo>
+          <CurrencyLogo logo={wallet.currency.logo} />
+          <S.CurrencyDetails>
             <S.Ticker $isActive={manager.activeWalletId === wallet.id}>{wallet.currency.ticker}</S.Ticker>
             <S.Domain>{wallet.currency.domain}</S.Domain>
-          </S.Div>
-          <CurrencyLogo logo={wallet.currency.logo} />
-        </S.Text>
+          </S.CurrencyDetails>
+        </S.CurrencyInfo>
         <S.Balance>
-          Balance: <S.Span> {wallet.balance.toLocaleString()}</S.Span>
+          Balance: <S.BalanceAmount>{wallet.balance.toLocaleString()}</S.BalanceAmount>
         </S.Balance>
       </S.Container>
     </>
