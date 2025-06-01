@@ -22,14 +22,6 @@ export const displayErrorToast = (error: any) => {
   displayToast(errorStr, ToastType.ERROR);
 };
 
-/**
- * Displays error toasts for each error message in the provided array.
- * @param {string[]} errors - An array of error messages to be displayed as toasts.
- */
-export const displayErrorToasts = (errors: string[]): void => {
-  errors.forEach(displayErrorToast);
-};
-
 export const displayToast = (message: ReactNode, type: ToastType, className?: string): void => {
   toast(
     <Toast className={className} type={type}>

@@ -255,7 +255,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
           </S.Content>
         )}
       </S.Container>
-      {currencySelectModalIsOpen ? <CurrencySelectModal close={toggleCurrencySelectModal} /> : null}
+      {currencySelectModalIsOpen ? <CurrencySelectModal close={() => toggleCurrencySelectModal(false)} /> : null}
     </>
   );
 };
