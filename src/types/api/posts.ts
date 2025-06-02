@@ -6,6 +6,8 @@ export interface PostReadSerializer extends CreatedModified {
   content: string;
   id: number;
   image: string | null;
+  is_liked: boolean;
+  like_count: number;
   owner: UserReadSerializer;
   price_amount: number | null;
   price_currency: number | null;

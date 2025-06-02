@@ -178,3 +178,36 @@ export const TransferText = styled.div`
     font-weight: ${fonts.weight.bold};
   }
 `;
+
+export const LikeButton = styled.button`
+  align-items: center;
+  background: transparent;
+  border: 1px solid ${colors.palette.gray[300]};
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  padding: 6px 12px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${colors.palette.gray[50]};
+    border-color: ${colors.palette.gray[400]};
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
+export const LikeIcon = styled(UIcon)<{$isLiked: boolean}>`
+  & path {
+    fill: ${({$isLiked}) => ($isLiked ? colors.palette.red[500] : colors.palette.gray[600])} !important;
+  }
+`;
+
+export const LikeCount = styled.span`
+  color: ${colors.palette.gray[700]};
+  font-size: 14px;
+  font-weight: ${fonts.weight.medium};
+`;

@@ -6,6 +6,8 @@ export interface Post extends CreatedModified {
   content: string;
   id: number;
   image: string | null;
+  is_liked: boolean;
+  like_count: number;
   owner: UserReadSerializer;
   price_amount: number | null;
   price_currency: number | null;
@@ -14,4 +16,9 @@ export interface Post extends CreatedModified {
 
 export interface Posts extends Pagination {
   posts: Post[];
+}
+
+export interface PostLike extends CreatedModified {
+  id: number;
+  user: UserReadSerializer;
 }
