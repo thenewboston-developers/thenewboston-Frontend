@@ -8,8 +8,14 @@ import {breakpoints, colors, fonts} from 'styles';
 export const BoxLeft = styled.div`
   align-items: center;
   display: flex;
-  gap: 8px;
+  gap: 16px;
   margin: 8px 0;
+`;
+
+export const LikeWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 2px;
 `;
 
 export const Container = styled.div`
@@ -185,7 +191,7 @@ export const LikeButton = styled.button`
   border: none;
   cursor: pointer;
   display: flex;
-  padding: 8px;
+  padding: 4px;
   transition: all 0.2s ease;
 
   &:hover {
@@ -211,7 +217,7 @@ export const LikeCount = styled.button`
   cursor: pointer;
   font-size: 14px;
   font-weight: ${fonts.weight.medium};
-  padding: 8px 4px;
+  padding: 4px;
   transition: color 0.2s ease;
 
   &:hover {

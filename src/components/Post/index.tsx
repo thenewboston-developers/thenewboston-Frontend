@@ -145,10 +145,14 @@ const Post: SFC<PostProps> = ({className, post}) => {
         {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
         <S.Div>
           <S.BoxLeft>
-            <S.LikeButton onClick={handleLikeClick}>
-              <S.LikeIcon $isLiked={is_liked} icon={is_liked ? mdiHeart : mdiHeartOutline} size={20} />
-            </S.LikeButton>
-            <S.LikeCount onClick={toggleLikesModal}>{like_count} likes</S.LikeCount>
+            <S.LikeWrapper>
+              <S.LikeButton onClick={handleLikeClick}>
+                <S.LikeIcon $isLiked={is_liked} icon={is_liked ? mdiHeart : mdiHeartOutline} size={20} />
+              </S.LikeButton>
+              <S.LikeCount onClick={toggleLikesModal}>
+                {like_count} {like_count === 1 ? 'like' : 'likes'}
+              </S.LikeCount>
+            </S.LikeWrapper>
             <OutlineButton
               iconLeft={mdiCommentTextOutline}
               onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
