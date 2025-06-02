@@ -6,12 +6,12 @@ import {breakpoints, colors} from 'styles';
 export const EmptyMessage = styled.div`
   color: ${colors.palette.gray[600]};
   font-size: 16px;
-  padding: 40px 20px;
+  padding: 24px 12px;
   text-align: center;
 `;
 
 export const LikeItem = styled.div`
-  padding: 12px 20px;
+  padding: 8px 12px;
   transition: background-color 0.2s ease;
 
   &:hover {
@@ -28,7 +28,7 @@ export const LoaderContainer = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 40px 12px;
 `;
 
 export const Modal = styled(UModal)`
