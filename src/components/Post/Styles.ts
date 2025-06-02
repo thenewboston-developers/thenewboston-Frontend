@@ -1,9 +1,48 @@
 import {Link} from 'react-router-dom';
-import styled from 'styled-components';
+import styled, {css, keyframes} from 'styled-components';
 
 import UDropdownMenu from 'components/DropdownMenu';
 import UIcon from 'components/Icon';
 import {breakpoints, colors, fonts} from 'styles';
+
+const likeAnimation = keyframes`
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  10% {
+    transform: scale(0.8) rotate(-8deg);
+  }
+  30% {
+    transform: scale(1.4) rotate(12deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(-5deg);
+  }
+  70% {
+    transform: scale(1.3) rotate(3deg);
+  }
+  90% {
+    transform: scale(1.1) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+`;
+
+const sparkle = keyframes`
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5) rotate(360deg);
+  }
+`;
 
 export const BoxLeft = styled.div`
   align-items: center;
@@ -185,13 +224,14 @@ export const TransferText = styled.div`
   }
 `;
 
-export const LikeButton = styled.button`
+export const LikeButton = styled.button<{$animate: boolean}>`
   align-items: center;
   background: transparent;
   border: none;
   cursor: pointer;
   display: flex;
   padding: 4px;
+  position: relative;
   transition: all 0.2s ease;
 
   &:hover {
@@ -202,12 +242,42 @@ export const LikeButton = styled.button`
   &:active {
     transform: scale(0.95);
   }
+
+  ${({$animate}) =>
+    $animate &&
+    css`
+      &::before,
+      &::after {
+        content: '✨';
+        position: absolute;
+        font-size: 12px;
+        animation: ${sparkle} 0.6s ease-out;
+        pointer-events: none;
+      }
+
+      &::before {
+        top: -8px;
+        left: -8px;
+      }
+
+      &::after {
+        bottom: -8px;
+        right: -8px;
+        animation-delay: 0.2s;
+      }
+    `}
 `;
 
-export const LikeIcon = styled(UIcon)<{$isLiked: boolean}>`
+export const LikeIcon = styled(UIcon)<{$isLiked: boolean; $animate: boolean}>`
   & path {
     fill: ${({$isLiked}) => ($isLiked ? colors.palette.red[500] : colors.palette.gray[600])} !important;
   }
+
+  ${({$animate}) =>
+    $animate &&
+    css`
+      animation: ${likeAnimation} 0.6s ease-out;
+    `}
 `;
 
 export const LikeCount = styled.button`

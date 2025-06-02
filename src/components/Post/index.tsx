@@ -29,6 +29,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const [likesModalIsOpen, toggleLikesModal] = useToggle(false);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [showFullContent, setShowFullContent] = useState(false);
+  const [animateLike, setAnimateLike] = useState(false);
   const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
@@ -54,6 +55,9 @@ const Post: SFC<PostProps> = ({className, post}) => {
       if (is_liked) {
         await dispatch(unlikePost(id));
       } else {
+        // Trigger animation only when liking
+        setAnimateLike(true);
+        setTimeout(() => setAnimateLike(false), 600);
         await dispatch(likePost(id));
       }
     } catch (error) {
@@ -146,8 +150,13 @@ const Post: SFC<PostProps> = ({className, post}) => {
         <S.Div>
           <S.BoxLeft>
             <S.LikeWrapper>
-              <S.LikeButton onClick={handleLikeClick}>
-                <S.LikeIcon $isLiked={is_liked} icon={is_liked ? mdiHeart : mdiHeartOutline} size={20} />
+              <S.LikeButton $animate={animateLike} onClick={handleLikeClick}>
+                <S.LikeIcon
+                  $animate={animateLike}
+                  $isLiked={is_liked}
+                  icon={is_liked ? mdiHeart : mdiHeartOutline}
+                  size={20}
+                />
               </S.LikeButton>
               <S.LikeCount onClick={toggleLikesModal}>
                 {like_count} {like_count === 1 ? 'like' : 'likes'}
