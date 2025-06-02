@@ -9,8 +9,10 @@ export interface PostLikePayload {
 }
 
 export interface PostCommentPayload {
+  comment: string;
+  commenter: UserReadSerializer;
   notification_type: 'POST_COMMENT';
-  [key: string]: any;
+  post_id: number;
 }
 
 export type NotificationPayload = PostLikePayload | PostCommentPayload;

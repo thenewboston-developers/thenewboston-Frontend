@@ -27,7 +27,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   };
 
   const renderPostCommentNotification = () => {
-    if (notification.payload.notification_type !== 'POST_COMMENT') return null;
+    if (notification.payload.notification_type !== NotificationType.POST_COMMENT) return null;
 
     return (
       <S.NotificationContainer>
@@ -50,7 +50,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   };
 
   const renderPostLikeNotification = () => {
-    if (notification.payload.notification_type !== 'POST_LIKE') return null;
+    if (notification.payload.notification_type !== NotificationType.POST_LIKE) return null;
 
     return (
       <S.NotificationContainer>
