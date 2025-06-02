@@ -3,15 +3,11 @@ import {Link} from 'react-router-dom';
 import {mdiContentCopy, mdiHeart} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
+import {NotificationType} from 'enums';
 import {Notification as TNotification, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
 import * as S from './Styles';
-
-enum NotificationType {
-  POST_COMMENT = 'POST_COMMENT',
-  POST_LIKE = 'POST_LIKE',
-}
 
 export interface NotificationProps {
   notification: TNotification;
