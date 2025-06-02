@@ -24,7 +24,7 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {
       setLoading(true);
       try {
         const data = await getCurrencyBalances({
-          currency__id: currency.id,
+          currency: currency.id,
           page: currentPage,
           page_size: 20,
         });

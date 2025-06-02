@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {GetPostsParams, PaginatedResponse, PostReadSerializer} from 'types';
+import {GetPostsParams, PaginatedResponse, PostLike, PostReadSerializer} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/posts`;
@@ -62,6 +62,23 @@ export const updatePost = async (id: number, data: FormData): Promise<PostReadSe
   try {
     const response = await axios.patch<PostReadSerializer>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
     return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const likePost = async (postId: number): Promise<PostLike> => {
+  try {
+    const response = await axios.post<PostLike>(`${BASE_URL}/${postId}/like`, {}, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const unlikePost = async (postId: number): Promise<void> => {
+  try {
+    await axios.post(`${BASE_URL}/${postId}/unlike`, {}, authorizationHeaders());
   } catch (error) {
     throw error;
   }

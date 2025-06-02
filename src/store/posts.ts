@@ -40,8 +40,15 @@ const posts = createSlice({
     unsetPost: (state, {payload: id}: PayloadAction<number>) => {
       state.posts = state.posts.filter((post) => post.id !== id);
     },
+    updatePostLikeStatus: (state, {payload}: PayloadAction<{postId: number; isLiked: boolean; likeCount: number}>) => {
+      const post = state.posts.find((p) => p.id === payload.postId);
+      if (post) {
+        post.is_liked = payload.isLiked;
+        post.like_count = payload.likeCount;
+      }
+    },
   },
 });
 
-export const {setPost, setPosts, unsetPost, startLoading, resetPosts} = posts.actions;
+export const {setPost, setPosts, unsetPost, startLoading, resetPosts, updatePostLikeStatus} = posts.actions;
 export default posts.reducer;

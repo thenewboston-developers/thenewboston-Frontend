@@ -2,11 +2,13 @@ import {
   createPost as _createPost,
   deletePost as _deletePost,
   getPosts as _getPosts,
+  likePost as _likePost,
+  unlikePost as _unlikePost,
   updatePost as _updatePost,
 } from 'api/posts';
 import {store} from 'store';
 import {setComments} from 'store/comments';
-import {resetPosts as _resetPosts, setPost, setPosts, startLoading, unsetPost} from 'store/posts';
+import {resetPosts as _resetPosts, setPost, setPosts, startLoading, unsetPost, updatePostLikeStatus} from 'store/posts';
 import {AppDispatch, GetPostsParams} from 'types';
 import {getNextUrlFromState} from 'utils/urls';
 
@@ -48,4 +50,64 @@ export const updatePost = (id: number, data: FormData) => async (dispatch: AppDi
   delete responseData.comments;
 
   dispatch(setPost(responseData));
+};
+
+export const likePost = (postId: number) => async (dispatch: AppDispatch) => {
+  const state = store.getState();
+  const post = state.posts.posts.find((p) => p.id === postId);
+
+  if (!post) return;
+
+  // Optimistically update the UI
+  dispatch(
+    updatePostLikeStatus({
+      postId,
+      isLiked: true,
+      likeCount: post.like_count + 1,
+    }),
+  );
+
+  try {
+    await _likePost(postId);
+  } catch (error) {
+    // Revert on error
+    dispatch(
+      updatePostLikeStatus({
+        postId,
+        isLiked: false,
+        likeCount: post.like_count,
+      }),
+    );
+    throw error;
+  }
+};
+
+export const unlikePost = (postId: number) => async (dispatch: AppDispatch) => {
+  const state = store.getState();
+  const post = state.posts.posts.find((p) => p.id === postId);
+
+  if (!post) return;
+
+  // Optimistically update the UI
+  dispatch(
+    updatePostLikeStatus({
+      postId,
+      isLiked: false,
+      likeCount: post.like_count - 1,
+    }),
+  );
+
+  try {
+    await _unlikePost(postId);
+  } catch (error) {
+    // Revert on error
+    dispatch(
+      updatePostLikeStatus({
+        postId,
+        isLiked: true,
+        likeCount: post.like_count,
+      }),
+    );
+    throw error;
+  }
 };

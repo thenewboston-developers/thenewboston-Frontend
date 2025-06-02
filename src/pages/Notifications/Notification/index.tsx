@@ -1,16 +1,13 @@
 import {ReactNode} from 'react';
 import {Link} from 'react-router-dom';
-import {mdiContentCopy} from '@mdi/js';
+import {mdiContentCopy, mdiHeart} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
+import {NotificationType} from 'enums';
 import {Notification as TNotification, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
 import * as S from './Styles';
-
-enum NotificationType {
-  POST_COMMENT = 'POST_COMMENT',
-}
 
 export interface NotificationProps {
   notification: TNotification;
@@ -26,6 +23,8 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   };
 
   const renderPostCommentNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.POST_COMMENT) return null;
+
     return (
       <S.NotificationContainer>
         <Link to={`/profile/${notification.payload.commenter.id}`}>
@@ -46,9 +45,31 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     );
   };
 
+  const renderPostLikeNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.POST_LIKE) return null;
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/profile/${notification.payload.liker.id}`}>
+          <Avatar src={notification.payload.liker.avatar} size="45px" />
+          <S.Icon path={mdiHeart} size="23px" />
+        </Link>
+        <S.TextContainer>
+          <div>
+            <S.Link to={`/profile/${notification.payload.liker.id}`}>{notification.payload.liker.username}</S.Link>{' '}
+            liked your <strong>Post</strong>
+          </div>
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
+  };
+
   const renderContent = () => {
     const notificationTypes: {[key in NotificationType]: () => ReactNode} = {
       [NotificationType.POST_COMMENT]: renderPostCommentNotification,
+      [NotificationType.POST_LIKE]: renderPostLikeNotification,
     };
 
     const renderFunction = notificationTypes[notification.payload.notification_type as NotificationType];

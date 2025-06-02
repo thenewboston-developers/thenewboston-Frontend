@@ -1,14 +1,15 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiCommentTextOutline, mdiDotsVertical, mdiSwapHorizontal} from '@mdi/js';
+import {mdiCommentTextOutline, mdiDotsVertical, mdiHeart, mdiHeartOutline, mdiSwapHorizontal} from '@mdi/js';
 
 import Linkify from 'components/Linkify';
 import OutlineButton from 'components/OutlineButton';
 import UserLabel from 'components/UserLabel';
-import {deletePost} from 'dispatchers/posts';
+import {deletePost, likePost, unlikePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
+import PostLikesModal from 'modals/PostLikesModal';
 import PostModal from 'modals/PostModal';
 import {getCurrencies, getSelf} from 'selectors/state';
 import {AppDispatch, Post as TPost, SFC} from 'types';
@@ -25,13 +26,15 @@ export interface PostProps {
 const Post: SFC<PostProps> = ({className, post}) => {
   const [imageModalIsOpen, toggleImageModal] = useToggle(false);
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
+  const [likesModalIsOpen, toggleLikesModal] = useToggle(false);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [showFullContent, setShowFullContent] = useState(false);
+  const [animateLike, setAnimateLike] = useState(false);
   const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
-  const {content, created_date, id, image, owner, price_amount, price_currency, recipient} = post;
+  const {content, created_date, id, image, is_liked, like_count, owner, price_amount, price_currency, recipient} = post;
   const isTransferPost = !!(recipient && price_amount && price_currency);
 
   const handleDelete = async () => {
@@ -45,6 +48,21 @@ const Post: SFC<PostProps> = ({className, post}) => {
 
   const handlePostImageClick = () => {
     toggleImageModal();
+  };
+
+  const handleLikeClick = async () => {
+    try {
+      if (is_liked) {
+        await dispatch(unlikePost(id));
+      } else {
+        // Trigger animation only when liking
+        setAnimateLike(true);
+        setTimeout(() => setAnimateLike(false), 600);
+        await dispatch(likePost(id));
+      }
+    } catch (error) {
+      displayErrorToast('Error updating like status');
+    }
   };
 
   const renderContent = () => {
@@ -131,6 +149,19 @@ const Post: SFC<PostProps> = ({className, post}) => {
         {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
         <S.Div>
           <S.BoxLeft>
+            <S.LikeWrapper>
+              <S.LikeButton $animate={animateLike} onClick={handleLikeClick}>
+                <S.LikeIcon
+                  $animate={animateLike}
+                  $isLiked={is_liked}
+                  icon={is_liked ? mdiHeart : mdiHeartOutline}
+                  size={20}
+                />
+              </S.LikeButton>
+              <S.LikeCount onClick={toggleLikesModal}>
+                {like_count} {like_count === 1 ? 'like' : 'likes'}
+              </S.LikeCount>
+            </S.LikeWrapper>
             <OutlineButton
               iconLeft={mdiCommentTextOutline}
               onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
@@ -141,6 +172,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
       {imageModalIsOpen && image ? <FullScreenImageModal close={toggleImageModal} imageSrc={image} /> : null}
+      {likesModalIsOpen ? <PostLikesModal close={toggleLikesModal} postId={post.id} /> : null}
       {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
     </>
   );
