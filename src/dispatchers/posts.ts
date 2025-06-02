@@ -58,7 +58,7 @@ export const likePost = (postId: number) => async (dispatch: AppDispatch) => {
 
   if (!post) return;
 
-  await _likePost(postId);
+  // Optimistically update the UI
   dispatch(
     updatePostLikeStatus({
       postId,
@@ -66,6 +66,20 @@ export const likePost = (postId: number) => async (dispatch: AppDispatch) => {
       likeCount: post.like_count + 1,
     }),
   );
+
+  try {
+    await _likePost(postId);
+  } catch (error) {
+    // Revert on error
+    dispatch(
+      updatePostLikeStatus({
+        postId,
+        isLiked: false,
+        likeCount: post.like_count,
+      }),
+    );
+    throw error;
+  }
 };
 
 export const unlikePost = (postId: number) => async (dispatch: AppDispatch) => {
@@ -74,7 +88,7 @@ export const unlikePost = (postId: number) => async (dispatch: AppDispatch) => {
 
   if (!post) return;
 
-  await _unlikePost(postId);
+  // Optimistically update the UI
   dispatch(
     updatePostLikeStatus({
       postId,
@@ -82,4 +96,18 @@ export const unlikePost = (postId: number) => async (dispatch: AppDispatch) => {
       likeCount: post.like_count - 1,
     }),
   );
+
+  try {
+    await _unlikePost(postId);
+  } catch (error) {
+    // Revert on error
+    dispatch(
+      updatePostLikeStatus({
+        postId,
+        isLiked: true,
+        likeCount: post.like_count,
+      }),
+    );
+    throw error;
+  }
 };
