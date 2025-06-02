@@ -16,6 +16,10 @@ export const Content = styled.div`
   padding: 24px;
 `;
 
+export const EndMessageContainer = styled.div`
+  margin: 32px 0;
+`;
+
 export const Header = styled.div`
   background: ${colors.white};
   border-bottom: 1px solid ${colors.border};
@@ -42,18 +46,9 @@ export const NotificationContainer = styled.div`
   flex-direction: column;
 `;
 
-export const SkeletonContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 export const NotificationSkeletonContainer = styled.div`
   margin-bottom: 16px;
   padding: 0 4px;
-`;
-
-export const EndMessageContainer = styled.div`
-  margin: 32px 0;
 `;
 
 export const SectionHeading = styled(USectionHeading)`
@@ -62,4 +57,9 @@ export const SectionHeading = styled(USectionHeading)`
   ${Contents} {
     padding-bottom: 0;
   }
+`;
+
+export const SkeletonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
 `;

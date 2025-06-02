@@ -23,9 +23,9 @@ import * as S from './Styles';
 
 const Notifications: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
-  const notifications = useSelector(getNotifications);
   const hasMore = useSelector(hasMoreNotifications);
   const isLoading = useSelector(isLoadingNotifications);
+  const notifications = useSelector(getNotifications);
 
   useEffect(() => {
     (async () => {
@@ -37,15 +37,6 @@ const Notifications: SFC = ({className}) => {
       }
     })();
   }, [dispatch]);
-
-  const handleMarkAllAsRead = async () => {
-    try {
-      await dispatch(markAllNotificationsAsRead());
-      displayToast('All Notifications marked as read', ToastType.SUCCESS);
-    } catch (error) {
-      displayToast('Oops.. An error occurred.', ToastType.ERROR);
-    }
-  };
 
   const notificationList = useMemo(() => {
     return orderBy(Object.values(notifications), ['created_date'], ['desc']);
@@ -66,6 +57,15 @@ const Notifications: SFC = ({className}) => {
     return <S.SkeletonContainer>{skeletons}</S.SkeletonContainer>;
   };
 
+  const handleMarkAllAsRead = async () => {
+    try {
+      await dispatch(markAllNotificationsAsRead());
+      displayToast('All Notifications marked as read', ToastType.SUCCESS);
+    } catch (error) {
+      displayToast('Oops.. An error occurred.', ToastType.ERROR);
+    }
+  };
+
   const renderNotifications = () => {
     if (isLoading && !notificationList.length) {
       return getNotificationSkeleton(5);
@@ -83,8 +83,8 @@ const Notifications: SFC = ({className}) => {
           hasMore={hasMore}
           loader={getNotificationSkeleton(3)}
           next={fetchMoreNotifications}
-          scrollThreshold={0.9}
           scrollableTarget="main-scrollable-area"
+          scrollThreshold={0.9}
         >
           <S.NotificationContainer>
             {notificationList.map((notification) => (
