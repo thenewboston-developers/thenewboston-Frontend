@@ -100,9 +100,8 @@ const Notifications: SFC = ({className}) => {
 
   const renderSectionHeading = () => {
     const unreadCount = getUnreadNotificationsCount(notificationList);
-    const sectionTitle = `Notifications${unreadCount > 0 ? ` - ${unreadCount}` : ''}`;
     const rightContent = unreadCount > 0 ? renderMarkAllAsReadButton() : null;
-    return <S.SectionHeading heading={sectionTitle} rightContent={rightContent} renderLine={false} />;
+    return <S.SectionHeading heading="Notifications" rightContent={rightContent} renderLine={false} />;
   };
 
   const renderMarkAllAsReadButton = () => {
