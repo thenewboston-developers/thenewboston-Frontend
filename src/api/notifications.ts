@@ -1,13 +1,14 @@
 import axios from 'axios';
 
-import {Notification} from 'types';
+import {Notification, PaginatedResponse} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/notifications`;
 
-export const getNotifications = async (): Promise<Notification[]> => {
+export const getNotifications = async (url?: string): Promise<PaginatedResponse<Notification>> => {
   try {
-    const response = await axios.get<Notification[]>(BASE_URL, authorizationHeaders());
+    const apiURL = url || BASE_URL;
+    const response = await axios.get<PaginatedResponse<Notification>>(apiURL, authorizationHeaders());
     return response.data;
   } catch (error) {
     throw error;

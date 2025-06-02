@@ -9,12 +9,10 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
 `;
 
 export const Content = styled.div`
   flex: 1;
-  overflow-y: auto;
   padding: 24px;
 `;
 
@@ -42,6 +40,20 @@ export const MarkAllButton = styled(UButton)`
 export const NotificationContainer = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+export const SkeletonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const NotificationSkeletonContainer = styled.div`
+  margin-bottom: 16px;
+  padding: 0 4px;
+`;
+
+export const EndMessageContainer = styled.div`
+  margin: 32px 0;
 `;
 
 export const SectionHeading = styled(USectionHeading)`

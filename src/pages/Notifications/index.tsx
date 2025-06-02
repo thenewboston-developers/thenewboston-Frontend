@@ -1,15 +1,22 @@
 import {useEffect, useMemo} from 'react';
+import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {useDispatch, useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
-import {getNotifications as _getNotifications, markAllNotificationsAsRead} from 'dispatchers/notifications';
+import EmptyText from 'components/EmptyText';
+import Skeleton from 'components/Skeleton';
+import {
+  getNotifications as _getNotifications,
+  markAllNotificationsAsRead,
+  resetNotifications as _resetNotifications,
+} from 'dispatchers/notifications';
 import {ToastType} from 'enums';
-import {getNotifications} from 'selectors/state';
+import {getNotifications, hasMoreNotifications, isLoadingNotifications} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {getUnreadNotificationsCount} from 'utils/notifications';
-import {displayToast} from 'utils/toasts';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import Notification from './Notification';
 import * as S from './Styles';
@@ -17,10 +24,17 @@ import * as S from './Styles';
 const Notifications: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
   const notifications = useSelector(getNotifications);
+  const hasMore = useSelector(hasMoreNotifications);
+  const isLoading = useSelector(isLoadingNotifications);
 
   useEffect(() => {
     (async () => {
-      await dispatch(_getNotifications());
+      try {
+        dispatch(_resetNotifications());
+        await dispatch(_getNotifications());
+      } catch (error) {
+        displayErrorToast('Error fetching notifications');
+      }
     })();
   }, [dispatch]);
 
@@ -37,16 +51,51 @@ const Notifications: SFC = ({className}) => {
     return orderBy(Object.values(notifications), ['created_date'], ['desc']);
   }, [notifications]);
 
-  const renderContent = () => {
-    if (!!notificationList.length) return renderNotificationContainer();
-    return <EmptyPage bottomText="Create a post or something." graphic={LeavesEmptyState} topText="Nothing here!" />;
+  const fetchMoreNotifications = async () => {
+    if (!isLoading) {
+      await dispatch(_getNotifications());
+    }
   };
 
-  const renderNotificationContainer = () => {
-    const _notifications = notificationList.map((notification) => (
-      <Notification key={notification.id} notification={notification} />
+  const getNotificationSkeleton = (n: number) => {
+    const skeletons = Array.from({length: n}, (_, i) => (
+      <S.NotificationSkeletonContainer key={i}>
+        <Skeleton width="100%" height="80px" />
+      </S.NotificationSkeletonContainer>
     ));
-    return <S.NotificationContainer>{_notifications}</S.NotificationContainer>;
+    return <S.SkeletonContainer>{skeletons}</S.SkeletonContainer>;
+  };
+
+  const renderNotifications = () => {
+    if (isLoading && !notificationList.length) {
+      return getNotificationSkeleton(5);
+    }
+
+    if (notificationList.length) {
+      return (
+        <InfiniteScrollComponent
+          dataLength={notificationList.length}
+          endMessage={
+            <S.EndMessageContainer>
+              <EmptyText>No more notifications to show.</EmptyText>
+            </S.EndMessageContainer>
+          }
+          hasMore={hasMore}
+          loader={getNotificationSkeleton(3)}
+          next={fetchMoreNotifications}
+          scrollThreshold={0.9}
+          scrollableTarget="main-scrollable-area"
+        >
+          <S.NotificationContainer>
+            {notificationList.map((notification) => (
+              <Notification key={notification.id} notification={notification} />
+            ))}
+          </S.NotificationContainer>
+        </InfiniteScrollComponent>
+      );
+    }
+
+    return <EmptyPage bottomText="Create a post or something." graphic={LeavesEmptyState} topText="Nothing here!" />;
   };
 
   const renderSectionHeading = () => {
@@ -63,7 +112,7 @@ const Notifications: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Header>{renderSectionHeading()}</S.Header>
-      <S.Content>{renderContent()}</S.Content>
+      <S.Content>{renderNotifications()}</S.Content>
     </S.Container>
   );
 };

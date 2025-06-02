@@ -25,7 +25,7 @@ import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Invitation, Invitations} from 'types/invitations';
 import {Manager} from 'types/manager';
 import {Mint, Mints} from 'types/mints';
-import {Notification, Notifications} from 'types/notifications';
+import {Notification, Notifications, NotificationsState} from 'types/notifications';
 import {PaginatedResponse} from 'types/pagination';
 import {Post, PostLike, Posts} from 'types/posts';
 import {Self} from 'types/self';
@@ -83,6 +83,7 @@ export {
   Mints,
   Notification,
   Notifications,
+  NotificationsState,
   PaginatedResponse,
   Post,
   PostLike,

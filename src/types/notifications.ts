@@ -2,6 +2,7 @@ import {NotificationType} from 'enums';
 import {UserReadSerializer} from 'types/api/users';
 import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
+import {Pagination} from 'types/pagination';
 
 export interface PostLikePayload {
   liker: UserReadSerializer;
@@ -26,3 +27,7 @@ export interface Notification extends CreatedModified {
 }
 
 export type Notifications = Dict<Notification>;
+
+export interface NotificationsState extends Pagination {
+  notifications: Notifications;
+}
