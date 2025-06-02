@@ -1,4 +1,3 @@
-import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 import {
   mdiAccount,
@@ -11,9 +10,8 @@ import {
 } from '@mdi/js';
 
 import {PATH_AUTHENTICATION} from 'constants/paths';
-import {getNotifications, getSelf} from 'selectors/state';
+import {getSelf, getTotalUnreadNotificationCount} from 'selectors/state';
 import {SFC} from 'types';
-import {getUnreadNotificationsCount} from 'utils/notifications';
 
 import MenuLink from './MenuItem/MenuLink';
 import BadgeCount from './BadgeCount';
@@ -21,12 +19,8 @@ import CreatePostButton from './CreatePostButton';
 import * as S from './Styles';
 
 const LeftNav: SFC = ({className}) => {
-  const notifications = useSelector(getNotifications);
+  const totalUnreadCount = useSelector(getTotalUnreadNotificationCount);
   const self = useSelector(getSelf);
-
-  const notificationsList = useMemo(() => {
-    return Object.values(notifications);
-  }, [notifications]);
 
   return (
     <S.Container className={className}>
@@ -35,7 +29,7 @@ const LeftNav: SFC = ({className}) => {
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
         <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
         <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications">
-          <BadgeCount items={notificationsList} countFunction={getUnreadNotificationsCount} />
+          <BadgeCount items={Array(totalUnreadCount).fill(null)} />
         </MenuLink>
         <MenuLink icon={mdiAccount} rootPath={`/profile/${self.id}`} text="Profile" to={`/profile/${self.id}`} />
         <MenuLink icon={mdiWalletBifoldOutline} rootPath="/wallets" text="Wallets" to="/wallets" />
