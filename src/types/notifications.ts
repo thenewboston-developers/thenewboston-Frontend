@@ -30,4 +30,5 @@ export type Notifications = Dict<Notification>;
 
 export interface NotificationsState extends Pagination {
   notifications: Notifications;
+  totalUnreadCount: number;
 }

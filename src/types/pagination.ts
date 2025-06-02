@@ -3,6 +3,7 @@ export interface PaginatedResponse<T> {
   next: string | null;
   previous: string | null;
   results: T[];
+  unread_count?: number; // Only present in notification responses
 }
 
 export interface Pagination {
