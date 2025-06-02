@@ -9,6 +9,7 @@ import {deletePost, likePost, unlikePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
+import PostLikesModal from 'modals/PostLikesModal';
 import PostModal from 'modals/PostModal';
 import {getCurrencies, getSelf} from 'selectors/state';
 import {AppDispatch, Post as TPost, SFC} from 'types';
@@ -25,6 +26,7 @@ export interface PostProps {
 const Post: SFC<PostProps> = ({className, post}) => {
   const [imageModalIsOpen, toggleImageModal] = useToggle(false);
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
+  const [likesModalIsOpen, toggleLikesModal] = useToggle(false);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [showFullContent, setShowFullContent] = useState(false);
   const currencies = useSelector(getCurrencies);
@@ -145,8 +147,8 @@ const Post: SFC<PostProps> = ({className, post}) => {
           <S.BoxLeft>
             <S.LikeButton onClick={handleLikeClick}>
               <S.LikeIcon $isLiked={is_liked} icon={is_liked ? mdiHeart : mdiHeartOutline} size={20} />
-              <S.LikeCount>{like_count}</S.LikeCount>
             </S.LikeButton>
+            <S.LikeCount onClick={toggleLikesModal}>{like_count} likes</S.LikeCount>
             <OutlineButton
               iconLeft={mdiCommentTextOutline}
               onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
@@ -157,6 +159,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
       {imageModalIsOpen && image ? <FullScreenImageModal close={toggleImageModal} imageSrc={image} /> : null}
+      {likesModalIsOpen ? <PostLikesModal close={toggleLikesModal} postId={post.id} /> : null}
       {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
     </>
   );

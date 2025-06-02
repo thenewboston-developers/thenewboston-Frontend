@@ -182,17 +182,15 @@ export const TransferText = styled.div`
 export const LikeButton = styled.button`
   align-items: center;
   background: transparent;
-  border: 1px solid ${colors.palette.gray[300]};
-  border-radius: 8px;
+  border: none;
   cursor: pointer;
   display: flex;
-  gap: 6px;
-  padding: 6px 12px;
+  padding: 8px;
   transition: all 0.2s ease;
 
   &:hover {
-    background: ${colors.palette.gray[50]};
-    border-color: ${colors.palette.gray[400]};
+    background: ${colors.palette.gray[100]};
+    border-radius: 50%;
   }
 
   &:active {
@@ -206,8 +204,18 @@ export const LikeIcon = styled(UIcon)<{$isLiked: boolean}>`
   }
 `;
 
-export const LikeCount = styled.span`
+export const LikeCount = styled.button`
+  background: transparent;
+  border: none;
   color: ${colors.palette.gray[700]};
+  cursor: pointer;
   font-size: 14px;
   font-weight: ${fonts.weight.medium};
+  padding: 8px 4px;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${colors.palette.gray[900]};
+    text-decoration: underline;
+  }
 `;
