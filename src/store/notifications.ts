@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {NOTIFICATIONS} from 'constants/store';
-import {Notification, NotificationsState, PaginatedResponse} from 'types';
+import {Notification, NotificationPaginatedResponse, NotificationsState} from 'types';
 
 const initialState: NotificationsState = {
   hasMore: false,
@@ -26,19 +26,17 @@ const notifications = createSlice({
       state.isLoading = false;
       state.next = null;
       state.notifications = {};
-      state.totalUnreadCount = 0;
+      // Don't reset totalUnreadCount to prevent badge flashing
     },
     setNotification: (state: NotificationsState, {payload}: PayloadAction<Notification>) => {
       const {id} = payload;
       state.notifications[id] = payload;
     },
-    setNotifications: (state: NotificationsState, {payload}: PayloadAction<PaginatedResponse<Notification>>) => {
+    setNotifications: (state: NotificationsState, {payload}: PayloadAction<NotificationPaginatedResponse>) => {
       state.hasMore = !!payload.next;
       state.isLoading = false;
       state.next = payload.next;
-      if (payload.unread_count !== undefined) {
-        state.totalUnreadCount = payload.unread_count;
-      }
+      state.totalUnreadCount = payload.unread_count;
       payload.results.forEach((notification) => {
         state.notifications[notification.id] = notification;
       });

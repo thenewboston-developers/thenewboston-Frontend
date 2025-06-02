@@ -14,6 +14,7 @@ import {getSelf, getTotalUnreadNotificationCount} from 'selectors/state';
 import {SFC} from 'types';
 
 import MenuLink from './MenuItem/MenuLink';
+import BadgeCount from './BadgeCount';
 import CreatePostButton from './CreatePostButton';
 import * as S from './Styles';
 
@@ -28,7 +29,7 @@ const LeftNav: SFC = ({className}) => {
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
         <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
         <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications">
-          {totalUnreadCount > 0 && <S.NotificationBadge>{totalUnreadCount}</S.NotificationBadge>}
+          <BadgeCount items={Array(totalUnreadCount).fill(null)} />
         </MenuLink>
         <MenuLink icon={mdiAccount} rootPath={`/profile/${self.id}`} text="Profile" to={`/profile/${self.id}`} />
         <MenuLink icon={mdiWalletBifoldOutline} rootPath="/wallets" text="Wallets" to="/wallets" />
