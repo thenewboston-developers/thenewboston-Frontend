@@ -16,17 +16,6 @@ export const Container = styled.div`
   }
 `;
 
-export const EmptyState = styled.div`
-  color: ${colors.secondary};
-  padding: 60px 20px;
-  text-align: center;
-
-  p {
-    font-size: 14px;
-    margin: 0;
-  }
-`;
-
 export const Header = styled.div`
   align-items: center;
   display: flex;

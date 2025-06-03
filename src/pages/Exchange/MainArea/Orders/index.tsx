@@ -3,7 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {mdiDotsVertical} from '@mdi/js';
 import orderBy from 'lodash/orderBy';
 
+import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import DropdownMenu from 'components/DropdownMenu';
+import EmptyPage from 'components/EmptyPage';
 import FillStatusBadge from 'components/FillStatusBadge';
 import {updateExchangeOrder} from 'dispatchers/exchangeOrders';
 import {ExchangeOrderType, FillStatus} from 'enums';
@@ -155,17 +157,17 @@ const Orders: SFC = ({className}) => {
   }, [ordersList, getCurrencyTicker, renderDropdownMenu]);
 
   const renderContent = () => {
-    return (
-      <S.OrdersList>
-        {ordersList.length === 0 ? (
-          <S.EmptyState>
-            <p>No orders to display.</p>
-          </S.EmptyState>
-        ) : (
-          renderOrders()
-        )}
-      </S.OrdersList>
-    );
+    if (ordersList.length === 0) {
+      return (
+        <EmptyPage
+          bottomText="Place an order to see it here"
+          graphic={LeavesEmptyState}
+          topText="No orders to display"
+        />
+      );
+    }
+
+    return <S.OrdersList>{renderOrders()}</S.OrdersList>;
   };
 
   return (

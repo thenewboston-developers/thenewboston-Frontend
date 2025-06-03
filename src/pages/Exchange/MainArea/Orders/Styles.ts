@@ -12,6 +12,8 @@ const sellMixin = css`
 `;
 
 export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100%;
   overflow-y: auto;
 `;
@@ -44,17 +46,6 @@ export const DropdownMenuWrapper = styled.div`
     &:hover {
       background-color: ${colors.palette.gray[100]};
     }
-  }
-`;
-
-export const EmptyState = styled.div`
-  color: ${colors.secondary};
-  padding: 60px 20px;
-  text-align: center;
-
-  p {
-    font-size: 14px;
-    margin: 0;
   }
 `;
 
