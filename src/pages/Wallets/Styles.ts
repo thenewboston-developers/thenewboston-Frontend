@@ -26,12 +26,12 @@ export const ButtonContainer = styled.div<{$hasWallets: boolean}>`
 export const Container = styled.div`
   align-items: flex-start;
   display: flex;
-  gap: 10px;
-  padding: 24px;
+  gap: 16px;
+  padding: 24px 32px;
 
   @media (max-width: ${breakpoints.tablet}) {
     flex-direction: column;
-    padding: 10px;
+    padding: 24px;
   }
 `;
 
