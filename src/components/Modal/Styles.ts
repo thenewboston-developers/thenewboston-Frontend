@@ -1,5 +1,6 @@
 import styled, {keyframes} from 'styled-components';
 
+import UButton from 'components/Button';
 import {fonts} from 'styles';
 
 const addOverlay = keyframes`
@@ -47,4 +48,17 @@ export const Overlay = styled.div`
 export const Heading = styled.div`
   font-size: 20px;
   font-weight: 600;
+`;
+
+export const ModalContent = styled.div``;
+
+export const ModalFooter = styled.div`
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+`;
+
+export const ModalFooterButton = styled(UButton)`
+  min-width: 80px;
 `;

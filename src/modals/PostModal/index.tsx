@@ -7,6 +7,7 @@ import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiBox from 'components/EmojiPicker';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
+import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {createPost, updatePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {AppDispatch, Post, SFC} from 'types';
@@ -94,7 +95,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <S.ModalContent>
+            <ModalContent>
               <S.TextareaContainer>
                 <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
                 <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
@@ -112,10 +113,10 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
                 }}
                 src={preview}
               />
-            </S.ModalContent>
+            </ModalContent>
 
-            <S.ModalFooter>
-              <S.FooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+            <ModalFooter>
+              <ModalFooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}
@@ -124,7 +125,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
                 text="Submit"
                 type={ButtonType.submit}
               />
-            </S.ModalFooter>
+            </ModalFooter>
           </Form>
         )}
       </Formik>

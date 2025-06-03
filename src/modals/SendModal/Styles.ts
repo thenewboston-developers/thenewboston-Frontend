@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import UButton from 'components/Button';
 import {Textarea as UTextarea} from 'components/FormElements';
 import UModal from 'components/Modal';
 import {colors} from 'styles';
@@ -10,10 +9,6 @@ export const Arrow = styled.div`
   font-size: 24px;
   margin: 8px 0;
   text-align: center;
-`;
-
-export const FooterButton = styled(UButton)`
-  min-width: 80px;
 `;
 
 export const Label = styled.span`
@@ -26,17 +21,6 @@ export const Label = styled.span`
 
 export const Modal = styled(UModal)`
   width: 420px;
-`;
-
-export const ModalContent = styled.div`
-  padding: 0;
-`;
-
-export const ModalFooter = styled.div`
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  margin-top: 24px;
 `;
 
 export const NoWalletsMessage = styled.div`

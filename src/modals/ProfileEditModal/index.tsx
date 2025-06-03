@@ -6,6 +6,7 @@ import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
+import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {updateUser} from 'dispatchers/users';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
@@ -62,7 +63,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <S.ModalContent>
+            <ModalContent>
               {!values.avatar && (
                 <FileInput errors={errors} name="avatar" onChange={handleFileChange} touched={touched} />
               )}
@@ -73,10 +74,10 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
                 }}
                 src={preview}
               />
-            </S.ModalContent>
+            </ModalContent>
 
-            <S.ModalFooter>
-              <S.FooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+            <ModalFooter>
+              <ModalFooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}
@@ -85,7 +86,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
                 text="Submit"
                 type={ButtonType.submit}
               />
-            </S.ModalFooter>
+            </ModalFooter>
           </Form>
         )}
       </Formik>

@@ -5,6 +5,7 @@ import {Form, Formik} from 'formik';
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import {Input} from 'components/FormElements';
+import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {createInvitation, updateInvitation} from 'dispatchers/invitations';
 import {ToastType} from 'enums';
 import {AppDispatch, Invitation, SFC} from 'types';
@@ -60,12 +61,12 @@ const InvitationModal: SFC<InvitationModalProps> = ({className, close, invitatio
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, touched}) => (
           <Form>
-            <S.ModalContent>
+            <ModalContent>
               <Input errors={errors} label="Note" name="note" touched={touched} />
-            </S.ModalContent>
+            </ModalContent>
 
-            <S.ModalFooter>
-              <S.FooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+            <ModalFooter>
+              <ModalFooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}
@@ -74,7 +75,7 @@ const InvitationModal: SFC<InvitationModalProps> = ({className, close, invitatio
                 text="Submit"
                 type={ButtonType.submit}
               />
-            </S.ModalFooter>
+            </ModalFooter>
           </Form>
         )}
       </Formik>
