@@ -2,7 +2,8 @@ import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Form, Formik} from 'formik';
 
-import Button, {ButtonType} from 'components/Button';
+import Button from 'components/Button';
+import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {updateUser} from 'dispatchers/users';
@@ -61,25 +62,30 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            {!values.avatar && (
-              <FileInput errors={errors} name="avatar" onChange={handleFileChange} touched={touched} />
-            )}
-            <ImagePreview
-              onClear={async () => {
-                await setFieldValue('avatar', '');
-                setPreview(null);
-              }}
-              src={preview}
-            />
-            <S.Bumper />
-            <Button
-              dirty={dirty}
-              disabled={isSubmitting}
-              isSubmitting={isSubmitting}
-              isValid={isValid}
-              text="Submit"
-              type={ButtonType.submit}
-            />
+            <S.ModalContent>
+              {!values.avatar && (
+                <FileInput errors={errors} name="avatar" onChange={handleFileChange} touched={touched} />
+              )}
+              <ImagePreview
+                onClear={async () => {
+                  await setFieldValue('avatar', '');
+                  setPreview(null);
+                }}
+                src={preview}
+              />
+            </S.ModalContent>
+
+            <S.ModalFooter>
+              <S.FooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+              <Button
+                dirty={dirty}
+                disabled={isSubmitting}
+                isSubmitting={isSubmitting}
+                isValid={isValid}
+                text="Submit"
+                type={ButtonType.submit}
+              />
+            </S.ModalFooter>
           </Form>
         )}
       </Formik>

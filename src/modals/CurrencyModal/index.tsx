@@ -2,7 +2,8 @@ import {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Form, Formik} from 'formik';
 
-import Button, {ButtonType} from 'components/Button';
+import Button from 'components/Button';
+import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {createCurrency, updateCurrency} from 'dispatchers/currencies';
@@ -109,34 +110,39 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) =>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid, setFieldValue, values}) => (
           <Form>
-            {self.is_staff && <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />}
-            <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />
-            {!values.logo && (
-              <FileInput
-                errors={errors}
-                label="Logo (required, 512x512 px)"
-                name="logo"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
-                touched={touched}
+            <S.ModalContent>
+              {self.is_staff && <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />}
+              <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />
+              {!values.logo && (
+                <FileInput
+                  errors={errors}
+                  label="Logo (required, 512x512 pixels)"
+                  name="logo"
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
+                  touched={touched}
+                />
+              )}
+              <ImagePreview
+                onClear={async () => {
+                  await setFieldValue('logo', '');
+                  setPreview(null);
+                  setIsLogoCleared(true);
+                }}
+                src={preview}
               />
-            )}
-            <ImagePreview
-              onClear={async () => {
-                await setFieldValue('logo', '');
-                setPreview(null);
-                setIsLogoCleared(true);
-              }}
-              src={preview}
-            />
-            <S.Bumper />
-            <Button
-              dirty={dirty}
-              disabled={isSubmitting}
-              isSubmitting={isSubmitting}
-              isValid={isValid}
-              text="Submit"
-              type={ButtonType.submit}
-            />
+            </S.ModalContent>
+
+            <S.ModalFooter>
+              <S.FooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+              <Button
+                dirty={dirty}
+                disabled={isSubmitting}
+                isSubmitting={isSubmitting}
+                isValid={isValid}
+                text="Submit"
+                type={ButtonType.submit}
+              />
+            </S.ModalFooter>
           </Form>
         )}
       </Formik>

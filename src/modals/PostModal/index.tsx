@@ -2,7 +2,8 @@ import {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
-import Button, {ButtonType} from 'components/Button';
+import Button from 'components/Button';
+import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiBox from 'components/EmojiPicker';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
@@ -93,32 +94,37 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <S.TextareaContainer>
-              <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
-              <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
-            </S.TextareaContainer>
+            <S.ModalContent>
+              <S.TextareaContainer>
+                <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
+                <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
+              </S.TextareaContainer>
 
-            {!values.image && (
-              <S.FileInputWrapper>
-                <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />
-              </S.FileInputWrapper>
-            )}
-            <ImagePreview
-              onClear={async () => {
-                await setFieldValue('image', '');
-                setPreview(null);
-              }}
-              src={preview}
-            />
-            <S.Bumper />
-            <Button
-              dirty={dirty}
-              disabled={isSubmitting}
-              isSubmitting={isSubmitting}
-              isValid={isValid}
-              text="Submit"
-              type={ButtonType.submit}
-            />
+              {!values.image && (
+                <S.FileInputWrapper>
+                  <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />
+                </S.FileInputWrapper>
+              )}
+              <ImagePreview
+                onClear={async () => {
+                  await setFieldValue('image', '');
+                  setPreview(null);
+                }}
+                src={preview}
+              />
+            </S.ModalContent>
+
+            <S.ModalFooter>
+              <S.FooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+              <Button
+                dirty={dirty}
+                disabled={isSubmitting}
+                isSubmitting={isSubmitting}
+                isValid={isValid}
+                text="Submit"
+                type={ButtonType.submit}
+              />
+            </S.ModalFooter>
           </Form>
         )}
       </Formik>

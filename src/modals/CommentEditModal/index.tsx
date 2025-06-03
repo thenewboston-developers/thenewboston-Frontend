@@ -2,7 +2,8 @@ import React, {useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
-import Button, {ButtonType} from 'components/Button';
+import Button from 'components/Button';
+import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiBox from 'components/EmojiPicker';
 import {updateComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
@@ -50,18 +51,24 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <S.Div>
-              <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
-              <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
-            </S.Div>
-            <Button
-              dirty={dirty}
-              disabled={isSubmitting}
-              isSubmitting={isSubmitting}
-              isValid={isValid}
-              text="Submit"
-              type={ButtonType.submit}
-            />
+            <S.ModalContent>
+              <S.Div>
+                <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
+                <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
+              </S.Div>
+            </S.ModalContent>
+
+            <S.ModalFooter>
+              <S.FooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+              <Button
+                dirty={dirty}
+                disabled={isSubmitting}
+                isSubmitting={isSubmitting}
+                isValid={isValid}
+                text="Submit"
+                type={ButtonType.submit}
+              />
+            </S.ModalFooter>
           </Form>
         )}
       </Formik>
