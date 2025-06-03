@@ -122,6 +122,7 @@ const Wallets: SFC = ({className}) => {
       </Tab>
     </Tabs>
   );
+
   return (
     <>
       <S.Container className={className}>

@@ -16,7 +16,7 @@ export const Button = styled(UButton)`
 `;
 
 export const ButtonContainer = styled.div<{$hasWallets: boolean}>`
-  margin-bottom: ${({$hasWallets}) => ($hasWallets ? '16px' : '0')};
+  margin-bottom: ${({$hasWallets}) => ($hasWallets ? '16px' : 0)};
 
   @media (min-width: 1025px) {
     flex-grow: 1;

@@ -30,11 +30,11 @@ export const Img = styled.img<{$size: string}>`
 `;
 
 export const SpanBlue = styled.span`
-  color: ${colors.palette.blue['400']};
+  color: ${colors.palette.blue[400]};
   cursor: pointer;
   font-weight: ${fonts.weight.semiBold};
 `;
 
 export const SpanGray = styled.span`
-  color: ${colors.palette.darkGray['500']};
+  color: ${colors.palette.darkGray[500]};
 `;
