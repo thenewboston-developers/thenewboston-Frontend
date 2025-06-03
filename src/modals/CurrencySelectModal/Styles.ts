@@ -1,16 +1,8 @@
 import styled from 'styled-components';
 
-import UButton from 'components/Button';
 import UModal from 'components/Modal';
 import URadioCard from 'components/RadioCard';
 import {breakpoints} from 'styles';
-
-export const Button = styled(UButton)`
-  border-radius: 100px;
-  height: 44px;
-  margin-top: 32px;
-  width: 112px;
-`;
 
 export const Modal = styled(UModal)`
   display: flex;
