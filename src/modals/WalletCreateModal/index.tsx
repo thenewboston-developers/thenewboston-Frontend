@@ -15,13 +15,14 @@ export interface WalletCreateModalProps {
 
 const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
   const [selectedCurrencyId, setSelectedCurrencyId] = useState<number | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const availableWalletCurrencies = useAvailableWalletCurrencies();
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
   const handleButtonClick = async () => {
+    setSubmitting(true);
     try {
-      // TODO: Add loading state for the button
       await dispatch(
         createWallet({
           currency: selectedCurrencyId!,
@@ -31,6 +32,8 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
       close();
     } catch (error) {
       displayErrorToast('Error creating wallet');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -52,7 +55,12 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
   return (
     <S.Modal className={className} close={close} header="Create Wallet">
       <S.RadioCardContainer>{renderRadioCards()}</S.RadioCardContainer>
-      <S.Button disabled={selectedCurrencyId === null} onClick={handleButtonClick} text="Submit" />
+      <S.Button
+        disabled={selectedCurrencyId === null || submitting}
+        isSubmitting={submitting}
+        onClick={handleButtonClick}
+        text="Submit"
+      />
     </S.Modal>
   );
 };
