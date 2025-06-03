@@ -2,9 +2,8 @@ import styled from 'styled-components';
 
 import UButton from 'components/Button';
 import UModal from 'components/Modal';
+import URadioCard from 'components/RadioCard';
 import {breakpoints} from 'styles';
-
-import RadioCard from './RadioCard';
 
 export const Button = styled(UButton)`
   border-radius: 100px;
@@ -38,8 +37,7 @@ export const RadioCardContainer = styled.div`
   }
 `;
 
-export const RadioCardWrapper = styled(RadioCard)`
-  border-radius: 14px;
+export const RadioCardWrapper = styled(URadioCard)`
   width: 224px;
 
   @media (max-width: ${breakpoints.mini}) {

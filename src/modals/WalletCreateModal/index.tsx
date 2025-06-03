@@ -41,10 +41,11 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
   const renderRadioCards = () => {
     return availableWalletCurrencies.map((currency) => (
       <S.RadioCardWrapper
-        activeCurrencyId={selectedCurrencyId}
-        currency={currency}
-        handleRadioCardClick={() => handleRadioCardClick(currency.id)}
         key={currency.id}
+        currency={currency}
+        isSelected={selectedCurrencyId === currency.id}
+        onClick={() => handleRadioCardClick(currency.id)}
+        showAnimation={true}
       />
     ));
   };
