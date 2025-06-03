@@ -7,7 +7,7 @@ export const Container = styled.div`
   position: relative;
 `;
 
-export const ImageStyle = styled.div`
+export const ImageContainer = styled.div`
   margin-top: 7px;
   position: absolute;
 `;
@@ -25,7 +25,7 @@ export const Select = styled.select`
   }
 `;
 
-export const Img = styled.img`
+export const Image = styled.img`
   border-radius: 50%;
   height: 20px;
   width: 20px;

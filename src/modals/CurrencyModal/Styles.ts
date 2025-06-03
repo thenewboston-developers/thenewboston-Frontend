@@ -3,10 +3,6 @@ import styled from 'styled-components';
 import {Input as UInput} from 'components/FormElements';
 import UModal from 'components/Modal';
 
-export const Bumper = styled.div`
-  height: 16px;
-`;
-
 export const Input = styled(UInput)`
   width: 100%;
 `;

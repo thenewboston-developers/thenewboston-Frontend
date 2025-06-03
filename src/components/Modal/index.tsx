@@ -32,3 +32,4 @@ const Modal: SFC<ModalProps> = ({children, className, close, disableOverlayClick
 };
 
 export default Modal;
+export {ModalContent, ModalFooter, ModalFooterButton} from './Styles';

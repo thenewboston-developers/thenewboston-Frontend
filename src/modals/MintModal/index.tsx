@@ -6,6 +6,7 @@ import * as yup from 'yup';
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import {Input} from 'components/FormElements';
+import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {createMint} from 'dispatchers/mints';
 import {ToastType} from 'enums';
 import {AppDispatch, CurrencyReadDetailSerializer, SFC} from 'types';
@@ -21,6 +22,7 @@ interface ComponentProps {
 
 const MintModal: SFC<ComponentProps> = ({className, close, currency, onSuccess}) => {
   const dispatch = useDispatch<AppDispatch>();
+
   const [submitting, setSubmitting] = useState(false);
 
   const initialValues = useMemo(
@@ -63,21 +65,21 @@ const MintModal: SFC<ComponentProps> = ({className, close, currency, onSuccess})
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isValid, touched}) => (
           <Form>
-            <S.ModalContent>
+            <ModalContent>
               <Input errors={errors} label="Amount" name="amount" touched={touched} type="number" />
-            </S.ModalContent>
+            </ModalContent>
 
-            <S.ModalFooter>
-              <S.FooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+            <ModalFooter>
+              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
-                text="Mint"
-                type={ButtonType.submit}
                 dirty={dirty}
                 disabled={submitting}
                 isSubmitting={submitting}
                 isValid={isValid}
+                text="Mint"
+                type={ButtonType.submit}
               />
-            </S.ModalFooter>
+            </ModalFooter>
           </Form>
         )}
       </Formik>

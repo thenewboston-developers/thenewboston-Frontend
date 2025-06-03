@@ -1,6 +1,6 @@
 import styled, {css, keyframes} from 'styled-components';
 
-import {colors, radioCardStyle} from 'styles';
+import {colors} from 'styles';
 
 export const IMG_HEIGHT = 32;
 
@@ -22,7 +22,18 @@ const smoothBounceIn = keyframes`
   }
 `;
 
-export const CheckIcon = styled.div<{$isAnimating?: boolean}>`
+const smoothBounceOut = keyframes`
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+`;
+
+export const CheckIcon = styled.div<{$isAnimating?: boolean; $isDeselecting?: boolean}>`
   align-items: center;
   background-color: ${colors.palette.green[600]};
   border-radius: 50%;
@@ -31,7 +42,11 @@ export const CheckIcon = styled.div<{$isAnimating?: boolean}>`
   height: 22px;
   justify-content: center;
   margin: 0 0 0 auto;
-  opacity: ${(props) => (props.$isAnimating ? 0 : 1)};
+  opacity: ${(props) => {
+    if (props.$isAnimating) return 0;
+    if (props.$isDeselecting) return 1;
+    return 1;
+  }};
   width: 22px;
 
   ${(props) =>
@@ -40,8 +55,30 @@ export const CheckIcon = styled.div<{$isAnimating?: boolean}>`
       animation: ${smoothBounceIn} 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     `}
 
+  ${(props) =>
+    props.$isDeselecting &&
+    css`
+      animation: ${smoothBounceOut} 0.2s cubic-bezier(0.64, 0, 0.78, 0) forwards;
+    `}
+
   svg {
     color: ${colors.white};
+  }
+`;
+
+const radioCardStyle = css<{$isActive: boolean}>`
+  align-items: center;
+  border-radius: 4px;
+  border: 2px solid ${({$isActive}) => ($isActive ? colors.palette.blue[300] : colors.border)};
+  display: flex;
+  flex: auto;
+  justify-content: center;
+  margin: 6px;
+  padding: 16px;
+  white-space: nowrap;
+
+  &:hover {
+    cursor: pointer;
   }
 `;
 
@@ -59,7 +96,7 @@ export const Container = styled.div<{$isActive: boolean; $isAnimating?: boolean}
   justify-content: flex-start;
   padding: 16px 20px;
   position: relative;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 
   &:hover {
     background: ${colors.whiteHover};

@@ -2,10 +2,12 @@ import {ChangeEvent, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Form, Formik} from 'formik';
 
-import Button, {ButtonType} from 'components/Button';
+import Button from 'components/Button';
+import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiBox from 'components/EmojiPicker';
 import {FileInput, Input, Select} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
+import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import UserLabel from 'components/UserLabel';
 import {createPost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
@@ -23,11 +25,12 @@ export interface SendModalProps {
 }
 
 const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
-  const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
   const wallets = useSelector(getWallets);
+
   const activeWallet = useActiveWallet();
+  const [preview, setPreview] = useState<string | null>(null);
 
   const myWallets = useMemo(() => {
     return Object.values(wallets).filter((wallet) => wallet.owner === self.id);
@@ -121,51 +124,63 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <S.TransferInfo>
-              <S.UserRow>
-                <S.Label>From:</S.Label>
-                <UserLabel avatar={self.avatar} description="" id={self.id!} username={self.username!} />
-              </S.UserRow>
-              <S.Arrow>↓</S.Arrow>
-              <S.UserRow>
-                <S.Label>To:</S.Label>
-                <UserLabel avatar={recipient.avatar} description="" id={recipient.id} username={recipient.username} />
-              </S.UserRow>
-            </S.TransferInfo>
+            <ModalContent>
+              <S.TransferInfo>
+                <S.UserRow>
+                  <S.Label>From:</S.Label>
+                  <UserLabel avatar={self.avatar} description="" id={self.id!} username={self.username!} />
+                </S.UserRow>
+                <S.Arrow>↓</S.Arrow>
+                <S.UserRow>
+                  <S.Label>To:</S.Label>
+                  <UserLabel avatar={recipient.avatar} description="" id={recipient.id} username={recipient.username} />
+                </S.UserRow>
+              </S.TransferInfo>
 
-            <Select errors={errors} label="Select Wallet" name="wallet_id" options={walletOptions} touched={touched} />
-
-            <Input errors={errors} label="Amount" name="price_amount" touched={touched} type="number" />
-
-            <S.TextareaContainer>
-              <S.Textarea
+              <Select
                 errors={errors}
-                label="Message (optional)"
-                name="content"
-                placeholder="Add a message..."
+                label="Select Wallet"
+                name="wallet_id"
+                options={walletOptions}
                 touched={touched}
               />
-              <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
-            </S.TextareaContainer>
 
-            {!values.image && <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />}
-            <ImagePreview
-              onClear={async () => {
-                await setFieldValue('image', '');
-                setPreview(null);
-              }}
-              src={preview}
-            />
+              <Input errors={errors} label="Amount" name="price_amount" touched={touched} type="number" />
 
-            <S.Bumper />
-            <Button
-              dirty={dirty}
-              disabled={isSubmitting || !values.price_amount}
-              isSubmitting={isSubmitting}
-              isValid={isValid}
-              text="Send"
-              type={ButtonType.submit}
-            />
+              <S.TextareaContainer>
+                <S.Textarea
+                  errors={errors}
+                  label="Message (optional)"
+                  name="content"
+                  placeholder="Add a message..."
+                  touched={touched}
+                />
+                <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
+              </S.TextareaContainer>
+
+              {!values.image && (
+                <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />
+              )}
+              <ImagePreview
+                onClear={async () => {
+                  await setFieldValue('image', '');
+                  setPreview(null);
+                }}
+                src={preview}
+              />
+            </ModalContent>
+
+            <ModalFooter>
+              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
+              <Button
+                dirty={dirty}
+                disabled={isSubmitting || !values.price_amount}
+                isSubmitting={isSubmitting}
+                isValid={isValid}
+                text="Send"
+                type={ButtonType.submit}
+              />
+            </ModalFooter>
           </Form>
         )}
       </Formik>

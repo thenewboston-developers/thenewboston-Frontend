@@ -3,10 +3,6 @@ import styled from 'styled-components';
 import {Textarea as UTextarea} from 'components/FormElements';
 import UModal from 'components/Modal';
 
-export const Bumper = styled.div`
-  margin-bottom: 24px;
-`;
-
 export const FileInputWrapper = styled.div`
   margin-bottom: 12px;
   margin-top: 16px;

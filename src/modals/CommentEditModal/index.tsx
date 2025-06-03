@@ -2,8 +2,10 @@ import React, {useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
-import Button, {ButtonType} from 'components/Button';
+import Button from 'components/Button';
+import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiBox from 'components/EmojiPicker';
+import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {updateComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
 import {AppDispatch, Comment, SFC} from 'types';
@@ -50,18 +52,24 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <S.Div>
-              <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
-              <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
-            </S.Div>
-            <Button
-              dirty={dirty}
-              disabled={isSubmitting}
-              isSubmitting={isSubmitting}
-              isValid={isValid}
-              text="Submit"
-              type={ButtonType.submit}
-            />
+            <ModalContent>
+              <S.Div>
+                <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
+                <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
+              </S.Div>
+            </ModalContent>
+
+            <ModalFooter>
+              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
+              <Button
+                dirty={dirty}
+                disabled={isSubmitting}
+                isSubmitting={isSubmitting}
+                isValid={isValid}
+                text="Submit"
+                type={ButtonType.submit}
+              />
+            </ModalFooter>
           </Form>
         )}
       </Formik>

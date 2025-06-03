@@ -11,10 +11,6 @@ export const Arrow = styled.div`
   text-align: center;
 `;
 
-export const Bumper = styled.div`
-  margin-bottom: 24px;
-`;
-
 export const Label = styled.span`
   color: ${colors.palette.gray[600]};
   font-size: 12px;

@@ -14,9 +14,7 @@ export const FileInput = styled.input`
 `;
 
 export const Label = styled.div`
-  color: ${colors.palette.gray[900]};
-  font-size: 14px;
-  font-weight: ${fonts.weight.medium};
+  font-size: 12px;
   margin-bottom: 8px;
 `;
 
