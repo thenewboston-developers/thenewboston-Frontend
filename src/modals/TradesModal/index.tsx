@@ -29,6 +29,8 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
     })();
   }, [dispatch, order]);
 
+  const getCurrencyTicker = useCallback((currencyId: number) => currencies[currencyId]?.ticker || '-', [currencies]);
+
   const filteredTrades = useMemo(() => {
     if (!order) return [];
 
@@ -37,8 +39,6 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
       (trade) => (order.order_type === ExchangeOrderType.BUY ? trade.buy_order : trade.sell_order) === order.id,
     );
   }, [order, trades]);
-
-  const getCurrencyTicker = useCallback((currencyId: number) => currencies[currencyId]?.ticker || '-', [currencies]);
 
   const renderRows = useCallback(() => {
     if (!order) return null;

@@ -19,9 +19,10 @@ export interface ProfileEditModalProps {
 }
 
 const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
-  const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
+
+  const [preview, setPreview] = useState<string | null>(null);
 
   const initialValues = useMemo(
     () => ({
@@ -77,7 +78,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
             </ModalContent>
 
             <ModalFooter>
-              <ModalFooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}

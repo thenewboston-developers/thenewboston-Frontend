@@ -22,6 +22,7 @@ interface ComponentProps {
 
 const MintModal: SFC<ComponentProps> = ({className, close, currency, onSuccess}) => {
   const dispatch = useDispatch<AppDispatch>();
+
   const [submitting, setSubmitting] = useState(false);
 
   const initialValues = useMemo(
@@ -69,14 +70,14 @@ const MintModal: SFC<ComponentProps> = ({className, close, currency, onSuccess})
             </ModalContent>
 
             <ModalFooter>
-              <ModalFooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
-                text="Mint"
-                type={ButtonType.submit}
                 dirty={dirty}
                 disabled={submitting}
                 isSubmitting={submitting}
                 isValid={isValid}
+                text="Mint"
+                type={ButtonType.submit}
               />
             </ModalFooter>
           </Form>

@@ -22,8 +22,9 @@ export interface PostModalProps {
 }
 
 const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
-  const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+
+  const [preview, setPreview] = useState<string | null>(null);
 
   const initialValues = useMemo(
     () => ({
@@ -98,7 +99,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
             <ModalContent>
               <S.TextareaContainer>
                 <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
-                <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
+                <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
               </S.TextareaContainer>
 
               {!values.image && (
@@ -116,7 +117,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
             </ModalContent>
 
             <ModalFooter>
-              <ModalFooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}

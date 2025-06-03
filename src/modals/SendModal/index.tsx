@@ -25,11 +25,12 @@ export interface SendModalProps {
 }
 
 const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
-  const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
   const wallets = useSelector(getWallets);
+
   const activeWallet = useActiveWallet();
+  const [preview, setPreview] = useState<string | null>(null);
 
   const myWallets = useMemo(() => {
     return Object.values(wallets).filter((wallet) => wallet.owner === self.id);
@@ -154,7 +155,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
                   placeholder="Add a message..."
                   touched={touched}
                 />
-                <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
+                <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
               </S.TextareaContainer>
 
               {!values.image && (
@@ -170,7 +171,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
             </ModalContent>
 
             <ModalFooter>
-              <ModalFooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting || !values.price_amount}

@@ -66,7 +66,7 @@ const InvitationModal: SFC<InvitationModalProps> = ({className, close, invitatio
             </ModalContent>
 
             <ModalFooter>
-              <ModalFooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}

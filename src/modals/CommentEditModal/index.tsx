@@ -55,12 +55,12 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
             <ModalContent>
               <S.Div>
                 <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
-                <EmojiBox setFieldValue={setFieldValue} value={values.content} field="content" />
+                <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
               </S.Div>
             </ModalContent>
 
             <ModalFooter>
-              <ModalFooterButton onClick={close} text="Cancel" type={ButtonType.button} color={ButtonColor.secondary} />
+              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}
