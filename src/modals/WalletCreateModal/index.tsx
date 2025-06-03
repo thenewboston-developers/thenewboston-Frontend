@@ -45,7 +45,6 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
         currency={currency}
         isSelected={selectedCurrencyId === currency.id}
         onClick={() => handleRadioCardClick(currency.id)}
-        showAnimation={true}
       />
     ));
   };
