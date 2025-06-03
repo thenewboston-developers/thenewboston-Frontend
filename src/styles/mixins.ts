@@ -4,6 +4,11 @@ import colors from 'styles/colors';
 import {TOOLBAR_HEIGHT} from 'styles/constants';
 import fonts from 'styles/fonts';
 
+export const formLabel = css`
+  font-size: 12px;
+  margin-bottom: 8px;
+`;
+
 export const hiddenScroll = css`
   overflow-y: auto;
   scrollbar-width: none; /* Firefox */

@@ -1,7 +1,7 @@
 import UIcon from '@mdi/react';
 import styled from 'styled-components';
 
-import {colors, fonts} from 'styles';
+import {colors, fonts, formLabel} from 'styles';
 
 export const ErrorMessage = styled.div`
   color: ${colors.palette.red[400]};
@@ -14,8 +14,7 @@ export const FileInput = styled.input`
 `;
 
 export const Label = styled.div`
-  font-size: 12px;
-  margin-bottom: 8px;
+  ${formLabel};
 `;
 
 export const SecondaryContainer = styled.div``;
