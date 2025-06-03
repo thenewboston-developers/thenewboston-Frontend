@@ -69,7 +69,7 @@ export const CheckIcon = styled.div<{$isAnimating?: boolean; $isDeselecting?: bo
 const radioCardStyle = css<{$isActive: boolean}>`
   align-items: center;
   border-radius: 4px;
-  border: 2px solid ${({$isActive}) => ($isActive ? colors.palette.blue['300'] : colors.border)};
+  border: 2px solid ${({$isActive}) => ($isActive ? colors.palette.blue[300] : colors.border)};
   display: flex;
   flex: auto;
   justify-content: center;

@@ -57,11 +57,11 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
         {Object.values(currencies).map((_currency) => {
           return (
             <S.RadioCardWrapper
-              key={_currency.id}
               currency={_currency}
               isSelected={manager.activeCommentCurrency?.id === _currency.id}
-              onClick={() => handleCurrencyClick(_currency.id)}
+              key={_currency.id}
               onAnimationComplete={handleAnimationComplete}
+              onClick={() => handleCurrencyClick(_currency.id)}
             />
           );
         })}

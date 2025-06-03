@@ -8,11 +8,11 @@ import {AppDispatch, SFC} from 'types';
 import * as S from './Styles';
 
 const AssetPairSelector: SFC = ({className}) => {
+  const activeAssetPair = useActiveAssetPair();
+  const assetPairs = useSelector(getAssetPairs);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
-  const assetPairs = useSelector(getAssetPairs);
   const updatedAssetsParis = Object.entries(assetPairs);
-  const activeAssetPair = useActiveAssetPair();
 
   const handleOptionClick = (assetPairId: number) => {
     dispatch(updateManager({activeAssetPairId: assetPairId === manager.activeAssetPairId ? null : assetPairId}));
@@ -20,10 +20,10 @@ const AssetPairSelector: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <S.ImageStyle>
-        <S.Img src={activeAssetPair?.primary_currency.logo} height={20} width={20} />
-      </S.ImageStyle>
-      <S.Select value={manager.activeAssetPairId || ''} onChange={(e) => handleOptionClick(+e.target.value)}>
+      <S.ImageContainer>
+        <S.Image height={20} src={activeAssetPair?.primary_currency.logo} width={20} />
+      </S.ImageContainer>
+      <S.Select onChange={(e) => handleOptionClick(+e.target.value)} value={manager.activeAssetPairId || ''}>
         {updatedAssetsParis.map((assetsValue, index) => {
           return (
             <option key={index} value={assetsValue[1].id}>
