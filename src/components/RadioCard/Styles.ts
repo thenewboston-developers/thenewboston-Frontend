@@ -1,6 +1,6 @@
 import styled, {css, keyframes} from 'styled-components';
 
-import {colors, radioCardStyle} from 'styles';
+import {colors} from 'styles';
 
 export const IMG_HEIGHT = 32;
 
@@ -63,6 +63,22 @@ export const CheckIcon = styled.div<{$isAnimating?: boolean; $isDeselecting?: bo
 
   svg {
     color: ${colors.white};
+  }
+`;
+
+const radioCardStyle = css<{$isActive: boolean}>`
+  align-items: center;
+  border-radius: 4px;
+  border: 2px solid ${({$isActive}) => ($isActive ? colors.palette.blue['300'] : colors.border)};
+  display: flex;
+  flex: auto;
+  justify-content: center;
+  margin: 6px;
+  padding: 16px;
+  white-space: nowrap;
+
+  &:hover {
+    cursor: pointer;
   }
 `;
 

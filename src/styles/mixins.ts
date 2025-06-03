@@ -28,32 +28,6 @@ export const inputStyle = css`
   }
 `;
 
-export const listItemDescription = css`
-  color: ${colors.secondary};
-  font-size: 12px;
-  margin-top: 2px;
-`;
-
-export const listItemName = css`
-  font-weight: 600;
-`;
-
-export const radioCardStyle = css<{$isActive: boolean}>`
-  align-items: center;
-  border-radius: 4px;
-  border: 2px solid ${({$isActive}) => ($isActive ? colors.palette.blue['300'] : colors.border)};
-  display: flex;
-  flex: auto;
-  justify-content: center;
-  margin: 6px;
-  padding: 16px;
-  white-space: nowrap;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
 export const toolbarStyle = css`
   background: #fff;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
