@@ -4,6 +4,7 @@ import {useParams} from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 
 import Button from 'components/Button';
+import EmptyText from 'components/EmptyText';
 import {useToggle} from 'hooks';
 import InvitationModal from 'modals/InvitationModal';
 import {getInvitationLimits, getInvitations, getSelf} from 'selectors/state';
@@ -35,13 +36,7 @@ const Invitations: SFC = ({className}) => {
   const renderContent = () => {
     return (
       <S.InvitationsList>
-        {invitationList.length === 0 ? (
-          <S.EmptyState>
-            <p>No invitations to display.</p>
-          </S.EmptyState>
-        ) : (
-          renderInvitations()
-        )}
+        {invitationList.length === 0 ? <EmptyText>No invitations to display.</EmptyText> : renderInvitations()}
       </S.InvitationsList>
     );
   };
