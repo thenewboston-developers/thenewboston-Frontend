@@ -68,7 +68,7 @@ const Wallets: SFC = ({className}) => {
     if (!availableWalletCores.length) return null;
 
     return (
-      <S.ButtonContainer>
+      <S.ButtonContainer $hasWallets={walletList.length > 0}>
         <S.Button onClick={toggleWalletCreateModal} text="Create Wallet" />
       </S.ButtonContainer>
     );
@@ -91,7 +91,7 @@ const Wallets: SFC = ({className}) => {
     return (
       <EmptyPage
         actionText="create a wallet"
-        bottomText="To deposit or withdraw coins"
+        bottomText="To deposit or withdraw coins,"
         graphic={LeavesEmptyState}
         onActionTextClick={toggleWalletCreateModal}
         topText="Nothing here!"
@@ -127,7 +127,7 @@ const Wallets: SFC = ({className}) => {
       <S.Container className={className}>
         <S.LeftMenu>
           <S.FlexContainer>{renderButtonContainer()}</S.FlexContainer>
-          <S.Box>{renderMenuItems()}</S.Box>
+          {walletList.length > 0 && <S.Box>{renderMenuItems()}</S.Box>}
         </S.LeftMenu>
         <S.Right>{renderRightContent()}</S.Right>
       </S.Container>

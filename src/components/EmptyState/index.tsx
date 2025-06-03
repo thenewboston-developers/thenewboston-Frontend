@@ -20,18 +20,18 @@ const EmptyState: SFC<EmptyStateProps> = ({
   size,
   topText,
 }) => {
-  const renderActionText = () => {
-    if (!actionText || !onActionTextClick) return null;
-    return <S.SpanBlue onClick={onActionTextClick}>{actionText}</S.SpanBlue>;
-  };
-
   return (
     <S.Container className={className}>
       <S.Img alt="Empty state" src={graphic} $size={size ? `${size}px` : ''} />
       <S.H3>{topText}</S.H3>
       <S.HelperText>
         <S.SpanGray>{bottomText}</S.SpanGray>
-        <S.Div>{renderActionText()}</S.Div>
+        {actionText && onActionTextClick && (
+          <>
+            {' '}
+            <S.SpanBlue onClick={onActionTextClick}>{actionText}</S.SpanBlue>
+          </>
+        )}
       </S.HelperText>
     </S.Container>
   );

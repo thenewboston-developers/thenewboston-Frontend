@@ -15,8 +15,8 @@ export const Button = styled(UButton)`
   width: 100%;
 `;
 
-export const ButtonContainer = styled.div`
-  margin-bottom: 16px;
+export const ButtonContainer = styled.div<{$hasWallets: boolean}>`
+  margin-bottom: ${({$hasWallets}) => ($hasWallets ? '16px' : '0')};
 
   @media (min-width: 1025px) {
     flex-grow: 1;
@@ -47,7 +47,7 @@ export const FlexContainer = styled.div`
 export const LeftMenu = styled.div`
   min-width: 271px;
 
-  @media (max-width: ${breakpoints.mobile}) {
+  @media (max-width: ${breakpoints.tablet}) {
     min-width: auto;
     width: 100%;
   }
@@ -60,6 +60,10 @@ export const Right = styled.div`
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
   flex: 1;
   padding: 24px 16px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+  }
 
   @media (max-width: ${breakpoints.mobile}) {
     padding: 18px 10px;

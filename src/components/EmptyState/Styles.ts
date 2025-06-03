@@ -15,13 +15,8 @@ export const H3 = styled.h3`
 `;
 
 export const HelperText = styled.div`
-  display: flex;
-  flex-direction: row;
   font-size: 14px;
   margin-top: 8px;
-  @media (max-width: ${breakpoints.mini}) {
-    flex-direction: column;
-  }
 `;
 
 export const Img = styled.img<{$size: string}>`
@@ -43,4 +38,3 @@ export const SpanBlue = styled.span`
 export const SpanGray = styled.span`
   color: ${colors.palette.darkGray['500']};
 `;
-export const Div = styled.div``;
