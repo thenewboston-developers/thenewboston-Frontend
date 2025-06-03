@@ -22,12 +22,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22.16.0
 
       # 3. Install deps & build production bundle
       - name: Install dependencies & build
         run: |
-          npm ci
+          npm ci --legacy-peer-deps
           npm run build
         # REACT_APP_* vars are injected above, so the build picks up your prod URLs
 
