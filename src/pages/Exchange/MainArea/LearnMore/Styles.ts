@@ -7,8 +7,6 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   overflow-y: auto;
-  padding-bottom: 48px;
-  padding-top: 48px;
 `;
 
 export const Content = styled.div`
@@ -94,18 +92,4 @@ export const ListItem = styled.li`
 
 export const Bold = styled.strong`
   font-weight: ${fonts.weight.semiBold};
-`;
-
-export const Divider = styled.hr`
-  border: 0;
-  border-top: 1px solid ${colors.border};
-  margin: 40px 0;
-`;
-
-export const Footer = styled.p`
-  color: ${colors.secondary};
-  font-size: 16px;
-  font-style: italic;
-  line-height: 1.6;
-  text-align: center;
 `;

@@ -6,11 +6,11 @@ const LearnMore: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Content>
-        <S.Title>Trading Guide: Orders, Matching, and Fills</S.Title>
+        <S.Title>Exchange Guide: Orders, Matching, and Fills</S.Title>
 
         <S.Introduction>
-          Welcome to our trading platform! This guide explains how placing orders, the matching process, and trade
-          execution work.
+          Welcome to our exchange! This guide explains how placing orders, the matching process, and trade execution
+          work.
         </S.Introduction>
 
         <S.Section>
@@ -152,21 +152,6 @@ const LearnMore: SFC = ({className}) => {
             </S.ListItem>
           </S.List>
         </S.Section>
-
-        <S.Section>
-          <S.SectionTitle>Wallet Management</S.SectionTitle>
-          <S.List>
-            <S.ListItem>Whenever you place an order, the required TNB or coins are reserved (locked).</S.ListItem>
-            <S.ListItem>Upon order execution (trading), coins or TNB are instantly credited to your wallet.</S.ListItem>
-            <S.ListItem>
-              Any refunds due to differences in the limit and executed prices are credited immediately.
-            </S.ListItem>
-          </S.List>
-        </S.Section>
-
-        <S.Divider />
-
-        <S.Footer>Happy trading, and always reach out to support if you have questions!</S.Footer>
       </S.Content>
     </S.Container>
   );
