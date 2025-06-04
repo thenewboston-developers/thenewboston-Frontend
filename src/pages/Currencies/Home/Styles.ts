@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {breakpoints} from 'styles';
+import {breakpoints, pagePadding} from 'styles';
 
 export const CardsContainer = styled.div`
   display: grid;
@@ -22,5 +22,5 @@ export const CardsContainer = styled.div`
 `;
 
 export const Container = styled.div`
-  padding: 24px 32px;
+  ${pagePadding};
 `;

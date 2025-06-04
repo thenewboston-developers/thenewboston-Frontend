@@ -1,17 +1,13 @@
 import styled from 'styled-components';
 
-import {breakpoints} from 'styles';
+import {breakpoints, pagePadding} from 'styles';
 
 export const Container = styled.div`
+  ${pagePadding};
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  padding: 24px 32px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 16px 24px;
-  }
 `;
 
 export const Grid = styled.div`

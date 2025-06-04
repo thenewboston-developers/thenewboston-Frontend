@@ -1,7 +1,7 @@
 import styled, {css} from 'styled-components';
 
 import {ExchangeOrderType} from 'enums';
-import {breakpoints, colors} from 'styles';
+import {breakpoints, colors, pagePadding} from 'styles';
 
 const buyMixin = css`
   color: ${colors.palette.green[600]};
@@ -12,6 +12,7 @@ const sellMixin = css`
 `;
 
 export const Container = styled.div`
+  ${pagePadding};
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -140,11 +141,6 @@ export const OrderMetrics = styled.div`
 export const OrdersList = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 24px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 16px;
-  }
 `;
 
 export const OrderTopLine = styled.div`

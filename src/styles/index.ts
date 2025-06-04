@@ -2,6 +2,17 @@ import breakpoints from 'styles/breakpoints';
 import colors from 'styles/colors';
 import {TOOLBAR_HEIGHT} from 'styles/constants';
 import fonts from 'styles/fonts';
-import {hiddenScroll, inputStyle, toolbarStyle} from 'styles/mixins';
+import {feedPagePadding, formLabel, hiddenScroll, inputStyle, pagePadding, toolbarStyle} from 'styles/mixins';
 
-export {breakpoints, colors, fonts, hiddenScroll, inputStyle, TOOLBAR_HEIGHT, toolbarStyle};
+export {
+  breakpoints,
+  colors,
+  feedPagePadding,
+  fonts,
+  formLabel,
+  hiddenScroll,
+  inputStyle,
+  pagePadding,
+  TOOLBAR_HEIGHT,
+  toolbarStyle,
+};

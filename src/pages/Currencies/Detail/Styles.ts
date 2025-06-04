@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {colors, fonts} from 'styles';
+import {colors, fonts, pagePadding} from 'styles';
 
 export const BackButton = styled.button`
   align-items: center;
@@ -32,9 +32,9 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
+  ${pagePadding};
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
 `;
 
 export const Header = styled.div`

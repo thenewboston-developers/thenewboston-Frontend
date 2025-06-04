@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {breakpoints, colors, fonts} from 'styles';
+import {breakpoints, colors, fonts, pagePadding} from 'styles';
 import {Col as UCol, Row as URow} from 'styles/components/GridStyle';
 
 export const CodeBlock = styled.div`
@@ -41,7 +41,7 @@ export const CodeTitleContainer = styled.div`
 export const Col = styled(UCol)``;
 
 export const Container = styled.div`
-  padding: 24px 32px;
+  ${pagePadding};
 `;
 
 export const Img = styled.img`

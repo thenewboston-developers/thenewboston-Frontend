@@ -1,7 +1,7 @@
 import {Field as UField} from 'formik';
 import styled from 'styled-components';
 
-import {colors, inputStyle} from 'styles';
+import {colors, formLabel, inputStyle} from 'styles';
 
 export const ErrorMessage = styled.div`
   color: ${colors.palette.red['400']};
@@ -19,8 +19,7 @@ export const Field = styled(UField)`
 `;
 
 export const Label = styled.div`
-  font-size: 12px;
-  margin-bottom: 8px;
+  ${formLabel};
 `;
 
 export const SecondaryContainer = styled.div`

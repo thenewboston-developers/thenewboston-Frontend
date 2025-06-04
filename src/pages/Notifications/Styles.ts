@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import UButton from 'components/Button';
 import USectionHeading from 'components/SectionHeading';
 import {Contents} from 'components/SectionHeading/Styles';
-import {colors, fonts} from 'styles';
+import {colors, fonts, pagePadding} from 'styles';
 
 export const Container = styled.div`
   display: flex;
@@ -12,8 +12,8 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
+  ${pagePadding};
   flex: 1;
-  padding: 24px;
 `;
 
 export const EndMessageContainer = styled.div`
