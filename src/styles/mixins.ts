@@ -1,8 +1,17 @@
 import {css} from 'styled-components';
 
+import breakpoints from 'styles/breakpoints';
 import colors from 'styles/colors';
 import {TOOLBAR_HEIGHT} from 'styles/constants';
 import fonts from 'styles/fonts';
+
+export const feedPagePadding = css`
+  padding: 0 32px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 0 24px;
+  }
+`;
 
 export const formLabel = css`
   font-size: 12px;
@@ -30,6 +39,14 @@ export const inputStyle = css`
   &::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
+  }
+`;
+
+export const pagePadding = css`
+  padding: 24px 32px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 16px 24px;
   }
 `;
 

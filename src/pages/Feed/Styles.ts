@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 
+import {breakpoints, feedPagePadding} from 'styles';
+
 export const Container = styled.div`
+  ${feedPagePadding};
   height: 100%;
   overflow-y: auto;
-  padding: 0 16px;
 `;
 
 export const PostContainer = styled.div`
@@ -12,4 +14,8 @@ export const PostContainer = styled.div`
   gap: 16px;
   margin: 24px auto;
   max-width: 720px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    margin: 16px auto;
+  }
 `;

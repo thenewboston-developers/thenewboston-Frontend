@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import UButton from 'components/Button';
-import {breakpoints, colors} from 'styles';
+import {breakpoints, colors, pagePadding} from 'styles';
 
 export const Box = styled.div`
   background: ${colors.white};
@@ -24,14 +24,13 @@ export const ButtonContainer = styled.div<{$hasWallets: boolean}>`
 `;
 
 export const Container = styled.div`
+  ${pagePadding};
   align-items: flex-start;
   display: flex;
   gap: 16px;
-  padding: 24px 32px;
 
   @media (max-width: ${breakpoints.tablet}) {
     flex-direction: column;
-    padding: 24px;
   }
 `;
 
