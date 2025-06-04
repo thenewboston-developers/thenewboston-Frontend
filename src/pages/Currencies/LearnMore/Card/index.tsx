@@ -12,7 +12,7 @@ interface LearnMoreData {
   title: string;
 }
 
-export interface LearnMoreCardProps {
+export interface CardProps {
   children?: ReactNode;
   content: LearnMoreData;
   contentWidth?: string;
@@ -20,7 +20,7 @@ export interface LearnMoreCardProps {
   minHeight?: string;
 }
 
-const LearnMoreCard: SFC<LearnMoreCardProps> = ({content, contentWidth, displayStyle, minHeight, children = null}) => {
+const Card: SFC<CardProps> = ({content, contentWidth, displayStyle, minHeight, children = null}) => {
   return (
     <>
       <S.Container $displayStyle={displayStyle} $minHeight={minHeight}>
@@ -40,4 +40,4 @@ const LearnMoreCard: SFC<LearnMoreCardProps> = ({content, contentWidth, displayS
   );
 };
 
-export default LearnMoreCard;
+export default Card;
