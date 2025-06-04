@@ -2,11 +2,11 @@ import {SFC} from 'types';
 
 import * as S from './Styles';
 
-export interface LearnMoreListProps {
+export interface ListProps {
   list: any[]; // TODO (muhammad) LOW: Define type for this list instead of 'any'
 }
 
-const LearnMoreList: SFC<LearnMoreListProps> = ({className, list}) => {
+const List: SFC<ListProps> = ({className, list}) => {
   return (
     <S.ListContainer className={className}>
       <S.DottedLine />
@@ -23,4 +23,4 @@ const LearnMoreList: SFC<LearnMoreListProps> = ({className, list}) => {
   );
 };
 
-export default LearnMoreList;
+export default List;

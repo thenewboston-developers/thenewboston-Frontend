@@ -1,8 +1,6 @@
 import {useCallback} from 'react';
 
 import Code from 'components/Code';
-import LearnMoreCard from 'components/LearnMore/Card';
-import LearnMoreList from 'components/LearnMore/List';
 import {SFC} from 'types';
 
 import SystemArc from './assets/architecture.png';
@@ -11,6 +9,8 @@ import MissionImg from './assets/mission-statement.png';
 import Tag from './assets/tag-icon.png';
 import UseCaseImg from './assets/use-cases.png';
 import VisionImg from './assets/vision-statement.png';
+import Card from './Card';
+import List from './List';
 import * as S from './Styles';
 
 interface LearnMoreData {
@@ -152,33 +152,23 @@ const LearnMore: SFC = ({className}) => {
   const visionMissionMinHeight = '250px';
   const benefitsUseCasesMinHeight = '1050px';
 
-  const getLearnMoreList = useCallback((obj?: object) => <LearnMoreList list={obj ? Object.values(obj) : []} />, []);
+  const getLearnMoreList = useCallback((obj?: object) => <List list={obj ? Object.values(obj) : []} />, []);
 
   const getVisionStatement = useCallback(() => {
-    return <LearnMoreCard content={VISION_STATEMENT} minHeight={visionMissionMinHeight} />;
+    return <Card content={VISION_STATEMENT} minHeight={visionMissionMinHeight} />;
   }, []);
 
   const getMissionStatement = useCallback(() => {
-    return <LearnMoreCard content={MISSION_STATEMENT} minHeight={visionMissionMinHeight} />;
+    return <Card content={MISSION_STATEMENT} minHeight={visionMissionMinHeight} />;
   }, []);
 
   const getBenefits = useCallback(() => {
-    return (
-      <LearnMoreCard
-        content={BENEFITS}
-        children={getLearnMoreList(BENEFITS.obj)}
-        minHeight={benefitsUseCasesMinHeight}
-      />
-    );
+    return <Card content={BENEFITS} children={getLearnMoreList(BENEFITS.obj)} minHeight={benefitsUseCasesMinHeight} />;
   }, [getLearnMoreList]);
 
   const getUseCases = useCallback(() => {
     return (
-      <LearnMoreCard
-        content={USE_CASES}
-        children={getLearnMoreList(USE_CASES.obj)}
-        minHeight={benefitsUseCasesMinHeight}
-      />
+      <Card content={USE_CASES} children={getLearnMoreList(USE_CASES.obj)} minHeight={benefitsUseCasesMinHeight} />
     );
   }, [getLearnMoreList]);
 
@@ -199,9 +189,9 @@ const LearnMore: SFC = ({className}) => {
     };
 
     return (
-      <LearnMoreCard content={SYSTEM_ARCHITECTURE} displayStyle="flex" contentWidth="50%">
+      <Card content={SYSTEM_ARCHITECTURE} displayStyle="flex" contentWidth="50%">
         {getCodeSection(SYSTEM_ARCHITECTURE_CODE)}
-      </LearnMoreCard>
+      </Card>
     );
   }, []);
 
