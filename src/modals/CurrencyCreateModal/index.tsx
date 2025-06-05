@@ -20,10 +20,9 @@ export interface CurrencyCreateModalProps {
 }
 
 const CurrencyCreateModal: SFC<CurrencyCreateModalProps> = ({className, close}) => {
+  const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
-
-  const [preview, setPreview] = useState<string | null>(null);
 
   const initialValues = useMemo(
     () => ({

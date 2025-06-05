@@ -88,7 +88,7 @@ export const Title = styled.p`
   color: ${colors.black};
   font-size: 14px;
   font-weight: ${fonts.weight.regular};
-  margin: 0 5px 0 0;
+  margin: 0 5px 0;
 `;
 
 export const TNBLogo = styled.img`

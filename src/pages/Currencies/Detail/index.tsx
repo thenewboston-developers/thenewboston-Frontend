@@ -27,14 +27,14 @@ import * as S from './Styles';
 const Detail: SFC = ({className}) => {
   const [activeTab, setActiveTab] = useState<'minting' | 'balances'>('minting');
   const [currency, setCurrency] = useState<CurrencyReadDetailSerializer | null>(null);
+  const [currencyEditModalIsOpen, toggleCurrencyEditModal] = useToggle(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
-  const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
-  const [currencyEditModalIsOpen, toggleCurrencyEditModal] = useToggle(false);
   const [mintModalIsOpen, toggleMintModal] = useToggle(false);
-  const {id} = useParams<{id: string}>();
+  const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const {id} = useParams<{id: string}>();
   const navigate = useNavigate();
   const self = useSelector(getSelf);
 
@@ -150,9 +150,9 @@ const Detail: SFC = ({className}) => {
               {activeTab === 'minting' ? (
                 <MintSection
                   currency={currency}
-                  mintsData={mintsData}
-                  loadingMints={loadingMints}
                   currentPage={currentPage}
+                  loadingMints={loadingMints}
+                  mintsData={mintsData}
                   onPageChange={handlePageChange}
                 />
               ) : (

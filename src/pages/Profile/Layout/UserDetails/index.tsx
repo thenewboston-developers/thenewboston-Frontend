@@ -24,8 +24,8 @@ const UserDetails: SFC = ({className}) => {
   const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
   const [selfFollowing, setSelfFollowing] = useState<boolean>(false);
   const [sendModalIsOpen, toggleSendModal] = useToggle(false);
-  const {id} = useParams();
   const dispatch = useDispatch<AppDispatch>();
+  const {id} = useParams();
   const self = useSelector(getSelf);
   const user = useUser(id);
   const userAvatar = user?.avatar || DefaultAvatar;

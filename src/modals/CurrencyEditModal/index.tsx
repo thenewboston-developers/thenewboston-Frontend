@@ -21,9 +21,8 @@ export interface CurrencyEditModalProps {
 }
 
 const CurrencyEditModal: SFC<CurrencyEditModalProps> = ({className, close, currency, onSuccess}) => {
-  const dispatch = useDispatch<AppDispatch>();
-
   const [preview, setPreview] = useState<string | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   const initialValues = useMemo(
     () => ({

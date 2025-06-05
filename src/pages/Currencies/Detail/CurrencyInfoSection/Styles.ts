@@ -11,7 +11,7 @@ export const CurrencyDescription = styled.p`
   color: ${colors.secondary};
   font-size: 14px;
   line-height: 1.5;
-  margin: 12px 0 0 0;
+  margin: 12px 0 0;
 `;
 
 export const CurrencyDomain = styled.p`
@@ -44,7 +44,7 @@ export const CurrencyName = styled.h1`
   color: ${colors.primary};
   font-size: 28px;
   font-weight: ${fonts.weight.bold};
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
 `;
 
 export const CurrencyPanel = styled.div`
