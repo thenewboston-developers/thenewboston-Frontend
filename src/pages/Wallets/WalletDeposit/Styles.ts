@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import UCopyContainer from 'components/CopyContainer';
 import Qr from 'components/Qr';
-import {colors, fonts} from 'styles';
+import {colors} from 'styles';
 
 export const Balance = styled.div`
   color: ${colors.primary};
@@ -31,7 +31,7 @@ export const DepositLeft = styled.div`
 `;
 
 export const DepositSection = styled.div`
-  padding: 24px 0;
+  margin-top: 24px;
 `;
 
 export const EmptyState = styled.div`
