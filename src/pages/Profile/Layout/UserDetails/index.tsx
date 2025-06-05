@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
-import {mdiCashFast, mdiSquareEditOutline} from '@mdi/js';
 
 import {getFollowers} from 'api/followers';
 import DefaultAvatar from 'assets/default-avatar.svg';
@@ -95,14 +94,7 @@ const UserDetails: SFC = ({className}) => {
 
   const renderEditProfileButton = () => {
     if (self.id !== userId) return null;
-    return (
-      <S.Button
-        color={ButtonColor.secondary}
-        iconLeft={mdiSquareEditOutline}
-        onClick={toggleProfileEditModal}
-        text="Edit Profile"
-      />
-    );
+    return <S.Button color={ButtonColor.secondary} onClick={toggleProfileEditModal} text="Edit Profile" />;
   };
 
   const renderFollowButton = () => {
@@ -118,7 +110,7 @@ const UserDetails: SFC = ({className}) => {
 
   const renderSendButton = () => {
     if (self.id === userId) return null;
-    return <S.Button color={ButtonColor.secondary} iconLeft={mdiCashFast} onClick={toggleSendModal} text="Send" />;
+    return <S.Button color={ButtonColor.secondary} onClick={toggleSendModal} text="Send" />;
   };
 
   const renderStatsAndBalance = () => {

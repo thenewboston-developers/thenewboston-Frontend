@@ -13,6 +13,7 @@ import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
 import {getMints} from 'dispatchers/mints';
 import {useToggle} from 'hooks';
+import CurrencyEditModal from 'modals/CurrencyEditModal';
 import MintModal from 'modals/MintModal';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, CurrencyReadDetailSerializer, Mint, PaginatedResponse, SFC} from 'types';
@@ -30,6 +31,7 @@ const Detail: SFC = ({className}) => {
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
   const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
+  const [currencyEditModalIsOpen, toggleCurrencyEditModal] = useToggle(false);
   const [mintModalIsOpen, toggleMintModal] = useToggle(false);
   const {id} = useParams<{id: string}>();
   const dispatch = useDispatch<AppDispatch>();
@@ -74,6 +76,18 @@ const Detail: SFC = ({className}) => {
     navigate('/currencies/home');
   };
 
+  const handleCurrencyEditSuccess = async () => {
+    if (!currency || !id) return;
+
+    // Refetch currency details to update the displayed data
+    try {
+      const updatedCurrency = await getCurrency(parseInt(id));
+      setCurrency(updatedCurrency);
+    } catch (error) {
+      displayErrorToast('Error updating currency details');
+    }
+  };
+
   const handleMintModalSuccess = async () => {
     if (!currency || !id) return;
 
@@ -113,6 +127,7 @@ const Detail: SFC = ({className}) => {
             <Icon icon={mdiArrowLeft} size={20} />
             <span>Back to Currencies</span>
           </S.BackButton>
+          {isOwner && <Button onClick={toggleCurrencyEditModal} text="Edit" />}
         </S.Header>
 
         <S.Content>
@@ -147,6 +162,9 @@ const Detail: SFC = ({className}) => {
           </S.TabSection>
         </S.Content>
       </S.Container>
+      {currencyEditModalIsOpen && (
+        <CurrencyEditModal close={toggleCurrencyEditModal} currency={currency} onSuccess={handleCurrencyEditSuccess} />
+      )}
       {mintModalIsOpen && <MintModal close={toggleMintModal} currency={currency} onSuccess={handleMintModalSuccess} />}
     </>
   );
