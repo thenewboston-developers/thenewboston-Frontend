@@ -111,7 +111,7 @@ export const Value = styled.div`
 `;
 
 export const WithdrawSection = styled.div`
-  padding: 24px 0;
+  margin-top: 24px;
 `;
 
 export const InternalCurrencyMessage = styled.div`

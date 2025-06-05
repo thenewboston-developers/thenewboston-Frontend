@@ -22,6 +22,7 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
             ) : (
               <S.TypeBadge $internal={isInternalCurrency}>{isInternalCurrency ? 'Internal' : 'External'}</S.TypeBadge>
             )}
+            {currency.description && <S.CurrencyDescription>{currency.description}</S.CurrencyDescription>}
             <S.OwnerInfo>
               <UserLabel
                 avatar={currency.owner.avatar}

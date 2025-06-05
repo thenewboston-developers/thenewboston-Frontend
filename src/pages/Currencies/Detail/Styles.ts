@@ -38,8 +38,11 @@ export const Content = styled.div`
 `;
 
 export const Header = styled.div`
+  align-items: center;
   background: ${colors.white};
   border-bottom: 1px solid ${colors.border};
+  display: flex;
+  justify-content: space-between;
   padding: 20px 24px;
 `;
 

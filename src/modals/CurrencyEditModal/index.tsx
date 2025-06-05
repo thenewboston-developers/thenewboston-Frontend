@@ -1,5 +1,5 @@
 import {ChangeEvent, useEffect, useMemo, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
 import Button from 'components/Button';
@@ -7,33 +7,29 @@ import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
-import {createCurrency, updateCurrency} from 'dispatchers/currencies';
-import {getSelf} from 'selectors/state';
-import {AppDispatch, Currency, SFC} from 'types';
+import {updateCurrency} from 'dispatchers/currencies';
+import {AppDispatch, CurrencyReadDetailSerializer, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
 
-export interface CurrencyModalProps {
+export interface CurrencyEditModalProps {
   close(): void;
-  currency?: Currency;
+  currency: CurrencyReadDetailSerializer;
+  onSuccess?: () => void;
 }
 
-const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const self = useSelector(getSelf);
-
-  const [isLogoCleared, setIsLogoCleared] = useState<boolean | null>(null);
+const CurrencyEditModal: SFC<CurrencyEditModalProps> = ({className, close, currency, onSuccess}) => {
   const [preview, setPreview] = useState<string | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   const initialValues = useMemo(
     () => ({
-      domain: currency?.domain || '',
-      logo: currency?.logo || '',
-      ticker: currency?.ticker || '',
+      description: currency.description || '',
+      logo: currency.logo || '',
     }),
-    [currency?.domain, currency?.logo, currency?.ticker],
+    [currency.description, currency.logo],
   );
 
   type FormValues = typeof initialValues;
@@ -61,7 +57,6 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) =>
             return;
           }
           setPreview(reader.result as string);
-          setIsLogoCleared(false);
         };
         img.src = reader.result as string;
       };
@@ -73,48 +68,39 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) =>
     try {
       const requestData = new FormData();
 
-      if (self.is_staff && values.domain) {
-        requestData.append('domain', values.domain);
-      }
-
-      requestData.append('ticker', values.ticker);
-      requestData.append('is_logo_cleared', isLogoCleared ? 'True' : 'False');
+      // Always append description to ensure empty values are sent
+      requestData.append('description', values.description);
 
       if (initialValues.logo !== values.logo) requestData.append('logo', values.logo);
 
-      if (currency) {
-        await dispatch(updateCurrency(currency.id, requestData));
-      } else {
-        await dispatch(createCurrency(requestData));
-      }
-
+      await dispatch(updateCurrency(currency.id, requestData));
+      onSuccess?.();
       close();
     } catch (error) {
-      displayErrorToast('Error');
+      displayErrorToast('Error updating currency');
     }
   };
 
   const validationSchema = useMemo(() => {
-    const schema: any = {
+    return yup.object().shape({
+      description: yup.string().max(500, 'Description must be at most 500 characters'),
       logo: yup.string().required('Logo is required (512x512 px)'),
-      ticker: yup.string().required(),
-    };
-
-    if (self.is_staff) {
-      schema.domain = yup.string();
-    }
-
-    return yup.object().shape(schema);
-  }, [self.is_staff]);
+    });
+  }, []);
 
   return (
-    <S.Modal className={className} close={close} header={currency ? 'Edit Currency' : 'Create Currency'}>
+    <S.Modal className={className} close={close} header="Edit Currency">
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid, setFieldValue, values}) => (
           <Form>
             <ModalContent>
-              {self.is_staff && <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />}
-              <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />
+              <S.Textarea
+                errors={errors}
+                label="Description (optional)"
+                name="description"
+                placeholder=""
+                touched={touched}
+              />
               {!values.logo && (
                 <FileInput
                   errors={errors}
@@ -128,7 +114,6 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) =>
                 onClear={async () => {
                   await setFieldValue('logo', '');
                   setPreview(null);
-                  setIsLogoCleared(true);
                 }}
                 src={preview}
               />
@@ -152,4 +137,4 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency}) =>
   );
 };
 
-export default CurrencyModal;
+export default CurrencyEditModal;

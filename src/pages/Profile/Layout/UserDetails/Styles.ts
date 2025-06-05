@@ -11,12 +11,6 @@ export const Button = styled(UButton)`
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
   font-weight: ${fonts.weight.semiBold};
   height: 44px;
-
-  & svg {
-    & path {
-      fill: ${colors.black} !important;
-    }
-  }
 `;
 
 export const ButtonGroup = styled.div`
@@ -94,7 +88,7 @@ export const Title = styled.p`
   color: ${colors.black};
   font-size: 14px;
   font-weight: ${fonts.weight.regular};
-  margin: 0 5px 0 0;
+  margin: 0 5px 0;
 `;
 
 export const TNBLogo = styled.img`

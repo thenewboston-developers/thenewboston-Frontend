@@ -15,5 +15,3 @@ export const Center = styled.div`
 export const Container = styled.div`
   ${toolbarStyle};
 `;
-
-export const Right = styled.div``;
