@@ -4,13 +4,13 @@ import {Input as UInput, Textarea as UTextarea} from 'components/FormElements';
 import UModal from 'components/Modal';
 
 export const Input = styled(UInput)`
-  width: 100%;
-`;
-
-export const Modal = styled(UModal)`
+  margin-bottom: 24px;
   width: 360px;
 `;
 
+export const Modal = styled(UModal)``;
+
 export const Textarea = styled(UTextarea)`
-  width: 100%;
+  margin-bottom: 24px;
+  width: 360px;
 `;

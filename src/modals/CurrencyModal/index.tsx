@@ -1,5 +1,5 @@
 import {ChangeEvent, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Form, Formik} from 'formik';
 
 import Button from 'components/Button';
@@ -7,37 +7,44 @@ import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
-import {updateCurrency} from 'dispatchers/currencies';
-import {AppDispatch, CurrencyReadDetailSerializer, SFC} from 'types';
+import {createCurrency, updateCurrency} from 'dispatchers/currencies';
+import {getSelf} from 'selectors/state';
+import {AppDispatch, Currency, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
 
-export interface CurrencyEditModalProps {
+export interface CurrencyModalProps {
   close(): void;
-  currency: CurrencyReadDetailSerializer;
+  currency?: Currency;
   onSuccess?: () => void;
 }
 
-const CurrencyEditModal: SFC<CurrencyEditModalProps> = ({className, close, currency, onSuccess}) => {
+const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onSuccess}) => {
   const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const self = useSelector(getSelf);
+
+  const isEditMode = !!currency;
 
   const initialValues = useMemo(
     () => ({
-      description: currency.description || '',
-      logo: currency.logo || '',
+      description: currency?.description || '',
+      domain: currency?.domain || '',
+      logo: currency?.logo || '',
+      ticker: currency?.ticker || '',
     }),
-    [currency.description, currency.logo],
+    [currency],
   );
 
   type FormValues = typeof initialValues;
 
   useEffect(() => {
-    if (!initialValues.logo) return;
-    setPreview(initialValues.logo);
-  }, [initialValues]);
+    if (initialValues.logo) {
+      setPreview(initialValues.logo);
+    }
+  }, [initialValues.logo]);
 
   const handleFileChange = (
     event: ChangeEvent<HTMLInputElement>,
@@ -68,32 +75,65 @@ const CurrencyEditModal: SFC<CurrencyEditModalProps> = ({className, close, curre
     try {
       const requestData = new FormData();
 
-      // Always append description to ensure empty values are sent
-      requestData.append('description', values.description);
+      if (isEditMode) {
+        // Always append description to ensure empty values are sent
+        requestData.append('description', values.description);
 
-      if (initialValues.logo !== values.logo) requestData.append('logo', values.logo);
+        if (initialValues.logo !== values.logo) {
+          requestData.append('logo', values.logo);
+        }
 
-      await dispatch(updateCurrency(currency.id, requestData));
+        await dispatch(updateCurrency(currency.id, requestData));
+      } else {
+        // Create mode
+        if (values.description) {
+          requestData.append('description', values.description);
+        }
+
+        if (self.is_staff && values.domain) {
+          requestData.append('domain', values.domain);
+        }
+
+        requestData.append('ticker', values.ticker);
+        requestData.append('logo', values.logo);
+
+        await dispatch(createCurrency(requestData));
+      }
+
       onSuccess?.();
       close();
     } catch (error) {
-      displayErrorToast('Error updating currency');
+      displayErrorToast(isEditMode ? 'Error updating currency' : 'Error creating currency');
     }
   };
 
   const validationSchema = useMemo(() => {
-    return yup.object().shape({
+    const schema: any = {
       description: yup.string().max(500, 'Description must be at most 500 characters'),
       logo: yup.string().required('Logo is required (512x512 px)'),
-    });
-  }, []);
+    };
+
+    if (!isEditMode) {
+      schema.ticker = yup.string().required();
+
+      if (self.is_staff) {
+        schema.domain = yup.string();
+      }
+    }
+
+    return yup.object().shape(schema);
+  }, [isEditMode, self.is_staff]);
 
   return (
-    <S.Modal className={className} close={close} header="Edit Currency">
+    <S.Modal className={className} close={close} header={isEditMode ? 'Edit Currency' : 'Create Currency'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid, setFieldValue, values}) => (
           <Form>
             <ModalContent>
+              {!isEditMode && self.is_staff && (
+                <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />
+              )}
+              {!isEditMode && <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />}
               <S.Textarea
                 errors={errors}
                 label="Description (optional)"
@@ -137,4 +177,4 @@ const CurrencyEditModal: SFC<CurrencyEditModalProps> = ({className, close, curre
   );
 };
 
-export default CurrencyEditModal;
+export default CurrencyModal;
