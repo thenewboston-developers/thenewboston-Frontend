@@ -117,13 +117,6 @@ export const LongContent = styled.span`
   word-break: break-all;
 `;
 
-export const Right = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 2px;
-`;
-
 export const Text = styled.div`
   display: flex;
 `;

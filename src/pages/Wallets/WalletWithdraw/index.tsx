@@ -77,15 +77,13 @@ const WalletWithdraw: SFC = ({className}) => {
 
   if (isInternalCurrency) {
     return (
-      <S.Container className={className}>
-        <S.InternalCurrencyMessage>
-          <S.Title>Withdrawals Not Available</S.Title>
-          <S.Text>
-            This is an internal currency that exists only within our platform. Withdrawals to external addresses are not
-            supported.
-          </S.Text>
-        </S.InternalCurrencyMessage>
-      </S.Container>
+      <S.InternalCurrencyMessage className={className}>
+        <S.Title>Withdrawals Not Available</S.Title>
+        <S.Text>
+          This is an internal currency that exists only within our platform. Withdrawals to external addresses are not
+          supported.
+        </S.Text>
+      </S.InternalCurrencyMessage>
     );
   }
 

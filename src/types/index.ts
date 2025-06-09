@@ -31,6 +31,7 @@ import {Post, PostLike, Posts} from 'types/posts';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
 import {Trade, Trades} from 'types/trades';
+import {Transfer, TransfersResponse} from 'types/transfers';
 import {Users} from 'types/users';
 import {UserStats} from 'types/userStats';
 import {Wallet, Wallets} from 'types/wallets';
@@ -96,6 +97,8 @@ export {
   TotalAmountMintedResponse,
   Trade,
   Trades,
+  Transfer,
+  TransfersResponse,
   UserReadSerializer,
   Users,
   UserStats,

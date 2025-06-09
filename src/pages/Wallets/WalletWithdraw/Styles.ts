@@ -13,7 +13,11 @@ export const AmountLogoInput = styled(LogoInput)`
 `;
 
 export const Container = styled.div`
-  margin-top: 16px;
+  padding: 16px 16px 24px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 18px 10px;
+  }
 `;
 
 export const DetailRow = styled.div`
@@ -86,7 +90,6 @@ export const Panel = styled.div`
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
   display: flex;
   justify-content: space-between;
-  margin-top: 16px;
   padding: 0 16px;
 `;
 
