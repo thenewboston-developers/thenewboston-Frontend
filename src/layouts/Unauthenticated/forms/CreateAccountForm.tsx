@@ -40,6 +40,8 @@ const CreateAccountForm: SFC = () => {
   };
 
   const validationSchema = useMemo(() => {
+    const reservedUsernames = ['admin', 'support', 'moderator', 'thenewboston', 'ia'];
+
     return yup.object().shape({
       confirmPassword: yup
         .string()
@@ -49,8 +51,22 @@ const CreateAccountForm: SFC = () => {
       password: yup.string().required(),
       username: yup
         .string()
-        .matches(/^[A-Za-z0-9]+$/, 'Username must be alphanumeric')
-        .required(),
+        .min(2, 'Username must be at least 2 characters')
+        .max(150, 'Username must not exceed 150 characters')
+        .matches(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores')
+        .test('no-leading-underscore', 'Username cannot start with underscore', (value) => {
+          return !value || !value.startsWith('_');
+        })
+        .test('no-trailing-underscore', 'Username cannot end with underscore', (value) => {
+          return !value || !value.endsWith('_');
+        })
+        .test('no-consecutive-underscores', 'Username cannot contain consecutive underscores', (value) => {
+          return !value || !value.includes('__');
+        })
+        .test('not-reserved', 'This username is reserved', (value) => {
+          return !value || !reservedUsernames.includes(value.toLowerCase());
+        })
+        .required('Username is required'),
     });
   }, []);
 
