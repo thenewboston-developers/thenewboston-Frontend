@@ -72,6 +72,9 @@ const WalletTransfers: SFC = ({className}) => {
 
   const renderTransfer = (transfer: Transfer) => {
     const isReceived = transfer.amount > 0;
+    const action = isReceived ? 'sent' : 'received';
+    const source = transfer.comment_id ? 'comment' : 'post';
+    const description = `${action} via ${source}`;
 
     return (
       <S.TransferItem key={`${transfer.post_id}-${transfer.comment_id}-${transfer.timestamp}`}>
@@ -79,7 +82,7 @@ const WalletTransfers: SFC = ({className}) => {
           <S.TransferHeader>
             <UserLabel
               avatar={transfer.counterparty.avatar}
-              description=""
+              description={description}
               id={transfer.counterparty.id}
               username={transfer.counterparty.username}
             />
