@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiBankTransferIn, mdiBankTransferOut} from '@mdi/js';
+import {mdiArrowDownCircle, mdiArrowUpCircle, mdiSwapHorizontal} from '@mdi/js';
 import Icon from '@mdi/react';
 import orderBy from 'lodash/orderBy';
 
@@ -118,17 +118,18 @@ const Wallets: SFC = ({className}) => {
           isActive={manager.activeWalletTab === WalletTab.TRANSFERS}
           onClick={() => handleTabClick(WalletTab.TRANSFERS)}
         >
+          <Icon path={mdiSwapHorizontal} size={'18px'} />
           <span>Transfers</span>
         </Tab>
         <Tab isActive={manager.activeWalletTab === WalletTab.DEPOSIT} onClick={() => handleTabClick(WalletTab.DEPOSIT)}>
-          <Icon path={mdiBankTransferIn} size={'18px'} />
+          <Icon path={mdiArrowDownCircle} size={'18px'} />
           <span>Deposit</span>
         </Tab>
         <Tab
           isActive={manager.activeWalletTab === WalletTab.WITHDRAW}
           onClick={() => handleTabClick(WalletTab.WITHDRAW)}
         >
-          <Icon path={mdiBankTransferOut} size={'18px'} />
+          <Icon path={mdiArrowUpCircle} size={'18px'} />
           <span>Withdraw</span>
         </Tab>
       </Tabs>
