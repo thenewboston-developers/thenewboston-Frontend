@@ -26,8 +26,8 @@ const Chart: SFC = ({className}) => {
       if (!activeAssetPair) return;
       await dispatch(
         _getTrades({
-          buy_order__primary_currency__id: activeAssetPair.primary_currency.id,
-          buy_order__secondary_currency__id: activeAssetPair.secondary_currency.id,
+          buy_order__primary_currency: activeAssetPair.primary_currency.id,
+          buy_order__secondary_currency: activeAssetPair.secondary_currency.id,
         }),
       );
     })();
