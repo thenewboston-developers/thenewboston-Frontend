@@ -20,6 +20,7 @@ import {displayErrorToast} from 'utils/toasts';
 import MenuItem from './MenuItem';
 import * as S from './Styles';
 import WalletDeposit from './WalletDeposit';
+import WalletTransfers from './WalletTransfers';
 import WalletWithdraw from './WalletWithdraw';
 
 const Wallets: SFC = ({className}) => {
@@ -51,7 +52,7 @@ const Wallets: SFC = ({className}) => {
       dispatch(
         updateManager({
           activeWalletId: firstWallet.id,
-          activeWalletTab: WalletTab.DEPOSIT,
+          activeWalletTab: WalletTab.TRANSFERS,
         }),
       );
     })();
@@ -80,12 +81,7 @@ const Wallets: SFC = ({className}) => {
 
   const renderRightContent = () => {
     if (manager.activeWalletId) {
-      return (
-        <>
-          {renderTabs()}
-          {renderTabContent()}
-        </>
-      );
+      return renderTabContent();
     }
 
     return (
@@ -103,6 +99,7 @@ const Wallets: SFC = ({className}) => {
     if (!manager.activeWalletTab) return null;
 
     const tabContent = {
+      [WalletTab.TRANSFERS]: <WalletTransfers />,
       [WalletTab.DEPOSIT]: <WalletDeposit />,
       [WalletTab.WITHDRAW]: <WalletWithdraw />,
     };
@@ -110,18 +107,31 @@ const Wallets: SFC = ({className}) => {
     return tabContent[manager.activeWalletTab];
   };
 
-  const renderTabs = () => (
-    <Tabs>
-      <Tab isActive={manager.activeWalletTab === WalletTab.DEPOSIT} onClick={() => handleTabClick(WalletTab.DEPOSIT)}>
-        <Icon path={mdiBankTransferIn} size={'18px'} />
-        <span>Deposit</span>
-      </Tab>
-      <Tab isActive={manager.activeWalletTab === WalletTab.WITHDRAW} onClick={() => handleTabClick(WalletTab.WITHDRAW)}>
-        <Icon path={mdiBankTransferOut} size={'18px'} />
-        <span>Withdraw</span>
-      </Tab>
-    </Tabs>
-  );
+  const renderTabs = () => {
+    if (!manager.activeWalletId) return null;
+
+    return (
+      <Tabs>
+        <Tab
+          isActive={manager.activeWalletTab === WalletTab.TRANSFERS}
+          onClick={() => handleTabClick(WalletTab.TRANSFERS)}
+        >
+          <span>Transfers</span>
+        </Tab>
+        <Tab isActive={manager.activeWalletTab === WalletTab.DEPOSIT} onClick={() => handleTabClick(WalletTab.DEPOSIT)}>
+          <Icon path={mdiBankTransferIn} size={'18px'} />
+          <span>Deposit</span>
+        </Tab>
+        <Tab
+          isActive={manager.activeWalletTab === WalletTab.WITHDRAW}
+          onClick={() => handleTabClick(WalletTab.WITHDRAW)}
+        >
+          <Icon path={mdiBankTransferOut} size={'18px'} />
+          <span>Withdraw</span>
+        </Tab>
+      </Tabs>
+    );
+  };
 
   return (
     <>
@@ -130,7 +140,10 @@ const Wallets: SFC = ({className}) => {
           <S.FlexContainer>{renderButtonContainer()}</S.FlexContainer>
           {walletList.length > 0 && <S.Box>{renderMenuItems()}</S.Box>}
         </S.LeftMenu>
-        <S.Right>{renderRightContent()}</S.Right>
+        <S.MainContent>
+          {renderTabs()}
+          <S.ContentArea>{renderRightContent()}</S.ContentArea>
+        </S.MainContent>
       </S.Container>
       {walletCreateModalIsOpen ? <WalletCreateModal close={toggleWalletCreateModal} /> : null}
     </>

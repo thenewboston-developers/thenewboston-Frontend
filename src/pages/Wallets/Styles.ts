@@ -52,19 +52,25 @@ export const LeftMenu = styled.div`
   }
 `;
 
-export const Right = styled.div`
+export const ContentArea = styled.div`
   background: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 14px;
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
-  flex: 1;
   padding: 24px 16px;
-
-  @media (max-width: ${breakpoints.tablet}) {
-    width: 100%;
-  }
 
   @media (max-width: ${breakpoints.mobile}) {
     padding: 18px 10px;
+  }
+`;
+
+export const MainContent = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
   }
 `;
