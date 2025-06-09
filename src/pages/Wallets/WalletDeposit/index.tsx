@@ -31,15 +31,13 @@ const WalletDeposit: SFC = ({className}) => {
 
   if (isInternalCurrency) {
     return (
-      <S.Container className={className}>
-        <S.InternalCurrencyMessage>
-          <S.Title>Deposits Not Available</S.Title>
-          <S.Text>
-            This is an internal currency that exists only within our platform. Deposits from external sources are not
-            supported.
-          </S.Text>
-        </S.InternalCurrencyMessage>
-      </S.Container>
+      <S.InternalCurrencyMessage className={className}>
+        <S.Title>Deposits Not Available</S.Title>
+        <S.Text>
+          This is an internal currency that exists only within our platform. Deposits from external sources are not
+          supported.
+        </S.Text>
+      </S.InternalCurrencyMessage>
     );
   }
 

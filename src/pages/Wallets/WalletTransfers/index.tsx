@@ -114,11 +114,13 @@ const WalletTransfers: SFC = ({className}) => {
 
     if (!transfers.length) {
       return (
-        <EmptyPage
-          bottomText="Transfers will appear here when you send or receive funds"
-          graphic={LeavesEmptyState}
-          topText="No transfers yet!"
-        />
+        <S.EmptyPageWrapper>
+          <EmptyPage
+            bottomText="Transfers will appear here when you send or receive funds"
+            graphic={LeavesEmptyState}
+            topText="No transfers yet!"
+          />
+        </S.EmptyPageWrapper>
       );
     }
 

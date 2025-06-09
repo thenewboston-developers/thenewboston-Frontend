@@ -85,13 +85,15 @@ const Wallets: SFC = ({className}) => {
     }
 
     return (
-      <EmptyPage
-        actionText="create a wallet"
-        bottomText="To deposit or withdraw coins,"
-        graphic={LeavesEmptyState}
-        onActionTextClick={toggleWalletCreateModal}
-        topText="Nothing here!"
-      />
+      <S.EmptyPageWrapper>
+        <EmptyPage
+          actionText="create a wallet"
+          bottomText="To deposit or withdraw coins,"
+          graphic={LeavesEmptyState}
+          onActionTextClick={toggleWalletCreateModal}
+          topText="Nothing here!"
+        />
+      </S.EmptyPageWrapper>
     );
   };
 

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import UCopyContainer from 'components/CopyContainer';
 import Qr from 'components/Qr';
-import {colors} from 'styles';
+import {breakpoints, colors} from 'styles';
 
 export const Balance = styled.div`
   color: ${colors.primary};
@@ -11,7 +11,11 @@ export const Balance = styled.div`
 `;
 
 export const Container = styled.div`
-  margin-top: 16px;
+  padding: 24px 16px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 18px 10px;
+  }
 `;
 
 export const CopyContainer = styled(UCopyContainer)`

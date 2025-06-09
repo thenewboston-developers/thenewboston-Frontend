@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {colors} from 'styles';
+import {breakpoints, colors} from 'styles';
 
 export const Amount = styled.div<{$isReceived: boolean}>`
   color: ${({$isReceived}) => ($isReceived ? colors.palette.green[600] : colors.palette.red[600])};
@@ -13,11 +13,20 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding: 0 16px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 0 10px;
+  }
 `;
 
 export const Date = styled.div`
   color: ${colors.palette.gray[600]};
   font-size: 12px;
+`;
+
+export const EmptyPageWrapper = styled.div`
+  padding: 24px 0;
 `;
 
 export const LoaderWrapper = styled.div`
