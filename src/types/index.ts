@@ -1,6 +1,6 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
-import {CurrencyReadDetailSerializer} from 'types/api/currencies';
+import {TotalAmountMintedResponse} from 'types/api/currencies';
 import {CurrencyBalance} from 'types/api/currencyBalances';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer, GetFollowersParams} from 'types/api/follower';
@@ -58,7 +58,6 @@ export {
   Currencies,
   Currency,
   CurrencyBalance,
-  CurrencyReadDetailSerializer,
   DepositResponse,
   Dict,
   ExchangeOrder,
@@ -94,6 +93,7 @@ export {
   SelectOption,
   Self,
   SFC,
+  TotalAmountMintedResponse,
   Trade,
   Trades,
   UserReadSerializer,

@@ -1,3 +1,4 @@
+import {UserReadSerializer} from 'types/api/users';
 import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
 
@@ -6,7 +7,7 @@ export interface Currency extends CreatedModified {
   domain: string | null;
   id: number;
   logo: string;
-  owner: number;
+  owner: UserReadSerializer;
   ticker: string;
 }
 

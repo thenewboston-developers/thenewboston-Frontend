@@ -4,13 +4,13 @@ import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
 import Loader from 'components/Loader';
 import {getMints as getMintsSelector} from 'selectors/state';
-import {CurrencyReadDetailSerializer, Mint, PaginatedResponse, SFC} from 'types';
+import {Currency, Mint, PaginatedResponse, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
 import * as S from './Styles';
 
 interface MintSectionProps {
-  currency: CurrencyReadDetailSerializer;
+  currency: Currency;
   currentPage: number;
   loadingMints: boolean;
   mintsData: PaginatedResponse<Mint> | null;

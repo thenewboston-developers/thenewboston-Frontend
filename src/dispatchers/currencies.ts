@@ -2,6 +2,7 @@ import {
   createCurrency as _createCurrency,
   deleteCurrency as _deleteCurrency,
   getCurrencies as _getCurrencies,
+  getCurrency as _getCurrency,
   updateCurrency as _updateCurrency,
 } from 'api/currencies';
 import {setCurrencies, setCurrency, unsetCurrency} from 'store/currencies';
@@ -20,6 +21,12 @@ export const deleteCurrency = (id: number) => async (dispatch: AppDispatch) => {
 export const getCurrencies = () => async (dispatch: AppDispatch) => {
   const responseData = await _getCurrencies();
   dispatch(setCurrencies(responseData));
+};
+
+export const getCurrency = (id: number) => async (dispatch: AppDispatch) => {
+  const responseData = await _getCurrency(id);
+  dispatch(setCurrency(responseData));
+  return responseData;
 };
 
 export const updateCurrency = (id: number, data: FormData) => async (dispatch: AppDispatch) => {

@@ -5,7 +5,6 @@ import {colors, fonts} from 'styles';
 export const Box = styled.div`
   align-items: center;
   display: flex;
-  justify-content: space-between;
   margin: 10px 0 15px;
   width: 100%;
 `;

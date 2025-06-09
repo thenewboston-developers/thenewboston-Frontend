@@ -5,13 +5,13 @@ import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
 import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
-import {CurrencyBalance, CurrencyReadDetailSerializer, PaginatedResponse, SFC} from 'types';
+import {Currency, CurrencyBalance, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
 interface BalancesSectionProps {
-  currency: CurrencyReadDetailSerializer;
+  currency: Currency;
 }
 
 const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {

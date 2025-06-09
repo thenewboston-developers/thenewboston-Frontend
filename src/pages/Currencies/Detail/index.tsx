@@ -1,23 +1,26 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
-import {mdiArrowLeft} from '@mdi/js';
+import {mdiArrowLeft, mdiDotsVertical} from '@mdi/js';
 
-import {getCurrency} from 'api/currencies';
+import {getTotalAmountMinted} from 'api/currencies';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Button from 'components/Button';
+import DropdownMenu from 'components/DropdownMenu';
 import EmptyPage from 'components/EmptyPage';
 import Icon from 'components/Icon';
 import Loader from 'components/Loader';
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
+import {deleteCurrency as _deleteCurrency, getCurrency} from 'dispatchers/currencies';
 import {getMints} from 'dispatchers/mints';
+import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
-import CurrencyEditModal from 'modals/CurrencyEditModal';
+import CurrencyModal from 'modals/CurrencyModal';
 import MintModal from 'modals/MintModal';
-import {getSelf} from 'selectors/state';
-import {AppDispatch, CurrencyReadDetailSerializer, Mint, PaginatedResponse, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
+import {getCurrencies, getSelf} from 'selectors/state';
+import {AppDispatch, Mint, PaginatedResponse, SFC} from 'types';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import BalancesSection from './BalancesSection';
 import CurrencyInfoSection from './CurrencyInfoSection';
@@ -26,32 +29,44 @@ import * as S from './Styles';
 
 const Detail: SFC = ({className}) => {
   const [activeTab, setActiveTab] = useState<'minting' | 'balances'>('minting');
-  const [currency, setCurrency] = useState<CurrencyReadDetailSerializer | null>(null);
-  const [currencyEditModalIsOpen, toggleCurrencyEditModal] = useToggle(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
   const [mintModalIsOpen, toggleMintModal] = useToggle(false);
   const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
+  const [totalAmountMinted, setTotalAmountMinted] = useState<number | null>(null);
+  const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
-  const {id} = useParams<{id: string}>();
+  const isDeleting = useRef(false);
   const navigate = useNavigate();
   const self = useSelector(getSelf);
+  const {id} = useParams<{id: string}>();
+  const currency = id ? currencies[parseInt(id)] : null;
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || isDeleting.current) return;
 
     (async () => {
       try {
-        const data = await getCurrency(parseInt(id));
-        setCurrency(data);
+        // Check if currency is already in store
+        if (!currency) {
+          await dispatch(getCurrency(parseInt(id)));
+        }
+
+        // Fetch total amount minted separately
+        const totalData = await getTotalAmountMinted(parseInt(id));
+        setTotalAmountMinted(totalData.total_amount_minted);
       } catch (error) {
-        displayErrorToast('Error loading currency');
+        // Only show error if we're not in the process of deleting
+        if (!isDeleting.current) {
+          displayErrorToast('Error loading currency');
+        }
       } finally {
         setLoading(false);
       }
     })();
-  }, [id]);
+  }, [id, currency, dispatch]);
 
   useEffect(() => {
     if (!currency) return;
@@ -72,17 +87,42 @@ const Detail: SFC = ({className}) => {
   const isInternalCurrency = currency?.domain === null;
   const isOwner = currency?.owner.id === self.id;
 
+  const handleDelete = async () => {
+    if (!currency) return;
+
+    try {
+      isDeleting.current = true;
+      await dispatch(_deleteCurrency(currency.id));
+      displayToast('Currency deleted!', ToastType.SUCCESS);
+      navigate('/currencies/home');
+    } catch (error) {
+      isDeleting.current = false;
+      displayErrorToast('Error deleting currency');
+    }
+  };
+
+  const menuOptions = [
+    {
+      label: 'Edit',
+      onClick: toggleCurrencyModal,
+    },
+    {
+      label: 'Delete',
+      onClick: handleDelete,
+    },
+  ];
+
   const handleBackClick = () => {
     navigate('/currencies/home');
   };
 
-  const handleCurrencyEditSuccess = async () => {
-    if (!currency || !id) return;
+  const handleCurrencyModalSuccess = async () => {
+    if (!id) return;
 
-    // Refetch currency details to update the displayed data
+    // Refetch total amount minted after update
     try {
-      const updatedCurrency = await getCurrency(parseInt(id));
-      setCurrency(updatedCurrency);
+      const totalData = await getTotalAmountMinted(parseInt(id));
+      setTotalAmountMinted(totalData.total_amount_minted);
     } catch (error) {
       displayErrorToast('Error updating currency details');
     }
@@ -91,10 +131,10 @@ const Detail: SFC = ({className}) => {
   const handleMintModalSuccess = async () => {
     if (!currency || !id) return;
 
-    // Refetch currency details to update total_amount_minted
+    // Refetch total amount minted after minting
     try {
-      const updatedCurrency = await getCurrency(parseInt(id));
-      setCurrency(updatedCurrency);
+      const totalData = await getTotalAmountMinted(parseInt(id));
+      setTotalAmountMinted(totalData.total_amount_minted);
     } catch (error) {
       displayErrorToast('Error updating currency details');
     }
@@ -127,11 +167,11 @@ const Detail: SFC = ({className}) => {
             <Icon icon={mdiArrowLeft} size={20} />
             <span>Back to Currencies</span>
           </S.BackButton>
-          {isOwner && <Button onClick={toggleCurrencyEditModal} text="Edit" />}
+          {isOwner && <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />}
         </S.Header>
 
         <S.Content>
-          <CurrencyInfoSection currency={currency} />
+          <CurrencyInfoSection currency={currency} totalAmountMinted={totalAmountMinted} />
           <S.TabSection>
             <S.TabHeader>
               <Tabs>
@@ -162,8 +202,8 @@ const Detail: SFC = ({className}) => {
           </S.TabSection>
         </S.Content>
       </S.Container>
-      {currencyEditModalIsOpen && (
-        <CurrencyEditModal close={toggleCurrencyEditModal} currency={currency} onSuccess={handleCurrencyEditSuccess} />
+      {currencyModalIsOpen && currency && (
+        <CurrencyModal close={toggleCurrencyModal} currency={currency} onSuccess={handleCurrencyModalSuccess} />
       )}
       {mintModalIsOpen && <MintModal close={toggleMintModal} currency={currency} onSuccess={handleMintModalSuccess} />}
     </>

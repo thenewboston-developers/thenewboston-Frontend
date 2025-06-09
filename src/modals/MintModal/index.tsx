@@ -9,14 +9,14 @@ import {Input} from 'components/FormElements';
 import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {createMint} from 'dispatchers/mints';
 import {ToastType} from 'enums';
-import {AppDispatch, CurrencyReadDetailSerializer, SFC} from 'types';
+import {AppDispatch, Currency, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
 interface ComponentProps {
   close(): void;
-  currency: CurrencyReadDetailSerializer;
+  currency: Currency;
   onSuccess?: () => void;
 }
 

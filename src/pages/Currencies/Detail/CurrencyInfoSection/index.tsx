@@ -1,13 +1,14 @@
 import UserLabel from 'components/UserLabel';
-import {CurrencyReadDetailSerializer, SFC} from 'types';
+import {Currency, SFC} from 'types';
 
 import * as S from './Styles';
 
 interface CurrencyInfoSectionProps {
-  currency: CurrencyReadDetailSerializer;
+  currency: Currency;
+  totalAmountMinted: number | null;
 }
 
-const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency}) => {
+const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency, totalAmountMinted}) => {
   const isInternalCurrency = currency.domain === null;
 
   return (
@@ -32,10 +33,12 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
               />
             </S.OwnerInfo>
           </S.CurrencyInfo>
-          <S.TotalMintedInfo>
-            <S.TotalMintedLabel>Total Minted</S.TotalMintedLabel>
-            <S.TotalMintedValue>{currency.total_amount_minted.toLocaleString()}</S.TotalMintedValue>
-          </S.TotalMintedInfo>
+          {totalAmountMinted !== null && (
+            <S.TotalMintedInfo>
+              <S.TotalMintedLabel>Total Minted</S.TotalMintedLabel>
+              <S.TotalMintedValue>{totalAmountMinted.toLocaleString()}</S.TotalMintedValue>
+            </S.TotalMintedInfo>
+          )}
         </S.CurrencyInfoContainer>
       </S.CurrencyContent>
     </S.CurrencyPanel>
