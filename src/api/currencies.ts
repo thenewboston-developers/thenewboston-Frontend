@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-import {Currency, TotalAmountMintedResponse} from 'types';
+import {Currency} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/currencies`;
-const TOTAL_AMOUNT_MINTED_URL = `${process.env.REACT_APP_API_URL}/api/total-amount-minted`;
 
 export const createCurrency = async (data: FormData): Promise<Currency> => {
   try {
@@ -35,18 +34,6 @@ export const getCurrencies = async (): Promise<Currency[]> => {
 export const getCurrency = async (id: number): Promise<Currency> => {
   try {
     const response = await axios.get<Currency>(`${BASE_URL}/${id}`, authorizationHeaders());
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getTotalAmountMinted = async (currencyId: number): Promise<TotalAmountMintedResponse> => {
-  try {
-    const response = await axios.get<TotalAmountMintedResponse>(TOTAL_AMOUNT_MINTED_URL, {
-      ...authorizationHeaders(),
-      params: {currency: currencyId},
-    });
     return response.data;
   } catch (error) {
     throw error;

@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 import {mdiArrowLeft, mdiDotsVertical} from '@mdi/js';
 
-import {getTotalAmountMinted} from 'api/currencies';
+import {getTotalAmountMinted} from 'api/totalAmountMinted';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Button from 'components/Button';
 import DropdownMenu from 'components/DropdownMenu';
