@@ -7,7 +7,6 @@ import Pattern from './profile-pattern.png';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   padding: 0;
   position: relative;
 `;
@@ -19,15 +18,15 @@ export const ContentWrapper = styled.div`
 `;
 
 export const OutletContainer = styled.div`
-  padding: 0 32px 32px;
+  padding: 24px 32px 32px;
 
-  @media (max-width: ${breakpoints.mini}) {
-    padding: 0 16px 16px;
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 16px 24px 24px;
   }
 `;
 
 export const TopSection = styled.div`
-  padding: 24px 32px;
+  padding: 24px 32px 0;
   position: relative;
 
   &::after {
@@ -42,7 +41,7 @@ export const TopSection = styled.div`
     z-index: -1;
   }
 
-  @media (max-width: ${breakpoints.mini}) {
-    padding: 24px 16px;
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 24px 24px 0;
   }
 `;

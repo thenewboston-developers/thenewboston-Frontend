@@ -1,12 +1,12 @@
-import {useEffect, useMemo, useRef} from 'react';
+import {useEffect, useMemo} from 'react';
+import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {useDispatch, useSelector} from 'react-redux';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
-import InfiniteScroll from 'components/InfiniteScroll';
+import EmptyText from 'components/EmptyText';
 import Post from 'components/Post';
 import PostSkeleton from 'components/Post/PostSkeleton';
-import ScrollToTopButton from 'components/ScrollUpButton';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
@@ -19,7 +19,6 @@ const Feed: SFC = ({className}) => {
   const posts = useSelector(getPosts);
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
-  const scrollableDivRef = useRef<HTMLDivElement>(null!);
 
   const postList = useMemo(() => Object.values(posts), [posts]);
 
@@ -40,33 +39,46 @@ const Feed: SFC = ({className}) => {
     }
   };
 
-  const getSkeleton = (n: number) => (
-    <S.PostContainer>
-      <PostSkeleton dataLength={n} />
-    </S.PostContainer>
-  );
-
   const renderContent = () => {
     if (isLoading && !postList.length) {
-      return getSkeleton(3);
+      return (
+        <S.PostContainer>
+          <S.PostsWrapper>
+            <PostSkeleton dataLength={3} />
+          </S.PostsWrapper>
+        </S.PostContainer>
+      );
     }
+
     if (postList.length) {
       return (
-        <InfiniteScroll
-          ref={scrollableDivRef}
-          dataLength={postList.length}
-          hasMore={hasMore}
-          next={fetchMorePosts}
-          heightMargin={0}
-          loader={getSkeleton(1)}
-        >
-          <ScrollToTopButton targetRef={scrollableDivRef} />
-          <S.PostContainer>
-            {postList.map((post) => (
-              <Post key={post.id} post={post} />
-            ))}
-          </S.PostContainer>
-        </InfiniteScroll>
+        <S.PostContainer>
+          <InfiniteScrollComponent
+            dataLength={postList.length}
+            endMessage={
+              <S.EndMessageContainer>
+                <EmptyText>No more posts to show.</EmptyText>
+              </S.EndMessageContainer>
+            }
+            hasMore={hasMore}
+            loader={
+              <S.LoaderContainer>
+                <S.SkeletonContainer>
+                  <PostSkeleton dataLength={1} />
+                </S.SkeletonContainer>
+              </S.LoaderContainer>
+            }
+            next={fetchMorePosts}
+            scrollThreshold={0.9}
+            scrollableTarget="main-scrollable-area"
+          >
+            <S.PostsWrapper>
+              {postList.map((post) => (
+                <Post key={post.id} post={post} />
+              ))}
+            </S.PostsWrapper>
+          </InfiniteScrollComponent>
+        </S.PostContainer>
       );
     }
 

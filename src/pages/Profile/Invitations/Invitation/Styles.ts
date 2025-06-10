@@ -3,11 +3,26 @@ import styled from 'styled-components';
 import {breakpoints, colors} from 'styles';
 
 export const CodeValue = styled.span`
-  color: ${colors.primary};
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-family: monospace;
+  font-size: 14px;
+`;
+
+export const Container = styled.div`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${colors.whiteHover};
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 16px;
+  }
 `;
 
 export const DetailItem = styled.div`
@@ -25,7 +40,6 @@ export const DetailLabel = styled.span`
 `;
 
 export const DetailValue = styled.span`
-  color: ${colors.primary};
   font-size: 14px;
   font-weight: 600;
 `;
@@ -50,24 +64,6 @@ export const InvitationActions = styled.div`
   align-items: center;
   display: flex;
   gap: 8px;
-`;
-
-export const InvitationCard = styled.div`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  padding: 20px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${colors.whiteHover};
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 16px;
-  }
 `;
 
 export const InvitationDetails = styled.div`

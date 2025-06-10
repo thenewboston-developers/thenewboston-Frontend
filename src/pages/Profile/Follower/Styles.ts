@@ -11,7 +11,7 @@ export const Container = styled.div`
   background: ${colors.white};
   border-radius: 14px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-  margin: 16px auto 0;
+  margin: 0 auto;
   max-width: 720px;
   padding: 20px 24px;
   width: 100%;
@@ -75,4 +75,11 @@ export const Heading = styled.div`
   & span {
     color: ${colors.black};
   }
+`;
+
+export const LoaderWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 16px 0;
 `;

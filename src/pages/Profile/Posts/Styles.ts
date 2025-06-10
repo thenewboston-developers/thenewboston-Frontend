@@ -7,12 +7,23 @@ export const Container = styled.div`
 `;
 
 export const EndMessageContainer = styled.div`
-  margin-top: 32px;
+  margin-top: 16px;
 `;
 
-export const PostContainer = styled.div`
+export const LoaderContainer = styled.div`
+  margin: 16px 0 32px;
+`;
+
+export const PostContainer = styled.div``;
+
+export const PostsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin: 1rem 0;
+`;
+
+export const SkeletonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;

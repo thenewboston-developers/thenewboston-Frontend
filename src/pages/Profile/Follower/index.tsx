@@ -1,10 +1,11 @@
 import {useEffect, useMemo} from 'react';
+import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {mdiAccountMinusOutline, mdiAccountPlusOutline} from '@mdi/js';
 
 import EmptyText from 'components/EmptyText';
-import InfiniteScroll from 'components/InfiniteScroll';
+import Loader from 'components/Loader';
 import OutlineButton from 'components/OutlineButton';
 import UserLabel from 'components/UserLabel';
 import {createFollower, deleteFollower, getFollowers, resetFollowers} from 'dispatchers/followers';
@@ -118,12 +119,24 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
 
   const renderFollowerCards = () => {
     return (
-      <InfiniteScroll dataLength={followerList.length} hasMore={hasMore} heightMargin={200} next={fetchMoreFollowers}>
+      <InfiniteScrollComponent
+        dataLength={followerList.length}
+        endMessage={null}
+        hasMore={hasMore}
+        loader={
+          <S.LoaderWrapper>
+            <Loader size={24} />
+          </S.LoaderWrapper>
+        }
+        next={fetchMoreFollowers}
+        scrollThreshold={0.9}
+        scrollableTarget="main-scrollable-area"
+      >
         {followerList.map((item, index) => {
           const user = extractObject(item);
           return getFollowerCard(index, item.id, item.self_following, user, item.created_date);
         })}
-      </InfiniteScroll>
+      </InfiniteScrollComponent>
     );
   };
 

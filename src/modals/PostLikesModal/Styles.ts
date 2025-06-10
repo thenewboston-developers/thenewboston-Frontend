@@ -31,6 +31,13 @@ export const LoaderContainer = styled.div`
   padding: 40px 12px;
 `;
 
+export const LoaderWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 16px 0;
+`;
+
 export const Modal = styled(UModal)`
   display: flex;
   flex-direction: column;
