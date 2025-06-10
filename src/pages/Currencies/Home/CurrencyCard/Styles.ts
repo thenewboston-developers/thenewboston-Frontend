@@ -18,9 +18,16 @@ export const Container = styled.div`
   background-color: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
   display: flex;
   justify-content: space-between;
   padding: 8px 5px 8px 14px;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 export const Domain = styled.div`
@@ -54,10 +61,5 @@ export const Text = styled.div`
 `;
 
 export const Ticker = styled.div`
-  cursor: pointer;
   font-weight: ${fonts.weight.semiBold};
-
-  &:hover {
-    text-decoration: underline;
-  }
 `;
