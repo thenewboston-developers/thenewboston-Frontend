@@ -34,7 +34,10 @@ export const Container = styled.div`
 export const Content = styled.div`
   ${pagePadding};
   flex: 1;
+  margin: 0 auto;
+  max-width: 1200px;
   overflow-y: auto;
+  width: 100%;
 `;
 
 export const Header = styled.div`

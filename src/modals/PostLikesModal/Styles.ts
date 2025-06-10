@@ -3,13 +3,6 @@ import styled from 'styled-components';
 import UModal from 'components/Modal';
 import {breakpoints, colors} from 'styles';
 
-export const EmptyMessage = styled.div`
-  color: ${colors.palette.gray[600]};
-  font-size: 16px;
-  padding: 24px 12px;
-  text-align: center;
-`;
-
 export const LikeItem = styled.div`
   padding: 8px 12px;
   transition: background-color 0.2s ease;
@@ -28,7 +21,7 @@ export const LoaderContainer = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
-  padding: 40px 12px;
+  padding: 32px 16px;
 `;
 
 export const LoaderWrapper = styled.div`
