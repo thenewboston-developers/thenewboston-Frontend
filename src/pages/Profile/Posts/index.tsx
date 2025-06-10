@@ -22,15 +22,15 @@ const Posts: SFC = ({className}) => {
   const userId = id ? parseInt(id, 10) : null;
 
   const postList = useMemo(() => {
-    return Object.values(posts).filter(({owner}) => owner.id === userId);
-  }, [posts, userId]);
+    return Object.values(posts);
+  }, [posts]);
 
   useEffect(() => {
     (async () => {
       try {
         if (!userId) return;
         dispatch(_resetPosts());
-        await dispatch(_getPosts({owner: userId}));
+        await dispatch(_getPosts({user: userId}));
       } catch (error) {
         displayErrorToast('Error fetching posts');
       }
@@ -40,7 +40,7 @@ const Posts: SFC = ({className}) => {
   const fetchMorePosts = async () => {
     if (!isLoading && userId) {
       try {
-        await dispatch(_getPosts({owner: userId}));
+        await dispatch(_getPosts({user: userId}));
       } catch (error) {
         displayErrorToast('Error fetching more posts');
       }
