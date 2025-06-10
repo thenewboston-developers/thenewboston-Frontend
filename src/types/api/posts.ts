@@ -16,4 +16,5 @@ export interface PostReadSerializer extends CreatedModified {
 
 export interface GetPostsParams {
   owner?: number;
+  user?: number;
 }
