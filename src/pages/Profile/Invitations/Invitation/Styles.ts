@@ -7,6 +7,24 @@ export const CodeValue = styled.span`
   font-size: 14px;
 `;
 
+export const Container = styled.div`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${colors.whiteHover};
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 16px;
+  }
+`;
+
 export const DetailItem = styled.div`
   display: flex;
   flex-direction: column;
@@ -46,24 +64,6 @@ export const InvitationActions = styled.div`
   align-items: center;
   display: flex;
   gap: 8px;
-`;
-
-export const InvitationCard = styled.div`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  padding: 20px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${colors.whiteHover};
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 16px;
-  }
 `;
 
 export const InvitationDetails = styled.div`

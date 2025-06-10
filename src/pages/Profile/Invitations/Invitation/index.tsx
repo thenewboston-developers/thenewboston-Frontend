@@ -68,7 +68,7 @@ const Invitation: SFC<InvitationProps> = ({invitation}) => {
 
   return (
     <>
-      <S.InvitationCard>
+      <S.Container>
         <S.InvitationHeader>
           <S.InvitationMainInfo>{renderUserLabel()}</S.InvitationMainInfo>
           <S.InvitationActions>
@@ -90,7 +90,7 @@ const Invitation: SFC<InvitationProps> = ({invitation}) => {
             </S.NoteItem>
           )}
         </S.InvitationDetails>
-      </S.InvitationCard>
+      </S.Container>
 
       {invitationModalIsOpen ? <InvitationModal close={toggleInvitationModal} invitation={invitation} /> : null}
     </>
