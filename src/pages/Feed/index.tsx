@@ -50,6 +50,7 @@ const Feed: SFC = ({className}) => {
     if (isLoading && !postList.length) {
       return getSkeleton(3);
     }
+
     if (postList.length) {
       return (
         <InfiniteScroll

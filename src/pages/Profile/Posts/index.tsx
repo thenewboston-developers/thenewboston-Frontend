@@ -66,7 +66,7 @@ const Posts: SFC = ({className}) => {
             </S.EndMessageContainer>
           }
           hasMore={hasMore}
-          loader={getSkeleton(1)}
+          loader={<S.LoaderContainer>{getSkeleton(1)}</S.LoaderContainer>}
           next={fetchMorePosts}
           scrollThreshold={0.9}
           scrollableTarget="main-scrollable-area"
