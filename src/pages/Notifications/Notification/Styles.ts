@@ -18,7 +18,6 @@ export const Container = styled.div<{$isRead: boolean}>`
 
   &:hover {
     background: ${({$isRead}) => ($isRead ? colors.lightGray : colors.whiteHover)};
-    box-shadow: ${({$isRead}) => ($isRead ? 'none' : '0 2px 6px rgba(0, 0, 0, 0.12)')};
   }
 `;
 

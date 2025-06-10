@@ -7,11 +7,11 @@ const Toolbar: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Left />
-      <S.Center>
+      <S.MenuItems>
         <ToolbarMenuLink text="Trade" to="/exchange/trade" />
         <ToolbarMenuLink text="Orders" to="/exchange/orders" />
         <ToolbarMenuLink text="Learn More" to="/exchange/learn-more" />
-      </S.Center>
+      </S.MenuItems>
       <S.Right />
     </S.Container>
   );

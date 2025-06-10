@@ -13,18 +13,18 @@ export interface CurrencyCardProps {
 const CurrencyCard: SFC<CurrencyCardProps> = ({className, currency}) => {
   const navigate = useNavigate();
 
-  const handleTickerClick = () => {
+  const handleCardClick = () => {
     navigate(`/currencies/${currency.id}`);
   };
 
   return (
-    <S.Container className={className}>
+    <S.Container className={className} onClick={handleCardClick}>
       <S.LabelContainer>
         <S.Box>
           <S.BoxLeft>
             <CurrencyLogo logo={currency.logo} />
             <S.Text>
-              <S.Ticker onClick={handleTickerClick}>{currency.ticker}</S.Ticker>
+              <S.Ticker>{currency.ticker}</S.Ticker>
             </S.Text>
           </S.BoxLeft>
         </S.Box>

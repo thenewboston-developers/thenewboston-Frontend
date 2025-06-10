@@ -51,6 +51,7 @@ export const pagePadding = css`
 `;
 
 export const toolbarStyle = css`
+  align-items: center;
   background: #fff;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   display: flex;
