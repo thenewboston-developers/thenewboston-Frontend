@@ -149,7 +149,12 @@ const Detail: SFC = ({className}) => {
     setCurrentPage(page);
   };
 
-  if (loading) return <Loader />;
+  if (loading)
+    return (
+      <S.LoaderWrapper>
+        <Loader />
+      </S.LoaderWrapper>
+    );
   if (!currency)
     return (
       <EmptyPage

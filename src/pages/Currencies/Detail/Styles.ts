@@ -56,6 +56,13 @@ export const TabHeader = styled.div`
   justify-content: space-between;
 `;
 
+export const LoaderWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+`;
+
 export const TabContent = styled.div`
   margin-top: 24px;
 `;
