@@ -14,5 +14,4 @@ export const PostContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin: 1rem 0;
 `;
