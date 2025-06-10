@@ -1,9 +1,10 @@
 import {useCallback, useEffect, useState} from 'react';
+import InfiniteScrollComponent from 'react-infinite-scroll-component';
 
 import {getTransfers} from 'api/transfers';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
-import InfiniteScroll from 'components/InfiniteScroll';
+import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
 import {useActiveWallet} from 'hooks';
@@ -125,19 +126,25 @@ const WalletTransfers: SFC = ({className}) => {
     }
 
     return (
-      <InfiniteScroll
+      <InfiniteScrollComponent
         dataLength={transfers.length}
+        endMessage={
+          <S.EndMessageContainer>
+            <EmptyText>No more transfers to show.</EmptyText>
+          </S.EndMessageContainer>
+        }
         hasMore={hasMore}
-        heightMargin={0}
         loader={
           <S.LoaderWrapper>
             <Loader size={24} />
           </S.LoaderWrapper>
         }
         next={fetchMoreTransfers}
+        scrollThreshold={0.9}
+        scrollableTarget="main-scrollable-area"
       >
         <S.TransfersList>{transfers.map(renderTransfer)}</S.TransfersList>
-      </InfiniteScroll>
+      </InfiniteScrollComponent>
     );
   };
 

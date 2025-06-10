@@ -47,14 +47,12 @@ const Posts: SFC = ({className}) => {
     }
   };
 
-  const getSkeleton = (n: number) => (
-    <S.PostContainer>
-      <PostSkeleton dataLength={n} />
-    </S.PostContainer>
-  );
+  const getSkeleton = (n: number) => <PostSkeleton dataLength={n} />;
 
   const renderContent = () => {
-    if (isLoading && !postList.length) return getSkeleton(3);
+    if (isLoading && !postList.length) {
+      return <S.PostContainer>{getSkeleton(3)}</S.PostContainer>;
+    }
 
     if (postList.length) {
       return (
@@ -66,7 +64,13 @@ const Posts: SFC = ({className}) => {
             </S.EndMessageContainer>
           }
           hasMore={hasMore}
-          loader={<S.LoaderContainer>{getSkeleton(1)}</S.LoaderContainer>}
+          loader={
+            <S.LoaderContainer>
+              <S.SkeletonContainer>
+                <PostSkeleton dataLength={1} />
+              </S.SkeletonContainer>
+            </S.LoaderContainer>
+          }
           next={fetchMorePosts}
           scrollThreshold={0.9}
           scrollableTarget="main-scrollable-area"

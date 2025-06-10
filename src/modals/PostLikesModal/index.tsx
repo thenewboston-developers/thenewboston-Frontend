@@ -1,7 +1,8 @@
 import {useEffect, useState} from 'react';
+import InfiniteScrollComponent from 'react-infinite-scroll-component';
 
 import {getPostLikes} from 'api/postLikes';
-import InfiniteScroll from 'components/InfiniteScroll';
+import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
 import {PostLike, SFC} from 'types';
@@ -69,12 +70,21 @@ const PostLikesModal: SFC<PostLikesModalProps> = ({className, close, postId}) =>
 
     return (
       <S.ScrollContainer>
-        <InfiniteScroll
+        <InfiniteScrollComponent
           dataLength={likes.length}
+          endMessage={
+            <S.EndMessageContainer>
+              <EmptyText>No more likes to show.</EmptyText>
+            </S.EndMessageContainer>
+          }
           hasMore={hasMore}
+          height={400}
+          loader={
+            <S.LoaderWrapper>
+              <Loader size={24} />
+            </S.LoaderWrapper>
+          }
           next={fetchMoreLikes}
-          heightMargin={200}
-          loader={<Loader size={24} />}
         >
           <S.LikesList>
             {likes.map((like) => (
@@ -88,7 +98,7 @@ const PostLikesModal: SFC<PostLikesModalProps> = ({className, close, postId}) =>
               </S.LikeItem>
             ))}
           </S.LikesList>
-        </InfiniteScroll>
+        </InfiniteScrollComponent>
       </S.ScrollContainer>
     );
   };

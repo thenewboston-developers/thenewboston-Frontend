@@ -10,6 +10,10 @@ export const EmptyMessage = styled.div`
   text-align: center;
 `;
 
+export const EndMessageContainer = styled.div`
+  margin-top: 16px;
+`;
+
 export const LikeItem = styled.div`
   padding: 8px 12px;
   transition: background-color 0.2s ease;
@@ -29,6 +33,13 @@ export const LoaderContainer = styled.div`
   display: flex;
   justify-content: center;
   padding: 40px 12px;
+`;
+
+export const LoaderWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 16px 0;
 `;
 
 export const Modal = styled(UModal)`
