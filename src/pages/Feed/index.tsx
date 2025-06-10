@@ -39,12 +39,6 @@ const Feed: SFC = ({className}) => {
     }
   };
 
-  const getSkeleton = (n: number) => (
-    <S.SkeletonContainer>
-      <PostSkeleton dataLength={n} />
-    </S.SkeletonContainer>
-  );
-
   const renderContent = () => {
     if (isLoading && !postList.length) {
       return (
@@ -67,7 +61,13 @@ const Feed: SFC = ({className}) => {
               </S.EndMessageContainer>
             }
             hasMore={hasMore}
-            loader={<S.LoaderWrapper>{getSkeleton(1)}</S.LoaderWrapper>}
+            loader={
+              <S.LoaderContainer>
+                <S.SkeletonContainer>
+                  <PostSkeleton dataLength={1} />
+                </S.SkeletonContainer>
+              </S.LoaderContainer>
+            }
             next={fetchMorePosts}
             scrollThreshold={0.9}
             scrollableTarget="main-scrollable-area"
