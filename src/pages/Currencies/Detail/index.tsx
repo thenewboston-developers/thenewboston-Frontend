@@ -155,6 +155,7 @@ const Detail: SFC = ({className}) => {
         <Loader />
       </S.LoaderWrapper>
     );
+
   if (!currency)
     return (
       <EmptyPage

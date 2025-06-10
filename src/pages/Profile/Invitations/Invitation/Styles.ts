@@ -3,11 +3,8 @@ import styled from 'styled-components';
 import {breakpoints, colors} from 'styles';
 
 export const CodeValue = styled.span`
-  color: ${colors.primary};
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-family: monospace;
+  font-size: 14px;
 `;
 
 export const DetailItem = styled.div`
@@ -25,7 +22,6 @@ export const DetailLabel = styled.span`
 `;
 
 export const DetailValue = styled.span`
-  color: ${colors.primary};
   font-size: 14px;
   font-weight: 600;
 `;
