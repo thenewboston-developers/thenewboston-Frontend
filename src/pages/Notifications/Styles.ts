@@ -29,7 +29,7 @@ export const Header = styled.div`
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   flex-shrink: 0;
   padding: 20px 24px;
-  z-index: 10;
+  z-index: 1;
 `;
 
 export const MarkAllButton = styled(UButton)`

@@ -57,4 +57,5 @@ export const toolbarStyle = css`
   height: ${`${TOOLBAR_HEIGHT}px`};
   justify-content: space-between;
   padding: 0 16px;
+  z-index: 1;
 `;
