@@ -83,7 +83,7 @@ const Notifications: SFC = ({className}) => {
           hasMore={hasMore}
           loader={getNotificationSkeleton(3)}
           next={fetchMoreNotifications}
-          scrollableTarget="main-scrollable-area"
+          scrollableTarget="notifications-content"
           scrollThreshold={0.9}
         >
           <S.NotificationContainer>
@@ -111,7 +111,7 @@ const Notifications: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Header>{renderSectionHeading()}</S.Header>
-      <S.Content>{renderNotifications()}</S.Content>
+      <S.Content id="notifications-content">{renderNotifications()}</S.Content>
     </S.Container>
   );
 };
