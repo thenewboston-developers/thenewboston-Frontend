@@ -121,11 +121,7 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
     return (
       <InfiniteScrollComponent
         dataLength={followerList.length}
-        endMessage={
-          <S.EndMessageContainer>
-            <EmptyText>No more to show.</EmptyText>
-          </S.EndMessageContainer>
-        }
+        endMessage={null}
         hasMore={hasMore}
         loader={
           <S.LoaderWrapper>

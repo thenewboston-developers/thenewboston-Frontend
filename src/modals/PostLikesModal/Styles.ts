@@ -10,10 +10,6 @@ export const EmptyMessage = styled.div`
   text-align: center;
 `;
 
-export const EndMessageContainer = styled.div`
-  margin-top: 16px;
-`;
-
 export const LikeItem = styled.div`
   padding: 8px 12px;
   transition: background-color 0.2s ease;

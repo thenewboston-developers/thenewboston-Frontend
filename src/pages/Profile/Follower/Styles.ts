@@ -25,10 +25,6 @@ export const Counter = styled.div`
   font-weight: ${fonts.weight.medium};
 `;
 
-export const EndMessageContainer = styled.div`
-  margin-top: 32px;
-`;
-
 export const FollowerContainer = styled.div`
   align-items: center;
   border-bottom: 1px solid ${colors.border};

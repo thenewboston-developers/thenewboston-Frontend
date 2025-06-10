@@ -29,10 +29,6 @@ export const EmptyPageWrapper = styled.div`
   padding: 24px 0;
 `;
 
-export const EndMessageContainer = styled.div`
-  margin-top: 32px;
-`;
-
 export const LoaderWrapper = styled.div`
   align-items: center;
   display: flex;

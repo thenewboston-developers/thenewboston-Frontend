@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
 
 import {getPostLikes} from 'api/postLikes';
-import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
 import {PostLike, SFC} from 'types';
@@ -72,11 +71,7 @@ const PostLikesModal: SFC<PostLikesModalProps> = ({className, close, postId}) =>
       <S.ScrollContainer>
         <InfiniteScrollComponent
           dataLength={likes.length}
-          endMessage={
-            <S.EndMessageContainer>
-              <EmptyText>No more likes to show.</EmptyText>
-            </S.EndMessageContainer>
-          }
+          endMessage={null}
           hasMore={hasMore}
           height={400}
           loader={

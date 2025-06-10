@@ -17,7 +17,7 @@ export const Content = styled.div`
 `;
 
 export const EndMessageContainer = styled.div`
-  margin: 32px 0;
+  margin: 8px 0;
 `;
 
 export const Header = styled.div`

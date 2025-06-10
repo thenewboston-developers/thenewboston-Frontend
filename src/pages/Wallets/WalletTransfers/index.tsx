@@ -4,7 +4,6 @@ import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {getTransfers} from 'api/transfers';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
-import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
 import {useActiveWallet} from 'hooks';
@@ -128,11 +127,7 @@ const WalletTransfers: SFC = ({className}) => {
     return (
       <InfiniteScrollComponent
         dataLength={transfers.length}
-        endMessage={
-          <S.EndMessageContainer>
-            <EmptyText>No more transfers to show.</EmptyText>
-          </S.EndMessageContainer>
-        }
+        endMessage={null}
         hasMore={hasMore}
         loader={
           <S.LoaderWrapper>
