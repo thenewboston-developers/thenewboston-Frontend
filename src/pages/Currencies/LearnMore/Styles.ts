@@ -42,11 +42,6 @@ export const ListItem = styled.li`
   }
 `;
 
-export const NestedList = styled(List)`
-  margin-bottom: 8px;
-  margin-top: 8px;
-`;
-
 export const Paragraph = styled.p`
   color: ${colors.primary};
   font-size: 15px;

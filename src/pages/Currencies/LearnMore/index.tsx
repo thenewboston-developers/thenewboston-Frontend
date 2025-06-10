@@ -55,8 +55,8 @@ const LearnMore: SFC = ({className}) => {
             <S.StepNumber>1</S.StepNumber>
             <S.StepTitle>Create Your Currency</S.StepTitle>
             <S.Paragraph style={{marginTop: '12px', marginBottom: 0}}>
-              Choose a unique ticker symbol (like BTC or ETH), upload a logo, and add a description. Your ticker is how
-              people will identify your currency across the platform.
+              Choose a unique ticker symbol, upload a logo, and add a description. Your ticker is how people will
+              identify your currency across the platform.
             </S.Paragraph>
           </S.Step>
 
@@ -70,8 +70,8 @@ const LearnMore: SFC = ({className}) => {
             <S.StepNumber>2</S.StepNumber>
             <S.StepTitle>Mint Your Coins</S.StepTitle>
             <S.Paragraph style={{marginTop: '12px', marginBottom: 0}}>
-              Decide how many coins you want to create. You can mint more later, but choose wisely - the total supply
-              affects your currency's value. All minted coins go directly to your wallet.
+              Decide how many coins you want to create. You can mint more later. All minted coins go directly to your
+              wallet.
             </S.Paragraph>
           </S.Step>
 
@@ -102,18 +102,6 @@ const LearnMore: SFC = ({className}) => {
         </S.Section>
 
         <S.Section>
-          <S.SectionTitle>Key Concepts</S.SectionTitle>
-
-          <S.SubSection>
-            <S.SubSectionTitle>Minting</S.SubSectionTitle>
-            <S.Paragraph>
-              Minting is the process of creating new coins. As the currency creator, only you can mint new coins. This
-              gives you control over the total supply.
-            </S.Paragraph>
-          </S.SubSection>
-        </S.Section>
-
-        <S.Section>
           <S.SectionTitle>Frequently Asked Questions</S.SectionTitle>
 
           <S.SubSection>
@@ -126,10 +114,7 @@ const LearnMore: SFC = ({className}) => {
 
           <S.SubSection>
             <S.SubSectionTitle>Is there a limit to how many coins I can mint?</S.SubSectionTitle>
-            <S.Paragraph>
-              There's no hard limit, but remember: minting too many coins can decrease their value. Many successful
-              currencies start with a reasonable supply and mint more only when needed.
-            </S.Paragraph>
+            <S.Paragraph>There's no hard limit. You can mint as many coins as you need for your use case.</S.Paragraph>
           </S.SubSection>
         </S.Section>
       </S.Content>
