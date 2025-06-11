@@ -11,8 +11,8 @@ const LearnMore: SFC = ({className}) => {
         <S.Title>Create Your Own Currency</S.Title>
 
         <S.Introduction>
-          Here you can create, mint, and distribute your own coins. You can also trade them for other coins or send them
-          to your friends.
+          Here you can create your own currency, mint coins, and distribute them. You can also trade your coins for
+          other currencies or send them to your friends.
         </S.Introduction>
 
         <S.PlaceholderGraphic $height="300px">
@@ -33,10 +33,10 @@ const LearnMore: SFC = ({className}) => {
               <S.Bold>Mint coins</S.Bold> in any quantity you choose
             </S.ListItem>
             <S.ListItem>
-              <S.Bold>Trade on the exchange</S.Bold> by listing your currency for others to buy and sell
+              <S.Bold>Trade your coins</S.Bold> for other currencies on the exchange
             </S.ListItem>
             <S.ListItem>
-              <S.Bold>Send to anyone</S.Bold> instantly through the platform
+              <S.Bold>Send coins</S.Bold> instantly to anyone on the platform
             </S.ListItem>
           </S.List>
         </S.Section>
@@ -83,8 +83,8 @@ const LearnMore: SFC = ({className}) => {
             <S.StepParagraph>Now the fun begins! You can:</S.StepParagraph>
             <S.StepList>
               <S.ListItem>Send coins to friends and community members</S.ListItem>
-              <S.ListItem>Trade your currency for other currencies on the exchange</S.ListItem>
-              <S.ListItem>Watch as others buy and sell your currency</S.ListItem>
+              <S.ListItem>Trade your coins for other currencies on the exchange</S.ListItem>
+              <S.ListItem>Watch as others buy and sell your coins</S.ListItem>
             </S.StepList>
           </S.Step>
 
