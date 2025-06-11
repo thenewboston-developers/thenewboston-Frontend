@@ -1,4 +1,3 @@
-import {DEFAULT_CURRENCY_TICKER} from 'constants/general';
 import {SFC} from 'types';
 
 import * as S from './Styles';
@@ -221,15 +220,6 @@ const LearnMore: SFC = ({className}) => {
         </S.Section>
 
         <S.Section>
-          <S.SectionTitle>Default Currency</S.SectionTitle>
-          <S.Paragraph>
-            The platform uses {DEFAULT_CURRENCY_TICKER} as the default currency for simplified transactions. When you
-            create posts with prices or send coins without specifying a currency, {DEFAULT_CURRENCY_TICKER} is used
-            automatically.
-          </S.Paragraph>
-        </S.Section>
-
-        <S.Section>
           <S.SectionTitle>External Resources</S.SectionTitle>
           <S.Paragraph>Want to dive deeper into the world of digital currencies and cores?</S.Paragraph>
 
@@ -275,14 +265,6 @@ const LearnMore: SFC = ({className}) => {
             <S.Paragraph>
               Internal transfers are instant. External deposits and withdrawals typically complete within seconds,
               depending on the core server's response time.
-            </S.Paragraph>
-          </S.SubSection>
-
-          <S.SubSection>
-            <S.SubSectionTitle>What's a deposit account?</S.SubSectionTitle>
-            <S.Paragraph>
-              Your deposit account is your unique account number on an external core server. It's like your mailing
-              address for receiving coins from outside thenewboston.net.
             </S.Paragraph>
           </S.SubSection>
         </S.Section>
