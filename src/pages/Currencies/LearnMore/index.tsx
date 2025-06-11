@@ -1,4 +1,6 @@
+import {MAX_MINT_AMOUNT} from 'constants/general';
 import {SFC} from 'types';
+import {formatNumber} from 'utils/numbers';
 
 import * as S from './Styles';
 
@@ -13,7 +15,7 @@ const LearnMore: SFC = ({className}) => {
           to your friends.
         </S.Introduction>
 
-        <S.PlaceholderGraphic style={{height: '300px'}}>
+        <S.PlaceholderGraphic $height="300px">
           Graphic: Illustrated overview showing currency creation, minting coins, sending to friends, and trading on
           exchange
           <br />
@@ -28,9 +30,6 @@ const LearnMore: SFC = ({className}) => {
           </S.Paragraph>
           <S.List>
             <S.ListItem>
-              <S.Bold>Create tokens</S.Bold> with a unique ticker symbol and logo
-            </S.ListItem>
-            <S.ListItem>
               <S.Bold>Mint coins</S.Bold> in any quantity you choose
             </S.ListItem>
             <S.ListItem>
@@ -38,9 +37,6 @@ const LearnMore: SFC = ({className}) => {
             </S.ListItem>
             <S.ListItem>
               <S.Bold>Send to anyone</S.Bold> instantly through the platform
-            </S.ListItem>
-            <S.ListItem>
-              <S.Bold>Control the supply</S.Bold> - only you can mint new coins
             </S.ListItem>
           </S.List>
         </S.Section>
@@ -54,13 +50,13 @@ const LearnMore: SFC = ({className}) => {
           <S.Step>
             <S.StepNumber>1</S.StepNumber>
             <S.StepTitle>Create Your Currency</S.StepTitle>
-            <S.Paragraph style={{marginTop: '12px', marginBottom: 0}}>
+            <S.StepParagraph>
               Choose a unique ticker symbol, upload a logo, and add a description. Your ticker is how people will
               identify your currency across the platform.
-            </S.Paragraph>
+            </S.StepParagraph>
           </S.Step>
 
-          <S.PlaceholderGraphic style={{height: '200px'}}>
+          <S.PlaceholderGraphic $height="200px">
             Graphic: Screenshot mockup of currency creation form with ticker, logo upload, and description fields
             <br />
             Dimensions: 600x200px
@@ -69,13 +65,13 @@ const LearnMore: SFC = ({className}) => {
           <S.Step>
             <S.StepNumber>2</S.StepNumber>
             <S.StepTitle>Mint Your Coins</S.StepTitle>
-            <S.Paragraph style={{marginTop: '12px', marginBottom: 0}}>
+            <S.StepParagraph>
               Decide how many coins you want to create. You can mint more later. All minted coins go directly to your
               wallet.
-            </S.Paragraph>
+            </S.StepParagraph>
           </S.Step>
 
-          <S.PlaceholderGraphic style={{height: '200px'}}>
+          <S.PlaceholderGraphic $height="200px">
             Graphic: Illustration of minting process with coins flowing into a wallet
             <br />
             Dimensions: 600x200px
@@ -84,16 +80,15 @@ const LearnMore: SFC = ({className}) => {
           <S.Step>
             <S.StepNumber>3</S.StepNumber>
             <S.StepTitle>Distribute & Trade</S.StepTitle>
-            <S.Paragraph style={{marginTop: '12px', marginBottom: 0}}>Now the fun begins! You can:</S.Paragraph>
-            <S.List style={{marginTop: '8px'}}>
+            <S.StepParagraph>Now the fun begins! You can:</S.StepParagraph>
+            <S.StepList>
               <S.ListItem>Send coins to friends and community members</S.ListItem>
-              <S.ListItem>List your currency on the exchange for trading</S.ListItem>
-              <S.ListItem>Set your own exchange rates against other currencies</S.ListItem>
-              <S.ListItem>Build liquidity by encouraging others to trade</S.ListItem>
-            </S.List>
+              <S.ListItem>Trade your currency for other currencies on the exchange</S.ListItem>
+              <S.ListItem>Watch as others buy and sell your currency</S.ListItem>
+            </S.StepList>
           </S.Step>
 
-          <S.PlaceholderGraphic style={{height: '250px'}}>
+          <S.PlaceholderGraphic $height="250px">
             Graphic: Split illustration showing coins being sent to friends on one side and trading on exchange on the
             other
             <br />
@@ -114,7 +109,10 @@ const LearnMore: SFC = ({className}) => {
 
           <S.SubSection>
             <S.SubSectionTitle>Is there a limit to how many coins I can mint?</S.SubSectionTitle>
-            <S.Paragraph>There's no hard limit. You can mint as many coins as you need for your use case.</S.Paragraph>
+            <S.Paragraph>
+              The maximum total supply for any currency is {formatNumber(MAX_MINT_AMOUNT)} coins. Once you've minted
+              this amount, you cannot mint any more coins for that currency.
+            </S.Paragraph>
           </S.SubSection>
         </S.Section>
       </S.Content>

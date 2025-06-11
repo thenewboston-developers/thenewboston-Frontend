@@ -49,7 +49,7 @@ export const Paragraph = styled.p`
   margin-bottom: 16px;
 `;
 
-export const PlaceholderGraphic = styled.div`
+export const PlaceholderGraphic = styled.div<{$height: string}>`
   align-items: center;
   background-color: ${colors.palette.gray[200]};
   border: 1px solid ${colors.palette.gray[300]};
@@ -58,6 +58,7 @@ export const PlaceholderGraphic = styled.div`
   display: flex;
   font-size: 14px;
   font-style: italic;
+  height: ${({$height}) => $height};
   justify-content: center;
   margin: 24px 0;
   padding: 24px;
@@ -88,6 +89,10 @@ export const Step = styled.div`
   padding: 20px;
 `;
 
+export const StepList = styled(List)`
+  margin-top: 8px;
+`;
+
 export const StepNumber = styled.span`
   background-color: ${colors.palette.blue[500]};
   border-radius: 50%;
@@ -100,6 +105,11 @@ export const StepNumber = styled.span`
   margin-right: 12px;
   text-align: center;
   width: 28px;
+`;
+
+export const StepParagraph = styled(Paragraph)`
+  margin-bottom: 0;
+  margin-top: 12px;
 `;
 
 export const StepTitle = styled.h3`
