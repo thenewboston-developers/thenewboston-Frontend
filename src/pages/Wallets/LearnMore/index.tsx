@@ -1,3 +1,4 @@
+import {DEFAULT_CURRENCY_TICKER} from 'constants/general';
 import {SFC} from 'types';
 
 import * as S from './Styles';
@@ -24,7 +25,7 @@ const LearnMore: SFC = ({className}) => {
           <S.SectionTitle>What Are Wallets?</S.SectionTitle>
           <S.Paragraph>
             Wallets are your personal coin storage on thenewboston.net. Each wallet holds coins for a specific currency,
-            and you can have multiple wallets for different currencies. Wallets enable you to:
+            and you can have one wallet per currency. Wallets enable you to:
           </S.Paragraph>
           <S.List>
             <S.ListItem>
@@ -50,7 +51,7 @@ const LearnMore: SFC = ({className}) => {
             <S.SubSectionTitle>Manual Creation</S.SubSectionTitle>
             <S.Paragraph>
               You can create a wallet anytime by clicking the "Create Wallet" button. Just select the currency you want
-              to store, and your wallet is ready instantly!
+              to store, and your wallet is ready instantly! Note: You can only have one wallet per currency.
             </S.Paragraph>
           </S.SubSection>
 
@@ -76,22 +77,18 @@ const LearnMore: SFC = ({className}) => {
 
           <S.SubSection>
             <S.SubSectionTitle>Transfers Tab</S.SubSectionTitle>
-            <S.Paragraph>Shows your internal transaction history within thenewboston.net:</S.Paragraph>
-            <S.List>
-              <S.ListItem>
-                <S.Bold>Coins received</S.Bold> from posts, comments, or direct sends
-              </S.ListItem>
-              <S.ListItem>
-                <S.Bold>Coins sent</S.Bold> to other users or through posts
-              </S.ListItem>
-            </S.List>
+            <S.Paragraph>
+              Shows all coins sent and received through posts and comments within thenewboston.net. This includes
+              payments on priced posts, tips on comments, and coins sent directly to users from their profile page.
+            </S.Paragraph>
           </S.SubSection>
 
           <S.SubSection>
             <S.SubSectionTitle>Deposit Tab</S.SubSectionTitle>
             <S.Paragraph>
-              For external currencies only. Shows your deposit account QR code, balance, and history of deposits from
-              external cores.
+              For external currencies only. Shows your deposit account QR code, balance, and deposit history. Your
+              deposit account is like a personal mailbox on the external core - coins wait there until you transfer them
+              into your main wallet on thenewboston.net.
             </S.Paragraph>
           </S.SubSection>
 
@@ -162,8 +159,8 @@ const LearnMore: SFC = ({className}) => {
             <S.StepTitle>Verify and Transfer</S.StepTitle>
             <S.StepParagraph>
               When you click deposit, thenewboston.net checks your deposit account balance on the core. If coins are
-              available, they're transferred to thenewboston.net's main account. You need at least 1 coin to cover the
-              transaction fee.
+              available, they're transferred to thenewboston.net's main account. You need at least 2 coins (1 for the
+              amount to deposit + 1 for the transaction fee).
             </S.StepParagraph>
           </S.Step>
 
@@ -171,9 +168,9 @@ const LearnMore: SFC = ({className}) => {
             <S.StepNumber>3</S.StepNumber>
             <S.StepTitle>Credit Your Wallet</S.StepTitle>
             <S.StepParagraph>
-              Your wallet balance updates instantly with the deposited amount. thenewboston.net acts as a custodian for
-              these coins - your wallet balance represents a credit that you can use within the platform or withdraw
-              later.
+              Your wallet balance updates instantly with the deposited amount minus the 1 coin fee. For example, if you
+              deposit 100 coins, you'll receive 99 in your wallet. thenewboston.net acts as a custodian for these coins
+              - your wallet balance represents a credit that you can use within the platform or withdraw later.
             </S.StepParagraph>
           </S.Step>
 
@@ -195,8 +192,8 @@ const LearnMore: SFC = ({className}) => {
             <S.StepNumber>1</S.StepNumber>
             <S.StepTitle>Enter Recipient Account</S.StepTitle>
             <S.StepParagraph>
-              Provide the recipient's account number on the external core and the amount you want to send. Make sure you
-              have enough balance!
+              Provide the recipient's account number on the external core and the amount you want to send. You need at
+              least 2 coins in your wallet (minimum 1 coin to send + 1 coin for the fee).
             </S.StepParagraph>
           </S.Step>
 
@@ -213,8 +210,9 @@ const LearnMore: SFC = ({className}) => {
             <S.StepNumber>3</S.StepNumber>
             <S.StepTitle>Transaction Complete</S.StepTitle>
             <S.StepParagraph>
-              Your wallet balance updates, and the recipient receives coins on the external core. A transaction record
-              is saved in your transfer history. A 1 coin fee is deducted for the transaction.
+              Your wallet balance updates, and the recipient receives coins on the external core minus the 1 coin fee.
+              For example, if you withdraw 100 coins from your wallet, the recipient gets 99 coins. A transaction record
+              is saved in your withdrawal history.
             </S.StepParagraph>
           </S.Step>
 
@@ -224,6 +222,15 @@ const LearnMore: SFC = ({className}) => {
             <br />
             Dimensions: 700x250px
           </S.PlaceholderGraphic>
+        </S.Section>
+
+        <S.Section>
+          <S.SectionTitle>Default Currency</S.SectionTitle>
+          <S.Paragraph>
+            The platform uses {DEFAULT_CURRENCY_TICKER} as the default currency for simplified transactions. When you
+            create posts with prices or send coins without specifying a currency, {DEFAULT_CURRENCY_TICKER} is used
+            automatically.
+          </S.Paragraph>
         </S.Section>
 
         <S.Section>
