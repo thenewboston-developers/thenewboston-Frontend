@@ -71,27 +71,43 @@ const LearnMore: SFC = ({className}) => {
         </S.Section>
 
         <S.Section>
-          <S.SectionTitle>Understanding Transfers</S.SectionTitle>
-          <S.Paragraph>
-            The transfers section is your transaction history. It shows every coin movement in and out of your wallet:
-          </S.Paragraph>
-          <S.List>
-            <S.ListItem>
-              <S.Bold>Coins received</S.Bold> from posts, comments, or direct sends
-            </S.ListItem>
-            <S.ListItem>
-              <S.Bold>Coins sent</S.Bold> to other users or through posts
-            </S.ListItem>
-            <S.ListItem>
-              <S.Bold>Deposits and withdrawals</S.Bold> from external cores
-            </S.ListItem>
-          </S.List>
+          <S.SectionTitle>Understanding Your Wallet Tabs</S.SectionTitle>
+          <S.Paragraph>Each wallet has three tabs to help you manage and track your coins:</S.Paragraph>
+
+          <S.SubSection>
+            <S.SubSectionTitle>Transfers Tab</S.SubSectionTitle>
+            <S.Paragraph>Shows your internal transaction history within thenewboston.net:</S.Paragraph>
+            <S.List>
+              <S.ListItem>
+                <S.Bold>Coins received</S.Bold> from posts, comments, or direct sends
+              </S.ListItem>
+              <S.ListItem>
+                <S.Bold>Coins sent</S.Bold> to other users or through posts
+              </S.ListItem>
+            </S.List>
+          </S.SubSection>
+
+          <S.SubSection>
+            <S.SubSectionTitle>Deposit Tab</S.SubSectionTitle>
+            <S.Paragraph>
+              For external currencies only. Shows your deposit account QR code, balance, and history of deposits from
+              external cores.
+            </S.Paragraph>
+          </S.SubSection>
+
+          <S.SubSection>
+            <S.SubSectionTitle>Withdraw Tab</S.SubSectionTitle>
+            <S.Paragraph>
+              For external currencies only. Allows you to send coins to external core accounts and view your withdrawal
+              history.
+            </S.Paragraph>
+          </S.SubSection>
 
           <S.PlaceholderGraphic $height="250px">
-            Graphic: Mock transfer history showing different types of transactions with icons for posts, comments, and
-            direct transfers
+            Graphic: Visual showing the three tabs with example content - transfers showing posts/comments, deposit
+            showing QR code, withdraw showing form
             <br />
-            Dimensions: 600x250px
+            Dimensions: 700x250px
           </S.PlaceholderGraphic>
         </S.Section>
 
