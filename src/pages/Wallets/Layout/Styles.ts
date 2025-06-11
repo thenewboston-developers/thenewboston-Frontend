@@ -6,3 +6,8 @@ export const Container = styled.div`
   height: 100%;
   overflow: hidden;
 `;
+
+export const OutletContainer = styled.div`
+  height: 100%;
+  overflow-y: auto;
+`;
