@@ -26,7 +26,7 @@ const LearnMore: SFC = ({className}) => {
           <S.SectionTitle>What Can You Do With Your Currency?</S.SectionTitle>
           <S.Paragraph>
             Creating your own currency opens up endless possibilities. Here's what you can do once you've created your
-            coins:
+            currency:
           </S.Paragraph>
           <S.List>
             <S.ListItem>
