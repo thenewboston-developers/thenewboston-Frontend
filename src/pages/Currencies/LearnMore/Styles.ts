@@ -1,54 +1,144 @@
 import styled from 'styled-components';
 
 import {breakpoints, colors, fonts, pagePadding} from 'styles';
-import {Col as UCol, Row as URow} from 'styles/components/GridStyle';
 
-export const CodeBlock = styled.div`
-  padding: 0 15px;
+export const Bold = styled.strong`
+  font-weight: ${fonts.weight.semiBold};
 `;
-
-export const CodeContainer = styled.div`
-  background-color: ${colors.whiteHover};
-  border-radius: 10px;
-  flex: 1;
-  margin-left: 15px;
-  padding: 5px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-  }
-`;
-
-export const CodeDetail = styled.div`
-  padding: 5px 15px;
-`;
-
-export const CodeTitle = styled.div`
-  font-size: 14px;
-  font-weight: ${fonts.weight.bold};
-  margin-left: 20px;
-`;
-
-export const CodeTitleContainer = styled.div`
-  align-items: center;
-  display: flex;
-  font-weight: bold;
-  padding: 10px;
-`;
-
-export const Col = styled(UCol)``;
 
 export const Container = styled.div`
   ${pagePadding};
+  display: flex;
+  justify-content: center;
+  overflow-y: auto;
 `;
 
-export const Img = styled.img`
-  height: 40px;
-  width: 40px;
+export const Content = styled.div`
+  max-width: 800px;
+  width: 100%;
 `;
 
-export const Row = styled(URow)`
-  margin-bottom: 20px;
+export const Introduction = styled.p`
+  color: ${colors.primary};
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+`;
+
+export const List = styled.ul`
+  list-style: disc;
+  margin-bottom: 16px;
+  margin-left: 24px;
+`;
+
+export const ListItem = styled.li`
+  color: ${colors.primary};
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+export const Paragraph = styled.p`
+  color: ${colors.primary};
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+`;
+
+export const PlaceholderGraphic = styled.div<{$height: string}>`
+  align-items: center;
+  background-color: ${colors.palette.gray[200]};
+  border: 1px solid ${colors.palette.gray[300]};
+  border-radius: 8px;
+  color: ${colors.palette.gray[600]};
+  display: flex;
+  font-size: 14px;
+  font-style: italic;
+  height: ${({$height}) => $height};
+  justify-content: center;
+  margin: 24px 0;
+  padding: 24px;
+  text-align: center;
+`;
+
+export const Section = styled.section`
+  margin-bottom: 40px;
+`;
+
+export const SectionTitle = styled.h2`
+  color: ${colors.primary};
+  font-size: 24px;
+  font-weight: ${fonts.weight.semiBold};
+  line-height: 1.3;
+  margin-bottom: 16px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 20px;
+  }
+`;
+
+export const Step = styled.div`
+  background-color: ${colors.palette.gray[50]};
+  border-left: 4px solid ${colors.palette.blue[500]};
+  border-radius: 4px;
+  margin-bottom: 16px;
+  padding: 20px;
+`;
+
+export const StepList = styled(List)`
+  margin-top: 8px;
+`;
+
+export const StepNumber = styled.span`
+  background-color: ${colors.palette.blue[500]};
+  border-radius: 50%;
+  color: white;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: ${fonts.weight.semiBold};
+  height: 28px;
+  line-height: 28px;
+  margin-right: 12px;
+  text-align: center;
+  width: 28px;
+`;
+
+export const StepParagraph = styled(Paragraph)`
+  margin-bottom: 0;
+  margin-top: 12px;
+`;
+
+export const StepTitle = styled.h3`
+  color: ${colors.primary};
+  display: inline;
+  font-size: 18px;
+  font-weight: ${fonts.weight.medium};
+`;
+
+export const SubSection = styled.div`
+  margin-bottom: 24px;
+`;
+
+export const SubSectionTitle = styled.h3`
+  color: ${colors.primary};
+  font-size: 18px;
+  font-weight: ${fonts.weight.medium};
+  line-height: 1.4;
+  margin-bottom: 12px;
+`;
+
+export const Title = styled.h1`
+  color: ${colors.primary};
+  font-size: 32px;
+  font-weight: ${fonts.weight.bold};
+  line-height: 1.2;
+  margin-bottom: 24px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 24px;
+  }
 `;
