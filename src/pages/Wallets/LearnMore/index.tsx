@@ -51,7 +51,7 @@ const LearnMore: SFC = ({className}) => {
             <S.SubSectionTitle>Manual Creation</S.SubSectionTitle>
             <S.Paragraph>
               You can create a wallet anytime by clicking the "Create Wallet" button. Just select the currency you want
-              to store, and your wallet is ready instantly! Note: You can only have one wallet per currency.
+              to store, and your wallet is ready instantly!
             </S.Paragraph>
           </S.SubSection>
 
@@ -78,8 +78,8 @@ const LearnMore: SFC = ({className}) => {
           <S.SubSection>
             <S.SubSectionTitle>Transfers Tab</S.SubSectionTitle>
             <S.Paragraph>
-              Shows all coins sent and received through posts and comments within thenewboston.net. This includes
-              payments on priced posts, tips on comments, and coins sent directly to users from their profile page.
+              Shows all coins sent and received within thenewboston.net. This includes payments for paid posts, tips on
+              comments, and direct transfers between users.
             </S.Paragraph>
           </S.SubSection>
 
@@ -149,8 +149,7 @@ const LearnMore: SFC = ({className}) => {
             <S.StepNumber>1</S.StepNumber>
             <S.StepTitle>Send Coins to Your Deposit Account</S.StepTitle>
             <S.StepParagraph>
-              Using software like tnbOS or other compatible applications, send coins to your deposit account number. The
-              coins will arrive on the core server.
+              Using software like tnbOS or other compatible applications, send coins to your deposit account number.
             </S.StepParagraph>
           </S.Step>
 
@@ -159,8 +158,7 @@ const LearnMore: SFC = ({className}) => {
             <S.StepTitle>Verify and Transfer</S.StepTitle>
             <S.StepParagraph>
               When you click deposit, thenewboston.net checks your deposit account balance on the core. If coins are
-              available, they're transferred to thenewboston.net's main account. You need at least 2 coins (1 for the
-              amount to deposit + 1 for the transaction fee).
+              available, they're transferred to thenewboston.net's main account.
             </S.StepParagraph>
           </S.Step>
 
@@ -168,9 +166,9 @@ const LearnMore: SFC = ({className}) => {
             <S.StepNumber>3</S.StepNumber>
             <S.StepTitle>Credit Your Wallet</S.StepTitle>
             <S.StepParagraph>
-              Your wallet balance updates instantly with the deposited amount minus the 1 coin fee. For example, if you
-              deposit 100 coins, you'll receive 99 in your wallet. thenewboston.net acts as a custodian for these coins
-              - your wallet balance represents a credit that you can use within the platform or withdraw later.
+              Your wallet balance updates instantly with the deposited amount minus the 1 coin fee. thenewboston.net
+              acts as a custodian for these coins - your wallet balance represents a credit that you can use within the
+              platform or withdraw later.
             </S.StepParagraph>
           </S.Step>
 
@@ -192,8 +190,7 @@ const LearnMore: SFC = ({className}) => {
             <S.StepNumber>1</S.StepNumber>
             <S.StepTitle>Enter Recipient Account</S.StepTitle>
             <S.StepParagraph>
-              Provide the recipient's account number on the external core and the amount you want to send. You need at
-              least 2 coins in your wallet (minimum 1 coin to send + 1 coin for the fee).
+              Provide the recipient's account number on the external core and the amount you want to send.
             </S.StepParagraph>
           </S.Step>
 
@@ -210,9 +207,8 @@ const LearnMore: SFC = ({className}) => {
             <S.StepNumber>3</S.StepNumber>
             <S.StepTitle>Transaction Complete</S.StepTitle>
             <S.StepParagraph>
-              Your wallet balance updates, and the recipient receives coins on the external core minus the 1 coin fee.
-              For example, if you withdraw 100 coins from your wallet, the recipient gets 99 coins. A transaction record
-              is saved in your withdrawal history.
+              Your wallet balance updates, and the recipient receives coins on the external core minus the 1 coin fee. A
+              transaction record is saved in your withdrawal history.
             </S.StepParagraph>
           </S.Step>
 
@@ -270,11 +266,8 @@ const LearnMore: SFC = ({className}) => {
           <S.SectionTitle>Frequently Asked Questions</S.SectionTitle>
 
           <S.SubSection>
-            <S.SubSectionTitle>Are there fees for transfers?</S.SubSectionTitle>
-            <S.Paragraph>
-              Internal transfers between thenewboston.net users are always free! External deposits and withdrawals
-              include a 1 coin transaction fee required by the core network.
-            </S.Paragraph>
+            <S.SubSectionTitle>Are there fees?</S.SubSectionTitle>
+            <S.Paragraph>Internal transfers are free. External deposits and withdrawals have a 1 coin fee.</S.Paragraph>
           </S.SubSection>
 
           <S.SubSection>
