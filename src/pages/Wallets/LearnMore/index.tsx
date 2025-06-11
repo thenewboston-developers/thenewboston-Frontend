@@ -6,11 +6,11 @@ const LearnMore: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Content>
-        <S.Title>Your Digital Wallet Guide</S.Title>
+        <S.Title>Understanding Wallets</S.Title>
 
         <S.Introduction>
-          Welcome to your digital wallet hub! This guide will help you understand how wallets work, how to send and
-          receive coins, and how to connect with external currency networks.
+          This guide explains how wallets work, how to manage your coins, and how to connect with external currency
+          networks for deposits and withdrawals.
         </S.Introduction>
 
         <S.PlaceholderGraphic $height="300px">
@@ -23,29 +23,28 @@ const LearnMore: SFC = ({className}) => {
         <S.Section>
           <S.SectionTitle>What Are Wallets?</S.SectionTitle>
           <S.Paragraph>
-            Wallets are your personal coin storage on thenewboston.net. Think of them like digital piggy banks - each
-            wallet holds coins for a specific currency. You can have multiple wallets for different currencies, allowing
-            you to:
+            Wallets are your personal coin storage on thenewboston.net. Each wallet holds coins for a specific currency,
+            and you can have multiple wallets for different currencies. Wallets enable you to:
           </S.Paragraph>
           <S.List>
             <S.ListItem>
-              <S.Bold>Store coins</S.Bold> safely in your account
+              <S.Bold>Manage your coin balances</S.Bold> across different currencies
             </S.ListItem>
             <S.ListItem>
-              <S.Bold>Send coins</S.Bold> to friends instantly
+              <S.Bold>View your transfer history</S.Bold> for all incoming and outgoing transactions
             </S.ListItem>
             <S.ListItem>
-              <S.Bold>Receive coins</S.Bold> from other users
+              <S.Bold>Connect to external cores</S.Bold> for deposits and withdrawals
             </S.ListItem>
             <S.ListItem>
-              <S.Bold>Trade coins</S.Bold> on the exchange
+              <S.Bold>Track coins earned</S.Bold> from posts and comments
             </S.ListItem>
           </S.List>
         </S.Section>
 
         <S.Section>
           <S.SectionTitle>How Wallets Are Created</S.SectionTitle>
-          <S.Paragraph>There are two ways wallets come to life:</S.Paragraph>
+          <S.Paragraph>There are two ways wallets are created:</S.Paragraph>
 
           <S.SubSection>
             <S.SubSectionTitle>Manual Creation</S.SubSectionTitle>
@@ -84,7 +83,7 @@ const LearnMore: SFC = ({className}) => {
               <S.Bold>Coins sent</S.Bold> to other users or through posts
             </S.ListItem>
             <S.ListItem>
-              <S.Bold>Exchange trades</S.Bold> when you buy or sell currencies
+              <S.Bold>Deposits and withdrawals</S.Bold> from external cores
             </S.ListItem>
           </S.List>
 
@@ -128,32 +127,37 @@ const LearnMore: SFC = ({className}) => {
         <S.Section>
           <S.SectionTitle>How Deposits Work</S.SectionTitle>
           <S.Paragraph>
-            Depositing brings coins from an external core into your thenewboston.net wallet. Here's how it works:
+            When you create a wallet for an external currency, we automatically generate a unique deposit account for
+            you on that currency's core server. This deposit account is where you'll send coins from external
+            applications like tnbOS.
           </S.Paragraph>
 
           <S.Step>
             <S.StepNumber>1</S.StepNumber>
-            <S.StepTitle>Check Your Core Balance</S.StepTitle>
+            <S.StepTitle>Send Coins to Your Deposit Account</S.StepTitle>
             <S.StepParagraph>
-              We check how many coins you have on the external core server. You need enough to cover your deposit plus a
-              small transaction fee.
+              Using software like tnbOS or other compatible applications, send coins to your deposit account number. The
+              coins will arrive on the core server.
             </S.StepParagraph>
           </S.Step>
 
           <S.Step>
             <S.StepNumber>2</S.StepNumber>
-            <S.StepTitle>Authorize the Transfer</S.StepTitle>
+            <S.StepTitle>Verify and Transfer</S.StepTitle>
             <S.StepParagraph>
-              Using secure cryptographic signatures, we transfer coins from your core account to thenewboston.net's
-              account on the core.
+              When you click deposit, thenewboston.net checks your deposit account balance on the core. If coins are
+              available, they're transferred to thenewboston.net's main account. You need at least 1 coin to cover the
+              transaction fee.
             </S.StepParagraph>
           </S.Step>
 
           <S.Step>
             <S.StepNumber>3</S.StepNumber>
-            <S.StepTitle>Receive Your Coins</S.StepTitle>
+            <S.StepTitle>Credit Your Wallet</S.StepTitle>
             <S.StepParagraph>
-              Your wallet balance updates instantly! Now you can trade on the exchange or send coins to friends.
+              Your wallet balance updates instantly with the deposited amount. thenewboston.net acts as a custodian for
+              these coins - your wallet balance represents a credit that you can use within the platform or withdraw
+              later.
             </S.StepParagraph>
           </S.Step>
 
@@ -173,18 +177,19 @@ const LearnMore: SFC = ({className}) => {
 
           <S.Step>
             <S.StepNumber>1</S.StepNumber>
-            <S.StepTitle>Enter Recipient Details</S.StepTitle>
+            <S.StepTitle>Enter Recipient Account</S.StepTitle>
             <S.StepParagraph>
-              Provide the account number where you want to send coins and the amount. Make sure you have enough balance!
+              Provide the recipient's account number on the external core and the amount you want to send. Make sure you
+              have enough balance!
             </S.StepParagraph>
           </S.Step>
 
           <S.Step>
             <S.StepNumber>2</S.StepNumber>
-            <S.StepTitle>Confirm the Transaction</S.StepTitle>
+            <S.StepTitle>Process the Withdrawal</S.StepTitle>
             <S.StepParagraph>
-              We send a secure request to the core server to transfer coins from thenewboston.net's account to your
-              chosen recipient.
+              thenewboston.net sends a request to the core server to transfer coins from its account to the recipient's
+              account.
             </S.StepParagraph>
           </S.Step>
 
@@ -193,7 +198,7 @@ const LearnMore: SFC = ({className}) => {
             <S.StepTitle>Transaction Complete</S.StepTitle>
             <S.StepParagraph>
               Your wallet balance updates, and the recipient receives coins on the external core. A transaction record
-              is saved in your transfer history.
+              is saved in your transfer history. A 1 coin fee is deducted for the transaction.
             </S.StepParagraph>
           </S.Step>
 
@@ -202,39 +207,6 @@ const LearnMore: SFC = ({className}) => {
             on core
             <br />
             Dimensions: 700x250px
-          </S.PlaceholderGraphic>
-        </S.Section>
-
-        <S.Section>
-          <S.SectionTitle>What Can You Do With Your Coins?</S.SectionTitle>
-          <S.Paragraph>Once coins are in your wallet, the possibilities are endless:</S.Paragraph>
-
-          <S.SubSection>
-            <S.SubSectionTitle>Trade on the Exchange</S.SubSectionTitle>
-            <S.Paragraph>
-              Visit the exchange to buy and sell different currencies. Set your own prices and watch the market move!
-            </S.Paragraph>
-          </S.SubSection>
-
-          <S.SubSection>
-            <S.SubSectionTitle>Send to Friends</S.SubSectionTitle>
-            <S.Paragraph>
-              Transfer coins instantly to anyone on the platform. Perfect for splitting bills, gifts, or just being
-              generous!
-            </S.Paragraph>
-          </S.SubSection>
-
-          <S.SubSection>
-            <S.SubSectionTitle>Support Content Creators</S.SubSectionTitle>
-            <S.Paragraph>
-              Use coins to tip great posts and comments. It's a fun way to show appreciation and support the community!
-            </S.Paragraph>
-          </S.SubSection>
-
-          <S.PlaceholderGraphic $height="200px">
-            Graphic: Three icons showing exchange trading, sending to friends, and tipping content
-            <br />
-            Dimensions: 600x200px
           </S.PlaceholderGraphic>
         </S.Section>
 
@@ -278,7 +250,7 @@ const LearnMore: SFC = ({className}) => {
             <S.SubSectionTitle>Are there fees for transfers?</S.SubSectionTitle>
             <S.Paragraph>
               Internal transfers between thenewboston.net users are always free! External deposits and withdrawals
-              include small transaction fees required by the core network.
+              include a 1 coin transaction fee required by the core network.
             </S.Paragraph>
           </S.SubSection>
 
@@ -287,14 +259,6 @@ const LearnMore: SFC = ({className}) => {
             <S.Paragraph>
               Internal transfers are instant. External deposits and withdrawals typically complete within seconds,
               depending on the core server's response time.
-            </S.Paragraph>
-          </S.SubSection>
-
-          <S.SubSection>
-            <S.SubSectionTitle>Can I delete a wallet?</S.SubSectionTitle>
-            <S.Paragraph>
-              Wallets with zero balance are hidden automatically. If you receive coins for that currency later, the
-              wallet will reappear with your new balance.
             </S.Paragraph>
           </S.SubSection>
 
