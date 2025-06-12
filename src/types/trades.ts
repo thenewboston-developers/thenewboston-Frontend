@@ -6,6 +6,8 @@ export interface Trade extends CreatedModified {
   fill_quantity: number;
   id: number;
   overpayment_amount: number;
+  primary_currency: number;
+  secondary_currency: number;
   sell_order: number;
   trade_price: number;
 }

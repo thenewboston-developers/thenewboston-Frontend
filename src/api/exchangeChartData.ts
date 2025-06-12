@@ -16,6 +16,8 @@ export interface ChartDataResponse {
   data: ChartDataPoint[];
   end_time: string;
   interval_minutes: number;
+  primary_currency: number;
+  secondary_currency: number;
   start_time: string;
 }
 

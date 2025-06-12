@@ -1,27 +1,18 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import * as d3 from 'd3';
 
 import {ChartDataPoint, ChartTimeRange} from 'api/exchangeChartData';
 import CurrencyLogo from 'components/CurrencyLogo';
-import {getChartData as _getChartData} from 'dispatchers/exchangeChartData';
+import {getChartData as fetchChartData} from 'dispatchers/exchangeChartData';
 import {useActiveAssetPair} from 'hooks';
-import {getTrades} from 'selectors/state';
+import {getChartData} from 'selectors/state';
+import {clearChartData} from 'store/chartData';
 import {colors} from 'styles';
-import {AppDispatch, SFC, Trade} from 'types';
+import {AppDispatch, SFC} from 'types';
 import {chartDisplayDate} from 'utils/dates';
 
 import * as S from './Styles';
-
-interface CurrentInterval {
-  close: number;
-  endTime: Date;
-  high: number;
-  low: number;
-  open: number;
-  startTime: Date;
-  volume: number;
-}
 
 interface DisplayDataPoint extends ChartDataPoint {
   display_date: string;
@@ -30,363 +21,62 @@ interface DisplayDataPoint extends ChartDataPoint {
 const Chart: SFC = ({className}) => {
   const activeAssetPair = useActiveAssetPair();
   const dispatch = useDispatch<AppDispatch>();
-  const trades = useSelector(getTrades);
+  const chartDataState = useSelector(getChartData);
+  const {data: chartData, intervalMinutes} = chartDataState;
 
-  const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [chartType, setChartType] = useState<'candlestick' | 'line'>('candlestick');
-  const [currentInterval, setCurrentInterval] = useState<CurrentInterval | null>(null);
-  const [intervalMinutes, setIntervalMinutes] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '3M' | '1Y' | 'ALL'>('1D');
 
-  const currentIntervalRef = useRef<CurrentInterval | null>(null);
-  const intervalMinutesRef = useRef<number>(0);
-  const chartDataRef = useRef<ChartDataPoint[]>([]);
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const processedTradeIdsRef = useRef<Set<number>>(new Set());
 
-  const fetchChartData = useCallback(async () => {
+  // Fetch chart data when activeAssetPair or timeframe changes
+  useEffect(() => {
     if (!activeAssetPair) return;
 
-    // Map UI timeframe to API timerange
-    const timeframeToApiMap: Record<string, ChartTimeRange> = {
-      '1D': '1d',
-      '1W': '1w',
-      '1M': '1m',
-      '3M': '3m',
-      '1Y': '1y',
-      ALL: 'all',
+    const loadChartData = async () => {
+      // Map UI timeframe to API timerange
+      const timeframeToApiMap: Record<string, ChartTimeRange> = {
+        '1D': '1d',
+        '1W': '1w',
+        '1M': '1m',
+        '3M': '3m',
+        '1Y': '1y',
+        ALL: 'all',
+      };
+
+      setIsLoading(true);
+      try {
+        await dispatch(fetchChartData(activeAssetPair.id, timeframeToApiMap[timeframe]));
+      } catch (error) {
+        // Handle error
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    setIsLoading(true);
-    try {
-      const response = await dispatch(_getChartData(activeAssetPair.id, timeframeToApiMap[timeframe]));
-
-      setChartData(response.data);
-      chartDataRef.current = response.data;
-      setIntervalMinutes(response.interval_minutes);
-      intervalMinutesRef.current = response.interval_minutes;
-
-      // Clear processed trades when fetching new data
-      processedTradeIdsRef.current.clear();
-
-      // Initialize current interval if we have data
-      if (response.data.length > 0) {
-        const lastPoint = response.data[response.data.length - 1];
-        const intervalMs = response.interval_minutes * 60 * 1000;
-        const lastEndTime = new Date(lastPoint.end);
-
-        // We now have explicit start and end times for each interval
-        // Create a new interval starting from the last interval's end time
-        const newInterval: CurrentInterval = {
-          close: lastPoint.close,
-          endTime: new Date(lastEndTime.getTime() + intervalMs),
-          high: lastPoint.close,
-          low: lastPoint.close,
-          open: lastPoint.close,
-          startTime: lastEndTime,
-          volume: 0,
-        };
-
-        setCurrentInterval(newInterval);
-        currentIntervalRef.current = newInterval;
-      }
-    } catch (error) {
-      // Failed to fetch chart data
-    } finally {
-      setIsLoading(false);
-    }
+    loadChartData();
   }, [activeAssetPair, dispatch, timeframe]);
 
-  // Process incoming trade from WebSocket
-  const processTrade = useCallback((trade: Trade) => {
-    if (!currentIntervalRef.current || !intervalMinutesRef.current) return;
-
-    const tradeTime = new Date(trade.created_date);
-    let currentInt = currentIntervalRef.current;
-    const intervalMs = intervalMinutesRef.current * 60 * 1000;
-
-    // Check if we need to fill missing intervals
-    const missedIntervals = Math.floor((tradeTime.getTime() - currentInt.endTime.getTime()) / intervalMs);
-
-    if (missedIntervals > 0) {
-      // First, finalize the current interval if it has any data
-      if (currentInt.volume > 0 || currentInt.startTime < currentInt.endTime) {
-        const finalizedPoint: ChartDataPoint = {
-          close: currentInt.close,
-          end: currentInt.endTime.toISOString(),
-          high: currentInt.high,
-          low: currentInt.low,
-          open: currentInt.open,
-          start: currentInt.startTime.toISOString(),
-          volume: currentInt.volume,
-        };
-
-        const newChartData = [...chartDataRef.current, finalizedPoint];
-        setChartData(newChartData);
-        chartDataRef.current = newChartData;
-      }
-
-      // Fill missing intervals with carried forward price
-      const missingPoints: ChartDataPoint[] = [];
-      for (let i = 1; i < missedIntervals; i += 1) {
-        const intervalStart = new Date(currentInt.endTime.getTime() + (i - 1) * intervalMs);
-        const intervalEnd = new Date(intervalStart.getTime() + intervalMs);
-
-        missingPoints.push({
-          close: currentInt.close,
-          end: intervalEnd.toISOString(),
-          high: currentInt.close,
-          low: currentInt.close,
-          open: currentInt.close,
-          start: intervalStart.toISOString(),
-          volume: 0,
-        });
-      }
-
-      if (missingPoints.length > 0) {
-        const updatedData = [...chartDataRef.current, ...missingPoints];
-        setChartData(updatedData);
-        chartDataRef.current = updatedData;
-      }
-
-      // Create new current interval for the trade
-      const newIntervalStart = new Date(currentInt.endTime.getTime() + (missedIntervals - 1) * intervalMs);
-      const newIntervalEnd = new Date(newIntervalStart.getTime() + intervalMs);
-      const newInterval: CurrentInterval = {
-        close: currentInt.close,
-        endTime: newIntervalEnd,
-        high: currentInt.close,
-        low: currentInt.close,
-        open: currentInt.close,
-        startTime: newIntervalStart,
-        volume: 0,
-      };
-
-      setCurrentInterval(newInterval);
-      currentIntervalRef.current = newInterval;
-
-      // Update currentInt reference for the trade processing below
-      currentInt = newInterval;
-    }
-
-    // Check if trade belongs to current interval
-    if (tradeTime >= currentInt.startTime && tradeTime < currentInt.endTime) {
-      // Update current interval
-      const updatedInterval: CurrentInterval = {
-        ...currentInt,
-        close: trade.trade_price,
-        high: Math.max(currentInt.high, trade.trade_price),
-        low: Math.min(currentInt.low, trade.trade_price),
-        volume: currentInt.volume + trade.fill_quantity,
-      };
-
-      // If this is the first trade in the interval, update the open price
-      if (currentInt.volume === 0) {
-        updatedInterval.open = trade.trade_price;
-        updatedInterval.high = trade.trade_price;
-        updatedInterval.low = trade.trade_price;
-      }
-
-      setCurrentInterval(updatedInterval);
-      currentIntervalRef.current = updatedInterval;
-    } else if (tradeTime >= currentInt.endTime) {
-      // Trade belongs to new interval - finalize current interval
-      const finalizedPoint: ChartDataPoint = {
-        close: currentInt.close,
-        end: currentInt.endTime.toISOString(),
-        high: currentInt.high,
-        low: currentInt.low,
-        open: currentInt.open,
-        start: currentInt.startTime.toISOString(),
-        volume: currentInt.volume,
-      };
-
-      // Update chart data (no longer limited to 100 points)
-      const newChartData = [...chartDataRef.current, finalizedPoint];
-      setChartData(newChartData);
-      chartDataRef.current = newChartData;
-
-      // Initialize new interval
-      const newInterval: CurrentInterval = {
-        close: trade.trade_price,
-        endTime: new Date(currentInt.endTime.getTime() + intervalMs),
-        high: trade.trade_price,
-        low: trade.trade_price,
-        open: trade.trade_price,
-        startTime: currentInt.endTime,
-        volume: trade.fill_quantity,
-      };
-
-      setCurrentInterval(newInterval);
-      currentIntervalRef.current = newInterval;
-    }
-  }, []);
-
-  // Subscribe to trade updates
-  useEffect(() => {
-    if (!activeAssetPair) return;
-
-    // Clear processed trades when asset pair changes
-    processedTradeIdsRef.current.clear();
-
-    // Process new trades as they come in
-    const checkForNewTrades = () => {
-      const allTrades = Object.values(trades);
-      const newTrades = allTrades.filter((trade) => !processedTradeIdsRef.current.has(trade.id));
-
-      if (newTrades.length > 0 && currentIntervalRef.current && intervalMinutesRef.current > 0) {
-        // Sort by created date to process in order
-        const sortedNewTrades = newTrades.sort(
-          (a, b) => new Date(a.created_date).getTime() - new Date(b.created_date).getTime(),
-        );
-
-        sortedNewTrades.forEach((trade) => {
-          processTrade(trade);
-          processedTradeIdsRef.current.add(trade.id);
-        });
-      }
-    };
-
-    // Initial check for existing trades
-    checkForNewTrades();
-
-    // Check for trades periodically
-    const interval = setInterval(checkForNewTrades, 100);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [activeAssetPair, trades, processTrade]);
-
-  // Fetch data when activeAssetPair or timeframe changes
-  useEffect(() => {
-    fetchChartData().catch(() => {
-      // Handle error
-    });
-  }, [fetchChartData]);
-
-  // Handle extended inactivity - check for interval completion periodically
-  useEffect(() => {
-    if (!currentInterval || !intervalMinutes) return;
-
-    const checkIntervalCompletion = () => {
-      const now = new Date();
-      const currentInt = currentIntervalRef.current;
-      if (!currentInt) return;
-
-      const intervalMs = intervalMinutesRef.current * 60 * 1000;
-      const missedIntervals = Math.floor((now.getTime() - currentInt.endTime.getTime()) / intervalMs);
-
-      if (missedIntervals > 0) {
-        // Fill missing intervals
-        const missingPoints: ChartDataPoint[] = [];
-
-        // First, finalize the current interval
-        missingPoints.push({
-          close: currentInt.close,
-          end: currentInt.endTime.toISOString(),
-          high: currentInt.high,
-          low: currentInt.low,
-          open: currentInt.open,
-          start: currentInt.startTime.toISOString(),
-          volume: currentInt.volume,
-        });
-
-        // Then add any additional missing intervals
-        for (let i = 1; i < missedIntervals; i += 1) {
-          const intervalStart = new Date(currentInt.endTime.getTime() + (i - 1) * intervalMs);
-          const intervalEnd = new Date(currentInt.endTime.getTime() + i * intervalMs);
-          missingPoints.push({
-            close: currentInt.close,
-            end: intervalEnd.toISOString(),
-            high: currentInt.close,
-            low: currentInt.close,
-            open: currentInt.close,
-            start: intervalStart.toISOString(),
-            volume: 0,
-          });
-        }
-
-        // Update chart data (no longer limited to 100 points)
-        const updatedData = [...chartDataRef.current, ...missingPoints];
-        setChartData(updatedData);
-        chartDataRef.current = updatedData;
-
-        // Initialize new current interval
-        const newStartTime = new Date(currentInt.endTime.getTime() + (missedIntervals - 1) * intervalMs);
-        const newEndTime = new Date(newStartTime.getTime() + intervalMs);
-        const newInterval: CurrentInterval = {
-          close: currentInt.close,
-          endTime: newEndTime,
-          high: currentInt.close,
-          low: currentInt.close,
-          open: currentInt.close,
-          startTime: newStartTime,
-          volume: 0,
-        };
-
-        setCurrentInterval(newInterval);
-        currentIntervalRef.current = newInterval;
-      }
-    };
-
-    const intervalTimer = setInterval(checkIntervalCompletion, 5000); // Check every 5 seconds
-
-    return () => {
-      clearInterval(intervalTimer);
-    };
-  }, [currentInterval, intervalMinutes]);
-
-  // Clean up on unmount
+  // Clear chart data when unmounting or switching asset pairs
   useEffect(() => {
     return () => {
-      currentIntervalRef.current = null;
-      intervalMinutesRef.current = 0;
-      chartDataRef.current = [];
+      dispatch(clearChartData());
     };
-  }, []);
+  }, [dispatch, activeAssetPair?.id]);
 
   const displayData = useMemo(() => {
-    const mappedData = chartData.map((point) => ({
+    return chartData.map((point) => ({
       ...point,
       display_date: chartDisplayDate(point.end),
     }));
-
-    // Include current interval in the chart only if it has volume or we're past its start time
-    if (currentInterval && intervalMinutes > 0) {
-      const now = new Date();
-      const hasVolume = currentInterval.volume > 0;
-      const isPastStartTime = now >= currentInterval.startTime;
-
-      // Only show the current interval if it has trades or if we're actually in this time period
-      if (hasVolume || isPastStartTime) {
-        const currentPoint: DisplayDataPoint = {
-          close: currentInterval.close,
-          display_date: chartDisplayDate(currentInterval.endTime.toISOString()),
-          end: currentInterval.endTime.toISOString(),
-          high: currentInterval.high,
-          low: currentInterval.low,
-          open: currentInterval.open,
-          start: currentInterval.startTime.toISOString(),
-          volume: currentInterval.volume,
-        };
-
-        return [...mappedData, currentPoint];
-      }
-    }
-
-    return mappedData;
-  }, [chartData, currentInterval, intervalMinutes]);
+  }, [chartData]);
 
   const lastTradePrice = useMemo(() => {
-    if (currentInterval && intervalMinutes > 0) {
-      return currentInterval.close;
-    }
     const lastPoint = chartData[chartData.length - 1];
     return lastPoint?.close || 0;
-  }, [chartData, currentInterval, intervalMinutes]);
+  }, [chartData]);
 
   const firstTradePrice = useMemo(() => {
     const firstPoint = chartData[0];
@@ -730,7 +420,7 @@ const Chart: SFC = ({className}) => {
                     <S.PriceLogo>
                       <CurrencyLogo logo={activeAssetPair.secondary_currency.logo} width="32px" />
                     </S.PriceLogo>
-                    <S.PriceAmount>{lastTradePrice.toFixed(2)}</S.PriceAmount>
+                    <S.PriceAmount>{lastTradePrice}</S.PriceAmount>
                   </>
                 )}
               </S.CurrentPrice>
@@ -744,11 +434,11 @@ const Chart: SFC = ({className}) => {
             <S.StatsBar>
               <S.StatItem>
                 <S.StatLabel>High</S.StatLabel>
-                <S.StatValue>{priceStats.max.toFixed(2)}</S.StatValue>
+                <S.StatValue>{priceStats.max}</S.StatValue>
               </S.StatItem>
               <S.StatItem>
                 <S.StatLabel>Low</S.StatLabel>
-                <S.StatValue>{priceStats.min.toFixed(2)}</S.StatValue>
+                <S.StatValue>{priceStats.min}</S.StatValue>
               </S.StatItem>
               <S.StatItem>
                 <S.StatLabel>Avg</S.StatLabel>
