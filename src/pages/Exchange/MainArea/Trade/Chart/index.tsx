@@ -97,18 +97,8 @@ const Chart: SFC = ({className}) => {
     const currentInt = currentIntervalRef.current;
     const intervalMs = intervalMinutesRef.current * 60 * 1000;
 
-    // Debug logging
-    console.log('DEBUG processTrade START');
-    console.log(`Trade time: ${tradeTime.toISOString()}`);
-    console.log(`Trade price: ${trade.trade_price}`);
-    console.log(`Current interval start: ${currentInt.startTime.toISOString()}`);
-    console.log(`Current interval end: ${currentInt.endTime.toISOString()}`);
-    console.log(`Current interval close price: ${currentInt.close}`);
-    console.log(`Chart data points: ${chartDataRef.current.length}`);
-
     // Check if we need to fill missing intervals
     const missedIntervals = Math.floor((tradeTime.getTime() - currentInt.endTime.getTime()) / intervalMs);
-    console.log(`Missed intervals: ${missedIntervals}`);
 
     if (missedIntervals > 0) {
       // Fill missing intervals with carried forward price
@@ -144,8 +134,6 @@ const Chart: SFC = ({className}) => {
 
     // Check if trade belongs to current interval
     if (tradeTime <= currentInt.endTime) {
-      console.log('Trade belongs to current interval, updating...');
-
       // Update current interval
       const updatedInterval = {
         ...currentInt,
@@ -155,14 +143,8 @@ const Chart: SFC = ({className}) => {
         volume: currentInt.volume + trade.fill_quantity,
       };
 
-      console.log(
-        `Updated interval - close: ${updatedInterval.close}, high: ${updatedInterval.high}, low: ${updatedInterval.low}`,
-      );
-
       setCurrentInterval(updatedInterval);
       currentIntervalRef.current = updatedInterval;
-
-      console.log('DEBUG processTrade END - interval updated');
     } else {
       // Trade belongs to new interval - finalize current interval
       const finalizedPoint: ChartDataPoint = {
@@ -336,9 +318,6 @@ const Chart: SFC = ({className}) => {
         trade_price: currentInterval.close,
       };
 
-      console.log(
-        `Adding current interval to display: price=${currentPoint.price}, timestamp=${currentPoint.timestamp}`,
-      );
       return [...mappedData, currentPoint];
     }
 
