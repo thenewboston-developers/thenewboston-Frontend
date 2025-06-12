@@ -3,11 +3,12 @@ import axios from 'axios';
 import {authorizationHeaders} from 'utils/authentication';
 
 export interface ChartDataPoint {
+  close: number;
+  end: string;
   high: number;
   low: number;
   open: number;
-  price: number;
-  timestamp: string;
+  start: string;
   volume: number;
 }
 
@@ -16,10 +17,9 @@ export interface ChartDataResponse {
   end_time: string;
   interval_minutes: number;
   start_time: string;
-  total_points: number;
 }
 
-export type ChartTimeRange = '1d' | '1w' | '1m' | '3m' | 'all';
+export type ChartTimeRange = '1d' | '1w' | '1m' | '3m' | '1y' | 'all';
 
 interface GetChartDataParams {
   asset_pair: number;

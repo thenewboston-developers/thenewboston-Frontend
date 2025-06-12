@@ -26,7 +26,7 @@ export const ChangeArrow = styled.span<{$isPositive: boolean}>`
 `;
 
 export const ChartBackground = styled.div`
-  background: linear-gradient(135deg, ${colors.white} 0%, #fafbfc 100%);
+  background: ${colors.white};
   border-radius: 20px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   padding: 24px;
@@ -37,8 +37,14 @@ export const ChartBackground = styled.div`
 export const ChartControls = styled.div`
   align-items: center;
   display: flex;
-  gap: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
   justify-content: space-between;
+  width: 100%;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    gap: 12px;
+  }
 `;
 
 export const ChartHeader = styled.div`
@@ -80,8 +86,15 @@ export const ChartTypeButtons = styled.div`
 export const ChartWrapper = styled.div`
   background: white;
   border-radius: 16px;
+  overflow: hidden;
   padding: 20px 10px 10px 0;
   position: relative;
+  width: 100%;
+
+  svg {
+    display: block;
+    max-width: 100%;
+  }
 
   .recharts-cartesian-grid-horizontal line {
     stroke-dasharray: 0;
@@ -93,7 +106,10 @@ export const ChartWrapper = styled.div`
   }
 `;
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  width: 100%;
+  overflow: hidden;
+`;
 
 export const CurrentPrice = styled.div`
   align-items: center;
@@ -131,6 +147,7 @@ export const PriceSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
 
   @media (min-width: ${breakpoints.tablet}) {
     align-items: flex-start;
