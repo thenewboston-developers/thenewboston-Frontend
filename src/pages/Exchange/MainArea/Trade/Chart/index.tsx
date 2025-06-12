@@ -22,7 +22,7 @@ const Chart: SFC = ({className}) => {
   const activeAssetPair = useActiveAssetPair();
   const dispatch = useDispatch<AppDispatch>();
   const chartDataState = useSelector(getChartData);
-  const {data: chartData, intervalMinutes} = chartDataState;
+  const {data: chartData} = chartDataState;
 
   const [chartType, setChartType] = useState<'candlestick' | 'line'>('candlestick');
   const [isLoading, setIsLoading] = useState(false);

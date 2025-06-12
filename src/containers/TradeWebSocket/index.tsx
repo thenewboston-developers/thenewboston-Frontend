@@ -40,7 +40,6 @@ const TradeWebSocket: FC<TradeWebSocketProps> = ({activeAssetPair, url}) => {
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log('[TradeWebSocket] Received message:', data);
 
       if (data.type === SocketDataType.CREATE_TRADE) {
         const {trade} = data;
@@ -55,16 +54,7 @@ const TradeWebSocket: FC<TradeWebSocketProps> = ({activeAssetPair, url}) => {
             trade.primary_currency === chartDataState.primaryCurrencyId &&
             trade.secondary_currency === chartDataState.secondaryCurrencyId;
 
-          console.log('[TradeWebSocket] Currency match check:', {
-            tradePrimary: trade.primary_currency,
-            tradeSecondary: trade.secondary_currency,
-            chartPrimary: chartDataState.primaryCurrencyId,
-            chartSecondary: chartDataState.secondaryCurrencyId,
-            matchesCurrencies,
-          });
-
           if (matchesCurrencies) {
-            console.log('[TradeWebSocket] Dispatching processTrade action');
             dispatch(processTrade(trade));
           }
         }

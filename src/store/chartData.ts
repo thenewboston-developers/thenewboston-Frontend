@@ -52,13 +52,7 @@ const chartData = createSlice({
       state.data.push(payload);
     },
     processTrade: (state, {payload}: PayloadAction<Trade>) => {
-      console.log('processTrade reducer called with trade:', payload);
-
       if (!state.intervalMinutes || state.data.length === 0) {
-        console.log('Early return: intervalMinutes or data is empty', {
-          intervalMinutes: state.intervalMinutes,
-          dataLength: state.data.length,
-        });
         return;
       }
 
@@ -68,16 +62,8 @@ const chartData = createSlice({
       const lastInterval = state.data[state.data.length - 1];
       const lastIntervalEnd = new Date(lastInterval.end);
 
-      console.log('Trade processing details:', {
-        tradeTime: tradeTime.toISOString(),
-        lastIntervalStart: lastInterval.start,
-        lastIntervalEnd: lastInterval.end,
-        belongsToCurrentInterval: tradeTime >= new Date(lastInterval.start) && tradeTime < lastIntervalEnd,
-      });
-
       // Check if trade belongs to current interval
       if (tradeTime >= new Date(lastInterval.start) && tradeTime < lastIntervalEnd) {
-        console.log('Updating existing interval');
         // Update existing interval
         const updatedInterval: ChartDataPoint = {
           ...lastInterval,
@@ -94,10 +80,8 @@ const chartData = createSlice({
           updatedInterval.low = trade.trade_price;
         }
 
-        console.log('Updated interval:', updatedInterval);
         state.data[state.data.length - 1] = updatedInterval;
       } else if (tradeTime >= lastIntervalEnd) {
-        console.log('Trade is after last interval, creating new interval(s)');
         // Check for missed intervals
         const missedIntervals = Math.floor((tradeTime.getTime() - lastIntervalEnd.getTime()) / intervalMs);
 
@@ -133,11 +117,8 @@ const chartData = createSlice({
           volume: trade.fill_quantity,
         };
 
-        console.log('New interval created:', newInterval);
         state.data.push(newInterval);
       }
-
-      console.log('Final chart data length:', state.data.length);
     },
   },
 });
