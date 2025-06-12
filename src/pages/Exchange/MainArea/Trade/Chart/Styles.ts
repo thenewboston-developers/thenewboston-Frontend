@@ -198,3 +198,12 @@ export const TimeframeButtons = styled.div`
   gap: 4px;
   padding: 4px;
 `;
+
+export const LoadingContainer = styled.div`
+  align-items: center;
+  color: ${colors.palette.gray['600']};
+  display: flex;
+  font-size: 16px;
+  height: 400px;
+  justify-content: center;
+`;
