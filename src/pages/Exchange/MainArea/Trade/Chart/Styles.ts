@@ -94,6 +94,7 @@ export const ChartWrapper = styled.div`
   svg {
     display: block;
     max-width: 100%;
+    overflow: visible;
   }
 
   .recharts-cartesian-grid-horizontal line {

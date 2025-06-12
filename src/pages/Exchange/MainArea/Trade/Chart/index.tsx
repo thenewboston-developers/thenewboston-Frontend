@@ -106,7 +106,7 @@ const Chart: SFC = ({className}) => {
     if (!svgRef.current || !containerRef.current || displayData.length === 0) return;
 
     const renderChart = () => {
-      const margin = {bottom: 40, left: 60, right: 30, top: 20};
+      const margin = {bottom: 40, left: 60, right: 40, top: 20};
       const container = containerRef.current;
       if (!container) return;
 
@@ -121,14 +121,18 @@ const Chart: SFC = ({className}) => {
       const svg = d3
         .select(svgRef.current)
         .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom);
+        .attr('height', height + margin.top + margin.bottom)
+        .style('overflow', 'visible');
 
       const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
       // Scales
+      const xExtent = d3.extent(displayData, (d) => new Date(d.end)) as [Date, Date];
+      // Add padding to the time domain to ensure last candlestick fits
+      const timePadding = (xExtent[1].getTime() - xExtent[0].getTime()) * 0.02;
       const xScale = d3
         .scaleTime()
-        .domain(d3.extent(displayData, (d) => new Date(d.end)) as [Date, Date])
+        .domain([xExtent[0], new Date(xExtent[1].getTime() + timePadding)])
         .range([0, width]);
 
       const yExtent = d3.extent(displayData.flatMap((d) => [d.low, d.high])) as [number, number];
@@ -220,7 +224,7 @@ const Chart: SFC = ({className}) => {
         // Adjust width based on number of data points to handle variable length data
         const maxCandleWidth = 20;
         const minCandleWidth = 1;
-        const idealWidth = (width / displayData.length) * 0.8;
+        const idealWidth = (width / displayData.length) * 0.7; // Reduced from 0.8 to ensure space
         const candleWidth = Math.max(minCandleWidth, Math.min(maxCandleWidth, idealWidth));
 
         // High-Low lines
