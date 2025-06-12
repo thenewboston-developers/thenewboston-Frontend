@@ -44,6 +44,7 @@ const Chart: SFC = ({className}) => {
   const chartDataRef = useRef<ChartDataPoint[]>([]);
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const processedTradeIdsRef = useRef<Set<number>>(new Set());
 
   const fetchChartData = useCallback(async () => {
     if (!activeAssetPair) return;
@@ -66,6 +67,9 @@ const Chart: SFC = ({className}) => {
       chartDataRef.current = response.data;
       setIntervalMinutes(response.interval_minutes);
       intervalMinutesRef.current = response.interval_minutes;
+
+      // Clear processed trades when fetching new data
+      processedTradeIdsRef.current.clear();
 
       // Initialize current interval if we have data
       if (response.data.length > 0) {
@@ -100,17 +104,34 @@ const Chart: SFC = ({className}) => {
     if (!currentIntervalRef.current || !intervalMinutesRef.current) return;
 
     const tradeTime = new Date(trade.created_date);
-    const currentInt = currentIntervalRef.current;
+    let currentInt = currentIntervalRef.current;
     const intervalMs = intervalMinutesRef.current * 60 * 1000;
 
     // Check if we need to fill missing intervals
     const missedIntervals = Math.floor((tradeTime.getTime() - currentInt.endTime.getTime()) / intervalMs);
 
     if (missedIntervals > 0) {
+      // First, finalize the current interval if it has any data
+      if (currentInt.volume > 0 || currentInt.startTime < currentInt.endTime) {
+        const finalizedPoint: ChartDataPoint = {
+          close: currentInt.close,
+          end: currentInt.endTime.toISOString(),
+          high: currentInt.high,
+          low: currentInt.low,
+          open: currentInt.open,
+          start: currentInt.startTime.toISOString(),
+          volume: currentInt.volume,
+        };
+
+        const newChartData = [...chartDataRef.current, finalizedPoint];
+        setChartData(newChartData);
+        chartDataRef.current = newChartData;
+      }
+
       // Fill missing intervals with carried forward price
       const missingPoints: ChartDataPoint[] = [];
-      for (let i = 0; i < missedIntervals; i += 1) {
-        const intervalStart = new Date(currentInt.endTime.getTime() + i * intervalMs);
+      for (let i = 1; i < missedIntervals; i += 1) {
+        const intervalStart = new Date(currentInt.endTime.getTime() + (i - 1) * intervalMs);
         const intervalEnd = new Date(intervalStart.getTime() + intervalMs);
 
         missingPoints.push({
@@ -124,25 +145,36 @@ const Chart: SFC = ({className}) => {
         });
       }
 
-      // Add missing points to chart data (no longer limited to 100 points)
-      const updatedData = [...chartDataRef.current, ...missingPoints];
-      setChartData(updatedData);
-      chartDataRef.current = updatedData;
+      if (missingPoints.length > 0) {
+        const updatedData = [...chartDataRef.current, ...missingPoints];
+        setChartData(updatedData);
+        chartDataRef.current = updatedData;
+      }
 
-      // Update current interval to the last missing interval
-      const lastMissingInterval = new Date(currentInt.endTime.getTime() + missedIntervals * intervalMs);
-      currentInt.startTime = new Date(lastMissingInterval.getTime() - intervalMs);
-      currentInt.endTime = lastMissingInterval;
-      currentInt.open = currentInt.close;
-      currentInt.high = currentInt.close;
-      currentInt.low = currentInt.close;
-      currentInt.volume = 0;
+      // Create new current interval for the trade
+      const newIntervalStart = new Date(currentInt.endTime.getTime() + (missedIntervals - 1) * intervalMs);
+      const newIntervalEnd = new Date(newIntervalStart.getTime() + intervalMs);
+      const newInterval: CurrentInterval = {
+        close: currentInt.close,
+        endTime: newIntervalEnd,
+        high: currentInt.close,
+        low: currentInt.close,
+        open: currentInt.close,
+        startTime: newIntervalStart,
+        volume: 0,
+      };
+
+      setCurrentInterval(newInterval);
+      currentIntervalRef.current = newInterval;
+
+      // Update currentInt reference for the trade processing below
+      currentInt = newInterval;
     }
 
     // Check if trade belongs to current interval
-    if (tradeTime <= currentInt.endTime) {
+    if (tradeTime >= currentInt.startTime && tradeTime < currentInt.endTime) {
       // Update current interval
-      const updatedInterval = {
+      const updatedInterval: CurrentInterval = {
         ...currentInt,
         close: trade.trade_price,
         high: Math.max(currentInt.high, trade.trade_price),
@@ -150,9 +182,16 @@ const Chart: SFC = ({className}) => {
         volume: currentInt.volume + trade.fill_quantity,
       };
 
+      // If this is the first trade in the interval, update the open price
+      if (currentInt.volume === 0) {
+        updatedInterval.open = trade.trade_price;
+        updatedInterval.high = trade.trade_price;
+        updatedInterval.low = trade.trade_price;
+      }
+
       setCurrentInterval(updatedInterval);
       currentIntervalRef.current = updatedInterval;
-    } else {
+    } else if (tradeTime >= currentInt.endTime) {
       // Trade belongs to new interval - finalize current interval
       const finalizedPoint: ChartDataPoint = {
         close: currentInt.close,
@@ -189,15 +228,15 @@ const Chart: SFC = ({className}) => {
   useEffect(() => {
     if (!activeAssetPair) return;
 
-    // Store trade IDs we've already processed
-    const processedTradeIds = new Set<number>();
+    // Clear processed trades when asset pair changes
+    processedTradeIdsRef.current.clear();
 
     // Process new trades as they come in
     const checkForNewTrades = () => {
       const allTrades = Object.values(trades);
-      const newTrades = allTrades.filter((trade) => !processedTradeIds.has(trade.id));
+      const newTrades = allTrades.filter((trade) => !processedTradeIdsRef.current.has(trade.id));
 
-      if (newTrades.length > 0 && currentIntervalRef.current) {
+      if (newTrades.length > 0 && currentIntervalRef.current && intervalMinutesRef.current > 0) {
         // Sort by created date to process in order
         const sortedNewTrades = newTrades.sort(
           (a, b) => new Date(a.created_date).getTime() - new Date(b.created_date).getTime(),
@@ -205,7 +244,7 @@ const Chart: SFC = ({className}) => {
 
         sortedNewTrades.forEach((trade) => {
           processTrade(trade);
-          processedTradeIds.add(trade.id);
+          processedTradeIdsRef.current.add(trade.id);
         });
       }
     };
@@ -315,20 +354,27 @@ const Chart: SFC = ({className}) => {
       display_date: chartDisplayDate(point.end),
     }));
 
-    // Include current interval in the chart if it exists
+    // Include current interval in the chart only if it has volume or we're past its start time
     if (currentInterval && intervalMinutes > 0) {
-      const currentPoint: DisplayDataPoint = {
-        close: currentInterval.close,
-        display_date: chartDisplayDate(currentInterval.endTime.toISOString()),
-        end: currentInterval.endTime.toISOString(),
-        high: currentInterval.high,
-        low: currentInterval.low,
-        open: currentInterval.open,
-        start: currentInterval.startTime.toISOString(),
-        volume: currentInterval.volume,
-      };
+      const now = new Date();
+      const hasVolume = currentInterval.volume > 0;
+      const isPastStartTime = now >= currentInterval.startTime;
 
-      return [...mappedData, currentPoint];
+      // Only show the current interval if it has trades or if we're actually in this time period
+      if (hasVolume || isPastStartTime) {
+        const currentPoint: DisplayDataPoint = {
+          close: currentInterval.close,
+          display_date: chartDisplayDate(currentInterval.endTime.toISOString()),
+          end: currentInterval.endTime.toISOString(),
+          high: currentInterval.high,
+          low: currentInterval.low,
+          open: currentInterval.open,
+          start: currentInterval.startTime.toISOString(),
+          volume: currentInterval.volume,
+        };
+
+        return [...mappedData, currentPoint];
+      }
     }
 
     return mappedData;
@@ -536,6 +582,16 @@ const Chart: SFC = ({className}) => {
           .attr('d', line);
       }
 
+      // Vertical hover line
+      const hoverLine = g
+        .append('line')
+        .attr('class', 'hover-line')
+        .attr('y1', 0)
+        .attr('y2', height)
+        .style('stroke', colors.palette.gray[400])
+        .style('stroke-width', 1)
+        .style('opacity', 0);
+
       // Tooltip
       const tooltip = d3
         .select('body')
@@ -567,6 +623,11 @@ const Chart: SFC = ({className}) => {
             !d1 || x0.getTime() - new Date(d0.end).getTime() > new Date(d1.end).getTime() - x0.getTime() ? d1 : d0;
 
           if (d) {
+            // Show and position the hover line at the center of the hovered interval
+            hoverLine
+              .style('opacity', 1)
+              .attr('x1', xScale(new Date(d.end)))
+              .attr('x2', xScale(new Date(d.end)));
             // Format start and end times based on timeframe
             const startDate = new Date(d.start);
             const endDate = new Date(d.end);
@@ -624,6 +685,7 @@ const Chart: SFC = ({className}) => {
         })
         .on('mouseout', () => {
           tooltip.transition().duration(500).style('opacity', 0);
+          hoverLine.style('opacity', 0);
         });
 
       // Cleanup tooltip on unmount
