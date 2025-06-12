@@ -1,6 +1,6 @@
-import {ChartDataResponse, ChartTimeRange, getChartData as _getChartData} from 'api/exchangeChartData';
+import {getChartData as _getChartData} from 'api/exchangeChartData';
 import {setChartData} from 'store/chartData';
-import {AppDispatch} from 'types';
+import {AppDispatch, ChartDataResponse, ChartTimeRange} from 'types';
 
 export const getChartData =
   (assetPairId: number, timeRange: ChartTimeRange) =>

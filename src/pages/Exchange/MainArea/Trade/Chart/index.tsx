@@ -2,14 +2,13 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import * as d3 from 'd3';
 
-import {ChartDataPoint, ChartTimeRange} from 'api/exchangeChartData';
 import CurrencyLogo from 'components/CurrencyLogo';
 import {getChartData as fetchChartData} from 'dispatchers/exchangeChartData';
 import {useActiveAssetPair} from 'hooks';
 import {getChartData} from 'selectors/state';
 import {clearChartData} from 'store/chartData';
 import {colors} from 'styles';
-import {AppDispatch, SFC} from 'types';
+import {AppDispatch, ChartDataPoint, ChartTimeRange, SFC} from 'types';
 import {chartDisplayDate} from 'utils/dates';
 
 import * as S from './Styles';

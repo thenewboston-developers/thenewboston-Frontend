@@ -1,8 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {ChartDataPoint} from 'api/exchangeChartData';
 import {CHART_DATA} from 'constants/store';
-import {Trade} from 'types';
+import {ChartDataPoint, Trade} from 'types';
 
 export interface ChartDataState {
   data: ChartDataPoint[];

@@ -2,11 +2,10 @@ import {FC, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
-import {ChartDataPoint} from 'api/exchangeChartData';
 import {SocketDataType} from 'enums';
 import {getChartData} from 'selectors/state';
 import {addNewInterval, updateCurrentInterval} from 'store/chartData';
-import {AppDispatch, Trade} from 'types';
+import {AppDispatch, ChartDataPoint, Trade} from 'types';
 
 export interface ChartWebSocketProps {
   socket: ReconnectingWebSocket | null;

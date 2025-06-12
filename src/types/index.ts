@@ -1,6 +1,7 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CurrencyBalance} from 'types/api/currencyBalances';
+import {ChartDataPoint, ChartDataResponse, ChartTimeRange, GetChartDataParams} from 'types/api/exchangeChartData';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer, GetFollowersParams} from 'types/api/follower';
 import {CreateInvitationRequest} from 'types/api/invitations';
@@ -43,6 +44,9 @@ export {
   AssetPairs,
   Authentication,
   Block,
+  ChartDataPoint,
+  ChartDataResponse,
+  ChartTimeRange,
   ClassName,
   Comment,
   CommentReadSerializer,
@@ -68,6 +72,7 @@ export {
   Followers,
   GenericFunction,
   GenericVoidFunction,
+  GetChartDataParams,
   GetFollowersParams,
   GetMintsParams,
   GetPostsParams,
