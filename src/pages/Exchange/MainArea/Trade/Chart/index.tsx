@@ -206,7 +206,12 @@ const Chart: SFC = ({className}) => {
 
       // Y Axis
       g.append('g')
-        .call(d3.axisLeft(yScale).tickFormat((d) => d.toString()))
+        .call(
+          d3
+            .axisLeft(yScale)
+            .tickFormat((d) => d.toString())
+            .tickPadding(10),
+        )
         .style('font-size', '12px')
         .style('color', colors.palette.gray[600]);
 
