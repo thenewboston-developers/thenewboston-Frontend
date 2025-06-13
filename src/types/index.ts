@@ -1,7 +1,7 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CurrencyBalance} from 'types/api/currencyBalances';
-import {Candlestick, ChartDataResponse, ChartTimeRange, GetChartDataParams} from 'types/api/exchangeChartData';
+import {Candlestick, ChartData, ChartTimeRange, GetChartDataParams} from 'types/api/exchangeChartData';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer, GetFollowersParams} from 'types/api/follower';
 import {CreateInvitationRequest} from 'types/api/invitations';
@@ -45,7 +45,7 @@ export {
   Authentication,
   Block,
   Candlestick,
-  ChartDataResponse,
+  ChartData,
   ChartTimeRange,
   ClassName,
   Comment,

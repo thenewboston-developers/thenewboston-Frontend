@@ -8,7 +8,7 @@ export interface Candlestick {
   volume: number;
 }
 
-export interface ChartDataResponse {
+export interface ChartData {
   candlesticks: Candlestick[];
   end_time: string;
   interval_minutes: number;

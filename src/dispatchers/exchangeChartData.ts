@@ -1,10 +1,10 @@
-import {getChartData as _getChartData} from 'api/exchangeChartData';
+import {getChartData as _getChartData} from 'api/chartData';
 import {setChartData} from 'store/chartData';
-import {AppDispatch, ChartDataResponse, ChartTimeRange} from 'types';
+import {AppDispatch, ChartData, ChartTimeRange} from 'types';
 
 export const getChartData =
   (assetPairId: number, timeRange: ChartTimeRange) =>
-  async (dispatch: AppDispatch): Promise<ChartDataResponse> => {
+  async (dispatch: AppDispatch): Promise<ChartData> => {
     try {
       const response = await _getChartData({
         asset_pair: assetPairId,
