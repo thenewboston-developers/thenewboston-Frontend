@@ -10,6 +10,7 @@ import {clearChartData} from 'store/chartData';
 import {colors} from 'styles';
 import {AppDispatch, Candlestick, ChartTimeRange, SFC} from 'types';
 import {chartDisplayDate} from 'utils/dates';
+import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
@@ -48,7 +49,7 @@ const Chart: SFC = ({className}) => {
       try {
         await dispatch(fetchChartData(activeAssetPair.id, timeframeToApiMap[timeframe]));
       } catch (error) {
-        // Handle error
+        displayErrorToast(error);
       } finally {
         setIsLoading(false);
       }
