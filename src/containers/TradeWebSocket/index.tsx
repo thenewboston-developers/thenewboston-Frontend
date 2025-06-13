@@ -2,11 +2,7 @@ import {FC, useEffect, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
-import {SocketDataType} from 'enums';
-import {getChartData} from 'selectors/state';
-import {store} from 'store';
-import {processTrade} from 'store/chartData';
-import {setTrade} from 'store/trades';
+import rootRouter from 'routers/rootRouter';
 import {AppDispatch, AssetPair} from 'types';
 
 export interface TradeWebSocketProps {
@@ -39,26 +35,7 @@ const TradeWebSocket: FC<TradeWebSocketProps> = ({activeAssetPair, url}) => {
     };
 
     socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-
-      if (data.type === SocketDataType.CREATE_TRADE) {
-        const {trade} = data;
-        dispatch(setTrade(trade));
-
-        // Process trade for chart data if it matches the current asset pair
-        const state = store.getState();
-        const chartDataState = getChartData(state);
-
-        if (chartDataState.primaryCurrencyId && chartDataState.secondaryCurrencyId) {
-          const matchesCurrencies =
-            trade.primary_currency === chartDataState.primaryCurrencyId &&
-            trade.secondary_currency === chartDataState.secondaryCurrencyId;
-
-          if (matchesCurrencies) {
-            dispatch(processTrade(trade));
-          }
-        }
-      }
+      rootRouter(dispatch, event);
     };
 
     socket.onclose = () => {
