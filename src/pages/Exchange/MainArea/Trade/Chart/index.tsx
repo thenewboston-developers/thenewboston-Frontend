@@ -32,7 +32,7 @@ const Chart: SFC = ({className}) => {
   useEffect(() => {
     if (!activeAssetPair) return;
 
-    const loadChartData = async () => {
+    (async () => {
       // Map UI timeframe to API timerange
       const timeframeToApiMap: Record<string, ChartTimeRange> = {
         '1D': '1d',
@@ -51,9 +51,7 @@ const Chart: SFC = ({className}) => {
       } finally {
         setIsLoading(false);
       }
-    };
-
-    loadChartData();
+    })();
   }, [activeAssetPair, dispatch, timeframe]);
 
   // Clear chart data when unmounting or switching asset pairs
