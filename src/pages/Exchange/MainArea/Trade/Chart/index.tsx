@@ -23,7 +23,6 @@ const Chart: SFC = ({className}) => {
   const chartDataState = useSelector(getChartData);
   const {candlesticks} = chartDataState;
 
-  const [chartType, setChartType] = useState<'candlestick' | 'line'>('candlestick');
   const [isLoading, setIsLoading] = useState(false);
   const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '3M' | '1Y' | 'ALL'>('1D');
 
@@ -218,67 +217,51 @@ const Chart: SFC = ({className}) => {
         .style('font-size', '12px')
         .style('color', colors.palette.gray[600]);
 
-      if (chartType === 'candlestick') {
-        // Candlestick width based on data density
-        // Adjust width based on number of data points to handle variable length data
-        const maxCandleWidth = 20;
-        const minCandleWidth = 1;
-        const idealWidth = (width / displayData.length) * 0.7; // Reduced from 0.8 to ensure space
-        const candleWidth = Math.max(minCandleWidth, Math.min(maxCandleWidth, idealWidth));
+      // Candlestick width based on data density
+      // Adjust width based on number of data points to handle variable length data
+      const maxCandleWidth = 20;
+      const minCandleWidth = 1;
+      const idealWidth = (width / displayData.length) * 0.7; // Reduced from 0.8 to ensure space
+      const candleWidth = Math.max(minCandleWidth, Math.min(maxCandleWidth, idealWidth));
 
-        // High-Low lines
-        g.selectAll('.high-low-line')
-          .data(displayData)
-          .enter()
-          .append('line')
-          .attr('class', 'high-low-line')
-          .attr('x1', (d) => xScale(new Date(d.end)))
-          .attr('x2', (d) => xScale(new Date(d.end)))
-          .attr('y1', (d) => yScale(d.high))
-          .attr('y2', (d) => yScale(d.low))
-          .attr('stroke', (d) => (d.open <= d.close ? colors.palette.green[500] : colors.palette.red[500]))
-          .attr('stroke-width', 1);
+      // High-Low lines
+      g.selectAll('.high-low-line')
+        .data(displayData)
+        .enter()
+        .append('line')
+        .attr('class', 'high-low-line')
+        .attr('x1', (d) => xScale(new Date(d.end)))
+        .attr('x2', (d) => xScale(new Date(d.end)))
+        .attr('y1', (d) => yScale(d.high))
+        .attr('y2', (d) => yScale(d.low))
+        .attr('stroke', (d) => (d.open <= d.close ? colors.palette.green[500] : colors.palette.red[500]))
+        .attr('stroke-width', 1);
 
-        // Candle bodies
-        g.selectAll('.candle-body')
-          .data(displayData)
-          .enter()
-          .append('rect')
-          .attr('class', 'candle-body')
-          .attr('x', (d) => xScale(new Date(d.end)) - candleWidth / 2)
-          .attr('y', (d) => {
-            // If open equals close, position the dash centered on the price
-            if (d.open === d.close) {
-              return yScale(d.close) - 0.5;
-            }
-            return yScale(Math.max(d.open, d.close));
-          })
-          .attr('width', candleWidth)
-          .attr('height', (d) => {
-            // If open equals close, make a 1px tall dash
-            if (d.open === d.close) {
-              return 1;
-            }
-            return Math.abs(yScale(d.open) - yScale(d.close));
-          })
-          .attr('fill', (d) => (d.open <= d.close ? colors.palette.green[500] : colors.palette.red[500]))
-          .attr('stroke', (d) => (d.open <= d.close ? colors.palette.green[500] : colors.palette.red[500]))
-          .attr('stroke-width', 1);
-      } else {
-        // Line chart
-        const line = d3
-          .line<DisplayCandlestick>()
-          .x((d) => xScale(new Date(d.end)))
-          .y((d) => yScale(d.close))
-          .curve(d3.curveMonotoneX);
-
-        g.append('path')
-          .datum(displayData)
-          .attr('fill', 'none')
-          .attr('stroke', isPositive ? colors.palette.green[500] : colors.palette.red[500])
-          .attr('stroke-width', 2)
-          .attr('d', line);
-      }
+      // Candle bodies
+      g.selectAll('.candle-body')
+        .data(displayData)
+        .enter()
+        .append('rect')
+        .attr('class', 'candle-body')
+        .attr('x', (d) => xScale(new Date(d.end)) - candleWidth / 2)
+        .attr('y', (d) => {
+          // If open equals close, position the dash centered on the price
+          if (d.open === d.close) {
+            return yScale(d.close) - 0.5;
+          }
+          return yScale(Math.max(d.open, d.close));
+        })
+        .attr('width', candleWidth)
+        .attr('height', (d) => {
+          // If open equals close, make a 1px tall dash
+          if (d.open === d.close) {
+            return 1;
+          }
+          return Math.abs(yScale(d.open) - yScale(d.close));
+        })
+        .attr('fill', (d) => (d.open <= d.close ? colors.palette.green[500] : colors.palette.red[500]))
+        .attr('stroke', (d) => (d.open <= d.close ? colors.palette.green[500] : colors.palette.red[500]))
+        .attr('stroke-width', 1);
 
       // Vertical hover line
       const hoverLine = g
@@ -404,7 +387,7 @@ const Chart: SFC = ({className}) => {
       window.removeEventListener('resize', handleResize);
       d3.select('body').selectAll('.d3-tooltip').remove();
     };
-  }, [displayData, chartType, isPositive, timeframe]);
+  }, [displayData, isPositive, timeframe]);
 
   if (isLoading && candlesticks.length === 0) {
     return (
@@ -463,34 +446,6 @@ const Chart: SFC = ({className}) => {
                 </S.TimeframeButton>
               ))}
             </S.TimeframeButtons>
-
-            <S.ChartTypeButtons>
-              <S.ChartTypeButton $active={chartType === 'line'} onClick={() => setChartType('line')} title="Line Chart">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M3 17L7 13L11 15L17 9"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </S.ChartTypeButton>
-              <S.ChartTypeButton
-                $active={chartType === 'candlestick'}
-                onClick={() => setChartType('candlestick')}
-                title="Candlestick Chart"
-              >
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <rect x="4" y="6" width="4" height="8" stroke="currentColor" strokeWidth="2" fill="none" />
-                  <line x1="6" y1="3" x2="6" y2="6" stroke="currentColor" strokeWidth="2" />
-                  <line x1="6" y1="14" x2="6" y2="17" stroke="currentColor" strokeWidth="2" />
-                  <rect x="12" y="8" width="4" height="6" stroke="currentColor" strokeWidth="2" fill="currentColor" />
-                  <line x1="14" y1="5" x2="14" y2="8" stroke="currentColor" strokeWidth="2" />
-                  <line x1="14" y1="14" x2="14" y2="16" stroke="currentColor" strokeWidth="2" />
-                </svg>
-              </S.ChartTypeButton>
-            </S.ChartTypeButtons>
           </S.ChartControls>
         </S.ChartHeader>
 
