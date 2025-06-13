@@ -13,7 +13,7 @@ export const getChartData =
 
       dispatch(
         setChartData({
-          data: response.data,
+          candlesticks: response.candlesticks,
           intervalMinutes: response.interval_minutes,
           primaryCurrencyId: response.primary_currency,
           secondaryCurrencyId: response.secondary_currency,

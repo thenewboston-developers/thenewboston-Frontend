@@ -1,4 +1,4 @@
-export interface ChartDataPoint {
+export interface Candlestick {
   close: number;
   end: string;
   high: number;
@@ -9,7 +9,7 @@ export interface ChartDataPoint {
 }
 
 export interface ChartDataResponse {
-  data: ChartDataPoint[];
+  candlesticks: Candlestick[];
   end_time: string;
   interval_minutes: number;
   primary_currency: number;

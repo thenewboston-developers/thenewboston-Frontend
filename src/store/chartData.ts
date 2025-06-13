@@ -1,17 +1,17 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {CHART_DATA} from 'constants/store';
-import {ChartDataPoint, Trade} from 'types';
+import {Candlestick, Trade} from 'types';
 
 export interface ChartDataState {
-  data: ChartDataPoint[];
+  candlesticks: Candlestick[];
   intervalMinutes: number;
   primaryCurrencyId: number | null;
   secondaryCurrencyId: number | null;
 }
 
 const initialState: ChartDataState = {
-  data: [],
+  candlesticks: [],
   intervalMinutes: 0,
   primaryCurrencyId: null,
   secondaryCurrencyId: null,
@@ -27,96 +27,96 @@ const chartData = createSlice({
       {
         payload,
       }: PayloadAction<{
-        data: ChartDataPoint[];
+        candlesticks: Candlestick[];
         intervalMinutes: number;
         primaryCurrencyId: number;
         secondaryCurrencyId: number;
       }>,
     ) => {
-      state.data = payload.data;
+      state.candlesticks = payload.candlesticks;
       state.intervalMinutes = payload.intervalMinutes;
       state.primaryCurrencyId = payload.primaryCurrencyId;
       state.secondaryCurrencyId = payload.secondaryCurrencyId;
     },
-    updateCurrentInterval: (state, {payload}: PayloadAction<ChartDataPoint>) => {
+    updateCurrentInterval: (state, {payload}: PayloadAction<Candlestick>) => {
       // Update the last interval if it matches the time range
-      if (state.data.length > 0) {
-        const lastInterval = state.data[state.data.length - 1];
-        if (lastInterval.start === payload.start && lastInterval.end === payload.end) {
-          state.data[state.data.length - 1] = payload;
+      if (state.candlesticks.length > 0) {
+        const lastCandlestick = state.candlesticks[state.candlesticks.length - 1];
+        if (lastCandlestick.start === payload.start && lastCandlestick.end === payload.end) {
+          state.candlesticks[state.candlesticks.length - 1] = payload;
         }
       }
     },
-    addNewInterval: (state, {payload}: PayloadAction<ChartDataPoint>) => {
-      state.data.push(payload);
+    addNewInterval: (state, {payload}: PayloadAction<Candlestick>) => {
+      state.candlesticks.push(payload);
     },
     processTrade: (state, {payload}: PayloadAction<Trade>) => {
-      if (!state.intervalMinutes || state.data.length === 0) {
+      if (!state.intervalMinutes || state.candlesticks.length === 0) {
         return;
       }
 
       const trade = payload;
       const tradeTime = new Date(trade.created_date);
       const intervalMs = state.intervalMinutes * 60 * 1000;
-      const lastInterval = state.data[state.data.length - 1];
-      const lastIntervalEnd = new Date(lastInterval.end);
+      const lastCandlestick = state.candlesticks[state.candlesticks.length - 1];
+      const lastCandlestickEnd = new Date(lastCandlestick.end);
 
-      // Check if trade belongs to current interval
-      if (tradeTime >= new Date(lastInterval.start) && tradeTime < lastIntervalEnd) {
-        // Update existing interval
-        const updatedInterval: ChartDataPoint = {
-          ...lastInterval,
+      // Check if trade belongs to current candlestick
+      if (tradeTime >= new Date(lastCandlestick.start) && tradeTime < lastCandlestickEnd) {
+        // Update existing candlestick
+        const updatedCandlestick: Candlestick = {
+          ...lastCandlestick,
           close: trade.trade_price,
-          high: Math.max(lastInterval.high, trade.trade_price),
-          low: Math.min(lastInterval.low, trade.trade_price),
-          volume: lastInterval.volume + trade.fill_quantity,
+          high: Math.max(lastCandlestick.high, trade.trade_price),
+          low: Math.min(lastCandlestick.low, trade.trade_price),
+          volume: lastCandlestick.volume + trade.fill_quantity,
         };
 
-        // If this is the first trade in the interval, update open/high/low
-        if (lastInterval.volume === 0) {
-          updatedInterval.open = trade.trade_price;
-          updatedInterval.high = trade.trade_price;
-          updatedInterval.low = trade.trade_price;
+        // If this is the first trade in the candlestick, update open/high/low
+        if (lastCandlestick.volume === 0) {
+          updatedCandlestick.open = trade.trade_price;
+          updatedCandlestick.high = trade.trade_price;
+          updatedCandlestick.low = trade.trade_price;
         }
 
-        state.data[state.data.length - 1] = updatedInterval;
-      } else if (tradeTime >= lastIntervalEnd) {
-        // Check for missed intervals
-        const missedIntervals = Math.floor((tradeTime.getTime() - lastIntervalEnd.getTime()) / intervalMs);
+        state.candlesticks[state.candlesticks.length - 1] = updatedCandlestick;
+      } else if (tradeTime >= lastCandlestickEnd) {
+        // Check for missed candlesticks
+        const missedCandlesticks = Math.floor((tradeTime.getTime() - lastCandlestickEnd.getTime()) / intervalMs);
 
-        // Fill any missed intervals
-        for (let i = 0; i < missedIntervals; i += 1) {
-          const intervalStart = new Date(lastIntervalEnd.getTime() + i * intervalMs);
-          const intervalEnd = new Date(intervalStart.getTime() + intervalMs);
+        // Fill any missed candlesticks
+        for (let i = 0; i < missedCandlesticks; i += 1) {
+          const candlestickStart = new Date(lastCandlestickEnd.getTime() + i * intervalMs);
+          const candlestickEnd = new Date(candlestickStart.getTime() + intervalMs);
 
-          const missedInterval: ChartDataPoint = {
-            close: lastInterval.close,
-            end: intervalEnd.toISOString(),
-            high: lastInterval.close,
-            low: lastInterval.close,
-            open: lastInterval.close,
-            start: intervalStart.toISOString(),
+          const missedCandlestick: Candlestick = {
+            close: lastCandlestick.close,
+            end: candlestickEnd.toISOString(),
+            high: lastCandlestick.close,
+            low: lastCandlestick.close,
+            open: lastCandlestick.close,
+            start: candlestickStart.toISOString(),
             volume: 0,
           };
 
-          state.data.push(missedInterval);
+          state.candlesticks.push(missedCandlestick);
         }
 
-        // Create new interval with the trade
-        const newIntervalStart = new Date(lastIntervalEnd.getTime() + missedIntervals * intervalMs);
-        const newIntervalEnd = new Date(newIntervalStart.getTime() + intervalMs);
+        // Create new candlestick with the trade
+        const newCandlestickStart = new Date(lastCandlestickEnd.getTime() + missedCandlesticks * intervalMs);
+        const newCandlestickEnd = new Date(newCandlestickStart.getTime() + intervalMs);
 
-        const newInterval: ChartDataPoint = {
+        const newCandlestick: Candlestick = {
           close: trade.trade_price,
-          end: newIntervalEnd.toISOString(),
+          end: newCandlestickEnd.toISOString(),
           high: trade.trade_price,
           low: trade.trade_price,
           open: trade.trade_price,
-          start: newIntervalStart.toISOString(),
+          start: newCandlestickStart.toISOString(),
           volume: trade.fill_quantity,
         };
 
-        state.data.push(newInterval);
+        state.candlesticks.push(newCandlestick);
       }
     },
   },

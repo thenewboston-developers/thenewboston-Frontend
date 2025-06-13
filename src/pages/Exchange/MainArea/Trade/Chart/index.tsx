@@ -8,12 +8,12 @@ import {useActiveAssetPair} from 'hooks';
 import {getChartData} from 'selectors/state';
 import {clearChartData} from 'store/chartData';
 import {colors} from 'styles';
-import {AppDispatch, ChartDataPoint, ChartTimeRange, SFC} from 'types';
+import {AppDispatch, Candlestick, ChartTimeRange, SFC} from 'types';
 import {chartDisplayDate} from 'utils/dates';
 
 import * as S from './Styles';
 
-interface DisplayDataPoint extends ChartDataPoint {
+interface DisplayCandlestick extends Candlestick {
   display_date: string;
 }
 
@@ -21,7 +21,7 @@ const Chart: SFC = ({className}) => {
   const activeAssetPair = useActiveAssetPair();
   const dispatch = useDispatch<AppDispatch>();
   const chartDataState = useSelector(getChartData);
-  const {data: chartData} = chartDataState;
+  const {candlesticks} = chartDataState;
 
   const [chartType, setChartType] = useState<'candlestick' | 'line'>('candlestick');
   const [isLoading, setIsLoading] = useState(false);
@@ -66,21 +66,21 @@ const Chart: SFC = ({className}) => {
   }, [dispatch, activeAssetPair?.id]);
 
   const displayData = useMemo(() => {
-    return chartData.map((point) => ({
-      ...point,
-      display_date: chartDisplayDate(point.end),
+    return candlesticks.map((candlestick) => ({
+      ...candlestick,
+      display_date: chartDisplayDate(candlestick.end),
     }));
-  }, [chartData]);
+  }, [candlesticks]);
 
   const lastTradePrice = useMemo(() => {
-    const lastPoint = chartData[chartData.length - 1];
-    return lastPoint?.close || 0;
-  }, [chartData]);
+    const lastCandlestick = candlesticks[candlesticks.length - 1];
+    return lastCandlestick?.close || 0;
+  }, [candlesticks]);
 
   const firstTradePrice = useMemo(() => {
-    const firstPoint = chartData[0];
-    return firstPoint?.close || 0;
-  }, [chartData]);
+    const firstCandlestick = candlesticks[0];
+    return firstCandlestick?.close || 0;
+  }, [candlesticks]);
 
   const priceChange = useMemo(() => {
     if (!firstTradePrice || !lastTradePrice) return 0;
@@ -88,15 +88,15 @@ const Chart: SFC = ({className}) => {
   }, [firstTradePrice, lastTradePrice]);
 
   const priceStats = useMemo(() => {
-    if (!chartData.length) return {avg: 0, max: 0, min: 0};
+    if (!candlesticks.length) return {avg: 0, max: 0, min: 0};
 
-    const prices = chartData.map((p) => p.close);
+    const prices = candlesticks.map((c) => c.close);
     const min = Math.min(...prices);
     const max = Math.max(...prices);
     const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
 
     return {avg, max, min};
-  }, [chartData]);
+  }, [candlesticks]);
 
   const isPositive = priceChange >= 0;
 
@@ -267,7 +267,7 @@ const Chart: SFC = ({className}) => {
       } else {
         // Line chart
         const line = d3
-          .line<DisplayDataPoint>()
+          .line<DisplayCandlestick>()
           .x((d) => xScale(new Date(d.end)))
           .y((d) => yScale(d.close))
           .curve(d3.curveMonotoneX);
@@ -312,7 +312,7 @@ const Chart: SFC = ({className}) => {
         .attr('pointer-events', 'all')
         .on('mousemove', (event) => {
           const [mouseX] = d3.pointer(event, g.node());
-          const bisectDate = d3.bisector<DisplayDataPoint, Date>((d) => new Date(d.end)).left;
+          const bisectDate = d3.bisector<DisplayCandlestick, Date>((d) => new Date(d.end)).left;
           const x0 = xScale.invert(mouseX);
           const i = bisectDate(displayData, x0, 1);
           const d0 = displayData[i - 1];
@@ -406,7 +406,7 @@ const Chart: SFC = ({className}) => {
     };
   }, [displayData, chartType, isPositive, timeframe]);
 
-  if (isLoading && chartData.length === 0) {
+  if (isLoading && candlesticks.length === 0) {
     return (
       <S.Container className={className}>
         <S.ChartBackground>
