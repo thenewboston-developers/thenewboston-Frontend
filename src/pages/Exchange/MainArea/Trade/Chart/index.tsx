@@ -89,17 +89,19 @@ const Chart: SFC = ({className}) => {
   const priceStats = useMemo(() => {
     if (!candlesticks.length) return {avg: 0, max: 0, min: 0};
 
-    const prices = candlesticks.map((c) => c.close);
-    const min = Math.min(...prices);
-    const max = Math.max(...prices);
-    const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
+    const highs = candlesticks.map((c) => c.high);
+    const lows = candlesticks.map((c) => c.low);
+    const allPrices = candlesticks.flatMap((c) => [c.open, c.high, c.low, c.close]);
+
+    const min = Math.min(...lows);
+    const max = Math.max(...highs);
+    const avg = allPrices.reduce((a, b) => a + b, 0) / allPrices.length;
 
     return {avg, max, min};
   }, [candlesticks]);
 
   const isPositive = priceChange >= 0;
 
-  // D3 Chart Rendering
   useEffect(() => {
     if (!svgRef.current || !containerRef.current || displayData.length === 0) return;
 
