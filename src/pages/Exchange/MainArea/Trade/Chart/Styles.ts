@@ -55,34 +55,6 @@ export const ChartHeader = styled.div`
   margin-bottom: 20px;
 `;
 
-export const ChartTypeButton = styled.button<{$active: boolean}>`
-  align-items: center;
-  background: ${({$active}) => ($active ? colors.palette.blue['100'] : 'transparent')};
-  border: none;
-  border-radius: 8px;
-  color: ${({$active}) => ($active ? colors.palette.blue['500'] : colors.palette.gray['500'])};
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  padding: 8px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${({$active}) => ($active ? colors.palette.blue['100'] : colors.palette.gray['100'])};
-    color: ${({$active}) => ($active ? colors.palette.blue['500'] : colors.palette.gray['700'])};
-  }
-
-  svg {
-    height: 20px;
-    width: 20px;
-  }
-`;
-
-export const ChartTypeButtons = styled.div`
-  display: flex;
-  gap: 8px;
-`;
-
 export const ChartWrapper = styled.div`
   background: white;
   border-radius: 16px;
@@ -96,15 +68,6 @@ export const ChartWrapper = styled.div`
     max-width: 100%;
     overflow: visible;
   }
-
-  .recharts-cartesian-grid-horizontal line {
-    stroke-dasharray: 0;
-  }
-
-  .recharts-cartesian-axis-tick text {
-    fill: ${colors.palette.gray['600']};
-    font-size: 12px;
-  }
 `;
 
 export const Container = styled.div`
@@ -113,7 +76,7 @@ export const Container = styled.div`
 
 export const CurrentPrice = styled.div`
   align-items: center;
-  color: ${colors.palette.darkGray['500']};
+  color: ${colors.palette.darkGray[500]};
   display: flex;
   font-weight: 700;
   gap: 12px;
@@ -129,7 +92,7 @@ export const PriceChange = styled.div<{$isPositive: boolean}>`
   align-items: center;
   background: ${({$isPositive}) => ($isPositive ? 'rgba(22, 170, 22, 0.1)' : 'rgba(220, 13, 22, 0.1)')};
   border-radius: 8px;
-  color: ${({$isPositive}) => ($isPositive ? colors.palette.green['500'] : colors.palette.red['500'])};
+  color: ${({$isPositive}) => ($isPositive ? colors.palette.green[500] : colors.palette.red[500])};
   display: inline-flex;
   font-size: 14px;
   font-weight: 600;
@@ -169,21 +132,21 @@ export const StatItem = styled.div`
 `;
 
 export const StatLabel = styled.span`
-  color: ${colors.palette.gray['600']};
+  color: ${colors.palette.gray[600]};
   font-size: 12px;
   font-weight: 500;
   text-transform: capitalize;
 `;
 
 export const StatValue = styled.span`
-  color: ${colors.palette.darkGray['500']};
+  color: ${colors.palette.darkGray[500]};
   font-size: 13px;
   font-weight: 600;
 `;
 
 export const StatsBar = styled.div`
   align-self: flex-start;
-  background: ${colors.palette.gray['100']};
+  background: ${colors.palette.gray[100]};
   border-radius: 8px;
   display: inline-flex;
   gap: 16px;
@@ -195,7 +158,7 @@ export const TimeframeButton = styled.button<{$active: boolean}>`
   border: none;
   border-radius: 8px;
   box-shadow: ${({$active}) => ($active ? '0 2px 8px rgba(0, 0, 0, 0.08)' : 'none')};
-  color: ${({$active}) => ($active ? colors.palette.darkGray['500'] : colors.palette.gray['600'])};
+  color: ${({$active}) => ($active ? colors.palette.darkGray[500] : colors.palette.gray[600])};
   cursor: pointer;
   font-size: 14px;
   font-weight: ${({$active}) => ($active ? '600' : '500')};
@@ -204,12 +167,12 @@ export const TimeframeButton = styled.button<{$active: boolean}>`
 
   &:hover {
     background: ${({$active}) => ($active ? colors.white : 'rgba(255, 255, 255, 0.5)')};
-    color: ${colors.palette.darkGray['500']};
+    color: ${colors.palette.darkGray[500]};
   }
 `;
 
 export const TimeframeButtons = styled.div`
-  background: ${colors.palette.gray['100']};
+  background: ${colors.palette.gray[100]};
   border-radius: 12px;
   display: flex;
   gap: 4px;
@@ -218,7 +181,7 @@ export const TimeframeButtons = styled.div`
 
 export const LoadingContainer = styled.div`
   align-items: center;
-  color: ${colors.palette.gray['600']};
+  color: ${colors.palette.gray[600]};
   display: flex;
   font-size: 16px;
   height: 400px;

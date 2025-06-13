@@ -21,35 +21,10 @@ const chartData = createSlice({
   initialState,
   name: CHART_DATA,
   reducers: {
-    clearChartData: () => initialState,
-    setChartData: (
-      state,
-      {
-        payload,
-      }: PayloadAction<{
-        candlesticks: Candlestick[];
-        intervalMinutes: number;
-        primaryCurrencyId: number;
-        secondaryCurrencyId: number;
-      }>,
-    ) => {
-      state.candlesticks = payload.candlesticks;
-      state.intervalMinutes = payload.intervalMinutes;
-      state.primaryCurrencyId = payload.primaryCurrencyId;
-      state.secondaryCurrencyId = payload.secondaryCurrencyId;
-    },
-    updateCurrentInterval: (state, {payload}: PayloadAction<Candlestick>) => {
-      // Update the last interval if it matches the time range
-      if (state.candlesticks.length > 0) {
-        const lastCandlestick = state.candlesticks[state.candlesticks.length - 1];
-        if (lastCandlestick.start === payload.start && lastCandlestick.end === payload.end) {
-          state.candlesticks[state.candlesticks.length - 1] = payload;
-        }
-      }
-    },
     addNewInterval: (state, {payload}: PayloadAction<Candlestick>) => {
       state.candlesticks.push(payload);
     },
+    clearChartData: () => initialState,
     processTrade: (state, {payload}: PayloadAction<Trade>) => {
       if (!state.intervalMinutes || state.candlesticks.length === 0) {
         return;
@@ -119,8 +94,33 @@ const chartData = createSlice({
         state.candlesticks.push(newCandlestick);
       }
     },
+    setChartData: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        candlesticks: Candlestick[];
+        intervalMinutes: number;
+        primaryCurrencyId: number;
+        secondaryCurrencyId: number;
+      }>,
+    ) => {
+      state.candlesticks = payload.candlesticks;
+      state.intervalMinutes = payload.intervalMinutes;
+      state.primaryCurrencyId = payload.primaryCurrencyId;
+      state.secondaryCurrencyId = payload.secondaryCurrencyId;
+    },
+    updateCurrentInterval: (state, {payload}: PayloadAction<Candlestick>) => {
+      // Update the last interval if it matches the time range
+      if (state.candlesticks.length > 0) {
+        const lastCandlestick = state.candlesticks[state.candlesticks.length - 1];
+        if (lastCandlestick.start === payload.start && lastCandlestick.end === payload.end) {
+          state.candlesticks[state.candlesticks.length - 1] = payload;
+        }
+      }
+    },
   },
 });
 
-export const {clearChartData, setChartData, updateCurrentInterval, addNewInterval, processTrade} = chartData.actions;
+export const {addNewInterval, clearChartData, processTrade, setChartData, updateCurrentInterval} = chartData.actions;
 export default chartData.reducer;

@@ -19,16 +19,14 @@ interface DisplayCandlestick extends Candlestick {
 }
 
 const Chart: SFC = ({className}) => {
-  const activeAssetPair = useActiveAssetPair();
-  const dispatch = useDispatch<AppDispatch>();
-  const chartDataState = useSelector(getChartData);
-  const {candlesticks} = chartDataState;
-
   const [isLoading, setIsLoading] = useState(false);
   const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '3M' | '1Y' | 'ALL'>('1D');
-
-  const svgRef = useRef<SVGSVGElement>(null);
+  const activeAssetPair = useActiveAssetPair();
+  const chartDataState = useSelector(getChartData);
   const containerRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const svgRef = useRef<SVGSVGElement>(null);
+  const {candlesticks} = chartDataState;
 
   // Fetch chart data when activeAssetPair or timeframe changes
   useEffect(() => {
@@ -444,7 +442,7 @@ const Chart: SFC = ({className}) => {
           <S.ChartControls>
             <S.TimeframeButtons>
               {(['1D', '1W', '1M', '3M', '1Y', 'ALL'] as const).map((tf) => (
-                <S.TimeframeButton key={tf} $active={timeframe === tf} onClick={() => setTimeframe(tf)}>
+                <S.TimeframeButton $active={timeframe === tf} key={tf} onClick={() => setTimeframe(tf)}>
                   {tf}
                 </S.TimeframeButton>
               ))}
