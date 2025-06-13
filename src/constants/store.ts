@@ -1,5 +1,6 @@
 export const ASSET_PAIRS = 'assetPairs';
 export const AUTHENTICATION = 'authentication';
+export const CHART_DATA = 'chartData';
 export const COMMENTS = 'comments';
 export const CURRENCIES = 'currencies';
 export const EXCHANGE_ORDERS = 'exchangeOrders';

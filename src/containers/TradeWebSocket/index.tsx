@@ -2,8 +2,7 @@ import {FC, useEffect, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
-import {SocketDataType} from 'enums';
-import {setTrade} from 'store/trades';
+import rootRouter from 'routers/rootRouter';
 import {AppDispatch, AssetPair} from 'types';
 
 export interface TradeWebSocketProps {
@@ -36,11 +35,7 @@ const TradeWebSocket: FC<TradeWebSocketProps> = ({activeAssetPair, url}) => {
     };
 
     socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-
-      if (data.type === SocketDataType.CREATE_TRADE) {
-        dispatch(setTrade(data.trade));
-      }
+      rootRouter(dispatch, event);
     };
 
     socket.onclose = () => {
