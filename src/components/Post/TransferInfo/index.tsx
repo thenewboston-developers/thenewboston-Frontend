@@ -24,12 +24,17 @@ const TransferInfo: SFC<TransferInfoProps> = ({
   recipient,
 }) => {
   const currencies = useSelector(getCurrencies);
+  const currency = currencies[priceCurrency];
 
   return (
     <S.Container className={className}>
-      <S.IconWrapper>
-        <S.Icon icon={mdiSwapHorizontal} size={24} />
-      </S.IconWrapper>
+      <S.GraphicWrapper>
+        {currency?.logo ? (
+          <S.CurrencyLogo alt={currency.ticker} src={currency.logo} />
+        ) : (
+          <S.Icon icon={mdiSwapHorizontal} size={32} />
+        )}
+      </S.GraphicWrapper>
       <S.Content>
         <S.Text>
           <S.Link to={`/profile/${owner.id}`}>{owner.username}</S.Link> sent{' '}

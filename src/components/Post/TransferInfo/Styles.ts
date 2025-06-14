@@ -11,7 +11,7 @@ export const Container = styled.div`
   border-radius: 12px;
   display: flex;
   margin-top: 12px;
-  padding: 16px;
+  padding: 12px 14px;
 `;
 
 export const Content = styled.div`
@@ -20,28 +20,33 @@ export const Content = styled.div`
   flex-direction: column;
 `;
 
+export const CurrencyLogo = styled.img`
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+`;
+
 export const Date = styled.div`
   color: ${colors.palette.gray[500]};
   font-size: 13px;
-  margin-top: 4px;
+  margin-top: 2px;
+`;
+
+export const GraphicWrapper = styled.div`
+  align-items: center;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  height: 42px;
+  justify-content: center;
+  margin-right: 12px;
+  width: 42px;
 `;
 
 export const Icon = styled(UIcon)`
   & path {
     fill: ${colors.palette.gray[600]} !important;
   }
-`;
-
-export const IconWrapper = styled.div`
-  align-items: center;
-  background: white;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  height: 48px;
-  justify-content: center;
-  margin-right: 16px;
-  width: 48px;
 `;
 
 export const Link = styled(RouterLink)`
