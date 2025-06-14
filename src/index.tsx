@@ -20,11 +20,8 @@ import 'styles/fonts.css';
 
 const container = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(container, {
-  // Callback called when an error is thrown and not caught by an ErrorBoundary.
   onUncaughtError: Sentry.reactErrorHandler(),
-  // Callback called when React catches an error in an ErrorBoundary.
   onCaughtError: Sentry.reactErrorHandler(),
-  // Callback called when React automatically recovers from errors.
   onRecoverableError: Sentry.reactErrorHandler(),
 });
 
