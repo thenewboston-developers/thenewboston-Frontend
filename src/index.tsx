@@ -1,22 +1,36 @@
+// Sentry initialization should be imported first
+// eslint-disable-next-line simple-import-sort/imports
+import './instrument';
+
 import ReactDOM from 'react-dom/client';
 import {SkeletonTheme} from 'react-loading-skeleton';
 import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
+import * as Sentry from '@sentry/react';
 import {PersistGate} from 'redux-persist/integration/react';
 
-import initSentry from 'config/sentry';
 import App from 'containers/App';
 import {persistor, store} from 'store';
 import {colors} from 'styles';
 import GlobalStyle from 'styles/components/GlobalStyle';
 import ToastifyStyle from 'styles/components/ToastifyStyle';
 
+import './instrument';
+
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'styles/fonts.css';
 
-initSentry();
-
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const container = document.getElementById('root') as HTMLElement;
+const root = ReactDOM.createRoot(container, {
+  // Callback called when an error is thrown and not caught by an ErrorBoundary.
+  onUncaughtError: Sentry.reactErrorHandler((error, errorInfo) => {
+    console.warn('Uncaught error', error, errorInfo.componentStack);
+  }),
+  // Callback called when React catches an error in an ErrorBoundary.
+  onCaughtError: Sentry.reactErrorHandler(),
+  // Callback called when React automatically recovers from errors.
+  onRecoverableError: Sentry.reactErrorHandler(),
+});
 
 root.render(
   <Provider store={store}>
@@ -25,7 +39,9 @@ root.render(
       <ToastifyStyle />
       <SkeletonTheme highlightColor={colors.palette.gray[300]} baseColor={colors.whiteSmoke}>
         <BrowserRouter>
-          <App />
+          <Sentry.ErrorBoundary fallback={<p>An error has occurred. Please refresh the page.</p>}>
+            <App />
+          </Sentry.ErrorBoundary>
         </BrowserRouter>
       </SkeletonTheme>
     </PersistGate>
