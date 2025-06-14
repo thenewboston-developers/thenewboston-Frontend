@@ -40,11 +40,6 @@ const EmojiPicker: SFC<EmojiPickerProps> = ({field, setFieldValue, value, displa
     }
   }, [isOpenEmojiPicker]);
 
-  const handleEmojiClick = (emoji: string) => {
-    const updatedValue = value + emoji;
-    setFieldValue(field, updatedValue);
-  };
-
   const getFilteredEmojis = () => {
     if (!searchQuery) {
       return emojiData[selectedGroup].emojis;
@@ -60,6 +55,11 @@ const EmojiPicker: SFC<EmojiPickerProps> = ({field, setFieldValue, value, displa
     );
   };
 
+  const handleEmojiClick = (emoji: string) => {
+    const updatedValue = value + emoji;
+    setFieldValue(field, updatedValue);
+  };
+
   const filteredEmojis = getFilteredEmojis();
 
   return (
@@ -67,8 +67,8 @@ const EmojiPicker: SFC<EmojiPickerProps> = ({field, setFieldValue, value, displa
       <S.EmojiButton
         $displayMode={displayMode}
         $isOpenEmojiPicker={isOpenEmojiPicker}
-        ref={emojiButtonRef}
         onClick={() => setIsOpenEmojiPicker(!isOpenEmojiPicker)}
+        ref={emojiButtonRef}
         type="button"
       >
         <Icon path={mdiEmoticonOutline} size="24px" />

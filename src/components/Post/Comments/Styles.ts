@@ -37,7 +37,7 @@ export const Content = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin: 20px 0 10px 0;
+  margin: 20px 0 10px;
 `;
 
 export const ContentInput = styled(UInlineInput)<{$isMobileDevice: boolean | false}>`
