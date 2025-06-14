@@ -15,8 +15,6 @@ import {colors} from 'styles';
 import GlobalStyle from 'styles/components/GlobalStyle';
 import ToastifyStyle from 'styles/components/ToastifyStyle';
 
-import './instrument';
-
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'styles/fonts.css';
 
