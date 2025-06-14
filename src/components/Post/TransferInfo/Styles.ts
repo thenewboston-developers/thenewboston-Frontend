@@ -27,8 +27,8 @@ export const CurrencyLogo = styled.img`
 `;
 
 export const Date = styled.div`
-  color: ${colors.palette.gray[500]};
-  font-size: 13px;
+  color: ${colors.gray};
+  font-size: 12px;
   margin-top: 2px;
 `;
 
@@ -51,7 +51,7 @@ export const Icon = styled(UIcon)`
 
 export const Link = styled(RouterLink)`
   color: ${colors.palette.gray[900]};
-  font-weight: ${fonts.weight.bold};
+  font-weight: ${fonts.weight.semiBold};
   text-decoration: none;
 
   &:hover {
@@ -61,11 +61,10 @@ export const Link = styled(RouterLink)`
 
 export const Text = styled.div`
   color: ${colors.palette.gray[700]};
-  font-size: 15px;
-  line-height: 1.4;
+  font-size: 14px;
 
   strong {
     color: ${colors.palette.gray[900]};
-    font-weight: ${fonts.weight.bold};
+    font-weight: ${fonts.weight.semiBold};
   }
 `;

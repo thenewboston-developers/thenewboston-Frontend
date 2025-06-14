@@ -15,6 +15,7 @@ export const Container = styled.div`
 export const Description = styled.div`
   color: ${colors.gray};
   font-size: 12px;
+  margin-top: 2px;
 `;
 
 export const Right = styled.div`
