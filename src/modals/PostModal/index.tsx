@@ -11,7 +11,8 @@ import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {createPost, updatePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {AppDispatch, Post, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toasts';
+import {handleFormikAPIError} from 'utils/forms';
+import {displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
@@ -51,7 +52,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
     }
   };
 
-  const handleSubmit = async (values: FormValues): Promise<void> => {
+  const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
       const requestData = new FormData();
       requestData.append('content', values.content);
@@ -81,7 +82,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       close();
     } catch (error) {
       const verb = post ? 'updating' : 'creating';
-      displayErrorToast(`Error ${verb} post`);
+      handleFormikAPIError(error, helpers, `Error ${verb} post`);
     }
   };
 

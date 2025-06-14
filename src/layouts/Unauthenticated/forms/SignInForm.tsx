@@ -8,7 +8,7 @@ import {FormField} from 'components/FormElements';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {login} from 'dispatchers/authentication';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
+import {handleFormikAPIError} from 'utils/forms';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
@@ -24,12 +24,12 @@ const SignInForm: SFC = () => {
 
   type FormValues = typeof initialValues;
 
-  const handleSubmit = async (values: FormValues): Promise<void> => {
+  const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
       await dispatch(login(values));
       navigate('/feed');
     } catch (error) {
-      displayErrorToast('Error logging in');
+      handleFormikAPIError(error, helpers, 'Error logging in');
     }
   };
 

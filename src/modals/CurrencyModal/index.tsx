@@ -10,6 +10,7 @@ import Modal, {ModalContent, ModalFooter, ModalFooterButton} from 'components/Mo
 import {createCurrency, updateCurrency} from 'dispatchers/currencies';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Currency, SFC} from 'types';
+import {handleFormikAPIError} from 'utils/forms';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
@@ -71,7 +72,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
     }
   };
 
-  const handleSubmit = async (values: FormValues, {setFieldError}: any): Promise<void> => {
+  const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
       const requestData = new FormData();
 
@@ -102,28 +103,9 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
 
       onSuccess?.();
       close();
-    } catch (error: any) {
-      // Check if error response contains field-specific errors
-      if (error?.response?.data && typeof error.response.data === 'object') {
-        const fieldErrors = error.response.data;
-        let hasFieldError = false;
-
-        // Set field errors for each field that has an error
-        Object.keys(fieldErrors).forEach((fieldName) => {
-          if (Array.isArray(fieldErrors[fieldName]) && fieldErrors[fieldName].length > 0) {
-            setFieldError(fieldName, fieldErrors[fieldName][0]);
-            hasFieldError = true;
-          }
-        });
-
-        // If no field errors were set, show generic error toast
-        if (!hasFieldError) {
-          displayErrorToast(isEditMode ? 'Error updating currency' : 'Error creating currency');
-        }
-      } else {
-        // Show generic error toast for other types of errors
-        displayErrorToast(isEditMode ? 'Error updating currency' : 'Error creating currency');
-      }
+    } catch (error) {
+      const errorMessage = isEditMode ? 'Error updating currency' : 'Error creating currency';
+      handleFormikAPIError(error, helpers, errorMessage);
     }
   };
 

@@ -8,7 +8,7 @@ import {FormField} from 'components/FormElements';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {createUser} from 'dispatchers/users';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
+import {handleFormikAPIError} from 'utils/forms';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
@@ -26,7 +26,7 @@ const CreateAccountForm: SFC = () => {
 
   type FormValues = typeof initialValues;
 
-  const handleSubmit = async (values: FormValues): Promise<void> => {
+  const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
       const requestData = {
         invitation_code: values.invitationCode,
@@ -36,7 +36,7 @@ const CreateAccountForm: SFC = () => {
       const user = await dispatch(createUser(requestData));
       navigate(`/profile/${user.id}`);
     } catch (error: any) {
-      displayErrorToast(error);
+      handleFormikAPIError(error, helpers, 'Error creating account');
     }
   };
 

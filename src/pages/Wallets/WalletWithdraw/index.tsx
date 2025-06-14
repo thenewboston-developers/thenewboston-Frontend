@@ -14,7 +14,7 @@ import {WireType} from 'enums';
 import {useActiveWallet} from 'hooks';
 import {getWires} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
+import {handleFormikAPIError} from 'utils/forms';
 import yup, {accountNumberSchema} from 'utils/yup';
 
 import * as S from './Styles';
@@ -35,16 +35,16 @@ const WalletWithdraw: SFC = ({className}) => {
     return parseInt(amount, 10) + CURRENCY_TRANSACTION_FEE;
   };
 
-  const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
+  const handleSubmit = async (values: FormValues, helpers: FormikHelpers<FormValues>): Promise<void> => {
     try {
       const requestData = {
         account_number: values.accountNumber,
         amount: getTotal(values.amount),
       };
       await dispatch(createWalletWithdraw(activeWallet!.id, requestData));
-      resetForm();
+      helpers.resetForm();
     } catch (error) {
-      displayErrorToast('Error withdrawing funds');
+      handleFormikAPIError(error, helpers, 'Error withdrawing funds');
     }
   };
 

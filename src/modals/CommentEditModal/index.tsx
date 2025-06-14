@@ -9,7 +9,8 @@ import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {updateComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
 import {AppDispatch, Comment, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toasts';
+import {handleFormikAPIError} from 'utils/forms';
+import {displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
@@ -31,13 +32,13 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
 
   type FormValues = typeof initialValues;
 
-  const handleSubmit = async (values: FormValues): Promise<void> => {
+  const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
       await dispatch(updateComment(comment.id, values));
       displayToast('Comment updated!', ToastType.SUCCESS);
       close();
     } catch (error) {
-      displayErrorToast('Error updating comment');
+      handleFormikAPIError(error, helpers, 'Error updating comment');
     }
   };
 

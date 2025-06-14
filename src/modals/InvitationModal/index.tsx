@@ -9,7 +9,8 @@ import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {createInvitation, updateInvitation} from 'dispatchers/invitations';
 import {ToastType} from 'enums';
 import {AppDispatch, Invitation, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toasts';
+import {handleFormikAPIError} from 'utils/forms';
+import {displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
@@ -31,7 +32,7 @@ const InvitationModal: SFC<InvitationModalProps> = ({className, close, invitatio
 
   type FormValues = typeof initialValues;
 
-  const handleSubmit = async (values: FormValues): Promise<void> => {
+  const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
       if (invitation) {
         await dispatch(updateInvitation(invitation.id, values));
@@ -44,7 +45,7 @@ const InvitationModal: SFC<InvitationModalProps> = ({className, close, invitatio
       close();
     } catch (error) {
       const verb = invitation ? 'updating' : 'creating';
-      displayErrorToast(`Error ${verb} invitation`);
+      handleFormikAPIError(error, helpers, `Error ${verb} invitation`);
     }
   };
 
