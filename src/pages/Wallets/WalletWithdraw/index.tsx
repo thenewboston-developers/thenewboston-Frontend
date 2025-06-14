@@ -7,6 +7,7 @@ import wallet from 'assets/wallet.svg';
 import Button, {ButtonType} from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import ExpandableWire from 'components/ExpandableWire';
+import {FormField} from 'components/FormElements';
 import {CURRENCY_TRANSACTION_FEE} from 'constants/protocol';
 import {createWalletWithdraw} from 'dispatchers/wallets';
 import {WireType} from 'enums';
@@ -90,41 +91,49 @@ const WalletWithdraw: SFC = ({className}) => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
           {({dirty, errors, isSubmitting, isValid, touched, values}) => (
             <S.Form>
-              <S.AmountLogoInput
-                errors={errors}
-                label="Amount"
-                name="amount"
-                logo={activeWallet.currency.logo}
-                touched={touched}
-              />
-              <S.Input errors={errors} label="Account Number" name="accountNumber" touched={touched} />
-              <S.DetailRowContainer>
-                <S.DetailRow>
-                  <S.Label>FEE</S.Label>
-                  <S.Value>{CURRENCY_TRANSACTION_FEE}</S.Value>
-                </S.DetailRow>
-                <S.Line />
-                <S.DetailRow>
-                  <S.Label>TOTAL</S.Label>
-                  <S.Value>
-                    {values.amount ? (
-                      <span>
-                        {getTotal(values.amount).toLocaleString()} {activeWallet.currency.ticker}
-                      </span>
-                    ) : (
-                      `0 ${activeWallet.currency.ticker}`
-                    )}
-                  </S.Value>
-                </S.DetailRow>
-              </S.DetailRowContainer>
-              <Button
-                dirty={dirty}
-                disabled={isSubmitting}
-                isSubmitting={isSubmitting}
-                isValid={isValid}
-                text={`Withdraw ${activeWallet.currency.ticker}`}
-                type={ButtonType.submit}
-              />
+              <FormField>
+                <S.AmountLogoInput
+                  errors={errors}
+                  label="Amount"
+                  name="amount"
+                  logo={activeWallet.currency.logo}
+                  touched={touched}
+                />
+              </FormField>
+              <FormField>
+                <S.Input errors={errors} label="Account Number" name="accountNumber" touched={touched} />
+              </FormField>
+              <FormField>
+                <S.DetailRowContainer>
+                  <S.DetailRow>
+                    <S.Label>FEE</S.Label>
+                    <S.Value>{CURRENCY_TRANSACTION_FEE}</S.Value>
+                  </S.DetailRow>
+                  <S.Line />
+                  <S.DetailRow>
+                    <S.Label>TOTAL</S.Label>
+                    <S.Value>
+                      {values.amount ? (
+                        <span>
+                          {getTotal(values.amount).toLocaleString()} {activeWallet.currency.ticker}
+                        </span>
+                      ) : (
+                        `0 ${activeWallet.currency.ticker}`
+                      )}
+                    </S.Value>
+                  </S.DetailRow>
+                </S.DetailRowContainer>
+              </FormField>
+              <FormField>
+                <Button
+                  dirty={dirty}
+                  disabled={isSubmitting}
+                  isSubmitting={isSubmitting}
+                  isValid={isValid}
+                  text={`Withdraw ${activeWallet.currency.ticker}`}
+                  type={ButtonType.submit}
+                />
+              </FormField>
             </S.Form>
           )}
         </Formik>
