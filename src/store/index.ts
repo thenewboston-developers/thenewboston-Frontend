@@ -1,4 +1,5 @@
 import {AnyAction, combineReducers, configureStore} from '@reduxjs/toolkit';
+import * as Sentry from '@sentry/react';
 import {
   createMigrate,
   FLUSH,
@@ -72,6 +73,14 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, appReducer);
 
+const sentryReduxEnhancer = Sentry.createReduxEnhancer({
+  // Optional: Configure what state is sent to Sentry
+  stateTransformer: (state) => {
+    // You can filter out sensitive data here
+    return state;
+  },
+});
+
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -80,6 +89,9 @@ export const store = configureStore({
       },
     }),
   reducer: persistedReducer,
+  enhancers: (getDefaultEnhancers) => {
+    return getDefaultEnhancers().concat(sentryReduxEnhancer);
+  },
 });
 
 export const persistor = persistStore(store);
