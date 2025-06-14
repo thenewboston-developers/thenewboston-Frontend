@@ -8,9 +8,12 @@ import {breakpoints, colors} from 'styles';
 export const IMG_SIZE = '24px';
 
 export const Button = styled(UButton)`
+  align-items: center;
   background-color: ${colors.background};
   color: ${colors.black};
+  display: flex;
   height: 40px;
+  justify-content: center;
   min-width: 40px;
   padding: 10px;
   width: 40px;
