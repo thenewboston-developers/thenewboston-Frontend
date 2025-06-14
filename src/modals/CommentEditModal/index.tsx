@@ -54,7 +54,7 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
             <ModalContent>
-              <S.Div>
+              <S.TextareaWrapper>
                 <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
                 <EmojiPicker
                   displayMode="textarea"
@@ -62,7 +62,7 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
                   setFieldValue={setFieldValue}
                   value={values.content}
                 />
-              </S.Div>
+              </S.TextareaWrapper>
             </ModalContent>
 
             <ModalFooter>

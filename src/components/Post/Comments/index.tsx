@@ -189,12 +189,12 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
         {renderComments()}
         {commentList.length > commentDetails.length && (
           <S.Content>
-            <S.Div />
+            <S.Divider />
             <OutlineButton
               onClick={handleComment}
               text={`Show ${Math.min(4, commentList.length - commentDetails.length)} more comments`}
             />
-            <S.Div />
+            <S.Divider />
           </S.Content>
         )}
       </S.Container>

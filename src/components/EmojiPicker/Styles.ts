@@ -79,6 +79,7 @@ export const EmojiGrid = styled.div`
   flex: 1;
   gap: 2px;
   grid-template-columns: repeat(8, 1fr);
+  overflow-x: hidden;
   overflow-y: auto;
   padding: 8px;
 `;
@@ -94,6 +95,8 @@ export const EmojiItem = styled.button`
   height: 32px;
   justify-content: center;
   line-height: 1;
+  max-width: 32px;
+  min-width: 32px;
   outline: none;
   padding: 0;
   transition: background-color 0.1s;

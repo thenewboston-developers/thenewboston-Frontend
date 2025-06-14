@@ -18,9 +18,8 @@ const EmojiPicker: SFC<EmojiPickerProps> = ({field, setFieldValue, value, displa
   const [isOpenEmojiPicker, setIsOpenEmojiPicker] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGroup, setSelectedGroup] = useState(0);
-
-  const emojiPickerRef = useRef<HTMLDivElement>(null);
   const emojiButtonRef = useRef<HTMLButtonElement>(null);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

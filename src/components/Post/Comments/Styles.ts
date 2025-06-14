@@ -58,7 +58,7 @@ export const ContentInput = styled(UInlineInput)<{$isMobileDevice: boolean | fal
   }
 `;
 
-export const Div = styled.div`
+export const Divider = styled.div`
   border: 0;
   border-top: 1px solid ${colors.palette.gray[200]};
   flex: 1;
