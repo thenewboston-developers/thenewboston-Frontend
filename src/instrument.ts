@@ -8,8 +8,8 @@ Sentry.init({
   // Environment - this helps filter issues in Sentry
   environment: process.env.NODE_ENV,
 
-  // Enable error reporting in development
-  enabled: true,
+  // Only enable error reporting in production
+  enabled: process.env.NODE_ENV === 'production',
 
   // Adds request headers and IP for users, for more info visit:
   // https://docs.sentry.io/platforms/javascript/guides/react/configuration/options/#sendDefaultPii
@@ -39,9 +39,8 @@ Sentry.init({
   sampleRate: 1.0,
 
   // Filter out local development errors if needed
-  beforeSend(event, hint) {
+  beforeSend(event) {
     // You can filter or modify events here
-    console.log('Sentry Event:', event);
     return event;
   },
 });

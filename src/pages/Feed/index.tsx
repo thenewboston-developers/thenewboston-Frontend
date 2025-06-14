@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo} from 'react';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -19,7 +19,6 @@ const Feed: SFC = ({className}) => {
   const posts = useSelector(getPosts);
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
-  const [showSentryButton, setShowSentryButton] = useState(true);
 
   const postList = useMemo(() => Object.values(posts), [posts]);
 
@@ -92,40 +91,7 @@ const Feed: SFC = ({className}) => {
     );
   };
 
-  return (
-    <S.Container className={className}>
-      {showSentryButton && (
-        <div
-          style={{
-            padding: '10px',
-            backgroundColor: '#fee',
-            border: '1px solid #fcc',
-            margin: '10px',
-            borderRadius: '4px',
-          }}
-        >
-          <p style={{marginBottom: '10px'}}>Sentry Test (Remove this after testing):</p>
-          <button
-            type="button"
-            onClick={() => {
-              throw new Error('Sentry Test Error');
-            }}
-            style={{padding: '5px 10px', marginRight: '10px', cursor: 'pointer'}}
-          >
-            Break the world
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowSentryButton(false)}
-            style={{padding: '5px 10px', cursor: 'pointer'}}
-          >
-            Hide this
-          </button>
-        </div>
-      )}
-      {renderContent()}
-    </S.Container>
-  );
+  return <S.Container className={className}>{renderContent()}</S.Container>;
 };
 
 export default Feed;
