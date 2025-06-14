@@ -30,17 +30,6 @@ export const DetailRowContainer = styled.div`
   margin-bottom: 24px;
 `;
 
-export const EmptyState = styled.div`
-  color: ${colors.secondary};
-  padding: 60px 20px;
-  text-align: center;
-
-  p {
-    font-size: 14px;
-    margin: 0;
-  }
-`;
-
 export const Form = styled(UForm)`
   margin: 16px 0;
   min-width: 270px;

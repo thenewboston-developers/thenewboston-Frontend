@@ -5,6 +5,7 @@ import orderBy from 'lodash/orderBy';
 
 import wallet from 'assets/wallet.svg';
 import Button, {ButtonType} from 'components/Button';
+import EmptyText from 'components/EmptyText';
 import ExpandableWire from 'components/ExpandableWire';
 import {CURRENCY_TRANSACTION_FEE} from 'constants/protocol';
 import {createWalletWithdraw} from 'dispatchers/wallets';
@@ -54,11 +55,7 @@ const WalletWithdraw: SFC = ({className}) => {
     );
 
     if (withdrawals.length === 0) {
-      return (
-        <S.EmptyState>
-          <p>No withdrawals yet</p>
-        </S.EmptyState>
-      );
+      return <EmptyText>No withdrawals yet</EmptyText>;
     }
 
     return withdrawals.map((wire) => <ExpandableWire key={wire.id} wire={wire} />);

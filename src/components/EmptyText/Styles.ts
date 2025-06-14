@@ -4,8 +4,7 @@ import {colors} from 'styles';
 
 export const Container = styled.div`
   color: ${colors.secondary};
-  font-size: 12px;
-  font-style: italic;
+  font-size: 13px;
   padding: 16px;
   text-align: center;
 `;

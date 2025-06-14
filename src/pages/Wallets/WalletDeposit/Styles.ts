@@ -38,17 +38,6 @@ export const DepositSection = styled.div`
   margin-top: 24px;
 `;
 
-export const EmptyState = styled.div`
-  color: ${colors.secondary};
-  padding: 60px 20px;
-  text-align: center;
-
-  p {
-    font-size: 14px;
-    margin: 0;
-  }
-`;
-
 export const IconWrapper = styled.div`
   align-items: center;
   display: flex;
