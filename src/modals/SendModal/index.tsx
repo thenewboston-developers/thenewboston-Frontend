@@ -94,6 +94,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
+      content: yup.string().required(),
       price_amount: yup
         .number()
         .required('Amount is required')
@@ -148,13 +149,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
               <Input errors={errors} label="Amount" name="price_amount" touched={touched} type="number" />
 
               <S.TextareaContainer>
-                <S.Textarea
-                  errors={errors}
-                  label="Message (optional)"
-                  name="content"
-                  placeholder="Add a message..."
-                  touched={touched}
-                />
+                <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
                 <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
               </S.TextareaContainer>
 
