@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiCommentTextOutline, mdiDotsVertical, mdiHeart, mdiHeartOutline, mdiSwapHorizontal} from '@mdi/js';
+import {mdiCommentTextOutline, mdiDotsVertical, mdiHeart, mdiHeartOutline} from '@mdi/js';
 
 import Linkify from 'components/Linkify';
 import OutlineButton from 'components/OutlineButton';
@@ -11,26 +11,26 @@ import {useToggle} from 'hooks';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
 import PostLikesModal from 'modals/PostLikesModal';
 import PostModal from 'modals/PostModal';
-import {getCurrencies, getSelf} from 'selectors/state';
+import {getSelf} from 'selectors/state';
 import {AppDispatch, Post as TPost, SFC} from 'types';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import Comments from './Comments';
 import * as S from './Styles';
+import TransferInfo from './TransferInfo';
 
 export interface PostProps {
   post: TPost;
 }
 
 const Post: SFC<PostProps> = ({className, post}) => {
+  const [animateLike, setAnimateLike] = useState(false);
   const [imageModalIsOpen, toggleImageModal] = useToggle(false);
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [likesModalIsOpen, toggleLikesModal] = useToggle(false);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [showFullContent, setShowFullContent] = useState(false);
-  const [animateLike, setAnimateLike] = useState(false);
-  const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
@@ -93,28 +93,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
     setShowFullContent(!showFullContent);
   };
 
-  const renderTransferInfo = () => {
-    if (!isTransferPost) return null;
-
-    return (
-      <S.TransferInfo>
-        <S.TransferIconWrapper>
-          <S.TransferIcon icon={mdiSwapHorizontal} size={24} />
-        </S.TransferIconWrapper>
-        <S.TransferContent>
-          <S.TransferText>
-            <S.TransferLink to={`/profile/${owner.id}`}>{owner.username}</S.TransferLink> sent{' '}
-            <strong>
-              {price_amount?.toLocaleString()} {currencies[price_currency!]?.ticker}
-            </strong>{' '}
-            to <S.TransferLink to={`/profile/${recipient!.id}`}>{recipient!.username}</S.TransferLink>
-          </S.TransferText>
-          <S.TransferDate>{shortDate(created_date, true)}</S.TransferDate>
-        </S.TransferContent>
-      </S.TransferInfo>
-    );
-  };
-
   return (
     <>
       <S.Container className={className}>
@@ -127,7 +105,15 @@ const Post: SFC<PostProps> = ({className, post}) => {
           />
           {renderDropdownMenu()}
         </S.Top>
-        {renderTransferInfo()}
+        {isTransferPost && (
+          <TransferInfo
+            createdDate={created_date}
+            owner={owner}
+            priceAmount={price_amount!}
+            priceCurrency={price_currency!}
+            recipient={recipient!}
+          />
+        )}
         <S.Content>
           <Linkify>
             {showFullContent || content.length <= 400 ? (
