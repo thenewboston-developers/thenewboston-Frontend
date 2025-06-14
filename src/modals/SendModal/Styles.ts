@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {Textarea as UTextarea} from 'components/FormElements';
+import {Input as UInput, Select as USelect, Textarea as UTextarea} from 'components/FormElements';
 import UModal from 'components/Modal';
 import {colors} from 'styles';
 
@@ -9,6 +9,10 @@ export const Arrow = styled.div`
   font-size: 24px;
   margin: 8px 0;
   text-align: center;
+`;
+
+export const Input = styled(UInput)`
+  margin-bottom: 24px;
 `;
 
 export const Label = styled.span`
@@ -29,6 +33,10 @@ export const NoWalletsMessage = styled.div`
   text-align: center;
 `;
 
+export const Select = styled(USelect)`
+  margin-bottom: 24px;
+`;
+
 export const Textarea = styled(UTextarea)`
   max-height: 350px;
   overflow-y: auto;
@@ -36,6 +44,7 @@ export const Textarea = styled(UTextarea)`
 `;
 
 export const TextareaContainer = styled.div`
+  margin-bottom: 24px;
   position: relative;
 `;
 

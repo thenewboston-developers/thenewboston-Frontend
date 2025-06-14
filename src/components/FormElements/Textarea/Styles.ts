@@ -22,6 +22,4 @@ export const Label = styled.div`
   ${formLabel};
 `;
 
-export const SecondaryContainer = styled.div`
-  margin-bottom: 24px;
-`;
+export const SecondaryContainer = styled.div``;

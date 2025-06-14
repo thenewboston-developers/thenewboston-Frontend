@@ -5,7 +5,7 @@ import {Form, Formik} from 'formik';
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiBox from 'components/EmojiPicker';
-import {FileInput, Input, Select} from 'components/FormElements';
+import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import UserLabel from 'components/UserLabel';
@@ -138,7 +138,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
                 </S.UserRow>
               </S.TransferInfo>
 
-              <Select
+              <S.Select
                 errors={errors}
                 label="Select Wallet"
                 name="wallet_id"
@@ -146,7 +146,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
                 touched={touched}
               />
 
-              <Input errors={errors} label="Amount" name="price_amount" touched={touched} type="number" />
+              <S.Input errors={errors} label="Amount" name="price_amount" touched={touched} type="number" />
 
               <S.TextareaContainer>
                 <S.Textarea errors={errors} label="Content" name="content" touched={touched} />

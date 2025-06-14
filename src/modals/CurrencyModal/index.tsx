@@ -130,25 +130,35 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
         {({dirty, errors, isSubmitting, touched, isValid, setFieldValue, values}) => (
           <Form>
             <ModalContent>
-              {!isEditMode && self.is_staff && (
-                <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />
+              {!isEditMode && (
+                <S.FormField>
+                  <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />
+                </S.FormField>
               )}
-              {!isEditMode && <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />}
-              <S.Textarea
-                errors={errors}
-                label="Description (optional)"
-                name="description"
-                placeholder=""
-                touched={touched}
-              />
-              {!values.logo && (
-                <FileInput
+              <S.FormField>
+                <S.Textarea
                   errors={errors}
-                  label="Logo (required, 512x512 pixels)"
-                  name="logo"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
+                  label="Description (optional)"
+                  name="description"
+                  placeholder=""
                   touched={touched}
                 />
+              </S.FormField>
+              {!isEditMode && self.is_staff && (
+                <S.FormField>
+                  <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />
+                </S.FormField>
+              )}
+              {!values.logo && (
+                <S.FormField>
+                  <FileInput
+                    errors={errors}
+                    label="Logo (required, 512x512 pixels)"
+                    name="logo"
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
+                    touched={touched}
+                  />
+                </S.FormField>
               )}
               <ImagePreview
                 onClear={async () => {
