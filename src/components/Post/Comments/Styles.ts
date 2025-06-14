@@ -7,12 +7,6 @@ import {breakpoints, colors} from 'styles';
 
 export const IMG_HEIGHT = 24;
 
-export const Box = styled.div`
-  float: right;
-  margin-bottom: 6px;
-  padding: 0 16px;
-`;
-
 export const Button = styled(UButton)`
   background-color: ${colors.background};
   color: ${colors.black};
@@ -35,7 +29,7 @@ export const Button = styled(UButton)`
 `;
 
 export const Container = styled.div`
-  margin-top: 16px;
+  margin-top: 14px;
 `;
 
 export const Content = styled.div`
@@ -52,8 +46,7 @@ export const ContentInput = styled(UInlineInput)<{$isMobileDevice: boolean | fal
   flex: 1;
   width: 100%;
 
-  @media (max-width: ${breakpoints.mini}) {
-    margin: 8px 0;
+  @media (max-width: ${breakpoints.mobile}) {
     width: 100%;
   }
 `;
@@ -67,7 +60,6 @@ export const Divider = styled.div`
 
 export const Icon = styled(UIcon)`
   color: ${colors.secondary};
-  margin-left: 12px;
 
   &:hover {
     color: ${colors.backgroundDark};
@@ -77,7 +69,7 @@ export const Icon = styled(UIcon)`
 
 export const IconContainer = styled.div`
   align-items: center;
-  background-color: ${colors.palette.gray[100]};
+  background-color: ${colors.background};
   border-radius: 8px 0 0 8px;
   cursor: pointer;
   display: flex;
@@ -100,20 +92,24 @@ export const Image = styled.img`
 export const InputBox = styled.div`
   align-items: center;
   display: flex;
-  gap: 12px;
+  gap: 8px;
+  margin-bottom: 14px;
 
-  @media (max-width: ${breakpoints.mini}) {
+  @media (max-width: ${breakpoints.mobile}) {
+    align-items: flex-start;
     flex-direction: column;
+    gap: 10px;
   }
 `;
 
 export const PriceAmountInput = styled(UInlineInput)`
+  background-color: ${colors.background};
   border-left: 1px solid ${colors.borderDarker};
   border-radius: 0 8px 8px 0;
   height: 100%;
-  width: 130px;
+  width: 100px;
 
-  @media (max-width: ${breakpoints.mini}) {
+  @media (max-width: ${breakpoints.mobile}) {
     height: 40px;
   }
 `;
@@ -125,18 +121,14 @@ export const PriceAmountInputContainer = styled.div`
   display: grid;
   grid-auto-flow: column;
   height: 40px;
-
-  @media (max-width: ${breakpoints.mini}) {
-    width: 40%;
-  }
 `;
 
 export const ControlsWrapper = styled.div`
   align-items: center;
   display: flex;
-  gap: 10px;
+  gap: 8px;
 
-  @media (max-width: ${breakpoints.mini}) {
+  @media (max-width: ${breakpoints.mobile}) {
     justify-content: flex-end;
     width: 100%;
   }

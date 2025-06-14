@@ -47,7 +47,7 @@ export const BoxLeft = styled.div`
   align-items: center;
   display: flex;
   gap: 16px;
-  margin: 8px 0;
+  margin-top: 12px;
 `;
 
 export const LikeWrapper = styled.div`
@@ -69,7 +69,6 @@ export const Content = styled.div`
   color: ${colors.palette.gray[800]};
   font-size: 15px;
   line-height: 1.4;
-  margin-bottom: 16px;
   margin-top: 12px;
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -101,8 +100,7 @@ export const DropdownMenu = styled(UDropdownMenu)`
 export const Img = styled.img`
   border-radius: 12px;
   cursor: pointer;
-  margin-bottom: 16px;
-  margin-top: 12px;
+  margin-top: 16px;
   max-height: 600px;
   max-width: 100%;
   object-fit: cover;

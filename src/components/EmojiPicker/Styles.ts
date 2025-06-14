@@ -6,7 +6,7 @@ export const Container = styled.div<{$displayMode: 'textarea' | 'inline'}>`
   ${({$displayMode}) =>
     $displayMode === 'textarea'
       ? css`
-          margin-top: 8px;
+          margin-top: 6px;
         `
       : css`
           position: relative;

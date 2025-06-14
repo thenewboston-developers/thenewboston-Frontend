@@ -145,18 +145,16 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
                 />
                 <S.ControlsWrapper>
                   <EmojiPicker field="content" setFieldValue={setFieldValue} value={values.content} />
-                  {!isMobileDevice && (
-                    <S.PriceAmountInputContainer>
-                      {renderSelectCurrencyElement()}
-                      <S.PriceAmountInput
-                        errors={errors}
-                        name="price_amount"
-                        placeholder="Amount"
-                        touched={touched}
-                        type="number"
-                      />
-                    </S.PriceAmountInputContainer>
-                  )}
+                  <S.PriceAmountInputContainer>
+                    {renderSelectCurrencyElement()}
+                    <S.PriceAmountInput
+                      errors={errors}
+                      name="price_amount"
+                      placeholder="Amount"
+                      touched={touched}
+                      type="number"
+                    />
+                  </S.PriceAmountInputContainer>
                   <S.Button
                     color={ButtonColor.secondary}
                     dirty={dirty}
@@ -169,20 +167,6 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
                   />
                 </S.ControlsWrapper>
               </S.InputBox>
-              {isMobileDevice && (
-                <S.Box>
-                  <S.PriceAmountInputContainer>
-                    {renderSelectCurrencyElement()}
-                    <S.PriceAmountInput
-                      errors={errors}
-                      name="price_amount"
-                      placeholder="Amount"
-                      touched={touched}
-                      type="number"
-                    />
-                  </S.PriceAmountInputContainer>
-                </S.Box>
-              )}
             </Form>
           )}
         </Formik>
