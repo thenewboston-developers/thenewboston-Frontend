@@ -10,9 +10,9 @@ export const ActionsContainer = styled.div`
 
 export const CommentSection = styled.div`
   background: ${colors.background};
-  border-radius: 0 14px 14px 14px;
+  border-radius: 0 12px 12px 12px;
   flex-grow: 1;
-  padding: 10px 14px 14px 14px;
+  padding: 10px 14px 12px;
 `;
 
 export const Container = styled.div`
@@ -25,7 +25,6 @@ export const Container = styled.div`
 export const Content = styled.div`
   font-size: 14px;
   line-height: 1.4;
-  margin-top: 8px;
   overflow-wrap: break-word;
   word-wrap: break-word;
 `;
@@ -42,7 +41,7 @@ export const Dot = styled.div`
 `;
 
 export const HeadSection = styled.div`
-  align-items: center;
+  align-items: flex-start;
   display: flex;
   justify-content: space-between;
 `;
@@ -53,10 +52,6 @@ export const LongContent = styled.span`
 
 export const PriceMini = styled(UPriceMini)`
   margin-top: 2px;
-`;
-
-export const Right = styled.div`
-  margin-left: 10px;
 `;
 
 export const Username = styled.div`

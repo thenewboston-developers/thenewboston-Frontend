@@ -4,7 +4,7 @@ import {Form, Formik} from 'formik';
 
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
-import EmojiBox from 'components/EmojiPicker';
+import EmojiPicker from 'components/EmojiPicker';
 import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
@@ -156,7 +156,12 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
               <FormField>
                 <S.TextareaContainer>
                   <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
-                  <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
+                  <EmojiPicker
+                    displayMode="textarea"
+                    field="content"
+                    setFieldValue={setFieldValue}
+                    value={values.content}
+                  />
                 </S.TextareaContainer>
               </FormField>
 

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {Textarea as UTextarea} from 'components/FormElements';
 import UModal from 'components/Modal';
 
-export const Div = styled.div`
+export const TextareaWrapper = styled.div`
   position: relative;
 `;
 

@@ -1,11 +1,10 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiEmoticonOutline, mdiPlusCircle, mdiSend} from '@mdi/js';
-import Icon from '@mdi/react';
-import EmojiPicker from 'emoji-picker-react';
+import {mdiPlusCircle, mdiSend} from '@mdi/js';
 import {Form, Formik, FormikHelpers} from 'formik';
 
 import {ButtonColor, ButtonType} from 'components/Button';
+import EmojiPicker from 'components/EmojiPicker';
 import OutlineButton from 'components/OutlineButton';
 import {createComment} from 'dispatchers/comments';
 import {useToggle} from 'hooks';
@@ -28,12 +27,9 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   const [currencySelectModalIsOpen, toggleCurrencySelectModal] = useToggle(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileDevice, setIsMobileDevice] = useState<boolean>(window.innerWidth <= parseInt(breakpoints.mini));
-  const [isOpenEmojiBox, setIsOpenEmojiBox] = useState(false);
   const [startIndex, setStartIndex] = useState<number>(0);
   const comments = useSelector(getComments);
   const dispatch = useDispatch<AppDispatch>();
-  const emojiBoxRef = useRef<HTMLDivElement>(null);
-  const emojiButtonRef = useRef<HTMLButtonElement>(null);
   const manager = useSelector(getManager);
 
   const initialValues = {
@@ -71,13 +67,6 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   }, [commentList, startIndex]);
 
   useEffect(() => {
-    if (isOpenEmojiBox && document.querySelectorAll('.epr_-3yva2a').length > 0) {
-      const emojiFooter = document.querySelectorAll('.epr_-3yva2a')[0];
-      emojiFooter.remove();
-    }
-  }, [isOpenEmojiBox]);
-
-  useEffect(() => {
     const handleResize = () => {
       setIsMobileDevice(window.innerWidth <= parseInt(breakpoints.mini));
     };
@@ -86,25 +75,6 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        emojiBoxRef.current &&
-        !emojiBoxRef.current.contains(event.target as Node) &&
-        emojiButtonRef.current &&
-        !emojiButtonRef.current.contains(event.target as Node)
-      ) {
-        setIsOpenEmojiBox(false);
-      }
-    };
-    if (isOpenEmojiBox) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [isOpenEmojiBox]);
 
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
@@ -124,15 +94,9 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
       };
       await dispatch(createComment(requestData));
       resetForm();
-      setIsOpenEmojiBox(false);
     } catch (error) {
       displayErrorToast('Error submitting the comment');
     }
-  };
-
-  const toggleMenu = () => {
-    toggleCurrencySelectModal();
-    setIsMenuOpen(!isMenuOpen);
   };
 
   const renderComments = () => {
@@ -155,6 +119,11 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     );
   };
 
+  const toggleMenu = () => {
+    toggleCurrencySelectModal();
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <>
       <S.Container className={className}>
@@ -174,55 +143,8 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
                   placeholder="Add a comment..."
                   touched={touched}
                 />
-                {isOpenEmojiBox && (
-                  <S.EmojiBox ref={emojiBoxRef}>
-                    <EmojiPicker
-                      height={350}
-                      onEmojiClick={(e) => {
-                        const updatedValue = values.content + e.emoji;
-                        setFieldValue('content', updatedValue);
-                      }}
-                      skinTonesDisabled
-                      width={isMobileDevice ? 250 : 280}
-                    />
-                  </S.EmojiBox>
-                )}
-                <S.Wrapper>
-                  <S.EmojiButton
-                    ref={emojiButtonRef}
-                    $isOpenEmojiBox={isOpenEmojiBox}
-                    onClick={() => setIsOpenEmojiBox(!isOpenEmojiBox)}
-                    type="button"
-                  >
-                    <Icon path={mdiEmoticonOutline} size="24px" />
-                  </S.EmojiButton>
-                  {!isMobileDevice && (
-                    <S.PriceAmountInputContainer>
-                      {renderSelectCurrencyElement()}
-                      <S.PriceAmountInput
-                        errors={errors}
-                        name="price_amount"
-                        placeholder="Amount"
-                        touched={touched}
-                        type="number"
-                      />
-                    </S.PriceAmountInputContainer>
-                  )}
-
-                  <S.Button
-                    color={ButtonColor.secondary}
-                    dirty={dirty}
-                    disabled={isSubmitting}
-                    iconLeft={mdiSend}
-                    isSubmitting={isSubmitting}
-                    isValid={isValid}
-                    text=""
-                    type={ButtonType.submit}
-                  />
-                </S.Wrapper>
-              </S.InputBox>
-              {isMobileDevice && (
-                <S.Box>
+                <S.ControlsWrapper>
+                  <EmojiPicker field="content" setFieldValue={setFieldValue} value={values.content} />
                   <S.PriceAmountInputContainer>
                     {renderSelectCurrencyElement()}
                     <S.PriceAmountInput
@@ -233,20 +155,30 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
                       type="number"
                     />
                   </S.PriceAmountInputContainer>
-                </S.Box>
-              )}
+                  <S.Button
+                    color={ButtonColor.secondary}
+                    dirty={dirty}
+                    disabled={isSubmitting}
+                    iconLeft={mdiSend}
+                    isSubmitting={isSubmitting}
+                    isValid={isValid}
+                    text=""
+                    type={ButtonType.submit}
+                  />
+                </S.ControlsWrapper>
+              </S.InputBox>
             </Form>
           )}
         </Formik>
         {renderComments()}
         {commentList.length > commentDetails.length && (
           <S.Content>
-            <S.Div />
+            <S.Divider />
             <OutlineButton
               onClick={handleComment}
               text={`Show ${Math.min(4, commentList.length - commentDetails.length)} more comments`}
             />
-            <S.Div />
+            <S.Divider />
           </S.Content>
         )}
       </S.Container>

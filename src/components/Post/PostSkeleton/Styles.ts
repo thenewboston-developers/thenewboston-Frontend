@@ -13,12 +13,12 @@ export const AvatarContainer = styled.div`
 
 export const Container = styled.div`
   background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 16px;
-  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
-  padding: 16px;
+  border: 1px solid ${colors.palette.gray[200]};
+  border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 20px 24px;
 `;
 
-export const Div = styled.div`
-  margin: 10px 0 10px 0;
+export const SkeletonSection = styled.div`
+  margin: 10px 0;
 `;

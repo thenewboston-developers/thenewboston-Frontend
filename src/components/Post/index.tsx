@@ -46,10 +46,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
     }
   };
 
-  const handlePostImageClick = () => {
-    toggleImageModal();
-  };
-
   const handleLikeClick = async () => {
     try {
       if (is_liked) {
@@ -63,6 +59,10 @@ const Post: SFC<PostProps> = ({className, post}) => {
     } catch (error) {
       displayErrorToast('Error updating like status');
     }
+  };
+
+  const handlePostImageClick = () => {
+    toggleImageModal();
   };
 
   const renderContent = () => {
@@ -133,28 +133,26 @@ const Post: SFC<PostProps> = ({className, post}) => {
           </Linkify>
         </S.Content>
         {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
-        <S.Div>
-          <S.BoxLeft>
-            <S.LikeWrapper>
-              <S.LikeButton $animate={animateLike} onClick={handleLikeClick}>
-                <S.LikeIcon
-                  $animate={animateLike}
-                  $isLiked={is_liked}
-                  icon={is_liked ? mdiHeart : mdiHeartOutline}
-                  size={20}
-                />
-              </S.LikeButton>
-              <S.LikeCount onClick={toggleLikesModal}>
-                {like_count} {like_count === 1 ? 'like' : 'likes'}
-              </S.LikeCount>
-            </S.LikeWrapper>
-            <OutlineButton
-              iconLeft={mdiCommentTextOutline}
-              onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
-              text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
-            />
-          </S.BoxLeft>
-        </S.Div>
+        <S.ActionsContainer>
+          <S.LikeWrapper>
+            <S.LikeButton $animate={animateLike} onClick={handleLikeClick}>
+              <S.LikeIcon
+                $animate={animateLike}
+                $isLiked={is_liked}
+                icon={is_liked ? mdiHeart : mdiHeartOutline}
+                size={20}
+              />
+            </S.LikeButton>
+            <S.LikeCount onClick={toggleLikesModal}>
+              {like_count} {like_count === 1 ? 'like' : 'likes'}
+            </S.LikeCount>
+          </S.LikeWrapper>
+          <OutlineButton
+            iconLeft={mdiCommentTextOutline}
+            onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
+            text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
+          />
+        </S.ActionsContainer>
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
       {imageModalIsOpen && image ? <FullScreenImageModal close={toggleImageModal} imageSrc={image} /> : null}
