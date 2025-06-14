@@ -11,14 +11,6 @@ export const Arrow = styled.div`
   text-align: center;
 `;
 
-export const FormField = styled.div`
-  margin-bottom: 24px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
 export const Input = styled(UInput)``;
 
 export const Label = styled.span`

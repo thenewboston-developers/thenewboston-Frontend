@@ -9,14 +9,6 @@ export const Button = styled(UButton)`
   width: 100%;
 `;
 
-export const FormField = styled.div`
-  margin-bottom: 24px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
 export const Heading = styled.h2`
   color: #fff;
   margin-bottom: 12px;

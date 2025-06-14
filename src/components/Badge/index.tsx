@@ -1,10 +1,12 @@
+import {ReactNode} from 'react';
+
 import {SFC} from 'types';
 
 import * as S from './Styles';
 
 export interface BadgeProps {
   badgeStyle: BadgeStyle;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export enum BadgeStyle {

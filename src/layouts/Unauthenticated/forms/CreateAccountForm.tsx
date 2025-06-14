@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
 import {ButtonType} from 'components/Button';
+import {FormField} from 'components/FormElements';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {createUser} from 'dispatchers/users';
 import {AppDispatch, SFC} from 'types';
@@ -77,13 +78,13 @@ const CreateAccountForm: SFC = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
           {({dirty, errors, isSubmitting, touched, isValid}) => (
             <Form>
-              <S.FormField>
+              <FormField>
                 <S.Input errors={errors} label="Username" name="username" touched={touched} />
-              </S.FormField>
-              <S.FormField>
+              </FormField>
+              <FormField>
                 <S.Input errors={errors} label="Password" name="password" touched={touched} type="password" />
-              </S.FormField>
-              <S.FormField>
+              </FormField>
+              <FormField>
                 <S.Input
                   errors={errors}
                   label="Confirm Password"
@@ -91,11 +92,11 @@ const CreateAccountForm: SFC = () => {
                   touched={touched}
                   type="password"
                 />
-              </S.FormField>
-              <S.FormField>
+              </FormField>
+              <FormField>
                 <S.Input errors={errors} label="Invitation Code" name="invitationCode" touched={touched} />
-              </S.FormField>
-              <S.FormField>
+              </FormField>
+              <FormField>
                 <S.Button
                   dirty={dirty}
                   disabled={isSubmitting}
@@ -104,7 +105,7 @@ const CreateAccountForm: SFC = () => {
                   text="Create Account"
                   type={ButtonType.submit}
                 />
-              </S.FormField>
+              </FormField>
             </Form>
           )}
         </Formik>

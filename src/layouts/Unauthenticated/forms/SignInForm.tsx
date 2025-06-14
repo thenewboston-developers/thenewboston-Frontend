@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
 import {ButtonType} from 'components/Button';
+import {FormField} from 'components/FormElements';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {login} from 'dispatchers/authentication';
 import {AppDispatch, SFC} from 'types';
@@ -46,13 +47,13 @@ const SignInForm: SFC = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
           {({dirty, errors, isSubmitting, touched, isValid}) => (
             <Form>
-              <S.FormField>
+              <FormField>
                 <S.Input errors={errors} label="Username" name="username" touched={touched} />
-              </S.FormField>
-              <S.FormField>
+              </FormField>
+              <FormField>
                 <S.Input errors={errors} label="Password" name="password" touched={touched} type="password" />
-              </S.FormField>
-              <S.FormField>
+              </FormField>
+              <FormField>
                 <S.Button
                   dirty={dirty}
                   disabled={isSubmitting}
@@ -61,7 +62,7 @@ const SignInForm: SFC = () => {
                   text="Sign In"
                   type={ButtonType.submit}
                 />
-              </S.FormField>
+              </FormField>
             </Form>
           )}
         </Formik>
