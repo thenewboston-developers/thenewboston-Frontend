@@ -1,4 +1,4 @@
-import {AnyAction, combineReducers, configureStore} from '@reduxjs/toolkit';
+import {combineReducers, configureStore, UnknownAction} from '@reduxjs/toolkit';
 import * as Sentry from '@sentry/react';
 import {
   createMigrate,
@@ -59,7 +59,7 @@ const rootReducer = combineReducers({
   wires: wiresReducer,
 });
 
-const appReducer = (state: any, action: AnyAction) => {
+const appReducer = (state: any, action: UnknownAction) => {
   if (action.type === LOGOUT_USER) state = undefined;
   return rootReducer(state, action);
 };
