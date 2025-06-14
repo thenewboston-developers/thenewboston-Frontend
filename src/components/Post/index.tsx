@@ -134,26 +134,24 @@ const Post: SFC<PostProps> = ({className, post}) => {
         </S.Content>
         {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
         <S.ActionsContainer>
-          <S.BoxLeft>
-            <S.LikeWrapper>
-              <S.LikeButton $animate={animateLike} onClick={handleLikeClick}>
-                <S.LikeIcon
-                  $animate={animateLike}
-                  $isLiked={is_liked}
-                  icon={is_liked ? mdiHeart : mdiHeartOutline}
-                  size={20}
-                />
-              </S.LikeButton>
-              <S.LikeCount onClick={toggleLikesModal}>
-                {like_count} {like_count === 1 ? 'like' : 'likes'}
-              </S.LikeCount>
-            </S.LikeWrapper>
-            <OutlineButton
-              iconLeft={mdiCommentTextOutline}
-              onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
-              text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
-            />
-          </S.BoxLeft>
+          <S.LikeWrapper>
+            <S.LikeButton $animate={animateLike} onClick={handleLikeClick}>
+              <S.LikeIcon
+                $animate={animateLike}
+                $isLiked={is_liked}
+                icon={is_liked ? mdiHeart : mdiHeartOutline}
+                size={20}
+              />
+            </S.LikeButton>
+            <S.LikeCount onClick={toggleLikesModal}>
+              {like_count} {like_count === 1 ? 'like' : 'likes'}
+            </S.LikeCount>
+          </S.LikeWrapper>
+          <OutlineButton
+            iconLeft={mdiCommentTextOutline}
+            onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
+            text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
+          />
         </S.ActionsContainer>
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
