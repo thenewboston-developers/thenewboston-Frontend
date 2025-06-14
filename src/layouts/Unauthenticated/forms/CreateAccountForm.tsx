@@ -48,7 +48,7 @@ const CreateAccountForm: SFC = () => {
         .oneOf([yup.ref('password'), undefined], 'Passwords must match')
         .required('Confirm Password is required'),
       invitationCode: yup.string().required('Invitation code is required'),
-      password: yup.string().required(),
+      password: yup.string().required('Password is required'),
       username: yup
         .string()
         .min(2, 'Username must be at least 2 characters')
@@ -77,24 +77,34 @@ const CreateAccountForm: SFC = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
           {({dirty, errors, isSubmitting, touched, isValid}) => (
             <Form>
-              <S.Input errors={errors} label="Username" name="username" touched={touched} />
-              <S.Input errors={errors} label="Password" name="password" touched={touched} type="password" />
-              <S.Input
-                errors={errors}
-                label="Confirm Password"
-                name="confirmPassword"
-                touched={touched}
-                type="password"
-              />
-              <S.Input errors={errors} label="Invitation Code" name="invitationCode" touched={touched} />
-              <S.Button
-                dirty={dirty}
-                disabled={isSubmitting}
-                isSubmitting={isSubmitting}
-                isValid={isValid}
-                text="Create Account"
-                type={ButtonType.submit}
-              />
+              <S.FormField>
+                <S.Input errors={errors} label="Username" name="username" touched={touched} />
+              </S.FormField>
+              <S.FormField>
+                <S.Input errors={errors} label="Password" name="password" touched={touched} type="password" />
+              </S.FormField>
+              <S.FormField>
+                <S.Input
+                  errors={errors}
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  touched={touched}
+                  type="password"
+                />
+              </S.FormField>
+              <S.FormField>
+                <S.Input errors={errors} label="Invitation Code" name="invitationCode" touched={touched} />
+              </S.FormField>
+              <S.FormField>
+                <S.Button
+                  dirty={dirty}
+                  disabled={isSubmitting}
+                  isSubmitting={isSubmitting}
+                  isValid={isValid}
+                  text="Create Account"
+                  type={ButtonType.submit}
+                />
+              </S.FormField>
             </Form>
           )}
         </Formik>

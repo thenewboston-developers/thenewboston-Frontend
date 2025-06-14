@@ -62,7 +62,7 @@ const Sell: SFC = ({className}) => {
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
-      price: yup.number().integer('Price must be an integer').moreThan(0).required(),
+      price: yup.number().integer('Price must be an integer').moreThan(0).required('Price is required'),
       quantity: yup
         .number()
         .integer('Quantity must be an integer')
@@ -71,7 +71,7 @@ const Sell: SFC = ({className}) => {
           `Quantity cannot exceed your available balance of ${primaryCurrencyBalance.toLocaleString()}`,
         )
         .moreThan(0)
-        .required(),
+        .required('Quantity is required'),
     });
   }, [primaryCurrencyBalance]);
 

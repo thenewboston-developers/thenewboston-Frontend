@@ -34,8 +34,8 @@ const SignInForm: SFC = () => {
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
-      password: yup.string().required(),
-      username: yup.string().required(),
+      password: yup.string().required('Password is required'),
+      username: yup.string().required('Username is required'),
     });
   }, []);
 
@@ -46,16 +46,22 @@ const SignInForm: SFC = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
           {({dirty, errors, isSubmitting, touched, isValid}) => (
             <Form>
-              <S.Input errors={errors} label="Username" name="username" touched={touched} />
-              <S.Input errors={errors} label="Password" name="password" touched={touched} type="password" />
-              <S.Button
-                dirty={dirty}
-                disabled={isSubmitting}
-                isSubmitting={isSubmitting}
-                isValid={isValid}
-                text="Sign In"
-                type={ButtonType.submit}
-              />
+              <S.FormField>
+                <S.Input errors={errors} label="Username" name="username" touched={touched} />
+              </S.FormField>
+              <S.FormField>
+                <S.Input errors={errors} label="Password" name="password" touched={touched} type="password" />
+              </S.FormField>
+              <S.FormField>
+                <S.Button
+                  dirty={dirty}
+                  disabled={isSubmitting}
+                  isSubmitting={isSubmitting}
+                  isValid={isValid}
+                  text="Sign In"
+                  type={ButtonType.submit}
+                />
+              </S.FormField>
             </Form>
           )}
         </Formik>
