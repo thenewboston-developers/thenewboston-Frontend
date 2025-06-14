@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import {breakpoints} from 'styles';
 
-import Pattern from './profile-pattern.png';
+import Pattern from './assets/banner.svg';
 
 export const Container = styled.div`
   display: flex;
