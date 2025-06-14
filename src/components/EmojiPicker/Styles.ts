@@ -1,6 +1,6 @@
 import styled, {css} from 'styled-components';
 
-import {colors} from 'styles';
+import {colors, fonts, inputStyle} from 'styles';
 
 export const Container = styled.div<{$displayMode: 'textarea' | 'inline'}>`
   ${({$displayMode}) =>
@@ -45,7 +45,7 @@ export const EmojiButton = styled.button<{
   align-items: center;
   background: none;
   border: none;
-  color: ${({$isOpenEmojiPicker}) => ($isOpenEmojiPicker ? '#5a80ab' : colors.gray)};
+  color: ${({$isOpenEmojiPicker}) => ($isOpenEmojiPicker ? colors.palette.blue[500] : colors.gray)};
   cursor: pointer;
   display: flex;
   font-weight: 600;
@@ -60,7 +60,7 @@ export const EmojiButton = styled.button<{
           width: 32px;
 
           &:hover {
-            color: #5a80ab;
+            color: ${colors.palette.blue[500]};
           }
         `
       : css`
@@ -69,7 +69,7 @@ export const EmojiButton = styled.button<{
           width: 40px;
 
           &:hover {
-            color: #5a80ab;
+            color: ${colors.palette.blue[500]};
           }
         `}
 `;
@@ -147,12 +147,10 @@ export const SearchContainer = styled.div`
 `;
 
 export const SearchInput = styled.input`
-  background: ${colors.palette.gray[50]};
+  ${inputStyle};
   border: 1px solid ${colors.border};
-  border-radius: 4px;
+  font-family: ${fonts.family.default};
   font-size: 14px;
-  outline: none;
-  padding: 8px 12px;
   width: 100%;
 
   &:focus {
