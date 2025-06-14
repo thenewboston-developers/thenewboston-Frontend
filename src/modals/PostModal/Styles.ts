@@ -3,11 +3,6 @@ import styled from 'styled-components';
 import {Textarea as UTextarea} from 'components/FormElements';
 import UModal from 'components/Modal';
 
-export const FileInputWrapper = styled.div`
-  margin-bottom: 12px;
-  margin-top: 16px;
-`;
-
 export const Modal = styled(UModal)`
   width: 360px;
 `;
