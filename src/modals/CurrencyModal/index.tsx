@@ -10,6 +10,7 @@ import Modal, {ModalContent, ModalFooter, ModalFooterButton} from 'components/Mo
 import {createCurrency, updateCurrency} from 'dispatchers/currencies';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Currency, SFC} from 'types';
+import {handleFormikAPIError} from 'utils/forms';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
@@ -71,7 +72,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
     }
   };
 
-  const handleSubmit = async (values: FormValues): Promise<void> => {
+  const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
       const requestData = new FormData();
 
@@ -103,7 +104,8 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
       onSuccess?.();
       close();
     } catch (error) {
-      displayErrorToast(isEditMode ? 'Error updating currency' : 'Error creating currency');
+      const errorMessage = isEditMode ? 'Error updating currency' : 'Error creating currency';
+      handleFormikAPIError(error, helpers, errorMessage);
     }
   };
 

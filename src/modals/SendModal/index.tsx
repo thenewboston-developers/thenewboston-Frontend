@@ -14,6 +14,7 @@ import {ToastType} from 'enums';
 import {useActiveWallet} from 'hooks';
 import {getSelf, getWallets} from 'selectors/state';
 import {AppDispatch, SFC, UserReadSerializer} from 'types';
+import {handleFormikAPIError} from 'utils/forms';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
@@ -65,7 +66,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
     }
   };
 
-  const handleSubmit = async (values: FormValues): Promise<void> => {
+  const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
       const selectedWallet = myWallets.find((wallet) => wallet.id === parseInt(values.wallet_id as any));
       if (!selectedWallet) {
@@ -87,8 +88,8 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
       displayToast('Coins sent successfully!', ToastType.SUCCESS);
       close();
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.error || 'Error sending coins';
-      displayErrorToast(errorMessage);
+      const errorMessage = error?.response?.data?.error ?? 'Error sending coins';
+      handleFormikAPIError(error, helpers, errorMessage);
     }
   };
 

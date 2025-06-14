@@ -10,7 +10,7 @@ import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {updateUser} from 'dispatchers/users';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
+import {handleFormikAPIError} from 'utils/forms';
 
 import * as S from './Styles';
 
@@ -48,14 +48,14 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
     }
   };
 
-  const handleSubmit = async (values: FormValues): Promise<void> => {
+  const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
       const requestData = new FormData();
       requestData.append('avatar', values.avatar);
       await dispatch(updateUser(self.id!, requestData));
       close();
     } catch (error) {
-      displayErrorToast('Error updating avatar');
+      handleFormikAPIError(error, helpers, 'Error updating avatar');
     }
   };
 

@@ -10,7 +10,8 @@ import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {createMint} from 'dispatchers/mints';
 import {ToastType} from 'enums';
 import {AppDispatch, Currency, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toasts';
+import {handleFormikAPIError} from 'utils/forms';
+import {displayToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
@@ -43,7 +44,7 @@ const MintModal: SFC<ComponentProps> = ({className, close, currency, onSuccess})
     });
   }, []);
 
-  const handleSubmit = async (values: typeof initialValues) => {
+  const handleSubmit = async (values: typeof initialValues, helpers: any) => {
     setSubmitting(true);
     try {
       await dispatch(createMint({currency: currency.id, amount: parseInt(values.amount)}));
@@ -54,7 +55,8 @@ const MintModal: SFC<ComponentProps> = ({className, close, currency, onSuccess})
       if (onSuccess) onSuccess();
       close();
     } catch (error: any) {
-      displayErrorToast(error.response?.data?.error || 'Error minting currency');
+      const errorMessage = error?.response?.data?.error ?? 'Error minting currency';
+      handleFormikAPIError(error, helpers, errorMessage);
     } finally {
       setSubmitting(false);
     }
