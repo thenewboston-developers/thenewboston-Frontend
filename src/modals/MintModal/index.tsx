@@ -55,14 +55,8 @@ const MintModal: SFC<ComponentProps> = ({className, close, currency, onSuccess})
       if (onSuccess) onSuccess();
       close();
     } catch (error: any) {
-      // Check for custom error message in response
-      if (error.response?.data?.error) {
-        // This is a custom error message, display it as toast
-        handleFormikAPIError(error, helpers, error.response.data.error);
-      } else {
-        // Use standard field error handling
-        handleFormikAPIError(error, helpers, 'Error minting currency');
-      }
+      const errorMessage = error?.response?.data?.error ?? 'Error minting currency';
+      handleFormikAPIError(error, helpers, errorMessage);
     } finally {
       setSubmitting(false);
     }

@@ -88,14 +88,8 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
       displayToast('Coins sent successfully!', ToastType.SUCCESS);
       close();
     } catch (error: any) {
-      // Check for custom error message in response
-      if (error?.response?.data?.error) {
-        // This is a custom error message, use it as the generic message
-        handleFormikAPIError(error, helpers, error.response.data.error);
-      } else {
-        // Use standard field error handling
-        handleFormikAPIError(error, helpers, 'Error sending coins');
-      }
+      const errorMessage = error?.response?.data?.error ?? 'Error sending coins';
+      handleFormikAPIError(error, helpers, errorMessage);
     }
   };
 
