@@ -4,7 +4,7 @@ import {Form, Formik} from 'formik';
 
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
-import {FileInput} from 'components/FormElements';
+import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import Modal, {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {createCurrency, updateCurrency} from 'dispatchers/currencies';
@@ -131,11 +131,11 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
           <Form>
             <ModalContent>
               {!isEditMode && (
-                <S.FormField>
+                <FormField>
                   <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />
-                </S.FormField>
+                </FormField>
               )}
-              <S.FormField>
+              <FormField>
                 <S.Textarea
                   errors={errors}
                   label="Description (optional)"
@@ -143,14 +143,14 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
                   placeholder=""
                   touched={touched}
                 />
-              </S.FormField>
+              </FormField>
               {!isEditMode && self.is_staff && (
-                <S.FormField>
+                <FormField>
                   <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />
-                </S.FormField>
+                </FormField>
               )}
               {!values.logo && (
-                <S.FormField>
+                <FormField>
                   <FileInput
                     errors={errors}
                     label="Logo (required, 512x512 pixels)"
@@ -158,7 +158,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
                     onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
                     touched={touched}
                   />
-                </S.FormField>
+                </FormField>
               )}
               <ImagePreview
                 onClear={async () => {

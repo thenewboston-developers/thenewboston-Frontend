@@ -5,7 +5,7 @@ import {Form, Formik} from 'formik';
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiBox from 'components/EmojiPicker';
-import {FileInput} from 'components/FormElements';
+import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {createPost, updatePost} from 'dispatchers/posts';
@@ -97,15 +97,17 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
             <ModalContent>
-              <S.TextareaContainer>
-                <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
-                <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
-              </S.TextareaContainer>
+              <FormField>
+                <S.TextareaContainer>
+                  <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
+                  <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
+                </S.TextareaContainer>
+              </FormField>
 
               {!values.image && (
-                <S.FileInputWrapper>
+                <FormField>
                   <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />
-                </S.FileInputWrapper>
+                </FormField>
               )}
               <ImagePreview
                 onClear={async () => {

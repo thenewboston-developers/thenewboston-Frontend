@@ -66,8 +66,8 @@ const WalletWithdraw: SFC = ({className}) => {
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
-      accountNumber: accountNumberSchema.required(),
-      amount: yup.number().integer('Amount must be an integer').moreThan(1).required(),
+      accountNumber: accountNumberSchema.required('Account number is required'),
+      amount: yup.number().integer('Amount must be an integer').moreThan(1).required('Amount is required'),
     });
   }, []);
 

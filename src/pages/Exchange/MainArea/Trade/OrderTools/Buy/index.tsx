@@ -64,8 +64,8 @@ const Buy: SFC = ({className}) => {
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
-      price: yup.number().integer('Price must be an integer').moreThan(0).required(),
-      quantity: yup.number().integer('Quantity must be an integer').moreThan(0).required(),
+      price: yup.number().integer('Price must be an integer').moreThan(0).required('Price is required'),
+      quantity: yup.number().integer('Quantity must be an integer').moreThan(0).required('Quantity is required'),
     });
   }, []);
 

@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
 import {ButtonType} from 'components/Button';
+import {FormField} from 'components/FormElements';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {login} from 'dispatchers/authentication';
 import {AppDispatch, SFC} from 'types';
@@ -34,8 +35,8 @@ const SignInForm: SFC = () => {
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
-      password: yup.string().required(),
-      username: yup.string().required(),
+      password: yup.string().required('Password is required'),
+      username: yup.string().required('Username is required'),
     });
   }, []);
 
@@ -46,22 +47,28 @@ const SignInForm: SFC = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
           {({dirty, errors, isSubmitting, touched, isValid}) => (
             <Form>
-              <S.Input errors={errors} label="Username" name="username" touched={touched} />
-              <S.Input errors={errors} label="Password" name="password" touched={touched} type="password" />
-              <S.Button
-                dirty={dirty}
-                disabled={isSubmitting}
-                isSubmitting={isSubmitting}
-                isValid={isValid}
-                text="Sign In"
-                type={ButtonType.submit}
-              />
+              <FormField>
+                <S.Input errors={errors} label="Username" name="username" touched={touched} />
+              </FormField>
+              <FormField>
+                <S.Input errors={errors} label="Password" name="password" touched={touched} type="password" />
+              </FormField>
+              <FormField>
+                <S.Button
+                  dirty={dirty}
+                  disabled={isSubmitting}
+                  isSubmitting={isSubmitting}
+                  isValid={isValid}
+                  text="Sign In"
+                  type={ButtonType.submit}
+                />
+              </FormField>
             </Form>
           )}
         </Formik>
       </S.Panel>
       <S.QuestionText>
-        New user? <S.Link to={PATH_AUTHENTICATION.SIGNUP}>Create an Account</S.Link>
+        New user? <S.Link to={PATH_AUTHENTICATION.CREATE_ACCOUNT}>Create an Account</S.Link>
       </S.QuestionText>
     </>
   );

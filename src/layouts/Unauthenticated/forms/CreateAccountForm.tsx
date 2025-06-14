@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
 import {ButtonType} from 'components/Button';
+import {FormField} from 'components/FormElements';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {createUser} from 'dispatchers/users';
 import {AppDispatch, SFC} from 'types';
@@ -48,7 +49,7 @@ const CreateAccountForm: SFC = () => {
         .oneOf([yup.ref('password'), undefined], 'Passwords must match')
         .required('Confirm Password is required'),
       invitationCode: yup.string().required('Invitation code is required'),
-      password: yup.string().required(),
+      password: yup.string().required('Password is required'),
       username: yup
         .string()
         .min(2, 'Username must be at least 2 characters')
@@ -77,30 +78,40 @@ const CreateAccountForm: SFC = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
           {({dirty, errors, isSubmitting, touched, isValid}) => (
             <Form>
-              <S.Input errors={errors} label="Username" name="username" touched={touched} />
-              <S.Input errors={errors} label="Password" name="password" touched={touched} type="password" />
-              <S.Input
-                errors={errors}
-                label="Confirm Password"
-                name="confirmPassword"
-                touched={touched}
-                type="password"
-              />
-              <S.Input errors={errors} label="Invitation Code" name="invitationCode" touched={touched} />
-              <S.Button
-                dirty={dirty}
-                disabled={isSubmitting}
-                isSubmitting={isSubmitting}
-                isValid={isValid}
-                text="Create Account"
-                type={ButtonType.submit}
-              />
+              <FormField>
+                <S.Input errors={errors} label="Username" name="username" touched={touched} />
+              </FormField>
+              <FormField>
+                <S.Input errors={errors} label="Password" name="password" touched={touched} type="password" />
+              </FormField>
+              <FormField>
+                <S.Input
+                  errors={errors}
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  touched={touched}
+                  type="password"
+                />
+              </FormField>
+              <FormField>
+                <S.Input errors={errors} label="Invitation Code" name="invitationCode" touched={touched} />
+              </FormField>
+              <FormField>
+                <S.Button
+                  dirty={dirty}
+                  disabled={isSubmitting}
+                  isSubmitting={isSubmitting}
+                  isValid={isValid}
+                  text="Create Account"
+                  type={ButtonType.submit}
+                />
+              </FormField>
             </Form>
           )}
         </Formik>
       </S.Panel>
       <S.QuestionText>
-        Already have an account? <S.Link to={PATH_AUTHENTICATION.LOGIN}>Sign In</S.Link>
+        Already have an account? <S.Link to={PATH_AUTHENTICATION.SIGN_IN}>Sign In</S.Link>
       </S.QuestionText>
     </>
   );

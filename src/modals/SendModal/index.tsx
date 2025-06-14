@@ -5,7 +5,7 @@ import {Form, Formik} from 'formik';
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiBox from 'components/EmojiPicker';
-import {FileInput} from 'components/FormElements';
+import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import UserLabel from 'components/UserLabel';
@@ -138,7 +138,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
                 </S.UserRow>
               </S.TransferInfo>
 
-              <S.FormField>
+              <FormField>
                 <S.Select
                   errors={errors}
                   label="Select Wallet"
@@ -146,23 +146,23 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
                   options={walletOptions}
                   touched={touched}
                 />
-              </S.FormField>
+              </FormField>
 
-              <S.FormField>
+              <FormField>
                 <S.Input errors={errors} label="Amount" name="price_amount" touched={touched} type="number" />
-              </S.FormField>
+              </FormField>
 
-              <S.FormField>
+              <FormField>
                 <S.TextareaContainer>
                   <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
                   <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
                 </S.TextareaContainer>
-              </S.FormField>
+              </FormField>
 
               {!values.image && (
-                <S.FormField>
+                <FormField>
                   <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />
-                </S.FormField>
+                </FormField>
               )}
               <ImagePreview
                 onClear={async () => {

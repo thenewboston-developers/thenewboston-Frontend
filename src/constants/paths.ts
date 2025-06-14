@@ -1,9 +1,9 @@
 export const WILDCARD = '*';
 
 export const PATH_AUTHENTICATION = {
-  LOGIN: '/signIn',
+  CREATE_ACCOUNT: '/create-account',
   LOGOUT: '/logout',
-  SIGNUP: '/createAccount',
+  SIGN_IN: '/sign-in',
 };
 export const PATH_CURRENCIES = `/currencies/${WILDCARD}`;
 export const PATH_EXCHANGE = `/exchange/${WILDCARD}`;
