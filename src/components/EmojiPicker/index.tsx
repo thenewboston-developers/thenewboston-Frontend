@@ -100,9 +100,9 @@ const EmojiPicker: SFC<EmojiPickerProps> = ({field, setFieldValue, value, displa
           )}
 
           <S.EmojiGrid>
-            {filteredEmojis.map((emoji) => (
+            {filteredEmojis.map((emoji, index) => (
               <S.EmojiItem
-                key={emoji.emoji}
+                key={`${emoji.emoji}-${index}`}
                 onClick={() => handleEmojiClick(emoji.emoji)}
                 title={emoji.name}
                 type="button"
