@@ -59,7 +59,6 @@ export const ChartWrapper = styled.div`
   background: white;
   border-radius: 16px;
   overflow: hidden;
-  padding: 20px 10px 10px 0;
   position: relative;
   width: 100%;
 
