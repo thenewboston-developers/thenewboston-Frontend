@@ -17,7 +17,9 @@ export const Button = styled(UButton)`
   background-color: ${colors.background};
   color: ${colors.black};
   height: 40px;
+  min-width: 40px;
   padding: 10px;
+  width: 40px;
 
   & svg {
     margin-right: 0 !important;
@@ -48,8 +50,6 @@ export const ContentInput = styled(UInlineInput)<{$isMobileDevice: boolean | fal
   background-color: ${colors.white};
   border-radius: 12px;
   flex: 1;
-  padding: ${({$isMobileDevice}) => ($isMobileDevice ? '26px 95px 26px 16px' : '26px 300px 26px 16px')};
-  position: relative;
   width: 100%;
 
   @media (max-width: ${breakpoints.mini}) {
@@ -65,44 +65,6 @@ export const Div = styled.div`
   margin: 0 16px;
 `;
 
-export const EmojiBox = styled.div`
-  position: absolute;
-  right: 18%;
-  top: 60px;
-  z-index: 100;
-
-  @media (max-width: ${breakpoints.mini}) {
-    right: 0;
-    top: 70px;
-  }
-
-  @media (min-width: ${breakpoints.mini}) and (max-width: ${breakpoints.mobile}) {
-    right: 8%;
-    top: 70px;
-  }
-
-  @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}) {
-    right: 30%;
-  }
-
-  @media (min-width: ${breakpoints.tablet}) and (max-width: ${breakpoints.largeDesktop}) {
-    right: 25%;
-  }
-
-  @media (min-width: ${breakpoints.largeDesktop}) and (max-width: ${breakpoints.xlDesktop}) {
-    right: 12%;
-  }
-`;
-
-export const EmojiButton = styled.button<{$isOpenEmojiBox?: boolean | false}>`
-  background: none;
-  border: none;
-  color: ${({$isOpenEmojiBox}) => ($isOpenEmojiBox ? '#5a80ab' : `${colors.black}`)};
-  cursor: pointer;
-  font-weight: 600;
-  outline: none;
-`;
-
 export const Icon = styled(UIcon)`
   color: ${colors.secondary};
   margin-left: 12px;
@@ -116,11 +78,12 @@ export const Icon = styled(UIcon)`
 export const IconContainer = styled.div`
   align-items: center;
   background-color: ${colors.palette.gray[100]};
-  border-radius: 8px;
+  border-radius: 8px 0 0 8px;
   cursor: pointer;
   display: flex;
+  height: 100%;
   justify-content: center;
-  padding: 4px;
+  padding: 8px;
   transition: all 0.2s ease;
 
   &:hover {
@@ -131,21 +94,23 @@ export const IconContainer = styled.div`
 export const Image = styled.img`
   border-radius: 50%;
   height: ${`${IMG_HEIGHT}px`};
-  margin-left: 12px;
   width: ${`${IMG_HEIGHT}px`};
 `;
 
 export const InputBox = styled.div`
   align-items: center;
   display: flex;
-  flex-direction: row;
-  position: relative;
+  gap: 12px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    flex-direction: column;
+  }
 `;
 
 export const PriceAmountInput = styled(UInlineInput)`
   border-left: 1px solid ${colors.borderDarker};
   border-radius: 0 8px 8px 0;
-  margin-left: 8px;
+  height: 100%;
   width: 130px;
 
   @media (max-width: ${breakpoints.mini}) {
@@ -159,16 +124,20 @@ export const PriceAmountInputContainer = styled.div`
   border-radius: 8px;
   display: grid;
   grid-auto-flow: column;
+  height: 40px;
 
   @media (max-width: ${breakpoints.mini}) {
     width: 40%;
   }
 `;
 
-export const Wrapper = styled.div`
+export const ControlsWrapper = styled.div`
+  align-items: center;
   display: flex;
   gap: 10px;
-  justify-content: flex-end;
-  position: absolute;
-  right: 10px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    justify-content: flex-end;
+    width: 100%;
+  }
 `;

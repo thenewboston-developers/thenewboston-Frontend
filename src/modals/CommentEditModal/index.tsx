@@ -4,7 +4,7 @@ import {Form, Formik} from 'formik';
 
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
-import EmojiBox from 'components/EmojiPicker';
+import EmojiPicker from 'components/EmojiPicker';
 import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {updateComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
@@ -49,14 +49,19 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
   }, []);
 
   return (
-    <S.Modal className={className} close={close} header="Update Comment">
+    <S.Modal className={className} close={close} header="Edit Comment">
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
             <ModalContent>
               <S.Div>
                 <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
-                <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
+                <EmojiPicker
+                  displayMode="textarea"
+                  field="content"
+                  setFieldValue={setFieldValue}
+                  value={values.content}
+                />
               </S.Div>
             </ModalContent>
 
