@@ -6,7 +6,7 @@ import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
-import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
+import Modal, {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {createCurrency, updateCurrency} from 'dispatchers/currencies';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Currency, SFC} from 'types';
@@ -125,7 +125,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
   }, [isEditMode, self.is_staff]);
 
   return (
-    <S.Modal className={className} close={close} header={isEditMode ? 'Edit Currency' : 'Create Currency'}>
+    <Modal className={className} close={close} header={isEditMode ? 'Edit Currency' : 'Create Currency'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid, setFieldValue, values}) => (
           <Form>
@@ -183,7 +183,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
           </Form>
         )}
       </Formik>
-    </S.Modal>
+    </Modal>
   );
 };
 
