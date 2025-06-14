@@ -11,9 +11,15 @@ export const Arrow = styled.div`
   text-align: center;
 `;
 
-export const Input = styled(UInput)`
+export const FormField = styled.div`
   margin-bottom: 24px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
+
+export const Input = styled(UInput)``;
 
 export const Label = styled.span`
   color: ${colors.palette.gray[600]};
@@ -33,9 +39,7 @@ export const NoWalletsMessage = styled.div`
   text-align: center;
 `;
 
-export const Select = styled(USelect)`
-  margin-bottom: 24px;
-`;
+export const Select = styled(USelect)``;
 
 export const Textarea = styled(UTextarea)`
   max-height: 350px;
@@ -44,7 +48,6 @@ export const Textarea = styled(UTextarea)`
 `;
 
 export const TextareaContainer = styled.div`
-  margin-bottom: 24px;
   position: relative;
 `;
 

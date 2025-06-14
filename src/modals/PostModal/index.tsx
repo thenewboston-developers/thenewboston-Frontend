@@ -87,7 +87,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
-      content: yup.string().required(),
+      content: yup.string().required('Content is required'),
     });
   }, []);
 

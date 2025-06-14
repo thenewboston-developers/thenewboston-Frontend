@@ -114,7 +114,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
     };
 
     if (!isEditMode) {
-      schema.ticker = yup.string().required();
+      schema.ticker = yup.string().required('Ticker is required');
 
       if (self.is_staff) {
         schema.domain = yup.string();
