@@ -5,6 +5,7 @@ import MdiIcon from '@mdi/react';
 import orderBy from 'lodash/orderBy';
 
 import Button, {ButtonColor} from 'components/Button';
+import EmptyText from 'components/EmptyText';
 import ExpandableWire from 'components/ExpandableWire';
 import Line from 'components/Line';
 import Loader from 'components/Loader';
@@ -85,11 +86,7 @@ const WalletDeposit: SFC = ({className}) => {
     );
 
     if (deposits.length === 0) {
-      return (
-        <S.EmptyState>
-          <p>No deposits yet</p>
-        </S.EmptyState>
-      );
+      return <EmptyText>No deposits yet</EmptyText>;
     }
 
     return deposits.map((wire) => <ExpandableWire key={wire.id} wire={wire} />);

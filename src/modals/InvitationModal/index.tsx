@@ -59,16 +59,15 @@ const InvitationModal: SFC<InvitationModalProps> = ({className, close, invitatio
   return (
     <S.Modal className={className} close={close} header={`${verb} Invitation`}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
-        {({dirty, errors, isSubmitting, isValid, touched}) => (
+        {({errors, isSubmitting, isValid, touched}) => (
           <Form>
             <ModalContent>
-              <Input errors={errors} label="Note" name="note" touched={touched} />
+              <Input errors={errors} label="Note (optional)" name="note" touched={touched} />
             </ModalContent>
 
             <ModalFooter>
               <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
-                dirty={dirty}
                 disabled={isSubmitting}
                 isSubmitting={isSubmitting}
                 isValid={isValid}
