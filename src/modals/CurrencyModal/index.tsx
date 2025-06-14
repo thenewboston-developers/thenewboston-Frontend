@@ -6,7 +6,7 @@ import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
-import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
+import Modal, {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import {createCurrency, updateCurrency} from 'dispatchers/currencies';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Currency, SFC} from 'types';
@@ -114,7 +114,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
     };
 
     if (!isEditMode) {
-      schema.ticker = yup.string().required();
+      schema.ticker = yup.string().required('Ticker is required');
 
       if (self.is_staff) {
         schema.domain = yup.string();
@@ -125,30 +125,40 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
   }, [isEditMode, self.is_staff]);
 
   return (
-    <S.Modal className={className} close={close} header={isEditMode ? 'Edit Currency' : 'Create Currency'}>
+    <Modal className={className} close={close} header={isEditMode ? 'Edit Currency' : 'Create Currency'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid, setFieldValue, values}) => (
           <Form>
             <ModalContent>
-              {!isEditMode && self.is_staff && (
-                <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />
+              {!isEditMode && (
+                <S.FormField>
+                  <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />
+                </S.FormField>
               )}
-              {!isEditMode && <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />}
-              <S.Textarea
-                errors={errors}
-                label="Description (optional)"
-                name="description"
-                placeholder=""
-                touched={touched}
-              />
-              {!values.logo && (
-                <FileInput
+              <S.FormField>
+                <S.Textarea
                   errors={errors}
-                  label="Logo (required, 512x512 pixels)"
-                  name="logo"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
+                  label="Description (optional)"
+                  name="description"
+                  placeholder=""
                   touched={touched}
                 />
+              </S.FormField>
+              {!isEditMode && self.is_staff && (
+                <S.FormField>
+                  <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />
+                </S.FormField>
+              )}
+              {!values.logo && (
+                <S.FormField>
+                  <FileInput
+                    errors={errors}
+                    label="Logo (required, 512x512 pixels)"
+                    name="logo"
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
+                    touched={touched}
+                  />
+                </S.FormField>
               )}
               <ImagePreview
                 onClear={async () => {
@@ -173,7 +183,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
           </Form>
         )}
       </Formik>
-    </S.Modal>
+    </Modal>
   );
 };
 

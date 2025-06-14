@@ -42,6 +42,4 @@ export const Label = styled.div`
   margin-bottom: 8px;
 `;
 
-export const SecondaryContainer = styled.div`
-  margin-bottom: 24px;
-`;
+export const SecondaryContainer = styled.div``;

@@ -5,7 +5,7 @@ import {Form, Formik} from 'formik';
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiBox from 'components/EmojiPicker';
-import {FileInput, Input, Select} from 'components/FormElements';
+import {FileInput} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
 import UserLabel from 'components/UserLabel';
@@ -94,7 +94,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
-      content: yup.string().required(),
+      content: yup.string().required('Content is required'),
       price_amount: yup
         .number()
         .required('Amount is required')
@@ -138,23 +138,31 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
                 </S.UserRow>
               </S.TransferInfo>
 
-              <Select
-                errors={errors}
-                label="Select Wallet"
-                name="wallet_id"
-                options={walletOptions}
-                touched={touched}
-              />
+              <S.FormField>
+                <S.Select
+                  errors={errors}
+                  label="Select Wallet"
+                  name="wallet_id"
+                  options={walletOptions}
+                  touched={touched}
+                />
+              </S.FormField>
 
-              <Input errors={errors} label="Amount" name="price_amount" touched={touched} type="number" />
+              <S.FormField>
+                <S.Input errors={errors} label="Amount" name="price_amount" touched={touched} type="number" />
+              </S.FormField>
 
-              <S.TextareaContainer>
-                <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
-                <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
-              </S.TextareaContainer>
+              <S.FormField>
+                <S.TextareaContainer>
+                  <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
+                  <EmojiBox field="content" setFieldValue={setFieldValue} value={values.content} />
+                </S.TextareaContainer>
+              </S.FormField>
 
               {!values.image && (
-                <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />
+                <S.FormField>
+                  <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />
+                </S.FormField>
               )}
               <ImagePreview
                 onClear={async () => {

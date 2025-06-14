@@ -21,9 +21,7 @@ export const OptionEmptyState = styled.div`
   padding: 16px;
 `;
 
-export const SecondaryContainer = styled.div`
-  margin-bottom: 24px;
-`;
+export const SecondaryContainer = styled.div``;
 
 export const Select = styled.select<{$error: boolean | string}>`
   appearance: none;

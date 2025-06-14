@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {Textarea as UTextarea} from 'components/FormElements';
+import {Input as UInput, Select as USelect, Textarea as UTextarea} from 'components/FormElements';
 import UModal from 'components/Modal';
 import {colors} from 'styles';
 
@@ -10,6 +10,16 @@ export const Arrow = styled.div`
   margin: 8px 0;
   text-align: center;
 `;
+
+export const FormField = styled.div`
+  margin-bottom: 24px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+export const Input = styled(UInput)``;
 
 export const Label = styled.span`
   color: ${colors.palette.gray[600]};
@@ -28,6 +38,8 @@ export const NoWalletsMessage = styled.div`
   margin-bottom: 24px;
   text-align: center;
 `;
+
+export const Select = styled(USelect)``;
 
 export const Textarea = styled(UTextarea)`
   max-height: 350px;
