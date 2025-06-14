@@ -100,7 +100,7 @@ const CreateAccountForm: SFC = () => {
         </Formik>
       </S.Panel>
       <S.QuestionText>
-        Already have an account? <S.Link to={PATH_AUTHENTICATION.LOGIN}>Sign In</S.Link>
+        Already have an account? <S.Link to={PATH_AUTHENTICATION.SIGN_IN}>Sign In</S.Link>
       </S.QuestionText>
     </>
   );

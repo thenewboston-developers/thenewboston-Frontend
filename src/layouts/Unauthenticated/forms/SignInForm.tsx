@@ -61,7 +61,7 @@ const SignInForm: SFC = () => {
         </Formik>
       </S.Panel>
       <S.QuestionText>
-        New user? <S.Link to={PATH_AUTHENTICATION.SIGNUP}>Create an Account</S.Link>
+        New user? <S.Link to={PATH_AUTHENTICATION.CREATE_ACCOUNT}>Create an Account</S.Link>
       </S.QuestionText>
     </>
   );

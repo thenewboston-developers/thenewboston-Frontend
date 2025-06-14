@@ -12,7 +12,7 @@ const Logout: SFC = () => {
 
   useEffect(() => {
     dispatch(logout());
-    navigate(PATH_AUTHENTICATION.LOGIN);
+    navigate(PATH_AUTHENTICATION.SIGN_IN);
   }, [dispatch, navigate]);
 
   return null;
