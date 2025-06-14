@@ -46,10 +46,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
     }
   };
 
-  const handlePostImageClick = () => {
-    toggleImageModal();
-  };
-
   const handleLikeClick = async () => {
     try {
       if (is_liked) {
@@ -63,6 +59,10 @@ const Post: SFC<PostProps> = ({className, post}) => {
     } catch (error) {
       displayErrorToast('Error updating like status');
     }
+  };
+
+  const handlePostImageClick = () => {
+    toggleImageModal();
   };
 
   const renderContent = () => {
@@ -133,7 +133,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
           </Linkify>
         </S.Content>
         {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
-        <S.Div>
+        <S.ActionsContainer>
           <S.BoxLeft>
             <S.LikeWrapper>
               <S.LikeButton $animate={animateLike} onClick={handleLikeClick}>
@@ -154,7 +154,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
               text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
             />
           </S.BoxLeft>
-        </S.Div>
+        </S.ActionsContainer>
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
       {imageModalIsOpen && image ? <FullScreenImageModal close={toggleImageModal} imageSrc={image} /> : null}

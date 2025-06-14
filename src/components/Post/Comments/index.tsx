@@ -99,11 +99,6 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     }
   };
 
-  const toggleMenu = () => {
-    toggleCurrencySelectModal();
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   const renderComments = () => {
     return commentDetails.map((comment, index) => <Comment comment={comment} key={index} />);
   };
@@ -122,6 +117,11 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
         <S.Icon path={mdiPlusCircle} size="24px" />
       </S.IconContainer>
     );
+  };
+
+  const toggleMenu = () => {
+    toggleCurrencySelectModal();
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (

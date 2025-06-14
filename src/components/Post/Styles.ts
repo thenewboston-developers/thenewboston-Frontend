@@ -43,17 +43,22 @@ const sparkle = keyframes`
   }
 `;
 
+export const ActionsContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  @media (max-width: ${breakpoints.mini}) {
+    justify-content: center;
+  }
+`;
+
 export const BoxLeft = styled.div`
   align-items: center;
   display: flex;
   gap: 16px;
   margin-top: 12px;
-`;
-
-export const LikeWrapper = styled.div`
-  align-items: center;
-  display: flex;
-  gap: 2px;
 `;
 
 export const Container = styled.div`
@@ -81,17 +86,6 @@ export const Date = styled.div`
   line-height: 1.2;
 `;
 
-export const Div = styled.div`
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-
-  @media (max-width: ${breakpoints.mini}) {
-    justify-content: center;
-  }
-`;
-
 export const DropdownMenu = styled(UDropdownMenu)`
   margin-right: -8px;
   margin-top: -4px;
@@ -104,6 +98,84 @@ export const Img = styled.img`
   max-height: 600px;
   max-width: 100%;
   object-fit: cover;
+`;
+
+export const LikeButton = styled.button<{$animate: boolean}>`
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  padding: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${colors.palette.gray[100]};
+    border-radius: 50%;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  ${({$animate}) =>
+    $animate &&
+    css`
+      &::before,
+      &::after {
+        animation: ${sparkle} 0.6s ease-out;
+        content: '✨';
+        font-size: 12px;
+        pointer-events: none;
+        position: absolute;
+      }
+
+      &::before {
+        left: -8px;
+        top: -8px;
+      }
+
+      &::after {
+        animation-delay: 0.2s;
+        bottom: -8px;
+        right: -8px;
+      }
+    `}
+`;
+
+export const LikeCount = styled.button`
+  background: transparent;
+  border: none;
+  color: ${colors.palette.gray[700]};
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: ${fonts.weight.medium};
+  padding: 4px;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${colors.palette.gray[900]};
+    text-decoration: underline;
+  }
+`;
+
+export const LikeIcon = styled(UIcon)<{$isLiked: boolean; $animate: boolean}>`
+  & path {
+    fill: ${({$isLiked}) => ($isLiked ? colors.palette.red[500] : colors.palette.gray[600])} !important;
+  }
+
+  ${({$animate}) =>
+    $animate &&
+    css`
+      animation: ${likeAnimation} 0.6s ease-out;
+    `}
+`;
+
+export const LikeWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 2px;
 `;
 
 export const LongContent = styled.span`
@@ -147,76 +219,4 @@ export const Top = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 4px;
-`;
-
-export const LikeButton = styled.button<{$animate: boolean}>`
-  align-items: center;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  padding: 4px;
-  position: relative;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${colors.palette.gray[100]};
-    border-radius: 50%;
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
-
-  ${({$animate}) =>
-    $animate &&
-    css`
-      &::before,
-      &::after {
-        content: '✨';
-        position: absolute;
-        font-size: 12px;
-        animation: ${sparkle} 0.6s ease-out;
-        pointer-events: none;
-      }
-
-      &::before {
-        top: -8px;
-        left: -8px;
-      }
-
-      &::after {
-        bottom: -8px;
-        right: -8px;
-        animation-delay: 0.2s;
-      }
-    `}
-`;
-
-export const LikeIcon = styled(UIcon)<{$isLiked: boolean; $animate: boolean}>`
-  & path {
-    fill: ${({$isLiked}) => ($isLiked ? colors.palette.red[500] : colors.palette.gray[600])} !important;
-  }
-
-  ${({$animate}) =>
-    $animate &&
-    css`
-      animation: ${likeAnimation} 0.6s ease-out;
-    `}
-`;
-
-export const LikeCount = styled.button`
-  background: transparent;
-  border: none;
-  color: ${colors.palette.gray[700]};
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: ${fonts.weight.medium};
-  padding: 4px;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: ${colors.palette.gray[900]};
-    text-decoration: underline;
-  }
 `;

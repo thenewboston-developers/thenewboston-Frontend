@@ -5,7 +5,7 @@ import UButton from 'components/Button';
 import {InlineInput as UInlineInput} from 'components/FormElements';
 import {breakpoints, colors} from 'styles';
 
-export const IMG_HEIGHT = 24;
+export const IMG_SIZE = '24px';
 
 export const Button = styled(UButton)`
   background-color: ${colors.background};
@@ -73,7 +73,6 @@ export const IconContainer = styled.div`
   border-radius: 8px 0 0 8px;
   cursor: pointer;
   display: flex;
-  height: 100%;
   justify-content: center;
   padding: 8px;
   transition: all 0.2s ease;
@@ -85,8 +84,8 @@ export const IconContainer = styled.div`
 
 export const Image = styled.img`
   border-radius: 50%;
-  height: ${`${IMG_HEIGHT}px`};
-  width: ${`${IMG_HEIGHT}px`};
+  height: ${IMG_SIZE};
+  width: ${IMG_SIZE};
 `;
 
 export const InputBox = styled.div`
@@ -106,7 +105,6 @@ export const PriceAmountInput = styled(UInlineInput)`
   background-color: ${colors.background};
   border-left: 1px solid ${colors.borderDarker};
   border-radius: 0 8px 8px 0;
-  height: 100%;
   width: 100px;
 
   @media (max-width: ${breakpoints.mobile}) {
