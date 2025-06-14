@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Form, Formik, FormikHelpers} from 'formik';
 
@@ -19,6 +19,7 @@ const Sell: SFC = ({className}) => {
   const [total, setTotal] = useState<number>(0);
   const activeAssetPair = useActiveAssetPair();
   const dispatch = useDispatch<AppDispatch>();
+  const formikRef = useRef<any>(null);
   const wallets = useSelector(getWallets);
 
   const initialValues = {
@@ -46,6 +47,7 @@ const Sell: SFC = ({className}) => {
       await dispatch(createExchangeOrder(requestData));
       displayToast('Sell order created!', ToastType.SUCCESS);
       resetForm();
+      setTotal(0);
     } catch (error) {
       displayErrorToast('Error creating order');
     }
@@ -73,9 +75,21 @@ const Sell: SFC = ({className}) => {
     });
   }, [primaryCurrencyBalance]);
 
+  useEffect(() => {
+    if (formikRef.current) {
+      formikRef.current.resetForm();
+      setTotal(0);
+    }
+  }, [activeAssetPair]);
+
   return (
     <S.Container className={className}>
-      <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
+      <Formik
+        initialValues={initialValues}
+        innerRef={formikRef}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+      >
         {({dirty, errors, handleChange, isSubmitting, isValid, touched, values}) => (
           <Form>
             <LogoInput
