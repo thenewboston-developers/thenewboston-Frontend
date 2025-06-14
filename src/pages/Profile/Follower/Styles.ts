@@ -77,6 +77,13 @@ export const Heading = styled.div`
   }
 `;
 
+export const LoaderContainer = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px;
+`;
+
 export const LoaderWrapper = styled.div`
   align-items: center;
   display: flex;

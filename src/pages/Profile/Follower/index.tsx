@@ -113,8 +113,19 @@ const Follower: SFC<FollowerProps> = ({className, type = FollowerType.FOLLOWERS}
   };
 
   const renderContent = () => {
-    if (followerList.length) return renderFollowerCards();
-    return <EmptyText>{emptyText}</EmptyText>;
+    if (isLoading && !followerList.length) {
+      return (
+        <S.LoaderContainer>
+          <Loader size={24} />
+        </S.LoaderContainer>
+      );
+    }
+
+    if (!followerList.length) {
+      return <EmptyText>{emptyText}</EmptyText>;
+    }
+
+    return renderFollowerCards();
   };
 
   const renderFollowerCards = () => {
