@@ -57,8 +57,6 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       notification.payload;
     const action = order_type === 'BUY' ? 'buy' : 'sell';
 
-    // For buy orders: user receives primary currency (what they bought)
-    // For sell orders: user receives secondary currency (payment for what they sold)
     const totalReceived = order_type === 'BUY' ? quantity : quantity * price;
     const receivedTicker = order_type === 'BUY' ? primary_currency_ticker : secondary_currency_ticker;
 
