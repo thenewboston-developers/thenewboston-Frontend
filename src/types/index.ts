@@ -4,6 +4,7 @@ import {CurrencyBalance} from 'types/api/currencyBalances';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer, GetFollowersParams} from 'types/api/follower';
 import {CreateInvitationRequest} from 'types/api/invitations';
+import {GetMintChartDataParams, MintChartDataResponse, MintDataPoint} from 'types/api/mintChartData';
 import {CreateMintRequest, GetMintsParams} from 'types/api/mints';
 import {GetPostsParams, PostReadSerializer} from 'types/api/posts';
 import {TotalAmountMintedResponse} from 'types/api/totalAmountMinted';
@@ -77,6 +78,7 @@ export {
   GenericFunction,
   GenericVoidFunction,
   GetFollowersParams,
+  GetMintChartDataParams,
   GetMintsParams,
   GetPostsParams,
   GetTradePriceChartDataParams,
@@ -89,6 +91,8 @@ export {
   LoginResponse,
   Manager,
   Mint,
+  MintChartDataResponse,
+  MintDataPoint,
   Mints,
   Notification,
   NotificationPaginatedResponse,

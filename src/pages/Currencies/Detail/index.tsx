@@ -24,11 +24,13 @@ import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import BalancesSection from './BalancesSection';
 import CurrencyInfoSection from './CurrencyInfoSection';
+import MintHistoryChart from './MintHistoryChart';
 import MintSection from './MintSection';
 import * as S from './Styles';
 
 const Detail: SFC = ({className}) => {
   const [activeTab, setActiveTab] = useState<'minting' | 'balances'>('minting');
+  const [chartRefreshTrigger, setChartRefreshTrigger] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
   const [loading, setLoading] = useState(true);
@@ -49,16 +51,13 @@ const Detail: SFC = ({className}) => {
 
     (async () => {
       try {
-        // Check if currency is already in store
         if (!currency) {
           await dispatch(getCurrency(parseInt(id)));
         }
 
-        // Fetch total amount minted separately
         const totalData = await getTotalAmountMinted(parseInt(id));
         setTotalAmountMinted(totalData.total_amount_minted);
       } catch (error) {
-        // Only show error if we're not in the process of deleting
         if (!isDeleting.current) {
           displayErrorToast('Error loading currency');
         }
@@ -119,7 +118,6 @@ const Detail: SFC = ({className}) => {
   const handleCurrencyModalSuccess = async () => {
     if (!id) return;
 
-    // Refetch total amount minted after update
     try {
       const totalData = await getTotalAmountMinted(parseInt(id));
       setTotalAmountMinted(totalData.total_amount_minted);
@@ -131,7 +129,6 @@ const Detail: SFC = ({className}) => {
   const handleMintModalSuccess = async () => {
     if (!currency || !id) return;
 
-    // Refetch total amount minted after minting
     try {
       const totalData = await getTotalAmountMinted(parseInt(id));
       setTotalAmountMinted(totalData.total_amount_minted);
@@ -139,10 +136,10 @@ const Detail: SFC = ({className}) => {
       displayErrorToast('Error updating currency details');
     }
 
-    // Refetch mints list
     const data = await dispatch(getMints({currency: currency.id, page: 1}));
     setMintsData(data);
     setCurrentPage(1);
+    setChartRefreshTrigger((prev) => prev + 1);
   };
 
   const handlePageChange = (page: number) => {
@@ -178,6 +175,7 @@ const Detail: SFC = ({className}) => {
 
         <S.Content>
           <CurrencyInfoSection currency={currency} totalAmountMinted={totalAmountMinted} />
+          <MintHistoryChart currency={currency} refreshTrigger={chartRefreshTrigger} />
           <S.TabSection>
             <S.TabHeader>
               <Tabs>
