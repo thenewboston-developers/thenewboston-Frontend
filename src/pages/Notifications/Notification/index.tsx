@@ -1,7 +1,7 @@
 import {ReactNode} from 'react';
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {mdiContentCopy, mdiHeart, mdiSwapHorizontal} from '@mdi/js';
+import {mdiContentCopy, mdiHeart, mdiSwapHorizontal, mdiWalletBifoldOutline} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import CurrencyLogo from 'components/CurrencyLogo';
@@ -57,6 +57,31 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     );
   };
 
+  const renderPostCoinTransferNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.POST_COIN_TRANSFER) return null;
+
+    const {content, owner, price_amount, price_currency_ticker} = notification.payload;
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/profile/${owner.id}`}>
+          <S.AvatarContainer>
+            <Avatar src={owner.avatar} size="45px" />
+            <S.AvatarIcon path={mdiWalletBifoldOutline} size="23px" />
+          </S.AvatarContainer>
+        </Link>
+        <S.TextContainer>
+          <div>
+            <S.Link to={`/profile/${owner.id}`}>{owner.username}</S.Link> sent you {price_amount.toLocaleString()}{' '}
+            {price_currency_ticker} via a post: "{content}"
+          </div>
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
+  };
+
   const renderPostCommentNotification = () => {
     if (notification.payload.notification_type !== NotificationType.POST_COMMENT) return null;
 
@@ -73,7 +98,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
             <S.Link to={`/profile/${notification.payload.commenter.id}`}>
               {notification.payload.commenter.username}
             </S.Link>{' '}
-            commented on your <strong>Post</strong>: "{notification.payload.comment}"
+            commented on your post: "{notification.payload.comment}"
           </div>
           <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
         </S.TextContainer>
@@ -96,7 +121,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
         <S.TextContainer>
           <div>
             <S.Link to={`/profile/${notification.payload.liker.id}`}>{notification.payload.liker.username}</S.Link>{' '}
-            liked your <strong>Post</strong>
+            liked your post
           </div>
           <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
         </S.TextContainer>
@@ -116,6 +141,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const renderContent = () => {
     const notificationTypes: {[key in NotificationType]: () => ReactNode} = {
       [NotificationType.EXCHANGE_ORDER_FILLED]: renderExchangeOrderFilledNotification,
+      [NotificationType.POST_COIN_TRANSFER]: renderPostCoinTransferNotification,
       [NotificationType.POST_COMMENT]: renderPostCommentNotification,
       [NotificationType.POST_LIKE]: renderPostLikeNotification,
     };

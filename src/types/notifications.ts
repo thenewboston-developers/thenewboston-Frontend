@@ -16,6 +16,16 @@ export interface ExchangeOrderFilledPayload {
   secondary_currency_ticker: string;
 }
 
+export interface PostCoinTransferPayload {
+  content: string;
+  notification_type: NotificationType.POST_COIN_TRANSFER;
+  owner: UserReadSerializer;
+  post_id: string;
+  price_amount: number;
+  price_currency_id: string;
+  price_currency_ticker: string;
+}
+
 export interface PostCommentPayload {
   comment: string;
   commenter: UserReadSerializer;
@@ -29,7 +39,11 @@ export interface PostLikePayload {
   post_id: number;
 }
 
-export type NotificationPayload = ExchangeOrderFilledPayload | PostCommentPayload | PostLikePayload;
+export type NotificationPayload =
+  | ExchangeOrderFilledPayload
+  | PostCoinTransferPayload
+  | PostCommentPayload
+  | PostLikePayload;
 
 export interface Notification extends CreatedModified {
   id: number;
