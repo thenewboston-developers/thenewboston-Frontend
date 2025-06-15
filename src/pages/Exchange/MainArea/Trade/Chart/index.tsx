@@ -105,7 +105,7 @@ const Chart: SFC = ({className}) => {
     if (isLoading && candlesticks.length === 0) {
       return (
         <S.LoadingContainer>
-          <Loader size={48} />
+          <Loader size={24} />
         </S.LoadingContainer>
       );
     }

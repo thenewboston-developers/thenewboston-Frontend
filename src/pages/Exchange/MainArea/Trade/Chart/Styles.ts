@@ -58,6 +58,7 @@ export const ChartHeader = styled.div`
 export const ChartWrapper = styled.div`
   background: white;
   border-radius: 16px;
+  display: flex;
   min-height: 420px;
   overflow: hidden;
   position: relative;
@@ -182,17 +183,15 @@ export const TimeframeButtons = styled.div`
 export const EmptyContainer = styled.div`
   align-items: center;
   display: flex;
-  height: 100%;
+  flex: 1;
   justify-content: center;
-  min-height: 400px;
 `;
 
 export const LoadingContainer = styled.div`
   align-items: center;
   color: ${colors.palette.gray[600]};
   display: flex;
+  flex: 1;
   font-size: 16px;
-  height: 100%;
   justify-content: center;
-  min-height: 400px;
 `;
