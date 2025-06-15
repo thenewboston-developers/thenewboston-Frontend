@@ -34,6 +34,17 @@ export const DotContainer = styled.div`
   padding-right: 8px;
 `;
 
+export const ExchangeIconContainer = styled.div`
+  align-items: center;
+  background: ${colors.backgroundDark};
+  border-radius: 50%;
+  display: flex;
+  height: 45px;
+  justify-content: center;
+  position: relative;
+  width: 45px;
+`;
+
 export const Icon = styled(UIcon)`
   background: ${colors.backgroundDark};
   border: 2px solid ${colors.white};

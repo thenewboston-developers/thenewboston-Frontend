@@ -1,6 +1,6 @@
 import {ReactNode} from 'react';
 import {Link} from 'react-router-dom';
-import {mdiContentCopy, mdiHeart} from '@mdi/js';
+import {mdiContentCopy, mdiHeart, mdiSwapHorizontal} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import {NotificationType} from 'enums';
@@ -45,6 +45,34 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     );
   };
 
+  const renderExchangeOrderFilledNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.EXCHANGE_ORDER_FILLED) return null;
+
+    const {order_type, price, primary_currency_ticker, quantity, secondary_currency_ticker} = notification.payload;
+    const action = order_type === 'BUY' ? 'buy' : 'sell';
+
+    // For buy orders: user receives primary currency (what they bought)
+    // For sell orders: user receives secondary currency (payment for what they sold)
+    const totalReceived = order_type === 'BUY' ? quantity : quantity * price;
+    const receivedTicker = order_type === 'BUY' ? primary_currency_ticker : secondary_currency_ticker;
+
+    return (
+      <S.NotificationContainer>
+        <S.ExchangeIconContainer>
+          <S.Icon path={mdiSwapHorizontal} size="23px" />
+        </S.ExchangeIconContainer>
+        <S.TextContainer>
+          <div>
+            Your order to {action} {quantity.toLocaleString()} {primary_currency_ticker} was filled. You received a
+            total of {totalReceived.toLocaleString()} {receivedTicker}.
+          </div>
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
+  };
+
   const renderPostLikeNotification = () => {
     if (notification.payload.notification_type !== NotificationType.POST_LIKE) return null;
 
@@ -68,6 +96,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
 
   const renderContent = () => {
     const notificationTypes: {[key in NotificationType]: () => ReactNode} = {
+      [NotificationType.EXCHANGE_ORDER_FILLED]: renderExchangeOrderFilledNotification,
       [NotificationType.POST_COMMENT]: renderPostCommentNotification,
       [NotificationType.POST_LIKE]: renderPostLikeNotification,
     };

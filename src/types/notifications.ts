@@ -17,7 +17,17 @@ export interface PostCommentPayload {
   post_id: number;
 }
 
-export type NotificationPayload = PostLikePayload | PostCommentPayload;
+export interface ExchangeOrderFilledPayload {
+  notification_type: NotificationType.EXCHANGE_ORDER_FILLED;
+  order_id: string;
+  order_type: 'BUY' | 'SELL';
+  price: number;
+  primary_currency_ticker: string;
+  quantity: number;
+  secondary_currency_ticker: string;
+}
+
+export type NotificationPayload = ExchangeOrderFilledPayload | PostCommentPayload | PostLikePayload;
 
 export interface Notification extends CreatedModified {
   id: number;

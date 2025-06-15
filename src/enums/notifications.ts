@@ -1,4 +1,5 @@
 export enum NotificationType {
+  EXCHANGE_ORDER_FILLED = 'EXCHANGE_ORDER_FILLED',
   POST_COMMENT = 'POST_COMMENT',
   POST_LIKE = 'POST_LIKE',
 }
