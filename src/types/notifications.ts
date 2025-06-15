@@ -4,19 +4,6 @@ import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
 import {PaginatedResponse, Pagination} from 'types/pagination';
 
-export interface PostLikePayload {
-  liker: UserReadSerializer;
-  notification_type: NotificationType.POST_LIKE;
-  post_id: number;
-}
-
-export interface PostCommentPayload {
-  comment: string;
-  commenter: UserReadSerializer;
-  notification_type: NotificationType.POST_COMMENT;
-  post_id: number;
-}
-
 export interface ExchangeOrderFilledPayload {
   notification_type: NotificationType.EXCHANGE_ORDER_FILLED;
   order_id: string;
@@ -27,6 +14,19 @@ export interface ExchangeOrderFilledPayload {
   quantity: number;
   secondary_currency_id: string;
   secondary_currency_ticker: string;
+}
+
+export interface PostCommentPayload {
+  comment: string;
+  commenter: UserReadSerializer;
+  notification_type: NotificationType.POST_COMMENT;
+  post_id: number;
+}
+
+export interface PostLikePayload {
+  liker: UserReadSerializer;
+  notification_type: NotificationType.POST_LIKE;
+  post_id: number;
 }
 
 export type NotificationPayload = ExchangeOrderFilledPayload | PostCommentPayload | PostLikePayload;

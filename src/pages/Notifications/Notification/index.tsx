@@ -19,37 +19,6 @@ export interface NotificationProps {
 const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const currencies = useSelector(getCurrencies);
 
-  const renderRedDot = () => {
-    return notification.is_read ? null : (
-      <S.DotContainer>
-        <S.Dot />
-      </S.DotContainer>
-    );
-  };
-
-  const renderPostCommentNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.POST_COMMENT) return null;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/profile/${notification.payload.commenter.id}`}>
-          <Avatar src={notification.payload.commenter.avatar} size="45px" />
-          <S.AvatarIcon path={mdiContentCopy} size="23px" />
-        </Link>
-        <S.TextContainer>
-          <div>
-            <S.Link to={`/profile/${notification.payload.commenter.id}`}>
-              {notification.payload.commenter.username}
-            </S.Link>{' '}
-            commented on your <strong>Post</strong>: "{notification.payload.comment}"
-          </div>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
-        </S.TextContainer>
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
   const renderExchangeOrderFilledNotification = () => {
     if (notification.payload.notification_type !== NotificationType.EXCHANGE_ORDER_FILLED) return null;
 
@@ -86,6 +55,29 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     );
   };
 
+  const renderPostCommentNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.POST_COMMENT) return null;
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/profile/${notification.payload.commenter.id}`}>
+          <Avatar src={notification.payload.commenter.avatar} size="45px" />
+          <S.AvatarIcon path={mdiContentCopy} size="23px" />
+        </Link>
+        <S.TextContainer>
+          <div>
+            <S.Link to={`/profile/${notification.payload.commenter.id}`}>
+              {notification.payload.commenter.username}
+            </S.Link>{' '}
+            commented on your <strong>Post</strong>: "{notification.payload.comment}"
+          </div>
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
+  };
+
   const renderPostLikeNotification = () => {
     if (notification.payload.notification_type !== NotificationType.POST_LIKE) return null;
 
@@ -104,6 +96,14 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
         </S.TextContainer>
         {renderRedDot()}
       </S.NotificationContainer>
+    );
+  };
+
+  const renderRedDot = () => {
+    return notification.is_read ? null : (
+      <S.DotContainer>
+        <S.Dot />
+      </S.DotContainer>
     );
   };
 
