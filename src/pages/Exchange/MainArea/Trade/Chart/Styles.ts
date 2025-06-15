@@ -25,15 +25,6 @@ export const ChangeArrow = styled.span<{$isPositive: boolean}>`
   font-size: 12px;
 `;
 
-export const ChartBackground = styled.div`
-  background: ${colors.white};
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-  padding: 24px;
-  position: relative;
-  transition: all 0.3s ease;
-`;
-
 export const ChartControls = styled.div`
   align-items: center;
   display: flex;
@@ -58,6 +49,8 @@ export const ChartHeader = styled.div`
 export const ChartWrapper = styled.div`
   background: white;
   border-radius: 16px;
+  display: flex;
+  min-height: 420px;
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -70,6 +63,12 @@ export const ChartWrapper = styled.div`
 `;
 
 export const Container = styled.div`
+  background: ${colors.white};
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  padding: 24px;
+  position: relative;
+  transition: all 0.3s ease;
   width: 100%;
 `;
 
@@ -178,11 +177,18 @@ export const TimeframeButtons = styled.div`
   padding: 4px;
 `;
 
+export const EmptyContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+`;
+
 export const LoadingContainer = styled.div`
   align-items: center;
   color: ${colors.palette.gray[600]};
   display: flex;
+  flex: 1;
   font-size: 16px;
-  height: 400px;
   justify-content: center;
 `;

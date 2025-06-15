@@ -3,6 +3,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import * as d3 from 'd3';
 
 import CurrencyLogo from 'components/CurrencyLogo';
+import EmptyText from 'components/EmptyText';
+import Loader from 'components/Loader';
 import {getChartData as fetchChartData} from 'dispatchers/exchangeChartData';
 import {useActiveAssetPair} from 'hooks';
 import {getChartData} from 'selectors/state';
@@ -98,6 +100,26 @@ const Chart: SFC = ({className}) => {
   }, [candlesticks]);
 
   const isPositive = priceChange >= 0;
+
+  const renderChartContent = () => {
+    if (isLoading && candlesticks.length === 0) {
+      return (
+        <S.LoadingContainer>
+          <Loader size={24} />
+        </S.LoadingContainer>
+      );
+    }
+
+    if (candlesticks.length === 0) {
+      return (
+        <S.EmptyContainer>
+          <EmptyText>No chart data available for this timeframe</EmptyText>
+        </S.EmptyContainer>
+      );
+    }
+
+    return <svg ref={svgRef}></svg>;
+  };
 
   useEffect(() => {
     if (!svgRef.current || !containerRef.current || displayData.length === 0) return;
@@ -388,70 +410,56 @@ const Chart: SFC = ({className}) => {
     };
   }, [displayData, isPositive, timeframe]);
 
-  if (isLoading && candlesticks.length === 0) {
-    return (
-      <S.Container className={className}>
-        <S.ChartBackground>
-          <S.LoadingContainer>Loading chart data...</S.LoadingContainer>
-        </S.ChartBackground>
-      </S.Container>
-    );
-  }
-
   return (
     <S.Container className={className}>
-      <S.ChartBackground>
-        <S.ChartHeader>
-          <S.PriceSection>
-            <S.PriceWrapper>
-              <S.CurrentPrice>
-                {activeAssetPair && (
-                  <>
-                    <S.PriceLogo>
-                      <CurrencyLogo logo={activeAssetPair.secondary_currency.logo} width="32px" />
-                    </S.PriceLogo>
-                    <S.PriceAmount>{lastTradePrice}</S.PriceAmount>
-                  </>
-                )}
-              </S.CurrentPrice>
+      <S.ChartHeader>
+        <S.PriceSection>
+          <S.PriceWrapper>
+            <S.CurrentPrice>
+              {activeAssetPair && (
+                <>
+                  <S.PriceLogo>
+                    <CurrencyLogo logo={activeAssetPair.secondary_currency.logo} width="32px" />
+                  </S.PriceLogo>
+                  <S.PriceAmount>{lastTradePrice}</S.PriceAmount>
+                </>
+              )}
+            </S.CurrentPrice>
 
-              <S.PriceChange $isPositive={isPositive}>
-                <S.ChangeArrow $isPositive={isPositive}>{isPositive ? '▲' : '▼'}</S.ChangeArrow>
-                {Math.abs(priceChange).toFixed(2)}%
-              </S.PriceChange>
-            </S.PriceWrapper>
+            <S.PriceChange $isPositive={isPositive}>
+              <S.ChangeArrow $isPositive={isPositive}>{isPositive ? '▲' : '▼'}</S.ChangeArrow>
+              {Math.abs(priceChange).toFixed(2)}%
+            </S.PriceChange>
+          </S.PriceWrapper>
 
-            <S.StatsBar>
-              <S.StatItem>
-                <S.StatLabel>High</S.StatLabel>
-                <S.StatValue>{priceStats.max}</S.StatValue>
-              </S.StatItem>
-              <S.StatItem>
-                <S.StatLabel>Low</S.StatLabel>
-                <S.StatValue>{priceStats.min}</S.StatValue>
-              </S.StatItem>
-              <S.StatItem>
-                <S.StatLabel>Avg</S.StatLabel>
-                <S.StatValue>{priceStats.avg.toFixed(2)}</S.StatValue>
-              </S.StatItem>
-            </S.StatsBar>
-          </S.PriceSection>
+          <S.StatsBar>
+            <S.StatItem>
+              <S.StatLabel>High</S.StatLabel>
+              <S.StatValue>{priceStats.max}</S.StatValue>
+            </S.StatItem>
+            <S.StatItem>
+              <S.StatLabel>Low</S.StatLabel>
+              <S.StatValue>{priceStats.min}</S.StatValue>
+            </S.StatItem>
+            <S.StatItem>
+              <S.StatLabel>Avg</S.StatLabel>
+              <S.StatValue>{priceStats.avg.toFixed(2)}</S.StatValue>
+            </S.StatItem>
+          </S.StatsBar>
+        </S.PriceSection>
 
-          <S.ChartControls>
-            <S.TimeframeButtons>
-              {(['1D', '1W', '1M', '3M', '1Y', 'ALL'] as const).map((tf) => (
-                <S.TimeframeButton $active={timeframe === tf} key={tf} onClick={() => setTimeframe(tf)}>
-                  {tf}
-                </S.TimeframeButton>
-              ))}
-            </S.TimeframeButtons>
-          </S.ChartControls>
-        </S.ChartHeader>
+        <S.ChartControls>
+          <S.TimeframeButtons>
+            {(['1D', '1W', '1M', '3M', '1Y', 'ALL'] as const).map((tf) => (
+              <S.TimeframeButton $active={timeframe === tf} key={tf} onClick={() => setTimeframe(tf)}>
+                {tf}
+              </S.TimeframeButton>
+            ))}
+          </S.TimeframeButtons>
+        </S.ChartControls>
+      </S.ChartHeader>
 
-        <S.ChartWrapper ref={containerRef}>
-          <svg ref={svgRef}></svg>
-        </S.ChartWrapper>
-      </S.ChartBackground>
+      <S.ChartWrapper ref={containerRef}>{renderChartContent()}</S.ChartWrapper>
     </S.Container>
   );
 };
