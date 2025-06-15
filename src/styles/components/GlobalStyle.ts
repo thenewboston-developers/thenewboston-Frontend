@@ -7,6 +7,11 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
   body {
     background: ${colors.background};
     color: ${colors.primary};
@@ -54,21 +59,6 @@ const GlobalStyle = createGlobalStyle`
   p {
     margin: 0 0 20px 0;
   }
-  
-  // Custom Global Classes 
-  .align-screen-center {
-    left: 60%;
-    position: fixed;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1050;
-  }
-  
-  .disabled {
-    pointer-events: none;
-    opacity: 0.7;
-  }
-
 `;
 
 export default GlobalStyle;
