@@ -72,7 +72,7 @@ const WalletTransfers: SFC = ({className}) => {
 
   const renderTransfer = (transfer: Transfer) => {
     const isReceived = transfer.amount > 0;
-    const action = isReceived ? 'sent' : 'received';
+    const action = isReceived ? 'sent coins to you' : 'received coins from you';
     const source = transfer.comment_id ? 'comment' : 'post';
     const description = `${action} via ${source}`;
 
