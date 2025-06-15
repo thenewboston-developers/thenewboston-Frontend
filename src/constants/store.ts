@@ -1,6 +1,5 @@
 export const ASSET_PAIRS = 'assetPairs';
 export const AUTHENTICATION = 'authentication';
-export const CHART_DATA = 'chartData';
 export const COMMENTS = 'comments';
 export const CURRENCIES = 'currencies';
 export const EXCHANGE_ORDERS = 'exchangeOrders';
@@ -14,6 +13,7 @@ export const NOTIFICATIONS = 'notifications';
 export const POSTS = 'posts';
 export const SELF = 'self';
 export const TRADES = 'trades';
+export const TRADE_PRICE_CHART_DATA = 'tradePriceChartData';
 export const USERS = 'users';
 export const USER_STATS = 'userStats';
 export const WALLETS = 'wallets';

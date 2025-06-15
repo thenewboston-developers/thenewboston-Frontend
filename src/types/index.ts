@@ -1,13 +1,18 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CurrencyBalance} from 'types/api/currencyBalances';
-import {Candlestick, ChartData, ChartTimeRange, GetChartDataParams} from 'types/api/exchangeChartData';
 import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer, GetFollowersParams} from 'types/api/follower';
 import {CreateInvitationRequest} from 'types/api/invitations';
 import {CreateMintRequest, GetMintsParams} from 'types/api/mints';
 import {GetPostsParams, PostReadSerializer} from 'types/api/posts';
 import {TotalAmountMintedResponse} from 'types/api/totalAmountMinted';
+import {
+  Candlestick,
+  ChartTimeRange,
+  GetTradePriceChartDataParams,
+  TradePriceChartData,
+} from 'types/api/tradePriceChartData';
 import {GetTradesParams} from 'types/api/trades';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {UserStatsSerializer} from 'types/api/userStats';
@@ -45,7 +50,6 @@ export {
   Authentication,
   Block,
   Candlestick,
-  ChartData,
   ChartTimeRange,
   ClassName,
   Comment,
@@ -72,10 +76,10 @@ export {
   Followers,
   GenericFunction,
   GenericVoidFunction,
-  GetChartDataParams,
   GetFollowersParams,
   GetMintsParams,
   GetPostsParams,
+  GetTradePriceChartDataParams,
   GetTradesParams,
   Invitation,
   InvitationLimit,
@@ -101,6 +105,7 @@ export {
   SFC,
   TotalAmountMintedResponse,
   Trade,
+  TradePriceChartData,
   Trades,
   Transfer,
   TransfersResponse,

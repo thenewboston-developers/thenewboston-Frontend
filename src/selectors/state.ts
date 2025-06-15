@@ -2,7 +2,6 @@ import {RootState} from 'types';
 
 export const getAssetPairs = (state: RootState) => state.assetPairs;
 export const getAuthentication = (state: RootState) => state.authentication;
-export const getChartData = (state: RootState) => state.chartData;
 export const getComments = (state: RootState) => state.comments;
 export const getCurrencies = (state: RootState) => state.currencies;
 export const getExchangeOrders = (state: RootState) => state.exchangeOrders;
@@ -18,6 +17,7 @@ export const isLoadingNotifications = (state: RootState) => state.notifications.
 export const getTotalUnreadNotificationCount = (state: RootState) => state.notifications.totalUnreadCount;
 export const getPosts = (state: RootState) => state.posts.posts;
 export const getSelf = (state: RootState) => state.self;
+export const getTradePriceChartData = (state: RootState) => state.tradePriceChartData;
 export const getTrades = (state: RootState) => state.trades;
 export const getUserStats = (state: RootState) => state.userStats;
 export const getUsers = (state: RootState) => state.users;

@@ -16,7 +16,6 @@ import storage from 'redux-persist/lib/storage';
 import {LOGOUT_USER} from 'store/actions';
 import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
-import chartDataReducer from 'store/chartData';
 import commentsReducer from 'store/comments';
 import currenciesReducer from 'store/currencies';
 import exchangeOrdersReducer from 'store/exchangeOrders';
@@ -30,6 +29,7 @@ import mintsReducer from 'store/mints';
 import notificationsReducer from 'store/notifications';
 import postsReducer from 'store/posts';
 import selfReducer from 'store/self';
+import tradePriceChartDataReducer from 'store/tradePriceChartData';
 import tradesReducer from 'store/trades';
 import usersReducer from 'store/users';
 import userStatsReducer from 'store/userStats';
@@ -39,7 +39,6 @@ import wiresReducer from 'store/wires';
 const rootReducer = combineReducers({
   assetPairs: assetPairsReducer,
   authentication: authenticationReducer,
-  chartData: chartDataReducer,
   comments: commentsReducer,
   currencies: currenciesReducer,
   exchangeOrders: exchangeOrdersReducer,
@@ -52,6 +51,7 @@ const rootReducer = combineReducers({
   notifications: notificationsReducer,
   posts: postsReducer,
   self: selfReducer,
+  tradePriceChartData: tradePriceChartDataReducer,
   trades: tradesReducer,
   userStats: userStatsReducer,
   users: usersReducer,

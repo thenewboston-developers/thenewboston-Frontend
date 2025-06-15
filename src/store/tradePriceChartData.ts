@@ -1,27 +1,27 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {CHART_DATA} from 'constants/store';
+import {TRADE_PRICE_CHART_DATA} from 'constants/store';
 import {Candlestick, Trade} from 'types';
 
-export interface ChartDataState {
+export interface TradePriceChartDataState {
   candlesticks: Candlestick[];
   intervalMinutes: number;
   primaryCurrencyId: number | null;
   secondaryCurrencyId: number | null;
 }
 
-const initialState: ChartDataState = {
+const initialState: TradePriceChartDataState = {
   candlesticks: [],
   intervalMinutes: 0,
   primaryCurrencyId: null,
   secondaryCurrencyId: null,
 };
 
-const chartData = createSlice({
+const tradePriceChartData = createSlice({
   initialState,
-  name: CHART_DATA,
+  name: TRADE_PRICE_CHART_DATA,
   reducers: {
-    clearChartData: () => initialState,
+    clearTradePriceChartData: () => initialState,
     processTrade: (state, {payload}: PayloadAction<Trade>) => {
       if (!state.intervalMinutes || state.candlesticks.length === 0) {
         return;
@@ -91,7 +91,7 @@ const chartData = createSlice({
         state.candlesticks.push(newCandlestick);
       }
     },
-    setChartData: (
+    setTradePriceChartData: (
       state,
       {
         payload,
@@ -110,5 +110,5 @@ const chartData = createSlice({
   },
 });
 
-export const {clearChartData, processTrade, setChartData} = chartData.actions;
-export default chartData.reducer;
+export const {clearTradePriceChartData, processTrade, setTradePriceChartData} = tradePriceChartData.actions;
+export default tradePriceChartData.reducer;
