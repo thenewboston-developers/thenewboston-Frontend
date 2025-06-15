@@ -35,7 +35,6 @@ export const CommentForm = styled.div`
   align-items: center;
   display: flex;
   gap: 8px;
-  //margin-bottom: 14px;
 
   @media (max-width: ${breakpoints.mobile}) {
     align-items: flex-start;
