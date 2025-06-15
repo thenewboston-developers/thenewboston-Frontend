@@ -71,7 +71,7 @@ const DropdownMenu: SFC<DropdownMenuProps> = ({className, icon, options}) => {
           role="button"
           $MenuIndex={index}
         >
-          <S.Div $label={label!.toString()}>{label}</S.Div>
+          <S.OptionLabel $label={label!.toString()}>{label}</S.OptionLabel>
         </S.MenuOption>
       ))}
     </S.Menu>

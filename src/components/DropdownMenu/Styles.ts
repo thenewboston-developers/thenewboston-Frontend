@@ -4,19 +4,6 @@ import Icon from 'components/Icon';
 import {colors, fonts} from 'styles';
 import {Menu as UMenu, Option} from 'styles/components/DropMenuStyle';
 
-export const Div = styled.div<{$label: string}>`
-  align-items: center;
-  color: ${({$label = ''}) => ($label === 'Delete' ? colors.palette.red[500] : colors.palette.gray[700])};
-  display: flex;
-  font-weight: ${fonts.weight.medium};
-  justify-content: flex-start;
-  transition: color 0.15s ease;
-
-  &:hover {
-    color: ${({$label = ''}) => ($label === 'Delete' ? colors.palette.red[600] : colors.black)};
-  }
-`;
-
 export const Menu = styled(UMenu)<{$isOpen?: boolean}>`
   animation: fadeIn 0.2s ease;
   background: ${colors.white};
@@ -46,6 +33,7 @@ export const MenuIcon = styled(Icon)<{$isOpen: boolean}>`
   background: ${({$isOpen = false}) => ($isOpen ? 'rgba(144, 157, 171, 0.08)' : 'transparent')};
   border-radius: 6px;
   color: ${({$isOpen = false}) => ($isOpen ? colors.palette.gray[700] : colors.palette.gray[600])};
+  cursor: pointer;
   padding: 2px;
   transition:
     background 0.3s ease,
@@ -54,7 +42,6 @@ export const MenuIcon = styled(Icon)<{$isOpen: boolean}>`
   &:hover {
     background: rgba(144, 157, 171, 0.08);
     color: ${colors.palette.gray[700]};
-    cursor: pointer;
   }
 `;
 
@@ -72,5 +59,18 @@ export const MenuOption = styled(Option)<{$MenuIndex: number}>`
 
   &:active {
     background: rgba(144, 157, 171, 0.12);
+  }
+`;
+
+export const OptionLabel = styled.div<{$label: string}>`
+  align-items: center;
+  color: ${({$label = ''}) => ($label === 'Delete' ? colors.palette.red[500] : colors.palette.gray[700])};
+  display: flex;
+  font-weight: ${fonts.weight.medium};
+  justify-content: flex-start;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: ${({$label = ''}) => ($label === 'Delete' ? colors.palette.red[600] : colors.black)};
   }
 `;
