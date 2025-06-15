@@ -34,10 +34,12 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     return (
       <S.NotificationContainer>
         {primaryCurrency?.logo ? (
-          <S.CurrencyLogoContainer>
-            <CurrencyLogo logo={primaryCurrency.logo} width="45px" />
-            <S.ExchangeIcon path={mdiSwapHorizontal} size="23px" />
-          </S.CurrencyLogoContainer>
+          <Link to={`/currencies/${primary_currency_id}`}>
+            <S.CurrencyLogoContainer>
+              <CurrencyLogo logo={primaryCurrency.logo} width="45px" />
+              <S.ExchangeIcon path={mdiSwapHorizontal} size="23px" />
+            </S.CurrencyLogoContainer>
+          </Link>
         ) : (
           <S.ExchangeIconContainer>
             <S.ExchangeIcon path={mdiSwapHorizontal} size="23px" />
@@ -61,8 +63,10 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     return (
       <S.NotificationContainer>
         <Link to={`/profile/${notification.payload.commenter.id}`}>
-          <Avatar src={notification.payload.commenter.avatar} size="45px" />
-          <S.AvatarIcon path={mdiContentCopy} size="23px" />
+          <S.AvatarContainer>
+            <Avatar src={notification.payload.commenter.avatar} size="45px" />
+            <S.AvatarIcon path={mdiContentCopy} size="23px" />
+          </S.AvatarContainer>
         </Link>
         <S.TextContainer>
           <div>
@@ -84,8 +88,10 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     return (
       <S.NotificationContainer>
         <Link to={`/profile/${notification.payload.liker.id}`}>
-          <Avatar src={notification.payload.liker.avatar} size="45px" />
-          <S.AvatarIcon path={mdiHeart} size="23px" />
+          <S.AvatarContainer>
+            <Avatar src={notification.payload.liker.avatar} size="45px" />
+            <S.AvatarIcon path={mdiHeart} size="23px" />
+          </S.AvatarContainer>
         </Link>
         <S.TextContainer>
           <div>

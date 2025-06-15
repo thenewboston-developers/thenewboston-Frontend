@@ -5,15 +5,19 @@ import styled from 'styled-components';
 import UDot from 'components/Dot';
 import {colors, fonts} from 'styles';
 
+export const AvatarContainer = styled.div`
+  position: relative;
+`;
+
 export const AvatarIcon = styled(UIcon)`
   background: ${colors.backgroundDark};
   border: 2px solid ${colors.white};
   border-radius: 50%;
+  bottom: -2px;
   color: ${colors.white};
-  margin-left: 32px;
-  margin-top: -18px;
   padding: 3px;
   position: absolute;
+  right: -2px;
   z-index: 100;
 `;
 
