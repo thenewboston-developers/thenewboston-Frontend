@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {colors, fonts, pagePadding} from 'styles';
+import {colors, fonts, pagePadding, toolbarStyle} from 'styles';
 
 export const BackButton = styled.button`
   align-items: center;
@@ -28,25 +28,22 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
+`;
+
+export const ScrollableContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
 `;
 
 export const Content = styled.div`
   ${pagePadding};
-  flex: 1;
   margin: 0 auto;
   max-width: 1200px;
-  overflow-y: auto;
   width: 100%;
 `;
 
 export const Header = styled.div`
-  align-items: center;
-  background: ${colors.white};
-  border-bottom: 1px solid ${colors.border};
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 24px;
+  ${toolbarStyle};
 `;
 
 export const TabSection = styled.div`

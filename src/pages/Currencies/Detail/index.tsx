@@ -173,38 +173,40 @@ const Detail: SFC = ({className}) => {
           {isOwner && <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />}
         </S.Header>
 
-        <S.Content>
-          <CurrencyInfoSection currency={currency} totalAmountMinted={totalAmountMinted} />
-          <MintHistoryChart currency={currency} refreshTrigger={chartRefreshTrigger} />
-          <S.TabSection>
-            <S.TabHeader>
-              <Tabs>
-                <Tab isActive={activeTab === 'minting'} onClick={() => setActiveTab('minting')}>
-                  Minting History
-                </Tab>
-                <Tab isActive={activeTab === 'balances'} onClick={() => setActiveTab('balances')}>
-                  Balances
-                </Tab>
-              </Tabs>
-              {isOwner && isInternalCurrency && activeTab === 'minting' && (
-                <Button onClick={toggleMintModal} text="Mint" />
-              )}
-            </S.TabHeader>
-            <S.TabContent>
-              {activeTab === 'minting' ? (
-                <MintSection
-                  currency={currency}
-                  currentPage={currentPage}
-                  loadingMints={loadingMints}
-                  mintsData={mintsData}
-                  onPageChange={handlePageChange}
-                />
-              ) : (
-                <BalancesSection currency={currency} />
-              )}
-            </S.TabContent>
-          </S.TabSection>
-        </S.Content>
+        <S.ScrollableContent>
+          <S.Content>
+            <CurrencyInfoSection currency={currency} totalAmountMinted={totalAmountMinted} />
+            <MintHistoryChart currency={currency} refreshTrigger={chartRefreshTrigger} />
+            <S.TabSection>
+              <S.TabHeader>
+                <Tabs>
+                  <Tab isActive={activeTab === 'minting'} onClick={() => setActiveTab('minting')}>
+                    Minting History
+                  </Tab>
+                  <Tab isActive={activeTab === 'balances'} onClick={() => setActiveTab('balances')}>
+                    Balances
+                  </Tab>
+                </Tabs>
+                {isOwner && isInternalCurrency && activeTab === 'minting' && (
+                  <Button onClick={toggleMintModal} text="Mint" />
+                )}
+              </S.TabHeader>
+              <S.TabContent>
+                {activeTab === 'minting' ? (
+                  <MintSection
+                    currency={currency}
+                    currentPage={currentPage}
+                    loadingMints={loadingMints}
+                    mintsData={mintsData}
+                    onPageChange={handlePageChange}
+                  />
+                ) : (
+                  <BalancesSection currency={currency} />
+                )}
+              </S.TabContent>
+            </S.TabSection>
+          </S.Content>
+        </S.ScrollableContent>
       </S.Container>
       {currencyModalIsOpen && currency && (
         <CurrencyModal close={toggleCurrencyModal} currency={currency} onSuccess={handleCurrencyModalSuccess} />
