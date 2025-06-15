@@ -25,15 +25,6 @@ export const ChangeArrow = styled.span<{$isPositive: boolean}>`
   font-size: 12px;
 `;
 
-export const ChartBackground = styled.div`
-  background: ${colors.white};
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-  padding: 24px;
-  position: relative;
-  transition: all 0.3s ease;
-`;
-
 export const ChartControls = styled.div`
   align-items: center;
   display: flex;
@@ -72,6 +63,12 @@ export const ChartWrapper = styled.div`
 `;
 
 export const Container = styled.div`
+  background: ${colors.white};
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  padding: 24px;
+  position: relative;
+  transition: all 0.3s ease;
   width: 100%;
 `;
 

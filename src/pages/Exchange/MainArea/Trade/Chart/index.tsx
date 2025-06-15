@@ -412,56 +412,54 @@ const Chart: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <S.ChartBackground>
-        <S.ChartHeader>
-          <S.PriceSection>
-            <S.PriceWrapper>
-              <S.CurrentPrice>
-                {activeAssetPair && (
-                  <>
-                    <S.PriceLogo>
-                      <CurrencyLogo logo={activeAssetPair.secondary_currency.logo} width="32px" />
-                    </S.PriceLogo>
-                    <S.PriceAmount>{lastTradePrice}</S.PriceAmount>
-                  </>
-                )}
-              </S.CurrentPrice>
+      <S.ChartHeader>
+        <S.PriceSection>
+          <S.PriceWrapper>
+            <S.CurrentPrice>
+              {activeAssetPair && (
+                <>
+                  <S.PriceLogo>
+                    <CurrencyLogo logo={activeAssetPair.secondary_currency.logo} width="32px" />
+                  </S.PriceLogo>
+                  <S.PriceAmount>{lastTradePrice}</S.PriceAmount>
+                </>
+              )}
+            </S.CurrentPrice>
 
-              <S.PriceChange $isPositive={isPositive}>
-                <S.ChangeArrow $isPositive={isPositive}>{isPositive ? '▲' : '▼'}</S.ChangeArrow>
-                {Math.abs(priceChange).toFixed(2)}%
-              </S.PriceChange>
-            </S.PriceWrapper>
+            <S.PriceChange $isPositive={isPositive}>
+              <S.ChangeArrow $isPositive={isPositive}>{isPositive ? '▲' : '▼'}</S.ChangeArrow>
+              {Math.abs(priceChange).toFixed(2)}%
+            </S.PriceChange>
+          </S.PriceWrapper>
 
-            <S.StatsBar>
-              <S.StatItem>
-                <S.StatLabel>High</S.StatLabel>
-                <S.StatValue>{priceStats.max}</S.StatValue>
-              </S.StatItem>
-              <S.StatItem>
-                <S.StatLabel>Low</S.StatLabel>
-                <S.StatValue>{priceStats.min}</S.StatValue>
-              </S.StatItem>
-              <S.StatItem>
-                <S.StatLabel>Avg</S.StatLabel>
-                <S.StatValue>{priceStats.avg.toFixed(2)}</S.StatValue>
-              </S.StatItem>
-            </S.StatsBar>
-          </S.PriceSection>
+          <S.StatsBar>
+            <S.StatItem>
+              <S.StatLabel>High</S.StatLabel>
+              <S.StatValue>{priceStats.max}</S.StatValue>
+            </S.StatItem>
+            <S.StatItem>
+              <S.StatLabel>Low</S.StatLabel>
+              <S.StatValue>{priceStats.min}</S.StatValue>
+            </S.StatItem>
+            <S.StatItem>
+              <S.StatLabel>Avg</S.StatLabel>
+              <S.StatValue>{priceStats.avg.toFixed(2)}</S.StatValue>
+            </S.StatItem>
+          </S.StatsBar>
+        </S.PriceSection>
 
-          <S.ChartControls>
-            <S.TimeframeButtons>
-              {(['1D', '1W', '1M', '3M', '1Y', 'ALL'] as const).map((tf) => (
-                <S.TimeframeButton $active={timeframe === tf} key={tf} onClick={() => setTimeframe(tf)}>
-                  {tf}
-                </S.TimeframeButton>
-              ))}
-            </S.TimeframeButtons>
-          </S.ChartControls>
-        </S.ChartHeader>
+        <S.ChartControls>
+          <S.TimeframeButtons>
+            {(['1D', '1W', '1M', '3M', '1Y', 'ALL'] as const).map((tf) => (
+              <S.TimeframeButton $active={timeframe === tf} key={tf} onClick={() => setTimeframe(tf)}>
+                {tf}
+              </S.TimeframeButton>
+            ))}
+          </S.TimeframeButtons>
+        </S.ChartControls>
+      </S.ChartHeader>
 
-        <S.ChartWrapper ref={containerRef}>{renderChartContent()}</S.ChartWrapper>
-      </S.ChartBackground>
+      <S.ChartWrapper ref={containerRef}>{renderChartContent()}</S.ChartWrapper>
     </S.Container>
   );
 };
