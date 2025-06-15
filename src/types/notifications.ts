@@ -4,10 +4,26 @@ import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
 import {PaginatedResponse, Pagination} from 'types/pagination';
 
-export interface PostLikePayload {
-  liker: UserReadSerializer;
-  notification_type: NotificationType.POST_LIKE;
-  post_id: number;
+export interface ExchangeOrderFilledPayload {
+  notification_type: NotificationType.EXCHANGE_ORDER_FILLED;
+  order_id: string;
+  order_type: 'BUY' | 'SELL';
+  price: number;
+  primary_currency_id: string;
+  primary_currency_ticker: string;
+  quantity: number;
+  secondary_currency_id: string;
+  secondary_currency_ticker: string;
+}
+
+export interface PostCoinTransferPayload {
+  content: string;
+  notification_type: NotificationType.POST_COIN_TRANSFER;
+  owner: UserReadSerializer;
+  post_id: string;
+  price_amount: number;
+  price_currency_id: string;
+  price_currency_ticker: string;
 }
 
 export interface PostCommentPayload {
@@ -17,7 +33,17 @@ export interface PostCommentPayload {
   post_id: number;
 }
 
-export type NotificationPayload = PostLikePayload | PostCommentPayload;
+export interface PostLikePayload {
+  liker: UserReadSerializer;
+  notification_type: NotificationType.POST_LIKE;
+  post_id: number;
+}
+
+export type NotificationPayload =
+  | ExchangeOrderFilledPayload
+  | PostCoinTransferPayload
+  | PostCommentPayload
+  | PostLikePayload;
 
 export interface Notification extends CreatedModified {
   id: number;

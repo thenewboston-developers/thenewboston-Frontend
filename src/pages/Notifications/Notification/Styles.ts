@@ -5,6 +5,22 @@ import styled from 'styled-components';
 import UDot from 'components/Dot';
 import {colors, fonts} from 'styles';
 
+export const AvatarContainer = styled.div`
+  position: relative;
+`;
+
+export const AvatarIcon = styled(UIcon)`
+  background: ${colors.backgroundDark};
+  border: 2px solid ${colors.white};
+  border-radius: 50%;
+  bottom: -2px;
+  color: ${colors.white};
+  padding: 3px;
+  position: absolute;
+  right: -2px;
+  z-index: 100;
+`;
+
 export const Container = styled.div<{$isRead: boolean}>`
   background: ${({$isRead}) => ($isRead ? colors.background : colors.white)};
   border: 1px solid ${({$isRead}) => ($isRead ? colors.borderDarker : colors.border)};
@@ -21,8 +37,12 @@ export const Container = styled.div<{$isRead: boolean}>`
   }
 `;
 
+export const CurrencyLogoContainer = styled.div`
+  position: relative;
+`;
+
 export const Dot = styled(UDot)`
-  background: ${colors.palette.blue['700']};
+  background: ${colors.palette.blue[700]};
   height: 8px;
   width: 8px;
 `;
@@ -34,16 +54,27 @@ export const DotContainer = styled.div`
   padding-right: 8px;
 `;
 
-export const Icon = styled(UIcon)`
+export const ExchangeIcon = styled(UIcon)`
   background: ${colors.backgroundDark};
   border: 2px solid ${colors.white};
   border-radius: 50%;
+  bottom: -2px;
   color: ${colors.white};
-  margin-left: 32px;
-  margin-top: -18px;
   padding: 3px;
   position: absolute;
+  right: -2px;
   z-index: 100;
+`;
+
+export const ExchangeIconContainer = styled.div`
+  align-items: center;
+  background: ${colors.backgroundDark};
+  border-radius: 50%;
+  display: flex;
+  height: 45px;
+  justify-content: center;
+  position: relative;
+  width: 45px;
 `;
 
 export const Link = styled(ULink)`

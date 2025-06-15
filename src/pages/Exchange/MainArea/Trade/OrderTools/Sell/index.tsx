@@ -4,7 +4,7 @@ import {Form, Formik, FormikHelpers} from 'formik';
 
 import AvailableTotal from 'components/AvailableTotal';
 import {ButtonType} from 'components/Button';
-import {LogoInput} from 'components/FormElements';
+import {FormField, LogoInput} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
 import {ExchangeOrderType, ToastType} from 'enums';
 import {useActiveAssetPair} from 'hooks';
@@ -92,28 +92,32 @@ const Sell: SFC = ({className}) => {
       >
         {({dirty, errors, handleChange, isSubmitting, isValid, touched, values}) => (
           <Form>
-            <LogoInput
-              errors={errors}
-              label="Quantity"
-              logo={activeAssetPair!.primary_currency.logo}
-              name="quantity"
-              onChange={(e) => {
-                handleChange(e);
-                calculateTotal(e.target.value, values.price);
-              }}
-              touched={touched}
-            />
-            <LogoInput
-              errors={errors}
-              label="Price"
-              logo={activeAssetPair!.secondary_currency.logo}
-              name="price"
-              onChange={(e) => {
-                handleChange(e);
-                calculateTotal(values.quantity, e.target.value);
-              }}
-              touched={touched}
-            />
+            <FormField>
+              <LogoInput
+                errors={errors}
+                label="Quantity"
+                logo={activeAssetPair!.primary_currency.logo}
+                name="quantity"
+                onChange={(e) => {
+                  handleChange(e);
+                  calculateTotal(e.target.value, values.price);
+                }}
+                touched={touched}
+              />
+            </FormField>
+            <FormField>
+              <LogoInput
+                errors={errors}
+                label="Price"
+                logo={activeAssetPair!.secondary_currency.logo}
+                name="price"
+                onChange={(e) => {
+                  handleChange(e);
+                  calculateTotal(values.quantity, e.target.value);
+                }}
+                touched={touched}
+              />
+            </FormField>
             <AvailableTotal
               available={primaryCurrencyBalance}
               availableTicker={activeAssetPair!.primary_currency.ticker}
