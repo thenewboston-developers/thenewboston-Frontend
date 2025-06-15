@@ -31,6 +31,18 @@ export const Button = styled(UButton)`
   }
 `;
 
+export const CommentForm = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 8px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+`;
+
 export const Container = styled.div`
   margin-top: 14px;
 `;
@@ -89,19 +101,6 @@ export const Image = styled.img`
   border-radius: 50%;
   height: ${IMG_SIZE};
   width: ${IMG_SIZE};
-`;
-
-export const InputBox = styled.div`
-  align-items: center;
-  display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 10px;
-  }
 `;
 
 export const PriceAmountInput = styled(UInlineInput)`

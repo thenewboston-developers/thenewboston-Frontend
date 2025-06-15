@@ -18,9 +18,10 @@ import * as S from './Styles';
 
 export interface CommentProps {
   comment: TComment;
+  isFirst: boolean;
 }
 
-const Comment: SFC<CommentProps> = ({className, comment}) => {
+const Comment: SFC<CommentProps> = ({className, comment, isFirst = false}) => {
   const [commentEditModalIsOpen, toggleCommentEditModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
@@ -81,7 +82,7 @@ const Comment: SFC<CommentProps> = ({className, comment}) => {
 
   return (
     <>
-      <S.Container className={className}>
+      <S.Container $isFirst={isFirst} className={className}>
         <Link to={`/profile/${owner.id}`}>
           <Avatar src={owner.avatar} />
         </Link>
