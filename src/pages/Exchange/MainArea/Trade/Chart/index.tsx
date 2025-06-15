@@ -24,10 +24,10 @@ const Chart: SFC = ({className}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '3M' | '1Y' | 'ALL'>('1D');
   const activeAssetPair = useActiveAssetPair();
-  const tradePriceChartDataState = useSelector(getTradePriceChartData);
   const containerRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const svgRef = useRef<SVGSVGElement>(null);
+  const tradePriceChartDataState = useSelector(getTradePriceChartData);
   const {candlesticks} = tradePriceChartDataState;
 
   // Fetch chart data when activeAssetPair or timeframe changes

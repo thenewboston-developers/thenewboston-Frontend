@@ -39,7 +39,6 @@ import wiresReducer from 'store/wires';
 const rootReducer = combineReducers({
   assetPairs: assetPairsReducer,
   authentication: authenticationReducer,
-  tradePriceChartData: tradePriceChartDataReducer,
   comments: commentsReducer,
   currencies: currenciesReducer,
   exchangeOrders: exchangeOrdersReducer,
@@ -52,6 +51,7 @@ const rootReducer = combineReducers({
   notifications: notificationsReducer,
   posts: postsReducer,
   self: selfReducer,
+  tradePriceChartData: tradePriceChartDataReducer,
   trades: tradesReducer,
   userStats: userStatsReducer,
   users: usersReducer,
