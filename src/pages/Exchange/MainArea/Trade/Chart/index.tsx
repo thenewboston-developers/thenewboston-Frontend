@@ -5,10 +5,10 @@ import * as d3 from 'd3';
 import CurrencyLogo from 'components/CurrencyLogo';
 import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
-import {getChartData as fetchChartData} from 'dispatchers/exchangeChartData';
+import {getTradePriceChartData as fetchTradePriceChartData} from 'dispatchers/tradePriceChartData';
 import {useActiveAssetPair} from 'hooks';
-import {getChartData} from 'selectors/state';
-import {clearChartData} from 'store/chartData';
+import {getTradePriceChartData} from 'selectors/state';
+import {clearTradePriceChartData} from 'store/tradePriceChartData';
 import {colors} from 'styles';
 import {AppDispatch, Candlestick, ChartTimeRange, SFC} from 'types';
 import {chartDisplayDate} from 'utils/dates';
@@ -24,11 +24,11 @@ const Chart: SFC = ({className}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '3M' | '1Y' | 'ALL'>('1D');
   const activeAssetPair = useActiveAssetPair();
-  const chartDataState = useSelector(getChartData);
+  const tradePriceChartDataState = useSelector(getTradePriceChartData);
   const containerRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const svgRef = useRef<SVGSVGElement>(null);
-  const {candlesticks} = chartDataState;
+  const {candlesticks} = tradePriceChartDataState;
 
   // Fetch chart data when activeAssetPair or timeframe changes
   useEffect(() => {
@@ -47,7 +47,7 @@ const Chart: SFC = ({className}) => {
 
       setIsLoading(true);
       try {
-        await dispatch(fetchChartData(activeAssetPair.id, timeframeToApiMap[timeframe]));
+        await dispatch(fetchTradePriceChartData(activeAssetPair.id, timeframeToApiMap[timeframe]));
       } catch (error) {
         displayErrorToast(error);
       } finally {
@@ -59,7 +59,7 @@ const Chart: SFC = ({className}) => {
   // Clear chart data when unmounting or switching asset pairs
   useEffect(() => {
     return () => {
-      dispatch(clearChartData());
+      dispatch(clearTradePriceChartData());
     };
   }, [dispatch, activeAssetPair?.id]);
 

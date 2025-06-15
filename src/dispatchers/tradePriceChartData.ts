@@ -1,18 +1,18 @@
-import {getChartData as _getChartData} from 'api/chartData';
-import {setChartData} from 'store/chartData';
-import {AppDispatch, ChartData, ChartTimeRange} from 'types';
+import {getTradePriceChartData as _getTradePriceChartData} from 'api/tradePriceChartData';
+import {setTradePriceChartData} from 'store/tradePriceChartData';
+import {AppDispatch, ChartTimeRange, TradePriceChartData} from 'types';
 
-export const getChartData =
+export const getTradePriceChartData =
   (assetPairId: number, timeRange: ChartTimeRange) =>
-  async (dispatch: AppDispatch): Promise<ChartData> => {
+  async (dispatch: AppDispatch): Promise<TradePriceChartData> => {
     try {
-      const response = await _getChartData({
+      const response = await _getTradePriceChartData({
         asset_pair: assetPairId,
         time_range: timeRange,
       });
 
       dispatch(
-        setChartData({
+        setTradePriceChartData({
           candlesticks: response.candlesticks,
           intervalMinutes: response.interval_minutes,
           primaryCurrencyId: response.primary_currency,

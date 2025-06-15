@@ -1,9 +1,9 @@
 import {SocketDataType} from 'enums';
-import {getChartData} from 'selectors/state';
+import {getTradePriceChartData} from 'selectors/state';
 import {store} from 'store';
-import {processTrade} from 'store/chartData';
 import {setExchangeOrder} from 'store/exchangeOrders';
 import {setNotification, setTotalUnreadCount} from 'store/notifications';
+import {processTrade} from 'store/tradePriceChartData';
 import {setTrade} from 'store/trades';
 import {setWallet} from 'store/wallets';
 import {AppDispatch, RootState} from 'types';
@@ -21,7 +21,7 @@ const handleCreateTrade = (dispatch: AppDispatch, socketData: any) => {
   dispatch(setTrade(trade));
 
   const state = store.getState() as RootState;
-  const {primaryCurrencyId, secondaryCurrencyId} = getChartData(state);
+  const {primaryCurrencyId, secondaryCurrencyId} = getTradePriceChartData(state);
   if (!primaryCurrencyId || !secondaryCurrencyId) return;
 
   if (trade.primary_currency === primaryCurrencyId && trade.secondary_currency === secondaryCurrencyId) {

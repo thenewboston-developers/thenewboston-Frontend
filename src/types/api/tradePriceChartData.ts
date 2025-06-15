@@ -8,7 +8,7 @@ export interface Candlestick {
   volume: number;
 }
 
-export interface ChartData {
+export interface TradePriceChartData {
   candlesticks: Candlestick[];
   end_time: string;
   interval_minutes: number;
@@ -19,7 +19,7 @@ export interface ChartData {
 
 export type ChartTimeRange = '1d' | '1w' | '1m' | '3m' | '1y' | 'all';
 
-export interface GetChartDataParams {
+export interface GetTradePriceChartDataParams {
   asset_pair: number;
   time_range: ChartTimeRange;
 }

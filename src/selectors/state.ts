@@ -2,7 +2,7 @@ import {RootState} from 'types';
 
 export const getAssetPairs = (state: RootState) => state.assetPairs;
 export const getAuthentication = (state: RootState) => state.authentication;
-export const getChartData = (state: RootState) => state.chartData;
+export const getTradePriceChartData = (state: RootState) => state.tradePriceChartData;
 export const getComments = (state: RootState) => state.comments;
 export const getCurrencies = (state: RootState) => state.currencies;
 export const getExchangeOrders = (state: RootState) => state.exchangeOrders;
