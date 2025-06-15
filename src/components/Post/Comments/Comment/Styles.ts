@@ -15,10 +15,10 @@ export const CommentSection = styled.div`
   padding: 10px 14px 12px;
 `;
 
-export const Container = styled.div`
+export const Container = styled.div<{$isFirst: boolean}>`
   display: flex;
   gap: 10px;
-  margin-top: 12px;
+  margin-top: ${({$isFirst}) => ($isFirst ? '14px' : '12px')};
   width: 100%;
 `;
 

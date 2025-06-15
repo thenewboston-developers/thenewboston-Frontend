@@ -100,7 +100,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   };
 
   const renderComments = () => {
-    return commentDetails.map((comment, index) => <Comment comment={comment} key={index} />);
+    return commentDetails.map((comment, index) => <Comment comment={comment} isFirst={index === 0} key={index} />);
   };
 
   const renderSelectCurrencyElement = () => {
