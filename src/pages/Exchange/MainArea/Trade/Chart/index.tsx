@@ -3,6 +3,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import * as d3 from 'd3';
 
 import CurrencyLogo from 'components/CurrencyLogo';
+import EmptyText from 'components/EmptyText';
+import Loader from 'components/Loader';
 import {getChartData as fetchChartData} from 'dispatchers/exchangeChartData';
 import {useActiveAssetPair} from 'hooks';
 import {getChartData} from 'selectors/state';
@@ -98,6 +100,26 @@ const Chart: SFC = ({className}) => {
   }, [candlesticks]);
 
   const isPositive = priceChange >= 0;
+
+  const renderChartContent = () => {
+    if (isLoading && candlesticks.length === 0) {
+      return (
+        <S.LoadingContainer>
+          <Loader size={48} />
+        </S.LoadingContainer>
+      );
+    }
+
+    if (candlesticks.length === 0) {
+      return (
+        <S.EmptyContainer>
+          <EmptyText>No chart data available for this timeframe</EmptyText>
+        </S.EmptyContainer>
+      );
+    }
+
+    return <svg ref={svgRef}></svg>;
+  };
 
   useEffect(() => {
     if (!svgRef.current || !containerRef.current || displayData.length === 0) return;
@@ -388,16 +410,6 @@ const Chart: SFC = ({className}) => {
     };
   }, [displayData, isPositive, timeframe]);
 
-  if (isLoading && candlesticks.length === 0) {
-    return (
-      <S.Container className={className}>
-        <S.ChartBackground>
-          <S.LoadingContainer>Loading chart data...</S.LoadingContainer>
-        </S.ChartBackground>
-      </S.Container>
-    );
-  }
-
   return (
     <S.Container className={className}>
       <S.ChartBackground>
@@ -448,9 +460,7 @@ const Chart: SFC = ({className}) => {
           </S.ChartControls>
         </S.ChartHeader>
 
-        <S.ChartWrapper ref={containerRef}>
-          <svg ref={svgRef}></svg>
-        </S.ChartWrapper>
+        <S.ChartWrapper ref={containerRef}>{renderChartContent()}</S.ChartWrapper>
       </S.ChartBackground>
     </S.Container>
   );
