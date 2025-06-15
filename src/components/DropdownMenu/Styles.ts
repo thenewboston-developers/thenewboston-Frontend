@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import Icon from 'components/Icon';
 import {colors, fonts} from 'styles';
-import {Menu, Option} from 'styles/components/DropMenuStyle';
+import {Menu as UMenu, Option} from 'styles/components/DropMenuStyle';
 
 export const Div = styled.div<{$label: string}>`
   align-items: center;
@@ -17,7 +17,7 @@ export const Div = styled.div<{$label: string}>`
   }
 `;
 
-export const DropMenu = styled(Menu)<{$isOpen?: boolean}>`
+export const Menu = styled(UMenu)<{$isOpen?: boolean}>`
   animation: fadeIn 0.2s ease;
   background: ${colors.white};
   border: 1px solid ${colors.palette.gray[200]};
@@ -28,6 +28,7 @@ export const DropMenu = styled(Menu)<{$isOpen?: boolean}>`
   min-width: 160px;
   overflow: hidden;
   padding: 4px;
+  z-index: 2;
 
   @keyframes fadeIn {
     from {
