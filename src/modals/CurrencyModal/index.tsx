@@ -116,7 +116,11 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
     };
 
     if (!isEditMode) {
-      schema.ticker = yup.string().required('Ticker is required');
+      schema.ticker = yup
+        .string()
+        .required('Ticker is required')
+        .matches(/^[A-Z]+$/, 'Ticker must contain only uppercase letters')
+        .max(5, 'Ticker must be at most 5 characters');
 
       if (self.is_staff) {
         schema.domain = yup.string();
