@@ -135,7 +135,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
         >
           {({dirty, errors, isSubmitting, isValid, touched, values, setFieldValue}) => (
             <Form>
-              <S.InputBox>
+              <S.CommentForm>
                 <S.ContentInput
                   $isMobileDevice={isMobileDevice}
                   errors={errors}
@@ -166,7 +166,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
                     type={ButtonType.submit}
                   />
                 </S.ControlsWrapper>
-              </S.InputBox>
+              </S.CommentForm>
             </Form>
           )}
         </Formik>
