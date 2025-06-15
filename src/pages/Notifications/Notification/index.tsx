@@ -1,9 +1,12 @@
 import {ReactNode} from 'react';
+import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {mdiContentCopy, mdiHeart, mdiSwapHorizontal} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
+import CurrencyLogo from 'components/CurrencyLogo';
 import {NotificationType} from 'enums';
+import {getCurrencies} from 'selectors/state';
 import {Notification as TNotification, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
@@ -14,6 +17,8 @@ export interface NotificationProps {
 }
 
 const Notification: SFC<NotificationProps> = ({className, notification}) => {
+  const currencies = useSelector(getCurrencies);
+
   const renderRedDot = () => {
     return notification.is_read ? null : (
       <S.DotContainer>
@@ -29,7 +34,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       <S.NotificationContainer>
         <Link to={`/profile/${notification.payload.commenter.id}`}>
           <Avatar src={notification.payload.commenter.avatar} size="45px" />
-          <S.Icon path={mdiContentCopy} size="23px" />
+          <S.AvatarIcon path={mdiContentCopy} size="23px" />
         </Link>
         <S.TextContainer>
           <div>
@@ -48,7 +53,8 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const renderExchangeOrderFilledNotification = () => {
     if (notification.payload.notification_type !== NotificationType.EXCHANGE_ORDER_FILLED) return null;
 
-    const {order_type, price, primary_currency_ticker, quantity, secondary_currency_ticker} = notification.payload;
+    const {order_type, price, primary_currency_id, primary_currency_ticker, quantity, secondary_currency_ticker} =
+      notification.payload;
     const action = order_type === 'BUY' ? 'buy' : 'sell';
 
     // For buy orders: user receives primary currency (what they bought)
@@ -56,11 +62,20 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     const totalReceived = order_type === 'BUY' ? quantity : quantity * price;
     const receivedTicker = order_type === 'BUY' ? primary_currency_ticker : secondary_currency_ticker;
 
+    const primaryCurrency = currencies[primary_currency_id];
+
     return (
       <S.NotificationContainer>
-        <S.ExchangeIconContainer>
-          <S.Icon path={mdiSwapHorizontal} size="23px" />
-        </S.ExchangeIconContainer>
+        {primaryCurrency?.logo ? (
+          <S.CurrencyLogoContainer>
+            <CurrencyLogo logo={primaryCurrency.logo} width="45px" />
+            <S.ExchangeIcon path={mdiSwapHorizontal} size="23px" />
+          </S.CurrencyLogoContainer>
+        ) : (
+          <S.ExchangeIconContainer>
+            <S.ExchangeIcon path={mdiSwapHorizontal} size="23px" />
+          </S.ExchangeIconContainer>
+        )}
         <S.TextContainer>
           <div>
             Your order to {action} {quantity.toLocaleString()} {primary_currency_ticker} was filled. You received a
@@ -80,7 +95,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       <S.NotificationContainer>
         <Link to={`/profile/${notification.payload.liker.id}`}>
           <Avatar src={notification.payload.liker.avatar} size="45px" />
-          <S.Icon path={mdiHeart} size="23px" />
+          <S.AvatarIcon path={mdiHeart} size="23px" />
         </Link>
         <S.TextContainer>
           <div>

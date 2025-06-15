@@ -22,8 +22,10 @@ export interface ExchangeOrderFilledPayload {
   order_id: string;
   order_type: 'BUY' | 'SELL';
   price: number;
+  primary_currency_id: string;
   primary_currency_ticker: string;
   quantity: number;
+  secondary_currency_id: string;
   secondary_currency_ticker: string;
 }
 

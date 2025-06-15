@@ -34,6 +34,10 @@ export const DotContainer = styled.div`
   padding-right: 8px;
 `;
 
+export const CurrencyLogoContainer = styled.div`
+  position: relative;
+`;
+
 export const ExchangeIconContainer = styled.div`
   align-items: center;
   background: ${colors.backgroundDark};
@@ -45,7 +49,7 @@ export const ExchangeIconContainer = styled.div`
   width: 45px;
 `;
 
-export const Icon = styled(UIcon)`
+export const AvatarIcon = styled(UIcon)`
   background: ${colors.backgroundDark};
   border: 2px solid ${colors.white};
   border-radius: 50%;
@@ -54,6 +58,18 @@ export const Icon = styled(UIcon)`
   margin-top: -18px;
   padding: 3px;
   position: absolute;
+  z-index: 100;
+`;
+
+export const ExchangeIcon = styled(UIcon)`
+  background: ${colors.backgroundDark};
+  border: 2px solid ${colors.white};
+  border-radius: 50%;
+  bottom: -2px;
+  color: ${colors.white};
+  padding: 3px;
+  position: absolute;
+  right: -2px;
   z-index: 100;
 `;
 
