@@ -9,15 +9,15 @@ import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
-interface MintHistoryChartProps {
-  currency: Currency;
-  refreshTrigger?: number;
-}
-
 interface ChartData {
   amount: number;
   date: string;
   total: number;
+}
+
+interface MintHistoryChartProps {
+  currency: Currency;
+  refreshTrigger?: number;
 }
 
 const MintHistoryChart: SFC<MintHistoryChartProps> = ({className, currency, refreshTrigger}) => {
