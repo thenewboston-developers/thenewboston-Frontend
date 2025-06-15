@@ -31,6 +31,17 @@ const MintSection: SFC<MintSectionProps> = ({
     if (loadingMints) return <Loader />;
 
     if (!mintsData || mintsData.results.length === 0) {
+      const isExternalCurrency = currency.domain !== null;
+
+      if (isExternalCurrency) {
+        return (
+          <S.EmptyState>
+            <S.EmptyText>External currency</S.EmptyText>
+            <S.EmptySubtext>Minting is managed by {currency.domain}</S.EmptySubtext>
+          </S.EmptyState>
+        );
+      }
+
       return (
         <S.EmptyState>
           <S.EmptyText>No minting history yet</S.EmptyText>
