@@ -14,10 +14,8 @@ export const Arrow = styled.div`
 export const Input = styled(UInput)``;
 
 export const Label = styled.span`
-  color: ${colors.palette.gray[600]};
   font-size: 12px;
-  font-weight: 600;
-  margin-right: 12px;
+  margin-right: 8px;
   min-width: 40px;
 `;
 

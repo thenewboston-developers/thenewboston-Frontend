@@ -129,12 +129,12 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
             <ModalContent>
               <S.TransferInfo>
                 <S.UserRow>
-                  <S.Label>From:</S.Label>
+                  <S.Label>From</S.Label>
                   <UserLabel avatar={self.avatar} description="" id={self.id!} username={self.username!} />
                 </S.UserRow>
                 <S.Arrow>↓</S.Arrow>
                 <S.UserRow>
-                  <S.Label>To:</S.Label>
+                  <S.Label>To</S.Label>
                   <UserLabel avatar={recipient.avatar} description="" id={recipient.id} username={recipient.username} />
                 </S.UserRow>
               </S.TransferInfo>
