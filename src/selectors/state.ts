@@ -17,6 +17,9 @@ export const getNotifications = (state: RootState) => state.notifications.notifi
 export const hasMoreNotifications = (state: RootState) => state.notifications.hasMore;
 export const isLoadingNotifications = (state: RootState) => state.notifications.isLoading;
 export const getTotalUnreadNotificationCount = (state: RootState) => state.notifications.totalUnreadCount;
+export const getOrderBookBuyOrders = (state: RootState) => state.orderBook.buyOrders;
+export const getOrderBookSellOrders = (state: RootState) => state.orderBook.sellOrders;
+export const isLoadingOrderBook = (state: RootState) => state.orderBook.isLoading;
 export const getPosts = (state: RootState) => state.posts.posts;
 export const getSelf = (state: RootState) => state.self;
 export const getTradePriceChartData = (state: RootState) => state.tradePriceChartData;

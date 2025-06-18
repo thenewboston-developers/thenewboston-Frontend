@@ -27,6 +27,7 @@ import managerReducer from 'store/manager';
 import migrations from 'store/migrations';
 import mintsReducer from 'store/mints';
 import notificationsReducer from 'store/notifications';
+import orderBookReducer from 'store/orderBook';
 import postsReducer from 'store/posts';
 import selfReducer from 'store/self';
 import tradePriceChartDataReducer from 'store/tradePriceChartData';
@@ -49,6 +50,7 @@ const rootReducer = combineReducers({
   manager: managerReducer,
   mints: mintsReducer,
   notifications: notificationsReducer,
+  orderBook: orderBookReducer,
   posts: postsReducer,
   self: selfReducer,
   tradePriceChartData: tradePriceChartDataReducer,

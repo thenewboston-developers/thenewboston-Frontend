@@ -10,6 +10,7 @@ export const INVITATION_LIMITS = 'invitationLimits';
 export const MANAGER = 'manager';
 export const MINTS = 'mints';
 export const NOTIFICATIONS = 'notifications';
+export const ORDER_BOOK = 'orderBook';
 export const POSTS = 'posts';
 export const SELF = 'self';
 export const TRADES = 'trades';

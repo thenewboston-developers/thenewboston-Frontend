@@ -23,7 +23,6 @@ const App = () => {
     if (!isAuthenticated) return null;
     return (
       <>
-        <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/exchange-orders`} />
         <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/notifications/${self.id}`} />
         <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/wallet/${self.id}`} />
       </>

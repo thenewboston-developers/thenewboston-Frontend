@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
+import OrderBookWebSocket from 'containers/OrderBookWebSocket';
 import TradeWebSocket from 'containers/TradeWebSocket';
 import {getAssetPairs as _getAssetPairs} from 'dispatchers/assetPairs';
 import {useActiveAssetPair} from 'hooks';
@@ -66,6 +67,7 @@ const Trade: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       {renderPageContent()}
+      <OrderBookWebSocket assetPair={activeAssetPair} />
       <TradeWebSocket activeAssetPair={activeAssetPair} url={`${process.env.REACT_APP_WS_URL}/ws/trades`} />
     </S.Container>
   );

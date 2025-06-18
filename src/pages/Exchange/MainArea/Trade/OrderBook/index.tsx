@@ -1,12 +1,12 @@
-import {useMemo, useRef, useState} from 'react';
-import {useSelector} from 'react-redux';
-import orderBy from 'lodash/orderBy';
+import {useEffect, useRef, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
-import {ExchangeOrderType, FillStatus} from 'enums';
+import {getOrderBook} from 'dispatchers/orderBook';
 import {useActiveAssetPair} from 'hooks';
-import {getExchangeOrders} from 'selectors/state';
-import {ExchangeOrder, SFC} from 'types';
+import {getOrderBookBuyOrders, getOrderBookSellOrders, isLoadingOrderBook} from 'selectors/state';
+import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
+import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 import Tooltip from './Tooltip';
@@ -14,37 +14,33 @@ import Tooltip from './Tooltip';
 const OrderBook: SFC = ({className}) => {
   const [hoveredOrder, setHoveredOrder] = useState<ExchangeOrder | null>(null);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
   const activeAssetPair = useActiveAssetPair();
-  const orders = useSelector(getExchangeOrders);
+  const buyOrders = useSelector(getOrderBookBuyOrders);
+  const sellOrders = useSelector(getOrderBookSellOrders);
+  const isLoading = useSelector(isLoadingOrderBook);
 
-  const {buyOrders, sellOrders, spread} = useMemo(() => {
-    if (!activeAssetPair) return {buyOrders: [], sellOrders: [], spread: 0};
+  useEffect(() => {
+    if (!activeAssetPair) return;
 
-    const activeOrders = Object.values(orders).filter(
-      (order) =>
-        order.primary_currency === activeAssetPair.primary_currency.id &&
-        order.secondary_currency === activeAssetPair.secondary_currency.id &&
-        [FillStatus.OPEN, FillStatus.PARTIALLY_FILLED].includes(order.fill_status),
-    );
+    (async () => {
+      try {
+        await dispatch(getOrderBook(activeAssetPair.primary_currency.id, activeAssetPair.secondary_currency.id));
+      } catch (error) {
+        displayErrorToast('Error fetching order book');
+      }
+    })();
+  }, [activeAssetPair, dispatch]);
 
-    const buys = activeOrders.filter((order) => order.order_type === ExchangeOrderType.BUY);
-    const sells = activeOrders.filter((order) => order.order_type === ExchangeOrderType.SELL);
+  const spread = (() => {
+    if (!activeAssetPair || buyOrders.length === 0 || sellOrders.length === 0) return 0;
 
-    const sortedBuys = orderBy(buys, ['price'], ['desc']);
-    const sortedSells = orderBy(sells, ['price'], ['asc']);
+    const highestBuy = buyOrders[0]?.price || 0;
+    const lowestSell = sellOrders[0]?.price || 0;
+    return lowestSell > 0 && highestBuy > 0 ? lowestSell - highestBuy : 0;
+  })();
 
-    const highestBuy = sortedBuys[0]?.price || 0;
-    const lowestSell = sortedSells[0]?.price || 0;
-    const spreadValue = lowestSell > 0 && highestBuy > 0 ? lowestSell - highestBuy : 0;
-
-    return {
-      buyOrders: sortedBuys,
-      sellOrders: sortedSells,
-      spread: spreadValue,
-    };
-  }, [activeAssetPair, orders]);
-
-  const renderOrderSection = (sectionOrders: typeof buyOrders, type: 'buy' | 'sell') => {
+  const renderOrderSection = (sectionOrders: ExchangeOrder[], type: 'buy' | 'sell') => {
     if (!activeAssetPair) return null;
 
     return (
@@ -103,6 +99,10 @@ const OrderBook: SFC = ({className}) => {
 
   const renderContent = () => {
     if (!activeAssetPair) return null;
+
+    if (isLoading) {
+      return <S.EmptyState>Loading order book...</S.EmptyState>;
+    }
 
     if (buyOrders.length === 0 && sellOrders.length === 0) {
       return <S.EmptyState>No orders in the order book</S.EmptyState>;

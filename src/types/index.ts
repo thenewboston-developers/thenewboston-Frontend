@@ -1,7 +1,7 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CurrencyBalance} from 'types/api/currencyBalances';
-import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
+import {CreateExchangeOrderRequest, OrderBookResponse} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer, GetFollowersParams} from 'types/api/follower';
 import {CreateInvitationRequest} from 'types/api/invitations';
 import {GetMintChartDataParams, MintChartDataResponse, MintDataPoint} from 'types/api/mintChartData';
@@ -33,6 +33,7 @@ import {Invitation, Invitations} from 'types/invitations';
 import {Manager} from 'types/manager';
 import {Mint, Mints} from 'types/mints';
 import {Notification, NotificationPaginatedResponse, Notifications, NotificationsState} from 'types/notifications';
+import {OrderBookState} from 'types/orderBook';
 import {PaginatedResponse} from 'types/pagination';
 import {Post, PostLike, Posts} from 'types/posts';
 import {Self} from 'types/self';
@@ -100,6 +101,8 @@ export {
   NotificationPaginatedResponse,
   Notifications,
   NotificationsState,
+  OrderBookResponse,
+  OrderBookState,
   PaginatedResponse,
   Post,
   PostLike,
