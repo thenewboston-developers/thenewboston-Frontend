@@ -14,6 +14,7 @@ export const getTradePriceChartData =
       dispatch(
         setTradePriceChartData({
           candlesticks: response.candlesticks,
+          currentTimeRange: timeRange,
           intervalMinutes: response.interval_minutes,
           primaryCurrencyId: response.primary_currency,
           secondaryCurrencyId: response.secondary_currency,

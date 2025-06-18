@@ -1,10 +1,11 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {TRADE_PRICE_CHART_DATA} from 'constants/store';
-import {Candlestick, Trade} from 'types';
+import {Candlestick, ChartTimeRange, Trade} from 'types';
 
 export interface TradePriceChartDataState {
   candlesticks: Candlestick[];
+  currentTimeRange: ChartTimeRange | null;
   intervalMinutes: number;
   primaryCurrencyId: number | null;
   secondaryCurrencyId: number | null;
@@ -12,6 +13,7 @@ export interface TradePriceChartDataState {
 
 const initialState: TradePriceChartDataState = {
   candlesticks: [],
+  currentTimeRange: null,
   intervalMinutes: 0,
   primaryCurrencyId: null,
   secondaryCurrencyId: null,
@@ -23,13 +25,33 @@ const tradePriceChartData = createSlice({
   reducers: {
     clearTradePriceChartData: () => initialState,
     processTrade: (state, {payload}: PayloadAction<Trade>) => {
-      if (!state.intervalMinutes || state.candlesticks.length === 0) {
+      if (!state.intervalMinutes) {
         return;
       }
 
       const trade = payload;
       const tradeTime = new Date(trade.created_date);
       const intervalMs = state.intervalMinutes * 60 * 1000;
+
+      // If no candlesticks exist, create the first one
+      if (state.candlesticks.length === 0) {
+        const candlestickStart = new Date(Math.floor(tradeTime.getTime() / intervalMs) * intervalMs);
+        const candlestickEnd = new Date(candlestickStart.getTime() + intervalMs);
+
+        const newCandlestick: Candlestick = {
+          close: trade.trade_price,
+          end: candlestickEnd.toISOString(),
+          high: trade.trade_price,
+          low: trade.trade_price,
+          open: trade.trade_price,
+          start: candlestickStart.toISOString(),
+          volume: trade.fill_quantity,
+        };
+
+        state.candlesticks.push(newCandlestick);
+        return;
+      }
+
       const lastCandlestick = state.candlesticks[state.candlesticks.length - 1];
       const lastCandlestickEnd = new Date(lastCandlestick.end);
 
@@ -97,6 +119,7 @@ const tradePriceChartData = createSlice({
         payload,
       }: PayloadAction<{
         candlesticks: Candlestick[];
+        currentTimeRange?: ChartTimeRange;
         intervalMinutes: number;
         primaryCurrencyId: number;
         secondaryCurrencyId: number;
@@ -106,6 +129,9 @@ const tradePriceChartData = createSlice({
       state.intervalMinutes = payload.intervalMinutes;
       state.primaryCurrencyId = payload.primaryCurrencyId;
       state.secondaryCurrencyId = payload.secondaryCurrencyId;
+      if (payload.currentTimeRange) {
+        state.currentTimeRange = payload.currentTimeRange;
+      }
     },
   },
 });
