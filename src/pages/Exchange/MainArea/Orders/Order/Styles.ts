@@ -26,10 +26,6 @@ export const Container = styled.div`
   padding: 20px;
   transition: all 0.2s ease;
 
-  &:last-child {
-    margin-bottom: 0;
-  }
-
   &:hover {
     background: ${colors.whiteHover};
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);

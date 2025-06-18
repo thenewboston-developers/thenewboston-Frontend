@@ -1,23 +1,44 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {EXCHANGE_ORDERS} from 'constants/store';
-import {ExchangeOrder, ExchangeOrders} from 'types';
+import {ExchangeOrder, ExchangeOrderPaginatedResponse, ExchangeOrdersState} from 'types';
 
-const initialState: ExchangeOrders = {};
+const initialState: ExchangeOrdersState = {
+  exchangeOrders: {},
+  hasMore: false,
+  isLoading: false,
+  next: null,
+};
 
 const exchangeOrders = createSlice({
   initialState,
   name: EXCHANGE_ORDERS,
   reducers: {
-    setExchangeOrder: (state: ExchangeOrders, {payload}: PayloadAction<ExchangeOrder>) => {
-      const {id, modified_date} = payload;
-      if (!state[id] || new Date(modified_date) > new Date(state[id].modified_date)) state[id] = payload;
+    resetExchangeOrders: (state) => {
+      state.exchangeOrders = {};
+      state.hasMore = false;
+      state.isLoading = false;
+      state.next = null;
     },
-    setExchangeOrders: (state: ExchangeOrders, {payload}: PayloadAction<ExchangeOrder[]>) => {
-      return payload.reduce((acc: ExchangeOrders, obj) => ({...acc, [obj.id]: obj}), {});
+    setExchangeOrder: (state: ExchangeOrdersState, {payload}: PayloadAction<ExchangeOrder>) => {
+      const {id, modified_date} = payload;
+      if (!state.exchangeOrders[id] || new Date(modified_date) > new Date(state.exchangeOrders[id].modified_date)) {
+        state.exchangeOrders[id] = payload;
+      }
+    },
+    setExchangeOrders: (state: ExchangeOrdersState, {payload}: PayloadAction<ExchangeOrderPaginatedResponse>) => {
+      state.hasMore = !!payload.next;
+      state.isLoading = false;
+      state.next = payload.next;
+      payload.results.forEach((order) => {
+        state.exchangeOrders[order.id] = order;
+      });
+    },
+    startLoading: (state) => {
+      state.isLoading = true;
     },
   },
 });
 
-export const {setExchangeOrder, setExchangeOrders} = exchangeOrders.actions;
+export const {resetExchangeOrders, setExchangeOrder, setExchangeOrders, startLoading} = exchangeOrders.actions;
 export default exchangeOrders.reducer;

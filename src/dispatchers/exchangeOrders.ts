@@ -3,8 +3,15 @@ import {
   getExchangeOrders as _getExchangeOrders,
   updateExchangeOrder as _updateExchangeOrder,
 } from 'api/exchangeOrders';
-import {setExchangeOrder, setExchangeOrders} from 'store/exchangeOrders';
+import {store} from 'store';
+import {
+  resetExchangeOrders as _resetExchangeOrders,
+  setExchangeOrder,
+  setExchangeOrders,
+  startLoading,
+} from 'store/exchangeOrders';
 import {AppDispatch, CreateExchangeOrderRequest, ExchangeOrder} from 'types';
+import {getNextUrlFromState} from 'utils/urls';
 
 export const createExchangeOrder = (data: CreateExchangeOrderRequest) => async (dispatch: AppDispatch) => {
   const responseData = await _createExchangeOrder(data);
@@ -12,8 +19,15 @@ export const createExchangeOrder = (data: CreateExchangeOrderRequest) => async (
 };
 
 export const getExchangeOrders = () => async (dispatch: AppDispatch) => {
-  const responseData = await _getExchangeOrders();
+  dispatch(startLoading());
+
+  const nextURL = getNextUrlFromState(store.getState().exchangeOrders);
+  const responseData = await _getExchangeOrders(nextURL);
   dispatch(setExchangeOrders(responseData));
+};
+
+export const resetExchangeOrders = () => (dispatch: AppDispatch) => {
+  dispatch(_resetExchangeOrders());
 };
 
 export const updateExchangeOrder = (id: number, data: Partial<ExchangeOrder>) => async (dispatch: AppDispatch) => {

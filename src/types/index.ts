@@ -24,7 +24,7 @@ import {Block} from 'types/blocks';
 import {Comment, Comments} from 'types/comments';
 import {CreatedModified} from 'types/createdModified';
 import {Currencies, Currency} from 'types/currencies';
-import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
+import {ExchangeOrder, ExchangeOrderPaginatedResponse, ExchangeOrders, ExchangeOrdersState} from 'types/exchangeOrders';
 import {Follower, Followers} from 'types/follower';
 import {SelectOption} from 'types/forms';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
@@ -71,7 +71,9 @@ export {
   DepositResponse,
   Dict,
   ExchangeOrder,
+  ExchangeOrderPaginatedResponse,
   ExchangeOrders,
+  ExchangeOrdersState,
   Follower,
   FollowerReadSerializer,
   Followers,
