@@ -92,7 +92,7 @@ const Orders: SFC = ({className}) => {
         >
           <S.OrderContainer>
             {ordersList.map((order) => (
-              <Order key={order.id} order={order} onViewTrades={handleViewTrades} />
+              <Order key={order.id} onViewTrades={handleViewTrades} order={order} />
             ))}
           </S.OrderContainer>
         </InfiniteScrollComponent>

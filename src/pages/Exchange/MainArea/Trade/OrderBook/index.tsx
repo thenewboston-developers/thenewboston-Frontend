@@ -13,12 +13,12 @@ import Tooltip from './Tooltip';
 
 const OrderBook: SFC = ({className}) => {
   const [hoveredOrder, setHoveredOrder] = useState<ExchangeOrder | null>(null);
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const dispatch = useDispatch<AppDispatch>();
   const activeAssetPair = useActiveAssetPair();
   const buyOrders = useSelector(getOrderBookBuyOrders);
-  const sellOrders = useSelector(getOrderBookSellOrders);
+  const dispatch = useDispatch<AppDispatch>();
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isLoading = useSelector(isLoadingOrderBook);
+  const sellOrders = useSelector(getOrderBookSellOrders);
 
   useEffect(() => {
     if (!activeAssetPair) return;
