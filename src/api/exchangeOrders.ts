@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {CreateExchangeOrderRequest, ExchangeOrder} from 'types';
+import {CreateExchangeOrderRequest, ExchangeOrder, ExchangeOrderPaginatedResponse, OrderBookResponse} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/exchange-orders`;
@@ -14,9 +14,23 @@ export const createExchangeOrder = async (data: CreateExchangeOrderRequest): Pro
   }
 };
 
-export const getExchangeOrders = async (): Promise<ExchangeOrder[]> => {
+export const getExchangeOrders = async (url?: string): Promise<ExchangeOrderPaginatedResponse> => {
   try {
-    const response = await axios.get<ExchangeOrder[]>(BASE_URL, authorizationHeaders());
+    const requestUrl = url || BASE_URL;
+    const response = await axios.get<ExchangeOrderPaginatedResponse>(requestUrl, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getOrderBook = async (primaryCurrency: number, secondaryCurrency: number): Promise<OrderBookResponse> => {
+  try {
+    const params = new URLSearchParams({
+      primary_currency: primaryCurrency.toString(),
+      secondary_currency: secondaryCurrency.toString(),
+    });
+    const response = await axios.get<OrderBookResponse>(`${BASE_URL}/book?${params}`, authorizationHeaders());
     return response.data;
   } catch (error) {
     throw error;

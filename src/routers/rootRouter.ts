@@ -3,6 +3,7 @@ import {getTradePriceChartData} from 'selectors/state';
 import {store} from 'store';
 import {setExchangeOrder} from 'store/exchangeOrders';
 import {setNotification, setTotalUnreadCount} from 'store/notifications';
+import {updateOrderBookOrder} from 'store/orderBook';
 import {processTrade} from 'store/tradePriceChartData';
 import {setTrade} from 'store/trades';
 import {setWallet} from 'store/wallets';
@@ -35,6 +36,7 @@ const rootRouter = (dispatch: AppDispatch, event: MessageEvent) => {
 
   if ([SocketDataType.CREATE_EXCHANGE_ORDER, SocketDataType.UPDATE_EXCHANGE_ORDER].includes(type)) {
     dispatch(setExchangeOrder(socketData.exchange_order));
+    dispatch(updateOrderBookOrder(socketData.exchange_order));
   } else if (type === SocketDataType.CREATE_NOTIFICATION) {
     handleCreateNotification(dispatch, socketData);
   } else if (type === SocketDataType.CREATE_TRADE) {

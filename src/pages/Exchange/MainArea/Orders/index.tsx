@@ -1,178 +1,114 @@
-import {useCallback, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiDotsVertical} from '@mdi/js';
 import orderBy from 'lodash/orderBy';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
-import DropdownMenu from 'components/DropdownMenu';
 import EmptyPage from 'components/EmptyPage';
-import FillStatusBadge from 'components/FillStatusBadge';
-import {updateExchangeOrder} from 'dispatchers/exchangeOrders';
-import {ExchangeOrderType, FillStatus} from 'enums';
+import EmptyText from 'components/EmptyText';
+import Skeleton from 'components/Skeleton';
+import {
+  getExchangeOrders as _getExchangeOrders,
+  resetExchangeOrders as _resetExchangeOrders,
+} from 'dispatchers/exchangeOrders';
 import {useToggle} from 'hooks';
 import TradesModal from 'modals/TradesModal';
-import {getCurrencies, getExchangeOrders, getSelf} from 'selectors/state';
+import {getExchangeOrders, hasMoreExchangeOrders, isLoadingExchangeOrders} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
-import {longDate} from 'utils/dates';
+import {displayErrorToast} from 'utils/toasts';
 
+import Order from './Order';
 import * as S from './Styles';
 
 const Orders: SFC = ({className}) => {
   const [selectedOrder, setSelectedOrder] = useState<ExchangeOrder | null>(null);
   const [tradesModalIsOpen, toggleTradesModal] = useToggle(false);
-  const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
+  const hasMore = useSelector(hasMoreExchangeOrders);
+  const isLoading = useSelector(isLoadingExchangeOrders);
   const orders = useSelector(getExchangeOrders);
-  const self = useSelector(getSelf);
 
-  const getCurrencyTicker = useCallback((currencyId: number) => currencies[currencyId]?.ticker || '-', [currencies]);
+  useEffect(() => {
+    (async () => {
+      try {
+        dispatch(_resetExchangeOrders());
+        await dispatch(_getExchangeOrders());
+      } catch (error) {
+        displayErrorToast('Error fetching orders');
+      }
+    })();
+  }, [dispatch]);
 
   const ordersList = useMemo(() => {
-    const orderedOrders = orderBy(Object.values(orders), ['created_date'], ['desc']);
-    return orderedOrders.filter((order) => order.owner === self.id);
-  }, [orders, self.id]);
+    return orderBy(Object.values(orders), ['created_date'], ['desc']);
+  }, [orders]);
 
-  const renderDropdownMenu = useCallback(
-    (order: ExchangeOrder) => {
-      const menuOptions = [
-        {
-          label: 'View Trades',
-          onClick: () => {
-            setSelectedOrder(order);
-            toggleTradesModal();
-          },
-        },
-      ];
-
-      if ([FillStatus.OPEN, FillStatus.PARTIALLY_FILLED].includes(order.fill_status)) {
-        menuOptions.unshift({
-          label: 'Cancel Order',
-          onClick: async () => {
-            await dispatch(updateExchangeOrder(order.id, {fill_status: FillStatus.CANCELLED}));
-          },
-        });
+  const fetchMoreOrders = useCallback(async () => {
+    if (!isLoading && hasMore) {
+      try {
+        await dispatch(_getExchangeOrders());
+      } catch (error) {
+        displayErrorToast('Error fetching more orders');
       }
+    }
+  }, [dispatch, isLoading, hasMore]);
 
-      return (
-        <S.DropdownMenuWrapper>
-          <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />
-        </S.DropdownMenuWrapper>
-      );
+  const getOrderSkeleton = (n: number) => {
+    const skeletons = Array.from({length: n}, (_, i) => (
+      <S.OrderSkeletonContainer key={i}>
+        <Skeleton width="100%" height="100px" />
+      </S.OrderSkeletonContainer>
+    ));
+    return <S.SkeletonContainer>{skeletons}</S.SkeletonContainer>;
+  };
+
+  const handleViewTrades = useCallback(
+    (order: ExchangeOrder) => {
+      setSelectedOrder(order);
+      toggleTradesModal();
     },
-    [dispatch, toggleTradesModal],
+    [toggleTradesModal],
   );
 
-  const renderOrders = useCallback(() => {
-    return ordersList.map((order) => {
-      const {
-        created_date,
-        id,
-        filled_amount,
-        fill_status,
-        order_type,
-        quantity,
-        price,
-        primary_currency,
-        secondary_currency,
-      } = order;
+  const renderOrders = () => {
+    if (isLoading && !ordersList.length) {
+      return getOrderSkeleton(5);
+    }
 
-      const primaryCurrencyTicker = getCurrencyTicker(primary_currency);
-      const secondaryCurrencyTicker = getCurrencyTicker(secondary_currency);
-      const [date, time] = longDate(created_date).split('at');
-      const fillPercentage = quantity > 0 ? (filled_amount / quantity) * 100 : 0;
-      const totalValue = quantity * price;
-
+    if (ordersList.length) {
       return (
-        <S.OrderCard key={id}>
-          <S.OrderHeader>
-            <S.OrderMainInfo>
-              <S.OrderTopLine>
-                <S.OrderTypeBadge $orderType={ExchangeOrderType[order_type as keyof typeof ExchangeOrderType]}>
-                  {order_type}
-                </S.OrderTypeBadge>
-                <S.DateTime>
-                  {date.trim()} • {time.trim()}
-                </S.DateTime>
-              </S.OrderTopLine>
-            </S.OrderMainInfo>
-            <S.OrderActions>
-              <S.FillStatusBadgeWrapper>
-                <FillStatusBadge fillStatus={fill_status} />
-              </S.FillStatusBadgeWrapper>
-              {renderDropdownMenu(order)}
-            </S.OrderActions>
-          </S.OrderHeader>
-
-          <S.OrderMetrics>
-            <S.MetricItem>
-              <S.MetricLabel>Price</S.MetricLabel>
-              <S.MetricValue className="price">
-                {price.toLocaleString()}
-                <S.CurrencyTicker>{secondaryCurrencyTicker}</S.CurrencyTicker>
-              </S.MetricValue>
-            </S.MetricItem>
-
-            <S.MetricItem>
-              <S.MetricLabel>Quantity</S.MetricLabel>
-              <S.MetricValue>
-                {quantity.toLocaleString()}
-                <S.CurrencyTicker>{primaryCurrencyTicker}</S.CurrencyTicker>
-              </S.MetricValue>
-            </S.MetricItem>
-
-            <S.MetricItem>
-              <S.MetricLabel>Filled</S.MetricLabel>
-              <S.MetricValue>
-                {filled_amount.toLocaleString()}
-                <S.CurrencyTicker>{primaryCurrencyTicker}</S.CurrencyTicker>
-              </S.MetricValue>
-            </S.MetricItem>
-
-            <S.MetricItem>
-              <S.MetricLabel>Total Value</S.MetricLabel>
-              <S.MetricValue>
-                {totalValue.toLocaleString(undefined, {maximumFractionDigits: 2})}
-                <S.CurrencyTicker>{secondaryCurrencyTicker}</S.CurrencyTicker>
-              </S.MetricValue>
-            </S.MetricItem>
-          </S.OrderMetrics>
-
-          {fillPercentage > 0 && fillPercentage < 100 && (
-            <S.FillProgress>
-              <S.ProgressHeader>
-                <S.ProgressLabel>Fill Progress</S.ProgressLabel>
-                <S.ProgressValue>{fillPercentage.toFixed(1)}%</S.ProgressValue>
-              </S.ProgressHeader>
-              <S.ProgressBar>
-                <S.ProgressFill
-                  $percentage={fillPercentage}
-                  $orderType={ExchangeOrderType[order_type as keyof typeof ExchangeOrderType]}
-                />
-              </S.ProgressBar>
-            </S.FillProgress>
-          )}
-        </S.OrderCard>
-      );
-    });
-  }, [ordersList, getCurrencyTicker, renderDropdownMenu]);
-
-  const renderContent = () => {
-    if (ordersList.length === 0) {
-      return (
-        <EmptyPage
-          bottomText="Place an order to see it here"
-          graphic={LeavesEmptyState}
-          topText="No orders to display"
-        />
+        <InfiniteScrollComponent
+          dataLength={ordersList.length}
+          endMessage={
+            <S.EndMessageContainer>
+              <EmptyText>No more orders to show.</EmptyText>
+            </S.EndMessageContainer>
+          }
+          hasMore={hasMore}
+          loader={isLoading ? getOrderSkeleton(3) : null}
+          next={fetchMoreOrders}
+          scrollableTarget="orders-content"
+          scrollThreshold={0.9}
+        >
+          <S.OrderContainer>
+            {ordersList.map((order) => (
+              <Order key={order.id} onViewTrades={handleViewTrades} order={order} />
+            ))}
+          </S.OrderContainer>
+        </InfiniteScrollComponent>
       );
     }
 
-    return <S.OrdersList>{renderOrders()}</S.OrdersList>;
+    return (
+      <EmptyPage bottomText="Place an order to see it here" graphic={LeavesEmptyState} topText="No orders to display" />
+    );
   };
 
   return (
     <>
-      <S.Container className={className}>{renderContent()}</S.Container>
+      <S.Container className={className} id="orders-content">
+        {renderOrders()}
+      </S.Container>
       {tradesModalIsOpen ? <TradesModal close={toggleTradesModal} order={selectedOrder} /> : null}
     </>
   );

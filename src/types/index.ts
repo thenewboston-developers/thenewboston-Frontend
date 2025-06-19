@@ -1,7 +1,7 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CurrencyBalance} from 'types/api/currencyBalances';
-import {CreateExchangeOrderRequest} from 'types/api/exchangeOrders';
+import {CreateExchangeOrderRequest, OrderBookResponse} from 'types/api/exchangeOrders';
 import {CreateFollowerRequest, FollowerReadSerializer, GetFollowersParams} from 'types/api/follower';
 import {CreateInvitationRequest} from 'types/api/invitations';
 import {GetMintChartDataParams, MintChartDataResponse, MintDataPoint} from 'types/api/mintChartData';
@@ -24,7 +24,7 @@ import {Block} from 'types/blocks';
 import {Comment, Comments} from 'types/comments';
 import {CreatedModified} from 'types/createdModified';
 import {Currencies, Currency} from 'types/currencies';
-import {ExchangeOrder, ExchangeOrders} from 'types/exchangeOrders';
+import {ExchangeOrder, ExchangeOrderPaginatedResponse, ExchangeOrders, ExchangeOrdersState} from 'types/exchangeOrders';
 import {Follower, Followers} from 'types/follower';
 import {SelectOption} from 'types/forms';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
@@ -33,6 +33,7 @@ import {Invitation, Invitations} from 'types/invitations';
 import {Manager} from 'types/manager';
 import {Mint, Mints} from 'types/mints';
 import {Notification, NotificationPaginatedResponse, Notifications, NotificationsState} from 'types/notifications';
+import {OrderBookState} from 'types/orderBook';
 import {PaginatedResponse} from 'types/pagination';
 import {Post, PostLike, Posts} from 'types/posts';
 import {Self} from 'types/self';
@@ -71,7 +72,9 @@ export {
   DepositResponse,
   Dict,
   ExchangeOrder,
+  ExchangeOrderPaginatedResponse,
   ExchangeOrders,
+  ExchangeOrdersState,
   Follower,
   FollowerReadSerializer,
   Followers,
@@ -98,6 +101,8 @@ export {
   NotificationPaginatedResponse,
   Notifications,
   NotificationsState,
+  OrderBookResponse,
+  OrderBookState,
   PaginatedResponse,
   Post,
   PostLike,

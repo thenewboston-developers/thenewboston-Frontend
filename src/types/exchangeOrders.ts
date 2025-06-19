@@ -1,6 +1,7 @@
 import {ExchangeOrderType, FillStatus} from 'enums';
 import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
+import {PaginatedResponse, Pagination} from 'types/pagination';
 
 export interface ExchangeOrder extends CreatedModified {
   fill_status: FillStatus;
@@ -15,3 +16,9 @@ export interface ExchangeOrder extends CreatedModified {
 }
 
 export type ExchangeOrders = Dict<ExchangeOrder>;
+
+export interface ExchangeOrdersState extends Pagination {
+  exchangeOrders: ExchangeOrders;
+}
+
+export type ExchangeOrderPaginatedResponse = PaginatedResponse<ExchangeOrder>;
