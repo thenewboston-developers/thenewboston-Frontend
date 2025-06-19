@@ -168,7 +168,7 @@ const Detail: SFC = ({className}) => {
         <S.Header>
           <S.BackButton onClick={handleBackClick}>
             <Icon icon={mdiArrowLeft} size={20} />
-            <span>Back to Currencies</span>
+            <span>All Currencies</span>
           </S.BackButton>
           {isOwner && <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />}
         </S.Header>
