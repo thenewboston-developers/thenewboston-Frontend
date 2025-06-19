@@ -6,32 +6,30 @@ import rootRouter from 'routers/rootRouter';
 import {AppDispatch, AssetPair} from 'types';
 
 export interface TradeWebSocketProps {
-  activeAssetPair: AssetPair | null;
-  url: string;
+  assetPair: AssetPair | null;
 }
 
-const TradeWebSocket: FC<TradeWebSocketProps> = ({activeAssetPair, url}) => {
+const TradeWebSocket: FC<TradeWebSocketProps> = ({assetPair}) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const socket = useMemo((): ReconnectingWebSocket => {
-    return new ReconnectingWebSocket(url);
-  }, [url]);
+    const wsUrl = `${process.env.REACT_APP_WS_URL}/ws/trades`;
+    return new ReconnectingWebSocket(wsUrl);
+  }, []);
 
   useEffect(() => {
-    if (!socket || !activeAssetPair) return;
+    if (!socket || !assetPair) return;
 
     let currentTicker: string | null = null;
 
     socket.onopen = () => {
-      if (activeAssetPair) {
-        currentTicker = activeAssetPair.primary_currency.ticker;
-        socket.send(
-          JSON.stringify({
-            action: 'subscribe',
-            ticker: currentTicker,
-          }),
-        );
-      }
+      currentTicker = assetPair.primary_currency.ticker;
+      socket.send(
+        JSON.stringify({
+          action: 'subscribe',
+          ticker: currentTicker,
+        }),
+      );
     };
 
     socket.onmessage = (event) => {
@@ -52,12 +50,12 @@ const TradeWebSocket: FC<TradeWebSocketProps> = ({activeAssetPair, url}) => {
         );
       }
     };
-  }, [activeAssetPair, dispatch, socket]);
+  }, [assetPair, dispatch, socket]);
 
   useEffect(() => {
-    if (!socket || socket.readyState !== WebSocket.OPEN || !activeAssetPair) return;
+    if (!socket || socket.readyState !== WebSocket.OPEN || !assetPair) return;
 
-    const newTicker = activeAssetPair.primary_currency.ticker;
+    const newTicker = assetPair.primary_currency.ticker;
 
     socket.send(
       JSON.stringify({
@@ -76,7 +74,7 @@ const TradeWebSocket: FC<TradeWebSocketProps> = ({activeAssetPair, url}) => {
         );
       }
     };
-  }, [activeAssetPair, socket]);
+  }, [assetPair, socket]);
 
   return null;
 };
