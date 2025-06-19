@@ -8,16 +8,21 @@ export const handleFormikAPIError = (error: any, helpers: FormikHelpers, generic
   if (error?.response?.data && typeof error.response.data === 'object') {
     const fieldErrors = error.response.data;
     let hasFieldError = false;
+    let nonFieldError = null;
 
     Object.keys(fieldErrors).forEach((fieldName) => {
       if (Array.isArray(fieldErrors[fieldName]) && fieldErrors[fieldName].length > 0) {
-        helpers.setFieldError(fieldName, fieldErrors[fieldName][0]);
-        hasFieldError = true;
+        if (fieldName === 'non_field_errors') {
+          [nonFieldError] = fieldErrors[fieldName];
+        } else {
+          helpers.setFieldError(fieldName, fieldErrors[fieldName][0]);
+          hasFieldError = true;
+        }
       }
     });
 
     if (!hasFieldError) {
-      displayErrorToast(genericErrorMessage);
+      displayErrorToast(nonFieldError || genericErrorMessage);
     }
   } else {
     displayErrorToast(genericErrorMessage);
