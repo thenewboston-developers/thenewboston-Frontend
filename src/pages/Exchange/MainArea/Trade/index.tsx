@@ -68,7 +68,7 @@ const Trade: SFC = ({className}) => {
     <S.Container className={className}>
       {renderPageContent()}
       <OrderBookWebSocket assetPair={activeAssetPair} />
-      <TradeWebSocket activeAssetPair={activeAssetPair} url={`${process.env.REACT_APP_WS_URL}/ws/trades`} />
+      <TradeWebSocket assetPair={activeAssetPair} />
     </S.Container>
   );
 };
