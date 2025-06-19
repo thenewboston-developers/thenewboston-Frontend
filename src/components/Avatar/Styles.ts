@@ -9,5 +9,6 @@ export const Container = styled.div`
 export const Img = styled.img<{$size: string}>`
   border-radius: 50%;
   height: ${({$size}) => $size};
+  object-fit: cover;
   width: ${({$size}) => $size};
 `;
