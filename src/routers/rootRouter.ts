@@ -35,9 +35,7 @@ const rootRouter = (dispatch: AppDispatch, event: MessageEvent) => {
   const {type} = socketData;
 
   if ([SocketDataType.CREATE_EXCHANGE_ORDER, SocketDataType.UPDATE_EXCHANGE_ORDER].includes(type)) {
-    // Update exchange orders store (for user's orders page)
     dispatch(setExchangeOrder(socketData.exchange_order));
-    // Update order book if this order is for the currently viewed pair
     dispatch(updateOrderBookOrder(socketData.exchange_order));
   } else if (type === SocketDataType.CREATE_NOTIFICATION) {
     handleCreateNotification(dispatch, socketData);

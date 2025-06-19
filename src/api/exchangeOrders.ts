@@ -24,15 +24,6 @@ export const getExchangeOrders = async (url?: string): Promise<ExchangeOrderPagi
   }
 };
 
-export const updateExchangeOrder = async (id: number, data: Partial<ExchangeOrder>): Promise<ExchangeOrder> => {
-  try {
-    const response = await axios.patch<ExchangeOrder>(`${BASE_URL}/${id}`, data, authorizationHeaders());
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const getOrderBook = async (primaryCurrency: number, secondaryCurrency: number): Promise<OrderBookResponse> => {
   try {
     const params = new URLSearchParams({
@@ -40,6 +31,15 @@ export const getOrderBook = async (primaryCurrency: number, secondaryCurrency: n
       secondary_currency: secondaryCurrency.toString(),
     });
     const response = await axios.get<OrderBookResponse>(`${BASE_URL}/book?${params}`, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateExchangeOrder = async (id: number, data: Partial<ExchangeOrder>): Promise<ExchangeOrder> => {
+  try {
+    const response = await axios.patch<ExchangeOrder>(`${BASE_URL}/${id}`, data, authorizationHeaders());
     return response.data;
   } catch (error) {
     throw error;
