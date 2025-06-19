@@ -18,16 +18,7 @@ const OrderBookWebSocket: FC<OrderBookWebSocketProps> = ({assetPair}) => {
   }, []);
 
   useEffect(() => {
-    if (!socket || !assetPair) return;
-
-    socket.onopen = () => {
-      socket.send(
-        JSON.stringify({
-          action: 'subscribe',
-          asset_pair_id: assetPair.id,
-        }),
-      );
-    };
+    if (!socket) return;
 
     socket.onmessage = (event) => {
       rootRouter(dispatch, event);
@@ -38,19 +29,30 @@ const OrderBookWebSocket: FC<OrderBookWebSocketProps> = ({assetPair}) => {
     return () => {
       socket.close();
     };
-  }, [assetPair, dispatch, socket]);
+  }, [dispatch, socket]);
 
   useEffect(() => {
-    if (!socket || socket.readyState !== WebSocket.OPEN || !assetPair) return;
+    if (!socket || !assetPair) return;
 
-    socket.send(
-      JSON.stringify({
-        action: 'subscribe',
-        asset_pair_id: assetPair.id,
-      }),
-    );
+    const subscribe = () => {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(
+          JSON.stringify({
+            action: 'subscribe',
+            asset_pair_id: assetPair.id,
+          }),
+        );
+      }
+    };
+
+    // Subscribe immediately if already connected
+    subscribe();
+
+    // Subscribe when connection opens
+    socket.addEventListener('open', subscribe);
 
     return () => {
+      socket.removeEventListener('open', subscribe);
       if (socket.readyState === WebSocket.OPEN) {
         socket.send(
           JSON.stringify({

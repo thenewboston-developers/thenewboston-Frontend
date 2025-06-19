@@ -5,7 +5,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 import rootRouter from 'routers/rootRouter';
 import {AppDispatch, AssetPair} from 'types';
 
-export interface TradeWebSocketProps {
+interface TradeWebSocketProps {
   assetPair: AssetPair | null;
 }
 
@@ -18,58 +18,48 @@ const TradeWebSocket: FC<TradeWebSocketProps> = ({assetPair}) => {
   }, []);
 
   useEffect(() => {
-    if (!socket || !assetPair) return;
-
-    let currentTicker: string | null = null;
-
-    socket.onopen = () => {
-      currentTicker = assetPair.primary_currency.ticker;
-      socket.send(
-        JSON.stringify({
-          action: 'subscribe',
-          ticker: currentTicker,
-        }),
-      );
-    };
+    if (!socket) return;
 
     socket.onmessage = (event) => {
       rootRouter(dispatch, event);
     };
 
-    socket.onclose = () => {
-      currentTicker = null;
-    };
+    socket.onclose = () => {};
 
     return () => {
-      if (currentTicker && socket.readyState === WebSocket.OPEN) {
+      socket.close();
+    };
+  }, [dispatch, socket]);
+
+  useEffect(() => {
+    if (!socket || !assetPair) return;
+
+    const {ticker} = assetPair.primary_currency;
+
+    const subscribe = () => {
+      if (socket.readyState === WebSocket.OPEN) {
         socket.send(
           JSON.stringify({
-            action: 'unsubscribe',
-            ticker: currentTicker,
+            action: 'subscribe',
+            ticker: ticker,
           }),
         );
       }
     };
-  }, [assetPair, dispatch, socket]);
 
-  useEffect(() => {
-    if (!socket || socket.readyState !== WebSocket.OPEN || !assetPair) return;
+    // Subscribe immediately if already connected
+    subscribe();
 
-    const newTicker = assetPair.primary_currency.ticker;
-
-    socket.send(
-      JSON.stringify({
-        action: 'subscribe',
-        ticker: newTicker,
-      }),
-    );
+    // Subscribe when connection opens
+    socket.addEventListener('open', subscribe);
 
     return () => {
+      socket.removeEventListener('open', subscribe);
       if (socket.readyState === WebSocket.OPEN) {
         socket.send(
           JSON.stringify({
             action: 'unsubscribe',
-            ticker: newTicker,
+            ticker: ticker,
           }),
         );
       }
