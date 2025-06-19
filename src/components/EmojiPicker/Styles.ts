@@ -78,6 +78,7 @@ export const EmojiGrid = styled.div`
   display: grid;
   flex: 1;
   gap: 2px;
+  grid-auto-rows: max-content;
   grid-template-columns: repeat(8, 1fr);
   overflow-x: hidden;
   overflow-y: auto;
