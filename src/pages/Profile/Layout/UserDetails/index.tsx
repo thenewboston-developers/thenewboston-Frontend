@@ -163,7 +163,15 @@ const UserDetails: SFC = ({className}) => {
       </S.Container>
       {profileEditModalIsOpen ? <ProfileEditModal close={toggleProfileEditModal} /> : null}
       {profileAvatarModalIsOpen ? <FullScreenImageModal close={handleClose} imageSrc={userAvatar} /> : null}
-      {sendModalIsOpen && user ? <SendModal close={toggleSendModal} recipient={user} /> : null}
+      {sendModalIsOpen && user ? (
+        <SendModal
+          close={toggleSendModal}
+          onSuccess={() => {
+            if (userId) dispatch(getUserStats(userId));
+          }}
+          recipient={user}
+        />
+      ) : null}
     </>
   );
 };

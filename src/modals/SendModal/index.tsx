@@ -22,10 +22,11 @@ import * as S from './Styles';
 
 export interface SendModalProps {
   close(): void;
+  onSuccess?(): void;
   recipient: UserReadSerializer;
 }
 
-const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
+const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}) => {
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
   const wallets = useSelector(getWallets);
@@ -86,6 +87,8 @@ const SendModal: SFC<SendModalProps> = ({className, close, recipient}) => {
 
       await dispatch(createPost(requestData));
       displayToast('Coins sent successfully!', ToastType.SUCCESS);
+
+      if (onSuccess) onSuccess();
       close();
     } catch (error: any) {
       const errorMessage = error?.response?.data?.error ?? 'Error sending coins';
