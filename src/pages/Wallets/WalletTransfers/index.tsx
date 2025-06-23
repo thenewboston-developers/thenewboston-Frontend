@@ -1,5 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
-import InfiniteScrollComponent from 'react-infinite-scroll-component';
+import {useEffect, useState} from 'react';
 
 import {getTransfers} from 'api/transfers';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
@@ -13,11 +12,12 @@ import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const WalletTransfers: SFC = ({className}) => {
-  const [hasMore, setHasMore] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [next, setNext] = useState<string | null>(null);
+  const [totalCount, setTotalCount] = useState(0);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
   const activeWallet = useActiveWallet();
+  const itemsPerPage = 20;
 
   useEffect(() => {
     if (!activeWallet) return;
@@ -25,33 +25,23 @@ const WalletTransfers: SFC = ({className}) => {
     (async () => {
       setIsLoading(true);
       try {
-        const response = await getTransfers(activeWallet.currency.id);
+        const offset = (currentPage - 1) * itemsPerPage;
+        const url = `${process.env.REACT_APP_API_URL}/api/transfers?currency=${activeWallet.currency.id}&limit=${itemsPerPage}&offset=${offset}`;
+        const response = await getTransfers(activeWallet.currency.id, url);
         setTransfers(response.results);
-        setNext(response.next);
-        setHasMore(!!response.next);
+        setTotalCount(response.count);
       } catch (error) {
         displayErrorToast('Error fetching transfers');
       } finally {
         setIsLoading(false);
       }
     })();
-  }, [activeWallet]);
+  }, [activeWallet, currentPage]);
 
-  const fetchMoreTransfers = useCallback(async () => {
-    if (!activeWallet || isLoading || !hasMore) return;
-
-    setIsLoading(true);
-    try {
-      const response = await getTransfers(activeWallet.currency.id, next);
-      setTransfers((prev) => [...prev, ...response.results]);
-      setNext(response.next);
-      setHasMore(!!response.next);
-    } catch (error) {
-      displayErrorToast('Error fetching more transfers');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [activeWallet, hasMore, isLoading, next]);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({behavior: 'smooth', top: 0});
+  };
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -104,7 +94,7 @@ const WalletTransfers: SFC = ({className}) => {
   };
 
   const renderContent = () => {
-    if (isLoading && !transfers.length) {
+    if (isLoading) {
       return (
         <S.LoaderWrapper>
           <Loader size={24} />
@@ -112,7 +102,7 @@ const WalletTransfers: SFC = ({className}) => {
       );
     }
 
-    if (!transfers.length) {
+    if (!transfers.length && currentPage === 1) {
       return (
         <S.EmptyPageWrapper>
           <EmptyPage
@@ -124,22 +114,13 @@ const WalletTransfers: SFC = ({className}) => {
       );
     }
 
+    const totalPages = Math.ceil(totalCount / itemsPerPage);
+
     return (
-      <InfiniteScrollComponent
-        dataLength={transfers.length}
-        endMessage={null}
-        hasMore={hasMore}
-        loader={
-          <S.LoaderWrapper>
-            <Loader size={24} />
-          </S.LoaderWrapper>
-        }
-        next={fetchMoreTransfers}
-        scrollThreshold={0.9}
-        scrollableTarget="main-scrollable-area"
-      >
+      <>
         <S.TransfersList>{transfers.map(renderTransfer)}</S.TransfersList>
-      </InfiniteScrollComponent>
+        <S.Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+      </>
     );
   };
 

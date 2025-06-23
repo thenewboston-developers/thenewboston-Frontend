@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import UPagination from 'components/Pagination';
 import {breakpoints, colors} from 'styles';
 
 export const Amount = styled.div<{$isReceived: boolean}>`
@@ -34,6 +35,10 @@ export const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
   padding: 24px;
+`;
+
+export const Pagination = styled(UPagination)`
+  margin: 24px 0;
 `;
 
 export const Time = styled.div`
