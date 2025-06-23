@@ -25,8 +25,10 @@ const WalletTransfers: SFC = ({className}) => {
     (async () => {
       setIsLoading(true);
       try {
-        const offset = (currentPage - 1) * itemsPerPage;
-        const url = `${process.env.REACT_APP_API_URL}/api/transfers?currency=${activeWallet.currency.id}&limit=${itemsPerPage}&offset=${offset}`;
+        const url =
+          currentPage === 1
+            ? null
+            : `${process.env.REACT_APP_API_URL}/api/transfers?currency=${activeWallet.currency.id}&page=${currentPage}`;
         const response = await getTransfers(activeWallet.currency.id, url);
         setTransfers(response.results);
         setTotalCount(response.count);
