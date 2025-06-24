@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import UCurrencyLogo from 'components/CurrencyLogo';
+import {Img} from 'components/CurrencyLogo/Styles';
 import ULine from 'components/Line';
 import {colors, fonts} from 'styles';
 
@@ -24,6 +26,12 @@ export const Container = styled.div`
 
   &:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+export const CurrencyLogo = styled(UCurrencyLogo)`
+  ${Img} {
+    box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
   }
 `;
 

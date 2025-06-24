@@ -1,6 +1,5 @@
 import {useNavigate} from 'react-router-dom';
 
-import CurrencyLogo from 'components/CurrencyLogo';
 import UserLabel from 'components/UserLabel';
 import {Currency, SFC} from 'types';
 
@@ -21,7 +20,7 @@ const CurrencyCard: SFC<CurrencyCardProps> = ({className, currency}) => {
     <S.Container className={className} onClick={handleCardClick}>
       <S.CardContent>
         <S.HeaderSection>
-          <CurrencyLogo logo={currency.logo} width="56px" />
+          <S.CurrencyLogo logo={currency.logo} width="56px" />
           <S.Text>
             <S.Ticker>{currency.ticker}</S.Ticker>
             <S.DomainInfo>
