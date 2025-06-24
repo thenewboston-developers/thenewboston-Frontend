@@ -1,28 +1,27 @@
 import styled from 'styled-components';
 
+import UCurrencyLogo from 'components/CurrencyLogo';
+import {Img} from 'components/CurrencyLogo/Styles';
+import ULine from 'components/Line';
 import {colors, fonts} from 'styles';
 
-export const Box = styled.div`
-  align-items: center;
+export const CardContent = styled.div`
   display: flex;
-  margin: 10px 0 15px;
+  flex-direction: column;
+  height: 100%;
   width: 100%;
-`;
-
-export const BoxLeft = styled.div`
-  align-items: center;
-  display: flex;
 `;
 
 export const Container = styled.div`
   background-color: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 14px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   cursor: pointer;
   display: flex;
+  height: 100%;
   justify-content: space-between;
-  padding: 8px 5px 8px 14px;
+  padding: 12px 14px;
   transition: box-shadow 0.2s ease;
 
   &:hover {
@@ -30,15 +29,27 @@ export const Container = styled.div`
   }
 `;
 
+export const CurrencyLogo = styled(UCurrencyLogo)`
+  ${Img} {
+    box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+  }
+`;
+
+export const Description = styled.div`
+  color: ${colors.palette.gray[600]};
+  font-size: 13px;
+`;
+
+export const DescriptionRow = styled.div`
+  margin-top: 10px;
+`;
+
 export const Domain = styled.div`
   font-size: 12px;
 `;
 
-export const DomainRow = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 0;
+export const DomainInfo = styled.div`
+  margin-top: 2px;
 `;
 
 export const InternalBadge = styled.span`
@@ -50,16 +61,31 @@ export const InternalBadge = styled.span`
   padding: 2px 8px;
 `;
 
-export const LabelContainer = styled.div`
+export const HeaderSection = styled.div`
+  display: flex;
   width: 100%;
+`;
+
+export const Line = styled(ULine)`
+  margin-top: 10px;
+`;
+
+export const OwnerRow = styled.div`
+  margin-top: 10px;
+`;
+
+export const Spacer = styled.div`
+  flex: 1;
 `;
 
 export const Text = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
-  margin-left: 8px;
+  margin: 2px 0 0 12px;
 `;
 
 export const Ticker = styled.div`
+  font-size: 16px;
   font-weight: ${fonts.weight.semiBold};
 `;
