@@ -12,17 +12,14 @@ import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const WalletTransfers: SFC = ({className}) => {
-  const activeWallet = useActiveWallet();
+  const [activeCurrencyId, setActiveCurrencyId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
+  const activeWallet = useActiveWallet();
   const itemsPerPage = 20;
 
-  // Track the currency for which we're showing data
-  const [activeCurrencyId, setActiveCurrencyId] = useState<number | null>(null);
-
-  // Reset page when currency changes
   useEffect(() => {
     if (!activeWallet) return;
 
@@ -32,7 +29,6 @@ const WalletTransfers: SFC = ({className}) => {
     setActiveCurrencyId(activeWallet.currency.id);
   }, [activeWallet, activeCurrencyId]);
 
-  // Fetch data
   useEffect(() => {
     if (!activeWallet || activeCurrencyId !== activeWallet.currency.id) return;
 
