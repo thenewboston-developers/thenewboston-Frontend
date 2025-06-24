@@ -12,15 +12,29 @@ import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const WalletTransfers: SFC = ({className}) => {
+  const activeWallet = useActiveWallet();
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
-  const activeWallet = useActiveWallet();
   const itemsPerPage = 20;
 
+  // Track the currency for which we're showing data
+  const [activeCurrencyId, setActiveCurrencyId] = useState<number | null>(null);
+
+  // Reset page when currency changes
   useEffect(() => {
     if (!activeWallet) return;
+
+    if (activeCurrencyId !== null && activeCurrencyId !== activeWallet.currency.id) {
+      setCurrentPage(1);
+    }
+    setActiveCurrencyId(activeWallet.currency.id);
+  }, [activeWallet, activeCurrencyId]);
+
+  // Fetch data
+  useEffect(() => {
+    if (!activeWallet || activeCurrencyId !== activeWallet.currency.id) return;
 
     (async () => {
       setIsLoading(true);
@@ -29,6 +43,7 @@ const WalletTransfers: SFC = ({className}) => {
           currentPage === 1
             ? null
             : `${process.env.REACT_APP_API_URL}/api/transfers?currency=${activeWallet.currency.id}&page=${currentPage}`;
+
         const response = await getTransfers(activeWallet.currency.id, url);
         setTransfers(response.results);
         setTotalCount(response.count);
@@ -38,7 +53,7 @@ const WalletTransfers: SFC = ({className}) => {
         setIsLoading(false);
       }
     })();
-  }, [activeWallet, currentPage]);
+  }, [activeWallet, activeCurrencyId, currentPage]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
