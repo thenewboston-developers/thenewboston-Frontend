@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {DEPLOYMENT_TIMESTAMP_KEY} from 'constants/localStorage';
 import {dismissUpdateNotification} from 'dispatchers/frontendDeployments';
-import {AppDispatch} from 'types';
+import {AppDispatch, FrontendDeployment} from 'types';
 
 import * as S from './Styles';
 
 interface FrontendDeploymentsState {
+  currentDeployment: FrontendDeployment | null;
   updateAvailable: boolean;
 }
 
@@ -17,14 +19,16 @@ const DeploymentNotification = () => {
   const [countdown, setCountdown] = useState<number>(COUNTDOWN_SECONDS);
   const [isVisible, setIsVisible] = useState(false);
 
-  const updateAvailable = useSelector(
-    (state: {frontendDeployments: FrontendDeploymentsState}) => state.frontendDeployments.updateAvailable,
+  const {currentDeployment, updateAvailable} = useSelector(
+    (state: {frontendDeployments: FrontendDeploymentsState}) => state.frontendDeployments,
   );
 
   useEffect(() => {
     if (updateAvailable) {
       setIsVisible(true);
       setCountdown(COUNTDOWN_SECONDS);
+    } else {
+      setIsVisible(false);
     }
   }, [updateAvailable]);
 
@@ -34,7 +38,11 @@ const DeploymentNotification = () => {
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          handleReload();
+          // Update localStorage with the new deployment timestamp before reloading
+          if (currentDeployment?.created_date) {
+            localStorage.setItem(DEPLOYMENT_TIMESTAMP_KEY, currentDeployment.created_date);
+          }
+          window.location.reload();
           return 0;
         }
         return prev - 1;
@@ -42,14 +50,22 @@ const DeploymentNotification = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isVisible]);
+  }, [isVisible, currentDeployment]);
 
   const handleDismiss = () => {
+    // Update localStorage when dismissing so notification doesn't show again
+    if (currentDeployment?.created_date) {
+      localStorage.setItem(DEPLOYMENT_TIMESTAMP_KEY, currentDeployment.created_date);
+    }
     setIsVisible(false);
     dispatch(dismissUpdateNotification());
   };
 
   const handleReload = () => {
+    // Update localStorage with the new deployment timestamp before reloading
+    if (currentDeployment?.created_date) {
+      localStorage.setItem(DEPLOYMENT_TIMESTAMP_KEY, currentDeployment.created_date);
+    }
     window.location.reload();
   };
 

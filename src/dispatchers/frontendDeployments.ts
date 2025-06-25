@@ -24,6 +24,9 @@ export const checkForDeploymentUpdate = () => async (dispatch: AppDispatch) => {
       } else if (!storedTimestamp) {
         // First time checking, store the timestamp
         localStorage.setItem(DEPLOYMENT_TIMESTAMP_KEY, deployment.created_date);
+      } else {
+        // Timestamps match or stored is newer - ensure updateAvailable is false
+        dispatch(setUpdateAvailable(false));
       }
     }
 
@@ -42,10 +45,13 @@ export const handleDeploymentUpdate = (deployment: FrontendDeployment) => (dispa
   const storedTimestamp = localStorage.getItem(DEPLOYMENT_TIMESTAMP_KEY);
 
   if (!storedTimestamp || deployment.created_date > storedTimestamp) {
-    // Store the new timestamp
-    localStorage.setItem(DEPLOYMENT_TIMESTAMP_KEY, deployment.created_date);
+    // Don't update localStorage here - only update when user actually refreshes
     dispatch(setCurrentDeployment(deployment));
     dispatch(setUpdateAvailable(true));
+  } else {
+    // Deployment is not newer than stored - ensure updateAvailable is false
+    dispatch(setCurrentDeployment(deployment));
+    dispatch(setUpdateAvailable(false));
   }
 };
 
