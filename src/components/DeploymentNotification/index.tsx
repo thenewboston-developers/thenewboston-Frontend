@@ -4,25 +4,18 @@ import {mdiInformationOutline} from '@mdi/js';
 
 import {DEPLOYMENT_TIMESTAMP_KEY} from 'constants/localStorage';
 import {dismissUpdateNotification} from 'dispatchers/frontendDeployments';
-import {AppDispatch, FrontendDeployment} from 'types';
+import {getFrontendDeployments} from 'selectors/state';
+import {AppDispatch} from 'types';
 
 import * as S from './Styles';
-
-interface FrontendDeploymentsState {
-  currentDeployment: FrontendDeployment | null;
-  updateAvailable: boolean;
-}
 
 const COUNTDOWN_SECONDS = 10;
 
 const DeploymentNotification = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const [countdown, setCountdown] = useState<number>(COUNTDOWN_SECONDS);
   const [isVisible, setIsVisible] = useState(false);
-
-  const {currentDeployment, updateAvailable} = useSelector(
-    (state: {frontendDeployments: FrontendDeploymentsState}) => state.frontendDeployments,
-  );
+  const dispatch = useDispatch<AppDispatch>();
+  const {currentDeployment, updateAvailable} = useSelector(getFrontendDeployments);
 
   useEffect(() => {
     if (updateAvailable) {

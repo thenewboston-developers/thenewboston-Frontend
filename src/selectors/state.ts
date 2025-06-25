@@ -9,6 +9,7 @@ export const hasMoreExchangeOrders = (state: RootState) => state.exchangeOrders.
 export const isLoadingExchangeOrders = (state: RootState) => state.exchangeOrders.isLoading;
 export const getFollowers = (state: RootState) => state.followers;
 export const getFollowings = (state: RootState) => state.followings;
+export const getFrontendDeployments = (state: RootState) => state.frontendDeployments;
 export const getInvitationLimits = (state: RootState) => state.invitationLimits;
 export const getInvitations = (state: RootState) => state.invitations;
 export const getManager = (state: RootState) => state.manager;
