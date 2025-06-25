@@ -25,7 +25,6 @@ const frontendDeployments = createSlice({
   initialState,
   name: FRONTEND_DEPLOYMENTS,
   reducers: {
-    resetFrontendDeployments: () => initialState,
     setCheckingForUpdate: (state: FrontendDeploymentsState, {payload}: PayloadAction<boolean>) => {
       state.isCheckingForUpdate = payload;
     },
@@ -36,22 +35,13 @@ const frontendDeployments = createSlice({
     setPollingEnabled: (state: FrontendDeploymentsState, {payload}: PayloadAction<boolean>) => {
       state.isPollingEnabled = payload;
     },
-    setPollingInterval: (state: FrontendDeploymentsState, {payload}: PayloadAction<number>) => {
-      state.pollingInterval = payload;
-    },
     setUpdateAvailable: (state: FrontendDeploymentsState, {payload}: PayloadAction<boolean>) => {
       state.updateAvailable = payload;
     },
   },
 });
 
-export const {
-  resetFrontendDeployments,
-  setCheckingForUpdate,
-  setCurrentDeployment,
-  setPollingEnabled,
-  setPollingInterval,
-  setUpdateAvailable,
-} = frontendDeployments.actions;
+export const {setCheckingForUpdate, setCurrentDeployment, setPollingEnabled, setUpdateAvailable} =
+  frontendDeployments.actions;
 
 export default frontendDeployments.reducer;

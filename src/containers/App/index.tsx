@@ -29,19 +29,15 @@ const App = () => {
       <>
         <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/notifications/${self.id}`} />
         <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/wallet/${self.id}`} />
+        <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/frontend-deployments`} />
       </>
     );
   };
 
-  const renderDeploymentWebSocket = () => {
-    // Frontend deployment WebSocket doesn't require authentication
-    return <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/frontend-deployments`} />;
-  };
-
   return (
     <>
-      <DeploymentNotification />
       {renderLayout()}
+      <DeploymentNotification />
       <ToastContainer
         autoClose={3000}
         closeOnClick
@@ -55,7 +51,6 @@ const App = () => {
         transition={Flip}
       />
       {renderWebSockets()}
-      {renderDeploymentWebSocket()}
     </>
   );
 };

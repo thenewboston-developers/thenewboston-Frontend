@@ -56,7 +56,3 @@ export const dismissUpdateNotification = () => (dispatch: AppDispatch) => {
 export const enablePolling = () => (dispatch: AppDispatch) => {
   dispatch(setPollingEnabled(true));
 };
-
-export const disablePolling = () => (dispatch: AppDispatch) => {
-  dispatch(setPollingEnabled(false));
-};

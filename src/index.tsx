@@ -10,7 +10,6 @@ import * as Sentry from '@sentry/react';
 import {PersistGate} from 'redux-persist/integration/react';
 
 import App from 'containers/App';
-import AppInitializer from 'containers/AppInitializer';
 import {persistor, store} from 'store';
 import {colors} from 'styles';
 import GlobalStyle from 'styles/components/GlobalStyle';
@@ -34,9 +33,7 @@ root.render(
       <SkeletonTheme highlightColor={colors.palette.gray[300]} baseColor={colors.whiteSmoke}>
         <BrowserRouter>
           <Sentry.ErrorBoundary fallback={<p>An error has occurred. Please refresh the page.</p>}>
-            <AppInitializer>
-              <App />
-            </AppInitializer>
+            <App />
           </Sentry.ErrorBoundary>
         </BrowserRouter>
       </SkeletonTheme>

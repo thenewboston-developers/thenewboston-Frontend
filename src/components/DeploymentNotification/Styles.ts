@@ -42,7 +42,7 @@ export const Container = styled.div`
   position: fixed;
   right: 0;
   top: 0;
-  z-index: 9999;
+  z-index: 1000;
 `;
 
 export const Content = styled.div`
