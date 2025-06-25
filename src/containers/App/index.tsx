@@ -15,7 +15,6 @@ const App = () => {
   const isAuthenticated = useIsAuthenticated();
   const self = useSelector(getSelf);
 
-  // Initialize deployment polling
   useDeploymentPolling();
 
   const renderLayout = () => {
@@ -27,9 +26,9 @@ const App = () => {
     if (!isAuthenticated) return null;
     return (
       <>
+        <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/frontend-deployments`} />
         <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/notifications/${self.id}`} />
         <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/wallet/${self.id}`} />
-        <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/frontend-deployments`} />
       </>
     );
   };
