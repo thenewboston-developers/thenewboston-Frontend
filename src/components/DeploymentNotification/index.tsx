@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {mdiInformationOutline} from '@mdi/js';
 
 import {DEPLOYMENT_TIMESTAMP_KEY} from 'constants/localStorage';
 import {dismissUpdateNotification} from 'dispatchers/frontendDeployments';
@@ -74,9 +75,12 @@ const DeploymentNotification = () => {
   return (
     <S.Container>
       <S.Content>
-        <S.Message>
-          New version available! Refreshing in <S.Countdown>{countdown}</S.Countdown> seconds...
-        </S.Message>
+        <S.MessageContainer>
+          <S.InfoIcon icon={mdiInformationOutline} />
+          <S.Message>
+            New version available! Refreshing in <S.Countdown>{countdown}</S.Countdown> seconds...
+          </S.Message>
+        </S.MessageContainer>
         <S.ButtonGroup>
           <S.Button onClick={handleReload}>Refresh Now</S.Button>
           <S.DismissButton onClick={handleDismiss}>Dismiss</S.DismissButton>
