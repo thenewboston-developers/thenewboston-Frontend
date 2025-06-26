@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiInformationOutline} from '@mdi/js';
 
-import {DEPLOYMENT_TIMESTAMP_KEY} from 'constants/localStorage';
+import {DEPLOYMENT_TIMESTAMP} from 'constants/localStorage';
 import {getFrontendDeployments} from 'selectors/state';
 import {setUpdateAvailable} from 'store/frontendDeployments';
 import {AppDispatch} from 'types';
@@ -34,7 +34,7 @@ const DeploymentNotification = () => {
         if (prev <= 1) {
           // Update localStorage with the new deployment timestamp before reloading
           if (currentDeployment?.created_date) {
-            localStorage.setItem(DEPLOYMENT_TIMESTAMP_KEY, currentDeployment.created_date);
+            localStorage.setItem(DEPLOYMENT_TIMESTAMP, currentDeployment.created_date);
           }
           window.location.reload();
           return 0;
@@ -49,7 +49,7 @@ const DeploymentNotification = () => {
   const handleDismiss = () => {
     // Update localStorage when dismissing so notification doesn't show again
     if (currentDeployment?.created_date) {
-      localStorage.setItem(DEPLOYMENT_TIMESTAMP_KEY, currentDeployment.created_date);
+      localStorage.setItem(DEPLOYMENT_TIMESTAMP, currentDeployment.created_date);
     }
     setIsVisible(false);
     dispatch(setUpdateAvailable(false));
@@ -58,7 +58,7 @@ const DeploymentNotification = () => {
   const handleReload = () => {
     // Update localStorage with the new deployment timestamp before reloading
     if (currentDeployment?.created_date) {
-      localStorage.setItem(DEPLOYMENT_TIMESTAMP_KEY, currentDeployment.created_date);
+      localStorage.setItem(DEPLOYMENT_TIMESTAMP, currentDeployment.created_date);
     }
     window.location.reload();
   };

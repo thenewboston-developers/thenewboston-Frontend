@@ -1,5 +1,5 @@
 import {getFrontendDeploymentStatus} from 'api/frontendDeployments';
-import {DEPLOYMENT_TIMESTAMP_KEY} from 'constants/localStorage';
+import {DEPLOYMENT_TIMESTAMP} from 'constants/localStorage';
 import {setCurrentDeployment, setPollingEnabled, setUpdateAvailable} from 'store/frontendDeployments';
 import {AppDispatch} from 'types';
 import {FrontendDeployment} from 'types/frontendDeployment';
@@ -10,11 +10,11 @@ export const checkForDeploymentUpdate = () => async (dispatch: AppDispatch) => {
     dispatch(setCurrentDeployment(deployment));
 
     if (deployment) {
-      const storedTimestamp = localStorage.getItem(DEPLOYMENT_TIMESTAMP_KEY);
+      const storedTimestamp = localStorage.getItem(DEPLOYMENT_TIMESTAMP);
 
       if (!storedTimestamp) {
         // First time checking, store the timestamp
-        localStorage.setItem(DEPLOYMENT_TIMESTAMP_KEY, deployment.created_date);
+        localStorage.setItem(DEPLOYMENT_TIMESTAMP, deployment.created_date);
       } else if (deployment.created_date > storedTimestamp) {
         dispatch(setUpdateAvailable(true));
       } else {
@@ -33,7 +33,7 @@ export const checkForDeploymentUpdate = () => async (dispatch: AppDispatch) => {
 };
 
 export const handleDeploymentUpdate = (deployment: FrontendDeployment) => (dispatch: AppDispatch) => {
-  const storedTimestamp = localStorage.getItem(DEPLOYMENT_TIMESTAMP_KEY);
+  const storedTimestamp = localStorage.getItem(DEPLOYMENT_TIMESTAMP);
 
   if (!storedTimestamp || deployment.created_date > storedTimestamp) {
     // Don't update localStorage here - only update when user actually refreshes

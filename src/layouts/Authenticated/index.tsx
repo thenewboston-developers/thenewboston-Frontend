@@ -7,7 +7,6 @@ import {checkForDeploymentUpdate} from 'dispatchers/frontendDeployments';
 import {getNotifications} from 'dispatchers/notifications';
 import {getWallets} from 'dispatchers/wallets';
 import {getWires} from 'dispatchers/wires';
-import {setPollingEnabled} from 'store/frontendDeployments';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -22,17 +21,15 @@ const Authenticated: SFC = ({className}) => {
     (async () => {
       try {
         await Promise.all([
+          dispatch(checkForDeploymentUpdate()),
           dispatch(getAssetPairs()),
           dispatch(getCurrencies()),
           dispatch(getNotifications()),
           dispatch(getWallets()),
           dispatch(getWires()),
-          dispatch(checkForDeploymentUpdate()),
         ]);
       } catch (error) {
         displayErrorToast('Error fetching initial data');
-        // Enable polling if deployment check fails
-        dispatch(setPollingEnabled(true));
       }
     })();
   }, [dispatch]);
