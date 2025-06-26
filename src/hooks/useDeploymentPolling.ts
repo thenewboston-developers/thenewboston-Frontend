@@ -2,20 +2,13 @@ import {useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {checkForDeploymentUpdate} from 'dispatchers/frontendDeployments';
+import {getFrontendDeployments} from 'selectors/state';
 import {AppDispatch} from 'types';
-
-interface FrontendDeploymentsState {
-  isPollingEnabled: boolean;
-  pollingInterval: number;
-}
 
 const useDeploymentPolling = () => {
   const dispatch = useDispatch<AppDispatch>();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  const {isPollingEnabled, pollingInterval} = useSelector(
-    (state: {frontendDeployments: FrontendDeploymentsState}) => state.frontendDeployments,
-  );
+  const {isPollingEnabled, pollingInterval} = useSelector(getFrontendDeployments);
 
   useEffect(() => {
     if (isPollingEnabled && pollingInterval > 0) {
