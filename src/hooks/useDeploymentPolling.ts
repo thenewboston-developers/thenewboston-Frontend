@@ -19,17 +19,14 @@ const useDeploymentPolling = () => {
 
   useEffect(() => {
     if (isPollingEnabled && pollingInterval > 0) {
-      // Clear any existing interval
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
 
-      // Set up new interval
       intervalRef.current = setInterval(() => {
         dispatch(checkForDeploymentUpdate());
       }, pollingInterval);
 
-      // Run immediately on mount
       dispatch(checkForDeploymentUpdate());
 
       return () => {

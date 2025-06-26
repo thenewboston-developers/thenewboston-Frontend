@@ -32,7 +32,6 @@ const DeploymentNotification = () => {
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          // Update localStorage with the new deployment timestamp before reloading
           if (currentDeployment?.created_date) {
             localStorage.setItem(DEPLOYMENT_TIMESTAMP, currentDeployment.created_date);
           }
@@ -47,7 +46,6 @@ const DeploymentNotification = () => {
   }, [isVisible, currentDeployment]);
 
   const handleDismiss = () => {
-    // Update localStorage when dismissing so notification doesn't show again
     if (currentDeployment?.created_date) {
       localStorage.setItem(DEPLOYMENT_TIMESTAMP, currentDeployment.created_date);
     }
@@ -56,7 +54,6 @@ const DeploymentNotification = () => {
   };
 
   const handleReload = () => {
-    // Update localStorage with the new deployment timestamp before reloading
     if (currentDeployment?.created_date) {
       localStorage.setItem(DEPLOYMENT_TIMESTAMP, currentDeployment.created_date);
     }

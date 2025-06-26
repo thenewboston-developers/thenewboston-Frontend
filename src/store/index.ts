@@ -73,7 +73,7 @@ const persistConfig = {
   migrate: createMigrate(migrations, {debug: false}),
   storage,
   version: 1,
-  blacklist: ['frontendDeployments'], // Don't persist deployment state across refreshes
+  blacklist: ['frontendDeployments'],
 };
 
 const persistedReducer = persistReducer(persistConfig, appReducer);
