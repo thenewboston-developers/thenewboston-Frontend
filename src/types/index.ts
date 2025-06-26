@@ -27,6 +27,11 @@ import {Currencies, Currency} from 'types/currencies';
 import {ExchangeOrder, ExchangeOrderPaginatedResponse, ExchangeOrders, ExchangeOrdersState} from 'types/exchangeOrders';
 import {Follower, Followers} from 'types/follower';
 import {SelectOption} from 'types/forms';
+import {
+  FrontendDeployment,
+  FrontendDeploymentStatus,
+  FrontendDeploymentWebSocketMessage,
+} from 'types/frontendDeployment';
 import {ClassName, Dict, GenericFunction, GenericVoidFunction, SFC} from 'types/generic';
 import {InvitationLimit, InvitationLimits} from 'types/invitationLimits';
 import {Invitation, Invitations} from 'types/invitations';
@@ -78,6 +83,9 @@ export {
   Follower,
   FollowerReadSerializer,
   Followers,
+  FrontendDeployment,
+  FrontendDeploymentStatus,
+  FrontendDeploymentWebSocketMessage,
   GenericFunction,
   GenericVoidFunction,
   GetFollowersParams,

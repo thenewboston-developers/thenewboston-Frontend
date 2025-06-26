@@ -5,6 +5,7 @@ export const CURRENCIES = 'currencies';
 export const EXCHANGE_ORDERS = 'exchangeOrders';
 export const FOLLOWERS = 'followers';
 export const FOLLOWINGS = 'followings';
+export const FRONTEND_DEPLOYMENTS = 'frontendDeployments';
 export const INVITATIONS = 'invitations';
 export const INVITATION_LIMITS = 'invitationLimits';
 export const MANAGER = 'manager';

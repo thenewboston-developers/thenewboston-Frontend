@@ -2,8 +2,10 @@ import React from 'react';
 import {useSelector} from 'react-redux';
 import {Flip, ToastContainer} from 'react-toastify';
 
+import DeploymentNotification from 'components/DeploymentNotification';
+import FrontendDeploymentWebSocket from 'containers/FrontendDeploymentWebSocket';
 import WebSocket from 'containers/WebSocket';
-import {useIsAuthenticated} from 'hooks';
+import {useDeploymentPolling, useIsAuthenticated} from 'hooks';
 import Authenticated from 'layouts/Authenticated';
 import Unauthenticated from 'layouts/Unauthenticated';
 import {getSelf} from 'selectors/state';
@@ -14,6 +16,8 @@ const App = () => {
   const isAuthenticated = useIsAuthenticated();
   const self = useSelector(getSelf);
 
+  useDeploymentPolling();
+
   const renderLayout = () => {
     if (isAuthenticated) return <Authenticated />;
     return <Unauthenticated />;
@@ -23,6 +27,7 @@ const App = () => {
     if (!isAuthenticated) return null;
     return (
       <>
+        <FrontendDeploymentWebSocket />
         <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/notifications/${self.id}`} />
         <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/wallet/${self.id}`} />
       </>
@@ -32,6 +37,7 @@ const App = () => {
   return (
     <>
       {renderLayout()}
+      <DeploymentNotification />
       <ToastContainer
         autoClose={3000}
         closeOnClick

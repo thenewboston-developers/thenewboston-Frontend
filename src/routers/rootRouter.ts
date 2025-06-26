@@ -1,3 +1,4 @@
+import {handleDeploymentUpdate} from 'dispatchers/frontendDeployments';
 import {SocketDataType} from 'enums';
 import {getTradePriceChartData} from 'selectors/state';
 import {store} from 'store';
@@ -41,6 +42,8 @@ const rootRouter = (dispatch: AppDispatch, event: MessageEvent) => {
     handleCreateNotification(dispatch, socketData);
   } else if (type === SocketDataType.CREATE_TRADE) {
     handleCreateTrade(dispatch, socketData);
+  } else if (type === SocketDataType.UPDATE_FRONTEND_DEPLOYMENT) {
+    dispatch(handleDeploymentUpdate(socketData.frontend_deployment));
   } else if (type === SocketDataType.UPDATE_WALLET) {
     dispatch(setWallet(socketData.wallet));
   }

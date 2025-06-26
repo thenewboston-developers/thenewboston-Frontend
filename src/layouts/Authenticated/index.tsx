@@ -3,6 +3,7 @@ import {useDispatch} from 'react-redux';
 
 import {getAssetPairs} from 'dispatchers/assetPairs';
 import {getCurrencies} from 'dispatchers/currencies';
+import {checkForDeploymentUpdate} from 'dispatchers/frontendDeployments';
 import {getNotifications} from 'dispatchers/notifications';
 import {getWallets} from 'dispatchers/wallets';
 import {getWires} from 'dispatchers/wires';
@@ -20,6 +21,7 @@ const Authenticated: SFC = ({className}) => {
     (async () => {
       try {
         await Promise.all([
+          dispatch(checkForDeploymentUpdate()),
           dispatch(getAssetPairs()),
           dispatch(getCurrencies()),
           dispatch(getNotifications()),

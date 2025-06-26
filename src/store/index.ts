@@ -21,6 +21,7 @@ import currenciesReducer from 'store/currencies';
 import exchangeOrdersReducer from 'store/exchangeOrders';
 import followersReducer from 'store/followers';
 import followingsReducer from 'store/followings';
+import frontendDeploymentsReducer from 'store/frontendDeployments';
 import invitationLimitsReducer from 'store/invitationLimits';
 import invitationsReducer from 'store/invitations';
 import managerReducer from 'store/manager';
@@ -45,6 +46,7 @@ const rootReducer = combineReducers({
   exchangeOrders: exchangeOrdersReducer,
   followers: followersReducer,
   followings: followingsReducer,
+  frontendDeployments: frontendDeploymentsReducer,
   invitationLimits: invitationLimitsReducer,
   invitations: invitationsReducer,
   manager: managerReducer,
@@ -71,6 +73,7 @@ const persistConfig = {
   migrate: createMigrate(migrations, {debug: false}),
   storage,
   version: 1,
+  blacklist: ['frontendDeployments'],
 };
 
 const persistedReducer = persistReducer(persistConfig, appReducer);
