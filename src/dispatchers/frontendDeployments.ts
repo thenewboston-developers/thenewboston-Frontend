@@ -12,11 +12,11 @@ export const checkForDeploymentUpdate = () => async (dispatch: AppDispatch) => {
     if (deployment) {
       const storedTimestamp = localStorage.getItem(DEPLOYMENT_TIMESTAMP_KEY);
 
-      if (storedTimestamp && deployment.created_date > storedTimestamp) {
-        dispatch(setUpdateAvailable(true));
-      } else if (!storedTimestamp) {
+      if (!storedTimestamp) {
         // First time checking, store the timestamp
         localStorage.setItem(DEPLOYMENT_TIMESTAMP_KEY, deployment.created_date);
+      } else if (deployment.created_date > storedTimestamp) {
+        dispatch(setUpdateAvailable(true));
       } else {
         // Timestamps match or stored is newer - ensure updateAvailable is false
         dispatch(setUpdateAvailable(false));
@@ -44,12 +44,4 @@ export const handleDeploymentUpdate = (deployment: FrontendDeployment) => (dispa
     dispatch(setCurrentDeployment(deployment));
     dispatch(setUpdateAvailable(false));
   }
-};
-
-export const dismissUpdateNotification = () => (dispatch: AppDispatch) => {
-  dispatch(setUpdateAvailable(false));
-};
-
-export const enablePolling = () => (dispatch: AppDispatch) => {
-  dispatch(setPollingEnabled(true));
 };

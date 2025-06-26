@@ -3,8 +3,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {mdiInformationOutline} from '@mdi/js';
 
 import {DEPLOYMENT_TIMESTAMP_KEY} from 'constants/localStorage';
-import {dismissUpdateNotification} from 'dispatchers/frontendDeployments';
 import {getFrontendDeployments} from 'selectors/state';
+import {setUpdateAvailable} from 'store/frontendDeployments';
 import {AppDispatch} from 'types';
 
 import * as S from './Styles';
@@ -52,7 +52,7 @@ const DeploymentNotification = () => {
       localStorage.setItem(DEPLOYMENT_TIMESTAMP_KEY, currentDeployment.created_date);
     }
     setIsVisible(false);
-    dispatch(dismissUpdateNotification());
+    dispatch(setUpdateAvailable(false));
   };
 
   const handleReload = () => {
