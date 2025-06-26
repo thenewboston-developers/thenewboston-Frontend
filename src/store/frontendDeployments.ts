@@ -5,7 +5,6 @@ import {FrontendDeployment} from 'types';
 
 export interface FrontendDeploymentsState {
   currentDeployment: FrontendDeployment | null;
-  isCheckingForUpdate: boolean;
   isPollingEnabled: boolean;
   lastCheckedAt: string | null;
   pollingInterval: number;
@@ -14,7 +13,6 @@ export interface FrontendDeploymentsState {
 
 const initialState: FrontendDeploymentsState = {
   currentDeployment: null,
-  isCheckingForUpdate: false,
   isPollingEnabled: false,
   lastCheckedAt: null,
   pollingInterval: 60000, // 1 minute default
@@ -25,9 +23,6 @@ const frontendDeployments = createSlice({
   initialState,
   name: FRONTEND_DEPLOYMENTS,
   reducers: {
-    setCheckingForUpdate: (state: FrontendDeploymentsState, {payload}: PayloadAction<boolean>) => {
-      state.isCheckingForUpdate = payload;
-    },
     setCurrentDeployment: (state: FrontendDeploymentsState, {payload}: PayloadAction<FrontendDeployment | null>) => {
       state.currentDeployment = payload;
       state.lastCheckedAt = new Date().toISOString();
@@ -41,7 +36,6 @@ const frontendDeployments = createSlice({
   },
 });
 
-export const {setCheckingForUpdate, setCurrentDeployment, setPollingEnabled, setUpdateAvailable} =
-  frontendDeployments.actions;
+export const {setCurrentDeployment, setPollingEnabled, setUpdateAvailable} = frontendDeployments.actions;
 
 export default frontendDeployments.reducer;

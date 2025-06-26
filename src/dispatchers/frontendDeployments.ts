@@ -1,17 +1,10 @@
 import {getFrontendDeploymentStatus} from 'api/frontendDeployments';
 import {DEPLOYMENT_TIMESTAMP_KEY} from 'constants/localStorage';
-import {
-  setCheckingForUpdate,
-  setCurrentDeployment,
-  setPollingEnabled,
-  setUpdateAvailable,
-} from 'store/frontendDeployments';
+import {setCurrentDeployment, setPollingEnabled, setUpdateAvailable} from 'store/frontendDeployments';
 import {AppDispatch} from 'types';
 import {FrontendDeployment} from 'types/frontendDeployment';
 
 export const checkForDeploymentUpdate = () => async (dispatch: AppDispatch) => {
-  dispatch(setCheckingForUpdate(true));
-
   try {
     const deployment = await getFrontendDeploymentStatus();
     dispatch(setCurrentDeployment(deployment));
@@ -36,8 +29,6 @@ export const checkForDeploymentUpdate = () => async (dispatch: AppDispatch) => {
     // Enable polling as fallback when there's an error
     dispatch(setPollingEnabled(true));
     throw error;
-  } finally {
-    dispatch(setCheckingForUpdate(false));
   }
 };
 
