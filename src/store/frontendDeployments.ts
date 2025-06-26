@@ -15,7 +15,7 @@ const initialState: FrontendDeploymentsState = {
   currentDeployment: null,
   isPollingEnabled: false,
   lastCheckedAt: null,
-  pollingInterval: 60000,
+  pollingInterval: 60_000,
   updateAvailable: false,
 };
 

@@ -3,6 +3,7 @@ import {useSelector} from 'react-redux';
 import {Flip, ToastContainer} from 'react-toastify';
 
 import DeploymentNotification from 'components/DeploymentNotification';
+import FrontendDeploymentWebSocket from 'containers/FrontendDeploymentWebSocket';
 import WebSocket from 'containers/WebSocket';
 import {useDeploymentPolling, useIsAuthenticated} from 'hooks';
 import Authenticated from 'layouts/Authenticated';
@@ -26,7 +27,7 @@ const App = () => {
     if (!isAuthenticated) return null;
     return (
       <>
-        <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/frontend-deployments`} />
+        <FrontendDeploymentWebSocket />
         <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/notifications/${self.id}`} />
         <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/wallet/${self.id}`} />
       </>
