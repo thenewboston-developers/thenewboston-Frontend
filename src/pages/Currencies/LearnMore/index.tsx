@@ -2,6 +2,7 @@ import {MAX_MINT_AMOUNT} from 'constants/general';
 import {SFC} from 'types';
 import {formatNumber} from 'utils/numbers';
 
+import sendingCoinsToFriend from './assets/sending-coins-to-friend.png';
 import * as S from './Styles';
 
 const LearnMore: SFC = ({className}) => {
@@ -15,12 +16,7 @@ const LearnMore: SFC = ({className}) => {
           other currencies or send them to your friends.
         </S.Introduction>
 
-        <S.PlaceholderGraphic $height="300px">
-          Graphic: Illustrated overview showing currency creation, minting coins, sending to friends, and trading on
-          exchange
-          <br />
-          Dimensions: 800x300px
-        </S.PlaceholderGraphic>
+        <S.Image alt="Currency creation, minting coins, sending to friends, and trading" src={sendingCoinsToFriend} />
 
         <S.Section>
           <S.SectionTitle>What Can You Do With Your Currency?</S.SectionTitle>

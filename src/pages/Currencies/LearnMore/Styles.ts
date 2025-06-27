@@ -18,6 +18,14 @@ export const Content = styled.div`
   width: 100%;
 `;
 
+export const Image = styled.img`
+  border-radius: 8px;
+  display: block;
+  margin: 24px auto;
+  max-width: 480px;
+  width: 100%;
+`;
+
 export const Introduction = styled.p`
   color: ${colors.primary};
   font-size: 16px;
