@@ -49,8 +49,11 @@ const RadioCard: SFC<RadioCardProps> = ({className, currency, isSelected, onClic
   return (
     <S.Container $isActive={isSelected} $isAnimating={isAnimating} className={className} onClick={handleClick}>
       <S.ImageContainer>
-        <S.Image alt={`${currency.ticker} logo`} src={currency.logo} />
-        <S.Title>{currency.ticker}</S.Title>
+        <S.CurrencyLogo alt={`${currency.ticker} logo`} src={currency.logo} />
+        <S.DomainInfo>
+          <S.Ticker>{currency.ticker}</S.Ticker>
+          {currency.domain ? <S.Domain>{currency.domain}</S.Domain> : <S.InternalBadge>Internal</S.InternalBadge>}
+        </S.DomainInfo>
       </S.ImageContainer>
       {(isSelected || isDeselecting) && (
         <S.CheckIcon $isAnimating={isAnimating} $isDeselecting={isDeselecting}>
