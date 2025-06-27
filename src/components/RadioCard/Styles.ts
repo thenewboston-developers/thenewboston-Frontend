@@ -33,6 +33,22 @@ const smoothBounceOut = keyframes`
   }
 `;
 
+const radioCardStyle = css<{$isActive: boolean}>`
+  align-items: center;
+  border: 2px solid ${({$isActive}) => ($isActive ? colors.palette.blue[300] : colors.border)};
+  border-radius: 4px;
+  display: flex;
+  flex: auto;
+  justify-content: center;
+  margin: 6px;
+  padding: 16px;
+  white-space: nowrap;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 export const CheckIcon = styled.div<{$isAnimating?: boolean; $isDeselecting?: boolean}>`
   align-items: center;
   background-color: ${colors.palette.green[600]};
@@ -63,22 +79,6 @@ export const CheckIcon = styled.div<{$isAnimating?: boolean; $isDeselecting?: bo
 
   svg {
     color: ${colors.white};
-  }
-`;
-
-const radioCardStyle = css<{$isActive: boolean}>`
-  align-items: center;
-  border-radius: 4px;
-  border: 2px solid ${({$isActive}) => ($isActive ? colors.palette.blue[300] : colors.border)};
-  display: flex;
-  flex: auto;
-  justify-content: center;
-  margin: 6px;
-  padding: 16px;
-  white-space: nowrap;
-
-  &:hover {
-    cursor: pointer;
   }
 `;
 
@@ -114,24 +114,23 @@ export const CurrencyLogo = styled.img`
   width: ${`${IMG_HEIGHT}px`};
 `;
 
+export const Domain = styled.div`
+  color: ${colors.palette.gray[600]};
+  font-size: 11px;
+  margin-top: 2px;
+`;
+
+export const DomainInfo = styled.div`
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+`;
+
 export const ImageContainer = styled.div`
   align-items: center;
   display: flex;
   gap: 12px;
   justify-content: center;
-`;
-
-export const Ticker = styled.div`
-  color: #2c3e50;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-`;
-
-export const Domain = styled.div`
-  color: ${colors.palette.gray[600]};
-  font-size: 11px;
-  margin-top: 2px;
 `;
 
 export const InternalBadge = styled.span`
@@ -144,8 +143,9 @@ export const InternalBadge = styled.span`
   padding: 2px 6px;
 `;
 
-export const DomainInfo = styled.div`
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
+export const Ticker = styled.div`
+  color: #2c3e50;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 `;

@@ -9,8 +9,8 @@ import * as S from './Styles';
 interface RadioCardProps {
   currency: Currency;
   isSelected: boolean;
-  onClick: () => void;
   onAnimationComplete?: () => void;
+  onClick: () => void;
 }
 
 const RadioCard: SFC<RadioCardProps> = ({className, currency, isSelected, onClick, onAnimationComplete}) => {
