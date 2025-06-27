@@ -1,8 +1,8 @@
 import styled, {css, keyframes} from 'styled-components';
 
-import {colors} from 'styles';
+import {colors, fonts} from 'styles';
 
-export const IMG_HEIGHT = 32;
+export const IMG_HEIGHT = 36;
 
 const smoothBounceIn = keyframes`
   0% {
@@ -30,6 +30,22 @@ const smoothBounceOut = keyframes`
   100% {
     opacity: 0;
     transform: scale(0);
+  }
+`;
+
+const radioCardStyle = css<{$isActive: boolean}>`
+  align-items: center;
+  border: 2px solid ${({$isActive}) => ($isActive ? colors.palette.blue[300] : colors.border)};
+  border-radius: 4px;
+  display: flex;
+  flex: auto;
+  justify-content: center;
+  margin: 6px;
+  padding: 16px;
+  white-space: nowrap;
+
+  &:hover {
+    cursor: pointer;
   }
 `;
 
@@ -66,22 +82,6 @@ export const CheckIcon = styled.div<{$isAnimating?: boolean; $isDeselecting?: bo
   }
 `;
 
-const radioCardStyle = css<{$isActive: boolean}>`
-  align-items: center;
-  border-radius: 4px;
-  border: 2px solid ${({$isActive}) => ($isActive ? colors.palette.blue[300] : colors.border)};
-  display: flex;
-  flex: auto;
-  justify-content: center;
-  margin: 6px;
-  padding: 16px;
-  white-space: nowrap;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
 export const Container = styled.div<{$isActive: boolean; $isAnimating?: boolean}>`
   ${radioCardStyle};
   background: ${(props) => {
@@ -94,7 +94,7 @@ export const Container = styled.div<{$isActive: boolean; $isAnimating?: boolean}
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   gap: 8px;
   justify-content: flex-start;
-  padding: 16px 20px;
+  padding: 12px 16px;
   position: relative;
   transition: all 0.3s ease;
 
@@ -104,7 +104,7 @@ export const Container = styled.div<{$isActive: boolean; $isAnimating?: boolean}
   }
 `;
 
-export const Image = styled.img`
+export const CurrencyLogo = styled.img`
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: ${`${IMG_HEIGHT}px`};
@@ -114,6 +114,18 @@ export const Image = styled.img`
   width: ${`${IMG_HEIGHT}px`};
 `;
 
+export const Domain = styled.div`
+  color: ${colors.palette.gray[600]};
+  font-size: 11px;
+  margin-top: 2px;
+`;
+
+export const DomainInfo = styled.div`
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+`;
+
 export const ImageContainer = styled.div`
   align-items: center;
   display: flex;
@@ -121,7 +133,17 @@ export const ImageContainer = styled.div`
   justify-content: center;
 `;
 
-export const Title = styled.div`
+export const InternalBadge = styled.span`
+  background: ${colors.palette.blue[100]};
+  border-radius: 4px;
+  color: ${colors.palette.blue[700]};
+  font-size: 10px;
+  font-weight: ${fonts.weight.semiBold};
+  margin-top: 2px;
+  padding: 2px 6px;
+`;
+
+export const Ticker = styled.div`
   color: #2c3e50;
   font-size: 16px;
   font-weight: 600;
