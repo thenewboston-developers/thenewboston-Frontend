@@ -33,7 +33,7 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
                 username={currency.owner.username}
               />
             </S.OwnerInfo>
-            <SocialLinks user={currency} />
+            <SocialLinks entity={currency} />
           </S.CurrencyInfo>
           {totalAmountMinted !== null && (
             <S.TotalMintedInfo>

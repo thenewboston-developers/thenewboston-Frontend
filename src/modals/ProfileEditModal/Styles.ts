@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
-import UModal from 'components/Modal';
-import {ModalContent as UModalContent, ModalFooter as UModalFooter} from 'components/Modal';
+import UModal, {ModalContent as UModalContent, ModalFooter as UModalFooter} from 'components/Modal';
 import {Content} from 'components/Modal/Styles';
 import {colors} from 'styles';
 

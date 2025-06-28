@@ -146,7 +146,7 @@ const UserDetails: SFC = ({className}) => {
 
   const renderSocialLinks = () => {
     if (!user) return null;
-    return <SocialLinks user={user} />;
+    return <SocialLinks entity={user} />;
   };
 
   const updateUserStats = async () => {

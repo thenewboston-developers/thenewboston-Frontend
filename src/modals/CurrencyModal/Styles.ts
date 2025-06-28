@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
 import {Input as UInput, Textarea as UTextarea} from 'components/FormElements';
-import UModal from 'components/Modal';
-import {ModalContent as UModalContent, ModalFooter as UModalFooter} from 'components/Modal';
+import UModal, {ModalContent as UModalContent, ModalFooter as UModalFooter} from 'components/Modal';
 import {Content} from 'components/Modal/Styles';
 import {colors} from 'styles';
 

@@ -1,4 +1,5 @@
 import {
+  mdiAlphaX,
   mdiChat,
   mdiFacebook,
   mdiGithub,
@@ -8,9 +9,10 @@ import {
   mdiPinterest,
   mdiReddit,
   mdiTwitch,
-  mdiTwitter,
   mdiYoutube,
 } from '@mdi/js';
+
+import {Currency, UserReadSerializer} from 'types';
 
 export interface SocialPlatform {
   icon: string;
@@ -65,7 +67,7 @@ export const socialPlatforms: Record<string, SocialPlatform> = {
     urlPattern: 'https://twitch.tv/{username}',
   },
   x: {
-    icon: mdiTwitter,
+    icon: mdiAlphaX,
     name: 'X',
     urlPattern: 'https://x.com/{username}',
   },
@@ -89,12 +91,14 @@ export type SocialLinkData = {
   username: string;
 };
 
-export const getSocialLinksFromUser = (user: any): SocialLinkData[] => {
+type SocialLinksEntity = UserReadSerializer | Currency;
+
+export const getSocialLinksFromEntity = (entity: SocialLinksEntity): SocialLinkData[] => {
   const links: SocialLinkData[] = [];
 
   Object.keys(socialPlatforms).forEach((platform) => {
-    const usernameField = `${platform}_username`;
-    const username = user[usernameField];
+    const usernameField = `${platform}_username` as keyof SocialLinksEntity;
+    const username = entity[usernameField] as string | null;
 
     if (username) {
       const platformConfig = socialPlatforms[platform];

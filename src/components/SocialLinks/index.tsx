@@ -1,16 +1,19 @@
 import React, {FC} from 'react';
 import Icon from '@mdi/react';
 
-import {getSocialLinksFromUser, SocialLinkData} from 'utils/socialLinks';
+import {Currency, UserReadSerializer} from 'types';
+import {getSocialLinksFromEntity, SocialLinkData} from 'utils/socialLinks';
 
 import * as S from './Styles';
 
+type SocialLinksEntity = Currency | UserReadSerializer;
+
 interface SocialLinksProps {
-  user: any;
+  entity: SocialLinksEntity;
 }
 
-const SocialLinks: FC<SocialLinksProps> = ({user}) => {
-  const socialLinks = getSocialLinksFromUser(user);
+const SocialLinks: FC<SocialLinksProps> = ({entity}) => {
+  const socialLinks = getSocialLinksFromEntity(entity);
 
   if (socialLinks.length === 0) {
     return null;
