@@ -6,7 +6,7 @@ import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
-import {ModalFooter, ModalFooterButton} from 'components/Modal';
+import {ModalFooterButton} from 'components/Modal';
 import {createCurrency, updateCurrency} from 'dispatchers/currencies';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Currency, SFC} from 'types';
@@ -242,7 +242,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
               </FormField>
             </S.ModalContent>
 
-            <ModalFooter>
+            <S.ModalFooter>
               <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
@@ -252,7 +252,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
                 text="Submit"
                 type={ButtonType.submit}
               />
-            </ModalFooter>
+            </S.ModalFooter>
           </Form>
         )}
       </Formik>

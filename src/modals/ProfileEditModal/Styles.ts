@@ -1,17 +1,27 @@
 import styled from 'styled-components';
 
 import UModal from 'components/Modal';
-import {ModalContent as UModalContent} from 'components/Modal';
+import {ModalContent as UModalContent, ModalFooter as UModalFooter} from 'components/Modal';
+import {Content} from 'components/Modal/Styles';
 import {colors} from 'styles';
 
 export const Modal = styled(UModal)`
   max-height: 90vh;
   width: 480px;
+
+  ${Content} {
+    padding: 0;
+  }
 `;
 
 export const ModalContent = styled(UModalContent)`
   max-height: calc(90vh - 200px);
   overflow-y: auto;
+  padding: 0 24px 32px;
+`;
+
+export const ModalFooter = styled(UModalFooter)`
+  padding: 0 24px 24px;
 `;
 
 export const Section = styled.div`
