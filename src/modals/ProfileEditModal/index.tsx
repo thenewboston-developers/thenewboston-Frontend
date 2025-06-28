@@ -19,11 +19,10 @@ export interface ProfileEditModalProps {
 }
 
 const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
-
-  const [preview, setPreview] = useState<string | null>(null);
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const initialValues = useMemo(
     () => ({
