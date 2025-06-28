@@ -64,10 +64,10 @@ export const socialPlatforms: Record<string, SocialPlatform> = {
     name: 'Twitch',
     urlPattern: 'https://twitch.tv/{username}',
   },
-  twitter: {
+  x: {
     icon: mdiTwitter,
-    name: 'Twitter',
-    urlPattern: 'https://twitter.com/{username}',
+    name: 'X',
+    urlPattern: 'https://x.com/{username}',
   },
   youtube: {
     icon: mdiYoutube,

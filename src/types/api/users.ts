@@ -11,7 +11,7 @@ export interface UserReadSerializer {
   reddit_username: string | null;
   tiktok_username: string | null;
   twitch_username: string | null;
-  twitter_username: string | null;
+  x_username: string | null;
   username: string;
   youtube_username: string | null;
 }

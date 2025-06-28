@@ -16,7 +16,7 @@ const initialState: Self = {
   reddit_username: null,
   tiktok_username: null,
   twitch_username: null,
-  twitter_username: null,
+  x_username: null,
   username: null,
   youtube_username: null,
 };

@@ -27,7 +27,7 @@ const useUser = (id: string | undefined): UserReadSerializer | null => {
         reddit_username: self.reddit_username,
         tiktok_username: self.tiktok_username,
         twitch_username: self.twitch_username,
-        twitter_username: self.twitter_username,
+        x_username: self.x_username,
         username: self.username!,
         youtube_username: self.youtube_username,
       };

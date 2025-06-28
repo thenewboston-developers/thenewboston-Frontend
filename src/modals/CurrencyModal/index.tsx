@@ -44,7 +44,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
       ticker: currency?.ticker || '',
       tiktok_username: currency?.tiktok_username || '',
       twitch_username: currency?.twitch_username || '',
-      twitter_username: currency?.twitter_username || '',
+      x_username: currency?.x_username || '',
       youtube_username: currency?.youtube_username || '',
     }),
     [currency],
@@ -99,7 +99,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
         requestData.append('reddit_username', values.reddit_username);
         requestData.append('tiktok_username', values.tiktok_username);
         requestData.append('twitch_username', values.twitch_username);
-        requestData.append('twitter_username', values.twitter_username);
+        requestData.append('x_username', values.x_username);
         requestData.append('youtube_username', values.youtube_username);
 
         if (initialValues.logo !== values.logo) {
@@ -128,7 +128,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
         requestData.append('reddit_username', values.reddit_username);
         requestData.append('tiktok_username', values.tiktok_username);
         requestData.append('twitch_username', values.twitch_username);
-        requestData.append('twitter_username', values.twitter_username);
+        requestData.append('x_username', values.x_username);
         requestData.append('youtube_username', values.youtube_username);
 
         await dispatch(createCurrency(requestData));
@@ -235,7 +235,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
                     <S.Input errors={errors} label="Instagram" name="instagram_username" touched={touched} />
                   </FormField>
                   <FormField>
-                    <S.Input errors={errors} label="Twitter" name="twitter_username" touched={touched} />
+                    <S.Input errors={errors} label="X" name="x_username" touched={touched} />
                   </FormField>
                   <FormField>
                     <S.Input errors={errors} label="LinkedIn" name="linkedin_username" touched={touched} />

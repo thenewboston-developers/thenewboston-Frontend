@@ -37,7 +37,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
       reddit_username: self.reddit_username || '',
       tiktok_username: self.tiktok_username || '',
       twitch_username: self.twitch_username || '',
-      twitter_username: self.twitter_username || '',
+      x_username: self.x_username || '',
       youtube_username: self.youtube_username || '',
     }),
     [self],
@@ -83,7 +83,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
       requestData.append('reddit_username', values.reddit_username);
       requestData.append('tiktok_username', values.tiktok_username);
       requestData.append('twitch_username', values.twitch_username);
-      requestData.append('twitter_username', values.twitter_username);
+      requestData.append('x_username', values.x_username);
       requestData.append('youtube_username', values.youtube_username);
       await dispatch(updateUser(self.id!, requestData));
       close();
@@ -143,7 +143,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
                     <Input errors={errors} label="Instagram" name="instagram_username" touched={touched} />
                   </FormField>
                   <FormField>
-                    <Input errors={errors} label="Twitter" name="twitter_username" touched={touched} />
+                    <Input errors={errors} label="X" name="x_username" touched={touched} />
                   </FormField>
                   <FormField>
                     <Input errors={errors} label="LinkedIn" name="linkedin_username" touched={touched} />
