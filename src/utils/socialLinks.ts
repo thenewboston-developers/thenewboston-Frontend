@@ -1,5 +1,4 @@
 import {
-  mdiAlphaX,
   mdiChat,
   mdiFacebook,
   mdiGithub,
@@ -9,6 +8,7 @@ import {
   mdiPinterest,
   mdiReddit,
   mdiTwitch,
+  mdiTwitter,
   mdiYoutube,
 } from '@mdi/js';
 
@@ -67,7 +67,7 @@ export const socialPlatforms: Record<string, SocialPlatform> = {
     urlPattern: 'https://twitch.tv/{username}',
   },
   x: {
-    icon: mdiAlphaX,
+    icon: mdiTwitter,
     name: 'X',
     urlPattern: 'https://x.com/{username}',
   },
