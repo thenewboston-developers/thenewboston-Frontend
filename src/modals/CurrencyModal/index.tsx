@@ -169,77 +169,85 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
         {({dirty, errors, isSubmitting, touched, isValid, setFieldValue, values}) => (
           <Form>
             <S.ModalContent>
-              {!isEditMode && (
-                <FormField>
-                  <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />
-                </FormField>
-              )}
-              <FormField>
-                <S.Textarea
-                  errors={errors}
-                  label="Description (optional)"
-                  name="description"
-                  placeholder=""
-                  touched={touched}
+              <S.Section>
+                {!isEditMode && (
+                  <>
+                    <FormField>
+                      <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />
+                    </FormField>
+                    {self.is_staff && (
+                      <FormField>
+                        <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />
+                      </FormField>
+                    )}
+                  </>
+                )}
+                <S.SectionHeading>Logo</S.SectionHeading>
+                {!values.logo && (
+                  <FormField>
+                    <FileInput
+                      errors={errors}
+                      label="Logo (required, 512x512 pixels)"
+                      name="logo"
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
+                      touched={touched}
+                    />
+                  </FormField>
+                )}
+                <ImagePreview
+                  onClear={async () => {
+                    await setFieldValue('logo', '');
+                    setPreview(null);
+                  }}
+                  src={preview}
                 />
-              </FormField>
-              {!isEditMode && self.is_staff && (
+              </S.Section>
+
+              <S.Section>
+                <S.SectionHeading>Description</S.SectionHeading>
                 <FormField>
-                  <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />
+                  <S.Textarea errors={errors} label="" name="description" touched={touched} />
                 </FormField>
-              )}
-              {!values.logo && (
-                <FormField>
-                  <FileInput
-                    errors={errors}
-                    label="Logo (required, 512x512 pixels)"
-                    name="logo"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
-                    touched={touched}
-                  />
-                </FormField>
-              )}
-              <ImagePreview
-                onClear={async () => {
-                  await setFieldValue('logo', '');
-                  setPreview(null);
-                }}
-                src={preview}
-              />
-              <S.SectionHeading>Social Media</S.SectionHeading>
-              <FormField>
-                <S.Input errors={errors} label="Discord" name="discord_username" touched={touched} />
-              </FormField>
-              <FormField>
-                <S.Input errors={errors} label="Facebook" name="facebook_username" touched={touched} />
-              </FormField>
-              <FormField>
-                <S.Input errors={errors} label="GitHub" name="github_username" touched={touched} />
-              </FormField>
-              <FormField>
-                <S.Input errors={errors} label="Instagram" name="instagram_username" touched={touched} />
-              </FormField>
-              <FormField>
-                <S.Input errors={errors} label="LinkedIn" name="linkedin_username" touched={touched} />
-              </FormField>
-              <FormField>
-                <S.Input errors={errors} label="Pinterest" name="pinterest_username" touched={touched} />
-              </FormField>
-              <FormField>
-                <S.Input errors={errors} label="Reddit" name="reddit_username" touched={touched} />
-              </FormField>
-              <FormField>
-                <S.Input errors={errors} label="TikTok" name="tiktok_username" touched={touched} />
-              </FormField>
-              <FormField>
-                <S.Input errors={errors} label="Twitch" name="twitch_username" touched={touched} />
-              </FormField>
-              <FormField>
-                <S.Input errors={errors} label="Twitter" name="twitter_username" touched={touched} />
-              </FormField>
-              <FormField>
-                <S.Input errors={errors} label="YouTube" name="youtube_username" touched={touched} />
-              </FormField>
+              </S.Section>
+
+              <S.Section>
+                <S.SectionHeading>Social Media</S.SectionHeading>
+                <S.SocialMediaGrid>
+                  <FormField>
+                    <S.Input errors={errors} label="Discord" name="discord_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="Reddit" name="reddit_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="Facebook" name="facebook_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="TikTok" name="tiktok_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="GitHub" name="github_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="Twitch" name="twitch_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="Instagram" name="instagram_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="Twitter" name="twitter_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="LinkedIn" name="linkedin_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="YouTube" name="youtube_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="Pinterest" name="pinterest_username" touched={touched} />
+                  </FormField>
+                </S.SocialMediaGrid>
+              </S.Section>
             </S.ModalContent>
 
             <S.ModalFooter>

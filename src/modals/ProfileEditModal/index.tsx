@@ -120,39 +120,41 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
 
               <S.Section>
                 <S.SectionHeading>Social Media</S.SectionHeading>
-                <FormField>
-                  <Input errors={errors} label="Discord" name="discord_username" touched={touched} />
-                </FormField>
-                <FormField>
-                  <Input errors={errors} label="Facebook" name="facebook_username" touched={touched} />
-                </FormField>
-                <FormField>
-                  <Input errors={errors} label="GitHub" name="github_username" touched={touched} />
-                </FormField>
-                <FormField>
-                  <Input errors={errors} label="Instagram" name="instagram_username" touched={touched} />
-                </FormField>
-                <FormField>
-                  <Input errors={errors} label="LinkedIn" name="linkedin_username" touched={touched} />
-                </FormField>
-                <FormField>
-                  <Input errors={errors} label="Pinterest" name="pinterest_username" touched={touched} />
-                </FormField>
-                <FormField>
-                  <Input errors={errors} label="Reddit" name="reddit_username" touched={touched} />
-                </FormField>
-                <FormField>
-                  <Input errors={errors} label="TikTok" name="tiktok_username" touched={touched} />
-                </FormField>
-                <FormField>
-                  <Input errors={errors} label="Twitch" name="twitch_username" touched={touched} />
-                </FormField>
-                <FormField>
-                  <Input errors={errors} label="Twitter" name="twitter_username" touched={touched} />
-                </FormField>
-                <FormField>
-                  <Input errors={errors} label="YouTube" name="youtube_username" touched={touched} />
-                </FormField>
+                <S.SocialMediaGrid>
+                  <FormField>
+                    <Input errors={errors} label="Discord" name="discord_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <Input errors={errors} label="Reddit" name="reddit_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <Input errors={errors} label="Facebook" name="facebook_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <Input errors={errors} label="TikTok" name="tiktok_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <Input errors={errors} label="GitHub" name="github_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <Input errors={errors} label="Twitch" name="twitch_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <Input errors={errors} label="Instagram" name="instagram_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <Input errors={errors} label="Twitter" name="twitter_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <Input errors={errors} label="LinkedIn" name="linkedin_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <Input errors={errors} label="YouTube" name="youtube_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <Input errors={errors} label="Pinterest" name="pinterest_username" touched={touched} />
+                  </FormField>
+                </S.SocialMediaGrid>
               </S.Section>
             </S.ModalContent>
 

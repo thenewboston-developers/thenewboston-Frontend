@@ -7,7 +7,7 @@ import {colors} from 'styles';
 
 export const Modal = styled(UModal)`
   max-height: 90vh;
-  width: 480px;
+  width: 680px;
 
   ${Content} {
     padding: 0;
@@ -37,4 +37,10 @@ export const SectionHeading = styled.h3`
   font-size: 16px;
   font-weight: 600;
   margin: 0 0 16px;
+`;
+
+export const SocialMediaGrid = styled.div`
+  display: grid;
+  gap: 0 24px;
+  grid-template-columns: 1fr 1fr;
 `;

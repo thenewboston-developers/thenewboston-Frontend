@@ -7,12 +7,12 @@ import {Content} from 'components/Modal/Styles';
 import {colors} from 'styles';
 
 export const Input = styled(UInput)`
-  width: 360px;
+  width: 100%;
 `;
 
 export const Modal = styled(UModal)`
   max-height: 90vh;
-  width: 520px;
+  width: 680px;
 
   ${Content} {
     padding: 0;
@@ -29,15 +29,27 @@ export const ModalFooter = styled(UModalFooter)`
   padding: 0 24px 24px;
 `;
 
+export const Section = styled.div`
+  & + & {
+    border-top: 1px solid ${colors.palette.gray[200]};
+    margin-top: 24px;
+    padding-top: 24px;
+  }
+`;
+
 export const SectionHeading = styled.h3`
-  border-top: 1px solid ${colors.palette.gray[200]};
   color: ${colors.palette.gray[900]};
   font-size: 16px;
   font-weight: 600;
-  margin: 24px 0 16px;
-  padding-top: 24px;
+  margin: 0 0 16px;
+`;
+
+export const SocialMediaGrid = styled.div`
+  display: grid;
+  gap: 0 24px;
+  grid-template-columns: 1fr 1fr;
 `;
 
 export const Textarea = styled(UTextarea)`
-  width: 360px;
+  width: 100%;
 `;
