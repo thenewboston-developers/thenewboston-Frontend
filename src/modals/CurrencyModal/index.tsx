@@ -6,7 +6,7 @@ import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
-import Modal, {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
+import {ModalFooterButton} from 'components/Modal';
 import {createCurrency, updateCurrency} from 'dispatchers/currencies';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Currency, SFC} from 'types';
@@ -32,9 +32,20 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
   const initialValues = useMemo(
     () => ({
       description: currency?.description || '',
+      discord_username: currency?.discord_username || '',
       domain: currency?.domain || '',
+      facebook_username: currency?.facebook_username || '',
+      github_username: currency?.github_username || '',
+      instagram_username: currency?.instagram_username || '',
+      linkedin_username: currency?.linkedin_username || '',
       logo: currency?.logo || '',
+      pinterest_username: currency?.pinterest_username || '',
+      reddit_username: currency?.reddit_username || '',
       ticker: currency?.ticker || '',
+      tiktok_username: currency?.tiktok_username || '',
+      twitch_username: currency?.twitch_username || '',
+      x_username: currency?.x_username || '',
+      youtube_username: currency?.youtube_username || '',
     }),
     [currency],
   );
@@ -79,6 +90,17 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
       if (isEditMode) {
         // Always append description to ensure empty values are sent
         requestData.append('description', values.description);
+        requestData.append('discord_username', values.discord_username);
+        requestData.append('facebook_username', values.facebook_username);
+        requestData.append('github_username', values.github_username);
+        requestData.append('instagram_username', values.instagram_username);
+        requestData.append('linkedin_username', values.linkedin_username);
+        requestData.append('pinterest_username', values.pinterest_username);
+        requestData.append('reddit_username', values.reddit_username);
+        requestData.append('tiktok_username', values.tiktok_username);
+        requestData.append('twitch_username', values.twitch_username);
+        requestData.append('x_username', values.x_username);
+        requestData.append('youtube_username', values.youtube_username);
 
         if (initialValues.logo !== values.logo) {
           requestData.append('logo', values.logo);
@@ -97,6 +119,17 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
 
         requestData.append('ticker', values.ticker);
         requestData.append('logo', values.logo);
+        requestData.append('discord_username', values.discord_username);
+        requestData.append('facebook_username', values.facebook_username);
+        requestData.append('github_username', values.github_username);
+        requestData.append('instagram_username', values.instagram_username);
+        requestData.append('linkedin_username', values.linkedin_username);
+        requestData.append('pinterest_username', values.pinterest_username);
+        requestData.append('reddit_username', values.reddit_username);
+        requestData.append('tiktok_username', values.tiktok_username);
+        requestData.append('twitch_username', values.twitch_username);
+        requestData.append('x_username', values.x_username);
+        requestData.append('youtube_username', values.youtube_username);
 
         await dispatch(createCurrency(requestData));
       }
@@ -131,51 +164,93 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
   }, [isEditMode, self.is_staff]);
 
   return (
-    <Modal className={className} close={close} header={isEditMode ? 'Edit Currency' : 'Create Currency'}>
+    <S.Modal className={className} close={close} header={isEditMode ? 'Edit Currency' : 'Create Currency'}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid, setFieldValue, values}) => (
           <Form>
-            <ModalContent>
-              {!isEditMode && (
-                <FormField>
-                  <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />
-                </FormField>
-              )}
-              <FormField>
-                <S.Textarea
-                  errors={errors}
-                  label="Description (optional)"
-                  name="description"
-                  placeholder=""
-                  touched={touched}
+            <S.ModalContent>
+              <S.Section>
+                {!isEditMode && (
+                  <>
+                    <FormField>
+                      <S.Input errors={errors} label="Ticker" name="ticker" touched={touched} />
+                    </FormField>
+                    {self.is_staff && (
+                      <FormField>
+                        <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />
+                      </FormField>
+                    )}
+                  </>
+                )}
+                <S.SectionHeading>Logo</S.SectionHeading>
+                {!values.logo && (
+                  <FormField>
+                    <FileInput
+                      errors={errors}
+                      label="Logo (required, 512x512 pixels)"
+                      name="logo"
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
+                      touched={touched}
+                    />
+                  </FormField>
+                )}
+                <ImagePreview
+                  onClear={async () => {
+                    await setFieldValue('logo', '');
+                    setPreview(null);
+                  }}
+                  src={preview}
                 />
-              </FormField>
-              {!isEditMode && self.is_staff && (
-                <FormField>
-                  <S.Input errors={errors} label="Domain (optional)" name="domain" touched={touched} />
-                </FormField>
-              )}
-              {!values.logo && (
-                <FormField>
-                  <FileInput
-                    errors={errors}
-                    label="Logo (required, 512x512 pixels)"
-                    name="logo"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
-                    touched={touched}
-                  />
-                </FormField>
-              )}
-              <ImagePreview
-                onClear={async () => {
-                  await setFieldValue('logo', '');
-                  setPreview(null);
-                }}
-                src={preview}
-              />
-            </ModalContent>
+              </S.Section>
 
-            <ModalFooter>
+              <S.Section>
+                <S.SectionHeading>Description</S.SectionHeading>
+                <FormField>
+                  <S.Textarea errors={errors} label="" name="description" touched={touched} />
+                </FormField>
+              </S.Section>
+
+              <S.Section>
+                <S.SectionHeading>Social Media</S.SectionHeading>
+                <S.SocialMediaGrid>
+                  <FormField>
+                    <S.Input errors={errors} label="Discord" name="discord_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="Reddit" name="reddit_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="Facebook" name="facebook_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="TikTok" name="tiktok_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="GitHub" name="github_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="Twitch" name="twitch_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="Instagram" name="instagram_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="X" name="x_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="LinkedIn" name="linkedin_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="YouTube" name="youtube_username" touched={touched} />
+                  </FormField>
+                  <FormField>
+                    <S.Input errors={errors} label="Pinterest" name="pinterest_username" touched={touched} />
+                  </FormField>
+                </S.SocialMediaGrid>
+              </S.Section>
+            </S.ModalContent>
+
+            <S.ModalFooter>
               <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
@@ -185,11 +260,11 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
                 text="Submit"
                 type={ButtonType.submit}
               />
-            </ModalFooter>
+            </S.ModalFooter>
           </Form>
         )}
       </Formik>
-    </Modal>
+    </S.Modal>
   );
 };
 

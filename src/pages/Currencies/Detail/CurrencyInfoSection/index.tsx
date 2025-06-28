@@ -1,3 +1,4 @@
+import SocialLinks from 'components/SocialLinks';
 import UserLabel from 'components/UserLabel';
 import {Currency, SFC} from 'types';
 
@@ -32,6 +33,7 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
                 username={currency.owner.username}
               />
             </S.OwnerInfo>
+            <SocialLinks entity={currency} />
           </S.CurrencyInfo>
           {totalAmountMinted !== null && (
             <S.TotalMintedInfo>
