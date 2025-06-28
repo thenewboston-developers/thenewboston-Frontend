@@ -13,13 +13,8 @@ const users = createSlice({
       const {id} = payload;
       state[id] = payload;
     },
-    setUsers: (state: Users, {payload}: PayloadAction<UserReadSerializer[]>) => {
-      payload.forEach((user) => {
-        state[user.id] = user;
-      });
-    },
   },
 });
 
-export const {setUser, setUsers} = users.actions;
+export const {setUser} = users.actions;
 export default users.reducer;
