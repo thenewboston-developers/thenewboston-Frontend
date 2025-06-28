@@ -6,6 +6,7 @@ import {getFollowers} from 'api/followers';
 import DefaultAvatar from 'assets/default-avatar.svg';
 import logo from 'assets/logo192.png';
 import {ButtonColor} from 'components/Button';
+import SocialLinks from 'components/SocialLinks';
 import {createFollower, deleteFollower} from 'dispatchers/followers';
 import {getUserStats} from 'dispatchers/userStats';
 import {useToggle, useUser} from 'hooks';
@@ -143,6 +144,11 @@ const UserDetails: SFC = ({className}) => {
     return <S.Username>{user.username}</S.Username>;
   };
 
+  const renderSocialLinks = () => {
+    if (!user) return null;
+    return <SocialLinks user={user} />;
+  };
+
   const updateUserStats = async () => {
     if (userId) await dispatch(getUserStats(userId));
   };
@@ -152,6 +158,7 @@ const UserDetails: SFC = ({className}) => {
       <S.Container className={className}>
         {renderAvatar()}
         {renderUsername()}
+        {renderSocialLinks()}
         <S.Wrapper>
           {renderStatsAndBalance()}
           <S.ButtonGroup>
