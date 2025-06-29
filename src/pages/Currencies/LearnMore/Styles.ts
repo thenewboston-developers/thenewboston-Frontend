@@ -22,7 +22,7 @@ export const Image = styled.img`
   border-radius: 8px;
   display: block;
   margin: 24px auto;
-  max-width: 480px;
+  max-width: 640px;
   width: 100%;
 `;
 

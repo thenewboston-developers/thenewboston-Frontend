@@ -2,6 +2,9 @@ import {MAX_MINT_AMOUNT} from 'constants/general';
 import {SFC} from 'types';
 import {formatNumber} from 'utils/numbers';
 
+import coinsBeingSent from './assets/coins-being-sent.png';
+import coinsFlowingIntoWallet from './assets/coins-flowing-into-wallet.png';
+import currencyCreation from './assets/currency-creation.png';
 import sendingCoinsToFriend from './assets/sending-coins-to-friend.png';
 import * as S from './Styles';
 
@@ -52,11 +55,10 @@ const LearnMore: SFC = ({className}) => {
             </S.StepParagraph>
           </S.Step>
 
-          <S.PlaceholderGraphic $height="200px">
-            Graphic: Screenshot mockup of currency creation form with ticker, logo upload, and description fields
-            <br />
-            Dimensions: 600x200px
-          </S.PlaceholderGraphic>
+          <S.Image
+            alt="Currency creation form with ticker, logo upload, and description fields"
+            src={currencyCreation}
+          />
 
           <S.Step>
             <S.StepNumber>2</S.StepNumber>
@@ -67,11 +69,7 @@ const LearnMore: SFC = ({className}) => {
             </S.StepParagraph>
           </S.Step>
 
-          <S.PlaceholderGraphic $height="200px">
-            Graphic: Illustration of minting process with coins flowing into a wallet
-            <br />
-            Dimensions: 600x200px
-          </S.PlaceholderGraphic>
+          <S.Image alt="Minting process with coins flowing into a wallet" src={coinsFlowingIntoWallet} />
 
           <S.Step>
             <S.StepNumber>3</S.StepNumber>
@@ -84,12 +82,7 @@ const LearnMore: SFC = ({className}) => {
             </S.StepList>
           </S.Step>
 
-          <S.PlaceholderGraphic $height="250px">
-            Graphic: Split illustration showing coins being sent to friends on one side and trading on exchange on the
-            other
-            <br />
-            Dimensions: 700x250px
-          </S.PlaceholderGraphic>
+          <S.Image alt="Coins being sent to friends and trading on exchange" src={coinsBeingSent} />
         </S.Section>
 
         <S.Section>
