@@ -6,7 +6,6 @@ import {breakpoints, colors, fonts} from 'styles';
 const USER_IMAGE_SIZE = 180;
 
 export const Bio = styled.p`
-  color: ${colors.palette.gray[600]};
   font-size: 14px;
   margin-top: 8px;
   max-width: 600px;
