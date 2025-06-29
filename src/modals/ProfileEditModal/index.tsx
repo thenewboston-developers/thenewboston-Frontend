@@ -4,7 +4,7 @@ import {Form, Formik} from 'formik';
 
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
-import {FileInput, FormField, Input} from 'components/FormElements';
+import {FileInput, FormField, Input, Textarea} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import {ModalFooterButton} from 'components/Modal';
 import {updateUser} from 'dispatchers/users';
@@ -27,6 +27,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
   const initialValues = useMemo(
     () => ({
       avatar: self.avatar || '',
+      bio: self.bio || '',
       discord_username: self.discord_username || '',
       facebook_username: self.facebook_username || '',
       github_username: self.github_username || '',
@@ -73,6 +74,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
         requestData.append('avatar', '');
       }
 
+      requestData.append('bio', values.bio);
       requestData.append('discord_username', values.discord_username);
       requestData.append('facebook_username', values.facebook_username);
       requestData.append('github_username', values.github_username);
@@ -115,6 +117,20 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
                   }}
                   src={preview}
                 />
+              </S.Section>
+
+              <S.Section>
+                <S.SectionHeading>Bio</S.SectionHeading>
+                <FormField>
+                  <Textarea
+                    errors={errors}
+                    label=""
+                    maxLength={160}
+                    name="bio"
+                    placeholder="Tell us about yourself (160 characters max)"
+                    touched={touched}
+                  />
+                </FormField>
               </S.Section>
 
               <S.Section>

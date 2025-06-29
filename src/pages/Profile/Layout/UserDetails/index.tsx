@@ -139,6 +139,11 @@ const UserDetails: SFC = ({className}) => {
     );
   };
 
+  const renderBio = () => {
+    if (!user || !user.bio) return null;
+    return <S.Bio>{user.bio}</S.Bio>;
+  };
+
   const renderUsername = () => {
     if (!user) return null;
     return <S.Username>{user.username}</S.Username>;
@@ -158,6 +163,7 @@ const UserDetails: SFC = ({className}) => {
       <S.Container className={className}>
         {renderAvatar()}
         {renderUsername()}
+        {renderBio()}
         {renderSocialLinks()}
         <S.Wrapper>
           {renderStatsAndBalance()}

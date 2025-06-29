@@ -5,6 +5,7 @@ import {Self} from 'types';
 
 const initialState: Self = {
   avatar: null,
+  bio: null,
   discord_username: null,
   facebook_username: null,
   github_username: null,
