@@ -5,6 +5,17 @@ import {breakpoints, colors, fonts} from 'styles';
 
 const USER_IMAGE_SIZE = 180;
 
+export const Bio = styled.p`
+  font-size: 14px;
+  margin-top: 8px;
+  max-width: 600px;
+  text-align: center;
+
+  @media (min-width: ${breakpoints.tablet}) {
+    text-align: left;
+  }
+`;
+
 export const Button = styled(UButton)`
   border: none;
   border-radius: 100px;

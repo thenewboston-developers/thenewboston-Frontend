@@ -1,5 +1,6 @@
 export interface Self {
   avatar: string | null;
+  bio: string | null;
   discord_username: string | null;
   facebook_username: string | null;
   github_username: string | null;
