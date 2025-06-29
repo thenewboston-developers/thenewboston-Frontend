@@ -22,7 +22,7 @@ export const Image = styled.img`
   border-radius: 8px;
   display: block;
   margin: 24px auto;
-  max-width: 480px;
+  max-width: 640px;
   width: 100%;
 `;
 
@@ -55,22 +55,6 @@ export const Paragraph = styled.p`
   font-size: 15px;
   line-height: 1.6;
   margin-bottom: 16px;
-`;
-
-export const PlaceholderGraphic = styled.div<{$height: string}>`
-  align-items: center;
-  background-color: ${colors.palette.gray[200]};
-  border: 1px solid ${colors.palette.gray[300]};
-  border-radius: 8px;
-  color: ${colors.palette.gray[600]};
-  display: flex;
-  font-size: 14px;
-  font-style: italic;
-  height: ${({$height}) => $height};
-  justify-content: center;
-  margin: 24px 0;
-  padding: 24px;
-  text-align: center;
 `;
 
 export const Section = styled.section`
