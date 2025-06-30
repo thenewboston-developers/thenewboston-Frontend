@@ -54,10 +54,10 @@ export const ActionsContainer = styled.div`
   }
 `;
 
-export const Container = styled.div`
+export const Container = styled.div<{$noBorderRadius: boolean}>`
   background: #fff;
   border: 1px solid ${colors.palette.gray[200]};
-  border-radius: 20px;
+  border-radius: ${({$noBorderRadius}) => ($noBorderRadius ? '0' : '20px')};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   padding: 20px 24px;
   transition: all 0.2s ease;

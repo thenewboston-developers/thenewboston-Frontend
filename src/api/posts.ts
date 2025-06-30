@@ -22,6 +22,15 @@ export const deletePost = async (id: number): Promise<void> => {
   }
 };
 
+export const getPost = async (id: number): Promise<PostReadSerializer> => {
+  try {
+    const response = await axios.get<PostReadSerializer>(`${BASE_URL}/${id}`, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getPosts = async (
   url: string,
   params?: GetPostsParams,

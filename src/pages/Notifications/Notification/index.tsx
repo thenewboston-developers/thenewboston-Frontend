@@ -1,4 +1,4 @@
-import {ReactNode} from 'react';
+import {ReactNode, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {mdiContentCopy, mdiHeart, mdiSwapHorizontal, mdiWalletBifoldOutline} from '@mdi/js';
@@ -10,6 +10,8 @@ import {getCurrencies} from 'selectors/state';
 import {Notification as TNotification, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
+import PostModal from '../PostModal';
+
 import * as S from './Styles';
 
 export interface NotificationProps {
@@ -17,6 +19,7 @@ export interface NotificationProps {
 }
 
 const Notification: SFC<NotificationProps> = ({className, notification}) => {
+  const [postModalOpen, setPostModalOpen] = useState(false);
   const currencies = useSelector(getCurrencies);
 
   const renderExchangeOrderFilledNotification = () => {
@@ -60,23 +63,28 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const renderPostCoinTransferNotification = () => {
     if (notification.payload.notification_type !== NotificationType.POST_COIN_TRANSFER) return null;
 
-    const {content, owner, price_amount, price_currency_ticker} = notification.payload;
+    const {owner, post_created, post_image_thumbnail, post_preview, price_amount, price_currency_ticker} =
+      notification.payload;
 
     return (
       <S.NotificationContainer>
-        <Link to={`/profile/${owner.id}`}>
+        <Link to={`/profile/${owner.id}`} onClick={(e) => e.stopPropagation()}>
           <S.AvatarContainer>
             <Avatar src={owner.avatar} size="45px" />
             <S.AvatarIcon path={mdiWalletBifoldOutline} size="23px" />
           </S.AvatarContainer>
         </Link>
         <S.TextContainer>
-          <div>
-            <S.Link to={`/profile/${owner.id}`}>{owner.username}</S.Link> sent you {price_amount.toLocaleString()}{' '}
-            {price_currency_ticker} via a post: "{content}"
-          </div>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+          <S.MainText>
+            <S.Link to={`/profile/${owner.id}`} onClick={(e) => e.stopPropagation()}>
+              {owner.username}
+            </S.Link>{' '}
+            sent you {price_amount.toLocaleString()} {price_currency_ticker} via a post:
+          </S.MainText>
+          <S.PostPreviewText>{post_preview}</S.PostPreviewText>
+          <S.TimeStamp>{longDate(post_created)}</S.TimeStamp>
         </S.TextContainer>
+        {post_image_thumbnail && <S.PostThumbnail alt="Post thumbnail" src={post_image_thumbnail} />}
         {renderRedDot()}
       </S.NotificationContainer>
     );
@@ -85,23 +93,28 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const renderPostCommentNotification = () => {
     if (notification.payload.notification_type !== NotificationType.POST_COMMENT) return null;
 
+    const {comment_preview, commenter, post_created, post_image_thumbnail, post_preview} = notification.payload;
+
     return (
       <S.NotificationContainer>
-        <Link to={`/profile/${notification.payload.commenter.id}`}>
+        <Link to={`/profile/${commenter.id}`} onClick={(e) => e.stopPropagation()}>
           <S.AvatarContainer>
-            <Avatar src={notification.payload.commenter.avatar} size="45px" />
+            <Avatar src={commenter.avatar} size="45px" />
             <S.AvatarIcon path={mdiContentCopy} size="23px" />
           </S.AvatarContainer>
         </Link>
         <S.TextContainer>
-          <div>
-            <S.Link to={`/profile/${notification.payload.commenter.id}`}>
-              {notification.payload.commenter.username}
+          <S.MainText>
+            <S.Link to={`/profile/${commenter.id}`} onClick={(e) => e.stopPropagation()}>
+              {commenter.username}
             </S.Link>{' '}
-            commented on your post: "{notification.payload.comment}"
-          </div>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+            commented on your post
+          </S.MainText>
+          <S.PostPreviewText>{post_preview}</S.PostPreviewText>
+          <S.CommentText>{comment_preview}</S.CommentText>
+          <S.TimeStamp>{longDate(post_created)}</S.TimeStamp>
         </S.TextContainer>
+        {post_image_thumbnail && <S.PostThumbnail alt="Post thumbnail" src={post_image_thumbnail} />}
         {renderRedDot()}
       </S.NotificationContainer>
     );
@@ -110,21 +123,27 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const renderPostLikeNotification = () => {
     if (notification.payload.notification_type !== NotificationType.POST_LIKE) return null;
 
+    const {liker, post_created, post_image_thumbnail, post_preview} = notification.payload;
+
     return (
       <S.NotificationContainer>
-        <Link to={`/profile/${notification.payload.liker.id}`}>
+        <Link to={`/profile/${liker.id}`} onClick={(e) => e.stopPropagation()}>
           <S.AvatarContainer>
-            <Avatar src={notification.payload.liker.avatar} size="45px" />
+            <Avatar src={liker.avatar} size="45px" />
             <S.AvatarIcon path={mdiHeart} size="23px" />
           </S.AvatarContainer>
         </Link>
         <S.TextContainer>
-          <div>
-            <S.Link to={`/profile/${notification.payload.liker.id}`}>{notification.payload.liker.username}</S.Link>{' '}
-            liked your post
-          </div>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+          <S.MainText>
+            <S.Link to={`/profile/${liker.id}`} onClick={(e) => e.stopPropagation()}>
+              {liker.username}
+            </S.Link>{' '}
+            liked your post:
+          </S.MainText>
+          <S.PostPreviewText>{post_preview}</S.PostPreviewText>
+          <S.TimeStamp>{longDate(post_created)}</S.TimeStamp>
         </S.TextContainer>
+        {post_image_thumbnail && <S.PostThumbnail alt="Post thumbnail" src={post_image_thumbnail} />}
         {renderRedDot()}
       </S.NotificationContainer>
     );
@@ -150,10 +169,38 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     return renderFunction ? renderFunction() : null;
   };
 
+  const handleClosePostModal = () => {
+    setPostModalOpen(false);
+  };
+
+  const getPostId = () => {
+    const {payload} = notification;
+    if ('post_id' in payload) {
+      return payload.post_id;
+    }
+    return null;
+  };
+
+  const postId = getPostId();
+
+  const handleContainerClick = () => {
+    const notificationType = notification.payload.notification_type;
+    if (
+      notificationType === NotificationType.POST_LIKE ||
+      notificationType === NotificationType.POST_COMMENT ||
+      notificationType === NotificationType.POST_COIN_TRANSFER
+    ) {
+      setPostModalOpen(true);
+    }
+  };
+
   return (
-    <S.Container $isRead={notification.is_read} className={className}>
-      {renderContent()}
-    </S.Container>
+    <>
+      <S.Container $isRead={notification.is_read} className={className} onClick={handleContainerClick}>
+        {renderContent()}
+      </S.Container>
+      {postModalOpen && postId && <PostModal onClose={handleClosePostModal} postId={postId} />}
+    </>
   );
 };
 

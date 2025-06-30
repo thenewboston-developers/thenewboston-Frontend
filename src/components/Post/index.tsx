@@ -21,10 +21,11 @@ import * as S from './Styles';
 import TransferInfo from './TransferInfo';
 
 export interface PostProps {
+  noBorderRadius?: boolean;
   post: TPost;
 }
 
-const Post: SFC<PostProps> = ({className, post}) => {
+const Post: SFC<PostProps> = ({className, noBorderRadius = false, post}) => {
   const [animateLike, setAnimateLike] = useState(false);
   const [imageModalIsOpen, toggleImageModal] = useToggle(false);
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
@@ -95,7 +96,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
 
   return (
     <>
-      <S.Container className={className}>
+      <S.Container $noBorderRadius={noBorderRadius} className={className}>
         <S.Top>
           <UserLabel
             avatar={owner.avatar}
