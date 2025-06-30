@@ -22,6 +22,7 @@ export const Modal = styled.div`
   position: fixed;
   top: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1000;
 `;
 
 export const Overlay = styled.div`
@@ -31,6 +32,7 @@ export const Overlay = styled.div`
   position: fixed;
   top: 0;
   width: 100vw;
+  z-index: 999;
 `;
 
 export const ImagePreviewContainer = styled.div`
@@ -61,6 +63,7 @@ export const ImagePreview = styled(UImagePreview)`
   height: 100vh;
   justify-content: center;
   width: 100vw;
+  z-index: 1001;
   &::before {
     background: ${colors.backgroundDark}
     opacity: 0.99;
