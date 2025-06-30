@@ -18,7 +18,20 @@ export const AvatarIcon = styled(UIcon)`
   padding: 3px;
   position: absolute;
   right: -2px;
-  z-index: 100;
+  z-index: 1;
+`;
+
+export const CommentText = styled.div`
+  background: ${colors.background};
+  border-left: 3px solid ${colors.palette.gray[300]};
+  border-radius: 6px;
+  color: ${colors.palette.gray[700]};
+  font-size: 14px;
+  line-height: 1.4;
+  margin-top: 8px;
+  overflow-wrap: break-word;
+  padding: 8px 12px;
+  word-wrap: break-word;
 `;
 
 export const Container = styled.div<{$isRead: boolean}>`
@@ -26,6 +39,7 @@ export const Container = styled.div<{$isRead: boolean}>`
   border: 1px solid ${({$isRead}) => ($isRead ? colors.borderDarker : colors.border)};
   border-radius: 8px;
   box-shadow: ${({$isRead}) => ($isRead ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.08)')};
+  cursor: pointer;
   display: flex;
   gap: 16px;
   margin-bottom: 8px;
@@ -34,6 +48,7 @@ export const Container = styled.div<{$isRead: boolean}>`
 
   &:hover {
     background: ${({$isRead}) => ($isRead ? colors.lightGray : colors.whiteHover)};
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -63,7 +78,7 @@ export const ExchangeIcon = styled(UIcon)`
   padding: 3px;
   position: absolute;
   right: -2px;
-  z-index: 100;
+  z-index: 1;
 `;
 
 export const ExchangeIconContainer = styled.div`
@@ -88,6 +103,12 @@ export const Link = styled(ULink)`
   }
 `;
 
+export const MainText = styled.div`
+  color: ${colors.palette.gray[700]};
+  font-size: 14px;
+  line-height: 1.4;
+`;
+
 export const NotificationContainer = styled.div`
   align-items: flex-start;
   display: flex;
@@ -96,13 +117,34 @@ export const NotificationContainer = styled.div`
   width: 100%;
 `;
 
+export const PostPreviewText = styled.div`
+  color: ${colors.palette.gray[800]};
+  font-size: 15px;
+  line-height: 1.4;
+  margin-top: 8px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+`;
+
+export const PostThumbnail = styled.img`
+  border-radius: 6px;
+  flex-shrink: 0;
+  height: 48px;
+  margin-left: 8px;
+  object-fit: cover;
+  width: 48px;
+`;
+
 export const TextContainer = styled.div`
   flex: 1;
   line-height: 1.5;
 `;
 
 export const TimeStamp = styled.small`
-  color: ${colors.secondary};
+  color: ${colors.palette.gray[500]};
+  display: block;
   font-size: 13px;
   font-weight: ${fonts.weight.regular};
+  line-height: 1.2;
+  margin-top: 8px;
 `;

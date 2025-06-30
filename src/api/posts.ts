@@ -22,6 +22,15 @@ export const deletePost = async (id: number): Promise<void> => {
   }
 };
 
+export const getPost = async (id: number): Promise<PostReadSerializer> => {
+  try {
+    const response = await axios.get<PostReadSerializer>(`${BASE_URL}/${id}`, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getPosts = async (
   url: string,
   params?: GetPostsParams,
@@ -58,15 +67,6 @@ export const getPosts = async (
   }
 };
 
-export const updatePost = async (id: number, data: FormData): Promise<PostReadSerializer> => {
-  try {
-    const response = await axios.patch<PostReadSerializer>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const likePost = async (postId: number): Promise<PostLike> => {
   try {
     const response = await axios.post<PostLike>(`${BASE_URL}/${postId}/like`, {}, authorizationHeaders());
@@ -79,6 +79,15 @@ export const likePost = async (postId: number): Promise<PostLike> => {
 export const unlikePost = async (postId: number): Promise<void> => {
   try {
     await axios.post(`${BASE_URL}/${postId}/unlike`, {}, authorizationHeaders());
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updatePost = async (id: number, data: FormData): Promise<PostReadSerializer> => {
+  try {
+    const response = await axios.patch<PostReadSerializer>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
+    return response.data;
   } catch (error) {
     throw error;
   }

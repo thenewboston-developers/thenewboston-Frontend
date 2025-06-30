@@ -20,7 +20,10 @@ export interface PostCoinTransferPayload {
   content: string;
   notification_type: NotificationType.POST_COIN_TRANSFER;
   owner: UserReadSerializer;
-  post_id: string;
+  post_created: string;
+  post_id: number;
+  post_image_thumbnail?: string;
+  post_preview: string;
   price_amount: number;
   price_currency_id: string;
   price_currency_ticker: string;
@@ -28,15 +31,22 @@ export interface PostCoinTransferPayload {
 
 export interface PostCommentPayload {
   comment: string;
+  comment_preview: string;
   commenter: UserReadSerializer;
   notification_type: NotificationType.POST_COMMENT;
+  post_created: string;
   post_id: number;
+  post_image_thumbnail?: string;
+  post_preview: string;
 }
 
 export interface PostLikePayload {
   liker: UserReadSerializer;
   notification_type: NotificationType.POST_LIKE;
+  post_created: string;
   post_id: number;
+  post_image_thumbnail?: string;
+  post_preview: string;
 }
 
 export type NotificationPayload =
