@@ -1,7 +1,9 @@
 import {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
+import {mdiArrowLeft} from '@mdi/js';
 
 import {getPost} from 'api/posts';
+import Icon from 'components/Icon';
 import Post from 'components/Post';
 import PostSkeleton from 'components/Post/PostSkeleton';
 import {Post as TPost, SFC} from 'types';
@@ -12,10 +14,11 @@ import * as S from './Styles';
 const PostDetail: SFC = ({className}) => {
   const [loading, setLoading] = useState(true);
   const [post, setPost] = useState<TPost | null>(null);
+  const navigate = useNavigate();
   const {postId} = useParams<{postId: string}>();
 
   useEffect(() => {
-    const fetchPost = async () => {
+    (async () => {
       if (!postId) {
         displayErrorToast('Invalid post ID');
         return;
@@ -30,14 +33,24 @@ const PostDetail: SFC = ({className}) => {
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchPost();
+    })();
   }, [postId]);
+
+  const handleBackClick = () => {
+    navigate('/notifications');
+  };
 
   return (
     <S.Container className={className}>
-      <S.Content>{loading ? <PostSkeleton dataLength={1} /> : post && <Post post={post} />}</S.Content>
+      <S.Header>
+        <S.BackButton onClick={handleBackClick}>
+          <Icon icon={mdiArrowLeft} size={20} />
+          <span>Back to Notifications</span>
+        </S.BackButton>
+      </S.Header>
+      <S.ScrollableContent>
+        <S.Content>{loading ? <PostSkeleton dataLength={1} /> : post && <Post post={post} />}</S.Content>
+      </S.ScrollableContent>
     </S.Container>
   );
 };

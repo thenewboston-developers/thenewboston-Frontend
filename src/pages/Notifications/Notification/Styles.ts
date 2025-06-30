@@ -116,6 +116,7 @@ export const PostPreviewText = styled.div`
 export const CommentText = styled.div`
   background: ${colors.background};
   border-left: 3px solid ${colors.palette.gray[300]};
+  border-radius: 6px;
   color: ${colors.palette.gray[700]};
   font-size: 14px;
   line-height: 1.4;

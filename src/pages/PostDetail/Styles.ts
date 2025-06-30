@@ -1,21 +1,47 @@
 import styled from 'styled-components';
 
-import {breakpoints} from 'styles';
+import {colors, fonts, pagePadding, toolbarStyle} from 'styles';
 
-export const Container = styled.div`
+export const BackButton = styled.button`
+  align-items: center;
+  background: none;
+  border: none;
+  color: ${colors.secondary};
+  cursor: pointer;
   display: flex;
-  justify-content: center;
-  margin: 0 auto;
-  max-width: 1200px;
-  padding: 24px 16px;
-  width: 100%;
+  font-size: 14px;
+  font-weight: ${fonts.weight.medium};
+  gap: 8px;
+  padding: 0;
+  transition: color 0.2s;
 
-  @media (max-width: ${breakpoints.tablet}) {
-    padding: 16px;
+  &:hover {
+    color: ${colors.primary};
+  }
+
+  span {
+    font-family: ${fonts.family.default};
   }
 `;
 
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
 export const Content = styled.div`
+  ${pagePadding};
+  margin: 0 auto;
   max-width: 600px;
   width: 100%;
+`;
+
+export const Header = styled.div`
+  ${toolbarStyle};
+`;
+
+export const ScrollableContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
 `;
