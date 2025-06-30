@@ -33,7 +33,7 @@ export const Container = styled.div`
 export const Content = styled.div`
   ${pagePadding};
   margin: 0 auto;
-  max-width: 600px;
+  max-width: 720px;
   width: 100%;
 `;
 
