@@ -20,6 +20,32 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const currencies = useSelector(getCurrencies);
   const navigate = useNavigate();
 
+  const handleContainerClick = () => {
+    const notificationType = notification.payload.notification_type;
+    if (
+      notificationType === NotificationType.POST_LIKE ||
+      notificationType === NotificationType.POST_COMMENT ||
+      notificationType === NotificationType.POST_COIN_TRANSFER
+    ) {
+      const {payload} = notification;
+      if ('post_id' in payload) {
+        navigate(`/posts/${payload.post_id}`);
+      }
+    }
+  };
+
+  const renderContent = () => {
+    const notificationTypes: {[key in NotificationType]: () => ReactNode} = {
+      [NotificationType.EXCHANGE_ORDER_FILLED]: renderExchangeOrderFilledNotification,
+      [NotificationType.POST_COIN_TRANSFER]: renderPostCoinTransferNotification,
+      [NotificationType.POST_COMMENT]: renderPostCommentNotification,
+      [NotificationType.POST_LIKE]: renderPostLikeNotification,
+    };
+
+    const renderFunction = notificationTypes[notification.payload.notification_type as NotificationType];
+    return renderFunction ? renderFunction() : null;
+  };
+
   const renderExchangeOrderFilledNotification = () => {
     if (notification.payload.notification_type !== NotificationType.EXCHANGE_ORDER_FILLED) return null;
 
@@ -153,32 +179,6 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
         <S.Dot />
       </S.DotContainer>
     );
-  };
-
-  const renderContent = () => {
-    const notificationTypes: {[key in NotificationType]: () => ReactNode} = {
-      [NotificationType.EXCHANGE_ORDER_FILLED]: renderExchangeOrderFilledNotification,
-      [NotificationType.POST_COIN_TRANSFER]: renderPostCoinTransferNotification,
-      [NotificationType.POST_COMMENT]: renderPostCommentNotification,
-      [NotificationType.POST_LIKE]: renderPostLikeNotification,
-    };
-
-    const renderFunction = notificationTypes[notification.payload.notification_type as NotificationType];
-    return renderFunction ? renderFunction() : null;
-  };
-
-  const handleContainerClick = () => {
-    const notificationType = notification.payload.notification_type;
-    if (
-      notificationType === NotificationType.POST_LIKE ||
-      notificationType === NotificationType.POST_COMMENT ||
-      notificationType === NotificationType.POST_COIN_TRANSFER
-    ) {
-      const {payload} = notification;
-      if ('post_id' in payload) {
-        navigate(`/posts/${payload.post_id}`);
-      }
-    }
   };
 
   return (

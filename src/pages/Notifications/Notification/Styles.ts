@@ -21,6 +21,19 @@ export const AvatarIcon = styled(UIcon)`
   z-index: 1;
 `;
 
+export const CommentText = styled.div`
+  background: ${colors.background};
+  border-left: 3px solid ${colors.palette.gray[300]};
+  border-radius: 6px;
+  color: ${colors.palette.gray[700]};
+  font-size: 14px;
+  line-height: 1.4;
+  margin-top: 8px;
+  overflow-wrap: break-word;
+  padding: 8px 12px;
+  word-wrap: break-word;
+`;
+
 export const Container = styled.div<{$isRead: boolean}>`
   background: ${({$isRead}) => ($isRead ? colors.background : colors.white)};
   border: 1px solid ${({$isRead}) => ($isRead ? colors.borderDarker : colors.border)};
@@ -90,6 +103,12 @@ export const Link = styled(ULink)`
   }
 `;
 
+export const MainText = styled.div`
+  color: ${colors.palette.gray[700]};
+  font-size: 14px;
+  line-height: 1.4;
+`;
+
 export const NotificationContainer = styled.div`
   align-items: flex-start;
   display: flex;
@@ -98,31 +117,12 @@ export const NotificationContainer = styled.div`
   width: 100%;
 `;
 
-export const MainText = styled.div`
-  color: ${colors.palette.gray[700]};
-  font-size: 14px;
-  line-height: 1.4;
-`;
-
 export const PostPreviewText = styled.div`
   color: ${colors.palette.gray[800]};
   font-size: 15px;
   line-height: 1.4;
   margin-top: 8px;
   overflow-wrap: break-word;
-  word-wrap: break-word;
-`;
-
-export const CommentText = styled.div`
-  background: ${colors.background};
-  border-left: 3px solid ${colors.palette.gray[300]};
-  border-radius: 6px;
-  color: ${colors.palette.gray[700]};
-  font-size: 14px;
-  line-height: 1.4;
-  margin-top: 8px;
-  overflow-wrap: break-word;
-  padding: 8px 12px;
   word-wrap: break-word;
 `;
 
