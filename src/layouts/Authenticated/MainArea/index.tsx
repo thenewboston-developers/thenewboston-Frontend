@@ -8,6 +8,7 @@ import {
   PATH_EXCHANGE,
   PATH_FEED,
   PATH_NOTIFICATIONS,
+  PATH_POST_DETAIL,
   PATH_PROFILE,
   PATH_WALLETS,
 } from 'constants/paths';
@@ -15,6 +16,7 @@ import Currencies from 'pages/Currencies';
 import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
 import Notifications from 'pages/Notifications';
+import PostDetail from 'pages/PostDetail';
 import Profile from 'pages/Profile';
 import Wallets from 'pages/Wallets';
 import {SFC} from 'types';
@@ -30,6 +32,7 @@ const MainArea: SFC = ({className}) => {
         <Route path={PATH_EXCHANGE} element={<Exchange />} />
         <Route path={PATH_FEED} element={<Feed />} />
         <Route path={PATH_NOTIFICATIONS} element={<Notifications />} />
+        <Route path={PATH_POST_DETAIL} element={<PostDetail />} />
         <Route path={PATH_PROFILE} element={<Profile />} />
         <Route path={PATH_AUTHENTICATION.LOGOUT} element={<Logout />} />
         <Route path={PATH_WALLETS} element={<Wallets />} />

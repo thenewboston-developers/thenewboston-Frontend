@@ -15,6 +15,7 @@ const FullScreenImageModal: SFC<ImageModalProps> = ({imageSrc, close}) => {
 
   return createPortal(
     <>
+      <S.Overlay onClick={close} />
       <S.Modal>
         <S.ImagePreviewContainer>
           <S.ImagePreview
