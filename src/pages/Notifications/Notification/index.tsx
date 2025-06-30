@@ -1,6 +1,6 @@
-import {ReactNode, useState} from 'react';
+import {ReactNode} from 'react';
 import {useSelector} from 'react-redux';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {mdiContentCopy, mdiHeart, mdiSwapHorizontal, mdiWalletBifoldOutline} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
@@ -10,8 +10,6 @@ import {getCurrencies} from 'selectors/state';
 import {Notification as TNotification, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
-import PostModal from '../PostModal';
-
 import * as S from './Styles';
 
 export interface NotificationProps {
@@ -19,8 +17,8 @@ export interface NotificationProps {
 }
 
 const Notification: SFC<NotificationProps> = ({className, notification}) => {
-  const [postModalOpen, setPostModalOpen] = useState(false);
   const currencies = useSelector(getCurrencies);
+  const navigate = useNavigate();
 
   const renderExchangeOrderFilledNotification = () => {
     if (notification.payload.notification_type !== NotificationType.EXCHANGE_ORDER_FILLED) return null;
@@ -169,20 +167,6 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     return renderFunction ? renderFunction() : null;
   };
 
-  const handleClosePostModal = () => {
-    setPostModalOpen(false);
-  };
-
-  const getPostId = () => {
-    const {payload} = notification;
-    if ('post_id' in payload) {
-      return payload.post_id;
-    }
-    return null;
-  };
-
-  const postId = getPostId();
-
   const handleContainerClick = () => {
     const notificationType = notification.payload.notification_type;
     if (
@@ -190,17 +174,17 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       notificationType === NotificationType.POST_COMMENT ||
       notificationType === NotificationType.POST_COIN_TRANSFER
     ) {
-      setPostModalOpen(true);
+      const {payload} = notification;
+      if ('post_id' in payload) {
+        navigate(`/posts/${payload.post_id}`);
+      }
     }
   };
 
   return (
-    <>
-      <S.Container $isRead={notification.is_read} className={className} onClick={handleContainerClick}>
-        {renderContent()}
-      </S.Container>
-      {postModalOpen && postId && <PostModal onClose={handleClosePostModal} postId={postId} />}
-    </>
+    <S.Container $isRead={notification.is_read} className={className} onClick={handleContainerClick}>
+      {renderContent()}
+    </S.Container>
   );
 };
 
