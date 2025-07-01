@@ -128,14 +128,14 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
             <S.ModalContent>
               <S.Section>
                 <S.SectionHeading>Avatar</S.SectionHeading>
-                {!values.avatar && (
+                <div style={{display: values.avatar ? 'none' : 'block'}}>
                   <FileInput
                     errors={errors}
                     name="avatar"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue, 'avatar')}
                     touched={touched}
                   />
-                )}
+                </div>
                 <ImagePreview
                   onClear={async () => {
                     await setFieldValue('avatar', '');
@@ -144,18 +144,19 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
                   }}
                   src={preview}
                 />
+                {errors.avatar && touched.avatar && preview && <S.ErrorMessage>{errors.avatar}</S.ErrorMessage>}
               </S.Section>
 
               <S.Section>
                 <S.SectionHeading>Banner</S.SectionHeading>
-                {!values.banner && (
+                <div style={{display: values.banner ? 'none' : 'block'}}>
                   <FileInput
                     errors={errors}
                     name="banner"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue, 'banner')}
                     touched={touched}
                   />
-                )}
+                </div>
                 <ImagePreview
                   onClear={async () => {
                     await setFieldValue('banner', '');
@@ -164,6 +165,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
                   }}
                   src={bannerPreview}
                 />
+                {errors.banner && touched.banner && bannerPreview && <S.ErrorMessage>{errors.banner}</S.ErrorMessage>}
               </S.Section>
 
               <S.Section>

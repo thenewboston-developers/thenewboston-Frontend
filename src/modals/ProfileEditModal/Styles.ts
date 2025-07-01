@@ -43,3 +43,9 @@ export const SocialMediaGrid = styled.div`
   gap: 0 24px;
   grid-template-columns: 1fr 1fr;
 `;
+
+export const ErrorMessage = styled.div`
+  color: ${colors.palette.red[400]};
+  font-size: 12px;
+  margin-top: 6px;
+`;
