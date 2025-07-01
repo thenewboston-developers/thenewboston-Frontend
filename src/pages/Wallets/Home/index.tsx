@@ -145,7 +145,7 @@ const Home: SFC = ({className}) => {
           {walletList.length > 0 && <S.Box>{renderMenuItems()}</S.Box>}
         </S.LeftMenu>
         <S.MainContent>
-          {manager.activeWalletId && <SendCoinsSection />}
+          {manager.activeWalletId && <SendCoinsSection key={manager.activeWalletId} />}
           {renderTabs()}
           <S.ContentArea>{renderRightContent()}</S.ContentArea>
         </S.MainContent>
