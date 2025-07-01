@@ -28,7 +28,7 @@ export const Container = styled.div`
 export const Dropdown = styled.div`
   background: ${colors.white};
   border: 1px solid ${colors.border};
-  border-radius: 3px;
+  border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   max-height: 300px;
   overflow-y: auto;
@@ -61,6 +61,7 @@ export const ErrorMessage = styled.div`
 export const Input = styled.input<{$error?: boolean}>`
   ${inputStyle};
   border: 1px solid ${({$error}) => ($error ? colors.palette.red[400] : colors.border)};
+  border-radius: 12px;
   padding-right: 40px;
   width: 100%;
 `;

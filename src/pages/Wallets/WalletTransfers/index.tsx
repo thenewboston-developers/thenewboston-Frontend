@@ -14,9 +14,9 @@ import * as S from './Styles';
 const WalletTransfers: SFC = ({className}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [previousWalletId, setPreviousWalletId] = useState<number | null>(null);
   const [totalCount, setTotalCount] = useState(0);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
-  const [previousWalletId, setPreviousWalletId] = useState<number | null>(null);
   const activeWallet = useActiveWallet();
   const itemsPerPage = 20;
 
@@ -52,11 +52,6 @@ const WalletTransfers: SFC = ({className}) => {
     })();
   }, [activeWallet, currentPage, previousWalletId]);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({behavior: 'smooth', top: 0});
-  };
-
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString('en-US', {
@@ -72,6 +67,11 @@ const WalletTransfers: SFC = ({className}) => {
       hour: '2-digit',
       minute: '2-digit',
     });
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({behavior: 'smooth', top: 0});
   };
 
   const renderTransfer = (transfer: Transfer) => {

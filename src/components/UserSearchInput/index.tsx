@@ -27,10 +27,10 @@ const UserSearchInput: SFC<UserSearchInputProps> = ({
   touched,
   value,
 }) => {
+  const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<UserReadSerializer[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 

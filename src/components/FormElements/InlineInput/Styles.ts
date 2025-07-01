@@ -5,7 +5,7 @@ import {colors, inputStyle} from 'styles';
 
 export const Field = styled(UField)`
   ${inputStyle};
-  border: 1px solid ${({$error}) => ($error ? colors.palette.red['400'] : colors.border)};
+  border: 1px solid ${({$error}) => ($error ? colors.palette.red[400] : colors.border)};
   border-radius: 12px;
   width: ${({width}) => (width ? `${width}px` : '260px')};
 `;

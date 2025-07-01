@@ -15,7 +15,7 @@ export const Container = styled.div`
 `;
 
 export const TotalRow = styled.div<{$isTotalValid: boolean}>`
-  color: ${({$isTotalValid}) => ($isTotalValid ? 'inherit' : colors.palette.red['500'])};
+  color: ${({$isTotalValid}) => ($isTotalValid ? 'inherit' : colors.palette.red[500])};
   display: flex;
   font-weight: ${fonts.weight.bold};
   gap: 16px;
