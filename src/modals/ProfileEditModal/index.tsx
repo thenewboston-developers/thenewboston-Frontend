@@ -5,7 +5,6 @@ import {Form, Formik} from 'formik';
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput, FormField, Input, Textarea} from 'components/FormElements';
-import ImagePreview from 'components/ImagePreview';
 import {ModalFooterButton} from 'components/Modal';
 import {updateUser} from 'dispatchers/users';
 import {getSelf} from 'selectors/state';
@@ -20,6 +19,8 @@ export interface ProfileEditModalProps {
 
 const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
+  const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
@@ -27,6 +28,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
   const initialValues = useMemo(
     () => ({
       avatar: self.avatar || '',
+      banner: self.banner || '',
       bio: self.bio || '',
       discord_username: self.discord_username || '',
       facebook_username: self.facebook_username || '',
@@ -46,19 +48,35 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
   type FormValues = typeof initialValues;
 
   useEffect(() => {
-    if (!initialValues.avatar) return;
-    setPreview(initialValues.avatar);
+    if (initialValues.avatar) {
+      setPreview(initialValues.avatar);
+    }
+    if (initialValues.banner) {
+      setBannerPreview(initialValues.banner);
+    }
   }, [initialValues]);
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>, setFieldValue: any) => {
+  const handleFileChange = (
+    event: ChangeEvent<HTMLInputElement>,
+    setFieldValue: any,
+    fieldName: 'avatar' | 'banner',
+  ) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      setAvatarFile(file);
-      setFieldValue('avatar', file);
 
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
-      reader.readAsDataURL(file);
+      if (fieldName === 'avatar') {
+        setAvatarFile(file);
+        setFieldValue('avatar', file);
+        const reader = new FileReader();
+        reader.onloadend = () => setPreview(reader.result as string);
+        reader.readAsDataURL(file);
+      } else {
+        setBannerFile(file);
+        setFieldValue('banner', file);
+        const reader = new FileReader();
+        reader.onloadend = () => setBannerPreview(reader.result as string);
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -72,6 +90,14 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
       } else if (values.avatar === '' && initialValues.avatar !== '') {
         // User cleared the avatar
         requestData.append('avatar', '');
+      }
+
+      // Only append banner if it's a new file or being cleared
+      if (bannerFile) {
+        requestData.append('banner', bannerFile);
+      } else if (values.banner === '' && initialValues.banner !== '') {
+        // User cleared the banner
+        requestData.append('banner', '');
       }
 
       requestData.append('bio', values.bio);
@@ -101,15 +127,15 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
             <S.ModalContent>
               <S.Section>
                 <S.SectionHeading>Avatar</S.SectionHeading>
-                {!values.avatar && (
+                <div style={{display: values.avatar ? 'none' : 'block'}}>
                   <FileInput
                     errors={errors}
                     name="avatar"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue, 'avatar')}
                     touched={touched}
                   />
-                )}
-                <ImagePreview
+                </div>
+                <S.AvatarPreview
                   onClear={async () => {
                     await setFieldValue('avatar', '');
                     setPreview(null);
@@ -117,6 +143,28 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
                   }}
                   src={preview}
                 />
+                {errors.avatar && touched.avatar && preview && <S.ErrorMessage>{errors.avatar}</S.ErrorMessage>}
+              </S.Section>
+
+              <S.Section>
+                <S.SectionHeading>Banner</S.SectionHeading>
+                <div style={{display: values.banner ? 'none' : 'block'}}>
+                  <FileInput
+                    errors={errors}
+                    name="banner"
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, setFieldValue, 'banner')}
+                    touched={touched}
+                  />
+                </div>
+                <S.BannerPreview
+                  onClear={async () => {
+                    await setFieldValue('banner', '');
+                    setBannerPreview(null);
+                    setBannerFile(null);
+                  }}
+                  src={bannerPreview}
+                />
+                {errors.banner && touched.banner && bannerPreview && <S.ErrorMessage>{errors.banner}</S.ErrorMessage>}
               </S.Section>
 
               <S.Section>

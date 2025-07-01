@@ -30,6 +30,7 @@ const UserDetails: SFC = ({className}) => {
   const self = useSelector(getSelf);
   const user = useUser(id);
   const userAvatar = user?.avatar || DefaultAvatar;
+  const userBanner = user?.banner;
   const userId = id ? parseInt(id, 10) : null;
   const userStats = useSelector(getUserStatsState);
   const {
@@ -59,7 +60,6 @@ const UserDetails: SFC = ({className}) => {
 
   const handleClose = () => {
     toggleProfileAvatarModal();
-    close();
   };
 
   const handleFollowButtonClick = async () => {
@@ -79,9 +79,13 @@ const UserDetails: SFC = ({className}) => {
         setSelfFollowing(true);
         await updateUserStats();
       } catch (error) {
-        displayErrorToast('Error unfollowing user');
+        displayErrorToast('Error following user');
       }
     }
+  };
+
+  const updateUserStats = async () => {
+    if (userId) await dispatch(getUserStats(userId));
   };
 
   const renderAvatar = () => {
@@ -91,6 +95,11 @@ const UserDetails: SFC = ({className}) => {
         <S.Image alt="image" onClick={toggleProfileAvatarModal} src={userAvatar} />
       </S.ImageWrapper>
     );
+  };
+
+  const renderBio = () => {
+    if (!user || !user.bio) return null;
+    return <S.Bio>{user.bio}</S.Bio>;
   };
 
   const renderEditProfileButton = () => {
@@ -112,6 +121,11 @@ const UserDetails: SFC = ({className}) => {
   const renderSendButton = () => {
     if (self.id === userId) return null;
     return <S.Button color={ButtonColor.secondary} onClick={toggleSendModal} text="Send" />;
+  };
+
+  const renderSocialLinks = () => {
+    if (!user) return null;
+    return <SocialLinks entity={user} />;
   };
 
   const renderStatsAndBalance = () => {
@@ -139,27 +153,14 @@ const UserDetails: SFC = ({className}) => {
     );
   };
 
-  const renderBio = () => {
-    if (!user || !user.bio) return null;
-    return <S.Bio>{user.bio}</S.Bio>;
-  };
-
   const renderUsername = () => {
     if (!user) return null;
     return <S.Username>{user.username}</S.Username>;
   };
 
-  const renderSocialLinks = () => {
-    if (!user) return null;
-    return <SocialLinks entity={user} />;
-  };
-
-  const updateUserStats = async () => {
-    if (userId) await dispatch(getUserStats(userId));
-  };
-
   return (
     <>
+      {userBanner ? <S.UserBanner src={userBanner} /> : <S.Banner />}
       <S.Container className={className}>
         {renderAvatar()}
         {renderUsername()}

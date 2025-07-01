@@ -1,8 +1,24 @@
 import styled from 'styled-components';
 
+import ImagePreview from 'components/ImagePreview';
 import UModal, {ModalContent as UModalContent, ModalFooter as UModalFooter} from 'components/Modal';
 import {Content} from 'components/Modal/Styles';
 import {colors} from 'styles';
+
+export const AvatarPreview = styled(ImagePreview)``;
+
+export const BannerPreview = styled(ImagePreview)`
+  img {
+    max-height: 225px;
+    max-width: 400px;
+  }
+`;
+
+export const ErrorMessage = styled.div`
+  color: ${colors.palette.red[400]};
+  font-size: 12px;
+  margin-top: 6px;
+`;
 
 export const Modal = styled(UModal)`
   max-height: 90vh;
