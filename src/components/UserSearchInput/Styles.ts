@@ -73,6 +73,13 @@ export const Label = styled.div`
   ${formLabel};
 `;
 
+export const LoaderWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+`;
+
 export const NoResultsMessage = styled.div`
   color: ${colors.palette.gray[600]};
   font-size: 14px;

@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {searchUsers} from 'api/users';
+import Loader from 'components/Loader';
 import {SFC, UserReadSerializer} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -29,6 +30,7 @@ const UserSearchInput: SFC<UserSearchInputProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<UserReadSerializer[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -53,6 +55,17 @@ const UserSearchInput: SFC<UserSearchInputProps> = ({
       clearTimeout(searchTimeoutRef.current);
     }
 
+    if (!query.trim()) {
+      setShowDropdown(false);
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    // Show dropdown and loading state immediately
+    setShowDropdown(true);
+    setIsSearching(true);
+
     // Set new timeout for debounced search
     searchTimeoutRef.current = setTimeout(() => {
       handleSearch(query);
@@ -62,15 +75,18 @@ const UserSearchInput: SFC<UserSearchInputProps> = ({
   const handleSearch = useCallback(async (query: string) => {
     if (!query.trim()) {
       setSearchResults([]);
+      setIsSearching(false);
       return;
     }
 
     try {
       const results = await searchUsers(query);
       setSearchResults(results);
-      setShowDropdown(true);
     } catch (error) {
       displayErrorToast('Error searching users');
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
     }
   }, []);
 
@@ -78,6 +94,30 @@ const UserSearchInput: SFC<UserSearchInputProps> = ({
     setSearchQuery(user.username);
     setShowDropdown(false);
     onChange?.(user);
+  };
+
+  const renderDropdownContent = () => {
+    if (isSearching) {
+      return (
+        <S.LoaderWrapper>
+          <Loader size={20} />
+        </S.LoaderWrapper>
+      );
+    }
+
+    if (searchResults.length > 0) {
+      return searchResults.map((user) => (
+        <S.DropdownItem key={user.id} onClick={() => handleSelectUser(user)}>
+          <S.UserLabel avatar={user.avatar} description="" id={user.id} username={user.username} />
+        </S.DropdownItem>
+      ));
+    }
+
+    if (searchQuery.trim()) {
+      return <S.NoResultsMessage>No users found</S.NoResultsMessage>;
+    }
+
+    return null;
   };
 
   useEffect(() => {
@@ -115,20 +155,7 @@ const UserSearchInput: SFC<UserSearchInputProps> = ({
         )}
       </S.InputWrapper>
       {errors[name] && touched[name] ? <S.ErrorMessage>{errors[name]}</S.ErrorMessage> : null}
-      {showDropdown && searchResults.length > 0 && (
-        <S.Dropdown>
-          {searchResults.map((user) => (
-            <S.DropdownItem key={user.id} onClick={() => handleSelectUser(user)}>
-              <S.UserLabel avatar={user.avatar} description="" id={user.id} username={user.username} />
-            </S.DropdownItem>
-          ))}
-        </S.Dropdown>
-      )}
-      {showDropdown && searchQuery.trim() && searchResults.length === 0 && (
-        <S.Dropdown>
-          <S.NoResultsMessage>No users found</S.NoResultsMessage>
-        </S.Dropdown>
-      )}
+      {showDropdown && <S.Dropdown>{renderDropdownContent()}</S.Dropdown>}
     </S.Container>
   );
 };
