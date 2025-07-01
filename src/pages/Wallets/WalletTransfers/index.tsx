@@ -15,6 +15,7 @@ const WalletTransfers: SFC = ({className}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [previousWalletId, setPreviousWalletId] = useState<number | null>(null);
+  const [previousPage, setPreviousPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
   const activeWallet = useActiveWallet();
@@ -23,15 +24,20 @@ const WalletTransfers: SFC = ({className}) => {
   useEffect(() => {
     if (!activeWallet) return;
 
-    // Only fetch if this is truly a new wallet
-    if (previousWalletId === activeWallet.id) return;
+    // Check if this is a genuine change that requires fetching
+    const walletChanged = previousWalletId !== null && previousWalletId !== activeWallet.id;
+
+    // Prevent duplicate API calls when navigating back to wallets page
+    // This check ensures we don't fetch if neither wallet nor page has changed
+    if (previousWalletId === activeWallet.id && previousPage === currentPage) return;
 
     // Reset page when wallet changes
-    if (previousWalletId !== null && previousWalletId !== activeWallet.id) {
+    if (walletChanged) {
       setCurrentPage(1);
     }
 
     setPreviousWalletId(activeWallet.id);
+    setPreviousPage(currentPage);
 
     (async () => {
       setIsLoading(true);
@@ -50,7 +56,7 @@ const WalletTransfers: SFC = ({className}) => {
         setIsLoading(false);
       }
     })();
-  }, [activeWallet, currentPage, previousWalletId]);
+  }, [activeWallet, currentPage, previousWalletId, previousPage]);
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
