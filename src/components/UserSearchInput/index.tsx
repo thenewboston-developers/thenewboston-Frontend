@@ -32,24 +32,15 @@ const UserSearchInput: SFC<UserSearchInputProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const handleClearSelection = () => {
+    setSearchQuery('');
+    setSearchResults([]);
+    onChange?.(null);
+  };
+
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
       setShowDropdown(false);
-    }
-  }, []);
-
-  const handleSearch = useCallback(async (query: string) => {
-    if (!query.trim()) {
-      setSearchResults([]);
-      return;
-    }
-
-    try {
-      const results = await searchUsers(query);
-      setSearchResults(results);
-      setShowDropdown(true);
-    } catch (error) {
-      displayErrorToast('Error searching users');
     }
   }, []);
 
@@ -68,16 +59,25 @@ const UserSearchInput: SFC<UserSearchInputProps> = ({
     }, 300);
   };
 
+  const handleSearch = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    try {
+      const results = await searchUsers(query);
+      setSearchResults(results);
+      setShowDropdown(true);
+    } catch (error) {
+      displayErrorToast('Error searching users');
+    }
+  }, []);
+
   const handleSelectUser = (user: UserReadSerializer) => {
     setSearchQuery(user.username);
     setShowDropdown(false);
     onChange?.(user);
-  };
-
-  const handleClearSelection = () => {
-    setSearchQuery('');
-    setSearchResults([]);
-    onChange?.(null);
   };
 
   useEffect(() => {

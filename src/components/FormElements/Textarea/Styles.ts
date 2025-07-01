@@ -12,6 +12,7 @@ export const ErrorMessage = styled.div`
 export const Field = styled(UField)`
   ${inputStyle};
   border: 1px solid ${({$error}) => ($error ? colors.palette.red['400'] : colors.border)};
+  border-radius: 12px;
   display: block;
   height: auto;
   resize: vertical;

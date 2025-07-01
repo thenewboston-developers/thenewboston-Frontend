@@ -28,7 +28,7 @@ export const Container = styled.div`
 export const Dropdown = styled.div`
   background: ${colors.white};
   border: 1px solid ${colors.border};
-  border-radius: 4px;
+  border-radius: 3px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   max-height: 300px;
   overflow-y: auto;
