@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import UUserLabel from 'components/UserLabel';
-import {colors, fonts, formLabel, inputStyle} from 'styles';
+import {colors, formLabel, inputStyle} from 'styles';
 
 export const ClearButton = styled.button`
   background: none;
