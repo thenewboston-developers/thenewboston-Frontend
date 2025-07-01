@@ -5,7 +5,6 @@ import {Form, Formik} from 'formik';
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput, FormField, Input, Textarea} from 'components/FormElements';
-import ImagePreview from 'components/ImagePreview';
 import {ModalFooterButton} from 'components/Modal';
 import {updateUser} from 'dispatchers/users';
 import {getSelf} from 'selectors/state';
@@ -136,7 +135,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
                     touched={touched}
                   />
                 </div>
-                <ImagePreview
+                <S.AvatarPreview
                   onClear={async () => {
                     await setFieldValue('avatar', '');
                     setPreview(null);
@@ -157,7 +156,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
                     touched={touched}
                   />
                 </div>
-                <ImagePreview
+                <S.BannerPreview
                   onClear={async () => {
                     await setFieldValue('banner', '');
                     setBannerPreview(null);
