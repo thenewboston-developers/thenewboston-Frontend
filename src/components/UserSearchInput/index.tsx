@@ -101,6 +101,7 @@ const UserSearchInput: SFC<UserSearchInputProps> = ({
       <S.InputWrapper>
         <S.Input
           $error={!!(errors[name] && touched[name])}
+          autoComplete="off"
           name={name}
           onChange={handleInputChange}
           placeholder={placeholder}
