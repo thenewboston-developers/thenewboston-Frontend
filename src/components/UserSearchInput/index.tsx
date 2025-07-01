@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 
-import {searchUsers} from 'api/users';
+import {searchUsers} from 'api/userSearch';
 import Loader from 'components/Loader';
 import {SFC, UserReadSerializer} from 'types';
 import {displayErrorToast} from 'utils/toasts';
