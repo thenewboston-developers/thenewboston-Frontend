@@ -45,7 +45,7 @@ export const Pagination = styled.div`
 
 export const Table = styled.table`
   background-color: ${colors.white};
-  border-radius: 14px;
+  border-radius: 12px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   overflow: hidden;
   width: 100%;
