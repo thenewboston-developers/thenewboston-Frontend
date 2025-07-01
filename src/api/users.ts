@@ -23,6 +23,18 @@ export const getUser = async (id: number): Promise<UserReadSerializer> => {
   }
 };
 
+export const searchUsers = async (query: string): Promise<UserReadSerializer[]> => {
+  try {
+    const response = await axios.get<UserReadSerializer[]>(`${BASE_URL}/search`, {
+      ...authorizationHeaders(),
+      params: {q: query},
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const updateUser = async (id: number, data: FormData): Promise<UserReadSerializer> => {
   try {
     const response = await axios.patch<UserReadSerializer>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
