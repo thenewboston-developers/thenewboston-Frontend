@@ -20,8 +20,8 @@ export interface ProfileEditModalProps {
 const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 

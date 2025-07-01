@@ -7,6 +7,19 @@ import BannerImage from './assets/default-banner.jpg';
 
 const USER_IMAGE_SIZE = 180;
 
+export const Banner = styled.div`
+  background-image: url(${BannerImage});
+  background-position: center;
+  background-size: cover;
+  border-radius: 12px;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+  height: 260px;
+  margin-bottom: -${USER_IMAGE_SIZE / 2 + 4}px;
+  width: 100%;
+`;
+
 export const Bio = styled.p`
   font-size: 14px;
   margin-top: 8px;
@@ -34,19 +47,6 @@ export const ButtonGroup = styled.div`
   @media (min-width: ${breakpoints.mobile}) {
     flex-direction: row;
   }
-`;
-
-export const Banner = styled.div`
-  background-image: url(${BannerImage});
-  background-position: center;
-  background-size: cover;
-  border-radius: 12px;
-  box-shadow:
-    0 4px 6px rgba(0, 0, 0, 0.1),
-    0 1px 3px rgba(0, 0, 0, 0.08);
-  height: 260px;
-  margin-bottom: -${USER_IMAGE_SIZE / 2 + 4}px;
-  width: 100%;
 `;
 
 export const Container = styled.div`
