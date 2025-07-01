@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 
 import UserSearchInput from 'components/UserSearchInput';
@@ -24,6 +24,10 @@ const SendCoinsSection: SFC = ({className}) => {
       toggleSendModal();
     }
   };
+
+  useEffect(() => {
+    setRecipient(null);
+  }, [activeWallet?.id]);
 
   if (!activeWallet || !self) return null;
 
