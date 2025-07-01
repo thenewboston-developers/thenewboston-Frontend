@@ -4,16 +4,16 @@ import {breakpoints, pagePadding} from 'styles';
 
 export const CardsContainer = styled.div`
   display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
   margin-top: 12px;
 
   @media (max-width: ${breakpoints.desktop}) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 
   @media (max-width: ${breakpoints.tablet}) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: auto;
   }
 
   @media (max-width: ${breakpoints.mobile}) {

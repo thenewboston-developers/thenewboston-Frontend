@@ -20,7 +20,7 @@ const CurrencyCard: SFC<CurrencyCardProps> = ({className, currency}) => {
     <S.Container className={className} onClick={handleCardClick}>
       <S.CardContent>
         <S.HeaderSection>
-          <S.CurrencyLogo logo={currency.logo} width="56px" />
+          <S.CurrencyLogo logo={currency.logo} width="72px" />
           <S.Text>
             <S.Ticker>{currency.ticker}</S.Ticker>
             <S.DomainInfo>

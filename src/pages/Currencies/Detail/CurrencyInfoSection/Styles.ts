@@ -4,7 +4,7 @@ import UCurrencyLogo from 'components/CurrencyLogo';
 import {colors, fonts} from 'styles';
 
 export const CurrencyContent = styled.div`
-  padding: 56px 24px 24px 24px; /* Top padding for logo overlap */
+  padding: 100px 24px 24px 24px; /* Top padding for logo overlap */
 `;
 
 export const CurrencyDescription = styled.p`
@@ -34,10 +34,13 @@ export const CurrencyInfoContainer = styled.div`
 export const CurrencyLogo = styled(UCurrencyLogo)`
   background: ${colors.white};
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08);
   left: 24px;
+  padding: 4px;
   position: absolute;
-  top: -48px;
+  top: -75px;
 `;
 
 export const CurrencyName = styled.h1`
@@ -52,7 +55,7 @@ export const CurrencyPanel = styled.div`
   border: 1px solid ${colors.border};
   border-radius: 12px;
   margin-bottom: 32px;
-  margin-top: 48px;
+  margin-top: 75px;
   padding: 0;
   position: relative;
 `;

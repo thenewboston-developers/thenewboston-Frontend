@@ -45,8 +45,8 @@ export const Pagination = styled.div`
 
 export const Table = styled.table`
   background-color: ${colors.white};
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 14px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   overflow: hidden;
   width: 100%;
 `;
@@ -56,7 +56,7 @@ export const TableBody = styled.tbody``;
 export const TableData = styled.td`
   color: ${colors.primary};
   font-size: 14px;
-  padding: 20px;
+  padding: 16px 24px;
 `;
 
 export const TableHead = styled.th`
@@ -64,7 +64,7 @@ export const TableHead = styled.th`
   color: ${colors.palette.gray[500]};
   font-size: 11px;
   font-weight: ${fonts.weight.semiBold};
-  padding: 12px 20px;
+  padding: 12px 24px;
   text-align: left;
   text-transform: uppercase;
 
@@ -76,9 +76,7 @@ export const TableHead = styled.th`
 export const TableHeader = styled.thead``;
 
 export const TableRow = styled.tr`
-  border-bottom: 1px solid ${colors.border};
-
-  &:last-child {
-    border-bottom: none;
+  &:not(:last-child) td {
+    border-bottom: 1px solid ${colors.border};
   }
 `;
