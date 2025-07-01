@@ -5,6 +5,21 @@ import UModal, {ModalContent as UModalContent, ModalFooter as UModalFooter} from
 import {Content} from 'components/Modal/Styles';
 import {colors} from 'styles';
 
+export const AvatarPreview = styled(ImagePreview)``;
+
+export const BannerPreview = styled(ImagePreview)`
+  img {
+    max-height: 225px;
+    max-width: 400px;
+  }
+`;
+
+export const ErrorMessage = styled.div`
+  color: ${colors.palette.red[400]};
+  font-size: 12px;
+  margin-top: 6px;
+`;
+
 export const Modal = styled(UModal)`
   max-height: 90vh;
   width: 680px;
@@ -43,21 +58,4 @@ export const SocialMediaGrid = styled.div`
   display: grid;
   gap: 0 24px;
   grid-template-columns: 1fr 1fr;
-`;
-
-export const ErrorMessage = styled.div`
-  color: ${colors.palette.red[400]};
-  font-size: 12px;
-  margin-top: 6px;
-`;
-
-export const AvatarPreview = styled(ImagePreview)`
-  /* Default size from ImagePreview component */
-`;
-
-export const BannerPreview = styled(ImagePreview)`
-  img {
-    max-width: 400px;
-    max-height: 225px; /* Maintains 16:9 aspect ratio */
-  }
 `;
