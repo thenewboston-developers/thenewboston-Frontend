@@ -18,6 +18,7 @@ import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
 import MenuItem from '../MenuItem';
+import SendCoinsSection from '../SendCoinsSection';
 import WalletDeposit from '../WalletDeposit';
 import WalletTransfers from '../WalletTransfers';
 import WalletWithdraw from '../WalletWithdraw';
@@ -30,6 +31,7 @@ const Home: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
   const wallets = useSelector(getWallets);
+  const walletList = useMemo(() => orderBy(Object.values(wallets), [(wallet) => wallet.currency.ticker]), [wallets]);
 
   useEffect(() => {
     (async () => {
@@ -40,8 +42,6 @@ const Home: SFC = ({className}) => {
       }
     })();
   }, [dispatch]);
-
-  const walletList = useMemo(() => orderBy(Object.values(wallets), [(wallet) => wallet.currency.ticker]), [wallets]);
 
   useEffect(() => {
     (async () => {
@@ -145,6 +145,7 @@ const Home: SFC = ({className}) => {
           {walletList.length > 0 && <S.Box>{renderMenuItems()}</S.Box>}
         </S.LeftMenu>
         <S.MainContent>
+          {manager.activeWalletId && <SendCoinsSection key={manager.activeWalletId} />}
           {renderTabs()}
           <S.ContentArea>{renderRightContent()}</S.ContentArea>
         </S.MainContent>

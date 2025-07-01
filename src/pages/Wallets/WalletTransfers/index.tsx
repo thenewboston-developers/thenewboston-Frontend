@@ -12,9 +12,9 @@ import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const WalletTransfers: SFC = ({className}) => {
-  const [activeCurrencyId, setActiveCurrencyId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [previousWalletId, setPreviousWalletId] = useState<number | null>(null);
   const [totalCount, setTotalCount] = useState(0);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
   const activeWallet = useActiveWallet();
@@ -23,14 +23,15 @@ const WalletTransfers: SFC = ({className}) => {
   useEffect(() => {
     if (!activeWallet) return;
 
-    if (activeCurrencyId !== null && activeCurrencyId !== activeWallet.currency.id) {
+    // Only fetch if this is truly a new wallet
+    if (previousWalletId === activeWallet.id) return;
+
+    // Reset page when wallet changes
+    if (previousWalletId !== null && previousWalletId !== activeWallet.id) {
       setCurrentPage(1);
     }
-    setActiveCurrencyId(activeWallet.currency.id);
-  }, [activeWallet, activeCurrencyId]);
 
-  useEffect(() => {
-    if (!activeWallet || activeCurrencyId !== activeWallet.currency.id) return;
+    setPreviousWalletId(activeWallet.id);
 
     (async () => {
       setIsLoading(true);
@@ -49,12 +50,7 @@ const WalletTransfers: SFC = ({className}) => {
         setIsLoading(false);
       }
     })();
-  }, [activeWallet, activeCurrencyId, currentPage]);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({behavior: 'smooth', top: 0});
-  };
+  }, [activeWallet, currentPage, previousWalletId]);
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -71,6 +67,11 @@ const WalletTransfers: SFC = ({className}) => {
       hour: '2-digit',
       minute: '2-digit',
     });
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({behavior: 'smooth', top: 0});
   };
 
   const renderTransfer = (transfer: Transfer) => {
