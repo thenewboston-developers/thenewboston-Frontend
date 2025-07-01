@@ -30,6 +30,7 @@ const UserDetails: SFC = ({className}) => {
   const self = useSelector(getSelf);
   const user = useUser(id);
   const userAvatar = user?.avatar || DefaultAvatar;
+  const userBanner = user?.banner;
   const userId = id ? parseInt(id, 10) : null;
   const userStats = useSelector(getUserStatsState);
   const {
@@ -160,7 +161,7 @@ const UserDetails: SFC = ({className}) => {
 
   return (
     <>
-      <S.Banner />
+      {userBanner ? <S.UserBanner src={userBanner} /> : <S.Banner />}
       <S.Container className={className}>
         {renderAvatar()}
         {renderUsername()}

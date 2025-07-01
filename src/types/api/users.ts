@@ -1,5 +1,6 @@
 export interface UserReadSerializer {
   avatar: string | null;
+  banner: string | null;
   bio: string;
   discord_username: string | null;
   facebook_username: string | null;

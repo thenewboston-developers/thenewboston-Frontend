@@ -87,7 +87,6 @@ export const ImageWrapper = styled.div`
   padding: 4px;
   position: relative;
   width: ${USER_IMAGE_SIZE}px;
-  z-index: 1;
 `;
 
 export const Separator = styled.span`
@@ -126,6 +125,17 @@ export const TNBLogo = styled.img`
   border-radius: 50%;
   margin: 0 3px;
   width: 20px;
+`;
+
+export const UserBanner = styled.img`
+  border-radius: 12px;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+  height: 260px;
+  margin-bottom: -${USER_IMAGE_SIZE / 2 + 4}px;
+  object-fit: cover;
+  width: 100%;
 `;
 
 export const Username = styled.h1`
