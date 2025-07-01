@@ -40,12 +40,14 @@ const Layout: SFC = ({className}) => {
     if (!userId) return null;
 
     return (
-      <Tabs>
-        {renderTab('Posts', `/profile/${userId}`)}
-        {renderTab('Followers', `/profile/${userId}/followers`)}
-        {renderTab('Following', `/profile/${userId}/following`)}
-        {userId === self.id ? renderTab('Invitations', `/profile/${userId}/invitations`) : null}
-      </Tabs>
+      <S.TabsWrapper>
+        <Tabs>
+          {renderTab('Posts', `/profile/${userId}`)}
+          {renderTab('Followers', `/profile/${userId}/followers`)}
+          {renderTab('Following', `/profile/${userId}/following`)}
+          {userId === self.id ? renderTab('Invitations', `/profile/${userId}/invitations`) : null}
+        </Tabs>
+      </S.TabsWrapper>
     );
   };
 

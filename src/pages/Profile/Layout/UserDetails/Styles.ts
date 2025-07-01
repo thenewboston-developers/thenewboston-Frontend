@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import UButton from 'components/Button';
 import {breakpoints, colors, fonts} from 'styles';
 
+import BannerImage from './assets/default-banner.jpg';
+
 const USER_IMAGE_SIZE = 180;
 
 export const Bio = styled.p`
@@ -19,7 +21,7 @@ export const Bio = styled.p`
 export const Button = styled(UButton)`
   border: none;
   border-radius: 100px;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
   font-weight: ${fonts.weight.semiBold};
   height: 44px;
 `;
@@ -34,12 +36,25 @@ export const ButtonGroup = styled.div`
   }
 `;
 
+export const Banner = styled.div`
+  background-image: url(${BannerImage});
+  background-position: center;
+  background-size: cover;
+  border-radius: 12px;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+  height: 260px;
+  margin-bottom: -${USER_IMAGE_SIZE / 2 + 4}px;
+  width: 100%;
+`;
+
 export const Container = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
-  margin-top: 50px;
+  padding-left: 24px;
 
   @media (min-width: ${breakpoints.tablet}) {
     display: block;
@@ -63,11 +78,16 @@ export const Image = styled.img`
 export const ImageWrapper = styled.div`
   background-color: ${colors.white};
   border-radius: 50%;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   height: ${USER_IMAGE_SIZE}px;
   overflow: hidden;
-  padding: 8px;
+  padding: 4px;
+  position: relative;
   width: ${USER_IMAGE_SIZE}px;
+  z-index: 1;
 `;
 
 export const Separator = styled.span`

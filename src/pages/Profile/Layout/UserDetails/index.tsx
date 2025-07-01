@@ -160,6 +160,7 @@ const UserDetails: SFC = ({className}) => {
 
   return (
     <>
+      <S.Banner />
       <S.Container className={className}>
         {renderAvatar()}
         {renderUsername()}
