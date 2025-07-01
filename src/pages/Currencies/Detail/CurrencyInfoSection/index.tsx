@@ -14,7 +14,7 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
 
   return (
     <S.CurrencyPanel className={className}>
-      <S.CurrencyLogo logo={currency.logo} width="96px" />
+      <S.CurrencyLogo logo={currency.logo} width="150px" />
       <S.CurrencyContent>
         <S.CurrencyInfoContainer>
           <S.CurrencyInfo>
