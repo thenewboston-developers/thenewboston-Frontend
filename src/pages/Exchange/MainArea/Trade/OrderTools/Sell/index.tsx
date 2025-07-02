@@ -62,7 +62,7 @@ const Sell: SFC = ({className}) => {
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
-      price: yup.number().integer('Price must be an integer').moreThan(0).required('Price is required'),
+      price: yup.number().integer('Ask price must be an integer').moreThan(0).required('Ask price is required'),
       quantity: yup
         .number()
         .integer('Quantity must be an integer')
@@ -108,7 +108,7 @@ const Sell: SFC = ({className}) => {
             <FormField>
               <LogoInput
                 errors={errors}
-                label="Price"
+                label="Ask Price"
                 logo={activeAssetPair!.secondary_currency.logo}
                 name="price"
                 onChange={(e) => {
