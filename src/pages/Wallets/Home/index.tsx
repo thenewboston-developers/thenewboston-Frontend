@@ -114,26 +114,31 @@ const Home: SFC = ({className}) => {
     if (!manager.activeWalletId) return null;
 
     return (
-      <Tabs>
-        <Tab
-          isActive={manager.activeWalletTab === WalletTab.TRANSFERS}
-          onClick={() => handleTabClick(WalletTab.TRANSFERS)}
-        >
-          <Icon path={mdiSwapHorizontal} size={'18px'} />
-          <span>Transfers</span>
-        </Tab>
-        <Tab isActive={manager.activeWalletTab === WalletTab.DEPOSIT} onClick={() => handleTabClick(WalletTab.DEPOSIT)}>
-          <Icon path={mdiArrowDownCircle} size={'18px'} />
-          <span>Deposit</span>
-        </Tab>
-        <Tab
-          isActive={manager.activeWalletTab === WalletTab.WITHDRAW}
-          onClick={() => handleTabClick(WalletTab.WITHDRAW)}
-        >
-          <Icon path={mdiArrowUpCircle} size={'18px'} />
-          <span>Withdraw</span>
-        </Tab>
-      </Tabs>
+      <S.TabsContainer>
+        <Tabs>
+          <Tab
+            isActive={manager.activeWalletTab === WalletTab.TRANSFERS}
+            onClick={() => handleTabClick(WalletTab.TRANSFERS)}
+          >
+            <Icon path={mdiSwapHorizontal} size={'18px'} />
+            <span>Transfers</span>
+          </Tab>
+          <Tab
+            isActive={manager.activeWalletTab === WalletTab.DEPOSIT}
+            onClick={() => handleTabClick(WalletTab.DEPOSIT)}
+          >
+            <Icon path={mdiArrowDownCircle} size={'18px'} />
+            <span>Deposit</span>
+          </Tab>
+          <Tab
+            isActive={manager.activeWalletTab === WalletTab.WITHDRAW}
+            onClick={() => handleTabClick(WalletTab.WITHDRAW)}
+          >
+            <Icon path={mdiArrowUpCircle} size={'18px'} />
+            <span>Withdraw</span>
+          </Tab>
+        </Tabs>
+      </S.TabsContainer>
     );
   };
 

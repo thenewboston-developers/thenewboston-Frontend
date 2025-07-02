@@ -77,3 +77,9 @@ export const MainContent = styled.div`
     width: 100%;
   }
 `;
+
+export const TabsContainer = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+`;
