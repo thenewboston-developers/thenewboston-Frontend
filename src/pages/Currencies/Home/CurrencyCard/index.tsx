@@ -20,19 +20,15 @@ const CurrencyCard: SFC<CurrencyCardProps> = ({className, currency}) => {
     <S.Container className={className} onClick={handleCardClick}>
       <S.CardContent>
         <S.HeaderSection>
-          <S.CurrencyLogo logo={currency.logo} width="72px" />
+          <S.CurrencyLogo logo={currency.logo} width="96px" />
           <S.Text>
-            <S.Ticker>{currency.ticker}</S.Ticker>
-            <S.DomainInfo>
+            <S.TickerRow>
+              <S.Ticker>{currency.ticker}</S.Ticker>
               {currency.domain ? <S.Domain>{currency.domain}</S.Domain> : <S.InternalBadge>Internal</S.InternalBadge>}
-            </S.DomainInfo>
+            </S.TickerRow>
+            {currency.description && <S.Description>{currency.description}</S.Description>}
           </S.Text>
         </S.HeaderSection>
-        {currency.description && (
-          <S.DescriptionRow>
-            <S.Description>{currency.description}</S.Description>
-          </S.DescriptionRow>
-        )}
         <S.Spacer />
         <S.Line />
         <S.OwnerRow>

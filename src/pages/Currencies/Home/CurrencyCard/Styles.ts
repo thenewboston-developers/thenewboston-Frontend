@@ -21,7 +21,7 @@ export const Container = styled.div`
   display: flex;
   height: 100%;
   justify-content: space-between;
-  padding: 12px 14px;
+  padding: 16px 18px;
   transition: box-shadow 0.2s ease;
 
   &:hover {
@@ -38,18 +38,17 @@ export const CurrencyLogo = styled(UCurrencyLogo)`
 export const Description = styled.div`
   color: ${colors.palette.gray[600]};
   font-size: 13px;
-`;
-
-export const DescriptionRow = styled.div`
-  margin-top: 10px;
+  margin-top: 6px;
 `;
 
 export const Domain = styled.div`
+  color: ${colors.palette.gray[600]};
   font-size: 12px;
 `;
 
-export const DomainInfo = styled.div`
-  margin-top: 2px;
+export const HeaderSection = styled.div`
+  display: flex;
+  width: 100%;
 `;
 
 export const InternalBadge = styled.span`
@@ -59,11 +58,6 @@ export const InternalBadge = styled.span`
   font-size: 11px;
   font-weight: ${fonts.weight.semiBold};
   padding: 2px 8px;
-`;
-
-export const HeaderSection = styled.div`
-  display: flex;
-  width: 100%;
 `;
 
 export const Line = styled(ULine)`
@@ -82,10 +76,16 @@ export const Text = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  margin: 2px 0 0 12px;
+  margin: 4px 0 0 16px;
 `;
 
 export const Ticker = styled.div`
-  font-size: 16px;
+  font-size: 20px;
   font-weight: ${fonts.weight.semiBold};
+`;
+
+export const TickerRow = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
 `;

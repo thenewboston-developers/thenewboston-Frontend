@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiArrowDownCircle, mdiArrowUpCircle, mdiSwapHorizontal} from '@mdi/js';
 import Icon from '@mdi/react';
@@ -26,6 +26,7 @@ import WalletWithdraw from '../WalletWithdraw';
 import * as S from './Styles';
 
 const Home: SFC = ({className}) => {
+  const [transfersRefreshKey, setTransfersRefreshKey] = useState(0);
   const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
   const availableWalletCores = useAvailableWalletCurrencies();
   const dispatch = useDispatch<AppDispatch>();
@@ -66,6 +67,11 @@ const Home: SFC = ({className}) => {
     [dispatch],
   );
 
+  const handleTransferSuccess = useCallback(() => {
+    // Increment the refresh key to force WalletTransfers to re-render
+    setTransfersRefreshKey((prev) => prev + 1);
+  }, []);
+
   const renderButtonContainer = () => {
     if (!availableWalletCores.length) return null;
 
@@ -102,7 +108,7 @@ const Home: SFC = ({className}) => {
     if (!manager.activeWalletTab) return null;
 
     const tabContent = {
-      [WalletTab.TRANSFERS]: <WalletTransfers />,
+      [WalletTab.TRANSFERS]: <WalletTransfers key={transfersRefreshKey} />,
       [WalletTab.DEPOSIT]: <WalletDeposit />,
       [WalletTab.WITHDRAW]: <WalletWithdraw />,
     };
@@ -150,7 +156,9 @@ const Home: SFC = ({className}) => {
           {walletList.length > 0 && <S.Box>{renderMenuItems()}</S.Box>}
         </S.LeftMenu>
         <S.MainContent>
-          {manager.activeWalletId && <SendCoinsSection key={manager.activeWalletId} />}
+          {manager.activeWalletId && (
+            <SendCoinsSection key={manager.activeWalletId} onTransferSuccess={handleTransferSuccess} />
+          )}
           {renderTabs()}
           <S.ContentArea>{renderRightContent()}</S.ContentArea>
         </S.MainContent>
