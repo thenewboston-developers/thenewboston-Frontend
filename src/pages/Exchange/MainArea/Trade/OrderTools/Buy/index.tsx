@@ -4,6 +4,7 @@ import {Form, Formik, FormikHelpers} from 'formik';
 
 import AvailableTotal from 'components/AvailableTotal';
 import {ButtonType} from 'components/Button';
+import Callout, {CalloutType} from 'components/Callout';
 import {FormField, LogoInput} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
 import {ExchangeOrderType, ToastType} from 'enums';
@@ -120,6 +121,11 @@ const Buy: SFC = ({className}) => {
               total={total}
               totalTicker={activeAssetPair!.secondary_currency.ticker}
             />
+            {!isTotalValid && total > 0 && (
+              <S.InsufficientFundsCallout type={CalloutType.ERROR}>
+                Insufficient {activeAssetPair!.secondary_currency.ticker} balance to complete this order
+              </S.InsufficientFundsCallout>
+            )}
             <S.Button
               dirty={dirty}
               disabled={isSubmitting || !isTotalValid}
