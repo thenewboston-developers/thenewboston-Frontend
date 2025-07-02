@@ -24,14 +24,12 @@ const WalletTransfers: SFC = ({className}) => {
   useEffect(() => {
     if (!activeWallet) return;
 
-    // Check if this is a genuine change that requires fetching
-    const walletChanged = previousWalletId !== null && previousWalletId !== activeWallet.id;
-
     // Prevent duplicate API calls when navigating back to wallets page
     // This check ensures we don't fetch if neither wallet nor page has changed
     if (previousWalletId === activeWallet.id && previousPage === currentPage) return;
 
-    // Reset page when wallet changes
+    const walletChanged = previousWalletId !== null && previousWalletId !== activeWallet.id;
+
     if (walletChanged) {
       setCurrentPage(1);
     }
