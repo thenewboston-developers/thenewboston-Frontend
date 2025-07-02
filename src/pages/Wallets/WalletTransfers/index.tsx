@@ -14,8 +14,8 @@ import * as S from './Styles';
 const WalletTransfers: SFC = ({className}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [previousWalletId, setPreviousWalletId] = useState<number | null>(null);
   const [previousPage, setPreviousPage] = useState(1);
+  const [previousWalletId, setPreviousWalletId] = useState<number | null>(null);
   const [totalCount, setTotalCount] = useState(0);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
   const activeWallet = useActiveWallet();
