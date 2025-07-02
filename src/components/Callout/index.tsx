@@ -12,7 +12,7 @@ export interface CalloutProps {
 
 const Callout: SFC<CalloutProps> = ({children, className, type = CalloutType.INFO}) => {
   return (
-    <S.Container $type={type} className={className}>
+    <S.Container className={className} $type={type}>
       {children}
     </S.Container>
   );

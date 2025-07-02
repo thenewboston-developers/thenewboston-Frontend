@@ -9,7 +9,7 @@ export interface ImageModalProps {
   imageSrc: string;
 }
 
-const FullScreenImageModal: SFC<ImageModalProps> = ({imageSrc, close}) => {
+const FullScreenImageModal: SFC<ImageModalProps> = ({close, imageSrc}) => {
   return createPortal(
     <>
       <S.Overlay onClick={close} />
