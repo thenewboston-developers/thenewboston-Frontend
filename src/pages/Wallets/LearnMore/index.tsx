@@ -1,5 +1,11 @@
 import {SFC} from 'types';
 
+import depositProcess from './assets/deposit-process.png';
+import internalVsExternal from './assets/internal-vs-external.png';
+import walletCreation from './assets/wallet-creation.png';
+import walletOverview from './assets/wallet-overview.png';
+import walletTabs from './assets/wallet-tabs.png';
+import withdrawalProcess from './assets/withdrawal-process.png';
 import * as S from './Styles';
 
 const LearnMore: SFC = ({className}) => {
@@ -13,12 +19,10 @@ const LearnMore: SFC = ({className}) => {
           networks for deposits and withdrawals.
         </S.Introduction>
 
-        <S.PlaceholderGraphic $height="300px">
-          Graphic: Overview illustration showing wallets, coin transfers between users, and connections to external
-          cores
-          <br />
-          Dimensions: 800x300px
-        </S.PlaceholderGraphic>
+        <S.Image
+          alt="Overview illustration showing wallets, coin transfers between users, and connections to external cores"
+          src={walletOverview}
+        />
 
         <S.Section>
           <S.SectionTitle>What Are Wallets?</S.SectionTitle>
@@ -62,12 +66,10 @@ const LearnMore: SFC = ({className}) => {
             </S.Paragraph>
           </S.SubSection>
 
-          <S.PlaceholderGraphic $height="200px">
-            Graphic: Split illustration showing manual wallet creation on the left and automatic creation when receiving
-            coins on the right
-            <br />
-            Dimensions: 700x200px
-          </S.PlaceholderGraphic>
+          <S.Image
+            alt="Split illustration showing manual wallet creation on the left and automatic creation when receiving coins on the right"
+            src={walletCreation}
+          />
         </S.Section>
 
         <S.Section>
@@ -99,12 +101,10 @@ const LearnMore: SFC = ({className}) => {
             </S.Paragraph>
           </S.SubSection>
 
-          <S.PlaceholderGraphic $height="250px">
-            Graphic: Visual showing the three tabs with example content - transfers showing posts/comments, deposit
-            showing QR code, withdraw showing form
-            <br />
-            Dimensions: 700x250px
-          </S.PlaceholderGraphic>
+          <S.Image
+            alt="Visual showing the three tabs with example content - transfers showing posts/comments, deposit showing QR code, withdraw showing form"
+            src={walletTabs}
+          />
         </S.Section>
 
         <S.Section>
@@ -128,12 +128,10 @@ const LearnMore: SFC = ({className}) => {
             </S.Paragraph>
           </S.SubSection>
 
-          <S.PlaceholderGraphic $height="200px">
-            Graphic: Comparison diagram showing internal currency transactions within the platform vs external currency
-            connections to core servers
-            <br />
-            Dimensions: 700x200px
-          </S.PlaceholderGraphic>
+          <S.Image
+            alt="Comparison diagram showing internal currency transactions within the platform vs external currency connections to core servers"
+            src={internalVsExternal}
+          />
         </S.Section>
 
         <S.Section>
@@ -171,12 +169,10 @@ const LearnMore: SFC = ({className}) => {
             </S.StepParagraph>
           </S.Step>
 
-          <S.PlaceholderGraphic $height="250px">
-            Graphic: Animated-style flow diagram showing coins moving from external core through deposit process into
-            user's wallet
-            <br />
-            Dimensions: 700x250px
-          </S.PlaceholderGraphic>
+          <S.Image
+            alt="Animated-style flow diagram showing coins moving from external core through deposit process into user's wallet"
+            src={depositProcess}
+          />
         </S.Section>
 
         <S.Section>
@@ -211,12 +207,10 @@ const LearnMore: SFC = ({className}) => {
             </S.StepParagraph>
           </S.Step>
 
-          <S.PlaceholderGraphic $height="250px">
-            Graphic: Flow diagram showing withdrawal process from wallet through thenewboston.net to external recipient
-            on core
-            <br />
-            Dimensions: 700x250px
-          </S.PlaceholderGraphic>
+          <S.Image
+            alt="Flow diagram showing withdrawal process from wallet through thenewboston.net to external recipient on core"
+            src={withdrawalProcess}
+          />
         </S.Section>
 
         <S.Section>
