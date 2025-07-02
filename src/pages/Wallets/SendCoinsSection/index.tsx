@@ -9,7 +9,11 @@ import {SFC, UserReadSerializer} from 'types';
 
 import * as S from './Styles';
 
-const SendCoinsSection: SFC = ({className}) => {
+export interface SendCoinsSectionProps {
+  onTransferSuccess?: () => void;
+}
+
+const SendCoinsSection: SFC<SendCoinsSectionProps> = ({className, onTransferSuccess}) => {
   const [recipient, setRecipient] = useState<UserReadSerializer | null>(null);
   const [sendModalIsOpen, toggleSendModal] = useToggle(false);
   const activeWallet = useActiveWallet();
@@ -24,6 +28,12 @@ const SendCoinsSection: SFC = ({className}) => {
       toggleSendModal();
     }
   };
+
+  const handleSendSuccess = useCallback(() => {
+    if (onTransferSuccess) {
+      onTransferSuccess();
+    }
+  }, [onTransferSuccess]);
 
   useEffect(() => {
     setRecipient(null);
@@ -47,7 +57,9 @@ const SendCoinsSection: SFC = ({className}) => {
           <S.SendButton disabled={!recipient} onClick={handleSendClick} text={`Send ${activeWallet.currency.ticker}`} />
         </S.SearchRow>
       </S.Container>
-      {sendModalIsOpen && recipient && <SendModal close={toggleSendModal} recipient={recipient} />}
+      {sendModalIsOpen && recipient && (
+        <SendModal close={toggleSendModal} onSuccess={handleSendSuccess} recipient={recipient} />
+      )}
     </>
   );
 };
