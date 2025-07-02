@@ -1,4 +1,3 @@
-import {useState} from 'react';
 import {createPortal} from 'react-dom';
 
 import {SFC} from 'types';
@@ -11,21 +10,11 @@ export interface ImageModalProps {
 }
 
 const FullScreenImageModal: SFC<ImageModalProps> = ({imageSrc, close}) => {
-  const [preview, setPreview] = useState<string | null>(imageSrc);
-
   return createPortal(
     <>
       <S.Overlay onClick={close} />
       <S.Modal>
-        <S.ImagePreviewContainer>
-          <S.ImagePreview
-            onClear={() => {
-              setPreview(null);
-              close();
-            }}
-            src={preview}
-          ></S.ImagePreview>
-        </S.ImagePreviewContainer>
+        <S.FullScreenImage onClick={close} src={imageSrc} />
       </S.Modal>
     </>,
     document.getElementById('modal-root') as HTMLElement,
