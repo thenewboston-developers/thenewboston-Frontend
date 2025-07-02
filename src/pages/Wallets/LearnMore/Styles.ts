@@ -28,6 +28,13 @@ export const ExternalLink = styled.a`
   }
 `;
 
+export const Image = styled.img`
+  display: block;
+  margin: 24px auto;
+  max-width: 640px;
+  width: 100%;
+`;
+
 export const Introduction = styled.p`
   color: ${colors.primary};
   font-size: 16px;
@@ -59,22 +66,6 @@ export const Paragraph = styled.p`
   margin-bottom: 16px;
 `;
 
-export const PlaceholderGraphic = styled.div<{$height: string}>`
-  align-items: center;
-  background-color: ${colors.palette.gray[200]};
-  border: 1px solid ${colors.palette.gray[300]};
-  border-radius: 8px;
-  color: ${colors.palette.gray[600]};
-  display: flex;
-  font-size: 14px;
-  font-style: italic;
-  height: ${({$height}) => $height};
-  justify-content: center;
-  margin: 24px 0;
-  padding: 24px;
-  text-align: center;
-`;
-
 export const Section = styled.section`
   margin-bottom: 40px;
 `;
@@ -93,8 +84,8 @@ export const SectionTitle = styled.h2`
 
 export const Step = styled.div`
   background-color: ${colors.palette.gray[50]};
-  border-left: 4px solid ${colors.palette.blue[500]};
   border-radius: 4px;
+  border-left: 4px solid ${colors.palette.blue[500]};
   margin-bottom: 16px;
   padding: 20px;
 `;
