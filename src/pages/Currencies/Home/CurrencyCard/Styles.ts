@@ -46,6 +46,11 @@ export const Domain = styled.div`
   font-size: 12px;
 `;
 
+export const HeaderSection = styled.div`
+  display: flex;
+  width: 100%;
+`;
+
 export const InternalBadge = styled.span`
   background: ${colors.palette.blue[100]};
   border-radius: 4px;
@@ -53,11 +58,6 @@ export const InternalBadge = styled.span`
   font-size: 11px;
   font-weight: ${fonts.weight.semiBold};
   padding: 2px 8px;
-`;
-
-export const HeaderSection = styled.div`
-  display: flex;
-  width: 100%;
 `;
 
 export const Line = styled(ULine)`

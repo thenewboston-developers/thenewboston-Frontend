@@ -26,8 +26,8 @@ import WalletWithdraw from '../WalletWithdraw';
 import * as S from './Styles';
 
 const Home: SFC = ({className}) => {
-  const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
   const [transfersRefreshKey, setTransfersRefreshKey] = useState(0);
+  const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
   const availableWalletCores = useAvailableWalletCurrencies();
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
