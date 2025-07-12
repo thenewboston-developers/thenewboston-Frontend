@@ -56,7 +56,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     const totalReceived = order_type === 'BUY' ? quantity : quantity * price;
     const receivedTicker = order_type === 'BUY' ? primary_currency_ticker : secondary_currency_ticker;
 
-    const primaryCurrency = currencies[primary_currency_id];
+    const primaryCurrency = currencies[Number(primary_currency_id)];
 
     return (
       <S.NotificationContainer>

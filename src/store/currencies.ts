@@ -1,23 +1,36 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {CURRENCIES} from 'constants/store';
-import {Currencies, Currency} from 'types';
+import {Currency} from 'types';
 
-const initialState: Currencies = {};
+interface CurrenciesState {
+  byId: {[id: number]: Currency};
+  ids: number[];
+}
+
+const initialState: CurrenciesState = {
+  byId: {},
+  ids: [],
+};
 
 const currencies = createSlice({
   initialState,
   name: CURRENCIES,
   reducers: {
-    setCurrency: (state: Currencies, {payload}: PayloadAction<Currency>) => {
+    setCurrency: (state: CurrenciesState, {payload}: PayloadAction<Currency>) => {
       const {id} = payload;
-      state[id] = payload;
+      state.byId[id] = payload;
+      if (!state.ids.includes(id)) {
+        state.ids.push(id);
+      }
     },
-    setCurrencies: (state: Currencies, {payload}: PayloadAction<Currency[]>) => {
-      return payload.reduce((acc: Currencies, obj) => ({...acc, [obj.id]: obj}), {});
+    setCurrencies: (state: CurrenciesState, {payload}: PayloadAction<Currency[]>) => {
+      state.byId = payload.reduce((acc: {[id: number]: Currency}, obj) => ({...acc, [obj.id]: obj}), {});
+      state.ids = payload.map((currency) => currency.id);
     },
-    unsetCurrency: (state: Currencies, {payload: id}: PayloadAction<number>) => {
-      delete state[id];
+    unsetCurrency: (state: CurrenciesState, {payload: id}: PayloadAction<number>) => {
+      delete state.byId[id];
+      state.ids = state.ids.filter((currencyId) => currencyId !== id);
     },
   },
 });
