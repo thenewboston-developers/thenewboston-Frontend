@@ -3,7 +3,11 @@ import {RootState} from 'types';
 export const getAssetPairs = (state: RootState) => state.assetPairs;
 export const getAuthentication = (state: RootState) => state.authentication;
 export const getComments = (state: RootState) => state.comments;
-export const getCurrencies = (state: RootState) => state.currencies;
+export const getCurrencies = (state: RootState) => state.currencies.byId;
+export const getCurrenciesOrdered = (state: RootState) => {
+  const {byId, ids} = state.currencies;
+  return ids.map((id) => byId[id]);
+};
 export const getExchangeOrders = (state: RootState) => state.exchangeOrders.exchangeOrders;
 export const hasMoreExchangeOrders = (state: RootState) => state.exchangeOrders.hasMore;
 export const isLoadingExchangeOrders = (state: RootState) => state.exchangeOrders.isLoading;

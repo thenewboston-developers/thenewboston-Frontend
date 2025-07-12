@@ -22,9 +22,13 @@ export const deleteCurrency = async (id: number): Promise<void> => {
   }
 };
 
-export const getCurrencies = async (): Promise<Currency[]> => {
+export const getCurrencies = async (ordering?: string): Promise<Currency[]> => {
   try {
-    const response = await axios.get<Currency[]>(BASE_URL, authorizationHeaders());
+    const params = ordering ? {ordering} : {};
+    const response = await axios.get<Currency[]>(BASE_URL, {
+      ...authorizationHeaders(),
+      params,
+    });
     return response.data;
   } catch (error) {
     throw error;

@@ -18,10 +18,12 @@ export const deleteCurrency = (id: number) => async (dispatch: AppDispatch) => {
   dispatch(unsetCurrency(id));
 };
 
-export const getCurrencies = () => async (dispatch: AppDispatch) => {
-  const responseData = await _getCurrencies();
-  dispatch(setCurrencies(responseData));
-};
+export const getCurrencies =
+  (ordering: string = '-modified_date') =>
+  async (dispatch: AppDispatch) => {
+    const responseData = await _getCurrencies(ordering);
+    dispatch(setCurrencies(responseData));
+  };
 
 export const getCurrency = (id: number) => async (dispatch: AppDispatch) => {
   const responseData = await _getCurrency(id);
