@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {Whitepaper} from 'types/whitepapers';
+import {PaginatedResponse, Whitepaper} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/whitepapers`;
@@ -24,11 +24,12 @@ export const deleteWhitepaper = async (id: number): Promise<void> => {
 
 export const getWhitepaper = async (currencyId: number): Promise<Whitepaper | null> => {
   try {
-    const response = await axios.get<Whitepaper[]>(BASE_URL, {
+    const response = await axios.get<PaginatedResponse<Whitepaper>>(BASE_URL, {
       ...authorizationHeaders(),
       params: {currency: currencyId},
     });
-    return response.data.length > 0 ? response.data[0] : null;
+
+    return response.data.results.length > 0 ? response.data.results[0] : null;
   } catch (error) {
     throw error;
   }
