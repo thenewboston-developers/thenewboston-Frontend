@@ -4,9 +4,10 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {mdiArrowLeft, mdiDotsVertical} from '@mdi/js';
 
 import {getTotalAmountMinted} from 'api/totalAmountMinted';
-import {getWhitepaper} from 'api/whitepapers';
+import {deleteWhitepaper, getWhitepaper} from 'api/whitepapers';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Button from 'components/Button';
+import {ButtonColor} from 'components/Button/types';
 import DropdownMenu from 'components/DropdownMenu';
 import EmptyPage from 'components/EmptyPage';
 import Icon from 'components/Icon';
@@ -42,6 +43,7 @@ const Detail: SFC = ({className}) => {
   const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
   const [totalAmountMinted, setTotalAmountMinted] = useState<number | null>(null);
   const [whitepaper, setWhitepaper] = useState<Whitepaper | null>(null);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
   const isDeleting = useRef(false);
@@ -170,6 +172,23 @@ const Detail: SFC = ({className}) => {
     setCurrentPage(page);
   };
 
+  const handleDeleteWhitepaper = () => {
+    setDeleteConfirmationOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!whitepaper) return;
+
+    try {
+      await deleteWhitepaper(whitepaper.id);
+      setWhitepaper(null);
+      setDeleteConfirmationOpen(false);
+      displayToast('Whitepaper deleted!', ToastType.SUCCESS);
+    } catch (error) {
+      displayErrorToast('Error deleting whitepaper');
+    }
+  };
+
   if (loading)
     return (
       <S.LoaderWrapper>
@@ -217,6 +236,9 @@ const Detail: SFC = ({className}) => {
                 {isOwner && isInternalCurrency && activeTab === 'minting' && (
                   <Button onClick={toggleMintModal} text="Mint" />
                 )}
+                {isOwner && activeTab === 'whitepaper' && whitepaper && (
+                  <Button color={ButtonColor.secondary} onClick={handleDeleteWhitepaper} text="Delete Whitepaper" />
+                )}
               </S.TabHeader>
               <S.TabContent>
                 {(() => {
@@ -252,6 +274,17 @@ const Detail: SFC = ({className}) => {
           onSuccess={handleWhitepaperModalSuccess}
           whitepaper={whitepaper}
         />
+      )}
+      {deleteConfirmationOpen && (
+        <S.ConfirmationModal close={() => setDeleteConfirmationOpen(false)} header="Delete Whitepaper">
+          <S.ConfirmationText>
+            Are you sure you want to delete this whitepaper? This action cannot be undone.
+          </S.ConfirmationText>
+          <S.ConfirmationButtons>
+            <Button color={ButtonColor.secondary} onClick={() => setDeleteConfirmationOpen(false)} text="Cancel" />
+            <Button onClick={handleConfirmDelete} text="Delete" />
+          </S.ConfirmationButtons>
+        </S.ConfirmationModal>
       )}
     </>
   );

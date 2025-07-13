@@ -81,6 +81,7 @@ const WhitepaperModal: SFC<WhitepaperModalProps> = ({className, close, currency,
             ) : (
               <S.PreviewContainer>
                 {values.content ? (
+                  // eslint-disable-next-line react/no-danger
                   <div dangerouslySetInnerHTML={{__html: renderMarkdown(values.content)}} />
                 ) : (
                   <p>No content to preview</p>

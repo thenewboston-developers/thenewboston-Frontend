@@ -119,6 +119,7 @@ export const Textarea = styled(UTextarea)`
 
   textarea {
     height: 480px;
+    min-height: 480px;
     resize: vertical;
   }
 `;

@@ -25,6 +25,7 @@ const WhitepaperSection: SFC<WhitepaperSectionProps> = ({className, whitepaper})
 
   return (
     <S.Container className={className}>
+      {/* eslint-disable-next-line react/no-danger */}
       <S.MarkdownContainer dangerouslySetInnerHTML={{__html: renderMarkdown(whitepaper.content)}} />
     </S.Container>
   );
