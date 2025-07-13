@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import UModal from 'components/Modal';
 import {colors, fonts, pagePadding, toolbarStyle} from 'styles';
 
 export const BackButton = styled.button`
@@ -24,15 +25,26 @@ export const BackButton = styled.button`
   }
 `;
 
+export const ConfirmationButtons = styled.div`
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+`;
+
+export const ConfirmationModal = styled(UModal)`
+  width: 400px;
+`;
+
+export const ConfirmationText = styled.p`
+  color: ${colors.palette.gray[700]};
+  line-height: 1.6;
+  margin-bottom: 24px;
+`;
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-`;
-
-export const ScrollableContent = styled.div`
-  flex: 1;
-  overflow-y: auto;
 `;
 
 export const Content = styled.div`
@@ -46,8 +58,20 @@ export const Header = styled.div`
   ${toolbarStyle};
 `;
 
-export const TabSection = styled.div`
-  margin-top: 32px;
+export const LoaderWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+`;
+
+export const ScrollableContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
+`;
+
+export const TabContent = styled.div`
+  margin-top: 24px;
 `;
 
 export const TabHeader = styled.div`
@@ -56,13 +80,6 @@ export const TabHeader = styled.div`
   justify-content: space-between;
 `;
 
-export const LoaderWrapper = styled.div`
-  align-items: center;
-  display: flex;
-  height: 100vh;
-  justify-content: center;
-`;
-
-export const TabContent = styled.div`
-  margin-top: 24px;
+export const TabSection = styled.div`
+  margin-top: 32px;
 `;

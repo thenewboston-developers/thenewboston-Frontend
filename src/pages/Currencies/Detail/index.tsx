@@ -4,8 +4,10 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {mdiArrowLeft, mdiDotsVertical} from '@mdi/js';
 
 import {getTotalAmountMinted} from 'api/totalAmountMinted';
+import {deleteWhitepaper, getWhitepaper} from 'api/whitepapers';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import Button from 'components/Button';
+import {ButtonColor} from 'components/Button/types';
 import DropdownMenu from 'components/DropdownMenu';
 import EmptyPage from 'components/EmptyPage';
 import Icon from 'components/Icon';
@@ -18,8 +20,9 @@ import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
 import CurrencyModal from 'modals/CurrencyModal';
 import MintModal from 'modals/MintModal';
+import WhitepaperModal from 'modals/WhitepaperModal';
 import {getCurrencies, getSelf} from 'selectors/state';
-import {AppDispatch, Mint, PaginatedResponse, SFC} from 'types';
+import {AppDispatch, Mint, PaginatedResponse, SFC, Whitepaper} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import BalancesSection from './BalancesSection';
@@ -27,17 +30,21 @@ import CurrencyInfoSection from './CurrencyInfoSection';
 import MintHistoryChart from './MintHistoryChart';
 import MintSection from './MintSection';
 import * as S from './Styles';
+import WhitepaperSection from './WhitepaperSection';
 
 const Detail: SFC = ({className}) => {
-  const [activeTab, setActiveTab] = useState<'balances' | 'minting'>('balances');
+  const [activeTab, setActiveTab] = useState<'balances' | 'minting' | 'whitepaper'>('balances');
   const [chartRefreshTrigger, setChartRefreshTrigger] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
   const [mintModalIsOpen, toggleMintModal] = useToggle(false);
   const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
   const [totalAmountMinted, setTotalAmountMinted] = useState<number | null>(null);
+  const [whitepaper, setWhitepaper] = useState<Whitepaper | null>(null);
+  const [whitepaperModalIsOpen, toggleWhitepaperModal] = useToggle(false);
   const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
   const isDeleting = useRef(false);
@@ -57,6 +64,9 @@ const Detail: SFC = ({className}) => {
 
         const totalData = await getTotalAmountMinted(parseInt(id));
         setTotalAmountMinted(totalData.total_amount_minted);
+
+        const whitepaperData = await getWhitepaper(parseInt(id));
+        setWhitepaper(whitepaperData);
       } catch (error) {
         if (!isDeleting.current) {
           displayErrorToast('Error loading currency');
@@ -102,8 +112,12 @@ const Detail: SFC = ({className}) => {
 
   const menuOptions = [
     {
-      label: 'Edit',
+      label: 'Edit Details',
       onClick: toggleCurrencyModal,
+    },
+    {
+      label: 'Edit Whitepaper',
+      onClick: toggleWhitepaperModal,
     },
     {
       label: 'Delete',
@@ -142,8 +156,36 @@ const Detail: SFC = ({className}) => {
     setChartRefreshTrigger((prev) => prev + 1);
   };
 
+  const handleWhitepaperModalSuccess = async () => {
+    if (!id) return;
+
+    try {
+      const whitepaperData = await getWhitepaper(parseInt(id));
+      setWhitepaper(whitepaperData);
+    } catch (error) {
+      displayErrorToast('Error updating whitepaper');
+    }
+  };
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+
+  const handleDeleteWhitepaper = () => {
+    setDeleteConfirmationOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!whitepaper) return;
+
+    try {
+      await deleteWhitepaper(whitepaper.id);
+      setWhitepaper(null);
+      setDeleteConfirmationOpen(false);
+      displayToast('Whitepaper deleted!', ToastType.SUCCESS);
+    } catch (error) {
+      displayErrorToast('Error deleting whitepaper');
+    }
   };
 
   if (loading)
@@ -186,23 +228,35 @@ const Detail: SFC = ({className}) => {
                   <Tab isActive={activeTab === 'minting'} onClick={() => setActiveTab('minting')}>
                     Minting History
                   </Tab>
+                  <Tab isActive={activeTab === 'whitepaper'} onClick={() => setActiveTab('whitepaper')}>
+                    Whitepaper
+                  </Tab>
                 </Tabs>
                 {isOwner && isInternalCurrency && activeTab === 'minting' && (
                   <Button onClick={toggleMintModal} text="Mint" />
                 )}
+                {isOwner && activeTab === 'whitepaper' && whitepaper && (
+                  <Button color={ButtonColor.secondary} onClick={handleDeleteWhitepaper} text="Delete Whitepaper" />
+                )}
               </S.TabHeader>
               <S.TabContent>
-                {activeTab === 'minting' ? (
-                  <MintSection
-                    currency={currency}
-                    currentPage={currentPage}
-                    loadingMints={loadingMints}
-                    mintsData={mintsData}
-                    onPageChange={handlePageChange}
-                  />
-                ) : (
-                  <BalancesSection currency={currency} />
-                )}
+                {(() => {
+                  if (activeTab === 'minting') {
+                    return (
+                      <MintSection
+                        currency={currency}
+                        currentPage={currentPage}
+                        loadingMints={loadingMints}
+                        mintsData={mintsData}
+                        onPageChange={handlePageChange}
+                      />
+                    );
+                  }
+                  if (activeTab === 'whitepaper') {
+                    return <WhitepaperSection currency={currency} whitepaper={whitepaper} />;
+                  }
+                  return <BalancesSection currency={currency} />;
+                })()}
               </S.TabContent>
             </S.TabSection>
           </S.Content>
@@ -212,6 +266,25 @@ const Detail: SFC = ({className}) => {
         <CurrencyModal close={toggleCurrencyModal} currency={currency} onSuccess={handleCurrencyModalSuccess} />
       )}
       {mintModalIsOpen && <MintModal close={toggleMintModal} currency={currency} onSuccess={handleMintModalSuccess} />}
+      {whitepaperModalIsOpen && currency && (
+        <WhitepaperModal
+          close={toggleWhitepaperModal}
+          currency={currency}
+          onSuccess={handleWhitepaperModalSuccess}
+          whitepaper={whitepaper}
+        />
+      )}
+      {deleteConfirmationOpen && (
+        <S.ConfirmationModal close={() => setDeleteConfirmationOpen(false)} header="Delete Whitepaper">
+          <S.ConfirmationText>
+            Are you sure you want to delete this whitepaper? This action cannot be undone.
+          </S.ConfirmationText>
+          <S.ConfirmationButtons>
+            <Button color={ButtonColor.secondary} onClick={() => setDeleteConfirmationOpen(false)} text="Cancel" />
+            <Button onClick={handleConfirmDelete} text="Delete" />
+          </S.ConfirmationButtons>
+        </S.ConfirmationModal>
+      )}
     </>
   );
 };
