@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import {Textarea as UTextarea} from 'components/FormElements';
+import {Field} from 'components/FormElements/Textarea/Styles';
 import UModal from 'components/Modal';
 import {colors} from 'styles';
 
@@ -115,11 +116,7 @@ export const TabsContainer = styled.div`
 `;
 
 export const Textarea = styled(UTextarea)`
+  height: 480px;
+  min-height: 480px;
   width: 100%;
-
-  textarea {
-    height: 480px;
-    min-height: 480px;
-    resize: vertical;
-  }
 `;
