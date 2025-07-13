@@ -26,10 +26,10 @@ export const renderMarkdown = (markdown: string): string => {
   html = html.replace(/_(.+?)_/g, '<em>$1</em>');
 
   // Links - with URL validation to prevent javascript: and other dangerous protocols
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
-    // Only allow http, https, and relative URLs
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => {
+    // Only allow https and relative URLs (http is not secure)
     const cleanUrl = url.trim();
-    if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://') || cleanUrl.startsWith('/')) {
+    if (cleanUrl.startsWith('https://') || cleanUrl.startsWith('/')) {
       return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer">${text}</a>`;
     }
     // If URL is not allowed, just return the text without a link

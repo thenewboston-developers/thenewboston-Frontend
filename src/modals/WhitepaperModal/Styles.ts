@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import {Textarea as UTextarea} from 'components/FormElements';
-import {Field} from 'components/FormElements/Textarea/Styles';
 import UModal from 'components/Modal';
 import {colors} from 'styles';
 
