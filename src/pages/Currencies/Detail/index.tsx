@@ -37,13 +37,14 @@ const Detail: SFC = ({className}) => {
   const [chartRefreshTrigger, setChartRefreshTrigger] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
   const [mintModalIsOpen, toggleMintModal] = useToggle(false);
   const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
   const [totalAmountMinted, setTotalAmountMinted] = useState<number | null>(null);
   const [whitepaper, setWhitepaper] = useState<Whitepaper | null>(null);
-  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [whitepaperModalIsOpen, toggleWhitepaperModal] = useToggle(false);
   const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
   const isDeleting = useRef(false);
@@ -108,8 +109,6 @@ const Detail: SFC = ({className}) => {
       displayErrorToast('Error deleting currency');
     }
   };
-
-  const [whitepaperModalIsOpen, toggleWhitepaperModal] = useToggle(false);
 
   const menuOptions = [
     {

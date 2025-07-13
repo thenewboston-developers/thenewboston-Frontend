@@ -39,7 +39,7 @@ const WhitepaperModal: SFC<WhitepaperModalProps> = ({className, close, currency,
         await updateWhitepaper(whitepaper.id, {content: values.content});
         displayToast('Whitepaper updated!', ToastType.SUCCESS);
       } else {
-        await createWhitepaper({currency: currency.id, content: values.content});
+        await createWhitepaper({content: values.content, currency: currency.id});
         displayToast('Whitepaper created!', ToastType.SUCCESS);
       }
       onSuccess?.();

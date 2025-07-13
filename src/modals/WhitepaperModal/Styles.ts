@@ -82,7 +82,7 @@ export const PreviewContainer = styled.div`
   blockquote {
     border-left: 4px solid ${colors.palette.gray[300]};
     color: ${colors.palette.gray[600]};
-    margin: 0 0 16px 0;
+    margin: 0 0 16px;
     padding-left: 16px;
   }
 
