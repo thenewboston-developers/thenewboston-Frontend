@@ -1,5 +1,16 @@
+// Escape HTML to prevent XSS attacks
+const escapeHtml = (unsafe: string): string => {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
 export const renderMarkdown = (markdown: string): string => {
-  let html = markdown;
+  // First escape all HTML to prevent XSS
+  let html = escapeHtml(markdown);
 
   // Headers
   html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
@@ -14,8 +25,16 @@ export const renderMarkdown = (markdown: string): string => {
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
   html = html.replace(/_(.+?)_/g, '<em>$1</em>');
 
-  // Links
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  // Links - with URL validation to prevent javascript: and other dangerous protocols
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
+    // Only allow http, https, and relative URLs
+    const cleanUrl = url.trim();
+    if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://') || cleanUrl.startsWith('/')) {
+      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+    }
+    // If URL is not allowed, just return the text without a link
+    return text;
+  });
 
   // Line breaks
   html = html.replace(/\n\n/g, '</p><p>');
