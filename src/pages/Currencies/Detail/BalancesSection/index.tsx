@@ -58,13 +58,18 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {
         <S.Table>
           <S.TableHeader>
             <S.TableRow>
+              <S.TableHead>Rank</S.TableHead>
               <S.TableHead>User</S.TableHead>
               <S.TableHead>Balance</S.TableHead>
+              <S.TableHead>Percentage</S.TableHead>
             </S.TableRow>
           </S.TableHeader>
           <S.TableBody>
             {balancesData.results.map((currencyBalance) => (
               <S.TableRow key={currencyBalance.owner.id}>
+                <S.TableData>
+                  <S.Rank>#{currencyBalance.rank}</S.Rank>
+                </S.TableData>
                 <S.TableData>
                   <UserLabel
                     avatar={currencyBalance.owner.avatar}
@@ -75,6 +80,9 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {
                 </S.TableData>
                 <S.TableData>
                   <S.Balance>{currencyBalance.balance.toLocaleString()}</S.Balance>
+                </S.TableData>
+                <S.TableData>
+                  <S.Percentage>{currencyBalance.percentage.toFixed(2)}%</S.Percentage>
                 </S.TableData>
               </S.TableRow>
             ))}

@@ -43,6 +43,18 @@ export const Pagination = styled.div`
   margin-top: 32px;
 `;
 
+export const Percentage = styled.div`
+  font-size: 16px;
+  font-weight: ${fonts.weight.semiBold};
+  text-align: right;
+`;
+
+export const Rank = styled.div`
+  color: ${colors.palette.gray[600]};
+  font-size: 16px;
+  font-weight: ${fonts.weight.semiBold};
+`;
+
 export const Table = styled.table`
   background-color: ${colors.white};
   border-radius: 12px;
@@ -57,6 +69,12 @@ export const TableData = styled.td`
   color: ${colors.primary};
   font-size: 14px;
   padding: 16px 24px;
+
+  &:first-child {
+    padding: 16px;
+    text-align: center;
+    width: 60px;
+  }
 `;
 
 export const TableHead = styled.th`
@@ -67,6 +85,16 @@ export const TableHead = styled.th`
   padding: 12px 24px;
   text-align: left;
   text-transform: uppercase;
+
+  &:first-child {
+    padding: 12px 16px;
+    text-align: center;
+    width: 60px;
+  }
+
+  &:nth-child(3) {
+    text-align: right;
+  }
 
   &:last-child {
     text-align: right;

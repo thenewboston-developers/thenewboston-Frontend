@@ -29,7 +29,7 @@ import MintSection from './MintSection';
 import * as S from './Styles';
 
 const Detail: SFC = ({className}) => {
-  const [activeTab, setActiveTab] = useState<'minting' | 'balances'>('minting');
+  const [activeTab, setActiveTab] = useState<'balances' | 'minting'>('balances');
   const [chartRefreshTrigger, setChartRefreshTrigger] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
@@ -180,11 +180,11 @@ const Detail: SFC = ({className}) => {
             <S.TabSection>
               <S.TabHeader>
                 <Tabs>
-                  <Tab isActive={activeTab === 'minting'} onClick={() => setActiveTab('minting')}>
-                    Minting History
-                  </Tab>
                   <Tab isActive={activeTab === 'balances'} onClick={() => setActiveTab('balances')}>
                     Balances
+                  </Tab>
+                  <Tab isActive={activeTab === 'minting'} onClick={() => setActiveTab('minting')}>
+                    Minting History
                   </Tab>
                 </Tabs>
                 {isOwner && isInternalCurrency && activeTab === 'minting' && (
