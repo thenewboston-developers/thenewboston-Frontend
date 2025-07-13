@@ -48,6 +48,7 @@ import {Transfer, TransfersResponse} from 'types/transfers';
 import {Users} from 'types/users';
 import {UserStats} from 'types/userStats';
 import {Wallet, Wallets} from 'types/wallets';
+import {Whitepaper} from 'types/whitepapers';
 import {Wire, Wires} from 'types/wires';
 
 export {
@@ -132,6 +133,7 @@ export {
   UserStatsSerializer,
   Wallet,
   Wallets,
+  Whitepaper,
   Wire,
   Wires,
   WithdrawRequest,
