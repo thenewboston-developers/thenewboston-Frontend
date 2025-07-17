@@ -39,11 +39,11 @@ const Buy: SFC = ({className}) => {
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
       const requestData = {
-        side: ExchangeOrderSide.BUY,
         price: parseInt(values.price, 10),
         primary_currency: activeAssetPair!.primary_currency.id,
         quantity: parseInt(values.quantity, 10),
         secondary_currency: activeAssetPair!.secondary_currency.id,
+        side: ExchangeOrderSide.BUY,
       };
       await dispatch(createExchangeOrder(requestData));
       displayToast('Buy order created!', ToastType.SUCCESS);
