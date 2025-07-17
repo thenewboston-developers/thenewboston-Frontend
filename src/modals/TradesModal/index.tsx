@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 
 import {getTrades as _getTrades} from 'dispatchers/trades';
-import {ExchangeOrderType} from 'enums';
+import {ExchangeOrderSide} from 'enums';
 import {getCurrencies, getTrades} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {getDateStr, getTimeStr} from 'utils/dates';
@@ -24,7 +24,7 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
     (async () => {
       if (!order) return;
 
-      const orderType = order.order_type === ExchangeOrderType.BUY ? {buy_order: order.id} : {sell_order: order.id};
+      const orderType = order.side === ExchangeOrderSide.BUY ? {buy_order: order.id} : {sell_order: order.id};
       await dispatch(_getTrades(orderType));
     })();
   }, [dispatch, order]);
@@ -36,7 +36,7 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
 
     const orderedTrades = orderBy(Object.values(trades), ['created_date'], ['desc']);
     return orderedTrades.filter(
-      (trade) => (order.order_type === ExchangeOrderType.BUY ? trade.buy_order : trade.sell_order) === order.id,
+      (trade) => (order.side === ExchangeOrderSide.BUY ? trade.buy_order : trade.sell_order) === order.id,
     );
   }, [order, trades]);
 
@@ -46,7 +46,7 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
     const primaryCurrencyTicker = getCurrencyTicker(order.primary_currency);
     const secondaryCurrencyTicker = getCurrencyTicker(order.secondary_currency);
 
-    return filteredTrades.map(({created_date, fill_quantity, id, overpayment_amount, trade_price}, index) => {
+    return filteredTrades.map(({created_date, filled_quantity, id, overpayment_amount, price}, index) => {
       const createdAt = new Date(created_date);
       return (
         <S.TableRow key={id}>
@@ -58,10 +58,10 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
             </S.DateContainer>
           </S.TableData>
           <S.TableData>
-            <S.Amount>{fill_quantity.toLocaleString()}</S.Amount> {primaryCurrencyTicker}
+            <S.Amount>{filled_quantity.toLocaleString()}</S.Amount> {primaryCurrencyTicker}
           </S.TableData>
           <S.TableData>
-            <S.Price>{trade_price.toLocaleString()}</S.Price> {secondaryCurrencyTicker}
+            <S.Price>{price.toLocaleString()}</S.Price> {secondaryCurrencyTicker}
           </S.TableData>
           <S.TableData>
             {overpayment_amount.toLocaleString()} {secondaryCurrencyTicker}

@@ -7,7 +7,7 @@ import {PaginatedResponse, Pagination} from 'types/pagination';
 export interface ExchangeOrderFilledPayload {
   notification_type: NotificationType.EXCHANGE_ORDER_FILLED;
   order_id: string;
-  order_type: 'BUY' | 'SELL';
+  side: number;
   price: number;
   primary_currency_id: string;
   primary_currency_ticker: string;

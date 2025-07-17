@@ -1,4 +1,5 @@
 import FillStatusBadge from 'components/FillStatusBadge';
+import {ExchangeOrderSide} from 'enums';
 import {AssetPair, ExchangeOrder, SFC} from 'types';
 
 import * as S from './Styles';
@@ -23,7 +24,7 @@ const Tooltip: SFC<TooltipProps> = ({order, activeAssetPair, date, time, type}) 
         </S.Row>
         <S.Row>
           <S.Label>Order Type:</S.Label>
-          <S.Value $type={type}>{order.order_type}</S.Value>
+          <S.Value $type={type}>{order.side === ExchangeOrderSide.BUY ? 'BUY' : 'SELL'}</S.Value>
         </S.Row>
         <S.Row>
           <S.Label>Order Quantity:</S.Label>
@@ -34,13 +35,13 @@ const Tooltip: SFC<TooltipProps> = ({order, activeAssetPair, date, time, type}) 
         <S.Row>
           <S.Label>Filled Amount:</S.Label>
           <S.Value>
-            {order.filled_amount.toLocaleString()} {activeAssetPair.primary_currency.ticker}
+            {order.filled_quantity.toLocaleString()} {activeAssetPair.primary_currency.ticker}
           </S.Value>
         </S.Row>
         <S.Row>
           <S.Label>Status:</S.Label>
           <S.Value>
-            <FillStatusBadge fillStatus={order.fill_status} />
+            <FillStatusBadge status={order.status} />
           </S.Value>
         </S.Row>
       </S.Content>

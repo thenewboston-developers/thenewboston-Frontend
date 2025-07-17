@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {ORDER_BOOK} from 'constants/store';
+import {ExchangeOrderSide, ExchangeOrderStatus} from 'enums';
 import {ExchangeOrder, OrderBookResponse, OrderBookState} from 'types';
 
 const initialState: OrderBookState = {
@@ -23,17 +24,17 @@ const orderBook = createSlice({
       state.isLoading = true;
     },
     updateOrderBookOrder: (state: OrderBookState, {payload}: PayloadAction<ExchangeOrder>) => {
-      const {id, order_type, fill_status} = payload;
+      const {id, side, status} = payload;
 
       // Remove order if it's no longer OPEN or PARTIALLY_FILLED
-      if (fill_status !== 'OPEN' && fill_status !== 'PARTIALLY_FILLED') {
+      if (status !== ExchangeOrderStatus.OPEN && status !== ExchangeOrderStatus.PARTIALLY_FILLED) {
         state.buyOrders = state.buyOrders.filter((order) => order.id !== id);
         state.sellOrders = state.sellOrders.filter((order) => order.id !== id);
         return;
       }
 
       // Update or add order to appropriate list
-      if (order_type === 'BUY') {
+      if (side === ExchangeOrderSide.BUY) {
         const index = state.buyOrders.findIndex((order) => order.id === id);
         if (index !== -1) {
           state.buyOrders[index] = payload;

@@ -1,18 +1,17 @@
-import {ExchangeOrderType, FillStatus} from 'enums';
 import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
 import {PaginatedResponse, Pagination} from 'types/pagination';
 
 export interface ExchangeOrder extends CreatedModified {
-  fill_status: FillStatus;
-  filled_amount: number;
+  filled_quantity: number;
   id: number;
-  order_type: ExchangeOrderType;
   owner: number;
   price: number;
   primary_currency: number;
   quantity: number;
   secondary_currency: number;
+  side: number;
+  status: number;
 }
 
 export type ExchangeOrders = Dict<ExchangeOrder>;

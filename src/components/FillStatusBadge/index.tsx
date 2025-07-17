@@ -1,20 +1,27 @@
 import Badge, {BadgeStyle} from 'components/Badge';
-import {FillStatus} from 'enums';
+import {ExchangeOrderStatus} from 'enums';
 import {SFC} from 'types';
 
 export interface FillStatusBadgeProps {
-  fillStatus: FillStatus;
+  status: number;
 }
 
-const FillStatusBadge: SFC<FillStatusBadgeProps> = ({fillStatus}) => {
-  const badgeStyle = {
-    [FillStatus.CANCELLED]: BadgeStyle.danger,
-    [FillStatus.FILLED]: BadgeStyle.success,
-    [FillStatus.OPEN]: BadgeStyle.primary,
-    [FillStatus.PARTIALLY_FILLED]: BadgeStyle.warning,
+const FillStatusBadge: SFC<FillStatusBadgeProps> = ({status}) => {
+  const badgeStyle: Record<number, BadgeStyle> = {
+    [ExchangeOrderStatus.CANCELLED]: BadgeStyle.danger,
+    [ExchangeOrderStatus.FILLED]: BadgeStyle.success,
+    [ExchangeOrderStatus.OPEN]: BadgeStyle.primary,
+    [ExchangeOrderStatus.PARTIALLY_FILLED]: BadgeStyle.warning,
   };
 
-  return <Badge badgeStyle={badgeStyle[fillStatus]} children={fillStatus} />;
+  const statusLabels: Record<number, string> = {
+    [ExchangeOrderStatus.CANCELLED]: 'CANCELLED',
+    [ExchangeOrderStatus.FILLED]: 'FILLED',
+    [ExchangeOrderStatus.OPEN]: 'OPEN',
+    [ExchangeOrderStatus.PARTIALLY_FILLED]: 'PARTIALLY FILLED',
+  };
+
+  return <Badge badgeStyle={badgeStyle[status]} children={statusLabels[status]} />;
 };
 
 export default FillStatusBadge;

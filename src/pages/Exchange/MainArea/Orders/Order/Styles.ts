@@ -1,6 +1,5 @@
 import styled, {css} from 'styled-components';
 
-import {ExchangeOrderType} from 'enums';
 import {breakpoints, colors} from 'styles';
 
 const buyMixin = css`
@@ -134,9 +133,8 @@ export const ProgressBar = styled.div`
   position: relative;
 `;
 
-export const ProgressFill = styled.div<{$percentage: number; $orderType: ExchangeOrderType}>`
-  background-color: ${({$orderType}) =>
-    $orderType === ExchangeOrderType.BUY ? colors.palette.green[500] : colors.palette.blue[500]};
+export const ProgressFill = styled.div<{$percentage: number; $orderType: string}>`
+  background-color: ${({$orderType}) => ($orderType === 'BUY' ? colors.palette.green[500] : colors.palette.blue[500])};
   height: 100%;
   transition: width 0.3s ease;
   width: ${({$percentage}) => $percentage}%;
@@ -168,15 +166,15 @@ export const TopLine = styled.div`
   gap: 12px;
 `;
 
-export const TypeBadge = styled.div<{$orderType: ExchangeOrderType}>`
+export const TypeBadge = styled.div<{$orderType: string}>`
   ${({$orderType}) => {
-    if ($orderType === ExchangeOrderType.BUY) return buyMixin;
-    if ($orderType === ExchangeOrderType.SELL) return sellMixin;
+    if ($orderType === 'BUY') return buyMixin;
+    if ($orderType === 'SELL') return sellMixin;
     return;
   }}
   align-items: center;
   background-color: ${({$orderType}) =>
-    $orderType === ExchangeOrderType.BUY ? colors.palette.green[600] + '15' : colors.palette.red[700] + '15'};
+    $orderType === 'BUY' ? colors.palette.green[600] + '15' : colors.palette.red[700] + '15'};
   border-radius: 4px;
   display: inline-flex;
   font-size: 12px;

@@ -58,7 +58,7 @@ const OrderBook: SFC = ({className}) => {
 
         <S.OrderList>
           {sectionOrders.map((order) => {
-            const remaining = order.quantity - order.filled_amount;
+            const remaining = order.quantity - order.filled_quantity;
             const total = remaining * order.price;
             const [date, time] = longDate(order.created_date).split('at');
 
