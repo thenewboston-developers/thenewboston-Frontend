@@ -5,7 +5,7 @@ import {mdiDotsVertical} from '@mdi/js';
 import DropdownMenu from 'components/DropdownMenu';
 import FillStatusBadge from 'components/FillStatusBadge';
 import {updateExchangeOrder} from 'dispatchers/exchangeOrders';
-import {ExchangeOrderType, FillStatus} from 'enums';
+import {ExchangeOrderSide, ExchangeOrderStatus} from 'enums';
 import {getCurrencies} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
@@ -31,11 +31,11 @@ const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
       },
     ];
 
-    if ([FillStatus.OPEN, FillStatus.PARTIALLY_FILLED].includes(order.fill_status)) {
+    if ([ExchangeOrderStatus.OPEN, ExchangeOrderStatus.PARTIALLY_FILLED].includes(order.status)) {
       menuOptions.unshift({
         label: 'Cancel Order',
         onClick: async () => {
-          await dispatch(updateExchangeOrder(order.id, {fill_status: FillStatus.CANCELLED}));
+          await dispatch(updateExchangeOrder(order.id, {status: ExchangeOrderStatus.CANCELLED}));
         },
       });
     }
@@ -47,13 +47,12 @@ const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
     );
   }, [dispatch, order, onViewTrades]);
 
-  const {created_date, filled_amount, fill_status, order_type, quantity, price, primary_currency, secondary_currency} =
-    order;
+  const {created_date, filled_quantity, status, side, quantity, price, primary_currency, secondary_currency} = order;
 
   const primaryCurrencyTicker = getCurrencyTicker(primary_currency);
   const secondaryCurrencyTicker = getCurrencyTicker(secondary_currency);
   const [date, time] = longDate(created_date).split('at');
-  const fillPercentage = quantity > 0 ? (filled_amount / quantity) * 100 : 0;
+  const fillPercentage = quantity > 0 ? (filled_quantity / quantity) * 100 : 0;
   const totalValue = quantity * price;
 
   return (
@@ -61,8 +60,8 @@ const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
       <S.Header>
         <S.MainInfo>
           <S.TopLine>
-            <S.TypeBadge $orderType={ExchangeOrderType[order_type as keyof typeof ExchangeOrderType]}>
-              {order_type}
+            <S.TypeBadge $orderType={side === ExchangeOrderSide.BUY ? 'BUY' : 'SELL'}>
+              {side === ExchangeOrderSide.BUY ? 'BUY' : 'SELL'}
             </S.TypeBadge>
             <S.DateTime>
               {date.trim()} • {time.trim()}
@@ -71,7 +70,7 @@ const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
         </S.MainInfo>
         <S.Actions>
           <S.FillStatusBadgeWrapper>
-            <FillStatusBadge fillStatus={fill_status} />
+            <FillStatusBadge status={status} />
           </S.FillStatusBadgeWrapper>
           {renderDropdownMenu()}
         </S.Actions>
@@ -97,7 +96,7 @@ const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
         <S.MetricItem>
           <S.MetricLabel>Filled</S.MetricLabel>
           <S.MetricValue>
-            {filled_amount.toLocaleString()}
+            {filled_quantity.toLocaleString()}
             <S.CurrencyTicker>{primaryCurrencyTicker}</S.CurrencyTicker>
           </S.MetricValue>
         </S.MetricItem>
@@ -118,10 +117,7 @@ const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
             <S.ProgressValue>{fillPercentage.toFixed(1)}%</S.ProgressValue>
           </S.ProgressHeader>
           <S.ProgressBar>
-            <S.ProgressFill
-              $percentage={fillPercentage}
-              $orderType={ExchangeOrderType[order_type as keyof typeof ExchangeOrderType]}
-            />
+            <S.ProgressFill $percentage={fillPercentage} $orderType={side === ExchangeOrderSide.BUY ? 'BUY' : 'SELL'} />
           </S.ProgressBar>
         </S.FillProgress>
       )}

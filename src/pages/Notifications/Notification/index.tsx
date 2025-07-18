@@ -5,7 +5,7 @@ import {mdiContentCopy, mdiHeart, mdiSwapHorizontal, mdiWalletBifoldOutline} fro
 
 import Avatar from 'components/Avatar';
 import CurrencyLogo from 'components/CurrencyLogo';
-import {NotificationType} from 'enums';
+import {ExchangeOrderSide, NotificationType} from 'enums';
 import {getCurrencies} from 'selectors/state';
 import {Notification as TNotification, SFC} from 'types';
 import {longDate} from 'utils/dates';
@@ -49,12 +49,12 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const renderExchangeOrderFilledNotification = () => {
     if (notification.payload.notification_type !== NotificationType.EXCHANGE_ORDER_FILLED) return null;
 
-    const {order_type, price, primary_currency_id, primary_currency_ticker, quantity, secondary_currency_ticker} =
+    const {side, price, primary_currency_id, primary_currency_ticker, quantity, secondary_currency_ticker} =
       notification.payload;
-    const action = order_type === 'BUY' ? 'buy' : 'sell';
+    const action = side === ExchangeOrderSide.BUY ? 'buy' : 'sell';
 
-    const totalReceived = order_type === 'BUY' ? quantity : quantity * price;
-    const receivedTicker = order_type === 'BUY' ? primary_currency_ticker : secondary_currency_ticker;
+    const totalReceived = side === ExchangeOrderSide.BUY ? quantity : quantity * price;
+    const receivedTicker = side === ExchangeOrderSide.BUY ? primary_currency_ticker : secondary_currency_ticker;
 
     const primaryCurrency = currencies[Number(primary_currency_id)];
 

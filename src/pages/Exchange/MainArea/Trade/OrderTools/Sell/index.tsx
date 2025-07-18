@@ -6,7 +6,7 @@ import AvailableTotal from 'components/AvailableTotal';
 import {ButtonType} from 'components/Button';
 import {FormField, LogoInput} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
-import {ExchangeOrderType, ToastType} from 'enums';
+import {ExchangeOrderSide, ToastType} from 'enums';
 import {useActiveAssetPair} from 'hooks';
 import {getWallets} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
@@ -38,11 +38,11 @@ const Sell: SFC = ({className}) => {
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
       const requestData = {
-        order_type: ExchangeOrderType.SELL,
         price: parseInt(values.price, 10),
         primary_currency: activeAssetPair!.primary_currency.id,
         quantity: parseInt(values.quantity, 10),
         secondary_currency: activeAssetPair!.secondary_currency.id,
+        side: ExchangeOrderSide.SELL,
       };
       await dispatch(createExchangeOrder(requestData));
       displayToast('Sell order created!', ToastType.SUCCESS);

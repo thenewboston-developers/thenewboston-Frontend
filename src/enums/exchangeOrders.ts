@@ -1,11 +1,11 @@
-export enum ExchangeOrderType {
-  BUY = 'BUY',
-  SELL = 'SELL',
+export enum ExchangeOrderSide {
+  BUY = 1,
+  SELL = -1,
 }
 
-export enum FillStatus {
-  CANCELLED = 'CANCELLED',
-  FILLED = 'FILLED',
-  OPEN = 'OPEN',
-  PARTIALLY_FILLED = 'PARTIALLY_FILLED',
+export enum ExchangeOrderStatus {
+  OPEN = 1,
+  PARTIALLY_FILLED = 2,
+  FILLED = 3,
+  CANCELLED = 100,
 }

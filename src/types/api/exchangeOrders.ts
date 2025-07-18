@@ -1,9 +1,7 @@
-import {ExchangeOrderType} from 'enums';
-
 import {ExchangeOrder} from '../exchangeOrders';
 
 export interface CreateExchangeOrderRequest {
-  order_type: ExchangeOrderType;
+  side: number;
   price: number;
   primary_currency: number;
   quantity: number;

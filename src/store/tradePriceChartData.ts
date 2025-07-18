@@ -39,13 +39,13 @@ const tradePriceChartData = createSlice({
         const candlestickEnd = new Date(candlestickStart.getTime() + intervalMs);
 
         const newCandlestick: Candlestick = {
-          close: trade.trade_price,
+          close: trade.price,
           end: candlestickEnd.toISOString(),
-          high: trade.trade_price,
-          low: trade.trade_price,
-          open: trade.trade_price,
+          high: trade.price,
+          low: trade.price,
+          open: trade.price,
           start: candlestickStart.toISOString(),
-          volume: trade.fill_quantity,
+          volume: trade.filled_quantity,
         };
 
         state.candlesticks.push(newCandlestick);
@@ -60,17 +60,17 @@ const tradePriceChartData = createSlice({
         // Update existing candlestick
         const updatedCandlestick: Candlestick = {
           ...lastCandlestick,
-          close: trade.trade_price,
-          high: Math.max(lastCandlestick.high, trade.trade_price),
-          low: Math.min(lastCandlestick.low, trade.trade_price),
-          volume: lastCandlestick.volume + trade.fill_quantity,
+          close: trade.price,
+          high: Math.max(lastCandlestick.high, trade.price),
+          low: Math.min(lastCandlestick.low, trade.price),
+          volume: lastCandlestick.volume + trade.filled_quantity,
         };
 
         // If this is the first trade in the candlestick, update open/high/low
         if (lastCandlestick.volume === 0) {
-          updatedCandlestick.open = trade.trade_price;
-          updatedCandlestick.high = trade.trade_price;
-          updatedCandlestick.low = trade.trade_price;
+          updatedCandlestick.open = trade.price;
+          updatedCandlestick.high = trade.price;
+          updatedCandlestick.low = trade.price;
         }
 
         state.candlesticks[state.candlesticks.length - 1] = updatedCandlestick;
@@ -101,13 +101,13 @@ const tradePriceChartData = createSlice({
         const newCandlestickEnd = new Date(newCandlestickStart.getTime() + intervalMs);
 
         const newCandlestick: Candlestick = {
-          close: trade.trade_price,
+          close: trade.price,
           end: newCandlestickEnd.toISOString(),
-          high: trade.trade_price,
-          low: trade.trade_price,
-          open: trade.trade_price,
+          high: trade.price,
+          low: trade.price,
+          open: trade.price,
           start: newCandlestickStart.toISOString(),
-          volume: trade.fill_quantity,
+          volume: trade.filled_quantity,
         };
 
         state.candlesticks.push(newCandlestick);
