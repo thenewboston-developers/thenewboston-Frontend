@@ -22,7 +22,7 @@ interface DisplayCandlestick extends Candlestick {
 
 const Chart: SFC = ({className}) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '3M' | '1Y' | 'ALL'>('1D');
+  const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '3M' | '1Y' | 'ALL'>('ALL');
   const activeAssetPair = useActiveAssetPair();
   const containerRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
@@ -450,7 +450,7 @@ const Chart: SFC = ({className}) => {
 
         <S.ChartControls>
           <S.TimeframeButtons>
-            {(['1D', '1W', '1M', '3M', '1Y', 'ALL'] as const).map((tf) => (
+            {(['ALL', '1Y', '3M', '1M', '1W', '1D'] as const).map((tf) => (
               <S.TimeframeButton $active={timeframe === tf} key={tf} onClick={() => setTimeframe(tf)}>
                 {tf}
               </S.TimeframeButton>
