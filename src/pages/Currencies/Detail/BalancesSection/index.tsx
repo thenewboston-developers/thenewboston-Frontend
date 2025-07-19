@@ -8,6 +8,9 @@ import UserLabel from 'components/UserLabel';
 import {Currency, CurrencyBalance, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
+import rank1Image from './assets/1.png';
+import rank2Image from './assets/2.png';
+import rank3Image from './assets/3.png';
 import * as S from './Styles';
 
 interface BalancesSectionProps {
@@ -68,7 +71,10 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {
             {balancesData.results.map((currencyBalance) => (
               <S.TableRow key={currencyBalance.owner.id}>
                 <S.TableData>
-                  <S.Rank>#{currencyBalance.rank}</S.Rank>
+                  {currencyBalance.rank === 1 && <S.RankBadge alt="Rank 1" src={rank1Image} />}
+                  {currencyBalance.rank === 2 && <S.RankBadge alt="Rank 2" src={rank2Image} />}
+                  {currencyBalance.rank === 3 && <S.RankBadge alt="Rank 3" src={rank3Image} />}
+                  {currencyBalance.rank > 3 && <S.Rank>#{currencyBalance.rank}</S.Rank>}
                 </S.TableData>
                 <S.TableData>
                   <UserLabel
