@@ -55,6 +55,11 @@ export const Rank = styled.div`
   font-weight: ${fonts.weight.semiBold};
 `;
 
+export const RankBadge = styled.img`
+  height: 32px;
+  width: 32px;
+`;
+
 export const Table = styled.table`
   background-color: ${colors.white};
   border-radius: 12px;
