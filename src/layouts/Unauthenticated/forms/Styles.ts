@@ -2,10 +2,14 @@ import {Link as ULink} from 'react-router-dom';
 import styled from 'styled-components';
 
 import UButton from 'components/Button';
-import {Input as UInput} from 'components/FormElements';
-import {fonts} from 'styles';
+import {Checkbox as UCheckbox, Input as UInput} from 'components/FormElements';
+import {colors, fonts} from 'styles';
 
 export const Button = styled(UButton)`
+  width: 100%;
+`;
+
+export const Checkbox = styled(UCheckbox)`
   width: 100%;
 `;
 
@@ -34,4 +38,14 @@ export const QuestionText = styled.div`
   color: #fff;
   font-size: 12px;
   margin-top: 16px;
+`;
+
+export const TermsLink = styled.a`
+  color: ${colors.palette.blue[500]};
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    color: ${colors.palette.blue[600]};
+  }
 `;
