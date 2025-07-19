@@ -1,7 +1,9 @@
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import {Currency, SFC, Whitepaper} from 'types';
-import {renderMarkdown} from 'utils/markdown';
 
 import * as S from './Styles';
 
@@ -25,8 +27,9 @@ const WhitepaperSection: SFC<WhitepaperSectionProps> = ({className, whitepaper})
 
   return (
     <S.Container className={className}>
-      {/* eslint-disable-next-line react/no-danger */}
-      <S.MarkdownContainer dangerouslySetInnerHTML={{__html: renderMarkdown(whitepaper.content)}} />
+      <S.MarkdownContainer>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>{whitepaper.content}</ReactMarkdown>
+      </S.MarkdownContainer>
     </S.Container>
   );
 };

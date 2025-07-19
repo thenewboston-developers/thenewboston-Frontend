@@ -60,14 +60,14 @@ export const PreviewContainer = styled.div`
   }
 
   code {
-    background-color: ${colors.palette.gray[200]};
+    background-color: ${colors.palette.gray[100]};
     border-radius: 3px;
     font-family: monospace;
     padding: 2px 4px;
   }
 
   pre {
-    background-color: ${colors.palette.gray[200]};
+    background-color: ${colors.palette.gray[100]};
     border-radius: 3px;
     margin-bottom: 16px;
     overflow-x: auto;
@@ -107,6 +107,28 @@ export const PreviewContainer = styled.div`
     border: 0;
     border-top: 1px solid ${colors.palette.gray[300]};
     margin: 24px 0;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  table {
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    width: 100%;
+
+    th,
+    td {
+      border: 1px solid ${colors.palette.gray[300]};
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: ${colors.palette.gray[100]};
+      font-weight: 600;
+    }
   }
 `;
 

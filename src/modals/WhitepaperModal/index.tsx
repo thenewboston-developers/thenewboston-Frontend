@@ -1,5 +1,7 @@
 import {useState} from 'react';
+import ReactMarkdown from 'react-markdown';
 import {Form, Formik} from 'formik';
+import remarkGfm from 'remark-gfm';
 
 import {createWhitepaper, updateWhitepaper} from 'api/whitepapers';
 import Button from 'components/Button';
@@ -9,7 +11,6 @@ import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
 import {ToastType} from 'enums';
 import {Currency, SFC, Whitepaper} from 'types';
-import {renderMarkdown} from 'utils/markdown';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
@@ -81,8 +82,7 @@ const WhitepaperModal: SFC<WhitepaperModalProps> = ({className, close, currency,
             ) : (
               <S.PreviewContainer>
                 {values.content ? (
-                  // eslint-disable-next-line react/no-danger
-                  <div dangerouslySetInnerHTML={{__html: renderMarkdown(values.content)}} />
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{values.content}</ReactMarkdown>
                 ) : (
                   <p>No content to preview</p>
                 )}
