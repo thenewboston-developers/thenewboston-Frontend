@@ -13,18 +13,12 @@ const TipAmounts: SFC<TipAmountsProps> = ({className, tipAmounts}) => {
 
   return (
     <S.Container className={className}>
-      <S.Title>Tips</S.Title>
-      <S.TipsList>
-        {tipAmounts.map((tip) => (
-          <S.TipItem key={tip.currency.id}>
-            <S.CurrencyLogo alt={tip.currency.ticker} src={tip.currency.logo} />
-            <S.TipInfo>
-              <S.Amount>{tip.total_amount}</S.Amount>
-              <S.Ticker>{tip.currency.ticker}</S.Ticker>
-            </S.TipInfo>
-          </S.TipItem>
-        ))}
-      </S.TipsList>
+      {tipAmounts.map((tip) => (
+        <S.TipItem key={tip.currency.id}>
+          <S.CurrencyLogo alt={tip.currency.ticker} src={tip.currency.logo} />
+          <S.Amount>{tip.total_amount}</S.Amount>
+        </S.TipItem>
+      ))}
     </S.Container>
   );
 };
