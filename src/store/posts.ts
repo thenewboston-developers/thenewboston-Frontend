@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {POSTS} from 'constants/store';
-import {PaginatedResponse, Post, Posts} from 'types';
+import {PaginatedResponse, Post, Posts, TipAmount} from 'types';
 
 const initialState: Posts = {
   hasMore: false,
@@ -47,8 +47,15 @@ const posts = createSlice({
         post.like_count = payload.likeCount;
       }
     },
+    updatePostTipAmounts: (state, {payload}: PayloadAction<{postId: number; tipAmounts: TipAmount[]}>) => {
+      const post = state.posts.find((p) => p.id === payload.postId);
+      if (post) {
+        post.tip_amounts = payload.tipAmounts;
+      }
+    },
   },
 });
 
-export const {setPost, setPosts, unsetPost, startLoading, resetPosts, updatePostLikeStatus} = posts.actions;
+export const {setPost, setPosts, unsetPost, startLoading, resetPosts, updatePostLikeStatus, updatePostTipAmounts} =
+  posts.actions;
 export default posts.reducer;

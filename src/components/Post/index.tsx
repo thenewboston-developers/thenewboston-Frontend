@@ -18,6 +18,7 @@ import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import Comments from './Comments';
 import * as S from './Styles';
+import TipAmounts from './TipAmounts';
 import TransferInfo from './TransferInfo';
 
 export interface PostProps {
@@ -34,7 +35,19 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
-  const {content, created_date, id, image, is_liked, like_count, owner, price_amount, price_currency, recipient} = post;
+  const {
+    content,
+    created_date,
+    id,
+    image,
+    is_liked,
+    like_count,
+    owner,
+    price_amount,
+    price_currency,
+    recipient,
+    tip_amounts = [],
+  } = post;
   const isTransferPost = !!(recipient && price_amount && price_currency);
 
   const handleDelete = async () => {
@@ -153,6 +166,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
             text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
           />
         </S.ActionsContainer>
+        {tip_amounts && tip_amounts.length > 0 && <TipAmounts tipAmounts={tip_amounts} />}
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
       {imageModalIsOpen && image ? <FullScreenImageModal close={toggleImageModal} imageSrc={image} /> : null}
