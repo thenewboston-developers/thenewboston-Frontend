@@ -19,6 +19,7 @@ export interface UserReadSerializer {
 }
 
 export interface CreateUserRequest {
+  agree_to_terms: boolean;
   invitation_code: string;
   password: string;
   username: string;

@@ -7,6 +7,9 @@ import {ButtonType} from 'components/Button';
 import {FormField} from 'components/FormElements';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {createUser} from 'dispatchers/users';
+import {useToggle} from 'hooks';
+import PrivacyPolicyModal from 'modals/PrivacyPolicyModal';
+import TermsModal from 'modals/TermsModal';
 import {AppDispatch, SFC} from 'types';
 import {handleFormikAPIError} from 'utils/forms';
 import yup from 'utils/yup';
@@ -14,10 +17,13 @@ import yup from 'utils/yup';
 import * as S from './Styles';
 
 const CreateAccountForm: SFC = () => {
+  const [privacyPolicyModalIsOpen, togglePrivacyPolicyModal] = useToggle(false);
+  const [termsModalIsOpen, toggleTermsModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const initialValues = {
+    agreeToTerms: false,
     confirmPassword: '',
     invitationCode: '',
     password: '',
@@ -29,6 +35,7 @@ const CreateAccountForm: SFC = () => {
   const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
       const requestData = {
+        agree_to_terms: values.agreeToTerms,
         invitation_code: values.invitationCode,
         password: values.password,
         username: values.username,
@@ -44,6 +51,10 @@ const CreateAccountForm: SFC = () => {
     const reservedUsernames = ['admin', 'support', 'moderator', 'thenewboston', 'ia'];
 
     return yup.object().shape({
+      agreeToTerms: yup
+        .boolean()
+        .oneOf([true], 'You must agree to the terms and conditions and privacy policy')
+        .required('You must agree to the terms and conditions and privacy policy'),
       confirmPassword: yup
         .string()
         .oneOf([yup.ref('password'), undefined], 'Passwords must match')
@@ -97,6 +108,35 @@ const CreateAccountForm: SFC = () => {
                 <S.Input errors={errors} label="Invitation Code" name="invitationCode" touched={touched} />
               </FormField>
               <FormField>
+                <S.Checkbox
+                  errors={errors}
+                  label={
+                    <span>
+                      I agree to the{' '}
+                      <S.TermsLink
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleTermsModal();
+                        }}
+                      >
+                        Terms and Conditions
+                      </S.TermsLink>{' '}
+                      and{' '}
+                      <S.TermsLink
+                        onClick={(e) => {
+                          e.preventDefault();
+                          togglePrivacyPolicyModal();
+                        }}
+                      >
+                        Privacy Policy
+                      </S.TermsLink>
+                    </span>
+                  }
+                  name="agreeToTerms"
+                  touched={touched}
+                />
+              </FormField>
+              <FormField>
                 <S.Button
                   dirty={dirty}
                   disabled={isSubmitting}
@@ -113,6 +153,8 @@ const CreateAccountForm: SFC = () => {
       <S.QuestionText>
         Already have an account? <S.Link to={PATH_AUTHENTICATION.SIGN_IN}>Sign In</S.Link>
       </S.QuestionText>
+      {termsModalIsOpen && <TermsModal close={toggleTermsModal} />}
+      {privacyPolicyModalIsOpen && <PrivacyPolicyModal close={togglePrivacyPolicyModal} />}
     </>
   );
 };
