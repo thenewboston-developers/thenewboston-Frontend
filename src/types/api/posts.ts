@@ -12,7 +12,7 @@ export interface PostReadSerializer extends CreatedModified {
   price_amount: number | null;
   price_currency: number | null;
   recipient: UserReadSerializer | null;
-  tip_amounts?: TipAmount[];
+  tip_amounts: TipAmount[];
 }
 
 export interface GetPostsParams {

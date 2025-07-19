@@ -18,7 +18,7 @@ export interface Post extends CreatedModified {
   price_amount: number | null;
   price_currency: number | null;
   recipient: UserReadSerializer | null;
-  tip_amounts?: TipAmount[];
+  tip_amounts: TipAmount[];
 }
 
 export interface Posts extends Pagination {

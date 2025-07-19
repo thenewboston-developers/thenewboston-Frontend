@@ -46,7 +46,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
     price_amount,
     price_currency,
     recipient,
-    tip_amounts = [],
+    tip_amounts,
   } = post;
   const isTransferPost = !!(recipient && price_amount && price_currency);
 
