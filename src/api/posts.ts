@@ -67,6 +67,18 @@ export const getPosts = async (
   }
 };
 
+export const getTipAmounts = async (postId: number): Promise<{tip_amounts: TipAmount[]}> => {
+  try {
+    const response = await axios.get<{tip_amounts: TipAmount[]}>(
+      `${BASE_URL}/${postId}/tip-amounts`,
+      authorizationHeaders(),
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const likePost = async (postId: number): Promise<PostLike> => {
   try {
     const response = await axios.post<PostLike>(`${BASE_URL}/${postId}/like`, {}, authorizationHeaders());
@@ -87,18 +99,6 @@ export const unlikePost = async (postId: number): Promise<void> => {
 export const updatePost = async (id: number, data: FormData): Promise<PostReadSerializer> => {
   try {
     const response = await axios.patch<PostReadSerializer>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getTipAmounts = async (postId: number): Promise<{tip_amounts: TipAmount[]}> => {
-  try {
-    const response = await axios.get<{tip_amounts: TipAmount[]}>(
-      `${BASE_URL}/${postId}/tip-amounts`,
-      authorizationHeaders(),
-    );
     return response.data;
   } catch (error) {
     throw error;
