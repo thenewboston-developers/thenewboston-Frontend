@@ -40,7 +40,7 @@ import {Mint, Mints} from 'types/mints';
 import {Notification, NotificationPaginatedResponse, Notifications, NotificationsState} from 'types/notifications';
 import {OrderBookState} from 'types/orderBook';
 import {PaginatedResponse} from 'types/pagination';
-import {Post, PostLike, Posts} from 'types/posts';
+import {Post, PostLike, Posts, TipAmount} from 'types/posts';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
 import {Trade, Trades} from 'types/trades';
@@ -121,6 +121,7 @@ export {
   SelectOption,
   Self,
   SFC,
+  TipAmount,
   TotalAmountMintedResponse,
   Trade,
   TradePriceChartData,

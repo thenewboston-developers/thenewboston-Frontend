@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {GetPostsParams, PaginatedResponse, PostLike, PostReadSerializer} from 'types';
+import {GetPostsParams, PaginatedResponse, PostLike, PostReadSerializer, TipAmount} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/posts`;
@@ -61,6 +61,18 @@ export const getPosts = async (
       params,
       ...authorizationHeaders(),
     });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getTipAmounts = async (postId: number): Promise<{tip_amounts: TipAmount[]}> => {
+  try {
+    const response = await axios.get<{tip_amounts: TipAmount[]}>(
+      `${BASE_URL}/${postId}/tip-amounts`,
+      authorizationHeaders(),
+    );
     return response.data;
   } catch (error) {
     throw error;

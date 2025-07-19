@@ -2,13 +2,22 @@ import {
   createPost as _createPost,
   deletePost as _deletePost,
   getPosts as _getPosts,
+  getTipAmounts as _getTipAmounts,
   likePost as _likePost,
   unlikePost as _unlikePost,
   updatePost as _updatePost,
 } from 'api/posts';
 import {store} from 'store';
 import {setComments} from 'store/comments';
-import {resetPosts as _resetPosts, setPost, setPosts, startLoading, unsetPost, updatePostLikeStatus} from 'store/posts';
+import {
+  resetPosts as _resetPosts,
+  setPost,
+  setPosts,
+  startLoading,
+  unsetPost,
+  updatePostLikeStatus,
+  updatePostTipAmounts,
+} from 'store/posts';
 import {AppDispatch, GetPostsParams} from 'types';
 import {getNextUrlFromState} from 'utils/urls';
 
@@ -110,4 +119,14 @@ export const unlikePost = (postId: number) => async (dispatch: AppDispatch) => {
     );
     throw error;
   }
+};
+
+export const updateTipAmounts = (postId: number) => async (dispatch: AppDispatch) => {
+  const responseData = await _getTipAmounts(postId);
+  dispatch(
+    updatePostTipAmounts({
+      postId,
+      tipAmounts: responseData.tip_amounts,
+    }),
+  );
 };

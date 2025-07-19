@@ -46,12 +46,19 @@ const sparkle = keyframes`
 export const ActionsContainer = styled.div`
   align-items: center;
   display: flex;
-  gap: 16px;
+  justify-content: space-between;
   margin-top: 16px;
 
   @media (max-width: ${breakpoints.mini}) {
-    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
   }
+`;
+
+export const ActionsLeft = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 16px;
 `;
 
 export const Container = styled.div`

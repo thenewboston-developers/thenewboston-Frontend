@@ -18,6 +18,7 @@ import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import Comments from './Comments';
 import * as S from './Styles';
+import TipAmounts from './TipAmounts';
 import TransferInfo from './TransferInfo';
 
 export interface PostProps {
@@ -34,7 +35,19 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
-  const {content, created_date, id, image, is_liked, like_count, owner, price_amount, price_currency, recipient} = post;
+  const {
+    content,
+    created_date,
+    id,
+    image,
+    is_liked,
+    like_count,
+    owner,
+    price_amount,
+    price_currency,
+    recipient,
+    tip_amounts,
+  } = post;
   const isTransferPost = !!(recipient && price_amount && price_currency);
 
   const handleDelete = async () => {
@@ -134,24 +147,27 @@ const Post: SFC<PostProps> = ({className, post}) => {
         </S.Content>
         {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
         <S.ActionsContainer>
-          <S.LikeWrapper>
-            <S.LikeButton $animate={animateLike} onClick={handleLikeClick}>
-              <S.LikeIcon
-                $animate={animateLike}
-                $isLiked={is_liked}
-                icon={is_liked ? mdiHeart : mdiHeartOutline}
-                size={20}
-              />
-            </S.LikeButton>
-            <S.LikeCount onClick={toggleLikesModal}>
-              {like_count} {like_count === 1 ? 'like' : 'likes'}
-            </S.LikeCount>
-          </S.LikeWrapper>
-          <OutlineButton
-            iconLeft={mdiCommentTextOutline}
-            onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
-            text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
-          />
+          <S.ActionsLeft>
+            <S.LikeWrapper>
+              <S.LikeButton $animate={animateLike} onClick={handleLikeClick}>
+                <S.LikeIcon
+                  $animate={animateLike}
+                  $isLiked={is_liked}
+                  icon={is_liked ? mdiHeart : mdiHeartOutline}
+                  size={20}
+                />
+              </S.LikeButton>
+              <S.LikeCount onClick={toggleLikesModal}>
+                {like_count} {like_count === 1 ? 'like' : 'likes'}
+              </S.LikeCount>
+            </S.LikeWrapper>
+            <OutlineButton
+              iconLeft={mdiCommentTextOutline}
+              onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
+              text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
+            />
+          </S.ActionsLeft>
+          {tip_amounts && tip_amounts.length > 0 && <TipAmounts tipAmounts={tip_amounts} />}
         </S.ActionsContainer>
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
