@@ -36,6 +36,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-linkify": "^1.0.0-alpha",
     "react-loading-skeleton": "^3.5.0",
+    "react-markdown": "^10.1.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.30.1",
     "react-scripts": "5.0.1",
@@ -44,6 +45,7 @@
     "recharts": "^2.15.3",
     "reconnecting-websocket": "^4.4.0",
     "redux-persist": "^6.0.0",
+    "remark-gfm": "^4.0.1",
     "styled-components": "^6.1.18",
     "typescript": "^5.8.3",
     "yup": "^1.6.1"
