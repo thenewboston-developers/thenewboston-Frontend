@@ -16,7 +16,7 @@ const TipAmounts: SFC<TipAmountsProps> = ({className, tipAmounts}) => {
       {tipAmounts.map((tip) => (
         <S.TipItem key={tip.currency.id}>
           <S.CurrencyLogo alt={tip.currency.ticker} src={tip.currency.logo} />
-          <S.Amount>{tip.total_amount}</S.Amount>
+          <S.Amount>{tip.total_amount.toLocaleString()}</S.Amount>
         </S.TipItem>
       ))}
     </S.Container>
