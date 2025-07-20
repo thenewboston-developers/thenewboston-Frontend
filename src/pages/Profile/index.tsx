@@ -49,9 +49,9 @@ const Profile: SFC = ({className}) => {
         <Route element={<Layout />}>
           {/* TODO: replace hardcoded paths with constants */}
           <Route index element={<Posts />} />
-          <Route path="/following" element={<Follower type={FollowerType.FOLLOWING} />} />
-          <Route path="/followers" element={<Follower type={FollowerType.FOLLOWERS} />} />
           <Route path="/collection" element={<Collection />} />
+          <Route path="/followers" element={<Follower type={FollowerType.FOLLOWERS} />} />
+          <Route path="/following" element={<Follower type={FollowerType.FOLLOWING} />} />
           <Route path="/invitations" element={<Invitations />} />
         </Route>
       </Routes>
