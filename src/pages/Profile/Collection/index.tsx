@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 import {getWallets} from 'api/wallets';
 import Avatar from 'components/Avatar';
@@ -11,6 +11,7 @@ import * as S from './Styles';
 
 const Collection: SFC = ({className}) => {
   const {id} = useParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const userId = id ? parseInt(id, 10) : null;
@@ -44,7 +45,7 @@ const Collection: SFC = ({className}) => {
     return (
       <S.WalletsGrid>
         {wallets.map((wallet) => (
-          <S.WalletCard key={wallet.id}>
+          <S.WalletCard key={wallet.id} onClick={() => navigate(`/currencies/${wallet.currency.id}`)}>
             <S.CoinInfo>
               <Avatar size="40px" src={wallet.currency.logo} />
               <S.CoinDetails>
