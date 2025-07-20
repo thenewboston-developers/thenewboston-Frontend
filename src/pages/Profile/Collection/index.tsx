@@ -10,10 +10,10 @@ import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const Collection: SFC = ({className}) => {
-  const {id} = useParams();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [wallets, setWallets] = useState<Wallet[]>([]);
+  const navigate = useNavigate();
+  const {id} = useParams();
   const userId = id ? parseInt(id, 10) : null;
 
   useEffect(() => {
