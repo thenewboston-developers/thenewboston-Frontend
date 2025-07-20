@@ -26,7 +26,10 @@ export const CoinName = styled.div`
 `;
 
 export const Container = styled.div`
+  margin: 0 auto;
+  max-width: 720px;
   padding: 24px;
+  width: 100%;
 `;
 
 export const LoadingText = styled.div`
@@ -39,6 +42,8 @@ export const WalletCard = styled.div`
   background: ${colors.white};
   border: 1px solid ${colors.palette.gray[200]};
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  cursor: pointer;
   padding: 16px;
   transition: box-shadow 0.2s;
 
