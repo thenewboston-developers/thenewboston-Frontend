@@ -29,6 +29,7 @@ const Authenticated: SFC = ({className}) => {
           dispatch(getWires()),
         ]);
       } catch (error) {
+        console.log(error);
         displayErrorToast('Error fetching initial data');
       }
     })();

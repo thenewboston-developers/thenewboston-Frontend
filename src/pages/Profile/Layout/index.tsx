@@ -1,6 +1,12 @@
 import {useSelector} from 'react-redux';
 import {Outlet, useLocation, useNavigate, useParams} from 'react-router-dom';
-import {mdiAccountArrowDownOutline, mdiAccountArrowUpOutline, mdiAccountBoxPlusOutline, mdiCardsOutline} from '@mdi/js';
+import {
+  mdiAccountArrowDownOutline,
+  mdiAccountArrowUpOutline,
+  mdiAccountBoxPlusOutline,
+  mdiCardsOutline,
+  mdiHandCoin,
+} from '@mdi/js';
 import Icon from '@mdi/react';
 
 import Tab from 'components/Tab';
@@ -11,9 +17,10 @@ import {SFC} from 'types';
 import * as S from './Styles';
 import UserDetails from './UserDetails';
 
-type IconName = 'Followers' | 'Following' | 'Invitations' | 'Posts';
+type IconName = 'Collection' | 'Followers' | 'Following' | 'Invitations' | 'Posts';
 
 const IconMapper = {
+  Collection: mdiHandCoin,
   Followers: mdiAccountArrowDownOutline,
   Following: mdiAccountArrowUpOutline,
   Invitations: mdiAccountBoxPlusOutline,
@@ -45,6 +52,7 @@ const Layout: SFC = ({className}) => {
           {renderTab('Posts', `/profile/${userId}`)}
           {renderTab('Followers', `/profile/${userId}/followers`)}
           {renderTab('Following', `/profile/${userId}/following`)}
+          {renderTab('Collection', `/profile/${userId}/collection`)}
           {userId === self.id ? renderTab('Invitations', `/profile/${userId}/invitations`) : null}
         </Tabs>
       </S.TabsWrapper>
