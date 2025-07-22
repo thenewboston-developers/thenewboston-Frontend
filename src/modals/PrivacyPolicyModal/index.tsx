@@ -141,7 +141,28 @@ const PrivacyPolicyModal: SFC<PrivacyPolicyModalProps> = ({className, close}) =>
           </S.Section>
 
           <S.Section>
-            <S.SectionTitle>11. Contact Information</S.SectionTitle>
+            <S.SectionTitle>11. User-Generated Content</S.SectionTitle>
+            <S.Paragraph>
+              <S.Bold>User-Created Content:</S.Bold> Users can create and share various types of content on this
+              platform, including currency descriptions, posts, comments, and profile information. We do not review,
+              verify, or endorse the accuracy or truthfulness of any user-generated content.
+            </S.Paragraph>
+            <S.Paragraph>
+              <S.Bold>
+                Currency Descriptions and Claims: We are not responsible for any false, misleading, or inaccurate
+                information in user-created currency descriptions.
+              </S.Bold>{' '}
+              Users may describe their currencies with fictional attributes, false claims about backing or value, or
+              other inaccurate information. We do not verify these claims and you should not rely on them.
+            </S.Paragraph>
+            <S.Paragraph>
+              All user-generated content represents solely the views of the user who created it, not those of the
+              platform operator. We disclaim all liability for user-generated content.
+            </S.Paragraph>
+          </S.Section>
+
+          <S.Section>
+            <S.SectionTitle>12. Contact Information</S.SectionTitle>
             <S.Paragraph>
               If you have questions about this Privacy Policy, please contact us through the platform's support
               channels.

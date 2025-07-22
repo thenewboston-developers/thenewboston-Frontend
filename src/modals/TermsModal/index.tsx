@@ -126,7 +126,35 @@ const TermsModal: SFC<TermsModalProps> = ({className, close}) => {
           </S.Section>
 
           <S.Section>
-            <S.SectionTitle>10. Termination</S.SectionTitle>
+            <S.SectionTitle>10. User-Generated Content</S.SectionTitle>
+            <S.Paragraph>
+              <S.Bold>
+                IMPORTANT: All currency names, descriptions, and other user-generated content are created by users and
+                do not reflect the views, opinions, or endorsements of the platform operator.
+              </S.Bold>
+            </S.Paragraph>
+            <S.Paragraph>
+              We do not verify, endorse, or guarantee the accuracy, truthfulness, or reliability of any user-generated
+              content, including but not limited to:
+            </S.Paragraph>
+            <S.List>
+              <S.ListItem>Currency or coin names, symbols, and descriptions</S.ListItem>
+              <S.ListItem>Claims about currency features, purposes, or backing</S.ListItem>
+              <S.ListItem>Posts, comments, and profile information</S.ListItem>
+              <S.ListItem>Any other content created by users</S.ListItem>
+            </S.List>
+            <S.Paragraph>
+              <S.Bold>
+                You acknowledge that the platform operator is not responsible or liable for any user-generated content,
+                including any false, misleading, or inaccurate descriptions of currencies or coins.
+              </S.Bold>{' '}
+              Users may create fictional descriptions for their currencies that have no basis in reality. Always
+              exercise your own judgment when viewing user-generated content.
+            </S.Paragraph>
+          </S.Section>
+
+          <S.Section>
+            <S.SectionTitle>11. Termination</S.SectionTitle>
             <S.Paragraph>
               We may terminate or suspend your account immediately, without prior notice or liability, for any reason
               whatsoever, including without limitation if you breach these Terms.
@@ -134,7 +162,7 @@ const TermsModal: SFC<TermsModalProps> = ({className, close}) => {
           </S.Section>
 
           <S.Section>
-            <S.SectionTitle>11. Contact</S.SectionTitle>
+            <S.SectionTitle>12. Contact</S.SectionTitle>
             <S.Paragraph>
               If you have any questions about these Terms, please contact us through the platform's support channels.
             </S.Paragraph>
