@@ -35,7 +35,7 @@ export const ColumnHeader = styled.span`
 `;
 
 export const ColumnHeaders = styled.div`
-  background-color: ${colors.palette.gray['100']};
+  background-color: ${colors.palette.gray[100]};
   border-radius: 6px;
   display: grid;
   gap: 12px;
@@ -67,8 +67,8 @@ export const OrderBookContainer = styled.div`
   grid-template-columns: 1fr 1fr;
 
   @media (max-width: ${breakpoints.tablet}) {
-    grid-template-columns: 1fr;
     gap: 20px;
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -85,7 +85,7 @@ export const OrderList = styled.div`
 `;
 
 export const OrderPrice = styled.span<{$type: 'buy' | 'sell'}>`
-  color: ${({$type}) => ($type === 'buy' ? colors.palette.green['600'] : colors.palette.red['700'])};
+  color: ${({$type}) => ($type === 'buy' ? colors.palette.green[600] : colors.palette.red[700])};
   font-size: 14px;
   font-weight: 600;
 `;
@@ -109,7 +109,7 @@ export const OrderRow = styled.div<{$type: 'buy' | 'sell'}>`
 
   &:hover {
     background-color: ${({$type}) =>
-      $type === 'buy' ? colors.palette.green['600'] + '10' : colors.palette.red['700'] + '10'};
+      $type === 'buy' ? colors.palette.green[600] + '10' : colors.palette.red[700] + '10'};
   }
 
   @media (max-width: ${breakpoints.mobile}) {
@@ -129,15 +129,13 @@ export const OrderTotal = styled.span`
 
 export const SectionHeader = styled.div`
   align-items: center;
-  border-bottom: 1px solid ${colors.border};
   display: flex;
   gap: 8px;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
+  margin-bottom: 8px;
 `;
 
 export const SectionTitle = styled.h3<{$type: 'buy' | 'sell'}>`
-  color: ${({$type}) => ($type === 'buy' ? colors.palette.green['600'] : colors.palette.red['700'])};
+  color: ${({$type}) => ($type === 'buy' ? colors.palette.green[600] : colors.palette.red[700])};
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -147,7 +145,7 @@ export const SectionTitle = styled.h3<{$type: 'buy' | 'sell'}>`
 
 export const Spread = styled.div`
   align-items: center;
-  background-color: ${colors.palette.gray['100']};
+  background-color: ${colors.palette.blue[50]};
   border-radius: 6px;
   display: flex;
   gap: 12px;

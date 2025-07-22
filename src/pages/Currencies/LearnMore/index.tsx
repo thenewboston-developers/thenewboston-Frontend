@@ -29,7 +29,7 @@ const LearnMore: SFC = ({className}) => {
           </S.Paragraph>
           <S.List>
             <S.ListItem>
-              <S.Bold>Mint coins</S.Bold> in any quantity you choose
+              <S.Bold>Mint coins</S.Bold> up to a maximum of {formatNumber(MAX_MINT_AMOUNT)} coins per currency
             </S.ListItem>
             <S.ListItem>
               <S.Bold>Trade your coins</S.Bold> for other currencies on the exchange
@@ -93,14 +93,6 @@ const LearnMore: SFC = ({className}) => {
             <S.Paragraph>
               You can update your currency's description and logo anytime. However, the ticker symbol is permanent and
               cannot be changed once created.
-            </S.Paragraph>
-          </S.SubSection>
-
-          <S.SubSection>
-            <S.SubSectionTitle>Is there a limit to how many coins I can mint?</S.SubSectionTitle>
-            <S.Paragraph>
-              The maximum total supply for any currency is {formatNumber(MAX_MINT_AMOUNT)} coins. Once you've minted
-              this amount, you cannot mint any more coins for that currency.
             </S.Paragraph>
           </S.SubSection>
         </S.Section>

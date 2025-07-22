@@ -126,7 +126,35 @@ const TermsModal: SFC<TermsModalProps> = ({className, close}) => {
           </S.Section>
 
           <S.Section>
-            <S.SectionTitle>10. Termination</S.SectionTitle>
+            <S.SectionTitle>10. User-Generated Content</S.SectionTitle>
+            <S.Paragraph>
+              <S.Bold>
+                IMPORTANT: All currency names, descriptions, and other user-generated content are created by users and
+                do not reflect the views, opinions, or endorsements of the platform operator.
+              </S.Bold>
+            </S.Paragraph>
+            <S.Paragraph>
+              We do not verify, endorse, or guarantee the accuracy, truthfulness, or reliability of any user-generated
+              content, including but not limited to:
+            </S.Paragraph>
+            <S.List>
+              <S.ListItem>Currency or coin names, symbols, and descriptions</S.ListItem>
+              <S.ListItem>Claims about currency features, purposes, or backing</S.ListItem>
+              <S.ListItem>Posts, comments, and profile information</S.ListItem>
+              <S.ListItem>Any other content created by users</S.ListItem>
+            </S.List>
+            <S.Paragraph>
+              <S.Bold>
+                You acknowledge that the platform operator is not responsible or liable for any user-generated content,
+                including any false, misleading, or inaccurate descriptions of currencies or coins.
+              </S.Bold>{' '}
+              Users may create fictional descriptions for their currencies that have no basis in reality. Always
+              exercise your own judgment when viewing user-generated content.
+            </S.Paragraph>
+          </S.Section>
+
+          <S.Section>
+            <S.SectionTitle>11. Termination</S.SectionTitle>
             <S.Paragraph>
               We may terminate or suspend your account immediately, without prior notice or liability, for any reason
               whatsoever, including without limitation if you breach these Terms.
@@ -134,7 +162,31 @@ const TermsModal: SFC<TermsModalProps> = ({className, close}) => {
           </S.Section>
 
           <S.Section>
-            <S.SectionTitle>11. Contact</S.SectionTitle>
+            <S.SectionTitle>12. Nature of Platform Currencies</S.SectionTitle>
+            <S.Paragraph>
+              <S.Bold>
+                Virtual currencies on this platform are digital entertainment tokens created for recreational use within
+                this closed ecosystem.
+              </S.Bold>{' '}
+              They have no real monetary value and cannot function as currency, investments, or stores of value.
+            </S.Paragraph>
+            <S.Paragraph>TNB and all other platform currencies:</S.Paragraph>
+            <S.List>
+              <S.ListItem>Are created and controlled entirely at the platform operator's discretion</S.ListItem>
+              <S.ListItem>Are not backed by any assets, commodities, or external value sources</S.ListItem>
+              <S.ListItem>Do not represent any ownership stake or profit-sharing arrangement</S.ListItem>
+              <S.ListItem>Cannot be redeemed for real money, goods, or services</S.ListItem>
+              <S.ListItem>May be created, modified, or deleted at any time without notice</S.ListItem>
+            </S.List>
+            <S.Paragraph>
+              Users participate in the platform solely for entertainment. Any trading or exchange of virtual currencies
+              is part of the platform's gameplay mechanics and does not constitute real financial activity or
+              investment.
+            </S.Paragraph>
+          </S.Section>
+
+          <S.Section>
+            <S.SectionTitle>13. Contact</S.SectionTitle>
             <S.Paragraph>
               If you have any questions about these Terms, please contact us through the platform's support channels.
             </S.Paragraph>
