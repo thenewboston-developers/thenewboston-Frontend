@@ -28,6 +28,9 @@ export const Container = styled.div`
   align-items: flex-start;
   display: flex;
   gap: 16px;
+  margin: 0 auto;
+  max-width: 1200px;
+  width: 100%;
 
   @media (max-width: ${breakpoints.tablet}) {
     flex-direction: column;
