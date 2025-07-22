@@ -129,11 +129,9 @@ export const OrderTotal = styled.span`
 
 export const SectionHeader = styled.div`
   align-items: center;
-  border-bottom: 1px solid ${colors.border};
   display: flex;
   gap: 8px;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
+  margin-bottom: 8px;
 `;
 
 export const SectionTitle = styled.h3<{$type: 'buy' | 'sell'}>`
