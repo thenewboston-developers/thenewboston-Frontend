@@ -162,7 +162,27 @@ const PrivacyPolicyModal: SFC<PrivacyPolicyModalProps> = ({className, close}) =>
           </S.Section>
 
           <S.Section>
-            <S.SectionTitle>12. Contact Information</S.SectionTitle>
+            <S.SectionTitle>12. Nature of Virtual Currencies</S.SectionTitle>
+            <S.Paragraph>
+              <S.Bold>
+                All virtual currencies on this platform, including TNB and user-created currencies, are entertainment
+                tokens for use exclusively within this platform.
+              </S.Bold>{' '}
+              They are not financial instruments and have no monetary value.
+            </S.Paragraph>
+            <S.Paragraph>
+              TNB, the platform's reserve currency, is created and distributed at the sole discretion of the platform
+              operator. It is not backed by any assets, commodities, or external value. The platform operator may mint,
+              distribute, modify, or remove TNB at any time without notice.
+            </S.Paragraph>
+            <S.Paragraph>
+              Virtual currencies on this platform are purely for entertainment and educational purposes. They do not
+              represent ownership interests, profit-sharing arrangements, or any form of investment opportunity.
+            </S.Paragraph>
+          </S.Section>
+
+          <S.Section>
+            <S.SectionTitle>13. Contact Information</S.SectionTitle>
             <S.Paragraph>
               If you have questions about this Privacy Policy, please contact us through the platform's support
               channels.
