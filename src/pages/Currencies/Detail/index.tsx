@@ -18,6 +18,7 @@ import {deleteCurrency as _deleteCurrency, getCurrency} from 'dispatchers/curren
 import {getMints} from 'dispatchers/mints';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
+import ConfirmationModal from 'modals/ConfirmationModal';
 import CurrencyModal from 'modals/CurrencyModal';
 import MintModal from 'modals/MintModal';
 import WhitepaperModal from 'modals/WhitepaperModal';
@@ -265,6 +266,15 @@ const Detail: SFC = ({className}) => {
       {currencyModalIsOpen && currency && (
         <CurrencyModal close={toggleCurrencyModal} currency={currency} onSuccess={handleCurrencyModalSuccess} />
       )}
+      {deleteConfirmationOpen && (
+        <ConfirmationModal
+          close={() => setDeleteConfirmationOpen(false)}
+          confirmText="Delete"
+          header="Delete Whitepaper"
+          message="Are you sure you want to delete this whitepaper? This action cannot be undone."
+          onConfirm={handleConfirmDelete}
+        />
+      )}
       {mintModalIsOpen && <MintModal close={toggleMintModal} currency={currency} onSuccess={handleMintModalSuccess} />}
       {whitepaperModalIsOpen && currency && (
         <WhitepaperModal
@@ -273,17 +283,6 @@ const Detail: SFC = ({className}) => {
           onSuccess={handleWhitepaperModalSuccess}
           whitepaper={whitepaper}
         />
-      )}
-      {deleteConfirmationOpen && (
-        <S.ConfirmationModal close={() => setDeleteConfirmationOpen(false)} header="Delete Whitepaper">
-          <S.ConfirmationText>
-            Are you sure you want to delete this whitepaper? This action cannot be undone.
-          </S.ConfirmationText>
-          <S.ConfirmationButtons>
-            <Button color={ButtonColor.secondary} onClick={() => setDeleteConfirmationOpen(false)} text="Cancel" />
-            <Button onClick={handleConfirmDelete} text="Delete" />
-          </S.ConfirmationButtons>
-        </S.ConfirmationModal>
       )}
     </>
   );
