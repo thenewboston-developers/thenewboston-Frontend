@@ -10,6 +10,8 @@ import {updateUser} from 'dispatchers/users';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {handleFormikAPIError} from 'utils/forms';
+import {socialUsernameValidators} from 'utils/socialUsernameValidation';
+import yup from 'utils/yup';
 
 import * as S from './Styles';
 
@@ -119,9 +121,27 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
     }
   };
 
+  const validationSchema = useMemo(() => {
+    const schema: any = {
+      bio: yup.string().max(160, 'Bio must be at most 160 characters'),
+    };
+
+    // Add social media username validation
+    Object.entries(socialUsernameValidators).forEach(([platform, validator]) => {
+      const fieldName = `${platform}_username`;
+      schema[fieldName] = yup.string().test(`${platform}-username-validation`, (value, context) => {
+        if (!value) return true; // Allow empty values
+        const result = validator(value);
+        return result.isValid ? true : context.createError({message: result.error});
+      });
+    });
+
+    return yup.object().shape(schema);
+  }, []);
+
   return (
     <S.Modal className={className} close={close} header="Edit Profile">
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+      <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
             <S.ModalContent>

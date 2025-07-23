@@ -11,6 +11,7 @@ import {createCurrency, updateCurrency} from 'dispatchers/currencies';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Currency, SFC} from 'types';
 import {handleFormikAPIError} from 'utils/forms';
+import {socialUsernameValidators} from 'utils/socialUsernameValidation';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
@@ -159,6 +160,16 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
         schema.domain = yup.string();
       }
     }
+
+    // Add social media username validation
+    Object.entries(socialUsernameValidators).forEach(([platform, validator]) => {
+      const fieldName = `${platform}_username`;
+      schema[fieldName] = yup.string().test(`${platform}-username-validation`, (value, context) => {
+        if (!value) return true; // Allow empty values
+        const result = validator(value);
+        return result.isValid ? true : context.createError({message: result.error});
+      });
+    });
 
     return yup.object().shape(schema);
   }, [isEditMode, self.is_staff]);
