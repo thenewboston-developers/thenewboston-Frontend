@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import UModal from 'components/Modal';
 import {colors, fonts, pagePadding, toolbarStyle} from 'styles';
 
 export const BackButton = styled.button`
@@ -23,22 +22,6 @@ export const BackButton = styled.button`
   span {
     font-family: ${fonts.family.default};
   }
-`;
-
-export const ConfirmationButtons = styled.div`
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-`;
-
-export const ConfirmationModal = styled(UModal)`
-  width: 400px;
-`;
-
-export const ConfirmationText = styled.p`
-  color: ${colors.palette.gray[700]};
-  line-height: 1.6;
-  margin-bottom: 24px;
 `;
 
 export const Container = styled.div`
