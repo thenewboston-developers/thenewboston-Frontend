@@ -34,8 +34,14 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
                 username={currency.owner.username}
               />
               <S.DateContainer>
-                <S.DateLabel>Created: {shortDate(currency.created_date, false)}</S.DateLabel>
-                <S.DateLabel>Modified: {shortDate(currency.modified_date, false)}</S.DateLabel>
+                <S.DateRow>
+                  <S.DateLabel>Created:</S.DateLabel>
+                  <S.DateValue>{shortDate(currency.created_date, false)}</S.DateValue>
+                </S.DateRow>
+                <S.DateRow>
+                  <S.DateLabel>Modified:</S.DateLabel>
+                  <S.DateValue>{shortDate(currency.modified_date, false)}</S.DateValue>
+                </S.DateRow>
               </S.DateContainer>
             </S.MetadataRow>
             <SocialLinks entity={currency} />

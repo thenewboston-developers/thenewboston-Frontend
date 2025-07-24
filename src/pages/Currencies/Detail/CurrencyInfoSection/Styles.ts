@@ -66,7 +66,19 @@ export const DateContainer = styled.div`
   gap: 4px;
 `;
 
-export const DateLabel = styled.div`
+export const DateLabel = styled.span`
+  color: ${colors.primary};
+  font-size: 13px;
+  font-weight: ${fonts.weight.semiBold};
+  margin-right: 4px;
+`;
+
+export const DateRow = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const DateValue = styled.span`
   color: ${colors.secondary};
   font-size: 13px;
 `;
