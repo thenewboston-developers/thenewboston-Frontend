@@ -23,6 +23,12 @@ export const CurrencyLogo = styled.img`
 
 export const TipItem = styled.div`
   align-items: center;
+  color: inherit;
   display: flex;
   gap: 4px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
 `;

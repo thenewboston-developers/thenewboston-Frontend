@@ -1,3 +1,4 @@
+import DateDisplay from 'components/DateDisplay';
 import SocialLinks from 'components/SocialLinks';
 import UserLabel from 'components/UserLabel';
 import {Currency, SFC} from 'types';
@@ -25,14 +26,15 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
               <S.TypeBadge $internal={isInternalCurrency}>{isInternalCurrency ? 'Internal' : 'External'}</S.TypeBadge>
             )}
             {currency.description && <S.CurrencyDescription>{currency.description}</S.CurrencyDescription>}
-            <S.OwnerInfo>
+            <S.MetadataRow>
               <UserLabel
                 avatar={currency.owner.avatar}
                 description="Owner"
                 id={currency.owner.id}
                 username={currency.owner.username}
               />
-            </S.OwnerInfo>
+              <DateDisplay createdDate={currency.created_date} modifiedDate={currency.modified_date} />
+            </S.MetadataRow>
             <SocialLinks entity={currency} />
           </S.CurrencyInfo>
           {totalAmountMinted !== null && (

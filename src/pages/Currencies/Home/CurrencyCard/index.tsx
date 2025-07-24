@@ -1,5 +1,6 @@
 import {useNavigate} from 'react-router-dom';
 
+import DateDisplay from 'components/DateDisplay';
 import UserLabel from 'components/UserLabel';
 import {Currency, SFC} from 'types';
 
@@ -31,14 +32,15 @@ const CurrencyCard: SFC<CurrencyCardProps> = ({className, currency}) => {
         </S.HeaderSection>
         <S.Spacer />
         <S.Line />
-        <S.OwnerRow>
+        <S.MetadataRow>
           <UserLabel
             avatar={currency.owner.avatar}
             description="Owner"
             id={currency.owner.id}
             username={currency.owner.username}
           />
-        </S.OwnerRow>
+          <DateDisplay createdDate={currency.created_date} modifiedDate={currency.modified_date} />
+        </S.MetadataRow>
       </S.CardContent>
     </S.Container>
   );

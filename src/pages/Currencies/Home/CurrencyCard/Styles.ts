@@ -64,7 +64,10 @@ export const Line = styled(ULine)`
   margin-top: 10px;
 `;
 
-export const OwnerRow = styled.div`
+export const MetadataRow = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
   margin-top: 10px;
 `;
 

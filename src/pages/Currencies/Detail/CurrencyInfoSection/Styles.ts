@@ -60,7 +60,10 @@ export const CurrencyPanel = styled.div`
   position: relative;
 `;
 
-export const OwnerInfo = styled.div`
+export const MetadataRow = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
   margin-top: 16px;
 `;
 
