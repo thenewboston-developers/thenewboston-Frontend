@@ -60,7 +60,21 @@ export const CurrencyPanel = styled.div`
   position: relative;
 `;
 
-export const OwnerInfo = styled.div`
+export const DateContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+export const DateLabel = styled.div`
+  color: ${colors.secondary};
+  font-size: 13px;
+`;
+
+export const MetadataRow = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
   margin-top: 16px;
 `;
 
