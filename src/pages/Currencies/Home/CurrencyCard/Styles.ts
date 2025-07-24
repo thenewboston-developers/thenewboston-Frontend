@@ -64,29 +64,6 @@ export const Line = styled(ULine)`
   margin-top: 10px;
 `;
 
-export const DateContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-`;
-
-export const DateLabel = styled.span`
-  color: ${colors.primary};
-  font-size: 12px;
-  font-weight: ${fonts.weight.semiBold};
-  margin-right: 4px;
-`;
-
-export const DateRow = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-export const DateValue = styled.span`
-  color: ${colors.palette.gray[600]};
-  font-size: 12px;
-`;
-
 export const MetadataRow = styled.div`
   align-items: center;
   display: flex;

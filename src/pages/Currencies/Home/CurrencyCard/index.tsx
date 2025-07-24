@@ -1,8 +1,8 @@
 import {useNavigate} from 'react-router-dom';
 
+import DateDisplay from 'components/DateDisplay';
 import UserLabel from 'components/UserLabel';
 import {Currency, SFC} from 'types';
-import {shortDate} from 'utils/dates';
 
 import * as S from './Styles';
 
@@ -39,16 +39,7 @@ const CurrencyCard: SFC<CurrencyCardProps> = ({className, currency}) => {
             id={currency.owner.id}
             username={currency.owner.username}
           />
-          <S.DateContainer>
-            <S.DateRow>
-              <S.DateLabel>Created:</S.DateLabel>
-              <S.DateValue>{shortDate(currency.created_date, false)}</S.DateValue>
-            </S.DateRow>
-            <S.DateRow>
-              <S.DateLabel>Modified:</S.DateLabel>
-              <S.DateValue>{shortDate(currency.modified_date, false)}</S.DateValue>
-            </S.DateRow>
-          </S.DateContainer>
+          <DateDisplay createdDate={currency.created_date} modifiedDate={currency.modified_date} />
         </S.MetadataRow>
       </S.CardContent>
     </S.Container>
