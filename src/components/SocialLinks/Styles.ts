@@ -6,7 +6,7 @@ export const Container = styled.div`
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
   margin-top: 12px;
 `;
 
@@ -18,7 +18,6 @@ export const SocialLink = styled.a`
   height: 36px;
   justify-content: center;
   transition: all 0.2s ease;
-  width: 36px;
 
   &:hover {
     background-color: ${colors.palette.gray[100]};
