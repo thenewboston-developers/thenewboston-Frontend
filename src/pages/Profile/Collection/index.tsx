@@ -1,19 +1,17 @@
 import {useEffect, useState} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 
 import {getUserWallets} from 'api/userWallets';
-import Avatar from 'components/Avatar';
-import Badge, {BadgeStyle} from 'components/Badge';
 import EmptyText from 'components/EmptyText';
 import {SFC, UserWallet} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
+import WalletCard from './WalletCard';
 
 const Collection: SFC = ({className}) => {
   const [loading, setLoading] = useState(true);
   const [wallets, setWallets] = useState<UserWallet[]>([]);
-  const navigate = useNavigate();
   const {id} = useParams();
   const userId = id ? parseInt(id, 10) : null;
 
@@ -46,23 +44,7 @@ const Collection: SFC = ({className}) => {
     return (
       <S.WalletsGrid>
         {wallets.map((wallet) => (
-          <S.WalletCard key={wallet.id} onClick={() => navigate(`/currencies/${wallet.currency.id}`)}>
-            {wallet.is_owner && (
-              <S.BadgeContainer>
-                <Badge badgeStyle={BadgeStyle.primary}>Owner</Badge>
-              </S.BadgeContainer>
-            )}
-            <S.CoinInfo>
-              <Avatar size="40px" src={wallet.currency.logo} />
-              <S.CoinDetails>
-                <S.CoinName>{wallet.currency.ticker}</S.CoinName>
-                <S.CoinAmount>{wallet.balance.toLocaleString()}</S.CoinAmount>
-                <S.RankText>
-                  Rank: {wallet.rank}/{wallet.total_users}
-                </S.RankText>
-              </S.CoinDetails>
-            </S.CoinInfo>
-          </S.WalletCard>
+          <WalletCard key={wallet.id} wallet={wallet} />
         ))}
       </S.WalletsGrid>
     );
