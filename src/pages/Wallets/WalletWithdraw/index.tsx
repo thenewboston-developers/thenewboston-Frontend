@@ -1,4 +1,4 @@
-import {useMemo} from 'react';
+import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
@@ -10,6 +10,7 @@ import ExpandableWire from 'components/ExpandableWire';
 import {FormField} from 'components/FormElements';
 import {CURRENCY_TRANSACTION_FEE} from 'constants/protocol';
 import {createWalletWithdraw} from 'dispatchers/wallets';
+import {getWires as getWiresAction} from 'dispatchers/wires';
 import {WireType} from 'enums';
 import {useActiveWallet} from 'hooks';
 import {getWires} from 'selectors/state';
@@ -23,6 +24,10 @@ const WalletWithdraw: SFC = ({className}) => {
   const activeWallet = useActiveWallet();
   const dispatch = useDispatch<AppDispatch>();
   const wires = useSelector(getWires);
+
+  useEffect(() => {
+    dispatch(getWiresAction());
+  }, [dispatch]);
 
   const initialValues = {
     accountNumber: '',

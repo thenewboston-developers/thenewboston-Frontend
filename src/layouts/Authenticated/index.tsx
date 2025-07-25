@@ -6,7 +6,6 @@ import {getCurrencies} from 'dispatchers/currencies';
 import {checkForDeploymentUpdate} from 'dispatchers/frontendDeployments';
 import {getNotifications} from 'dispatchers/notifications';
 import {getWallets} from 'dispatchers/wallets';
-import {getWires} from 'dispatchers/wires';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -26,7 +25,6 @@ const Authenticated: SFC = ({className}) => {
           dispatch(getCurrencies()),
           dispatch(getNotifications()),
           dispatch(getWallets()),
-          dispatch(getWires()),
         ]);
       } catch (error) {
         displayErrorToast('Error fetching initial data');
