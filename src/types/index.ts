@@ -17,6 +17,7 @@ import {
 import {GetTradesParams} from 'types/api/trades';
 import {CreateUserRequest, CreateUserResponse, UserReadSerializer} from 'types/api/users';
 import {UserStatsSerializer} from 'types/api/userStats';
+import {UserWallet} from 'types/api/userWallets';
 import {CreateWalletRequest, DepositResponse, WithdrawRequest, WithdrawResponse} from 'types/api/wallets';
 import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
@@ -132,6 +133,7 @@ export {
   Users,
   UserStats,
   UserStatsSerializer,
+  UserWallet,
   Wallet,
   Wallets,
   Whitepaper,

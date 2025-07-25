@@ -1,6 +1,9 @@
 import {useEffect, useState} from 'react';
 
 import {getCurrencyBalances} from 'api/currencyBalances';
+import rank1Image from 'assets/badges/rank1.png';
+import rank2Image from 'assets/badges/rank2.png';
+import rank3Image from 'assets/badges/rank3.png';
 import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
 import Loader from 'components/Loader';
@@ -8,9 +11,6 @@ import UserLabel from 'components/UserLabel';
 import {Currency, CurrencyBalance, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
-import rank1Image from './assets/1.png';
-import rank2Image from './assets/2.png';
-import rank3Image from './assets/3.png';
 import * as S from './Styles';
 
 interface BalancesSectionProps {
