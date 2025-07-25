@@ -45,14 +45,9 @@ export const getWalletDepositBalance = async (walletId: number): Promise<Wallet>
   }
 };
 
-export const getWallets = async (params?: {user?: number; has_balance?: boolean}): Promise<Wallet[]> => {
+export const getWallets = async (): Promise<Wallet[]> => {
   try {
-    const queryParams = new URLSearchParams();
-    if (params?.user) queryParams.append('user', params.user.toString());
-    if (params?.has_balance) queryParams.append('has_balance', params.has_balance.toString());
-
-    const url = queryParams.toString() ? `${BASE_URL}?${queryParams}` : BASE_URL;
-    const response = await axios.get<Wallet[]>(url, authorizationHeaders());
+    const response = await axios.get<Wallet[]>(BASE_URL, authorizationHeaders());
     return response.data;
   } catch (error) {
     throw error;

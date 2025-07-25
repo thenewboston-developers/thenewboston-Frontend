@@ -2,6 +2,10 @@ import styled from 'styled-components';
 
 import {colors} from 'styles';
 
+export const BadgeContainer = styled.div`
+  margin-bottom: 12px;
+`;
+
 export const CoinAmount = styled.div`
   color: ${colors.palette.gray[600]};
   font-size: 14px;
@@ -38,6 +42,12 @@ export const LoadingText = styled.div`
   text-align: center;
 `;
 
+export const RankText = styled.div`
+  color: ${colors.palette.gray[500]};
+  font-size: 13px;
+  font-weight: 500;
+`;
+
 export const WalletCard = styled.div`
   background: ${colors.white};
   border: 1px solid ${colors.palette.gray[200]};
@@ -45,6 +55,7 @@ export const WalletCard = styled.div`
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   cursor: pointer;
   padding: 16px;
+  position: relative;
   transition: box-shadow 0.2s;
 
   &:hover {

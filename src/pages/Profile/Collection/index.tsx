@@ -1,17 +1,18 @@
 import {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
-import {getWallets} from 'api/wallets';
+import {getUserWallets} from 'api/userWallets';
 import Avatar from 'components/Avatar';
+import Badge, {BadgeStyle} from 'components/Badge';
 import EmptyText from 'components/EmptyText';
-import {SFC, Wallet} from 'types';
+import {SFC, UserWallet} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
 const Collection: SFC = ({className}) => {
   const [loading, setLoading] = useState(true);
-  const [wallets, setWallets] = useState<Wallet[]>([]);
+  const [wallets, setWallets] = useState<UserWallet[]>([]);
   const navigate = useNavigate();
   const {id} = useParams();
   const userId = id ? parseInt(id, 10) : null;
@@ -22,7 +23,7 @@ const Collection: SFC = ({className}) => {
 
       try {
         setLoading(true);
-        const response = await getWallets({user: userId, has_balance: true});
+        const response = await getUserWallets(userId);
         setWallets(response);
       } catch (error) {
         displayErrorToast('Error fetching user wallets');
@@ -46,11 +47,19 @@ const Collection: SFC = ({className}) => {
       <S.WalletsGrid>
         {wallets.map((wallet) => (
           <S.WalletCard key={wallet.id} onClick={() => navigate(`/currencies/${wallet.currency.id}`)}>
+            {wallet.is_owner && (
+              <S.BadgeContainer>
+                <Badge badgeStyle={BadgeStyle.primary}>Owner</Badge>
+              </S.BadgeContainer>
+            )}
             <S.CoinInfo>
               <Avatar size="40px" src={wallet.currency.logo} />
               <S.CoinDetails>
                 <S.CoinName>{wallet.currency.ticker}</S.CoinName>
                 <S.CoinAmount>{wallet.balance.toLocaleString()}</S.CoinAmount>
+                <S.RankText>
+                  Rank: {wallet.rank}/{wallet.total_users}
+                </S.RankText>
               </S.CoinDetails>
             </S.CoinInfo>
           </S.WalletCard>

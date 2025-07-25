@@ -47,7 +47,7 @@ import {Trade, Trades} from 'types/trades';
 import {Transfer, TransfersResponse} from 'types/transfers';
 import {Users} from 'types/users';
 import {UserStats} from 'types/userStats';
-import {Wallet, Wallets} from 'types/wallets';
+import {UserWallet, UserWalletsPaginatedResponse, Wallet, Wallets} from 'types/wallets';
 import {Whitepaper} from 'types/whitepapers';
 import {Wire, Wires} from 'types/wires';
 
@@ -132,6 +132,8 @@ export {
   Users,
   UserStats,
   UserStatsSerializer,
+  UserWallet,
+  UserWalletsPaginatedResponse,
   Wallet,
   Wallets,
   Whitepaper,
