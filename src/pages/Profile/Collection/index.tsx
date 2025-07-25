@@ -11,7 +11,7 @@ import WalletCard from './WalletCard';
 
 const Collection: SFC = ({className}) => {
   const [loading, setLoading] = useState(true);
-  const [wallets, setWallets] = useState<UserWallet[]>([]);
+  const [userWallets, setUserWallets] = useState<UserWallet[]>([]);
   const {id} = useParams();
   const userId = id ? parseInt(id, 10) : null;
 
@@ -22,10 +22,10 @@ const Collection: SFC = ({className}) => {
       try {
         setLoading(true);
         const response = await getUserWallets(userId);
-        setWallets(response);
+        setUserWallets(response);
       } catch (error) {
         displayErrorToast('Error fetching user wallets');
-        setWallets([]);
+        setUserWallets([]);
       } finally {
         setLoading(false);
       }
@@ -37,14 +37,14 @@ const Collection: SFC = ({className}) => {
       return <S.LoadingText>Loading collection...</S.LoadingText>;
     }
 
-    if (wallets.length === 0) {
+    if (userWallets.length === 0) {
       return <EmptyText>No coins in collection</EmptyText>;
     }
 
     return (
       <S.WalletsGrid>
-        {wallets.map((wallet) => (
-          <WalletCard key={wallet.id} wallet={wallet} />
+        {userWallets.map((userWallet) => (
+          <WalletCard key={userWallet.id} userWallet={userWallet} />
         ))}
       </S.WalletsGrid>
     );

@@ -9,38 +9,38 @@ import {SFC, UserWallet} from 'types';
 import * as S from './Styles';
 
 export interface WalletCardProps {
-  wallet: UserWallet;
+  userWallet: UserWallet;
 }
 
-const WalletCard: SFC<WalletCardProps> = ({className, wallet}) => {
+const WalletCard: SFC<WalletCardProps> = ({className, userWallet}) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/currencies/${wallet.currency.id}`);
+    navigate(`/currencies/${userWallet.currency.id}`);
   };
 
   return (
     <S.Container className={className} onClick={handleCardClick}>
       <S.CoinInfo>
-        <S.Avatar size="64px" src={wallet.currency.logo} />
+        <S.Avatar size="64px" src={userWallet.currency.logo} />
         <S.CoinDetails>
-          <S.CoinName>{wallet.currency.ticker}</S.CoinName>
-          <S.CoinAmount>{wallet.balance.toLocaleString()}</S.CoinAmount>
+          <S.CoinName>{userWallet.currency.ticker}</S.CoinName>
+          <S.CoinAmount>{userWallet.balance.toLocaleString()}</S.CoinAmount>
         </S.CoinDetails>
       </S.CoinInfo>
       <S.Line />
       <S.BottomRow>
         <S.RankContainer>
-          {wallet.rank === 1 && <S.RankBadge alt="Rank 1" src={rank1Image} />}
-          {wallet.rank === 2 && <S.RankBadge alt="Rank 2" src={rank2Image} />}
-          {wallet.rank === 3 && <S.RankBadge alt="Rank 3" src={rank3Image} />}
+          {userWallet.rank === 1 && <S.RankBadge alt="Rank 1" src={rank1Image} />}
+          {userWallet.rank === 2 && <S.RankBadge alt="Rank 2" src={rank2Image} />}
+          {userWallet.rank === 3 && <S.RankBadge alt="Rank 3" src={rank3Image} />}
           <S.Rank>
-            {wallet.rank <= 3
-              ? `of ${wallet.total_users.toLocaleString()}`
-              : `#${wallet.rank} of ${wallet.total_users.toLocaleString()}`}
+            {userWallet.rank <= 3
+              ? `of ${userWallet.total_users.toLocaleString()}`
+              : `#${userWallet.rank} of ${userWallet.total_users.toLocaleString()}`}
           </S.Rank>
         </S.RankContainer>
-        {wallet.is_owner && <Badge badgeStyle={BadgeStyle.primary}>Owner</Badge>}
+        {userWallet.is_owner && <Badge badgeStyle={BadgeStyle.primary}>Owner</Badge>}
       </S.BottomRow>
     </S.Container>
   );
