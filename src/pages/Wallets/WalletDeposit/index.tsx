@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiRefresh} from '@mdi/js';
 import MdiIcon from '@mdi/react';
@@ -10,6 +10,7 @@ import ExpandableWire from 'components/ExpandableWire';
 import Line from 'components/Line';
 import Loader from 'components/Loader';
 import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
+import {getWires as getWiresAction} from 'dispatchers/wires';
 import {WireType} from 'enums';
 import {useActiveWallet} from 'hooks';
 import {getWires} from 'selectors/state';
@@ -25,6 +26,10 @@ const WalletDeposit: SFC = ({className}) => {
   const activeWallet = useActiveWallet();
   const dispatch = useDispatch<AppDispatch>();
   const wires = useSelector(getWires);
+
+  useEffect(() => {
+    dispatch(getWiresAction());
+  }, [dispatch]);
 
   if (!activeWallet) return null;
 
