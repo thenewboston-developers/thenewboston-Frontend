@@ -3,6 +3,7 @@ import {useParams} from 'react-router-dom';
 
 import {getUserWallets} from 'api/userWallets';
 import EmptyText from 'components/EmptyText';
+import Loader from 'components/Loader';
 import {SFC, UserWallet} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -34,7 +35,11 @@ const Collection: SFC = ({className}) => {
 
   const renderContent = () => {
     if (loading) {
-      return <S.LoadingText>Loading collection...</S.LoadingText>;
+      return (
+        <S.LoaderContainer>
+          <Loader size={24} />
+        </S.LoaderContainer>
+      );
     }
 
     if (userWallets.length === 0) {
