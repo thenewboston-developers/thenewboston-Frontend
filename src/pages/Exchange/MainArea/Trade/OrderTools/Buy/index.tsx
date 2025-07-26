@@ -4,7 +4,7 @@ import {Form, Formik, FormikHelpers} from 'formik';
 
 import AvailableTotal from 'components/AvailableTotal';
 import {ButtonType} from 'components/Button';
-import Callout, {CalloutType} from 'components/Callout';
+import {CalloutType} from 'components/Callout';
 import {FormField, LogoInput} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
 import {ExchangeOrderSide, ToastType} from 'enums';
