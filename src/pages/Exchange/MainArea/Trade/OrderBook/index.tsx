@@ -51,8 +51,8 @@ const OrderBook: SFC = ({className}) => {
         </S.SectionHeader>
 
         <S.ColumnHeaders>
-          <S.ColumnHeader>Price ({activeAssetPair.secondary_currency.ticker})</S.ColumnHeader>
           <S.ColumnHeader>Amount ({activeAssetPair.primary_currency.ticker})</S.ColumnHeader>
+          <S.ColumnHeader>Price ({activeAssetPair.secondary_currency.ticker})</S.ColumnHeader>
           <S.ColumnHeader>Total ({activeAssetPair.secondary_currency.ticker})</S.ColumnHeader>
         </S.ColumnHeaders>
 
@@ -82,8 +82,8 @@ const OrderBook: SFC = ({className}) => {
                   setHoveredOrder(null);
                 }}
               >
-                <S.OrderPrice $type={type}>{order.price.toLocaleString()}</S.OrderPrice>
                 <S.OrderQuantity>{remaining.toLocaleString()}</S.OrderQuantity>
+                <S.OrderPrice $type={type}>{order.price.toLocaleString()}</S.OrderPrice>
                 <S.OrderTotal>{total.toLocaleString(undefined, {maximumFractionDigits: 2})}</S.OrderTotal>
 
                 {hoveredOrder?.id === order.id && (
