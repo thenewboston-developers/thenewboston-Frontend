@@ -8,6 +8,7 @@ import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useResizeObserver from 'hooks/useResizeObserver';
 import useToggle from 'hooks/useToggle';
 import useUser from 'hooks/useUser';
+import useWindowSize from 'hooks/useWindowSize';
 
 export {
   useActiveAssetPair,
@@ -20,4 +21,5 @@ export {
   useResizeObserver,
   useToggle,
   useUser,
+  useWindowSize,
 };
