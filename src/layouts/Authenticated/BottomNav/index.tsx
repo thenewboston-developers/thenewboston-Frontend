@@ -4,8 +4,7 @@ import {mdiAccount, mdiBell, mdiCircleMultipleOutline, mdiHome, mdiSwapHorizonta
 import {getSelf, getTotalUnreadNotificationCount} from 'selectors/state';
 import {SFC} from 'types';
 
-import BadgeCount from '../LeftNav/BadgeCount';
-
+import BadgeCount from './BadgeCount';
 import MenuItem from './MenuItem';
 import * as S from './Styles';
 

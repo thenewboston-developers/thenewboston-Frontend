@@ -1,5 +1,6 @@
 import {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {useLocation} from 'react-router-dom';
 
 import {getAssetPairs} from 'dispatchers/assetPairs';
 import {getCurrencies} from 'dispatchers/currencies';
@@ -7,6 +8,7 @@ import {checkForDeploymentUpdate} from 'dispatchers/frontendDeployments';
 import {getNotifications} from 'dispatchers/notifications';
 import {getWallets} from 'dispatchers/wallets';
 import {useWindowSize} from 'hooks';
+import {getSelf} from 'selectors/state';
 import {breakpoints} from 'styles';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -19,9 +21,14 @@ import * as S from './Styles';
 
 const Authenticated: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
+  const location = useLocation();
+  const self = useSelector(getSelf);
   const {width} = useWindowSize();
 
   const isMobile = width < parseInt(breakpoints.mobile);
+  const isOnFeed = location.pathname === '/feed';
+  const isOnOwnProfile = location.pathname === `/profile/${self.id}`;
+  const shouldShowFloatingButton = isMobile && (isOnFeed || isOnOwnProfile);
 
   useEffect(() => {
     (async () => {
@@ -45,12 +52,8 @@ const Authenticated: SFC = ({className}) => {
       <S.MainArea>
         <MainArea />
       </S.MainArea>
-      {isMobile && (
-        <>
-          <BottomNav />
-          <FloatingCreatePostButton />
-        </>
-      )}
+      {isMobile && <BottomNav />}
+      {shouldShowFloatingButton && <FloatingCreatePostButton />}
     </S.Container>
   );
 };

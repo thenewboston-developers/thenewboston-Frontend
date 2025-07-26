@@ -1,19 +1,21 @@
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 import {getFollowers} from 'api/followers';
 import DefaultAvatar from 'assets/default-avatar.svg';
 import logo from 'assets/logo192.png';
 import {ButtonColor} from 'components/Button';
 import SocialLinks from 'components/SocialLinks';
+import {PATH_AUTHENTICATION} from 'constants/paths';
 import {createFollower, deleteFollower} from 'dispatchers/followers';
 import {getUserStats} from 'dispatchers/userStats';
-import {useToggle, useUser} from 'hooks';
+import {useToggle, useUser, useWindowSize} from 'hooks';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
 import ProfileEditModal from 'modals/ProfileEditModal';
 import SendModal from 'modals/SendModal';
 import {getSelf, getUserStats as getUserStatsState} from 'selectors/state';
+import {breakpoints} from 'styles';
 import {AppDispatch, SFC} from 'types';
 import {formatNumber} from 'utils/numbers';
 import {displayErrorToast} from 'utils/toasts';
@@ -26,6 +28,7 @@ const UserDetails: SFC = ({className}) => {
   const [selfFollowing, setSelfFollowing] = useState<boolean>(false);
   const [sendModalIsOpen, toggleSendModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const {id} = useParams();
   const self = useSelector(getSelf);
   const user = useUser(id);
@@ -33,6 +36,8 @@ const UserDetails: SFC = ({className}) => {
   const userBanner = user?.banner;
   const userId = id ? parseInt(id, 10) : null;
   const userStats = useSelector(getUserStatsState);
+  const {width} = useWindowSize();
+  const isMobile = width < parseInt(breakpoints.mobile);
   const {
     default_wallet_balance = 0,
     followers_count = 0,
@@ -107,6 +112,28 @@ const UserDetails: SFC = ({className}) => {
     return <S.Button color={ButtonColor.secondary} onClick={toggleProfileEditModal} text="Edit Profile" />;
   };
 
+  const renderLogoutButton = () => {
+    if (!isMobile || self.id !== userId) return null;
+    return (
+      <S.Button color={ButtonColor.secondary} onClick={() => navigate(PATH_AUTHENTICATION.LOGOUT)} text="Logout" />
+    );
+  };
+
+  const renderOwnProfileButtons = () => {
+    if (self.id !== userId) return null;
+
+    if (isMobile) {
+      return (
+        <S.OwnProfileButtonGroup>
+          {renderEditProfileButton()}
+          {renderLogoutButton()}
+        </S.OwnProfileButtonGroup>
+      );
+    }
+
+    return renderEditProfileButton();
+  };
+
   const renderFollowButton = () => {
     if (self.id === userId) return null;
     return (
@@ -169,7 +196,7 @@ const UserDetails: SFC = ({className}) => {
         <S.Wrapper>
           {renderStatsAndBalance()}
           <S.ButtonGroup>
-            {renderEditProfileButton()}
+            {renderOwnProfileButtons()}
             {renderSendButton()}
             {renderFollowButton()}
           </S.ButtonGroup>
