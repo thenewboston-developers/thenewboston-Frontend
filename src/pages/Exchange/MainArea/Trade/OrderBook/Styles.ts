@@ -70,7 +70,7 @@ export const OrderBookContainer = styled.div`
 
 export const OrderCount = styled.span`
   color: ${colors.secondary};
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
 `;
 
@@ -134,7 +134,7 @@ export const SectionHeader = styled.div`
 
 export const SectionTitle = styled.h3<{$type: 'buy' | 'sell'}>`
   color: ${({$type}) => ($type === 'buy' ? colors.palette.green[600] : colors.palette.red[700])};
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.05em;
   margin: 0;
