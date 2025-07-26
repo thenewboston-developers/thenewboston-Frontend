@@ -26,12 +26,8 @@ export const ColumnHeader = styled.span`
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.05em;
+  text-align: center;
   text-transform: uppercase;
-
-  &:nth-child(2),
-  &:nth-child(3) {
-    text-align: right;
-  }
 `;
 
 export const ColumnHeaders = styled.div`
@@ -88,13 +84,14 @@ export const OrderPrice = styled.span<{$type: 'buy' | 'sell'}>`
   color: ${({$type}) => ($type === 'buy' ? colors.palette.green[600] : colors.palette.red[700])};
   font-size: 14px;
   font-weight: 600;
+  text-align: center;
 `;
 
 export const OrderQuantity = styled.span`
   color: ${colors.primary};
   font-size: 14px;
   font-weight: 500;
-  text-align: right;
+  text-align: center;
 `;
 
 export const OrderRow = styled.div<{$type: 'buy' | 'sell'}>`
@@ -124,13 +121,14 @@ export const OrderTotal = styled.span`
   color: ${colors.secondary};
   font-size: 14px;
   font-weight: 500;
-  text-align: right;
+  text-align: center;
 `;
 
 export const SectionHeader = styled.div`
   align-items: center;
   display: flex;
   gap: 8px;
+  justify-content: center;
   margin-bottom: 8px;
 `;
 
