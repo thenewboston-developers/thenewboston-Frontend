@@ -10,12 +10,11 @@ import SocialLinks from 'components/SocialLinks';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {createFollower, deleteFollower} from 'dispatchers/followers';
 import {getUserStats} from 'dispatchers/userStats';
-import {useToggle, useUser, useWindowSize} from 'hooks';
+import {useIsMobile, useToggle, useUser} from 'hooks';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
 import ProfileEditModal from 'modals/ProfileEditModal';
 import SendModal from 'modals/SendModal';
 import {getSelf, getUserStats as getUserStatsState} from 'selectors/state';
-import {breakpoints} from 'styles';
 import {AppDispatch, SFC} from 'types';
 import {formatNumber} from 'utils/numbers';
 import {displayErrorToast} from 'utils/toasts';
@@ -36,8 +35,7 @@ const UserDetails: SFC = ({className}) => {
   const userBanner = user?.banner;
   const userId = id ? parseInt(id, 10) : null;
   const userStats = useSelector(getUserStatsState);
-  const {width} = useWindowSize();
-  const isMobile = width < parseInt(breakpoints.mobile);
+  const isMobile = useIsMobile();
   const {
     default_wallet_balance = 0,
     followers_count = 0,
