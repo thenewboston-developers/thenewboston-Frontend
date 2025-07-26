@@ -20,9 +20,9 @@ import * as S from './Styles';
 
 const Authenticated: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
+  const isMobile = useIsMobile();
   const location = useLocation();
   const self = useSelector(getSelf);
-  const isMobile = useIsMobile();
 
   const isOnFeed = location.pathname === '/feed';
   const isOnOwnProfile = location.pathname === `/profile/${self.id}`;

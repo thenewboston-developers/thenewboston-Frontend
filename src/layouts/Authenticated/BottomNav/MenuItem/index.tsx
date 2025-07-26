@@ -13,7 +13,7 @@ export interface MenuItemProps {
   to: string;
 }
 
-const MenuItem: SFC<MenuItemProps> = ({className, children, icon, rootPath, text, to}) => {
+const MenuItem: SFC<MenuItemProps> = ({children, className, icon, rootPath, text, to}) => {
   const location = useLocation();
 
   return (

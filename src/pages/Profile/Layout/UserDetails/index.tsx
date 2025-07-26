@@ -26,16 +26,16 @@ const UserDetails: SFC = ({className}) => {
   const [profileEditModalIsOpen, toggleProfileEditModal] = useToggle(false);
   const [selfFollowing, setSelfFollowing] = useState<boolean>(false);
   const [sendModalIsOpen, toggleSendModal] = useToggle(false);
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
   const {id} = useParams();
+  const dispatch = useDispatch<AppDispatch>();
+  const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const self = useSelector(getSelf);
   const user = useUser(id);
+  const userStats = useSelector(getUserStatsState);
   const userAvatar = user?.avatar || DefaultAvatar;
   const userBanner = user?.banner;
   const userId = id ? parseInt(id, 10) : null;
-  const userStats = useSelector(getUserStatsState);
-  const isMobile = useIsMobile();
   const {
     default_wallet_balance = 0,
     followers_count = 0,
