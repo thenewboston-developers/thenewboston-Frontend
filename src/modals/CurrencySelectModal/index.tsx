@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import RadioCard from 'components/RadioCard';
 import {ToastType} from 'enums';
 import {getCurrencies, getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
@@ -56,7 +57,7 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
       <>
         {Object.values(currencies).map((_currency) => {
           return (
-            <S.RadioCardWrapper
+            <RadioCard
               currency={_currency}
               isSelected={manager.activeCommentCurrency?.id === _currency.id}
               key={_currency.id}
