@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import {breakpoints} from 'styles';
 
 export const Container = styled.div<{$isMobile: boolean}>`
-  display: grid;
-  grid-template-columns: ${({$isMobile}) => ($isMobile ? '1fr' : '260px 1fr')};
+  display: ${({$isMobile}) => ($isMobile ? 'flex' : 'grid')};
+  flex-direction: ${({$isMobile}) => ($isMobile ? 'column' : 'unset')};
+  grid-template-columns: ${({$isMobile}) => ($isMobile ? 'unset' : '260px 1fr')};
   height: 100vh;
   overflow: hidden;
 
@@ -14,10 +15,7 @@ export const Container = styled.div<{$isMobile: boolean}>`
 `;
 
 export const MainArea = styled.div`
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding-bottom: 60px;
-  }
 `;
