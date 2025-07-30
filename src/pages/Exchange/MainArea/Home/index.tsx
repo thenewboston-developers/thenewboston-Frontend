@@ -29,12 +29,12 @@ const Home: SFC = ({className}) => {
     })();
   }, []);
 
-  const formatWholeNumber = (value: number) => {
-    return Math.floor(value).toLocaleString();
-  };
-
   const formatPercentage = (value: number) => {
     return Math.abs(value).toFixed(2);
+  };
+
+  const formatWholeNumber = (value: number) => {
+    return Math.floor(value).toLocaleString();
   };
 
   const renderSparkline = (data: number[]) => {
