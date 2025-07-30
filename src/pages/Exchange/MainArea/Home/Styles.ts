@@ -2,6 +2,12 @@ import styled, {css} from 'styled-components';
 
 import {breakpoints, colors, fonts} from 'styles';
 
+export const CoinInfo = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 12px;
+`;
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -74,12 +80,6 @@ export const Logo = styled.img`
   border-radius: 50%;
   height: 32px;
   width: 32px;
-`;
-
-export const CoinInfo = styled.div`
-  align-items: center;
-  display: flex;
-  gap: 12px;
 `;
 
 export const PercentageChange = styled.div<{$isPositive: boolean}>`
