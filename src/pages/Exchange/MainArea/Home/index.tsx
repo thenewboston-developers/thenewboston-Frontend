@@ -81,7 +81,7 @@ const Home: SFC = ({className}) => {
         <S.Table>
           <S.TableHeader>
             <S.TableRow>
-              <S.HeaderCell $sticky>Market</S.HeaderCell>
+              <S.HeaderCell $sticky>Coin</S.HeaderCell>
               <S.HeaderCell $align="right">Price (TNB)</S.HeaderCell>
               <S.HeaderCell $align="right">1h</S.HeaderCell>
               <S.HeaderCell $align="right">24h</S.HeaderCell>
@@ -95,12 +95,12 @@ const Home: SFC = ({className}) => {
             {tradeHistoryItems.map((item, index) => (
               <S.TableRow key={index}>
                 <S.DataCell $sticky>
-                  <S.MarketInfo>
+                  <S.CoinInfo>
                     <S.Logo alt={item.primary_currency.ticker} src={item.primary_currency.logo} />
                     <S.TickerPair>
                       {item.primary_currency.ticker}/{item.secondary_currency.ticker}
                     </S.TickerPair>
-                  </S.MarketInfo>
+                  </S.CoinInfo>
                 </S.DataCell>
                 <S.DataCell $align="right">{formatWholeNumber(item.price)}</S.DataCell>
                 <S.DataCell $align="right">

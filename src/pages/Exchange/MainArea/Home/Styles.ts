@@ -76,7 +76,7 @@ export const Logo = styled.img`
   width: 32px;
 `;
 
-export const MarketInfo = styled.div`
+export const CoinInfo = styled.div`
   align-items: center;
   display: flex;
   gap: 12px;
