@@ -26,7 +26,7 @@ const LeftNav: SFC = ({className}) => {
     <S.Container className={className}>
       <S.Top>
         <MenuLink icon={mdiCircleMultipleOutline} rootPath="/currencies" text="Currencies" to="/currencies" />
-        <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
+        <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange" />
         <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
         <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications">
           <BadgeCount items={Array(totalUnreadCount).fill(null)} />
