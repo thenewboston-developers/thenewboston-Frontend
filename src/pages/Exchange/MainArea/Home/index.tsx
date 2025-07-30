@@ -97,9 +97,7 @@ const Home: SFC = ({className}) => {
                 <S.DataCell $sticky>
                   <S.CoinInfo>
                     <S.Logo alt={item.primary_currency.ticker} src={item.primary_currency.logo} />
-                    <S.TickerPair>
-                      {item.primary_currency.ticker}/{item.secondary_currency.ticker}
-                    </S.TickerPair>
+                    <S.TickerPair>{item.primary_currency.ticker}</S.TickerPair>
                   </S.CoinInfo>
                 </S.DataCell>
                 <S.DataCell $align="right">{formatWholeNumber(item.price)}</S.DataCell>
