@@ -14,10 +14,12 @@ export const Container = styled.div`
   }
 `;
 
-export const DataCell = styled.td<{$sticky?: boolean}>`
+export const DataCell = styled.td<{$sticky?: boolean; $align?: 'left' | 'right'}>`
   background: ${colors.white};
+  color: ${colors.primary};
   font-size: 14px;
-  padding: 16px 12px;
+  padding: 16px 24px;
+  text-align: ${({$align}) => $align || 'left'};
   white-space: nowrap;
 
   ${({$sticky}) =>
@@ -42,13 +44,14 @@ export const ErrorMessage = styled.div`
   justify-content: center;
 `;
 
-export const HeaderCell = styled.th<{$sticky?: boolean}>`
+export const HeaderCell = styled.th<{$sticky?: boolean; $align?: 'left' | 'right'}>`
   background: ${colors.white};
-  color: ${colors.palette.gray[600]};
-  font-size: 12px;
+  border-bottom: 1px solid ${colors.border};
+  color: ${colors.palette.gray[500]};
+  font-size: 11px;
   font-weight: ${fonts.weight.semiBold};
-  padding: 12px;
-  text-align: left;
+  padding: 12px 24px;
+  text-align: ${({$align}) => $align || 'left'};
   text-transform: uppercase;
 
   ${({$sticky}) =>
@@ -79,12 +82,17 @@ export const MarketInfo = styled.div`
   gap: 12px;
 `;
 
-export const PercentageChange = styled.span<{$isPositive: boolean}>`
+export const PercentageChange = styled.div<{$isPositive: boolean}>`
+  align-items: center;
   color: ${({$isPositive}) => ($isPositive ? colors.palette.green[600] : colors.palette.red[600])};
+  display: inline-flex;
   font-weight: ${fonts.weight.medium};
+  gap: 4px;
+  justify-content: flex-end;
 `;
 
 export const SparklineContainer = styled.div`
+  display: inline-block;
   width: 120px;
 
   @media (max-width: ${breakpoints.desktop}) {
@@ -93,33 +101,34 @@ export const SparklineContainer = styled.div`
 `;
 
 export const Table = styled.table`
+  background-color: ${colors.white};
   border-collapse: collapse;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  overflow: hidden;
   width: 100%;
 `;
 
 export const TableBody = styled.tbody``;
 
-export const TableHeader = styled.thead`
-  border-bottom: 1px solid ${colors.palette.gray[200]};
-`;
+export const TableHeader = styled.thead``;
 
 export const TableRow = styled.tr`
-  border-bottom: 1px solid ${colors.palette.gray[100]};
-
-  &:hover {
-    background: ${colors.palette.gray[50]};
+  &:not(:last-child) td {
+    border-bottom: 1px solid ${colors.border};
   }
 `;
 
 export const TableWrapper = styled.div`
+  border-radius: 12px;
   flex: 1;
-  overflow: auto;
+  overflow: hidden;
 
   @media (max-width: ${breakpoints.tablet}) {
     overflow-x: auto;
 
     ${Table} {
-      min-width: 800px;
+      min-width: 900px;
     }
   }
 `;
