@@ -14,7 +14,7 @@ const BottomNav: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <MenuItem icon={mdiCircleMultipleOutline} rootPath="/currencies" text="Currencies" to="/currencies" />
-      <MenuItem icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange/trade" />
+      <MenuItem icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange" />
       <MenuItem icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
       <MenuItem icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications">
         <BadgeCount />

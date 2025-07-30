@@ -8,6 +8,7 @@ import {GetMintChartDataParams, MintChartDataResponse, MintDataPoint} from 'type
 import {CreateMintRequest, GetMintsParams} from 'types/api/mints';
 import {GetPostsParams, PostReadSerializer} from 'types/api/posts';
 import {TotalAmountMintedResponse} from 'types/api/totalAmountMinted';
+import {CurrencyTinySerializer, TradeHistoryItem, TradeHistoryItemsResponse} from 'types/api/tradeHistory';
 import {
   Candlestick,
   ChartTimeRange,
@@ -76,6 +77,7 @@ export {
   Currencies,
   Currency,
   CurrencyBalance,
+  CurrencyTinySerializer,
   DepositResponse,
   Dict,
   ExchangeOrder,
@@ -125,6 +127,8 @@ export {
   TipAmount,
   TotalAmountMintedResponse,
   Trade,
+  TradeHistoryItem,
+  TradeHistoryItemsResponse,
   TradePriceChartData,
   Trades,
   Transfer,
