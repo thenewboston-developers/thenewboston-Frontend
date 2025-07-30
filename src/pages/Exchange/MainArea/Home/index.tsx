@@ -78,56 +78,58 @@ const Home: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.TableWrapper>
-        <S.Table>
-          <S.TableHeader>
-            <S.TableRow>
-              <S.HeaderCell $sticky>Coin</S.HeaderCell>
-              <S.HeaderCell $align="right">Price (TNB)</S.HeaderCell>
-              <S.HeaderCell $align="right">1h</S.HeaderCell>
-              <S.HeaderCell $align="right">24h</S.HeaderCell>
-              <S.HeaderCell $align="right">7d</S.HeaderCell>
-              <S.HeaderCell $align="right">24h Volume</S.HeaderCell>
-              <S.HeaderCell $align="right">Market Cap (TNB)</S.HeaderCell>
-              <S.HeaderCell $align="right">Last 7 Days</S.HeaderCell>
-            </S.TableRow>
-          </S.TableHeader>
-          <S.TableBody>
-            {tradeHistoryItems.map((item, index) => (
-              <S.TableRow key={index}>
-                <S.DataCell $sticky>
-                  <S.CoinInfo>
-                    <S.Logo alt={item.primary_currency.ticker} src={item.primary_currency.logo} />
-                    <S.TickerPair>{item.primary_currency.ticker}</S.TickerPair>
-                  </S.CoinInfo>
-                </S.DataCell>
-                <S.DataCell $align="right">{formatWholeNumber(item.price)}</S.DataCell>
-                <S.DataCell $align="right">
-                  <S.PercentageChange $isPositive={item.change_1h >= 0}>
-                    <Icon icon={item.change_1h >= 0 ? mdiMenuUp : mdiMenuDown} size={24} />
-                    {formatPercentage(item.change_1h)}%
-                  </S.PercentageChange>
-                </S.DataCell>
-                <S.DataCell $align="right">
-                  <S.PercentageChange $isPositive={item.change_24h >= 0}>
-                    <Icon icon={item.change_24h >= 0 ? mdiMenuUp : mdiMenuDown} size={24} />
-                    {formatPercentage(item.change_24h)}%
-                  </S.PercentageChange>
-                </S.DataCell>
-                <S.DataCell $align="right">
-                  <S.PercentageChange $isPositive={item.change_7d >= 0}>
-                    <Icon icon={item.change_7d >= 0 ? mdiMenuUp : mdiMenuDown} size={24} />
-                    {formatPercentage(item.change_7d)}%
-                  </S.PercentageChange>
-                </S.DataCell>
-                <S.DataCell $align="right">{formatWholeNumber(item.volume_24h)}</S.DataCell>
-                <S.DataCell $align="right">{formatWholeNumber(item.market_cap)}</S.DataCell>
-                <S.DataCell $align="right">
-                  <S.SparklineContainer>{renderSparkline(item.sparkline)}</S.SparklineContainer>
-                </S.DataCell>
+        <S.ScrollWrapper>
+          <S.Table>
+            <S.TableHeader>
+              <S.TableRow>
+                <S.HeaderCell $sticky>Coin</S.HeaderCell>
+                <S.HeaderCell $align="right">Price (TNB)</S.HeaderCell>
+                <S.HeaderCell $align="right">1h</S.HeaderCell>
+                <S.HeaderCell $align="right">24h</S.HeaderCell>
+                <S.HeaderCell $align="right">7d</S.HeaderCell>
+                <S.HeaderCell $align="right">24h Volume</S.HeaderCell>
+                <S.HeaderCell $align="right">Market Cap (TNB)</S.HeaderCell>
+                <S.HeaderCell $align="right">Last 7 Days</S.HeaderCell>
               </S.TableRow>
-            ))}
-          </S.TableBody>
-        </S.Table>
+            </S.TableHeader>
+            <S.TableBody>
+              {tradeHistoryItems.map((item, index) => (
+                <S.TableRow key={index}>
+                  <S.DataCell $sticky>
+                    <S.CoinInfo>
+                      <S.Logo alt={item.primary_currency.ticker} src={item.primary_currency.logo} />
+                      <S.TickerPair>{item.primary_currency.ticker}</S.TickerPair>
+                    </S.CoinInfo>
+                  </S.DataCell>
+                  <S.DataCell $align="right">{formatWholeNumber(item.price)}</S.DataCell>
+                  <S.DataCell $align="right">
+                    <S.PercentageChange $isPositive={item.change_1h >= 0}>
+                      <Icon icon={item.change_1h >= 0 ? mdiMenuUp : mdiMenuDown} size={24} />
+                      {formatPercentage(item.change_1h)}%
+                    </S.PercentageChange>
+                  </S.DataCell>
+                  <S.DataCell $align="right">
+                    <S.PercentageChange $isPositive={item.change_24h >= 0}>
+                      <Icon icon={item.change_24h >= 0 ? mdiMenuUp : mdiMenuDown} size={24} />
+                      {formatPercentage(item.change_24h)}%
+                    </S.PercentageChange>
+                  </S.DataCell>
+                  <S.DataCell $align="right">
+                    <S.PercentageChange $isPositive={item.change_7d >= 0}>
+                      <Icon icon={item.change_7d >= 0 ? mdiMenuUp : mdiMenuDown} size={24} />
+                      {formatPercentage(item.change_7d)}%
+                    </S.PercentageChange>
+                  </S.DataCell>
+                  <S.DataCell $align="right">{formatWholeNumber(item.volume_24h)}</S.DataCell>
+                  <S.DataCell $align="right">{formatWholeNumber(item.market_cap)}</S.DataCell>
+                  <S.DataCell $align="right">
+                    <S.SparklineContainer>{renderSparkline(item.sparkline)}</S.SparklineContainer>
+                  </S.DataCell>
+                </S.TableRow>
+              ))}
+            </S.TableBody>
+          </S.Table>
+        </S.ScrollWrapper>
       </S.TableWrapper>
     </S.Container>
   );

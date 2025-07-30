@@ -90,6 +90,12 @@ export const PercentageChange = styled.div<{$isPositive: boolean}>`
   justify-content: flex-end;
 `;
 
+export const ScrollWrapper = styled.div`
+  height: 100%;
+  overflow: auto;
+  width: 100%;
+`;
+
 export const SparklineContainer = styled.div`
   display: inline-block;
   width: 120px;
@@ -102,9 +108,6 @@ export const SparklineContainer = styled.div`
 export const Table = styled.table`
   background-color: ${colors.white};
   border-collapse: collapse;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-  overflow: hidden;
   width: 100%;
 `;
 
@@ -119,13 +122,13 @@ export const TableRow = styled.tr`
 `;
 
 export const TableWrapper = styled.div`
+  background-color: ${colors.white};
   border-radius: 12px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   flex: 1;
   overflow: hidden;
 
   @media (max-width: ${breakpoints.tablet}) {
-    overflow-x: auto;
-
     ${Table} {
       min-width: 900px;
     }
