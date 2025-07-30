@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {mdiArrowDownCircle, mdiArrowUpCircle} from '@mdi/js';
+import {mdiMenuDown, mdiMenuUp} from '@mdi/js';
 import {Area, AreaChart, ResponsiveContainer} from 'recharts';
 
 import {getTradeHistoryItems} from 'api/tradeHistoryItems';
@@ -105,19 +105,19 @@ const Home: SFC = ({className}) => {
                 <S.DataCell $align="right">{formatWholeNumber(item.price)}</S.DataCell>
                 <S.DataCell $align="right">
                   <S.PercentageChange $isPositive={item.change_1h >= 0}>
-                    <Icon icon={item.change_1h >= 0 ? mdiArrowUpCircle : mdiArrowDownCircle} size={16} />
+                    <Icon icon={item.change_1h >= 0 ? mdiMenuUp : mdiMenuDown} size={24} />
                     {formatPercentage(item.change_1h)}%
                   </S.PercentageChange>
                 </S.DataCell>
                 <S.DataCell $align="right">
                   <S.PercentageChange $isPositive={item.change_24h >= 0}>
-                    <Icon icon={item.change_24h >= 0 ? mdiArrowUpCircle : mdiArrowDownCircle} size={16} />
+                    <Icon icon={item.change_24h >= 0 ? mdiMenuUp : mdiMenuDown} size={24} />
                     {formatPercentage(item.change_24h)}%
                   </S.PercentageChange>
                 </S.DataCell>
                 <S.DataCell $align="right">
                   <S.PercentageChange $isPositive={item.change_7d >= 0}>
-                    <Icon icon={item.change_7d >= 0 ? mdiArrowUpCircle : mdiArrowDownCircle} size={16} />
+                    <Icon icon={item.change_7d >= 0 ? mdiMenuUp : mdiMenuDown} size={24} />
                     {formatPercentage(item.change_7d)}%
                   </S.PercentageChange>
                 </S.DataCell>

@@ -87,7 +87,6 @@ export const PercentageChange = styled.div<{$isPositive: boolean}>`
   color: ${({$isPositive}) => ($isPositive ? colors.palette.green[600] : colors.palette.red[600])};
   display: inline-flex;
   font-weight: ${fonts.weight.medium};
-  gap: 4px;
   justify-content: flex-end;
 `;
 
