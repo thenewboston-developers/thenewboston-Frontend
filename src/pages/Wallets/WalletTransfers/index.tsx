@@ -136,7 +136,9 @@ const WalletTransfers: SFC = ({className}) => {
 
     return (
       <>
-        <S.TransfersList>{transfers.map(renderTransfer)}</S.TransfersList>
+        <S.WhitePanel>
+          <S.TransfersList>{transfers.map(renderTransfer)}</S.TransfersList>
+        </S.WhitePanel>
         <S.Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
       </>
     );

@@ -5,7 +5,6 @@ import rank1Image from 'assets/badges/rank1.png';
 import rank2Image from 'assets/badges/rank2.png';
 import rank3Image from 'assets/badges/rank3.png';
 import Loader from 'components/Loader';
-import Pagination from 'components/Pagination';
 import UserLabel from 'components/UserLabel';
 import {Currency, CurrencyBalance, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -94,7 +93,7 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {
           </S.TableBody>
         </S.Table>
         {balancesData.count > 20 && (
-          <Pagination
+          <S.Pagination
             currentPage={currentPage}
             onPageChange={handlePageChange}
             totalPages={Math.ceil(balancesData.count / 20)}

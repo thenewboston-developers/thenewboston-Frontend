@@ -37,14 +37,13 @@ export const Container = styled.div`
   }
 `;
 
-export const ContentArea = styled.div`
+export const ContentArea = styled.div``;
+
+export const EmptyPageWrapper = styled.div`
   background: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 14px;
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
-`;
-
-export const EmptyPageWrapper = styled.div`
   padding: 24px 16px;
 
   @media (max-width: ${breakpoints.mobile}) {

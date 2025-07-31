@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import UPagination from 'components/Pagination';
 import {colors, fonts} from 'styles';
 
 export const Balance = styled.div`
@@ -27,6 +28,10 @@ export const EmptyText = styled.div`
   font-size: 16px;
   font-weight: ${fonts.weight.medium};
   margin-bottom: 8px;
+`;
+
+export const Pagination = styled(UPagination)`
+  margin-top: 24px;
 `;
 
 export const Percentage = styled.div`

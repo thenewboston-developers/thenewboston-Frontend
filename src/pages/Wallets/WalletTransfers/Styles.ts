@@ -14,11 +14,6 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 0 16px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 0 10px;
-  }
 `;
 
 export const Date = styled.div`
@@ -27,18 +22,30 @@ export const Date = styled.div`
 `;
 
 export const EmptyPageWrapper = styled.div`
-  padding: 24px 0;
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 14px;
+  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
+  padding: 24px 16px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 18px 10px;
+  }
 `;
 
 export const LoaderWrapper = styled.div`
   align-items: center;
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 14px;
+  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
   display: flex;
   justify-content: center;
   padding: 24px;
 `;
 
 export const Pagination = styled(UPagination)`
-  margin: 24px 0;
+  margin-top: 24px;
 `;
 
 export const Time = styled.div`
@@ -96,4 +103,16 @@ export const TransferRight = styled.div`
 export const TransfersList = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 0 16px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 0 10px;
+  }
+`;
+
+export const WhitePanel = styled.div`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 14px;
+  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
 `;

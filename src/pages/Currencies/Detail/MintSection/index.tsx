@@ -1,7 +1,6 @@
 import {useSelector} from 'react-redux';
 
 import Loader from 'components/Loader';
-import Pagination from 'components/Pagination';
 import {getMints as getMintsSelector} from 'selectors/state';
 import {Currency, Mint, PaginatedResponse, SFC} from 'types';
 import {longDate} from 'utils/dates';
@@ -76,7 +75,7 @@ const MintSection: SFC<MintSectionProps> = ({
           </S.TableBody>
         </S.Table>
         {mintsData.count > 20 && (
-          <Pagination
+          <S.Pagination
             currentPage={currentPage}
             onPageChange={onPageChange}
             totalPages={Math.ceil(mintsData.count / 20)}
