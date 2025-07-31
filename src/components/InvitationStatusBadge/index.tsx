@@ -9,7 +9,7 @@ export interface InvitationStatusBadgeProps {
 const InvitationStatusBadge: SFC<InvitationStatusBadgeProps> = ({invitationStatus}) => {
   const badgeStyle = {
     [InvitationStatus.ACCEPTED]: BadgeStyle.success,
-    [InvitationStatus.PENDING]: BadgeStyle.draft,
+    [InvitationStatus.PENDING]: BadgeStyle.neutral,
   };
 
   return <Badge badgeStyle={badgeStyle[invitationStatus]} children={invitationStatus} />;

@@ -1,4 +1,4 @@
-import styled, {css} from 'styled-components';
+import styled from 'styled-components';
 
 import UCurrencyLogo from 'components/CurrencyLogo';
 import {colors, fonts} from 'styles';
@@ -84,24 +84,4 @@ export const TotalMintedValue = styled.span`
   color: ${colors.primary};
   font-size: 24px;
   font-weight: ${fonts.weight.semiBold};
-`;
-
-export const TypeBadge = styled.span<{$internal: boolean}>`
-  border-radius: 4px;
-  display: inline-block;
-  font-size: 11px;
-  font-weight: ${fonts.weight.semiBold};
-  margin-top: 8px;
-  padding: 2px 8px;
-
-  ${({$internal}) =>
-    $internal
-      ? css`
-          background: ${colors.palette.blue[100]};
-          color: ${colors.palette.blue[700]};
-        `
-      : css`
-          background: ${colors.palette.green[100]};
-          color: ${colors.palette.green[600]};
-        `}
 `;

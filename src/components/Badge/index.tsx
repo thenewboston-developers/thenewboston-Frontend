@@ -11,18 +11,19 @@ export interface BadgeProps {
 
 export enum BadgeStyle {
   danger = 'danger',
-  draft = 'draft',
+  info = 'info',
+  lightGreen = 'lightGreen',
+  lightRed = 'lightRed',
+  neutral = 'neutral',
   primary = 'primary',
   success = 'success',
   warning = 'warning',
-  lightGreen = 'lightGreen',
-  lightRed = 'lightRed',
 }
 
 const Badge: SFC<BadgeProps> = ({badgeStyle, className, children}) => {
   return (
     <S.Container $badgeStyle={badgeStyle} className={className}>
-      <S.Text> {children}</S.Text>
+      <S.Text>{children}</S.Text>
     </S.Container>
   );
 };

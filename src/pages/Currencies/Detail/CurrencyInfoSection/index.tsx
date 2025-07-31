@@ -1,3 +1,4 @@
+import Badge, {BadgeStyle} from 'components/Badge';
 import DateDisplay from 'components/DateDisplay';
 import SocialLinks from 'components/SocialLinks';
 import UserLabel from 'components/UserLabel';
@@ -11,8 +12,6 @@ interface CurrencyInfoSectionProps {
 }
 
 const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency, totalAmountMinted}) => {
-  const isInternalCurrency = currency.domain === null;
-
   return (
     <S.CurrencyPanel className={className}>
       <S.CurrencyLogo logo={currency.logo} width="150px" />
@@ -23,7 +22,7 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
             {currency.domain ? (
               <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
             ) : (
-              <S.TypeBadge $internal={isInternalCurrency}>{isInternalCurrency ? 'Internal' : 'External'}</S.TypeBadge>
+              <Badge badgeStyle={BadgeStyle.info}>Internal</Badge>
             )}
             {currency.description && <S.CurrencyDescription>{currency.description}</S.CurrencyDescription>}
             <S.MetadataRow>

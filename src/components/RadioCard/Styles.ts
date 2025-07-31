@@ -1,6 +1,6 @@
 import styled, {css, keyframes} from 'styled-components';
 
-import {colors, fonts} from 'styles';
+import {colors} from 'styles';
 
 export const IMG_HEIGHT = 36;
 
@@ -133,18 +133,8 @@ export const ImageContainer = styled.div`
   justify-content: center;
 `;
 
-export const InternalBadge = styled.span`
-  background: ${colors.palette.blue[100]};
-  border-radius: 4px;
-  color: ${colors.palette.blue[700]};
-  font-size: 10px;
-  font-weight: ${fonts.weight.semiBold};
-  margin-top: 2px;
-  padding: 2px 6px;
-`;
-
 export const Ticker = styled.div`
-  color: #2c3e50;
+  color: ${colors.primary};
   font-size: 16px;
   font-weight: 600;
   letter-spacing: -0.01em;
