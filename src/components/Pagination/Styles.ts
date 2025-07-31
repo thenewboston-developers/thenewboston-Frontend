@@ -32,3 +32,9 @@ export const NavigationButton = styled.button`
     opacity: 0.5;
   }
 `;
+
+export const PageInfo = styled.div`
+  color: ${colors.black};
+  font-size: 14px;
+  font-weight: 500;
+`;

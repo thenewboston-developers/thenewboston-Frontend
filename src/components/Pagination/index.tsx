@@ -32,6 +32,10 @@ const Pagination: SFC<PaginationProps> = ({className, currentPage, onPageChange,
         <Icon path={mdiChevronLeft} size="20px" />
       </S.NavigationButton>
 
+      <S.PageInfo>
+        Page {currentPage} of {totalPages}
+      </S.PageInfo>
+
       <S.NavigationButton disabled={currentPage === totalPages} onClick={handleNextClick}>
         <Icon path={mdiChevronRight} size="20px" />
       </S.NavigationButton>

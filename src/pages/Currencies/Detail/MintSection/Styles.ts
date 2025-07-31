@@ -32,20 +32,6 @@ export const EmptyText = styled.div`
   margin-bottom: 8px;
 `;
 
-export const PageInfo = styled.div`
-  color: ${colors.secondary};
-  font-size: 14px;
-  font-weight: ${fonts.weight.medium};
-`;
-
-export const Pagination = styled.div`
-  align-items: center;
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  margin-top: 32px;
-`;
-
 export const Table = styled.table`
   background-color: ${colors.white};
   border-radius: 12px;

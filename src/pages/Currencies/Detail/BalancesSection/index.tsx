@@ -4,9 +4,8 @@ import {getCurrencyBalances} from 'api/currencyBalances';
 import rank1Image from 'assets/badges/rank1.png';
 import rank2Image from 'assets/badges/rank2.png';
 import rank3Image from 'assets/badges/rank3.png';
-import Button from 'components/Button';
-import {ButtonColor} from 'components/Button/types';
 import Loader from 'components/Loader';
+import Pagination from 'components/Pagination';
 import UserLabel from 'components/UserLabel';
 import {Currency, CurrencyBalance, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -40,7 +39,7 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {
     })();
   }, [currency.id, currentPage]);
 
-  const handlePageButtonClick = (page: number) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
@@ -95,19 +94,11 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {
           </S.TableBody>
         </S.Table>
         {balancesData.count > 20 && (
-          <S.Pagination>
-            {balancesData.previous && (
-              <Button
-                color={ButtonColor.secondary}
-                onClick={() => handlePageButtonClick(currentPage - 1)}
-                text="Previous"
-              />
-            )}
-            <S.PageInfo>
-              Page {currentPage} of {Math.ceil(balancesData.count / 20)}
-            </S.PageInfo>
-            {balancesData.next && <Button onClick={() => handlePageButtonClick(currentPage + 1)} text="Next" />}
-          </S.Pagination>
+          <Pagination
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+            totalPages={Math.ceil(balancesData.count / 20)}
+          />
         )}
       </>
     );

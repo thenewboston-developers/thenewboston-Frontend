@@ -29,20 +29,6 @@ export const EmptyText = styled.div`
   margin-bottom: 8px;
 `;
 
-export const PageInfo = styled.div`
-  color: ${colors.secondary};
-  font-size: 14px;
-  font-weight: ${fonts.weight.medium};
-`;
-
-export const Pagination = styled.div`
-  align-items: center;
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  margin-top: 32px;
-`;
-
 export const Percentage = styled.div`
   font-size: 16px;
   font-weight: ${fonts.weight.semiBold};
