@@ -10,7 +10,7 @@ import {
 } from '@mdi/js';
 
 import {PATH_AUTHENTICATION} from 'constants/paths';
-import {getSelf, getTotalUnreadNotificationCount} from 'selectors/state';
+import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
 
 import MenuLink from './MenuItem/MenuLink';
@@ -19,7 +19,6 @@ import CreatePostButton from './CreatePostButton';
 import * as S from './Styles';
 
 const LeftNav: SFC = ({className}) => {
-  const totalUnreadCount = useSelector(getTotalUnreadNotificationCount);
   const self = useSelector(getSelf);
 
   return (
@@ -29,7 +28,7 @@ const LeftNav: SFC = ({className}) => {
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange" />
         <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
         <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications">
-          <BadgeCount items={Array(totalUnreadCount).fill(null)} />
+          <BadgeCount />
         </MenuLink>
         <MenuLink icon={mdiAccount} rootPath={`/profile/${self.id}`} text="Profile" to={`/profile/${self.id}`} />
         <MenuLink icon={mdiWalletBifoldOutline} rootPath="/wallets" text="Wallets" to="/wallets" />
