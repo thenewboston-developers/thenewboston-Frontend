@@ -1,7 +1,5 @@
 import {useSelector} from 'react-redux';
 
-import Button from 'components/Button';
-import {ButtonColor} from 'components/Button/types';
 import Loader from 'components/Loader';
 import {getMints as getMintsSelector} from 'selectors/state';
 import {Currency, Mint, PaginatedResponse, SFC} from 'types';
@@ -77,15 +75,11 @@ const MintSection: SFC<MintSectionProps> = ({
           </S.TableBody>
         </S.Table>
         {mintsData.count > 20 && (
-          <S.Pagination>
-            {mintsData.previous && (
-              <Button color={ButtonColor.secondary} onClick={() => onPageChange(currentPage - 1)} text="Previous" />
-            )}
-            <S.PageInfo>
-              Page {currentPage} of {Math.ceil(mintsData.count / 20)}
-            </S.PageInfo>
-            {mintsData.next && <Button onClick={() => onPageChange(currentPage + 1)} text="Next" />}
-          </S.Pagination>
+          <S.Pagination
+            currentPage={currentPage}
+            onPageChange={onPageChange}
+            totalPages={Math.ceil(mintsData.count / 20)}
+          />
         )}
       </>
     );

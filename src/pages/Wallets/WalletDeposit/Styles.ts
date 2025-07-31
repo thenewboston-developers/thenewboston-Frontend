@@ -11,6 +11,10 @@ export const Balance = styled.div`
 `;
 
 export const Container = styled.div`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 14px;
+  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
   padding: 24px 16px;
 
   @media (max-width: ${breakpoints.mobile}) {
@@ -159,6 +163,10 @@ export const Top = styled.div`
 `;
 
 export const InternalCurrencyMessage = styled.div`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 14px;
+  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
   padding: 40px;
   text-align: center;
 

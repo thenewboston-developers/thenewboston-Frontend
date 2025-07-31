@@ -13,6 +13,10 @@ export const AmountLogoInput = styled(LogoInput)`
 `;
 
 export const Container = styled.div`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 14px;
+  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
   padding: 16px 16px 24px;
 
   @media (max-width: ${breakpoints.mobile}) {
@@ -107,6 +111,10 @@ export const WithdrawSection = styled.div`
 `;
 
 export const InternalCurrencyMessage = styled.div`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 14px;
+  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
   padding: 40px;
   text-align: center;
 
