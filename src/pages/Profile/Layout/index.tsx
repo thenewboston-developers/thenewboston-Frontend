@@ -5,7 +5,7 @@ import {
   mdiAccountArrowUpOutline,
   mdiAccountBoxPlusOutline,
   mdiCardsOutline,
-  mdiDatabase,
+  mdiCircleMultipleOutline,
 } from '@mdi/js';
 import Icon from '@mdi/react';
 
@@ -20,7 +20,7 @@ import UserDetails from './UserDetails';
 type IconName = 'Collection' | 'Followers' | 'Following' | 'Invitations' | 'Posts';
 
 const IconMapper = {
-  Collection: mdiDatabase,
+  Collection: mdiCircleMultipleOutline,
   Followers: mdiAccountArrowDownOutline,
   Following: mdiAccountArrowUpOutline,
   Invitations: mdiAccountBoxPlusOutline,
