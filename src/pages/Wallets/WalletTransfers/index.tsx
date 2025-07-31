@@ -11,6 +11,8 @@ import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
+const ITEMS_PER_PAGE = 20;
+
 const WalletTransfers: SFC = ({className}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +21,6 @@ const WalletTransfers: SFC = ({className}) => {
   const [totalCount, setTotalCount] = useState(0);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
   const activeWallet = useActiveWallet();
-  const itemsPerPage = 20;
 
   useEffect(() => {
     if (!activeWallet) return;
@@ -132,7 +133,7 @@ const WalletTransfers: SFC = ({className}) => {
       );
     }
 
-    const totalPages = Math.ceil(totalCount / itemsPerPage);
+    const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
     return (
       <>

@@ -17,8 +17,8 @@ interface BalancesSectionProps {
 
 const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {
   const [balancesData, setBalancesData] = useState<PaginatedResponse<CurrencyBalance> | null>(null);
-  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {

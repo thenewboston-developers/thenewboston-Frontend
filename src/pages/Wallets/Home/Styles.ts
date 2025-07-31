@@ -7,7 +7,6 @@ export const Box = styled.div`
   background: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 14px;
-  border-right: 1px solid ${colors.border};
   box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
 `;
 

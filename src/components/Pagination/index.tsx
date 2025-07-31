@@ -12,15 +12,15 @@ export interface PaginationProps {
 }
 
 const Pagination: SFC<PaginationProps> = ({className, currentPage, onPageChange, totalPages}) => {
-  const handlePreviousClick = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
-    }
-  };
-
   const handleNextClick = () => {
     if (currentPage < totalPages) {
       onPageChange(currentPage + 1);
+    }
+  };
+
+  const handlePreviousClick = () => {
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
     }
   };
 
