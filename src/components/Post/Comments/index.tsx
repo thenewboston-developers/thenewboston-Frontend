@@ -81,6 +81,11 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
       let price_amount = values.price_amount === '' ? null : parseInt(values.price_amount, 10);
       let price_currency = manager.activeCommentCurrency?.id || null;
 
+      if (price_amount && !price_currency) {
+        displayErrorToast('Please select a currency for the amount');
+        return;
+      }
+
       if (!price_amount || !price_currency) {
         price_amount = null;
         price_currency = null;
