@@ -13,7 +13,7 @@ const AssetPairSelector: SFC = ({className}) => {
   const assetPairs = useSelector(getAssetPairs);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
-  const updatedAssetsParis = Object.entries(assetPairs);
+  const updatedAssetPairs = Object.entries(assetPairs);
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const assetPairId = +e.target.value;
@@ -34,7 +34,7 @@ const AssetPairSelector: SFC = ({className}) => {
         onChange={handleChange}
         value={manager.activeAssetPairId || ''}
       >
-        {updatedAssetsParis.map((assetsValue, index) => {
+        {updatedAssetPairs.map((assetsValue, index) => {
           return (
             <option key={index} value={assetsValue[1].id}>
               {assetsValue[1].primary_currency.ticker}

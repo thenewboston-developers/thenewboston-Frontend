@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {colors, fonts} from 'styles';
 
 export const Container = styled.div`
-  background: #fff;
+  background: ${colors.white};
   border-radius: 14px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   cursor: pointer;
@@ -14,6 +14,20 @@ export const Container = styled.div`
   &:hover {
     background-color: ${colors.palette.gray[50]};
   }
+`;
+
+export const Content = styled.div`
+  align-items: center;
+  display: flex;
+  height: 40px;
+  position: relative;
+`;
+
+export const Image = styled.img`
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+  height: 32px;
+  width: 32px;
 `;
 
 export const ImageContainer = styled.div`
@@ -41,23 +55,9 @@ export const Select = styled.select`
   }
 `;
 
-export const Image = styled.img`
-  border-radius: 50%;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
-  height: 32px;
-  width: 32px;
-`;
-
 export const Ticker = styled.div`
   font-size: 20px;
   font-weight: ${fonts.weight.semiBold};
   margin-left: 16px;
   pointer-events: none;
-`;
-
-export const Content = styled.div`
-  align-items: center;
-  display: flex;
-  height: 40px;
-  position: relative;
 `;
