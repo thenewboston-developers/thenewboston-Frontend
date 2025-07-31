@@ -39,6 +39,7 @@ export const Modal = styled.div`
   position: fixed;
   top: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1000;
 `;
 
 export const ModalContent = styled.div``;
@@ -61,4 +62,5 @@ export const Overlay = styled.div`
   position: fixed;
   top: 0;
   width: 100vw;
+  z-index: 999;
 `;
