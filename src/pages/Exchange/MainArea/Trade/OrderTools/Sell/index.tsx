@@ -7,17 +7,19 @@ import {ButtonType} from 'components/Button';
 import {FormField, LogoInput} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
 import {ExchangeOrderSide, ToastType} from 'enums';
-import {useActiveAssetPair} from 'hooks';
 import {getWallets} from 'selectors/state';
-import {AppDispatch, SFC} from 'types';
+import {AppDispatch, AssetPair, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
 
-const Sell: SFC = ({className}) => {
+interface SellProps {
+  activeAssetPair: AssetPair | null;
+}
+
+const Sell: SFC<SellProps> = ({activeAssetPair, className}) => {
   const [total, setTotal] = useState<number>(0);
-  const activeAssetPair = useActiveAssetPair();
   const dispatch = useDispatch<AppDispatch>();
   const formikRef = useRef<any>(null);
   const wallets = useSelector(getWallets);

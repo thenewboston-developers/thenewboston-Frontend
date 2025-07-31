@@ -9,7 +9,6 @@ const Toolbar: SFC = ({className}) => {
       <S.Left />
       <S.MenuItems>
         <ToolbarMenuLink text="Home" to="/exchange/home" />
-        <ToolbarMenuLink text="Trade" to="/exchange/trade" />
         <ToolbarMenuLink text="Orders" to="/exchange/orders" />
         <ToolbarMenuLink text="Learn More" to="/exchange/learn-more" />
       </S.MenuItems>

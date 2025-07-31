@@ -16,7 +16,7 @@ const MainArea: SFC = ({className}) => {
         <Route path="/home" element={<Home />} />
         <Route path="/learn-more" element={<LearnMore />} />
         <Route path="/orders" element={<Orders />} />
-        <Route path="/trade" element={<Trade />} />
+        <Route path="/trade/:assetPairId" element={<Trade />} />
       </Routes>
     </S.Container>
   );

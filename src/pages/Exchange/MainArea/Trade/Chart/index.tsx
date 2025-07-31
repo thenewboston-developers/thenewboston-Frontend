@@ -6,11 +6,10 @@ import CurrencyLogo from 'components/CurrencyLogo';
 import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
 import {getTradePriceChartData as fetchTradePriceChartData} from 'dispatchers/tradePriceChartData';
-import {useActiveAssetPair} from 'hooks';
 import {getTradePriceChartData} from 'selectors/state';
 import {clearTradePriceChartData} from 'store/tradePriceChartData';
 import {colors} from 'styles';
-import {AppDispatch, Candlestick, ChartTimeRange, SFC} from 'types';
+import {AppDispatch, AssetPair, Candlestick, ChartTimeRange, SFC} from 'types';
 import {chartDisplayDate} from 'utils/dates';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -20,10 +19,13 @@ interface DisplayCandlestick extends Candlestick {
   display_date: string;
 }
 
-const Chart: SFC = ({className}) => {
+interface ChartProps {
+  activeAssetPair: AssetPair | null;
+}
+
+const Chart: SFC<ChartProps> = ({activeAssetPair, className}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '3M' | '1Y' | 'ALL'>('ALL');
-  const activeAssetPair = useActiveAssetPair();
   const containerRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const svgRef = useRef<SVGSVGElement>(null);

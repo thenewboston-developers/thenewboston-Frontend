@@ -1,14 +1,13 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useParams} from 'react-router-dom';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import OrderBookWebSocket from 'containers/OrderBookWebSocket';
 import TradeWebSocket from 'containers/TradeWebSocket';
 import {getAssetPairs as _getAssetPairs} from 'dispatchers/assetPairs';
-import {useActiveAssetPair} from 'hooks';
 import {getAssetPairs} from 'selectors/state';
-import {updateManager} from 'store/manager';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -18,11 +17,15 @@ import OrderTools from './OrderTools';
 import * as S from './Styles';
 
 const Trade: SFC = ({className}) => {
-  const activeAssetPair = useActiveAssetPair();
+  const {assetPairId} = useParams<{assetPairId: string}>();
   const assetPairs = useSelector(getAssetPairs);
   const dispatch = useDispatch<AppDispatch>();
 
   const assetPairList = useMemo(() => Object.values(assetPairs), [assetPairs]);
+  const activeAssetPair = useMemo(() => {
+    if (!assetPairId || !assetPairs[assetPairId]) return null;
+    return assetPairs[assetPairId];
+  }, [assetPairId, assetPairs]);
 
   useEffect(() => {
     (async () => {
@@ -34,23 +37,15 @@ const Trade: SFC = ({className}) => {
     })();
   }, [dispatch]);
 
-  useEffect(() => {
-    (async () => {
-      if (!assetPairList.length || !!activeAssetPair) return;
-      const firstAssetPair = assetPairList[0];
-      dispatch(updateManager({activeAssetPairId: firstAssetPair.id}));
-    })();
-  }, [activeAssetPair, assetPairList, dispatch]);
-
   const renderPageContent = () => {
     if (!!assetPairList.length) {
       return (
         <>
           <S.Grid>
-            <OrderTools />
-            <Chart />
+            <OrderTools activeAssetPair={activeAssetPair} />
+            <Chart activeAssetPair={activeAssetPair} />
           </S.Grid>
-          <OrderBook />
+          <OrderBook activeAssetPair={activeAssetPair} />
         </>
       );
     }
