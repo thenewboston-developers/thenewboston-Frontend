@@ -1,6 +1,7 @@
 import {useMemo, useState} from 'react';
 import {mdiCheck} from '@mdi/js';
 
+import Badge, {BadgeStyle} from 'components/Badge';
 import Icon from 'components/Icon';
 import {Currency, SFC} from 'types';
 
@@ -52,7 +53,11 @@ const RadioCard: SFC<RadioCardProps> = ({className, currency, isSelected, onClic
         <S.CurrencyLogo alt={`${currency.ticker} logo`} src={currency.logo} />
         <S.DomainInfo>
           <S.Ticker>{currency.ticker}</S.Ticker>
-          {currency.domain ? <S.Domain>{currency.domain}</S.Domain> : <S.InternalBadge>Internal</S.InternalBadge>}
+          {currency.domain ? (
+            <S.Domain>{currency.domain}</S.Domain>
+          ) : (
+            <Badge badgeStyle={BadgeStyle.internal}>Internal</Badge>
+          )}
         </S.DomainInfo>
       </S.ImageContainer>
       {(isSelected || isDeselecting) && (

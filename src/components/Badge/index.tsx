@@ -12,11 +12,12 @@ export interface BadgeProps {
 export enum BadgeStyle {
   danger = 'danger',
   draft = 'draft',
+  internal = 'internal',
+  lightGreen = 'lightGreen',
+  lightRed = 'lightRed',
   primary = 'primary',
   success = 'success',
   warning = 'warning',
-  lightGreen = 'lightGreen',
-  lightRed = 'lightRed',
 }
 
 const Badge: SFC<BadgeProps> = ({badgeStyle, className, children}) => {
