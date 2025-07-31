@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {colors} from 'styles';
 
 export const Container = styled.div`
-  margin: 20px 0;
   position: relative;
 `;
 

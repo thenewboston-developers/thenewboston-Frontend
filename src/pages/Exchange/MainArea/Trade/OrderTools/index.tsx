@@ -52,9 +52,11 @@ const OrderTools: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      {renderTabs()}
       <AssetPairSelector />
-      {renderTabContent()}
+      <S.Panel>
+        {renderTabs()}
+        {renderTabContent()}
+      </S.Panel>
     </S.Container>
   );
 };
