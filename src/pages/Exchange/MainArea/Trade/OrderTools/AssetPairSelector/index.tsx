@@ -1,3 +1,4 @@
+import {ChangeEvent} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {useActiveAssetPair} from 'hooks';
@@ -14,16 +15,25 @@ const AssetPairSelector: SFC = ({className}) => {
   const manager = useSelector(getManager);
   const updatedAssetsParis = Object.entries(assetPairs);
 
-  const handleOptionClick = (assetPairId: number) => {
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const assetPairId = +e.target.value;
     dispatch(updateManager({activeAssetPairId: assetPairId === manager.activeAssetPairId ? null : assetPairId}));
   };
 
   return (
     <S.Container className={className}>
-      <S.ImageContainer>
-        <S.Image height={20} src={activeAssetPair?.primary_currency.logo} width={20} />
-      </S.ImageContainer>
-      <S.Select onChange={(e) => handleOptionClick(+e.target.value)} value={manager.activeAssetPairId || ''}>
+      <S.Content>
+        <S.ImageContainer>
+          <S.Image src={activeAssetPair?.primary_currency.logo} />
+        </S.ImageContainer>
+        <S.Ticker>{activeAssetPair?.primary_currency.ticker}</S.Ticker>
+      </S.Content>
+      <S.Select
+        id="asset-pair-selector"
+        name="asset-pair-selector"
+        onChange={handleChange}
+        value={manager.activeAssetPairId || ''}
+      >
         {updatedAssetsParis.map((assetsValue, index) => {
           return (
             <option key={index} value={assetsValue[1].id}>

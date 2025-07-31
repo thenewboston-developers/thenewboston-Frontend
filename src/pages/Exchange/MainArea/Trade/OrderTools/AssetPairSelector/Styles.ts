@@ -1,23 +1,40 @@
 import styled from 'styled-components';
 
-import {colors} from 'styles';
+import {colors, fonts} from 'styles';
 
 export const Container = styled.div`
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  cursor: pointer;
+  padding: 12px 16px;
   position: relative;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${colors.palette.gray[50]};
+  }
 `;
 
 export const ImageContainer = styled.div`
-  margin-top: 7px;
-  position: absolute;
+  align-items: center;
+  display: flex;
+  pointer-events: none;
 `;
 
 export const Select = styled.select`
+  appearance: none;
+  background: transparent;
   border: none;
-  border-bottom: 1px solid ${colors.black};
-  height: 26pt;
-  padding: 10px 10px 10px 50px;
-  text-indent: 45px;
+  cursor: pointer;
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  padding: 0 16px 0 56px;
+  position: absolute;
+  top: 0;
   width: 100%;
+  z-index: 2;
 
   &:focus {
     outline: none;
@@ -26,6 +43,21 @@ export const Select = styled.select`
 
 export const Image = styled.img`
   border-radius: 50%;
-  height: 20px;
-  width: 20px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+  height: 32px;
+  width: 32px;
+`;
+
+export const Ticker = styled.div`
+  font-size: 20px;
+  font-weight: ${fonts.weight.semiBold};
+  margin-left: 16px;
+  pointer-events: none;
+`;
+
+export const Content = styled.div`
+  align-items: center;
+  display: flex;
+  height: 40px;
+  position: relative;
 `;

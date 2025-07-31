@@ -8,7 +8,7 @@ export const Panel = styled.div`
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-  margin-top: 24px;
+  margin-top: 16px;
   padding: 20px;
 `;
 

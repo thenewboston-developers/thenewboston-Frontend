@@ -13,7 +13,7 @@ export const Container = styled.div`
 export const Grid = styled.div`
   align-items: start;
   display: grid;
-  gap: 12px;
+  gap: 16px;
   grid-template-columns: min-content auto;
 
   @media (max-width: ${breakpoints.tablet}) {
