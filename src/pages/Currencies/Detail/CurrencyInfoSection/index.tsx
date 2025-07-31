@@ -22,7 +22,7 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
             {currency.domain ? (
               <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
             ) : (
-              <Badge badgeStyle={BadgeStyle.internal}>Internal</Badge>
+              <Badge badgeStyle={BadgeStyle.info}>Internal</Badge>
             )}
             {currency.description && <S.CurrencyDescription>{currency.description}</S.CurrencyDescription>}
             <S.MetadataRow>

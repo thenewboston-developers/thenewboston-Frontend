@@ -11,10 +11,10 @@ export interface BadgeProps {
 
 export enum BadgeStyle {
   danger = 'danger',
-  draft = 'draft',
-  internal = 'internal',
+  info = 'info',
   lightGreen = 'lightGreen',
   lightRed = 'lightRed',
+  neutral = 'neutral',
   primary = 'primary',
   success = 'success',
   warning = 'warning',

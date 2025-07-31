@@ -56,7 +56,7 @@ const RadioCard: SFC<RadioCardProps> = ({className, currency, isSelected, onClic
           {currency.domain ? (
             <S.Domain>{currency.domain}</S.Domain>
           ) : (
-            <Badge badgeStyle={BadgeStyle.internal}>Internal</Badge>
+            <Badge badgeStyle={BadgeStyle.info}>Internal</Badge>
           )}
         </S.DomainInfo>
       </S.ImageContainer>

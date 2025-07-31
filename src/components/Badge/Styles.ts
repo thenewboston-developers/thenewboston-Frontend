@@ -8,7 +8,7 @@ const dangerMixin = css`
   background-color: ${colors.palette.red['300']};
 `;
 
-const draftMixin = css`
+const neutralMixin = css`
   background-color: ${colors.palette.darkGray['100']};
 `;
 
@@ -24,7 +24,7 @@ const warningMixin = css`
   background-color: ${colors.palette.orange['300']};
 `;
 
-const internalMixin = css`
+const infoMixin = css`
   background-color: ${colors.palette.blue[100]};
   color: ${colors.palette.blue[700]};
 `;
@@ -54,10 +54,10 @@ export const Container = styled.div<{$badgeStyle: BadgeStyle}>`
 
   ${({$badgeStyle}) => {
     if ($badgeStyle === BadgeStyle.danger) return dangerMixin;
-    if ($badgeStyle === BadgeStyle.draft) return draftMixin;
-    if ($badgeStyle === BadgeStyle.internal) return internalMixin;
+    if ($badgeStyle === BadgeStyle.info) return infoMixin;
     if ($badgeStyle === BadgeStyle.lightGreen) return lightGreenMixin;
     if ($badgeStyle === BadgeStyle.lightRed) return lightRedMixin;
+    if ($badgeStyle === BadgeStyle.neutral) return neutralMixin;
     if ($badgeStyle === BadgeStyle.primary) return primaryMixin;
     if ($badgeStyle === BadgeStyle.success) return successMixin;
     if ($badgeStyle === BadgeStyle.warning) return warningMixin;
