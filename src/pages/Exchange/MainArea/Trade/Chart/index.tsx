@@ -54,14 +54,15 @@ const Chart: SFC = ({className}) => {
         setIsLoading(false);
       }
     })();
-  }, [activeAssetPair, dispatch, timeframe]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeAssetPair?.id, dispatch, timeframe]);
 
-  // Clear chart data when unmounting or switching asset pairs
+  // Clear chart data when unmounting
   useEffect(() => {
     return () => {
       dispatch(clearTradePriceChartData());
     };
-  }, [dispatch, activeAssetPair?.id]);
+  }, [dispatch]);
 
   const displayData = useMemo(() => {
     return candlesticks.map((candlestick) => ({

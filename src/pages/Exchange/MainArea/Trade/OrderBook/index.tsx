@@ -30,7 +30,8 @@ const OrderBook: SFC = ({className}) => {
         displayErrorToast('Error fetching order book');
       }
     })();
-  }, [activeAssetPair, dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeAssetPair?.id, dispatch]);
 
   const spread = (() => {
     if (!activeAssetPair || buyOrders.length === 0 || sellOrders.length === 0) return 0;
