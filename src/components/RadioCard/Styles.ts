@@ -1,6 +1,6 @@
 import styled, {css, keyframes} from 'styled-components';
 
-import {colors, fonts} from 'styles';
+import {colors} from 'styles';
 
 export const IMG_HEIGHT = 36;
 
@@ -134,7 +134,7 @@ export const ImageContainer = styled.div`
 `;
 
 export const Ticker = styled.div`
-  color: #2c3e50;
+  color: ${colors.primary};
   font-size: 16px;
   font-weight: 600;
   letter-spacing: -0.01em;

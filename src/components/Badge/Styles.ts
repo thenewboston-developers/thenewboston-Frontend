@@ -5,23 +5,7 @@ import {colors, fonts} from 'styles';
 import {BadgeStyle} from '.';
 
 const dangerMixin = css`
-  background-color: ${colors.palette.red['300']};
-`;
-
-const neutralMixin = css`
-  background-color: ${colors.palette.darkGray['100']};
-`;
-
-const primaryMixin = css`
-  background-color: ${colors.palette.blue['300']};
-`;
-
-const successMixin = css`
-  background-color: ${colors.palette.green['400']};
-`;
-
-const warningMixin = css`
-  background-color: ${colors.palette.orange['300']};
+  background-color: ${colors.palette.red[300]};
 `;
 
 const infoMixin = css`
@@ -31,15 +15,28 @@ const infoMixin = css`
 
 const lightGreenMixin = css`
   background-color: ${colors.lightGreen};
-  color: ${colors.palette.green['600']};
+  color: ${colors.palette.green[600]};
 `;
+
 const lightRedMixin = css`
   background-color: ${colors.lightRed};
-  color: ${colors.palette.red['700']};
+  color: ${colors.palette.red[700]};
 `;
-export const Text = styled.div`
-  display: flex;
-  align-items: center;
+
+const neutralMixin = css`
+  background-color: ${colors.palette.darkGray[100]};
+`;
+
+const primaryMixin = css`
+  background-color: ${colors.palette.blue[300]};
+`;
+
+const successMixin = css`
+  background-color: ${colors.palette.green[400]};
+`;
+
+const warningMixin = css`
+  background-color: ${colors.palette.orange[300]};
 `;
 
 export const Container = styled.div<{$badgeStyle: BadgeStyle}>`
@@ -64,4 +61,9 @@ export const Container = styled.div<{$badgeStyle: BadgeStyle}>`
 
     return;
   }}
+`;
+
+export const Text = styled.div`
+  align-items: center;
+  display: flex;
 `;
