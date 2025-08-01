@@ -35,17 +35,17 @@ const secondaryMixin = css`
 `;
 
 const successMixin = css`
-  background: ${colors.palette.green['300']};
+  background: ${colors.palette.green[300]};
 
   &:hover {
-    background: ${colors.palette.green['400']};
+    background: ${colors.palette.green[400]};
   }
 `;
 
 export const Button = styled.button<{$color: ButtonColor; $hasIcon: boolean}>`
   background: ${colors.buttonDark};
-  border-radius: ${`${BUTTON_HEIGHT / 2}px`};
   border: 1px solid transparent;
+  border-radius: ${`${BUTTON_HEIGHT / 2}px`};
   color: ${colors.white};
   cursor: pointer;
   display: block;
