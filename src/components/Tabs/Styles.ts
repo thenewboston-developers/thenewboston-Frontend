@@ -6,7 +6,7 @@ const HEIGHT = 48;
 const BORDER_RADIUS = HEIGHT / 2;
 
 export const Container = styled.div`
-  background: ${colors.lightGray};
+  background: ${colors.palette.gray[200]};
   border-radius: ${`${BORDER_RADIUS}px`};
   border: 1px solid #dfdfdf;
   display: flex;

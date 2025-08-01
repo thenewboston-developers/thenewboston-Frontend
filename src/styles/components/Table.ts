@@ -30,24 +30,3 @@ export const Table = styled.table`
     width: 100%;
   }
 `;
-
-export const Tbody = styled.tbody`
-  & > tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
-  }
-  & > tr > td {
-    font-weight: 600;
-    padding: 10px 0;
-  }
-`;
-
-export const Thead = styled.thead`
-  & > tr > th {
-    color: ${colors.gray};
-    text-transform: uppercase;
-    padding-bottom: 12px;
-  }
-`;

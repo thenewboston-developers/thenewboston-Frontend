@@ -19,7 +19,7 @@ export const Container = styled.div`
 
 export const Counter = styled.div`
   align-items: center;
-  color: ${colors.gray};
+  color: ${colors.palette.gray[600]};
   display: flex;
   font-size: 13px;
   font-weight: ${fonts.weight.medium};
@@ -68,7 +68,7 @@ export const Header = styled.div`
 `;
 
 export const Heading = styled.div`
-  color: ${colors.gray};
+  color: ${colors.palette.gray[600]};
   font-size: 18px;
   font-weight: ${fonts.weight.semiBold};
 

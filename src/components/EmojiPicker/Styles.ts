@@ -45,7 +45,7 @@ export const EmojiButton = styled.button<{
   align-items: center;
   background: none;
   border: none;
-  color: ${({$isOpenEmojiPicker}) => ($isOpenEmojiPicker ? colors.palette.blue[500] : colors.gray)};
+  color: ${({$isOpenEmojiPicker}) => ($isOpenEmojiPicker ? colors.palette.blue[500] : colors.palette.gray[600])};
   cursor: pointer;
   display: flex;
   font-weight: 600;
@@ -136,7 +136,7 @@ export const GroupTabs = styled.div`
 `;
 
 export const NoResults = styled.div`
-  color: ${colors.gray};
+  color: ${colors.palette.gray[600]};
   grid-column: 1 / -1;
   padding: 32px;
   text-align: center;

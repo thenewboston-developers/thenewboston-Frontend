@@ -16,7 +16,7 @@ export const Header = styled.div`
 `;
 
 export const Heading = styled.div`
-  color: ${colors.gray};
+  color: ${colors.palette.gray[600]};
   font-size: 18px;
   font-weight: ${fonts.weight.semiBold};
 
