@@ -21,8 +21,8 @@ export interface ButtonProps {
 }
 
 const Button: SFC<ButtonProps> = ({
-  color = ButtonColor.primary,
   className,
+  color = ButtonColor.primary,
   dirty = true,
   disabled = false,
   iconColor = IconColor.white,
