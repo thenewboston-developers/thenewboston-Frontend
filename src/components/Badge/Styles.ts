@@ -14,12 +14,12 @@ const infoMixin = css`
 `;
 
 const lightGreenMixin = css`
-  background-color: ${colors.lightGreen};
+  background-color: ${colors.palette.green[50]};
   color: ${colors.palette.green[600]};
 `;
 
 const lightRedMixin = css`
-  background-color: ${colors.lightRed};
+  background-color: ${colors.palette.red[50]};
   color: ${colors.palette.red[700]};
 `;
 
