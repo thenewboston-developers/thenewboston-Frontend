@@ -84,10 +84,6 @@ const UserDetails: SFC = ({className}) => {
     }
   };
 
-  const updateUserStats = async () => {
-    if (userId) await dispatch(getUserStats(userId));
-  };
-
   const renderAvatar = () => {
     if (!user) return;
     return (
@@ -156,6 +152,10 @@ const UserDetails: SFC = ({className}) => {
   const renderUsername = () => {
     if (!user) return null;
     return <S.Username>{user.username}</S.Username>;
+  };
+
+  const updateUserStats = async () => {
+    if (userId) await dispatch(getUserStats(userId));
   };
 
   return (

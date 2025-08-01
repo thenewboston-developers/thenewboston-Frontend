@@ -28,6 +28,11 @@ export const Menu = styled.div<{$isOpen: boolean}>`
     `}
 `;
 
+export const MenuIcon = styled(Icon)`
+  color: ${colors.palette.gray[400]};
+  flex-shrink: 0;
+`;
+
 export const MenuItem = styled.div<{$isActive: boolean}>`
   align-items: center;
   color: ${colors.palette.gray[300]};
@@ -62,11 +67,6 @@ export const MenuOption = styled.div`
   &:hover {
     background: ${colors.palette.gray[800]};
   }
-`;
-
-export const MenuIcon = styled(Icon)`
-  color: ${colors.palette.gray[400]};
-  flex-shrink: 0;
 `;
 
 export const OptionLabel = styled.div`

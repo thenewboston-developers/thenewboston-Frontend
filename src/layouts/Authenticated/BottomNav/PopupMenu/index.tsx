@@ -24,12 +24,12 @@ const PopupMenu: SFC<PopupMenuProps> = ({children, className, options}) => {
   const [menuPosition, setMenuPosition] = useState<CSSProperties | undefined>(undefined);
   const buttonRef = useRef<HTMLDivElement>(null);
 
-  const handleClick = (e: any): void => {
+  const handleOutsideClick = (e: any): void => {
     if (buttonRef.current?.contains(e.target)) return;
     if (!buttonRef.current?.contains(e.target) && !dropDown.contains(e.target)) toggleIsOpen(false);
   };
 
-  useEventListener('mousedown', handleClick, document);
+  useEventListener('mousedown', handleOutsideClick, document);
 
   const handleButtonClick = useCallback(
     (e: MouseEvent<HTMLDivElement>): void => {
