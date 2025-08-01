@@ -49,17 +49,6 @@ export const ButtonGroup = styled.div`
   }
 `;
 
-export const OwnProfileButtonGroup = styled.div`
-  display: flex;
-  gap: 10px;
-  width: 100%;
-
-  ${Button} {
-    flex: 1;
-    white-space: nowrap;
-  }
-`;
-
 export const Container = styled.div`
   align-items: center;
   display: flex;

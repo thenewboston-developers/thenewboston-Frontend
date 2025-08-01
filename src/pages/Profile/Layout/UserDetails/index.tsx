@@ -1,16 +1,15 @@
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 
 import {getFollowers} from 'api/followers';
 import DefaultAvatar from 'assets/default-avatar.svg';
 import logo from 'assets/logo192.png';
 import {ButtonColor} from 'components/Button';
 import SocialLinks from 'components/SocialLinks';
-import {PATH_AUTHENTICATION} from 'constants/paths';
 import {createFollower, deleteFollower} from 'dispatchers/followers';
 import {getUserStats} from 'dispatchers/userStats';
-import {useIsMobile, useToggle, useUser} from 'hooks';
+import {useToggle, useUser} from 'hooks';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
 import ProfileEditModal from 'modals/ProfileEditModal';
 import SendModal from 'modals/SendModal';
@@ -28,8 +27,6 @@ const UserDetails: SFC = ({className}) => {
   const [sendModalIsOpen, toggleSendModal] = useToggle(false);
   const {id} = useParams();
   const dispatch = useDispatch<AppDispatch>();
-  const isMobile = useIsMobile();
-  const navigate = useNavigate();
   const self = useSelector(getSelf);
   const user = useUser(id);
   const userStats = useSelector(getUserStatsState);
@@ -87,10 +84,6 @@ const UserDetails: SFC = ({className}) => {
     }
   };
 
-  const updateUserStats = async () => {
-    if (userId) await dispatch(getUserStats(userId));
-  };
-
   const renderAvatar = () => {
     if (!user) return;
     return (
@@ -108,28 +101,6 @@ const UserDetails: SFC = ({className}) => {
   const renderEditProfileButton = () => {
     if (self.id !== userId) return null;
     return <S.Button color={ButtonColor.secondary} onClick={toggleProfileEditModal} text="Edit Profile" />;
-  };
-
-  const renderLogoutButton = () => {
-    if (!isMobile || self.id !== userId) return null;
-    return (
-      <S.Button color={ButtonColor.secondary} onClick={() => navigate(PATH_AUTHENTICATION.LOGOUT)} text="Logout" />
-    );
-  };
-
-  const renderOwnProfileButtons = () => {
-    if (self.id !== userId) return null;
-
-    if (isMobile) {
-      return (
-        <S.OwnProfileButtonGroup>
-          {renderEditProfileButton()}
-          {renderLogoutButton()}
-        </S.OwnProfileButtonGroup>
-      );
-    }
-
-    return renderEditProfileButton();
   };
 
   const renderFollowButton = () => {
@@ -183,6 +154,10 @@ const UserDetails: SFC = ({className}) => {
     return <S.Username>{user.username}</S.Username>;
   };
 
+  const updateUserStats = async () => {
+    if (userId) await dispatch(getUserStats(userId));
+  };
+
   return (
     <>
       {userBanner ? <S.UserBanner src={userBanner} /> : <S.Banner />}
@@ -194,7 +169,7 @@ const UserDetails: SFC = ({className}) => {
         <S.Wrapper>
           {renderStatsAndBalance()}
           <S.ButtonGroup>
-            {renderOwnProfileButtons()}
+            {renderEditProfileButton()}
             {renderSendButton()}
             {renderFollowButton()}
           </S.ButtonGroup>
