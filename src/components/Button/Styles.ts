@@ -5,15 +5,15 @@ import {colors, fonts} from 'styles';
 
 import {ButtonColor} from './types';
 
-const BUTTON_HEIGHT = 44;
+const BUTTON_HEIGHT = 36;
 
 const disabledMixin = css`
-  background: ${colors.palette.red['300']};
+  background: ${colors.buttonDarkDisabledBackground};
+  color: ${colors.buttonDarkDisabledText};
   cursor: not-allowed;
-  opacity: 0.65;
 
   &:hover {
-    background: ${colors.palette.red['300']};
+    background: ${colors.buttonDarkDisabledBackground};
   }
 `;
 
@@ -43,7 +43,7 @@ const successMixin = css`
 `;
 
 export const Button = styled.button<{$color: ButtonColor; $hasIcon: boolean}>`
-  background: ${colors.palette.red['500']};
+  background: ${colors.buttonDark};
   border-radius: ${`${BUTTON_HEIGHT / 2}px`};
   border: 1px solid transparent;
   color: ${colors.white};
@@ -53,11 +53,11 @@ export const Button = styled.button<{$color: ButtonColor; $hasIcon: boolean}>`
   font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
   height: ${`${BUTTON_HEIGHT}px`};
-  padding: 0 20px;
+  padding: 0 16px;
   transition: all 0.1s;
 
   &:hover {
-    background: ${colors.palette.red['600']};
+    background: ${colors.buttonDarkHover};
   }
 
   ${({$color}) => {
