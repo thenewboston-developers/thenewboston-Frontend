@@ -97,8 +97,11 @@ const Home: SFC = ({className}) => {
                 <S.TableRow key={index}>
                   <S.DataCell $sticky>
                     <S.CoinInfo>
-                      <S.Logo alt={item.primary_currency.ticker} src={item.primary_currency.logo} />
-                      <S.TickerPair>{item.primary_currency.ticker}</S.TickerPair>
+                      <S.Logo
+                        alt={item.asset_pair.primary_currency.ticker}
+                        src={item.asset_pair.primary_currency.logo || undefined}
+                      />
+                      <S.TickerPair>{item.asset_pair.primary_currency.ticker}</S.TickerPair>
                     </S.CoinInfo>
                   </S.DataCell>
                   <S.DataCell $align="right">{formatWholeNumber(item.price)}</S.DataCell>

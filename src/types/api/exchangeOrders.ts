@@ -1,11 +1,10 @@
 import {ExchangeOrder} from '../exchangeOrders';
 
 export interface CreateExchangeOrderRequest {
-  side: number;
+  asset_pair: number;
   price: number;
-  primary_currency: number;
   quantity: number;
-  secondary_currency: number;
+  side: number;
 }
 
 export interface OrderBookResponse {

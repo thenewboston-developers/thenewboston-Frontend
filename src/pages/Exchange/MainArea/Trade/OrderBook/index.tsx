@@ -27,7 +27,7 @@ const OrderBook: SFC<OrderBookProps> = ({activeAssetPair, className}) => {
 
     (async () => {
       try {
-        await dispatch(getOrderBook(activeAssetPair.primary_currency.id, activeAssetPair.secondary_currency.id));
+        await dispatch(getOrderBook(activeAssetPair.id));
       } catch (error) {
         displayErrorToast('Error fetching order book');
       }

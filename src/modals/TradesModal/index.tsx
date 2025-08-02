@@ -4,7 +4,7 @@ import orderBy from 'lodash/orderBy';
 
 import {getTrades as _getTrades} from 'dispatchers/trades';
 import {ExchangeOrderSide} from 'enums';
-import {getCurrencies, getTrades} from 'selectors/state';
+import {getTrades} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {getDateStr, getTimeStr} from 'utils/dates';
 
@@ -16,7 +16,6 @@ export interface TradesModalProps {
 }
 
 const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
-  const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
   const trades = useSelector(getTrades);
 
@@ -28,8 +27,6 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
       await dispatch(_getTrades(orderType));
     })();
   }, [dispatch, order]);
-
-  const getCurrencyTicker = useCallback((currencyId: number) => currencies[currencyId]?.ticker || '-', [currencies]);
 
   const filteredTrades = useMemo(() => {
     if (!order) return [];
@@ -43,8 +40,8 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
   const renderRows = useCallback(() => {
     if (!order) return null;
 
-    const primaryCurrencyTicker = getCurrencyTicker(order.primary_currency);
-    const secondaryCurrencyTicker = getCurrencyTicker(order.secondary_currency);
+    const primaryCurrencyTicker = order.asset_pair.primary_currency.ticker;
+    const secondaryCurrencyTicker = order.asset_pair.secondary_currency.ticker;
 
     return filteredTrades.map(({created_date, filled_quantity, id, overpayment_amount, price}, index) => {
       const createdAt = new Date(created_date);
@@ -69,7 +66,7 @@ const TradesModal: SFC<TradesModalProps> = ({className, close, order}) => {
         </S.TableRow>
       );
     });
-  }, [filteredTrades, getCurrencyTicker, order]);
+  }, [filteredTrades, order]);
 
   if (!order) return null;
 

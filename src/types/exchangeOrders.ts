@@ -1,15 +1,15 @@
+import {AssetPair} from 'types/assetPairs';
 import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
 import {PaginatedResponse, Pagination} from 'types/pagination';
 
 export interface ExchangeOrder extends CreatedModified {
+  asset_pair: AssetPair;
   filled_quantity: number;
   id: number;
   owner: number;
   price: number;
-  primary_currency: number;
   quantity: number;
-  secondary_currency: number;
   side: number;
   status: number;
 }
