@@ -35,12 +35,12 @@ const Home: SFC = ({className}) => {
     return Math.abs(value).toFixed(2);
   };
 
-  const handleCoinClick = (assetPairId: number) => {
-    navigate(`/exchange/trade/${assetPairId}`);
-  };
-
   const formatWholeNumber = (value: number) => {
     return Math.floor(value).toLocaleString();
+  };
+
+  const handleCoinClick = (assetPairId: number) => {
+    navigate(`/exchange/trade/${assetPairId}`);
   };
 
   const renderSparkline = (data: number[]) => {

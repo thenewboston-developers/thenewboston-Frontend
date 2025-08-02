@@ -12,9 +12,9 @@ interface AssetPairSelectorProps {
 }
 
 const AssetPairSelector: SFC<AssetPairSelectorProps> = ({activeAssetPair, className}) => {
-  const {assetPairId} = useParams<{assetPairId: string}>();
   const assetPairs = useSelector(getAssetPairs);
   const navigate = useNavigate();
+  const {assetPairId} = useParams<{assetPairId: string}>();
   const updatedAssetPairs = Object.entries(assetPairs);
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
