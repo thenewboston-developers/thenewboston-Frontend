@@ -51,7 +51,7 @@ const Home: SFC = ({className}) => {
         const response = await getCurrencies({no_wallet: true, page_size: 1});
         setHasAvailableCurrencies(response.count > 0);
       } catch (error) {
-        // Silently handle error - button won't show
+        displayErrorToast('Error checking available currencies');
       }
     })();
   }, [walletList]);
