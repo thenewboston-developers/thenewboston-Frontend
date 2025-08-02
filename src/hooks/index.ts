@@ -1,5 +1,4 @@
 import useActiveWallet from 'hooks/useActiveWallet';
-import useAvailableWalletCurrencies from 'hooks/useAvailableWalletCurrencies';
 import useCurrencyLogo from 'hooks/useCurrencyLogo';
 import useDeploymentPolling from 'hooks/useDeploymentPolling';
 import useEventListener from 'hooks/useEventListener';
@@ -12,7 +11,6 @@ import useWindowSize from 'hooks/useWindowSize';
 
 export {
   useActiveWallet,
-  useAvailableWalletCurrencies,
   useCurrencyLogo,
   useDeploymentPolling,
   useEventListener,

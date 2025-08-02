@@ -2,11 +2,18 @@ import styled from 'styled-components';
 
 import UButton from 'components/Button';
 import UModal from 'components/Modal';
+import UPagination from 'components/Pagination';
 import URadioCard from 'components/RadioCard';
-import {breakpoints} from 'styles';
+import {breakpoints, colors} from 'styles';
 
 export const Button = styled(UButton)`
   margin-top: 32px;
+`;
+
+export const EmptyText = styled.div`
+  color: ${colors.secondary};
+  padding: 20px;
+  text-align: center;
 `;
 
 export const Modal = styled(UModal)`
@@ -19,6 +26,10 @@ export const Modal = styled(UModal)`
     max-width: 100%;
     min-width: 90%;
   }
+`;
+
+export const Pagination = styled(UPagination)`
+  margin-top: 24px;
 `;
 
 export const RadioCardContainer = styled.div`
