@@ -32,11 +32,7 @@ export const Bio = styled.p`
 `;
 
 export const Button = styled(UButton)`
-  border: none;
-  border-radius: 100px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
-  font-weight: ${fonts.weight.semiBold};
-  height: 44px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
 `;
 
 export const ButtonGroup = styled.div`
