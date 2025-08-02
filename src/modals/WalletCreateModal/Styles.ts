@@ -10,6 +10,12 @@ export const Button = styled(UButton)`
   margin-top: 32px;
 `;
 
+export const EmptyText = styled.div`
+  color: ${colors.secondary};
+  padding: 20px;
+  text-align: center;
+`;
+
 export const Modal = styled(UModal)`
   display: flex;
   flex-direction: column;
@@ -20,6 +26,10 @@ export const Modal = styled(UModal)`
     max-width: 100%;
     min-width: 90%;
   }
+`;
+
+export const Pagination = styled(UPagination)`
+  margin-top: 24px;
 `;
 
 export const RadioCardContainer = styled.div`
@@ -33,16 +43,6 @@ export const RadioCardContainer = styled.div`
   @media (min-width: ${breakpoints.mini}) and (max-width: ${breakpoints.mobile}) {
     grid-template-columns: repeat(2, 1fr);
   }
-`;
-
-export const EmptyText = styled.div`
-  color: ${colors.secondary};
-  padding: 20px;
-  text-align: center;
-`;
-
-export const Pagination = styled(UPagination)`
-  margin-top: 24px;
 `;
 
 export const RadioCardWrapper = styled(URadioCard)`
