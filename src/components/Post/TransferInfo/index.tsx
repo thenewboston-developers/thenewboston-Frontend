@@ -1,8 +1,9 @@
-import {useSelector} from 'react-redux';
-import {mdiSwapHorizontal} from '@mdi/js';
+import {useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
-import {getCurrencies} from 'selectors/state';
-import {SFC, UserReadSerializer} from 'types';
+import {getCurrency} from 'dispatchers/currencies';
+import {useCurrencyLogo} from 'hooks';
+import {AppDispatch, Currency, SFC, UserReadSerializer} from 'types';
 import {shortDate} from 'utils/dates';
 
 import * as S from './Styles';
@@ -23,23 +24,35 @@ const TransferInfo: SFC<TransferInfoProps> = ({
   priceCurrency,
   recipient,
 }) => {
-  const currencies = useSelector(getCurrencies);
-  const currency = currencies[priceCurrency];
+  const [currency, setCurrency] = useState<Currency | null>(null);
+  const currencyLogo = useCurrencyLogo(priceCurrency);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    const fetchCurrency = async () => {
+      try {
+        const currencyData = await dispatch(getCurrency(priceCurrency));
+        setCurrency(currencyData);
+      } catch (error) {
+        // Error fetching currency
+      }
+    };
+
+    if (priceCurrency) {
+      fetchCurrency();
+    }
+  }, [priceCurrency, dispatch]);
 
   return (
     <S.Container className={className}>
       <S.GraphicWrapper>
-        {currency?.logo ? (
-          <S.CurrencyLogo alt={currency.ticker} src={currency.logo} />
-        ) : (
-          <S.Icon icon={mdiSwapHorizontal} size={32} />
-        )}
+        <S.CurrencyLogo alt={currency?.ticker || ''} src={currencyLogo} />
       </S.GraphicWrapper>
       <S.Content>
         <S.Text>
           <S.Link to={`/profile/${owner.id}`}>{owner.username}</S.Link> sent{' '}
           <strong>
-            {priceAmount.toLocaleString()} {currencies[priceCurrency]?.ticker}
+            {priceAmount.toLocaleString()} {currency?.ticker || ''}
           </strong>{' '}
           to <S.Link to={`/profile/${recipient.id}`}>{recipient.username}</S.Link>
         </S.Text>

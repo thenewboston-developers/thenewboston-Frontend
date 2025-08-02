@@ -19,10 +19,13 @@ export const deleteCurrency = (id: number) => async (dispatch: AppDispatch) => {
 };
 
 export const getCurrencies =
-  (ordering: string = '-modified_date') =>
-  async (dispatch: AppDispatch) => {
-    const responseData = await _getCurrencies(ordering);
-    dispatch(setCurrencies(responseData));
+  (params?: {ordering?: string; page?: number; page_size?: number}) => async (dispatch: AppDispatch) => {
+    const responseData = await _getCurrencies({
+      ordering: '-modified_date',
+      ...params,
+    });
+    dispatch(setCurrencies(responseData.results));
+    return responseData;
   };
 
 export const getCurrency = (id: number) => async (dispatch: AppDispatch) => {

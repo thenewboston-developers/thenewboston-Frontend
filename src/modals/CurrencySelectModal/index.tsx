@@ -1,11 +1,14 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import Loader from 'components/Loader';
+import Pagination from 'components/Pagination';
 import RadioCard from 'components/RadioCard';
+import {getCurrencies} from 'dispatchers/currencies';
 import {ToastType} from 'enums';
-import {getCurrencies, getManager} from 'selectors/state';
+import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
-import {AppDispatch, SFC} from 'types';
+import {AppDispatch, Currency, PaginatedResponse, SFC} from 'types';
 import {displayToast} from 'utils/toasts';
 
 import * as S from './Styles';
@@ -16,13 +19,32 @@ export interface CurrencySelectModalProps {
 
 const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) => {
   const [animationType, setAnimationType] = useState<'select' | 'deselect' | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currenciesData, setCurrenciesData] = useState<PaginatedResponse<Currency> | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
-  const currencies = useSelector(getCurrencies);
   const manager = useSelector(getManager);
 
-  const handleCurrencyClick = (currencyId: number) => {
-    const currency = currencies[currencyId];
-    const isCurrentlySelected = manager.activeCommentCurrency?.id === currencyId;
+  const pageSize = 10;
+
+  useEffect(() => {
+    const fetchCurrencies = async () => {
+      setIsLoading(true);
+      try {
+        const data = await dispatch(getCurrencies({page: currentPage, page_size: pageSize}));
+        setCurrenciesData(data);
+      } catch (error) {
+        // Error fetching currencies
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCurrencies();
+  }, [currentPage, dispatch]);
+
+  const handleCurrencyClick = (currency: Currency) => {
+    const isCurrentlySelected = manager.activeCommentCurrency?.id === currency.id;
 
     if (isCurrentlySelected) {
       // Start deselection
@@ -35,6 +57,10 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
       dispatch(updateManager({activeCommentCurrency: currency}));
       displayToast(`${currency.ticker} selected`, ToastType.SUCCESS);
     }
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   const handleAnimationComplete = () => {
@@ -53,19 +79,27 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
   };
 
   const renderRadioCards = () => {
+    if (isLoading) return <Loader />;
+    if (!currenciesData || !currenciesData.results.length) return <div>No currencies available</div>;
+
     return (
       <>
-        {Object.values(currencies).map((_currency) => {
+        {currenciesData.results.map((_currency) => {
           return (
             <RadioCard
               currency={_currency}
               isSelected={manager.activeCommentCurrency?.id === _currency.id}
               key={_currency.id}
               onAnimationComplete={handleAnimationComplete}
-              onClick={() => handleCurrencyClick(_currency.id)}
+              onClick={() => handleCurrencyClick(_currency)}
             />
           );
         })}
+        <Pagination
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+          totalPages={Math.ceil(currenciesData.count / pageSize)}
+        />
       </>
     );
   };

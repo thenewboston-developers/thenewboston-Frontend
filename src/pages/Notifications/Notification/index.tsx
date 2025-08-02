@@ -1,12 +1,11 @@
 import {ReactNode} from 'react';
-import {useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
 import {mdiContentCopy, mdiHeart, mdiSwapHorizontal, mdiWalletBifoldOutline} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import CurrencyLogo from 'components/CurrencyLogo';
 import {ExchangeOrderSide, NotificationType} from 'enums';
-import {getCurrencies} from 'selectors/state';
+import {useCurrencyLogo} from 'hooks';
 import {Notification as TNotification, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
@@ -17,8 +16,14 @@ export interface NotificationProps {
 }
 
 const Notification: SFC<NotificationProps> = ({className, notification}) => {
-  const currencies = useSelector(getCurrencies);
   const navigate = useNavigate();
+
+  // Extract primary_currency_id if it's an exchange order notification
+  const primaryCurrencyId =
+    notification.payload.notification_type === NotificationType.EXCHANGE_ORDER_FILLED
+      ? Number(notification.payload.primary_currency_id)
+      : 0;
+  const primaryCurrencyLogo = useCurrencyLogo(primaryCurrencyId);
 
   const handleContainerClick = () => {
     const notificationType = notification.payload.notification_type;
@@ -56,22 +61,14 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     const totalReceived = side === ExchangeOrderSide.BUY ? quantity : quantity * price;
     const receivedTicker = side === ExchangeOrderSide.BUY ? primary_currency_ticker : secondary_currency_ticker;
 
-    const primaryCurrency = currencies[Number(primary_currency_id)];
-
     return (
       <S.NotificationContainer>
-        {primaryCurrency?.logo ? (
-          <Link to={`/currencies/${primary_currency_id}`}>
-            <S.CurrencyLogoContainer>
-              <CurrencyLogo logo={primaryCurrency.logo} width="45px" />
-              <S.ExchangeIcon path={mdiSwapHorizontal} size="23px" />
-            </S.CurrencyLogoContainer>
-          </Link>
-        ) : (
-          <S.ExchangeIconContainer>
+        <Link to={`/currencies/${primary_currency_id}`}>
+          <S.CurrencyLogoContainer>
+            <CurrencyLogo logo={primaryCurrencyLogo} width="45px" />
             <S.ExchangeIcon path={mdiSwapHorizontal} size="23px" />
-          </S.ExchangeIconContainer>
-        )}
+          </S.CurrencyLogoContainer>
+        </Link>
         <S.TextContainer>
           <div>
             Your order to {action} {quantity.toLocaleString()} {primary_currency_ticker} was filled. You received a
