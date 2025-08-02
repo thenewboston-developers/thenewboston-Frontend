@@ -3,7 +3,6 @@ import {useDispatch} from 'react-redux';
 
 import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
-import Pagination from 'components/Pagination';
 import SectionHeading from 'components/SectionHeading';
 import {getCurrencies} from 'dispatchers/currencies';
 import {AppDispatch, Currency, PaginatedResponse, SFC} from 'types';
@@ -53,7 +52,7 @@ const Home: SFC = ({className}) => {
     return (
       <>
         <S.CardsContainer>{currencyCards}</S.CardsContainer>
-        <Pagination
+        <S.Pagination
           currentPage={currentPage}
           onPageChange={handlePageChange}
           totalPages={Math.ceil(currenciesData.count / pageSize)}

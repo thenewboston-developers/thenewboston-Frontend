@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import UPagination from 'components/Pagination';
 import {breakpoints, pagePadding} from 'styles';
 
 export const CardsContainer = styled.div`
@@ -23,4 +24,8 @@ export const CardsContainer = styled.div`
 
 export const Container = styled.div`
   ${pagePadding};
+`;
+
+export const Pagination = styled(UPagination)`
+  margin-top: 32px;
 `;
