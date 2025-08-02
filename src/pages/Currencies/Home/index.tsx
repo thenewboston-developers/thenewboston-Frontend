@@ -17,7 +17,7 @@ const Home: SFC = ({className}) => {
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
 
-  const pageSize = 10;
+  const pageSize = 20;
 
   useEffect(() => {
     (async () => {
