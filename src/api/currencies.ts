@@ -23,6 +23,7 @@ export const deleteCurrency = async (id: number): Promise<void> => {
 };
 
 export const getCurrencies = async (params?: {
+  no_wallet?: boolean;
   ordering?: string;
   page?: number;
   page_size?: number;
@@ -51,20 +52,6 @@ export const updateCurrency = async (id: number, data: FormData): Promise<Curren
   try {
     const response = await axios.patch<Currency>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
     return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getAvailableWalletCurrencies = async (): Promise<Currency[]> => {
-  try {
-    // Fetch all currencies with a high page_size to get most/all currencies
-    // This is a temporary solution until the backend provides a specific endpoint
-    const response = await axios.get<PaginatedResponse<Currency>>(BASE_URL, {
-      ...authorizationHeaders(),
-      params: {page_size: 100},
-    });
-    return response.data.results;
   } catch (error) {
     throw error;
   }

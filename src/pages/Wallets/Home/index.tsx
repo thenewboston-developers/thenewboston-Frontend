@@ -4,13 +4,14 @@ import {mdiArrowDownCircle, mdiArrowUpCircle, mdiSwapHorizontal} from '@mdi/js';
 import Icon from '@mdi/react';
 import orderBy from 'lodash/orderBy';
 
+import {getCurrencies} from 'api/currencies';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
 import {getWallets as _getWallets} from 'dispatchers/wallets';
 import {WalletTab} from 'enums';
-import {useAvailableWalletCurrencies, useToggle} from 'hooks';
+import {useToggle} from 'hooks';
 import WalletCreateModal from 'modals/WalletCreateModal';
 import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
@@ -26,9 +27,9 @@ import WalletWithdraw from '../WalletWithdraw';
 import * as S from './Styles';
 
 const Home: SFC = ({className}) => {
+  const [hasAvailableCurrencies, setHasAvailableCurrencies] = useState(false);
   const [transfersRefreshKey, setTransfersRefreshKey] = useState(0);
   const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
-  const availableWalletCores = useAvailableWalletCurrencies();
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
   const wallets = useSelector(getWallets);
@@ -43,6 +44,17 @@ const Home: SFC = ({className}) => {
       }
     })();
   }, [dispatch]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await getCurrencies({no_wallet: true, page_size: 1});
+        setHasAvailableCurrencies(response.count > 0);
+      } catch (error) {
+        // Silently handle error - button won't show
+      }
+    })();
+  }, [walletList]);
 
   useEffect(() => {
     (async () => {
@@ -73,7 +85,7 @@ const Home: SFC = ({className}) => {
   }, []);
 
   const renderButtonContainer = () => {
-    if (!availableWalletCores.length) return null;
+    if (!hasAvailableCurrencies) return null;
 
     return (
       <S.ButtonContainer $hasWallets={walletList.length > 0}>

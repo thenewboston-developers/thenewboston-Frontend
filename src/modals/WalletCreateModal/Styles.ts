@@ -2,8 +2,9 @@ import styled from 'styled-components';
 
 import UButton from 'components/Button';
 import UModal from 'components/Modal';
+import UPagination from 'components/Pagination';
 import URadioCard from 'components/RadioCard';
-import {breakpoints} from 'styles';
+import {breakpoints, colors} from 'styles';
 
 export const Button = styled(UButton)`
   margin-top: 32px;
@@ -32,6 +33,16 @@ export const RadioCardContainer = styled.div`
   @media (min-width: ${breakpoints.mini}) and (max-width: ${breakpoints.mobile}) {
     grid-template-columns: repeat(2, 1fr);
   }
+`;
+
+export const EmptyText = styled.div`
+  color: ${colors.secondary};
+  padding: 20px;
+  text-align: center;
+`;
+
+export const Pagination = styled(UPagination)`
+  margin-top: 24px;
 `;
 
 export const RadioCardWrapper = styled(URadioCard)`
