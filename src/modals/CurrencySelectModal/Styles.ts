@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import UModal from 'components/Modal';
+import UPagination from 'components/Pagination';
 import {breakpoints, hiddenScroll} from 'styles';
 
 export const Modal = styled(UModal)`
@@ -28,4 +29,8 @@ export const RadioCardContainer = styled.div`
   @media (max-width: ${breakpoints.mini}) {
     grid-template-columns: 1fr;
   }
+`;
+
+export const Pagination = styled(UPagination)`
+  margin-top: 24px;
 `;

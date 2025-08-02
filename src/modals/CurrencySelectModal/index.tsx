@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Loader from 'components/Loader';
-import Pagination from 'components/Pagination';
 import RadioCard from 'components/RadioCard';
 import {getCurrencies} from 'dispatchers/currencies';
 import {ToastType} from 'enums';
@@ -78,24 +77,26 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
     setAnimationType(null);
   };
 
-  const renderRadioCards = () => {
+  const renderContent = () => {
     if (isLoading) return <Loader />;
     if (!currenciesData || !currenciesData.results.length) return <div>No currencies available</div>;
 
     return (
       <>
-        {currenciesData.results.map((_currency) => {
-          return (
-            <RadioCard
-              currency={_currency}
-              isSelected={manager.activeCommentCurrency?.id === _currency.id}
-              key={_currency.id}
-              onAnimationComplete={handleAnimationComplete}
-              onClick={() => handleCurrencyClick(_currency)}
-            />
-          );
-        })}
-        <Pagination
+        <S.RadioCardContainer>
+          {currenciesData.results.map((_currency) => {
+            return (
+              <RadioCard
+                currency={_currency}
+                isSelected={manager.activeCommentCurrency?.id === _currency.id}
+                key={_currency.id}
+                onAnimationComplete={handleAnimationComplete}
+                onClick={() => handleCurrencyClick(_currency)}
+              />
+            );
+          })}
+        </S.RadioCardContainer>
+        <S.Pagination
           currentPage={currentPage}
           onPageChange={handlePageChange}
           totalPages={Math.ceil(currenciesData.count / pageSize)}
@@ -106,7 +107,7 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
 
   return (
     <S.Modal className={className} close={close} header="Currencies">
-      <S.RadioCardContainer>{renderRadioCards()}</S.RadioCardContainer>
+      {renderContent()}
     </S.Modal>
   );
 };
