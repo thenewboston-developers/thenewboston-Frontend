@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import UModal from 'components/Modal';
+import UPagination from 'components/Pagination';
 import {breakpoints, hiddenScroll} from 'styles';
 
 export const Modal = styled(UModal)`
@@ -12,6 +13,10 @@ export const Modal = styled(UModal)`
   @media (max-width: ${breakpoints.mobile}) {
     width: 95%;
   }
+`;
+
+export const Pagination = styled(UPagination)`
+  margin-top: 24px;
 `;
 
 export const RadioCardContainer = styled.div`

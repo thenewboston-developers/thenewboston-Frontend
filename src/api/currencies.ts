@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {Currency} from 'types';
+import {Currency, PaginatedResponse} from 'types';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/currencies`;
@@ -22,10 +22,13 @@ export const deleteCurrency = async (id: number): Promise<void> => {
   }
 };
 
-export const getCurrencies = async (ordering?: string): Promise<Currency[]> => {
+export const getCurrencies = async (params?: {
+  ordering?: string;
+  page?: number;
+  page_size?: number;
+}): Promise<PaginatedResponse<Currency>> => {
   try {
-    const params = ordering ? {ordering} : {};
-    const response = await axios.get<Currency[]>(BASE_URL, {
+    const response = await axios.get<PaginatedResponse<Currency>>(BASE_URL, {
       ...authorizationHeaders(),
       params,
     });
@@ -48,6 +51,20 @@ export const updateCurrency = async (id: number, data: FormData): Promise<Curren
   try {
     const response = await axios.patch<Currency>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
     return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAvailableWalletCurrencies = async (): Promise<Currency[]> => {
+  try {
+    // Fetch all currencies with a high page_size to get most/all currencies
+    // This is a temporary solution until the backend provides a specific endpoint
+    const response = await axios.get<PaginatedResponse<Currency>>(BASE_URL, {
+      ...authorizationHeaders(),
+      params: {page_size: 100},
+    });
+    return response.data.results;
   } catch (error) {
     throw error;
   }

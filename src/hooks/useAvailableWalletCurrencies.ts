@@ -1,11 +1,13 @@
-import {useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 
-import {getCurrencies, getWallets} from 'selectors/state';
+import {getAvailableWalletCurrencies} from 'api/currencies';
+import {getWallets} from 'selectors/state';
 import {Currency} from 'types';
+import {displayErrorToast} from 'utils/toasts';
 
 const useAvailableWalletCurrencies = (): Currency[] => {
-  const currencies = useSelector(getCurrencies);
+  const [allCurrencies, setAllCurrencies] = useState<Currency[]>([]);
   const wallets = useSelector(getWallets);
 
   const existingWalletCurrencyIds = useMemo(
@@ -13,9 +15,20 @@ const useAvailableWalletCurrencies = (): Currency[] => {
     [wallets],
   );
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const currencies = await getAvailableWalletCurrencies();
+        setAllCurrencies(currencies);
+      } catch (error) {
+        displayErrorToast('Error fetching available currencies');
+      }
+    })();
+  }, []);
+
   return useMemo(
-    () => Object.values(currencies).filter(({id}) => !existingWalletCurrencyIds.has(id)),
-    [currencies, existingWalletCurrencyIds],
+    () => allCurrencies.filter(({id}) => !existingWalletCurrencyIds.has(id)),
+    [allCurrencies, existingWalletCurrencyIds],
   );
 };
 
