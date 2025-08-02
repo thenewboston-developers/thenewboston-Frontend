@@ -5,6 +5,7 @@ import {getCurrency} from 'dispatchers/currencies';
 import {useCurrencyLogo} from 'hooks';
 import {AppDispatch, Currency, SFC, UserReadSerializer} from 'types';
 import {shortDate} from 'utils/dates';
+import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
@@ -29,18 +30,16 @@ const TransferInfo: SFC<TransferInfoProps> = ({
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const fetchCurrency = async () => {
+    if (!priceCurrency) return;
+
+    (async () => {
       try {
         const currencyData = await dispatch(getCurrency(priceCurrency));
         setCurrency(currencyData);
       } catch (error) {
-        // Error fetching currency
+        displayErrorToast('Error fetching currency information');
       }
-    };
-
-    if (priceCurrency) {
-      fetchCurrency();
-    }
+    })();
   }, [priceCurrency, dispatch]);
 
   return (
