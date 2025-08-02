@@ -1,3 +1,4 @@
+import {CurrencyTinySerializer} from 'types/api/tradeHistory';
 import {UserReadSerializer} from 'types/api/users';
 import {CreatedModified} from 'types/createdModified';
 import {Currency} from 'types/currencies';
@@ -16,7 +17,7 @@ export interface Post extends CreatedModified {
   like_count: number;
   owner: UserReadSerializer;
   price_amount: number | null;
-  price_currency: number | null;
+  price_currency: CurrencyTinySerializer | null;
   recipient: UserReadSerializer | null;
   tip_amounts: TipAmount[];
 }
