@@ -8,7 +8,7 @@ import {ToastType} from 'enums';
 import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, Currency, PaginatedResponse, SFC} from 'types';
-import {displayToast} from 'utils/toasts';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
@@ -27,19 +27,17 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
   const pageSize = 10;
 
   useEffect(() => {
-    const fetchCurrencies = async () => {
+    (async () => {
       setIsLoading(true);
       try {
         const data = await dispatch(getCurrencies({page: currentPage, page_size: pageSize}));
         setCurrenciesData(data);
       } catch (error) {
-        // Error fetching currencies
+        displayErrorToast('Error fetching currencies');
       } finally {
         setIsLoading(false);
       }
-    };
-
-    fetchCurrencies();
+    })();
   }, [currentPage, dispatch]);
 
   const handleCurrencyClick = (currency: Currency) => {
