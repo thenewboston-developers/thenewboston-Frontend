@@ -2,18 +2,20 @@ import {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {getOrderBook} from 'dispatchers/orderBook';
-import {useActiveAssetPair} from 'hooks';
 import {getOrderBookBuyOrders, getOrderBookSellOrders, isLoadingOrderBook} from 'selectors/state';
-import {AppDispatch, ExchangeOrder, SFC} from 'types';
+import {AppDispatch, AssetPair, ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 import Tooltip from './Tooltip';
 
-const OrderBook: SFC = ({className}) => {
+interface OrderBookProps {
+  activeAssetPair: AssetPair | null;
+}
+
+const OrderBook: SFC<OrderBookProps> = ({activeAssetPair, className}) => {
   const [hoveredOrder, setHoveredOrder] = useState<ExchangeOrder | null>(null);
-  const activeAssetPair = useActiveAssetPair();
   const buyOrders = useSelector(getOrderBookBuyOrders);
   const dispatch = useDispatch<AppDispatch>();
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -25,7 +27,7 @@ const OrderBook: SFC = ({className}) => {
 
     (async () => {
       try {
-        await dispatch(getOrderBook(activeAssetPair.primary_currency.id, activeAssetPair.secondary_currency.id));
+        await dispatch(getOrderBook(activeAssetPair.id));
       } catch (error) {
         displayErrorToast('Error fetching order book');
       }

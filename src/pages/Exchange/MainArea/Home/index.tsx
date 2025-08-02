@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {mdiMenuDown, mdiMenuUp} from '@mdi/js';
 import {Area, AreaChart, ResponsiveContainer} from 'recharts';
 
@@ -14,6 +15,7 @@ const Home: SFC = ({className}) => {
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [tradeHistoryItems, setTradeHistoryItems] = useState<TradeHistoryItem[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -35,6 +37,10 @@ const Home: SFC = ({className}) => {
 
   const formatWholeNumber = (value: number) => {
     return Math.floor(value).toLocaleString();
+  };
+
+  const handleCoinClick = (assetPairId: number) => {
+    navigate(`/exchange/trade/${assetPairId}`);
   };
 
   const renderSparkline = (data: number[]) => {
@@ -95,10 +101,13 @@ const Home: SFC = ({className}) => {
             <S.TableBody>
               {tradeHistoryItems.map((item, index) => (
                 <S.TableRow key={index}>
-                  <S.DataCell $sticky>
+                  <S.DataCell $clickable $sticky onClick={() => handleCoinClick(item.asset_pair.id)}>
                     <S.CoinInfo>
-                      <S.Logo alt={item.primary_currency.ticker} src={item.primary_currency.logo} />
-                      <S.TickerPair>{item.primary_currency.ticker}</S.TickerPair>
+                      <S.Logo
+                        alt={item.asset_pair.primary_currency.ticker}
+                        src={item.asset_pair.primary_currency.logo}
+                      />
+                      <S.TickerPair>{item.asset_pair.primary_currency.ticker}</S.TickerPair>
                     </S.CoinInfo>
                   </S.DataCell>
                   <S.DataCell $align="right">{formatWholeNumber(item.price)}</S.DataCell>

@@ -24,11 +24,10 @@ export const getExchangeOrders = async (url?: string): Promise<ExchangeOrderPagi
   }
 };
 
-export const getOrderBook = async (primaryCurrency: number, secondaryCurrency: number): Promise<OrderBookResponse> => {
+export const getOrderBook = async (assetPairId: number): Promise<OrderBookResponse> => {
   try {
     const params = new URLSearchParams({
-      primary_currency: primaryCurrency.toString(),
-      secondary_currency: secondaryCurrency.toString(),
+      asset_pair: assetPairId.toString(),
     });
     const response = await axios.get<OrderBookResponse>(`${BASE_URL}/book?${params}`, authorizationHeaders());
     return response.data;

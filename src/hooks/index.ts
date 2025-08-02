@@ -1,4 +1,3 @@
-import useActiveAssetPair from 'hooks/useActiveAssetPair';
 import useActiveWallet from 'hooks/useActiveWallet';
 import useAvailableWalletCurrencies from 'hooks/useAvailableWalletCurrencies';
 import useCurrencyLogo from 'hooks/useCurrencyLogo';
@@ -12,7 +11,6 @@ import useUser from 'hooks/useUser';
 import useWindowSize from 'hooks/useWindowSize';
 
 export {
-  useActiveAssetPair,
   useActiveWallet,
   useAvailableWalletCurrencies,
   useCurrencyLogo,

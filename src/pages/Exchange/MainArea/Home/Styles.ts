@@ -20,13 +20,24 @@ export const Container = styled.div`
   }
 `;
 
-export const DataCell = styled.td<{$sticky?: boolean; $align?: 'left' | 'right'}>`
+export const DataCell = styled.td<{$sticky?: boolean; $align?: 'left' | 'right'; $clickable?: boolean}>`
   background: ${colors.white};
   color: ${colors.primary};
   font-size: 14px;
   padding: 16px 24px;
   text-align: ${({$align}) => $align || 'left'};
   white-space: nowrap;
+
+  ${({$clickable}) =>
+    $clickable &&
+    css`
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: ${colors.palette.gray[50]};
+      }
+    `}
 
   ${({$sticky}) =>
     $sticky &&

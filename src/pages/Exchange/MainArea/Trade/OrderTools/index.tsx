@@ -3,8 +3,7 @@ import {mdiCartArrowDown, mdiCartArrowUp} from '@mdi/js';
 import Icon from '@mdi/react';
 
 import Tab from 'components/Tab';
-import {useActiveAssetPair} from 'hooks';
-import {SFC} from 'types';
+import {AssetPair, SFC} from 'types';
 
 import AssetPairSelector from './AssetPairSelector';
 import Buy from './Buy';
@@ -16,16 +15,19 @@ enum TradeTab {
   SELL = 'SELL',
 }
 
-const OrderTools: SFC = ({className}) => {
+interface OrderToolsProps {
+  activeAssetPair: AssetPair | null;
+}
+
+const OrderTools: SFC<OrderToolsProps> = ({activeAssetPair, className}) => {
   const [activeTab, setActiveTab] = useState(TradeTab.BUY);
-  const activeAssetPair = useActiveAssetPair();
 
   const renderTabContent = () => {
     if (!activeAssetPair) return null;
 
     const tabContent = {
-      [TradeTab.BUY]: <Buy />,
-      [TradeTab.SELL]: <Sell />,
+      [TradeTab.BUY]: <Buy activeAssetPair={activeAssetPair} />,
+      [TradeTab.SELL]: <Sell activeAssetPair={activeAssetPair} />,
     };
 
     return <S.TabContent>{tabContent[activeTab]}</S.TabContent>;
@@ -52,9 +54,11 @@ const OrderTools: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      {renderTabs()}
-      <AssetPairSelector />
-      {renderTabContent()}
+      <AssetPairSelector activeAssetPair={activeAssetPair} />
+      <S.Panel>
+        {renderTabs()}
+        {renderTabContent()}
+      </S.Panel>
     </S.Container>
   );
 };

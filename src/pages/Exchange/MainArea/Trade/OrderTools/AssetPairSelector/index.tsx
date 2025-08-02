@@ -1,30 +1,37 @@
-import {useDispatch, useSelector} from 'react-redux';
+import {ChangeEvent} from 'react';
+import {useSelector} from 'react-redux';
+import {useNavigate, useParams} from 'react-router-dom';
 
-import {useActiveAssetPair} from 'hooks';
-import {getAssetPairs, getManager} from 'selectors/state';
-import {updateManager} from 'store/manager';
-import {AppDispatch, SFC} from 'types';
+import {getAssetPairs} from 'selectors/state';
+import {AssetPair, SFC} from 'types';
 
 import * as S from './Styles';
 
-const AssetPairSelector: SFC = ({className}) => {
-  const activeAssetPair = useActiveAssetPair();
-  const assetPairs = useSelector(getAssetPairs);
-  const dispatch = useDispatch<AppDispatch>();
-  const manager = useSelector(getManager);
-  const updatedAssetsParis = Object.entries(assetPairs);
+interface AssetPairSelectorProps {
+  activeAssetPair: AssetPair | null;
+}
 
-  const handleOptionClick = (assetPairId: number) => {
-    dispatch(updateManager({activeAssetPairId: assetPairId === manager.activeAssetPairId ? null : assetPairId}));
+const AssetPairSelector: SFC<AssetPairSelectorProps> = ({activeAssetPair, className}) => {
+  const assetPairs = useSelector(getAssetPairs);
+  const navigate = useNavigate();
+  const {assetPairId} = useParams<{assetPairId: string}>();
+  const updatedAssetPairs = Object.entries(assetPairs);
+
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const newAssetPairId = e.target.value;
+    navigate(`/exchange/trade/${newAssetPairId}`);
   };
 
   return (
     <S.Container className={className}>
-      <S.ImageContainer>
-        <S.Image height={20} src={activeAssetPair?.primary_currency.logo} width={20} />
-      </S.ImageContainer>
-      <S.Select onChange={(e) => handleOptionClick(+e.target.value)} value={manager.activeAssetPairId || ''}>
-        {updatedAssetsParis.map((assetsValue, index) => {
+      <S.Content>
+        <S.ImageContainer>
+          <S.Image src={activeAssetPair?.primary_currency.logo} />
+        </S.ImageContainer>
+        <S.Ticker>{activeAssetPair?.primary_currency.ticker}</S.Ticker>
+      </S.Content>
+      <S.Select id="asset-pair-selector" name="asset-pair-selector" onChange={handleChange} value={assetPairId || ''}>
+        {updatedAssetPairs.map((assetsValue, index) => {
           return (
             <option key={index} value={assetsValue[1].id}>
               {assetsValue[1].primary_currency.ticker}

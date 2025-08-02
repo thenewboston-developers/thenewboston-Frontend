@@ -8,17 +8,19 @@ import {CalloutType} from 'components/Callout';
 import {FormField, LogoInput} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
 import {ExchangeOrderSide, ToastType} from 'enums';
-import {useActiveAssetPair} from 'hooks';
 import {getWallets} from 'selectors/state';
-import {AppDispatch, SFC} from 'types';
+import {AppDispatch, AssetPair, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
 
-const Buy: SFC = ({className}) => {
+interface BuyProps {
+  activeAssetPair: AssetPair | null;
+}
+
+const Buy: SFC<BuyProps> = ({activeAssetPair, className}) => {
   const [total, setTotal] = useState<number>(0);
-  const activeAssetPair = useActiveAssetPair();
   const dispatch = useDispatch<AppDispatch>();
   const formikRef = useRef<any>(null);
   const wallets = useSelector(getWallets);
@@ -39,10 +41,9 @@ const Buy: SFC = ({className}) => {
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
       const requestData = {
+        asset_pair: activeAssetPair!.id,
         price: parseInt(values.price, 10),
-        primary_currency: activeAssetPair!.primary_currency.id,
         quantity: parseInt(values.quantity, 10),
-        secondary_currency: activeAssetPair!.secondary_currency.id,
         side: ExchangeOrderSide.BUY,
       };
       await dispatch(createExchangeOrder(requestData));

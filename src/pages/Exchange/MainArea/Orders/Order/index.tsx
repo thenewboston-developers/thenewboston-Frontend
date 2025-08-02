@@ -1,12 +1,11 @@
 import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {mdiDotsVertical} from '@mdi/js';
 
 import DropdownMenu from 'components/DropdownMenu';
 import FillStatusBadge from 'components/FillStatusBadge';
 import {updateExchangeOrder} from 'dispatchers/exchangeOrders';
 import {ExchangeOrderSide, ExchangeOrderStatus} from 'enums';
-import {getCurrencies} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
@@ -18,10 +17,7 @@ export interface OrderProps {
 }
 
 const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
-  const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
-
-  const getCurrencyTicker = useCallback((currencyId: number) => currencies[currencyId]?.ticker || '-', [currencies]);
 
   const renderDropdownMenu = useCallback(() => {
     const menuOptions = [
@@ -47,10 +43,10 @@ const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
     );
   }, [dispatch, order, onViewTrades]);
 
-  const {created_date, filled_quantity, status, side, quantity, price, primary_currency, secondary_currency} = order;
+  const {asset_pair, created_date, filled_quantity, price, quantity, side, status} = order;
 
-  const primaryCurrencyTicker = getCurrencyTicker(primary_currency);
-  const secondaryCurrencyTicker = getCurrencyTicker(secondary_currency);
+  const primaryCurrencyTicker = asset_pair.primary_currency.ticker;
+  const secondaryCurrencyTicker = asset_pair.secondary_currency.ticker;
   const [date, time] = longDate(created_date).split('at');
   const fillPercentage = quantity > 0 ? (filled_quantity / quantity) * 100 : 0;
   const totalValue = quantity * price;
