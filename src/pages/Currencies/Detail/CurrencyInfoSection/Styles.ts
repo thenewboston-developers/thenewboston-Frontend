@@ -54,6 +54,7 @@ export const CurrencyPanel = styled.div`
   background: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 12px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   margin-bottom: 32px;
   margin-top: 75px;
   padding: 0;
