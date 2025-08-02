@@ -10,6 +10,11 @@ const useAvailableWalletCurrencies = (): Currency[] => {
   const [allCurrencies, setAllCurrencies] = useState<Currency[]>([]);
   const wallets = useSelector(getWallets);
 
+  const existingWalletCurrencyIds = useMemo(
+    () => new Set(Object.values(wallets).map(({currency}) => currency.id)),
+    [wallets],
+  );
+
   useEffect(() => {
     (async () => {
       try {
@@ -20,11 +25,6 @@ const useAvailableWalletCurrencies = (): Currency[] => {
       }
     })();
   }, []);
-
-  const existingWalletCurrencyIds = useMemo(
-    () => new Set(Object.values(wallets).map(({currency}) => currency.id)),
-    [wallets],
-  );
 
   return useMemo(
     () => allCurrencies.filter(({id}) => !existingWalletCurrencyIds.has(id)),

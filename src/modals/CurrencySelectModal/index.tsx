@@ -18,8 +18,8 @@ export interface CurrencySelectModalProps {
 
 const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) => {
   const [animationType, setAnimationType] = useState<'select' | 'deselect' | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
   const [currenciesData, setCurrenciesData] = useState<PaginatedResponse<Currency> | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
