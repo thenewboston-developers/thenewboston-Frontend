@@ -6,6 +6,7 @@ import Loader from 'components/Loader';
 import SectionHeading from 'components/SectionHeading';
 import {getCurrencies} from 'dispatchers/currencies';
 import {AppDispatch, Currency, PaginatedResponse, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
 
 import CurrencyCard from './CurrencyCard';
 import * as S from './Styles';
@@ -19,19 +20,17 @@ const Home: SFC = ({className}) => {
   const pageSize = 10;
 
   useEffect(() => {
-    const fetchCurrencies = async () => {
+    (async () => {
       setIsLoading(true);
       try {
         const data = await dispatch(getCurrencies({page: currentPage, page_size: pageSize}));
         setCurrenciesData(data);
       } catch (error) {
-        // Error fetching currencies
+        displayErrorToast('Error fetching currencies');
       } finally {
         setIsLoading(false);
       }
-    };
-
-    fetchCurrencies();
+    })();
   }, [currentPage, dispatch]);
 
   const handlePageChange = (page: number) => {

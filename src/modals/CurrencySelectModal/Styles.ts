@@ -15,6 +15,10 @@ export const Modal = styled(UModal)`
   }
 `;
 
+export const Pagination = styled(UPagination)`
+  margin-top: 24px;
+`;
+
 export const RadioCardContainer = styled.div`
   ${hiddenScroll};
   display: grid;
@@ -29,8 +33,4 @@ export const RadioCardContainer = styled.div`
   @media (max-width: ${breakpoints.mini}) {
     grid-template-columns: 1fr;
   }
-`;
-
-export const Pagination = styled(UPagination)`
-  margin-top: 24px;
 `;
