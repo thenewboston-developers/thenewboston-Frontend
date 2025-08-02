@@ -105,7 +105,7 @@ const Home: SFC = ({className}) => {
                     <S.CoinInfo>
                       <S.Logo
                         alt={item.asset_pair.primary_currency.ticker}
-                        src={item.asset_pair.primary_currency.logo || undefined}
+                        src={item.asset_pair.primary_currency.logo}
                       />
                       <S.TickerPair>{item.asset_pair.primary_currency.ticker}</S.TickerPair>
                     </S.CoinInfo>

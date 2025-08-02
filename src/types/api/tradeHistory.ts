@@ -1,6 +1,6 @@
 export interface CurrencyTinySerializer {
   id: number;
-  logo: string | null;
+  logo: string;
   ticker: string;
 }
 
