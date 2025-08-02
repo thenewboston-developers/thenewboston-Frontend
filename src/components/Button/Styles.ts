@@ -5,7 +5,7 @@ import {colors, fonts} from 'styles';
 
 import {ButtonColor} from './types';
 
-const BUTTON_HEIGHT = 36;
+const BUTTON_HEIGHT = 40;
 
 const disabledMixin = css`
   background: ${colors.buttonDarkDisabledBackground};
