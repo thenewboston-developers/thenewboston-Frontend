@@ -63,7 +63,7 @@ export const TabHeader = styled.div`
   justify-content: space-between;
 
   @media (max-width: ${breakpoints.mobile}) {
-    align-items: stretch;
+    align-items: center;
     flex-direction: column;
     gap: 16px;
   }
