@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {colors, fonts, pagePadding, toolbarStyle} from 'styles';
+import {breakpoints, colors, fonts, pagePadding, toolbarStyle} from 'styles';
 
 export const BackButton = styled.button`
   align-items: center;
@@ -61,6 +61,12 @@ export const TabHeader = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+  }
 `;
 
 export const TabSection = styled.div`
