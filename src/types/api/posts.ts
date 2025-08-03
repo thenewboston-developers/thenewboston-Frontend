@@ -1,4 +1,4 @@
-import {CommentReadSerializer, TipAmount, UserReadSerializer} from 'types';
+import {CommentReadSerializer, CurrencyTinySerializer, TipAmount, UserReadSerializer} from 'types';
 import {CreatedModified} from 'types/createdModified';
 
 export interface PostReadSerializer extends CreatedModified {
@@ -10,7 +10,7 @@ export interface PostReadSerializer extends CreatedModified {
   like_count: number;
   owner: UserReadSerializer;
   price_amount: number | null;
-  price_currency: number | null;
+  price_currency: CurrencyTinySerializer | null;
   recipient: UserReadSerializer | null;
   tip_amounts: TipAmount[];
 }
