@@ -1,17 +1,27 @@
 import styled from 'styled-components';
 
 import UCurrencyLogo from 'components/CurrencyLogo';
-import {colors, fonts} from 'styles';
+import {breakpoints, colors, fonts} from 'styles';
+
+export const ActionButtonContainer = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+`;
 
 export const CurrencyContent = styled.div`
   padding: 100px 24px 24px 24px; /* Top padding for logo overlap */
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 100px 16px 16px 16px;
+  }
 `;
 
 export const CurrencyDescription = styled.p`
   color: ${colors.secondary};
   font-size: 14px;
   line-height: 1.5;
-  margin: 12px 0 0;
+  width: 100%;
 `;
 
 export const CurrencyDomain = styled.p`
@@ -21,14 +31,13 @@ export const CurrencyDomain = styled.p`
 `;
 
 export const CurrencyInfo = styled.div`
-  flex: 1;
+  width: 100%;
 `;
 
 export const CurrencyInfoContainer = styled.div`
-  align-items: flex-start;
   display: flex;
-  gap: 48px;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 24px;
 `;
 
 export const CurrencyLogo = styled(UCurrencyLogo)`
@@ -61,11 +70,36 @@ export const CurrencyPanel = styled.div`
   position: relative;
 `;
 
+export const HeaderRow = styled.div`
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    flex-direction: column;
+    gap: 16px;
+  }
+`;
+
 export const MetadataRow = styled.div`
   align-items: center;
   display: flex;
+  gap: 24px;
   justify-content: space-between;
   margin-top: 16px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+`;
+
+export const TickerBadgeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 export const TotalMintedInfo = styled.div`
@@ -85,10 +119,4 @@ export const TotalMintedValue = styled.span`
   color: ${colors.primary};
   font-size: 24px;
   font-weight: ${fonts.weight.semiBold};
-`;
-
-export const ActionButtonContainer = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-top: 16px;
 `;

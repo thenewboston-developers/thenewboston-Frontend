@@ -72,13 +72,23 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({
       <S.CurrencyLogo logo={currency.logo} width="150px" />
       <S.CurrencyContent>
         <S.CurrencyInfoContainer>
-          <S.CurrencyInfo>
-            <S.CurrencyName>{currency.ticker}</S.CurrencyName>
-            {currency.domain ? (
-              <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
-            ) : (
-              <Badge badgeStyle={BadgeStyle.info}>Internal</Badge>
+          <S.HeaderRow>
+            <S.TickerBadgeContainer>
+              <S.CurrencyName>{currency.ticker}</S.CurrencyName>
+              {currency.domain ? (
+                <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
+              ) : (
+                <Badge badgeStyle={BadgeStyle.info}>Internal</Badge>
+              )}
+            </S.TickerBadgeContainer>
+            {totalAmountMinted !== null && (
+              <S.TotalMintedInfo>
+                <S.TotalMintedLabel>Total Minted</S.TotalMintedLabel>
+                <S.TotalMintedValue>{totalAmountMinted.toLocaleString()}</S.TotalMintedValue>
+              </S.TotalMintedInfo>
             )}
+          </S.HeaderRow>
+          <S.CurrencyInfo>
             {currency.description && <S.CurrencyDescription>{currency.description}</S.CurrencyDescription>}
             <S.MetadataRow>
               <UserLabel
@@ -104,12 +114,6 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({
               </S.ActionButtonContainer>
             )}
           </S.CurrencyInfo>
-          {totalAmountMinted !== null && (
-            <S.TotalMintedInfo>
-              <S.TotalMintedLabel>Total Minted</S.TotalMintedLabel>
-              <S.TotalMintedValue>{totalAmountMinted.toLocaleString()}</S.TotalMintedValue>
-            </S.TotalMintedInfo>
-          )}
         </S.CurrencyInfoContainer>
       </S.CurrencyContent>
     </S.CurrencyPanel>
