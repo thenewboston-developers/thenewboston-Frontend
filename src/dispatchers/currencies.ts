@@ -11,6 +11,7 @@ import {AppDispatch} from 'types';
 export const createCurrency = (data: FormData) => async (dispatch: AppDispatch) => {
   const responseData = await _createCurrency(data);
   dispatch(setCurrency(responseData));
+  return responseData;
 };
 
 export const deleteCurrency = (id: number) => async (dispatch: AppDispatch) => {
