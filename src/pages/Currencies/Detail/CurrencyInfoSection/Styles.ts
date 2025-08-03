@@ -88,5 +88,7 @@ export const TotalMintedValue = styled.span`
 `;
 
 export const TradeButtonContainer = styled.div`
+  display: flex;
+  gap: 12px;
   margin-top: 16px;
 `;

@@ -20,7 +20,6 @@ import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
 import ConfirmationModal from 'modals/ConfirmationModal';
 import CurrencyModal from 'modals/CurrencyModal';
-import MintModal from 'modals/MintModal';
 import WhitepaperModal from 'modals/WhitepaperModal';
 import {getCurrencies, getSelf} from 'selectors/state';
 import {AppDispatch, Mint, PaginatedResponse, SFC, Whitepaper} from 'types';
@@ -41,7 +40,6 @@ const Detail: SFC = ({className}) => {
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
-  const [mintModalIsOpen, toggleMintModal] = useToggle(false);
   const [mintsData, setMintsData] = useState<PaginatedResponse<Mint> | null>(null);
   const [totalAmountMinted, setTotalAmountMinted] = useState<number | null>(null);
   const [whitepaper, setWhitepaper] = useState<Whitepaper | null>(null);
@@ -218,7 +216,13 @@ const Detail: SFC = ({className}) => {
 
         <S.ScrollableContent>
           <S.Content>
-            <CurrencyInfoSection currency={currency} totalAmountMinted={totalAmountMinted} />
+            <CurrencyInfoSection
+              currency={currency}
+              isInternalCurrency={isInternalCurrency}
+              isOwner={isOwner}
+              onMintSuccess={handleMintModalSuccess}
+              totalAmountMinted={totalAmountMinted}
+            />
             <MintHistoryChart currency={currency} refreshTrigger={chartRefreshTrigger} />
             <S.TabSection>
               <S.TabHeader>
@@ -233,9 +237,6 @@ const Detail: SFC = ({className}) => {
                     Whitepaper
                   </Tab>
                 </Tabs>
-                {isOwner && isInternalCurrency && activeTab === 'minting' && (
-                  <Button onClick={toggleMintModal} text="Mint" />
-                )}
                 {isOwner && activeTab === 'whitepaper' && whitepaper && (
                   <Button color={ButtonColor.secondary} onClick={handleDeleteWhitepaper} text="Delete Whitepaper" />
                 )}
@@ -275,7 +276,6 @@ const Detail: SFC = ({className}) => {
           onConfirm={handleConfirmDelete}
         />
       )}
-      {mintModalIsOpen && <MintModal close={toggleMintModal} currency={currency} onSuccess={handleMintModalSuccess} />}
       {whitepaperModalIsOpen && currency && (
         <WhitepaperModal
           close={toggleWhitepaperModal}

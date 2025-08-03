@@ -9,6 +9,8 @@ import DateDisplay from 'components/DateDisplay';
 import SocialLinks from 'components/SocialLinks';
 import UserLabel from 'components/UserLabel';
 import {DEFAULT_CURRENCY_TICKER} from 'constants/general';
+import {useToggle} from 'hooks';
+import MintModal from 'modals/MintModal';
 import {Currency, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -16,12 +18,23 @@ import * as S from './Styles';
 
 interface CurrencyInfoSectionProps {
   currency: Currency;
+  isInternalCurrency: boolean;
+  isOwner: boolean;
+  onMintSuccess?: () => void;
   totalAmountMinted: number | null;
 }
 
-const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency, totalAmountMinted}) => {
+const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({
+  className,
+  currency,
+  isInternalCurrency,
+  isOwner,
+  onMintSuccess,
+  totalAmountMinted,
+}) => {
   const [assetPairId, setAssetPairId] = useState<number | null>(null);
   const [isLoadingAssetPair, setIsLoadingAssetPair] = useState(false);
+  const [mintModalIsOpen, toggleMintModal] = useToggle(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,48 +68,61 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
   };
 
   return (
-    <S.CurrencyPanel className={className}>
-      <S.CurrencyLogo logo={currency.logo} width="150px" />
-      <S.CurrencyContent>
-        <S.CurrencyInfoContainer>
-          <S.CurrencyInfo>
-            <S.CurrencyName>{currency.ticker}</S.CurrencyName>
-            {currency.domain ? (
-              <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
-            ) : (
-              <Badge badgeStyle={BadgeStyle.info}>Internal</Badge>
-            )}
-            {currency.description && <S.CurrencyDescription>{currency.description}</S.CurrencyDescription>}
-            <S.MetadataRow>
-              <UserLabel
-                avatar={currency.owner.avatar}
-                description="Owner"
-                id={currency.owner.id}
-                username={currency.owner.username}
-              />
-              <DateDisplay createdDate={currency.created_date} modifiedDate={currency.modified_date} />
-            </S.MetadataRow>
-            <SocialLinks entity={currency} />
-            {currency.ticker !== DEFAULT_CURRENCY_TICKER && assetPairId && (
-              <S.TradeButtonContainer>
-                <Button
-                  color={ButtonColor.primary}
-                  disabled={isLoadingAssetPair}
-                  onClick={handleTradeClick}
-                  text="Trade"
+    <>
+      <S.CurrencyPanel className={className}>
+        <S.CurrencyLogo logo={currency.logo} width="150px" />
+        <S.CurrencyContent>
+          <S.CurrencyInfoContainer>
+            <S.CurrencyInfo>
+              <S.CurrencyName>{currency.ticker}</S.CurrencyName>
+              {currency.domain ? (
+                <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
+              ) : (
+                <Badge badgeStyle={BadgeStyle.info}>Internal</Badge>
+              )}
+              {currency.description && <S.CurrencyDescription>{currency.description}</S.CurrencyDescription>}
+              <S.MetadataRow>
+                <UserLabel
+                  avatar={currency.owner.avatar}
+                  description="Owner"
+                  id={currency.owner.id}
+                  username={currency.owner.username}
                 />
+                <DateDisplay createdDate={currency.created_date} modifiedDate={currency.modified_date} />
+              </S.MetadataRow>
+              <SocialLinks entity={currency} />
+              <S.TradeButtonContainer>
+                {isOwner && isInternalCurrency && <Button onClick={toggleMintModal} text="Mint" />}
+                {currency.ticker !== DEFAULT_CURRENCY_TICKER && assetPairId && (
+                  <Button
+                    color={ButtonColor.primary}
+                    disabled={isLoadingAssetPair}
+                    onClick={handleTradeClick}
+                    text="Trade"
+                  />
+                )}
               </S.TradeButtonContainer>
+            </S.CurrencyInfo>
+            {totalAmountMinted !== null && (
+              <S.TotalMintedInfo>
+                <S.TotalMintedLabel>Total Minted</S.TotalMintedLabel>
+                <S.TotalMintedValue>{totalAmountMinted.toLocaleString()}</S.TotalMintedValue>
+              </S.TotalMintedInfo>
             )}
-          </S.CurrencyInfo>
-          {totalAmountMinted !== null && (
-            <S.TotalMintedInfo>
-              <S.TotalMintedLabel>Total Minted</S.TotalMintedLabel>
-              <S.TotalMintedValue>{totalAmountMinted.toLocaleString()}</S.TotalMintedValue>
-            </S.TotalMintedInfo>
-          )}
-        </S.CurrencyInfoContainer>
-      </S.CurrencyContent>
-    </S.CurrencyPanel>
+          </S.CurrencyInfoContainer>
+        </S.CurrencyContent>
+      </S.CurrencyPanel>
+      {mintModalIsOpen && (
+        <MintModal
+          close={toggleMintModal}
+          currency={currency}
+          onSuccess={() => {
+            onMintSuccess?.();
+            toggleMintModal();
+          }}
+        />
+      )}
+    </>
   );
 };
 

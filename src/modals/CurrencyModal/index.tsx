@@ -1,5 +1,6 @@
 import {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
 import Button from 'components/Button';
@@ -26,6 +27,7 @@ export interface CurrencyModalProps {
 const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onSuccess}) => {
   const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const self = useSelector(getSelf);
 
   const isEditMode = !!currency;
@@ -132,7 +134,10 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
         requestData.append('x_username', values.x_username);
         requestData.append('youtube_username', values.youtube_username);
 
-        await dispatch(createCurrency(requestData));
+        const createdCurrency = await dispatch(createCurrency(requestData));
+        onSuccess?.();
+        close();
+        navigate(`/currencies/${createdCurrency.id}`);
       }
 
       onSuccess?.();
