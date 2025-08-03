@@ -7,16 +7,6 @@ import {ButtonColor} from './types';
 
 const BUTTON_HEIGHT = 40;
 
-const disabledMixin = css`
-  background: ${colors.buttonDarkDisabledBackground};
-  color: ${colors.buttonDarkDisabledText};
-  cursor: not-allowed;
-
-  &:hover {
-    background: ${colors.buttonDarkDisabledBackground};
-  }
-`;
-
 const dangerDisabledMixin = css`
   background: ${colors.palette.red[300]};
   color: ${colors.white};
@@ -25,6 +15,24 @@ const dangerDisabledMixin = css`
 
   &:hover {
     background: ${colors.palette.red[300]};
+  }
+`;
+
+const dangerMixin = css`
+  background: ${colors.palette.red[500]};
+
+  &:hover {
+    background: ${colors.palette.red[600]};
+  }
+`;
+
+const disabledMixin = css`
+  background: ${colors.buttonDarkDisabledBackground};
+  color: ${colors.buttonDarkDisabledText};
+  cursor: not-allowed;
+
+  &:hover {
+    background: ${colors.buttonDarkDisabledBackground};
   }
 `;
 
@@ -42,14 +50,6 @@ const secondaryMixin = css`
 
   &:hover {
     background: ${colors.whiteHover};
-  }
-`;
-
-const dangerMixin = css`
-  background: ${colors.palette.red[500]};
-
-  &:hover {
-    background: ${colors.palette.red[600]};
   }
 `;
 
