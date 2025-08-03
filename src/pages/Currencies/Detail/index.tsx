@@ -35,9 +35,9 @@ import WhitepaperSection from './WhitepaperSection';
 
 const Detail: SFC = ({className}) => {
   const [activeTab, setActiveTab] = useState<'balances' | 'minting' | 'whitepaper'>('balances');
-  const [dataRefreshTrigger, setDataRefreshTrigger] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
+  const [dataRefreshTrigger, setDataRefreshTrigger] = useState(0);
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
@@ -97,6 +97,34 @@ const Detail: SFC = ({className}) => {
   const isInternalCurrency = currency?.domain === null;
   const isOwner = currency?.owner.id === self.id;
 
+  const handleBackClick = () => {
+    navigate('/currencies/home');
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!whitepaper) return;
+
+    try {
+      await deleteWhitepaper(whitepaper.id);
+      setWhitepaper(null);
+      setDeleteConfirmationOpen(false);
+      displayToast('Whitepaper deleted!', ToastType.SUCCESS);
+    } catch (error) {
+      displayErrorToast('Error deleting whitepaper');
+    }
+  };
+
+  const handleCurrencyModalSuccess = async () => {
+    if (!id) return;
+
+    try {
+      const totalData = await getTotalAmountMinted(parseInt(id));
+      setTotalAmountMinted(totalData.total_amount_minted);
+    } catch (error) {
+      displayErrorToast('Error updating currency details');
+    }
+  };
+
   const handleDelete = async () => {
     if (!currency) return;
 
@@ -111,34 +139,8 @@ const Detail: SFC = ({className}) => {
     }
   };
 
-  const menuOptions = [
-    {
-      label: 'Edit Details',
-      onClick: toggleCurrencyModal,
-    },
-    {
-      label: 'Edit Whitepaper',
-      onClick: toggleWhitepaperModal,
-    },
-    {
-      label: 'Delete',
-      onClick: handleDelete,
-    },
-  ];
-
-  const handleBackClick = () => {
-    navigate('/currencies/home');
-  };
-
-  const handleCurrencyModalSuccess = async () => {
-    if (!id) return;
-
-    try {
-      const totalData = await getTotalAmountMinted(parseInt(id));
-      setTotalAmountMinted(totalData.total_amount_minted);
-    } catch (error) {
-      displayErrorToast('Error updating currency details');
-    }
+  const handleDeleteWhitepaper = () => {
+    setDeleteConfirmationOpen(true);
   };
 
   const handleMintModalSuccess = async () => {
@@ -157,6 +159,10 @@ const Detail: SFC = ({className}) => {
     setDataRefreshTrigger((prev) => prev + 1);
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const handleWhitepaperModalSuccess = async () => {
     if (!id) return;
 
@@ -168,26 +174,20 @@ const Detail: SFC = ({className}) => {
     }
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handleDeleteWhitepaper = () => {
-    setDeleteConfirmationOpen(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    if (!whitepaper) return;
-
-    try {
-      await deleteWhitepaper(whitepaper.id);
-      setWhitepaper(null);
-      setDeleteConfirmationOpen(false);
-      displayToast('Whitepaper deleted!', ToastType.SUCCESS);
-    } catch (error) {
-      displayErrorToast('Error deleting whitepaper');
-    }
-  };
+  const menuOptions = [
+    {
+      label: 'Edit Details',
+      onClick: toggleCurrencyModal,
+    },
+    {
+      label: 'Edit Whitepaper',
+      onClick: toggleWhitepaperModal,
+    },
+    {
+      label: 'Delete',
+      onClick: handleDelete,
+    },
+  ];
 
   if (loading)
     return (
