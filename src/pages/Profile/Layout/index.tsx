@@ -48,7 +48,7 @@ const Layout: SFC = ({className}) => {
 
     return (
       <S.TabsWrapper>
-        <Tabs>
+        <Tabs stackOnMobile>
           {renderTab('Posts', `/profile/${userId}`)}
           {renderTab('Followers', `/profile/${userId}/followers`)}
           {renderTab('Following', `/profile/${userId}/following`)}

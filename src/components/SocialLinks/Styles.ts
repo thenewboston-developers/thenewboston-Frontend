@@ -1,11 +1,24 @@
 import styled from 'styled-components';
 
+import colors from 'styles/colors';
+
 export const Container = styled.div`
   align-items: center;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 12px;
+`;
+
+export const DiscordContainer = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 8px;
+`;
+
+export const DiscordUsername = styled.span`
+  color: ${colors.black};
+  font-size: 14px;
 `;
 
 export const SocialLink = styled.a`

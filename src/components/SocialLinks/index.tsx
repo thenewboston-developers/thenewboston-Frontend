@@ -110,7 +110,12 @@ const SocialLinks: FC<SocialLinksProps> = ({entity}) => {
       }
     });
 
-    return links;
+    // Sort to ensure Discord is always last
+    return links.sort((a, b) => {
+      if (a.name === 'Discord') return 1;
+      if (b.name === 'Discord') return -1;
+      return 0;
+    });
   };
 
   const socialLinks = getSocialLinksFromEntity();
@@ -121,17 +126,27 @@ const SocialLinks: FC<SocialLinksProps> = ({entity}) => {
 
   return (
     <S.Container>
-      {socialLinks.map((link) => (
-        <S.SocialLink
-          key={link.name}
-          href={link.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={`${link.name}: ${link.username}`}
-        >
-          <img src={link.icon} alt={link.name} width="24" height="24" />
-        </S.SocialLink>
-      ))}
+      {socialLinks.map((link) => {
+        if (link.name === 'Discord') {
+          return (
+            <S.DiscordContainer key={link.name} title={`${link.name}: ${link.username}`}>
+              <img src={link.icon} alt={link.name} width="24" height="24" />
+              <S.DiscordUsername>{link.username}</S.DiscordUsername>
+            </S.DiscordContainer>
+          );
+        }
+        return (
+          <S.SocialLink
+            key={link.name}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={`${link.name}: ${link.username}`}
+          >
+            <img src={link.icon} alt={link.name} width="24" height="24" />
+          </S.SocialLink>
+        );
+      })}
     </S.Container>
   );
 };
