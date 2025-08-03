@@ -17,6 +17,17 @@ const disabledMixin = css`
   }
 `;
 
+const dangerDisabledMixin = css`
+  background: ${colors.palette.red[300]};
+  color: ${colors.white};
+  cursor: not-allowed;
+  opacity: 0.65;
+
+  &:hover {
+    background: ${colors.palette.red[300]};
+  }
+`;
+
 const hasIconMixin = css`
   align-items: center;
   border-radius: 6px;
@@ -31,6 +42,14 @@ const secondaryMixin = css`
 
   &:hover {
     background: ${colors.whiteHover};
+  }
+`;
+
+const dangerMixin = css`
+  background: ${colors.palette.red[500]};
+
+  &:hover {
+    background: ${colors.palette.red[600]};
   }
 `;
 
@@ -61,12 +80,17 @@ export const Button = styled.button<{$color: ButtonColor; $hasIcon: boolean}>`
   }
 
   ${({$color}) => {
+    if ($color === ButtonColor.danger) return dangerMixin;
     if ($color === ButtonColor.secondary) return secondaryMixin;
     if ($color === ButtonColor.success) return successMixin;
     return;
   }}
 
-  ${({disabled}) => disabled && disabledMixin}
+  ${({$color, disabled}) => {
+    if (disabled && $color === ButtonColor.danger) return dangerDisabledMixin;
+    if (disabled) return disabledMixin;
+    return;
+  }}
 
   ${({$hasIcon}) => $hasIcon && hasIconMixin}
 `;

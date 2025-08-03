@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
-import {ButtonType} from 'components/Button';
+import {ButtonColor, ButtonType} from 'components/Button';
 import {FormField} from 'components/FormElements';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {createUser} from 'dispatchers/users';
@@ -138,6 +138,7 @@ const CreateAccountForm: SFC = () => {
               </FormField>
               <FormField>
                 <S.Button
+                  color={ButtonColor.danger}
                   dirty={dirty}
                   disabled={isSubmitting}
                   isSubmitting={isSubmitting}
