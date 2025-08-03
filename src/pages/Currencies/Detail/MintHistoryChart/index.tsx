@@ -17,7 +17,7 @@ interface ChartData {
 
 interface MintHistoryChartProps {
   currency: Currency;
-  refreshTrigger?: number;
+  refreshTrigger: number;
 }
 
 const MintHistoryChart: SFC<MintHistoryChartProps> = ({className, currency, refreshTrigger}) => {
