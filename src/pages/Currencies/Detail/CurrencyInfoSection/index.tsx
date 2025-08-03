@@ -16,10 +16,20 @@ import * as S from './Styles';
 
 interface CurrencyInfoSectionProps {
   currency: Currency;
+  isInternalCurrency: boolean;
+  isOwner: boolean;
+  onMintClick: () => void;
   totalAmountMinted: number | null;
 }
 
-const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency, totalAmountMinted}) => {
+const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({
+  className,
+  currency,
+  isInternalCurrency,
+  isOwner,
+  onMintClick,
+  totalAmountMinted,
+}) => {
   const [assetPairId, setAssetPairId] = useState<number | null>(null);
   const [isLoadingAssetPair, setIsLoadingAssetPair] = useState(false);
   const navigate = useNavigate();
@@ -54,18 +64,31 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
     }
   };
 
+  const showMintButton = isOwner && isInternalCurrency;
+  const showTradeButton = currency.ticker !== DEFAULT_CURRENCY_TICKER && assetPairId;
+
   return (
     <S.CurrencyPanel className={className}>
       <S.CurrencyLogo logo={currency.logo} width="150px" />
       <S.CurrencyContent>
         <S.CurrencyInfoContainer>
-          <S.CurrencyInfo>
-            <S.CurrencyName>{currency.ticker}</S.CurrencyName>
-            {currency.domain ? (
-              <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
-            ) : (
-              <Badge badgeStyle={BadgeStyle.info}>Internal</Badge>
+          <S.HeaderRow>
+            <S.TickerBadgeContainer>
+              <S.CurrencyName>{currency.ticker}</S.CurrencyName>
+              {currency.domain ? (
+                <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
+              ) : (
+                <Badge badgeStyle={BadgeStyle.info}>Internal</Badge>
+              )}
+            </S.TickerBadgeContainer>
+            {totalAmountMinted !== null && (
+              <S.TotalMintedInfo>
+                <S.TotalMintedLabel>Total Minted</S.TotalMintedLabel>
+                <S.TotalMintedValue>{totalAmountMinted.toLocaleString()}</S.TotalMintedValue>
+              </S.TotalMintedInfo>
             )}
+          </S.HeaderRow>
+          <S.CurrencyInfo>
             {currency.description && <S.CurrencyDescription>{currency.description}</S.CurrencyDescription>}
             <S.MetadataRow>
               <UserLabel
@@ -77,23 +100,20 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
               <DateDisplay createdDate={currency.created_date} modifiedDate={currency.modified_date} />
             </S.MetadataRow>
             <SocialLinks entity={currency} />
-            {currency.ticker !== DEFAULT_CURRENCY_TICKER && assetPairId && (
-              <S.TradeButtonContainer>
-                <Button
-                  color={ButtonColor.primary}
-                  disabled={isLoadingAssetPair}
-                  onClick={handleTradeClick}
-                  text="Trade"
-                />
-              </S.TradeButtonContainer>
+            {(showMintButton || showTradeButton) && (
+              <S.ActionButtonContainer>
+                {showMintButton && <Button onClick={onMintClick} text="Mint" />}
+                {showTradeButton && (
+                  <Button
+                    color={ButtonColor.primary}
+                    disabled={isLoadingAssetPair}
+                    onClick={handleTradeClick}
+                    text="Trade"
+                  />
+                )}
+              </S.ActionButtonContainer>
             )}
           </S.CurrencyInfo>
-          {totalAmountMinted !== null && (
-            <S.TotalMintedInfo>
-              <S.TotalMintedLabel>Total Minted</S.TotalMintedLabel>
-              <S.TotalMintedValue>{totalAmountMinted.toLocaleString()}</S.TotalMintedValue>
-            </S.TotalMintedInfo>
-          )}
         </S.CurrencyInfoContainer>
       </S.CurrencyContent>
     </S.CurrencyPanel>

@@ -152,10 +152,10 @@ export const markdownStyle = css`
 `;
 
 export const pagePadding = css`
-  padding: 24px 32px;
+  padding: 24px 32px 64px;
 
   @media (max-width: ${breakpoints.mobile}) {
-    padding: 16px 24px;
+    padding: 16px 24px 24px;
   }
 `;
 

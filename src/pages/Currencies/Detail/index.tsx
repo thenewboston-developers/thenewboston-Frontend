@@ -35,9 +35,9 @@ import WhitepaperSection from './WhitepaperSection';
 
 const Detail: SFC = ({className}) => {
   const [activeTab, setActiveTab] = useState<'balances' | 'minting' | 'whitepaper'>('balances');
-  const [chartRefreshTrigger, setChartRefreshTrigger] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
+  const [dataRefreshTrigger, setDataRefreshTrigger] = useState(0);
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
@@ -97,6 +97,34 @@ const Detail: SFC = ({className}) => {
   const isInternalCurrency = currency?.domain === null;
   const isOwner = currency?.owner.id === self.id;
 
+  const handleBackClick = () => {
+    navigate('/currencies/home');
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!whitepaper) return;
+
+    try {
+      await deleteWhitepaper(whitepaper.id);
+      setWhitepaper(null);
+      setDeleteConfirmationOpen(false);
+      displayToast('Whitepaper deleted!', ToastType.SUCCESS);
+    } catch (error) {
+      displayErrorToast('Error deleting whitepaper');
+    }
+  };
+
+  const handleCurrencyModalSuccess = async () => {
+    if (!id) return;
+
+    try {
+      const totalData = await getTotalAmountMinted(parseInt(id));
+      setTotalAmountMinted(totalData.total_amount_minted);
+    } catch (error) {
+      displayErrorToast('Error updating currency details');
+    }
+  };
+
   const handleDelete = async () => {
     if (!currency) return;
 
@@ -108,6 +136,41 @@ const Detail: SFC = ({className}) => {
     } catch (error) {
       isDeleting.current = false;
       displayErrorToast('Error deleting currency');
+    }
+  };
+
+  const handleDeleteWhitepaper = () => {
+    setDeleteConfirmationOpen(true);
+  };
+
+  const handleMintModalSuccess = async () => {
+    if (!currency || !id) return;
+
+    try {
+      const totalData = await getTotalAmountMinted(parseInt(id));
+      setTotalAmountMinted(totalData.total_amount_minted);
+    } catch (error) {
+      displayErrorToast('Error updating currency details');
+    }
+
+    const data = await dispatch(getMints({currency: currency.id, page: 1}));
+    setMintsData(data);
+    setCurrentPage(1);
+    setDataRefreshTrigger((prev) => prev + 1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleWhitepaperModalSuccess = async () => {
+    if (!id) return;
+
+    try {
+      const whitepaperData = await getWhitepaper(parseInt(id));
+      setWhitepaper(whitepaperData);
+    } catch (error) {
+      displayErrorToast('Error updating whitepaper');
     }
   };
 
@@ -125,69 +188,6 @@ const Detail: SFC = ({className}) => {
       onClick: handleDelete,
     },
   ];
-
-  const handleBackClick = () => {
-    navigate('/currencies/home');
-  };
-
-  const handleCurrencyModalSuccess = async () => {
-    if (!id) return;
-
-    try {
-      const totalData = await getTotalAmountMinted(parseInt(id));
-      setTotalAmountMinted(totalData.total_amount_minted);
-    } catch (error) {
-      displayErrorToast('Error updating currency details');
-    }
-  };
-
-  const handleMintModalSuccess = async () => {
-    if (!currency || !id) return;
-
-    try {
-      const totalData = await getTotalAmountMinted(parseInt(id));
-      setTotalAmountMinted(totalData.total_amount_minted);
-    } catch (error) {
-      displayErrorToast('Error updating currency details');
-    }
-
-    const data = await dispatch(getMints({currency: currency.id, page: 1}));
-    setMintsData(data);
-    setCurrentPage(1);
-    setChartRefreshTrigger((prev) => prev + 1);
-  };
-
-  const handleWhitepaperModalSuccess = async () => {
-    if (!id) return;
-
-    try {
-      const whitepaperData = await getWhitepaper(parseInt(id));
-      setWhitepaper(whitepaperData);
-    } catch (error) {
-      displayErrorToast('Error updating whitepaper');
-    }
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handleDeleteWhitepaper = () => {
-    setDeleteConfirmationOpen(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    if (!whitepaper) return;
-
-    try {
-      await deleteWhitepaper(whitepaper.id);
-      setWhitepaper(null);
-      setDeleteConfirmationOpen(false);
-      displayToast('Whitepaper deleted!', ToastType.SUCCESS);
-    } catch (error) {
-      displayErrorToast('Error deleting whitepaper');
-    }
-  };
 
   if (loading)
     return (
@@ -218,8 +218,14 @@ const Detail: SFC = ({className}) => {
 
         <S.ScrollableContent>
           <S.Content>
-            <CurrencyInfoSection currency={currency} totalAmountMinted={totalAmountMinted} />
-            <MintHistoryChart currency={currency} refreshTrigger={chartRefreshTrigger} />
+            <CurrencyInfoSection
+              currency={currency}
+              isInternalCurrency={isInternalCurrency}
+              isOwner={isOwner}
+              onMintClick={toggleMintModal}
+              totalAmountMinted={totalAmountMinted}
+            />
+            <MintHistoryChart currency={currency} refreshTrigger={dataRefreshTrigger} />
             <S.TabSection>
               <S.TabHeader>
                 <Tabs>
@@ -233,9 +239,6 @@ const Detail: SFC = ({className}) => {
                     Whitepaper
                   </Tab>
                 </Tabs>
-                {isOwner && isInternalCurrency && activeTab === 'minting' && (
-                  <Button onClick={toggleMintModal} text="Mint" />
-                )}
                 {isOwner && activeTab === 'whitepaper' && whitepaper && (
                   <Button color={ButtonColor.secondary} onClick={handleDeleteWhitepaper} text="Delete Whitepaper" />
                 )}
@@ -256,7 +259,7 @@ const Detail: SFC = ({className}) => {
                   if (activeTab === 'whitepaper') {
                     return <WhitepaperSection currency={currency} whitepaper={whitepaper} />;
                   }
-                  return <BalancesSection currency={currency} />;
+                  return <BalancesSection currency={currency} refreshTrigger={dataRefreshTrigger} />;
                 })()}
               </S.TabContent>
             </S.TabSection>
