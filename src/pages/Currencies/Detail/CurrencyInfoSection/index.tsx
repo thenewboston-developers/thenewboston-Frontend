@@ -16,10 +16,20 @@ import * as S from './Styles';
 
 interface CurrencyInfoSectionProps {
   currency: Currency;
+  isInternalCurrency: boolean;
+  isOwner: boolean;
+  onMintClick: () => void;
   totalAmountMinted: number | null;
 }
 
-const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency, totalAmountMinted}) => {
+const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({
+  className,
+  currency,
+  isInternalCurrency,
+  isOwner,
+  onMintClick,
+  totalAmountMinted,
+}) => {
   const [assetPairId, setAssetPairId] = useState<number | null>(null);
   const [isLoadingAssetPair, setIsLoadingAssetPair] = useState(false);
   const navigate = useNavigate();
@@ -54,6 +64,9 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
     }
   };
 
+  const showMintButton = isOwner && isInternalCurrency;
+  const showTradeButton = currency.ticker !== DEFAULT_CURRENCY_TICKER && assetPairId;
+
   return (
     <S.CurrencyPanel className={className}>
       <S.CurrencyLogo logo={currency.logo} width="150px" />
@@ -77,15 +90,18 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
               <DateDisplay createdDate={currency.created_date} modifiedDate={currency.modified_date} />
             </S.MetadataRow>
             <SocialLinks entity={currency} />
-            {currency.ticker !== DEFAULT_CURRENCY_TICKER && assetPairId && (
-              <S.TradeButtonContainer>
-                <Button
-                  color={ButtonColor.primary}
-                  disabled={isLoadingAssetPair}
-                  onClick={handleTradeClick}
-                  text="Trade"
-                />
-              </S.TradeButtonContainer>
+            {(showMintButton || showTradeButton) && (
+              <S.ActionButtonContainer>
+                {showMintButton && <Button onClick={onMintClick} text="Mint" />}
+                {showTradeButton && (
+                  <Button
+                    color={ButtonColor.primary}
+                    disabled={isLoadingAssetPair}
+                    onClick={handleTradeClick}
+                    text="Trade"
+                  />
+                )}
+              </S.ActionButtonContainer>
             )}
           </S.CurrencyInfo>
           {totalAmountMinted !== null && (

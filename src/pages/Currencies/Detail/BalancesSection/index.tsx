@@ -13,9 +13,10 @@ import * as S from './Styles';
 
 interface BalancesSectionProps {
   currency: Currency;
+  refreshTrigger?: number;
 }
 
-const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {
+const BalancesSection: SFC<BalancesSectionProps> = ({className, currency, refreshTrigger}) => {
   const [balancesData, setBalancesData] = useState<PaginatedResponse<CurrencyBalance> | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -36,7 +37,7 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency}) => {
         setLoading(false);
       }
     })();
-  }, [currency.id, currentPage]);
+  }, [currency.id, currentPage, refreshTrigger]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

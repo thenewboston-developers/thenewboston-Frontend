@@ -218,7 +218,13 @@ const Detail: SFC = ({className}) => {
 
         <S.ScrollableContent>
           <S.Content>
-            <CurrencyInfoSection currency={currency} totalAmountMinted={totalAmountMinted} />
+            <CurrencyInfoSection
+              currency={currency}
+              isInternalCurrency={isInternalCurrency}
+              isOwner={isOwner}
+              onMintClick={toggleMintModal}
+              totalAmountMinted={totalAmountMinted}
+            />
             <MintHistoryChart currency={currency} refreshTrigger={chartRefreshTrigger} />
             <S.TabSection>
               <S.TabHeader>
@@ -233,9 +239,6 @@ const Detail: SFC = ({className}) => {
                     Whitepaper
                   </Tab>
                 </Tabs>
-                {isOwner && isInternalCurrency && activeTab === 'minting' && (
-                  <Button onClick={toggleMintModal} text="Mint" />
-                )}
                 {isOwner && activeTab === 'whitepaper' && whitepaper && (
                   <Button color={ButtonColor.secondary} onClick={handleDeleteWhitepaper} text="Delete Whitepaper" />
                 )}
@@ -256,7 +259,7 @@ const Detail: SFC = ({className}) => {
                   if (activeTab === 'whitepaper') {
                     return <WhitepaperSection currency={currency} whitepaper={whitepaper} />;
                   }
-                  return <BalancesSection currency={currency} />;
+                  return <BalancesSection currency={currency} refreshTrigger={chartRefreshTrigger} />;
                 })()}
               </S.TabContent>
             </S.TabSection>

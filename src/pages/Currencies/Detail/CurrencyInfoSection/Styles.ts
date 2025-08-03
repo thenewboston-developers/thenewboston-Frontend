@@ -87,6 +87,8 @@ export const TotalMintedValue = styled.span`
   font-weight: ${fonts.weight.semiBold};
 `;
 
-export const TradeButtonContainer = styled.div`
+export const ActionButtonContainer = styled.div`
+  display: flex;
+  gap: 12px;
   margin-top: 16px;
 `;
