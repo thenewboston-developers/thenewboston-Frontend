@@ -108,7 +108,13 @@ const UserSearchInput: SFC<UserSearchInputProps> = ({
     if (searchResults.length > 0) {
       return searchResults.map((user) => (
         <S.DropdownItem key={user.id} onClick={() => handleSelectUser(user)}>
-          <S.UserLabel avatar={user.avatar} description={`User ID: ${user.id}`} id={user.id} username={user.username} />
+          <S.UserLabel
+            avatar={user.avatar}
+            clickable={false}
+            description={`User ID: ${user.id}`}
+            id={user.id}
+            username={user.username}
+          />
         </S.DropdownItem>
       ));
     }
