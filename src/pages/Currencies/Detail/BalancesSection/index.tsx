@@ -13,7 +13,7 @@ import * as S from './Styles';
 
 interface BalancesSectionProps {
   currency: Currency;
-  refreshTrigger?: number;
+  refreshTrigger: number;
 }
 
 const BalancesSection: SFC<BalancesSectionProps> = ({className, currency, refreshTrigger}) => {

@@ -35,7 +35,7 @@ import WhitepaperSection from './WhitepaperSection';
 
 const Detail: SFC = ({className}) => {
   const [activeTab, setActiveTab] = useState<'balances' | 'minting' | 'whitepaper'>('balances');
-  const [chartRefreshTrigger, setChartRefreshTrigger] = useState(0);
+  const [dataRefreshTrigger, setDataRefreshTrigger] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
@@ -154,7 +154,7 @@ const Detail: SFC = ({className}) => {
     const data = await dispatch(getMints({currency: currency.id, page: 1}));
     setMintsData(data);
     setCurrentPage(1);
-    setChartRefreshTrigger((prev) => prev + 1);
+    setDataRefreshTrigger((prev) => prev + 1);
   };
 
   const handleWhitepaperModalSuccess = async () => {
@@ -225,7 +225,7 @@ const Detail: SFC = ({className}) => {
               onMintClick={toggleMintModal}
               totalAmountMinted={totalAmountMinted}
             />
-            <MintHistoryChart currency={currency} refreshTrigger={chartRefreshTrigger} />
+            <MintHistoryChart currency={currency} refreshTrigger={dataRefreshTrigger} />
             <S.TabSection>
               <S.TabHeader>
                 <Tabs>
@@ -259,7 +259,7 @@ const Detail: SFC = ({className}) => {
                   if (activeTab === 'whitepaper') {
                     return <WhitepaperSection currency={currency} whitepaper={whitepaper} />;
                   }
-                  return <BalancesSection currency={currency} refreshTrigger={chartRefreshTrigger} />;
+                  return <BalancesSection currency={currency} refreshTrigger={dataRefreshTrigger} />;
                 })()}
               </S.TabContent>
             </S.TabSection>
