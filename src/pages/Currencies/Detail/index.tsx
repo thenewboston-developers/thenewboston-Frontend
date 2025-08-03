@@ -46,12 +46,12 @@ const Detail: SFC = ({className}) => {
   const [totalAmountMinted, setTotalAmountMinted] = useState<number | null>(null);
   const [whitepaper, setWhitepaper] = useState<Whitepaper | null>(null);
   const [whitepaperModalIsOpen, toggleWhitepaperModal] = useToggle(false);
+  const {id} = useParams<{id: string}>();
   const currencies = useSelector(getCurrencies);
   const dispatch = useDispatch<AppDispatch>();
   const isDeleting = useRef(false);
   const navigate = useNavigate();
   const self = useSelector(getSelf);
-  const {id} = useParams<{id: string}>();
   const currency = id ? currencies[parseInt(id)] : null;
 
   useEffect(() => {

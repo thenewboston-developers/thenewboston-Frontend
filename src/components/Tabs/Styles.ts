@@ -7,8 +7,8 @@ const BORDER_RADIUS = HEIGHT / 2;
 
 export const Container = styled.div<{$stackOnMobile: boolean}>`
   background: ${colors.palette.gray[200]};
-  border-radius: ${`${BORDER_RADIUS}px`};
   border: 1px solid #dfdfdf;
+  border-radius: ${`${BORDER_RADIUS}px`};
   display: flex;
   height: ${`${HEIGHT}px`};
   overflow-x: auto;
