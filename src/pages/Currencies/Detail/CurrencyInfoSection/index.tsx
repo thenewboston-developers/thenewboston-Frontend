@@ -1,8 +1,16 @@
+import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+
+import {getAssetPairs} from 'api/assetPairs';
 import Badge, {BadgeStyle} from 'components/Badge';
+import Button from 'components/Button';
+import {ButtonColor} from 'components/Button/types';
 import DateDisplay from 'components/DateDisplay';
 import SocialLinks from 'components/SocialLinks';
 import UserLabel from 'components/UserLabel';
+import {DEFAULT_CURRENCY_TICKER} from 'constants/general';
 import {Currency, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
@@ -12,6 +20,40 @@ interface CurrencyInfoSectionProps {
 }
 
 const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency, totalAmountMinted}) => {
+  const [assetPairId, setAssetPairId] = useState<number | null>(null);
+  const [isLoadingAssetPair, setIsLoadingAssetPair] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    (async () => {
+      if (currency.ticker === DEFAULT_CURRENCY_TICKER) {
+        return;
+      }
+
+      setIsLoadingAssetPair(true);
+      try {
+        const assetPairs = await getAssetPairs({
+          primary_currency_ticker: currency.ticker,
+          secondary_currency_ticker: DEFAULT_CURRENCY_TICKER,
+        });
+
+        if (assetPairs.length > 0) {
+          setAssetPairId(assetPairs[0].id);
+        }
+      } catch (error) {
+        displayErrorToast('Error fetching asset pair');
+      } finally {
+        setIsLoadingAssetPair(false);
+      }
+    })();
+  }, [currency.ticker]);
+
+  const handleTradeClick = () => {
+    if (assetPairId) {
+      navigate(`/exchange/trade/${assetPairId}`);
+    }
+  };
+
   return (
     <S.CurrencyPanel className={className}>
       <S.CurrencyLogo logo={currency.logo} width="150px" />
@@ -35,6 +77,16 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({className, currency
               <DateDisplay createdDate={currency.created_date} modifiedDate={currency.modified_date} />
             </S.MetadataRow>
             <SocialLinks entity={currency} />
+            {currency.ticker !== DEFAULT_CURRENCY_TICKER && assetPairId && (
+              <S.TradeButtonContainer>
+                <Button
+                  color={ButtonColor.primary}
+                  disabled={isLoadingAssetPair}
+                  onClick={handleTradeClick}
+                  text="Trade"
+                />
+              </S.TradeButtonContainer>
+            )}
           </S.CurrencyInfo>
           {totalAmountMinted !== null && (
             <S.TotalMintedInfo>
