@@ -15,7 +15,6 @@ export const CurrencyDescription = styled.p`
   color: ${colors.secondary};
   font-size: 14px;
   line-height: 1.5;
-  margin: 12px 0 0;
   width: 100%;
 `;
 
