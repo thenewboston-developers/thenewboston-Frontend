@@ -1,4 +1,5 @@
 import {NotificationType} from 'enums';
+import {CurrencyTinySerializer} from 'types/api/tradeHistory';
 import {UserReadSerializer} from 'types/api/users';
 import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
@@ -9,11 +10,9 @@ export interface ExchangeOrderFilledPayload {
   order_id: string;
   side: number;
   price: number;
-  primary_currency_id: string;
-  primary_currency_ticker: string;
+  primary_currency: CurrencyTinySerializer;
   quantity: number;
-  secondary_currency_id: string;
-  secondary_currency_ticker: string;
+  secondary_currency: CurrencyTinySerializer;
 }
 
 export interface PostCoinTransferPayload {
