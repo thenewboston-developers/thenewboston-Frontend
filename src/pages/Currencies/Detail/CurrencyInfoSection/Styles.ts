@@ -3,6 +3,12 @@ import styled from 'styled-components';
 import UCurrencyLogo from 'components/CurrencyLogo';
 import {breakpoints, colors, fonts} from 'styles';
 
+export const ActionButtonContainer = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+`;
+
 export const CurrencyContent = styled.div`
   padding: 100px 24px 24px 24px; /* Top padding for logo overlap */
 
@@ -64,6 +70,18 @@ export const CurrencyPanel = styled.div`
   position: relative;
 `;
 
+export const HeaderRow = styled.div`
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    flex-direction: column;
+    gap: 16px;
+  }
+`;
+
 export const MetadataRow = styled.div`
   align-items: center;
   display: flex;
@@ -76,6 +94,12 @@ export const MetadataRow = styled.div`
     flex-direction: column;
     gap: 16px;
   }
+`;
+
+export const TickerBadgeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 export const TotalMintedInfo = styled.div`
@@ -95,28 +119,4 @@ export const TotalMintedValue = styled.span`
   color: ${colors.primary};
   font-size: 24px;
   font-weight: ${fonts.weight.semiBold};
-`;
-
-export const ActionButtonContainer = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-top: 16px;
-`;
-
-export const HeaderRow = styled.div`
-  align-items: flex-start;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    flex-direction: column;
-    gap: 16px;
-  }
-`;
-
-export const TickerBadgeContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 `;
