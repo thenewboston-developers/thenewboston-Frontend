@@ -6,10 +6,15 @@ import * as S from './Styles';
 
 export interface TabsProps {
   children: ReactNode;
+  stackOnMobile?: boolean;
 }
 
-const Tabs: SFC<TabsProps> = ({children, className}) => {
-  return <S.Container className={className}>{children}</S.Container>;
+const Tabs: SFC<TabsProps> = ({children, className, stackOnMobile = false}) => {
+  return (
+    <S.Container $stackOnMobile={stackOnMobile} className={className}>
+      {children}
+    </S.Container>
+  );
 };
 
 export default Tabs;

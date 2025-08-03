@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
-import {colors} from 'styles';
+import {breakpoints, colors} from 'styles';
 
 const HEIGHT = 48;
 const BORDER_RADIUS = HEIGHT / 2;
 
-export const Container = styled.div`
+export const Container = styled.div<{$stackOnMobile: boolean}>`
   background: ${colors.palette.gray[200]};
   border-radius: ${`${BORDER_RADIUS}px`};
   border: 1px solid #dfdfdf;
@@ -14,4 +14,14 @@ export const Container = styled.div`
   overflow-x: auto;
   padding: 6px;
   width: fit-content;
+
+  ${({$stackOnMobile}) =>
+    $stackOnMobile &&
+    `
+    @media (max-width: ${breakpoints.mobile}) {
+      flex-direction: column;
+      height: auto;
+      width: 100%;
+    }
+  `}
 `;

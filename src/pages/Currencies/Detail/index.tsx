@@ -228,7 +228,7 @@ const Detail: SFC = ({className}) => {
             <MintHistoryChart currency={currency} refreshTrigger={dataRefreshTrigger} />
             <S.TabSection>
               <S.TabHeader>
-                <Tabs>
+                <Tabs stackOnMobile>
                   <Tab isActive={activeTab === 'balances'} onClick={() => setActiveTab('balances')}>
                     Balances
                   </Tab>
