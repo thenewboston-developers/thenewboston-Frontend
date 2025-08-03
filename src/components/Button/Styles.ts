@@ -7,6 +7,25 @@ import {ButtonColor} from './types';
 
 const BUTTON_HEIGHT = 40;
 
+const dangerDisabledMixin = css`
+  background: ${colors.palette.red[300]};
+  color: ${colors.white};
+  cursor: not-allowed;
+  opacity: 0.65;
+
+  &:hover {
+    background: ${colors.palette.red[300]};
+  }
+`;
+
+const dangerMixin = css`
+  background: ${colors.palette.red[500]};
+
+  &:hover {
+    background: ${colors.palette.red[600]};
+  }
+`;
+
 const disabledMixin = css`
   background: ${colors.buttonDarkDisabledBackground};
   color: ${colors.buttonDarkDisabledText};
@@ -61,12 +80,17 @@ export const Button = styled.button<{$color: ButtonColor; $hasIcon: boolean}>`
   }
 
   ${({$color}) => {
+    if ($color === ButtonColor.danger) return dangerMixin;
     if ($color === ButtonColor.secondary) return secondaryMixin;
     if ($color === ButtonColor.success) return successMixin;
     return;
   }}
 
-  ${({disabled}) => disabled && disabledMixin}
+  ${({$color, disabled}) => {
+    if (disabled && $color === ButtonColor.danger) return dangerDisabledMixin;
+    if (disabled) return disabledMixin;
+    return;
+  }}
 
   ${({$hasIcon}) => $hasIcon && hasIconMixin}
 `;
