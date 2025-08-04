@@ -5,7 +5,7 @@ import {Form, Formik} from 'formik';
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput, FormField, Input, Textarea} from 'components/FormElements';
-import {ModalFooterButton} from 'components/Modal';
+import {ModalFooter} from 'components/Modal';
 import {updateUser} from 'dispatchers/users';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
@@ -144,7 +144,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <S.ModalContent>
+            <S.ModalBody>
               <S.Section>
                 <S.SectionHeading>Avatar</S.SectionHeading>
                 <div style={{display: values.avatar ? 'none' : 'block'}}>
@@ -239,10 +239,10 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
                   </FormField>
                 </S.SocialMediaGrid>
               </S.Section>
-            </S.ModalContent>
+            </S.ModalBody>
 
-            <S.ModalFooter>
-              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
+            <ModalFooter>
+              <Button color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}
@@ -251,7 +251,7 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
                 text="Submit"
                 type={ButtonType.submit}
               />
-            </S.ModalFooter>
+            </ModalFooter>
           </Form>
         )}
       </Formik>

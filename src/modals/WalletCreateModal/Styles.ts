@@ -1,30 +1,15 @@
 import styled from 'styled-components';
 
-import UButton from 'components/Button';
 import UModal from 'components/Modal';
 import UPagination from 'components/Pagination';
-import URadioCard from 'components/RadioCard';
-import {breakpoints, colors} from 'styles';
-
-export const Button = styled(UButton)`
-  margin-top: 32px;
-`;
-
-export const EmptyText = styled.div`
-  color: ${colors.secondary};
-  padding: 20px;
-  text-align: center;
-`;
+import {breakpoints, hiddenScroll} from 'styles';
 
 export const Modal = styled(UModal)`
-  display: flex;
-  flex-direction: column;
-  max-width: 752px;
-  min-width: 480px;
+  max-height: 80vh;
+  width: 680px;
 
-  @media (max-width: ${breakpoints.mini}) {
-    max-width: 100%;
-    min-width: 90%;
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 95%;
   }
 `;
 
@@ -33,22 +18,17 @@ export const Pagination = styled(UPagination)`
 `;
 
 export const RadioCardContainer = styled.div`
+  ${hiddenScroll};
   display: grid;
+  gap: 16px;
   grid-template-columns: repeat(3, 1fr);
+  max-height: calc(80vh - 200px);
+
+  @media (max-width: ${breakpoints.mobile}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
   @media (max-width: ${breakpoints.mini}) {
     grid-template-columns: 1fr;
-  }
-
-  @media (min-width: ${breakpoints.mini}) and (max-width: ${breakpoints.mobile}) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-`;
-
-export const RadioCardWrapper = styled(URadioCard)`
-  width: 224px;
-
-  @media (max-width: ${breakpoints.mini}) {
-    width: 100%;
   }
 `;

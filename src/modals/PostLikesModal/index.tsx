@@ -4,6 +4,7 @@ import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {getPostLikes} from 'api/postLikes';
 import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
+import {ModalBody} from 'components/Modal';
 import UserLabel from 'components/UserLabel';
 import {PostLike, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -16,14 +17,14 @@ export interface PostLikesModalProps {
 }
 
 const PostLikesModal: SFC<PostLikesModalProps> = ({className, close, postId}) => {
-  const [likes, setLikes] = useState<PostLike[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(true);
   const [_, setNextUrl] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [likes, setLikes] = useState<PostLike[]>([]);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    const fetchInitialLikes = async () => {
+    (async () => {
       try {
         setIsLoading(true);
         const response = await getPostLikes({post: postId, page: 1});
@@ -35,9 +36,7 @@ const PostLikesModal: SFC<PostLikesModalProps> = ({className, close, postId}) =>
       } finally {
         setIsLoading(false);
       }
-    };
-
-    fetchInitialLikes();
+    })();
   }, [postId]);
 
   const fetchMoreLikes = async () => {
@@ -101,7 +100,7 @@ const PostLikesModal: SFC<PostLikesModalProps> = ({className, close, postId}) =>
 
   return (
     <S.Modal className={className} close={close} header="Likes">
-      {renderContent()}
+      <ModalBody>{renderContent()}</ModalBody>
     </S.Modal>
   );
 };

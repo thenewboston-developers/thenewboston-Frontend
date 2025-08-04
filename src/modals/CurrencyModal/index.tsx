@@ -7,7 +7,7 @@ import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
-import {ModalFooterButton} from 'components/Modal';
+import {ModalFooter} from 'components/Modal';
 import {createCurrency, updateCurrency} from 'dispatchers/currencies';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Currency, SFC} from 'types';
@@ -182,7 +182,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, touched, isValid, setFieldValue, values}) => (
           <Form>
-            <S.ModalContent>
+            <S.ModalBody>
               <S.Section>
                 {!isEditMode && (
                   <>
@@ -262,10 +262,10 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
                   </FormField>
                 </S.SocialMediaGrid>
               </S.Section>
-            </S.ModalContent>
+            </S.ModalBody>
 
-            <S.ModalFooter>
-              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
+            <ModalFooter>
+              <Button color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}
@@ -274,7 +274,7 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
                 text="Submit"
                 type={ButtonType.submit}
               />
-            </S.ModalFooter>
+            </ModalFooter>
           </Form>
         )}
       </Formik>

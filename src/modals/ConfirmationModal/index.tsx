@@ -1,5 +1,6 @@
 import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
+import {ModalBody, ModalFooter} from 'components/Modal';
 import {SFC} from 'types';
 
 import * as S from './Styles';
@@ -24,11 +25,13 @@ const ConfirmationModal: SFC<ConfirmationModalProps> = ({
 }) => {
   return (
     <S.Modal className={className} close={close} header={header}>
-      <S.Content>{message}</S.Content>
-      <S.Buttons>
+      <ModalBody>
+        <S.Message>{message}</S.Message>
+      </ModalBody>
+      <ModalFooter>
         <Button color={ButtonColor.secondary} onClick={close} text={cancelText} />
         <Button onClick={onConfirm} text={confirmText} />
-      </S.Buttons>
+      </ModalFooter>
     </S.Modal>
   );
 };

@@ -32,8 +32,6 @@ export const LoaderWrapper = styled.div`
 `;
 
 export const Modal = styled(UModal)`
-  display: flex;
-  flex-direction: column;
   max-height: 600px;
   width: 480px;
 
