@@ -5,7 +5,6 @@ import {mdiContentCopy, mdiHeart, mdiSwapHorizontal, mdiWalletBifoldOutline} fro
 import Avatar from 'components/Avatar';
 import CurrencyLogo from 'components/CurrencyLogo';
 import {ExchangeOrderSide, NotificationType} from 'enums';
-import {useCurrencyLogo} from 'hooks';
 import {Notification as TNotification, SFC} from 'types';
 import {longDate} from 'utils/dates';
 
@@ -17,13 +16,6 @@ export interface NotificationProps {
 
 const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const navigate = useNavigate();
-
-  // Extract primary_currency_id if it's an exchange order notification
-  const primaryCurrencyId =
-    notification.payload.notification_type === NotificationType.EXCHANGE_ORDER_FILLED
-      ? Number(notification.payload.primary_currency_id)
-      : 0;
-  const primaryCurrencyLogo = useCurrencyLogo(primaryCurrencyId);
 
   const handleContainerClick = () => {
     const notificationType = notification.payload.notification_type;
@@ -54,24 +46,23 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const renderExchangeOrderFilledNotification = () => {
     if (notification.payload.notification_type !== NotificationType.EXCHANGE_ORDER_FILLED) return null;
 
-    const {side, price, primary_currency_id, primary_currency_ticker, quantity, secondary_currency_ticker} =
-      notification.payload;
+    const {side, price, primary_currency, quantity, secondary_currency} = notification.payload;
     const action = side === ExchangeOrderSide.BUY ? 'buy' : 'sell';
 
     const totalReceived = side === ExchangeOrderSide.BUY ? quantity : quantity * price;
-    const receivedTicker = side === ExchangeOrderSide.BUY ? primary_currency_ticker : secondary_currency_ticker;
+    const receivedTicker = side === ExchangeOrderSide.BUY ? primary_currency.ticker : secondary_currency.ticker;
 
     return (
       <S.NotificationContainer>
-        <Link to={`/currencies/${primary_currency_id}`}>
+        <Link to={`/currencies/${primary_currency.id}`}>
           <S.CurrencyLogoContainer>
-            <CurrencyLogo logo={primaryCurrencyLogo} width="45px" />
+            <CurrencyLogo logo={primary_currency.logo} width="45px" />
             <S.ExchangeIcon path={mdiSwapHorizontal} size="23px" />
           </S.CurrencyLogoContainer>
         </Link>
         <S.TextContainer>
           <div>
-            Your order to {action} {quantity.toLocaleString()} {primary_currency_ticker} was filled. You received a
+            Your order to {action} {quantity.toLocaleString()} {primary_currency.ticker} was filled. You received a
             total of {totalReceived.toLocaleString()} {receivedTicker}.
           </div>
           <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
