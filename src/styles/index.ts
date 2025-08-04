@@ -8,6 +8,7 @@ import {
   hiddenScroll,
   inputStyle,
   markdownStyle,
+  modalBodyPadding,
   pagePadding,
   toolbarStyle,
 } from 'styles/mixins';
@@ -21,6 +22,7 @@ export {
   hiddenScroll,
   inputStyle,
   markdownStyle,
+  modalBodyPadding,
   pagePadding,
   TOOLBAR_HEIGHT,
   toolbarStyle,

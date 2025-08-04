@@ -24,7 +24,7 @@ const PostLikesModal: SFC<PostLikesModalProps> = ({className, close, postId}) =>
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    const fetchInitialLikes = async () => {
+    (async () => {
       try {
         setIsLoading(true);
         const response = await getPostLikes({post: postId, page: 1});
@@ -36,9 +36,7 @@ const PostLikesModal: SFC<PostLikesModalProps> = ({className, close, postId}) =>
       } finally {
         setIsLoading(false);
       }
-    };
-
-    fetchInitialLikes();
+    })();
   }, [postId]);
 
   const fetchMoreLikes = async () => {

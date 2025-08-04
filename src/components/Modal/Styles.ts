@@ -1,6 +1,6 @@
 import styled, {keyframes} from 'styled-components';
 
-import {breakpoints, fonts} from 'styles';
+import {fonts, modalBodyPadding} from 'styles';
 
 const addOverlay = keyframes`
   from {
@@ -41,7 +41,7 @@ export const Modal = styled.div`
 `;
 
 export const ModalBody = styled.div`
-  padding: 12px 16px 24px;
+  ${modalBodyPadding};
 `;
 
 export const ModalFooter = styled.div`
