@@ -5,16 +5,7 @@ import UModal from 'components/Modal';
 import {colors, markdownStyle} from 'styles';
 
 export const Modal = styled(UModal)`
-  display: flex;
-  flex-direction: column;
   width: 800px;
-`;
-
-export const ModalFooter = styled.div`
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  margin-top: 24px;
 `;
 
 export const PreviewContainer = styled.div`

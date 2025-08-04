@@ -5,7 +5,7 @@ import {Form, Formik} from 'formik';
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiPicker from 'components/EmojiPicker';
-import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
+import {ModalBody, ModalFooter} from 'components/Modal';
 import {updateComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
 import {AppDispatch, Comment, SFC} from 'types';
@@ -53,7 +53,7 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <ModalContent>
+            <ModalBody>
               <S.TextareaWrapper>
                 <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
                 <EmojiPicker
@@ -63,10 +63,10 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
                   value={values.content}
                 />
               </S.TextareaWrapper>
-            </ModalContent>
+            </ModalBody>
 
             <ModalFooter>
-              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
+              <Button color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}

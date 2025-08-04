@@ -1,7 +1,9 @@
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
+import {ModalBody} from 'components/Modal';
 import RadioCard from 'components/RadioCard';
 import {getCurrencies} from 'dispatchers/currencies';
 import {ToastType} from 'enums';
@@ -24,7 +26,7 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
 
-  const pageSize = 10;
+  const pageSize = 12;
 
   useEffect(() => {
     (async () => {
@@ -77,7 +79,7 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
 
   const renderContent = () => {
     if (isLoading) return <Loader />;
-    if (!currenciesData || !currenciesData.results.length) return <div>No currencies available</div>;
+    if (!currenciesData || !currenciesData.results.length) return <EmptyText>No currencies available</EmptyText>;
 
     return (
       <>
@@ -105,7 +107,7 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
 
   return (
     <S.Modal className={className} close={close} header="Currencies">
-      {renderContent()}
+      <ModalBody>{renderContent()}</ModalBody>
     </S.Modal>
   );
 };

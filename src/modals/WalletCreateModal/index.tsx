@@ -2,7 +2,11 @@ import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {getCurrencies} from 'api/currencies';
+import Button from 'components/Button';
+import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
+import {ModalBody, ModalFooter} from 'components/Modal';
+import RadioCard from 'components/RadioCard';
 import {createWallet} from 'dispatchers/wallets';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, Currency, PaginatedResponse, SFC} from 'types';
@@ -66,13 +70,13 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
 
   const renderContent = () => {
     if (isLoading) return <Loader />;
-    if (!currenciesData || !currenciesData.results.length) return <S.EmptyText>No currencies available</S.EmptyText>;
+    if (!currenciesData || !currenciesData.results.length) return <EmptyText>No currencies available</EmptyText>;
 
     return (
       <>
         <S.RadioCardContainer>
           {currenciesData.results.map((currency) => (
-            <S.RadioCardWrapper
+            <RadioCard
               currency={currency}
               isSelected={selectedCurrencyId === currency.id}
               key={currency.id}
@@ -93,13 +97,15 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
 
   return (
     <S.Modal className={className} close={close} header="Create Wallet">
-      {renderContent()}
-      <S.Button
-        disabled={selectedCurrencyId === null || submitting}
-        isSubmitting={submitting}
-        onClick={handleButtonClick}
-        text="Submit"
-      />
+      <ModalBody>{renderContent()}</ModalBody>
+      <ModalFooter>
+        <Button
+          disabled={selectedCurrencyId === null || submitting}
+          isSubmitting={submitting}
+          onClick={handleButtonClick}
+          text="Submit"
+        />
+      </ModalFooter>
     </S.Modal>
   );
 };

@@ -8,8 +8,6 @@ export const TextareaWrapper = styled.div`
 `;
 
 export const Modal = styled(UModal)`
-  display: flex;
-  flex-direction: column;
   width: 360px;
 `;
 

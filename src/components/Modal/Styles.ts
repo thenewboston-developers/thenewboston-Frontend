@@ -1,7 +1,6 @@
 import styled, {keyframes} from 'styled-components';
 
-import UButton from 'components/Button';
-import {fonts} from 'styles';
+import {breakpoints, fonts} from 'styles';
 
 const addOverlay = keyframes`
   from {
@@ -12,9 +11,7 @@ const addOverlay = keyframes`
   }
 `;
 
-export const Content = styled.div`
-  padding: 0 24px 32px;
-`;
+export const Content = styled.div``;
 
 export const Header = styled.div`
   align-items: center;
@@ -22,8 +19,7 @@ export const Header = styled.div`
   display: flex;
   font-weight: ${fonts.weight.bold};
   justify-content: space-between;
-  margin-bottom: 20px;
-  padding: 16px 24px 12px;
+  padding: 12px 16px 10px;
   position: relative;
 `;
 
@@ -35,6 +31,8 @@ export const Heading = styled.div`
 export const Modal = styled.div`
   background: #fff;
   border-radius: 20px;
+  display: flex;
+  flex-direction: column;
   left: 50%;
   position: fixed;
   top: 50%;
@@ -42,17 +40,15 @@ export const Modal = styled.div`
   z-index: 1000;
 `;
 
-export const ModalContent = styled.div``;
+export const ModalBody = styled.div`
+  padding: 12px 16px 24px;
+`;
 
 export const ModalFooter = styled.div`
   display: flex;
   gap: 12px;
   justify-content: flex-end;
-  margin-top: 24px;
-`;
-
-export const ModalFooterButton = styled(UButton)`
-  min-width: 80px;
+  padding: 8px 16px 12px;
 `;
 
 export const Overlay = styled.div`

@@ -40,7 +40,6 @@ const radioCardStyle = css<{$isActive: boolean}>`
   display: flex;
   flex: auto;
   justify-content: center;
-  margin: 6px;
   padding: 16px;
   white-space: nowrap;
 

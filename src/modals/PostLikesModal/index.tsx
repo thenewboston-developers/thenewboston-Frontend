@@ -4,6 +4,7 @@ import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {getPostLikes} from 'api/postLikes';
 import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
+import {ModalBody} from 'components/Modal';
 import UserLabel from 'components/UserLabel';
 import {PostLike, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -101,7 +102,7 @@ const PostLikesModal: SFC<PostLikesModalProps> = ({className, close, postId}) =>
 
   return (
     <S.Modal className={className} close={close} header="Likes">
-      {renderContent()}
+      <ModalBody>{renderContent()}</ModalBody>
     </S.Modal>
   );
 };

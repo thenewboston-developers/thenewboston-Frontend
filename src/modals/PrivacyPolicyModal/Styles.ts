@@ -23,8 +23,6 @@ export const ListItem = styled.li`
 `;
 
 export const Modal = styled(UModal)`
-  display: flex;
-  flex-direction: column;
   max-width: 600px;
   width: 90vw;
 `;
@@ -37,7 +35,7 @@ export const Paragraph = styled.p`
 export const ScrollableContent = styled.div`
   max-height: 70vh;
   overflow-y: auto;
-  padding: 0 24px 24px;
+  padding: 12px 16px 24px;
 `;
 
 export const Section = styled.section`
