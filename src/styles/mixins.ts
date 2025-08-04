@@ -151,6 +151,10 @@ export const markdownStyle = css`
   }
 `;
 
+export const modalBodyPadding = css`
+  padding: 20px 24px 24px;
+`;
+
 export const pagePadding = css`
   padding: 24px 32px 64px;
 

@@ -5,8 +5,6 @@ import UPagination from 'components/Pagination';
 import {breakpoints, hiddenScroll} from 'styles';
 
 export const Modal = styled(UModal)`
-  display: flex;
-  flex-direction: column;
   max-height: 80vh;
   width: 680px;
 

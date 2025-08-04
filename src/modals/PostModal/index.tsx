@@ -7,7 +7,7 @@ import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiPicker from 'components/EmojiPicker';
 import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
-import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
+import {ModalBody, ModalFooter} from 'components/Modal';
 import {createPost, updatePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {AppDispatch, Post, SFC} from 'types';
@@ -23,9 +23,8 @@ export interface PostModalProps {
 }
 
 const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
-  const dispatch = useDispatch<AppDispatch>();
-
   const [preview, setPreview] = useState<string | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   const initialValues = useMemo(
     () => ({
@@ -97,7 +96,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <ModalContent>
+            <ModalBody>
               <FormField>
                 <S.TextareaContainer>
                   <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
@@ -122,10 +121,10 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
                 }}
                 src={preview}
               />
-            </ModalContent>
+            </ModalBody>
 
             <ModalFooter>
-              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
+              <Button color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}

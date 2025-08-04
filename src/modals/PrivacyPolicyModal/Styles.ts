@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import UModal from 'components/Modal';
-import {colors} from 'styles';
+import {colors, modalBodyPadding} from 'styles';
 
 export const Bold = styled.span`
   font-weight: 600;
@@ -23,8 +23,6 @@ export const ListItem = styled.li`
 `;
 
 export const Modal = styled(UModal)`
-  display: flex;
-  flex-direction: column;
   max-width: 600px;
   width: 90vw;
 `;
@@ -35,9 +33,9 @@ export const Paragraph = styled.p`
 `;
 
 export const ScrollableContent = styled.div`
+  ${modalBodyPadding};
   max-height: 70vh;
   overflow-y: auto;
-  padding: 0 24px 24px;
 `;
 
 export const Section = styled.section`

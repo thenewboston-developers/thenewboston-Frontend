@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
 import ImagePreview from 'components/ImagePreview';
-import UModal, {ModalContent as UModalContent, ModalFooter as UModalFooter} from 'components/Modal';
-import {Content} from 'components/Modal/Styles';
+import UModal, {ModalBody as UModalBody} from 'components/Modal';
 import {colors} from 'styles';
 
 export const AvatarPreview = styled(ImagePreview)``;
@@ -23,20 +22,11 @@ export const ErrorMessage = styled.div`
 export const Modal = styled(UModal)`
   max-height: 90vh;
   width: 680px;
-
-  ${Content} {
-    padding: 0;
-  }
 `;
 
-export const ModalContent = styled(UModalContent)`
+export const ModalBody = styled(UModalBody)`
   max-height: calc(90vh - 200px);
   overflow-y: auto;
-  padding: 0 24px 32px;
-`;
-
-export const ModalFooter = styled(UModalFooter)`
-  padding: 0 24px 24px;
 `;
 
 export const Section = styled.div`

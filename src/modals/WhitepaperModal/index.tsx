@@ -6,7 +6,7 @@ import remarkGfm from 'remark-gfm';
 import {createWhitepaper, updateWhitepaper} from 'api/whitepapers';
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
-import {ModalFooterButton} from 'components/Modal';
+import {ModalBody, ModalFooter} from 'components/Modal';
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
 import {ToastType} from 'enums';
@@ -60,37 +60,39 @@ const WhitepaperModal: SFC<WhitepaperModalProps> = ({className, close, currency,
       >
         {({dirty, errors, isSubmitting, isValid, touched, values}) => (
           <Form>
-            <S.TabsContainer>
-              <Tabs>
-                <Tab isActive={activeTab === 'write'} onClick={() => setActiveTab('write')}>
-                  Write
-                </Tab>
-                <Tab isActive={activeTab === 'preview'} onClick={() => setActiveTab('preview')}>
-                  Preview
-                </Tab>
-              </Tabs>
-            </S.TabsContainer>
+            <ModalBody>
+              <S.TabsContainer>
+                <Tabs>
+                  <Tab isActive={activeTab === 'write'} onClick={() => setActiveTab('write')}>
+                    Write
+                  </Tab>
+                  <Tab isActive={activeTab === 'preview'} onClick={() => setActiveTab('preview')}>
+                    Preview
+                  </Tab>
+                </Tabs>
+              </S.TabsContainer>
 
-            {activeTab === 'write' ? (
-              <S.Textarea
-                errors={errors}
-                label="Content (Markdown supported)"
-                name="content"
-                placeholder="Enter your whitepaper content here..."
-                touched={touched}
-              />
-            ) : (
-              <S.PreviewContainer>
-                {values.content ? (
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{values.content}</ReactMarkdown>
-                ) : (
-                  <p>No content to preview</p>
-                )}
-              </S.PreviewContainer>
-            )}
+              {activeTab === 'write' ? (
+                <S.Textarea
+                  errors={errors}
+                  label="Content (Markdown supported)"
+                  name="content"
+                  placeholder="Enter your whitepaper content here..."
+                  touched={touched}
+                />
+              ) : (
+                <S.PreviewContainer>
+                  {values.content ? (
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{values.content}</ReactMarkdown>
+                  ) : (
+                    <p>No content to preview</p>
+                  )}
+                </S.PreviewContainer>
+              )}
+            </ModalBody>
 
-            <S.ModalFooter>
-              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
+            <ModalFooter>
+              <Button color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting}
@@ -99,7 +101,7 @@ const WhitepaperModal: SFC<WhitepaperModalProps> = ({className, close, currency,
                 text={whitepaper ? 'Update' : 'Create'}
                 type={ButtonType.submit}
               />
-            </S.ModalFooter>
+            </ModalFooter>
           </Form>
         )}
       </Formik>

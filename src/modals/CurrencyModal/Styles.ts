@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
 import {Input as UInput, Textarea as UTextarea} from 'components/FormElements';
-import UModal, {ModalContent as UModalContent, ModalFooter as UModalFooter} from 'components/Modal';
-import {Content} from 'components/Modal/Styles';
+import UModal, {ModalBody as UModalBody} from 'components/Modal';
 import {breakpoints, colors} from 'styles';
 
 export const Input = styled(UInput)`
@@ -16,28 +15,11 @@ export const Modal = styled(UModal)`
   @media (max-width: ${breakpoints.mobile}) {
     width: 95%;
   }
-
-  ${Content} {
-    padding: 0;
-  }
 `;
 
-export const ModalContent = styled(UModalContent)`
+export const ModalBody = styled(UModalBody)`
   max-height: calc(80vh - 200px);
   overflow-y: auto;
-  padding: 0 24px 32px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 0 16px 24px;
-  }
-`;
-
-export const ModalFooter = styled(UModalFooter)`
-  padding: 0 24px 24px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 0 16px 16px;
-  }
 `;
 
 export const Section = styled.div`

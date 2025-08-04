@@ -14,8 +14,6 @@ export const DateContainer = styled.div`
 `;
 
 export const Modal = styled(UModal)`
-  display: flex;
-  flex-direction: column;
   width: 60%;
 
   @media (max-width: ${breakpoints.tablet}) {

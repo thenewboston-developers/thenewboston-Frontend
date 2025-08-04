@@ -7,7 +7,7 @@ import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiPicker from 'components/EmojiPicker';
 import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
-import {ModalContent, ModalFooter, ModalFooterButton} from 'components/Modal';
+import {ModalBody, ModalFooter} from 'components/Modal';
 import UserLabel from 'components/UserLabel';
 import {createPost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
@@ -129,7 +129,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <ModalContent>
+            <ModalBody>
               <S.TransferInfo>
                 <S.UserRow>
                   <S.Label>From</S.Label>
@@ -180,10 +180,10 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
                 }}
                 src={preview}
               />
-            </ModalContent>
+            </ModalBody>
 
             <ModalFooter>
-              <ModalFooterButton color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
+              <Button color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
                 disabled={isSubmitting || !values.price_amount}
