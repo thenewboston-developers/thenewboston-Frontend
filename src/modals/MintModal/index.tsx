@@ -22,9 +22,8 @@ interface ComponentProps {
 }
 
 const MintModal: SFC<ComponentProps> = ({className, close, currency, onSuccess}) => {
-  const dispatch = useDispatch<AppDispatch>();
-
   const [submitting, setSubmitting] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const initialValues = useMemo(
     () => ({

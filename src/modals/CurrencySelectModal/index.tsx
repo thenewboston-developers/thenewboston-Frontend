@@ -42,6 +42,21 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
     })();
   }, [currentPage, dispatch]);
 
+  const handleAnimationComplete = () => {
+    if (animationType === 'select') {
+      // For selection, wait to complete 1 second total
+      setTimeout(() => {
+        close();
+      }, 500);
+    } else if (animationType === 'deselect') {
+      // For deselection, close faster (0.2s animation + 0.3s delay = 0.5s total)
+      setTimeout(() => {
+        close();
+      }, 300);
+    }
+    setAnimationType(null);
+  };
+
   const handleCurrencyClick = (currency: Currency) => {
     const isCurrentlySelected = manager.activeCommentCurrency?.id === currency.id;
 
@@ -60,21 +75,6 @@ const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) 
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-  };
-
-  const handleAnimationComplete = () => {
-    if (animationType === 'select') {
-      // For selection, wait to complete 1 second total
-      setTimeout(() => {
-        close();
-      }, 500);
-    } else if (animationType === 'deselect') {
-      // For deselection, close faster (0.2s animation + 0.3s delay = 0.5s total)
-      setTimeout(() => {
-        close();
-      }, 300);
-    }
-    setAnimationType(null);
   };
 
   const renderContent = () => {

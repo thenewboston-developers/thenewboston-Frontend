@@ -17,10 +17,10 @@ export interface PostLikesModalProps {
 }
 
 const PostLikesModal: SFC<PostLikesModalProps> = ({className, close, postId}) => {
-  const [likes, setLikes] = useState<PostLike[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(true);
   const [_, setNextUrl] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [likes, setLikes] = useState<PostLike[]>([]);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
