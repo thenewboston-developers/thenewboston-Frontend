@@ -77,7 +77,7 @@ const Comment: SFC<CommentProps> = ({className, comment, isFirst = false}) => {
 
   const renderPriceMini = () => {
     if (!price_amount || !price_currency) return null;
-    return <S.PriceMini currencyId={price_currency} price={price_amount} />;
+    return <S.PriceMini currency={price_currency} price={price_amount} />;
   };
 
   return (
