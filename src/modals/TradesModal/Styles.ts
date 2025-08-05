@@ -31,6 +31,8 @@ export const Table = styled.table`
   margin-top: 0;
   overflow: hidden;
   width: 100%;
+  min-width: 575px;
+  border-collapse: collapse;
 `;
 
 export const TableBody = styled.tbody``;
