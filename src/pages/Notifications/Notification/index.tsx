@@ -9,6 +9,7 @@ import {updateNotification} from 'dispatchers/notifications';
 import {ExchangeOrderSide, NotificationType} from 'enums';
 import {AppDispatch, Notification as TNotification, SFC} from 'types';
 import {longDate} from 'utils/dates';
+import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
@@ -22,7 +23,11 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
 
   const handleContainerClick = async () => {
     if (!notification.is_read) {
-      dispatch(updateNotification(notification.id));
+      try {
+        await dispatch(updateNotification(notification.id));
+      } catch (error) {
+        displayErrorToast('Failed to mark notification as read');
+      }
     }
 
     const notificationType = notification.payload.notification_type;

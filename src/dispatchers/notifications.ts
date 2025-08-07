@@ -14,7 +14,6 @@ import {
   startLoading,
 } from 'store/notifications';
 import {AppDispatch} from 'types';
-import {displayErrorToast} from 'utils/toasts';
 import {getNextUrlFromState} from 'utils/urls';
 
 export const getNotifications = () => async (dispatch: AppDispatch) => {
@@ -37,12 +36,7 @@ export const markAllNotificationsAsRead = () => async (dispatch: AppDispatch) =>
 
 export const updateNotification = (notificationId: number) => async (dispatch: AppDispatch) => {
   dispatch(markNotificationAsReadAction(notificationId));
-
-  try {
-    await _updateNotification(notificationId);
-    const response = await getUnreadCount();
-    dispatch(setTotalUnreadCount(response.unread_count));
-  } catch (error) {
-    displayErrorToast('Failed to mark notification as read');
-  }
+  await _updateNotification(notificationId);
+  const response = await getUnreadCount();
+  dispatch(setTotalUnreadCount(response.unread_count));
 };
