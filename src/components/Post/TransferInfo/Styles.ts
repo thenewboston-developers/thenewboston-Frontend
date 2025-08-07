@@ -37,10 +37,10 @@ export const GraphicWrapper = styled.div`
   border-radius: 50%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
-  height: 42px;
+  height: 32px;
   justify-content: center;
   margin-right: 12px;
-  width: 42px;
+  width: 32px;
 `;
 
 export const Icon = styled(UIcon)`

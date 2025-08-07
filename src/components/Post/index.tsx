@@ -120,7 +120,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
         </S.Top>
         {isTransferPost && (
           <TransferInfo
-            createdDate={created_date}
             owner={owner}
             priceAmount={price_amount!}
             priceCurrency={price_currency!}
