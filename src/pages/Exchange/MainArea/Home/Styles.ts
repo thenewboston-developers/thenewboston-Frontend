@@ -24,7 +24,7 @@ export const DataCell = styled.td<{$sticky?: boolean; $align?: 'left' | 'right';
   background: ${colors.white};
   color: ${colors.primary};
   font-size: 14px;
-  padding: 16px 24px;
+  padding: 12px 24px;
   text-align: ${({$align}) => $align || 'left'};
   white-space: nowrap;
 
