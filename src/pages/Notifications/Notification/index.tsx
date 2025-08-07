@@ -1,12 +1,15 @@
 import {ReactNode} from 'react';
+import {useDispatch} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
 import {mdiContentCopy, mdiHeart, mdiSwapHorizontal, mdiWalletBifoldOutline} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import CurrencyLogo from 'components/CurrencyLogo';
+import {updateNotification} from 'dispatchers/notifications';
 import {ExchangeOrderSide, NotificationType} from 'enums';
-import {Notification as TNotification, SFC} from 'types';
+import {AppDispatch, Notification as TNotification, SFC} from 'types';
 import {longDate} from 'utils/dates';
+import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
@@ -15,9 +18,18 @@ export interface NotificationProps {
 }
 
 const Notification: SFC<NotificationProps> = ({className, notification}) => {
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const handleContainerClick = () => {
+  const handleContainerClick = async () => {
+    if (!notification.is_read) {
+      try {
+        await dispatch(updateNotification(notification.id));
+      } catch (error) {
+        displayErrorToast('Failed to mark notification as read');
+      }
+    }
+
     const notificationType = notification.payload.notification_type;
     if (
       notificationType === NotificationType.POST_LIKE ||

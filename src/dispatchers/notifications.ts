@@ -1,11 +1,13 @@
 import {
   getNotifications as _getNotifications,
-  getUnreadCount as _getUnreadCount,
+  getUnreadCount,
   markAllNotificationsAsRead as _markAllNotificationsAsRead,
+  updateNotification as _updateNotification,
 } from 'api/notifications';
 import {store} from 'store';
 import {
   markAllNotificationsAsRead as markAllNotificationsAsReadAction,
+  markNotificationAsRead as markNotificationAsReadAction,
   resetNotifications as _resetNotifications,
   setNotifications,
   setTotalUnreadCount,
@@ -32,7 +34,9 @@ export const markAllNotificationsAsRead = () => async (dispatch: AppDispatch) =>
   dispatch(setTotalUnreadCount(response.unread_count));
 };
 
-export const getUnreadCount = () => async (dispatch: AppDispatch) => {
-  const response = await _getUnreadCount();
+export const updateNotification = (notificationId: number) => async (dispatch: AppDispatch) => {
+  dispatch(markNotificationAsReadAction(notificationId));
+  await _updateNotification(notificationId);
+  const response = await getUnreadCount();
   dispatch(setTotalUnreadCount(response.unread_count));
 };

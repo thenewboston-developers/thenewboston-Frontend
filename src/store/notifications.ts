@@ -21,6 +21,12 @@ const notifications = createSlice({
       });
       state.totalUnreadCount = 0;
     },
+    markNotificationAsRead: (state: NotificationsState, {payload}: PayloadAction<number>) => {
+      if (state.notifications[payload] && !state.notifications[payload].is_read) {
+        state.notifications[payload].is_read = true;
+        state.totalUnreadCount = Math.max(0, state.totalUnreadCount - 1);
+      }
+    },
     resetNotifications: (state) => {
       state.hasMore = false;
       state.isLoading = false;
@@ -52,6 +58,7 @@ const notifications = createSlice({
 
 export const {
   markAllNotificationsAsRead,
+  markNotificationAsRead,
   resetNotifications,
   setNotification,
   setNotifications,
