@@ -10,7 +10,7 @@ import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 import WalletCard from './WalletCard';
 
-const Collection: SFC = ({className}) => {
+const Coins: SFC = ({className}) => {
   const [loading, setLoading] = useState(true);
   const [userWallets, setUserWallets] = useState<UserWallet[]>([]);
   const {id} = useParams();
@@ -58,4 +58,4 @@ const Collection: SFC = ({className}) => {
   return <S.Container className={className}>{renderContent()}</S.Container>;
 };
 
-export default Collection;
+export default Coins;

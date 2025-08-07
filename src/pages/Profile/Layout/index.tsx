@@ -17,10 +17,10 @@ import {SFC} from 'types';
 import * as S from './Styles';
 import UserDetails from './UserDetails';
 
-type IconName = 'Collection' | 'Followers' | 'Following' | 'Invitations' | 'Posts';
+type IconName = 'Coins' | 'Followers' | 'Following' | 'Invitations' | 'Posts';
 
 const IconMapper = {
-  Collection: mdiCircleMultipleOutline,
+  Coins: mdiCircleMultipleOutline,
   Followers: mdiAccountArrowDownOutline,
   Following: mdiAccountArrowUpOutline,
   Invitations: mdiAccountBoxPlusOutline,
@@ -52,7 +52,7 @@ const Layout: SFC = ({className}) => {
           {renderTab('Posts', `/profile/${userId}`)}
           {renderTab('Followers', `/profile/${userId}/followers`)}
           {renderTab('Following', `/profile/${userId}/following`)}
-          {renderTab('Collection', `/profile/${userId}/collection`)}
+          {renderTab('Coins', `/profile/${userId}/coins`)}
           {userId === self.id ? renderTab('Invitations', `/profile/${userId}/invitations`) : null}
         </Tabs>
       </S.TabsWrapper>

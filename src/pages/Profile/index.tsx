@@ -11,7 +11,7 @@ import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
-import Collection from './Collection';
+import Coins from './Coins';
 import Follower from './Follower';
 import Invitations from './Invitations';
 import Layout from './Layout';
@@ -49,7 +49,7 @@ const Profile: SFC = ({className}) => {
         <Route element={<Layout />}>
           {/* TODO: replace hardcoded paths with constants */}
           <Route index element={<Posts />} />
-          <Route path="/collection" element={<Collection />} />
+          <Route path="/coins" element={<Coins />} />
           <Route path="/followers" element={<Follower type={FollowerType.FOLLOWERS} />} />
           <Route path="/following" element={<Follower type={FollowerType.FOLLOWING} />} />
           <Route path="/invitations" element={<Invitations />} />
