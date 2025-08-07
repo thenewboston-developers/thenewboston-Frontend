@@ -7,6 +7,7 @@ import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import {Input} from 'components/FormElements';
 import {ModalBody, ModalFooter} from 'components/Modal';
+import {MAX_MINT_AMOUNT} from 'constants/general';
 import {createMint} from 'dispatchers/mints';
 import {ToastType} from 'enums';
 import {AppDispatch, Currency, SFC} from 'types';
@@ -39,7 +40,8 @@ const MintModal: SFC<ComponentProps> = ({className, close, currency, onSuccess})
         .typeError('Amount must be a number')
         .required('Amount is required')
         .positive('Amount must be positive')
-        .integer('Amount must be a whole number'),
+        .integer('Amount must be a whole number')
+        .max(MAX_MINT_AMOUNT, `Amount cannot exceed ${MAX_MINT_AMOUNT.toLocaleString()}`),
     });
   }, []);
 
@@ -54,8 +56,19 @@ const MintModal: SFC<ComponentProps> = ({className, close, currency, onSuccess})
       if (onSuccess) onSuccess();
       close();
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.error ?? 'Error minting currency';
-      handleFormikAPIError(error, helpers, errorMessage);
+      const responseData = error?.response?.data;
+
+      if (responseData?.amount && Array.isArray(responseData.amount)) {
+        const amountErrors = responseData.amount;
+        if (amountErrors.length > 0 && amountErrors[0]?.message) {
+          helpers.setFieldError('amount', amountErrors[0].message);
+        } else {
+          helpers.setFieldError('amount', 'Invalid amount');
+        }
+      } else {
+        const errorMessage = responseData?.error || 'Error minting currency';
+        handleFormikAPIError(error, helpers, errorMessage);
+      }
     } finally {
       setSubmitting(false);
     }
