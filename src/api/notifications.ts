@@ -36,3 +36,11 @@ export const getUnreadCount = async (): Promise<{unread_count: number}> => {
     throw error;
   }
 };
+
+export const updateNotification = async (notificationId: number): Promise<void> => {
+  try {
+    await axios.patch(`${BASE_URL}/${notificationId}`, {is_read: true}, authorizationHeaders());
+  } catch (error) {
+    throw error;
+  }
+};
