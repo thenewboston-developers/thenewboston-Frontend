@@ -14,11 +14,13 @@ import {
   setPost,
   setPosts,
   startLoading,
+  stopLoading,
   unsetPost,
   updatePostLikeStatus,
   updatePostTipAmounts,
 } from 'store/posts';
 import {AppDispatch, GetPostsParams} from 'types';
+import {isCancellationError} from 'utils/errors';
 import {getNextUrlFromState} from 'utils/urls';
 
 export const createPost = (data: FormData) => async (dispatch: AppDispatch) => {
@@ -36,19 +38,28 @@ export const resetPosts = () => (dispatch: AppDispatch) => {
   dispatch(_resetPosts());
 };
 
-export const getPosts = (params?: GetPostsParams) => async (dispatch: AppDispatch) => {
+export const getPosts = (params?: GetPostsParams, abortSignal?: AbortSignal) => async (dispatch: AppDispatch) => {
   dispatch(startLoading());
 
-  const nextURL = getNextUrlFromState(store.getState().posts);
-  const responseData = await _getPosts(nextURL, params);
+  try {
+    const nextURL = getNextUrlFromState(store.getState().posts);
+    const responseData = await _getPosts(nextURL, params, abortSignal);
 
-  for (const post of responseData.results) {
-    const comments = post.comments || [];
-    dispatch(setComments(comments));
-    delete post.comments;
+    for (const post of responseData.results) {
+      const comments = post.comments || [];
+      dispatch(setComments(comments));
+      delete post.comments;
+    }
+
+    dispatch(setPosts(responseData));
+  } catch (error: any) {
+    dispatch(stopLoading());
+
+    // Don't throw if the request was aborted
+    if (!isCancellationError(error)) {
+      throw error;
+    }
   }
-
-  dispatch(setPosts(responseData));
 };
 
 export const updatePost = (id: number, data: FormData) => async (dispatch: AppDispatch) => {

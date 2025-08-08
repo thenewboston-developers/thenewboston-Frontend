@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
@@ -9,12 +9,14 @@ import PostSkeleton from 'components/Post/PostSkeleton';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
+import {isCancellationError} from 'utils/errors';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
 const Posts: SFC = ({className}) => {
   const {id} = useParams();
+  const abortControllerRef = useRef<AbortController | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
@@ -26,23 +28,35 @@ const Posts: SFC = ({className}) => {
   }, [posts]);
 
   useEffect(() => {
+    if (!userId) return;
+
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     (async () => {
       try {
-        if (!userId) return;
         dispatch(_resetPosts());
-        await dispatch(_getPosts({user: userId}));
-      } catch (error) {
-        displayErrorToast('Error fetching posts');
+        await dispatch(_getPosts({user: userId}, abortController.signal));
+      } catch (error: any) {
+        if (!isCancellationError(error)) {
+          displayErrorToast('Error fetching posts');
+        }
       }
     })();
+
+    return () => {
+      abortController.abort();
+    };
   }, [dispatch, userId]);
 
   const fetchMorePosts = async () => {
-    if (!isLoading && userId) {
+    if (!isLoading && userId && abortControllerRef.current) {
       try {
-        await dispatch(_getPosts({user: userId}));
-      } catch (error) {
-        displayErrorToast('Error fetching more posts');
+        await dispatch(_getPosts({user: userId}, abortControllerRef.current.signal));
+      } catch (error: any) {
+        if (!isCancellationError(error)) {
+          displayErrorToast('Error fetching more posts');
+        }
       }
     }
   };

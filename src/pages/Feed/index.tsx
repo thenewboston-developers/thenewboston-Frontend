@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -10,32 +10,49 @@ import PostSkeleton from 'components/Post/PostSkeleton';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
+import {isCancellationError} from 'utils/errors';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
 const Feed: SFC = ({className}) => {
+  const abortControllerRef = useRef<AbortController | null>(null);
   const dispatch = useDispatch<AppDispatch>();
-  const posts = useSelector(getPosts);
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
+  const posts = useSelector(getPosts);
 
   const postList = useMemo(() => Object.values(posts), [posts]);
 
   useEffect(() => {
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     (async () => {
       try {
         dispatch(_resetPosts());
-        await dispatch(_getPosts());
-      } catch (error) {
-        displayErrorToast('Error fetching posts');
+        await dispatch(_getPosts(undefined, abortController.signal));
+      } catch (error: any) {
+        if (!isCancellationError(error)) {
+          displayErrorToast('Error fetching posts');
+        }
       }
     })();
+
+    return () => {
+      abortController.abort();
+    };
   }, [dispatch]);
 
   const fetchMorePosts = async () => {
-    if (!isLoading) {
-      await dispatch(_getPosts());
+    if (!isLoading && abortControllerRef.current) {
+      try {
+        await dispatch(_getPosts(undefined, abortControllerRef.current.signal));
+      } catch (error: any) {
+        if (!isCancellationError(error)) {
+          displayErrorToast('Error fetching more posts');
+        }
+      }
     }
   };
 

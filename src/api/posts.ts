@@ -34,6 +34,7 @@ export const getPost = async (id: number): Promise<PostReadSerializer> => {
 export const getPosts = async (
   url: string,
   params?: GetPostsParams,
+  signal?: AbortSignal,
 ): Promise<PaginatedResponse<PostReadSerializer>> => {
   try {
     // If we have a full URL (pagination), we need to preserve any params
@@ -48,10 +49,10 @@ export const getPosts = async (
         }
       });
 
-      const response = await axios.get<PaginatedResponse<PostReadSerializer>>(
-        urlObj.toString(),
-        authorizationHeaders(),
-      );
+      const response = await axios.get<PaginatedResponse<PostReadSerializer>>(urlObj.toString(), {
+        ...authorizationHeaders(),
+        signal,
+      });
       return response.data;
     }
 
@@ -60,6 +61,7 @@ export const getPosts = async (
     const response = await axios.get<PaginatedResponse<PostReadSerializer>>(apiURL, {
       params,
       ...authorizationHeaders(),
+      signal,
     });
     return response.data;
   } catch (error) {

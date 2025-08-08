@@ -37,6 +37,9 @@ const posts = createSlice({
     startLoading: (state) => {
       state.isLoading = true;
     },
+    stopLoading: (state) => {
+      state.isLoading = false;
+    },
     unsetPost: (state, {payload: id}: PayloadAction<number>) => {
       state.posts = state.posts.filter((post) => post.id !== id);
     },
@@ -56,6 +59,14 @@ const posts = createSlice({
   },
 });
 
-export const {setPost, setPosts, unsetPost, startLoading, resetPosts, updatePostLikeStatus, updatePostTipAmounts} =
-  posts.actions;
+export const {
+  resetPosts,
+  setPost,
+  setPosts,
+  startLoading,
+  stopLoading,
+  unsetPost,
+  updatePostLikeStatus,
+  updatePostTipAmounts,
+} = posts.actions;
 export default posts.reducer;
