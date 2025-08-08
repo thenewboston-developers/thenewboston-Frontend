@@ -1,24 +1,15 @@
 import {CurrencyTinySerializer, SFC, UserReadSerializer} from 'types';
-import {shortDate} from 'utils/dates';
 
 import * as S from './Styles';
 
 export interface TransferInfoProps {
-  createdDate: Date;
   owner: UserReadSerializer;
   priceAmount: number;
   priceCurrency: CurrencyTinySerializer;
   recipient: UserReadSerializer;
 }
 
-const TransferInfo: SFC<TransferInfoProps> = ({
-  className,
-  createdDate,
-  owner,
-  priceAmount,
-  priceCurrency,
-  recipient,
-}) => {
+const TransferInfo: SFC<TransferInfoProps> = ({className, owner, priceAmount, priceCurrency, recipient}) => {
   return (
     <S.Container className={className}>
       <S.GraphicWrapper>
@@ -32,7 +23,6 @@ const TransferInfo: SFC<TransferInfoProps> = ({
           </strong>{' '}
           to <S.Link to={`/profile/${recipient.id}`}>{recipient.username}</S.Link>
         </S.Text>
-        <S.Date>{shortDate(createdDate, true)}</S.Date>
       </S.Content>
     </S.Container>
   );
