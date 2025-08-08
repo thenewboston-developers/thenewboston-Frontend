@@ -9,6 +9,7 @@ import PostSkeleton from 'components/Post/PostSkeleton';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
+import {isCancellationError} from 'utils/errors';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
@@ -29,7 +30,6 @@ const Posts: SFC = ({className}) => {
   useEffect(() => {
     if (!userId) return;
 
-    // Create a new AbortController for this component instance
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
 
@@ -38,15 +38,12 @@ const Posts: SFC = ({className}) => {
         dispatch(_resetPosts());
         await dispatch(_getPosts({user: userId}, abortController.signal));
       } catch (error: any) {
-        // Only show error toast if it's not a cancelled request
-        // Axios with AbortController throws 'CanceledError' with code 'ERR_CANCELED'
-        if (error?.code !== 'ERR_CANCELED' && error?.name !== 'CanceledError' && error?.name !== 'AbortError') {
+        if (!isCancellationError(error)) {
           displayErrorToast('Error fetching posts');
         }
       }
     })();
 
-    // Cleanup: cancel any pending requests when component unmounts or userId changes
     return () => {
       abortController.abort();
     };
@@ -57,9 +54,7 @@ const Posts: SFC = ({className}) => {
       try {
         await dispatch(_getPosts({user: userId}, abortControllerRef.current.signal));
       } catch (error: any) {
-        // Only show error toast if it's not a cancelled request
-        // Axios with AbortController throws 'CanceledError' with code 'ERR_CANCELED'
-        if (error?.code !== 'ERR_CANCELED' && error?.name !== 'CanceledError' && error?.name !== 'AbortError') {
+        if (!isCancellationError(error)) {
           displayErrorToast('Error fetching more posts');
         }
       }

@@ -20,6 +20,7 @@ import {
   updatePostTipAmounts,
 } from 'store/posts';
 import {AppDispatch, GetPostsParams} from 'types';
+import {isCancellationError} from 'utils/errors';
 import {getNextUrlFromState} from 'utils/urls';
 
 export const createPost = (data: FormData) => async (dispatch: AppDispatch) => {
@@ -52,13 +53,10 @@ export const getPosts = (params?: GetPostsParams, abortSignal?: AbortSignal) => 
 
     dispatch(setPosts(responseData));
   } catch (error: any) {
-    // If the request was aborted, stop loading but don't throw
-    // Axios with AbortController throws 'CanceledError' with code 'ERR_CANCELED'
-    if (error?.code === 'ERR_CANCELED' || error?.name === 'CanceledError' || error?.name === 'AbortError') {
-      dispatch(stopLoading());
-    } else {
-      // For real errors, stop loading and throw
-      dispatch(stopLoading());
+    dispatch(stopLoading());
+
+    // Don't throw if the request was aborted
+    if (!isCancellationError(error)) {
       throw error;
     }
   }
