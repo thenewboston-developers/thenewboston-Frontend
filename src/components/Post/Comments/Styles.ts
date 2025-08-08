@@ -45,6 +45,10 @@ export const CommentForm = styled.div`
 
 export const Container = styled.div`
   margin-top: 14px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 0 16px 16px 16px;
+  }
 `;
 
 export const Content = styled.div`

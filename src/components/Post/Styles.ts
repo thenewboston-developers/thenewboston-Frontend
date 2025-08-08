@@ -50,8 +50,7 @@ export const ActionsContainer = styled.div`
   margin-top: 16px;
 
   @media (max-width: ${breakpoints.mini}) {
-    flex-direction: column;
-    gap: 12px;
+    padding: 0 16px 16px 16px;
   }
 `;
 
@@ -68,6 +67,14 @@ export const Container = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   padding: 20px 24px;
   transition: all 0.2s ease;
+
+  @media (max-width: ${breakpoints.mini}) {
+    border: none;
+    border-bottom: 1px solid ${colors.palette.gray[200]};
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+  }
 `;
 
 export const Content = styled.div`
@@ -77,6 +84,10 @@ export const Content = styled.div`
   margin-top: 12px;
   overflow-wrap: break-word;
   word-wrap: break-word;
+
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 0 16px;
+  }
 `;
 
 export const Date = styled.div`
@@ -98,6 +109,11 @@ export const Img = styled.img`
   max-height: 600px;
   max-width: 100%;
   object-fit: cover;
+
+  @media (max-width: ${breakpoints.mini}) {
+    border-radius: 0;
+    width: 100%;
+  }
 `;
 
 export const LikeButton = styled.button<{$animate: boolean}>`
@@ -219,4 +235,8 @@ export const Top = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 4px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 16px 16px 0 16px;
+  }
 `;
