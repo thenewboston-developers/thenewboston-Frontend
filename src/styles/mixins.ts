@@ -163,6 +163,11 @@ export const pagePadding = css`
   }
 `;
 
+// Needed because the overflow for this container is not visible, and it's clipping the shadows of the radio cards
+export const radioCardContainerPadding = css`
+  padding: 0 2px 8px;
+`;
+
 export const toolbarStyle = css`
   align-items: center;
   background: #fff;
