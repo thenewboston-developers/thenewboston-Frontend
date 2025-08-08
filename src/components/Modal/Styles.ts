@@ -11,7 +11,10 @@ const addOverlay = keyframes`
   }
 `;
 
-export const Content = styled.div``;
+export const Content = styled.div`
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+`;
 
 export const Header = styled.div`
   align-items: center;
