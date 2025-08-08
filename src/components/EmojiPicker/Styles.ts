@@ -1,6 +1,6 @@
 import styled, {css} from 'styled-components';
 
-import {colors, fonts, inputStyle} from 'styles';
+import {breakpoints, colors, fonts, inputStyle} from 'styles';
 
 export const Container = styled.div<{$displayMode: 'textarea' | 'inline'}>`
   ${({$displayMode}) =>
@@ -11,6 +11,10 @@ export const Container = styled.div<{$displayMode: 'textarea' | 'inline'}>`
       : css`
           position: relative;
         `}
+
+  @media (max-width: ${breakpoints.mini}) {
+    display: none;
+  }
 `;
 
 export const EmojiPicker = styled.div<{$displayMode: 'textarea' | 'inline'}>`

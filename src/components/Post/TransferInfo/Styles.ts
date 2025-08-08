@@ -2,7 +2,7 @@ import {Link as RouterLink} from 'react-router-dom';
 import styled from 'styled-components';
 
 import UIcon from 'components/Icon';
-import {colors, fonts} from 'styles';
+import {breakpoints, colors, fonts} from 'styles';
 
 export const Container = styled.div`
   align-items: center;
@@ -21,6 +21,11 @@ export const Container = styled.div`
   margin-top: 12px;
   padding: 14px 16px;
   position: relative;
+
+  @media (max-width: ${breakpoints.mini}) {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
 
   &::before {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
