@@ -61,7 +61,7 @@ export const ErrorMessage = styled.div`
   justify-content: center;
 `;
 
-export const HeaderCell = styled.th<{$sticky?: boolean; $align?: 'left' | 'right'}>`
+export const HeaderCell = styled.th<{$sticky?: boolean; $align?: 'left' | 'right'; $clickable?: boolean}>`
   background: ${colors.white};
   border-bottom: 1px solid ${colors.border};
   color: ${colors.palette.gray[500]};
@@ -71,6 +71,18 @@ export const HeaderCell = styled.th<{$sticky?: boolean; $align?: 'left' | 'right
   text-align: ${({$align}) => $align || 'left'};
   text-transform: uppercase;
 
+  ${({$clickable}) =>
+    $clickable &&
+    css`
+      cursor: pointer;
+      transition: background-color 0.2s;
+      user-select: none;
+
+      &:hover {
+        background-color: ${colors.palette.gray[50]};
+      }
+    `}
+
   ${({$sticky}) =>
     $sticky &&
     css`
@@ -78,6 +90,12 @@ export const HeaderCell = styled.th<{$sticky?: boolean; $align?: 'left' | 'right
       position: sticky;
       z-index: 2;
     `}
+`;
+
+export const HeaderContent = styled.div<{$align?: 'left' | 'right'}>`
+  align-items: center;
+  display: flex;
+  justify-content: ${({$align}) => ($align === 'right' ? 'flex-end' : 'flex-start')};
 `;
 
 export const LoaderContainer = styled.div`
