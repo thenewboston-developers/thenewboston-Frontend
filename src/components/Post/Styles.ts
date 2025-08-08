@@ -50,7 +50,7 @@ export const ActionsContainer = styled.div`
   margin-top: 16px;
 
   @media (max-width: ${breakpoints.mini}) {
-    padding: 0 16px 16px 16px;
+    padding: 0 16px 8px 16px;
   }
 `;
 

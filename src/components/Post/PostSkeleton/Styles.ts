@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {colors} from 'styles';
+import {breakpoints, colors} from 'styles';
 
 export const Avatar = styled.div`
   margin-right: 1rem;
@@ -17,6 +17,14 @@ export const Container = styled.div`
   border-radius: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   padding: 20px 24px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    border: none;
+    border-bottom: 1px solid ${colors.palette.gray[200]};
+    border-radius: 0;
+    box-shadow: none;
+    padding: 16px;
+  }
 `;
 
 export const SkeletonSection = styled.div`

@@ -40,4 +40,12 @@ export const SkeletonContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    gap: 0;
+
+    & > div:first-child > div:first-child {
+      border-top: 1px solid ${colors.palette.gray[200]};
+    }
+  }
 `;

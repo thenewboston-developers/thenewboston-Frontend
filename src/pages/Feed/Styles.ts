@@ -53,4 +53,12 @@ export const SkeletonContainer = styled.div`
   gap: 16px;
   margin: 0 auto;
   max-width: 720px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    gap: 0;
+
+    & > div:first-child > div:first-child {
+      border-top: 1px solid ${colors.palette.gray[200]};
+    }
+  }
 `;
