@@ -16,12 +16,12 @@ import * as S from './Styles';
 
 const Posts: SFC = ({className}) => {
   const {id} = useParams();
+  const abortControllerRef = useRef<AbortController | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
   const posts = useSelector(getPosts);
   const userId = id ? parseInt(id, 10) : null;
-  const abortControllerRef = useRef<AbortController | null>(null);
 
   const postList = useMemo(() => {
     return Object.values(posts);

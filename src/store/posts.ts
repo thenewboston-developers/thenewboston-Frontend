@@ -20,9 +20,6 @@ const posts = createSlice({
       state.next = null;
       state.posts = [];
     },
-    stopLoading: (state) => {
-      state.isLoading = false;
-    },
     setPost: (state, {payload}: PayloadAction<Post>) => {
       const existingPostIndex = state.posts.findIndex((post) => post.id === payload.id);
       if (existingPostIndex >= 0) {
@@ -39,6 +36,9 @@ const posts = createSlice({
     },
     startLoading: (state) => {
       state.isLoading = true;
+    },
+    stopLoading: (state) => {
+      state.isLoading = false;
     },
     unsetPost: (state, {payload: id}: PayloadAction<number>) => {
       state.posts = state.posts.filter((post) => post.id !== id);
@@ -60,12 +60,12 @@ const posts = createSlice({
 });
 
 export const {
+  resetPosts,
   setPost,
   setPosts,
-  unsetPost,
   startLoading,
   stopLoading,
-  resetPosts,
+  unsetPost,
   updatePostLikeStatus,
   updatePostTipAmounts,
 } = posts.actions;

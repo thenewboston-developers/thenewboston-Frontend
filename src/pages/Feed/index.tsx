@@ -16,11 +16,11 @@ import {displayErrorToast} from 'utils/toasts';
 import * as S from './Styles';
 
 const Feed: SFC = ({className}) => {
+  const abortControllerRef = useRef<AbortController | null>(null);
   const dispatch = useDispatch<AppDispatch>();
-  const posts = useSelector(getPosts);
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
-  const abortControllerRef = useRef<AbortController | null>(null);
+  const posts = useSelector(getPosts);
 
   const postList = useMemo(() => Object.values(posts), [posts]);
 
