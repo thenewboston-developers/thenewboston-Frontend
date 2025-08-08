@@ -7,10 +7,12 @@ import {ButtonColor, ButtonType} from 'components/Button/types';
 import {FileInput, FormField, Input, Textarea} from 'components/FormElements';
 import {ModalFooter} from 'components/Modal';
 import {updateUser} from 'dispatchers/users';
+import {ToastType} from 'enums';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {handleFormikAPIError} from 'utils/forms';
 import {socialUsernameValidators} from 'utils/socialUsernameValidation';
+import {displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
@@ -116,8 +118,24 @@ const ProfileEditModal: SFC<ProfileEditModalProps> = ({className, close}) => {
       requestData.append('youtube_username', values.youtube_username);
       await dispatch(updateUser(self.id!, requestData));
       close();
-    } catch (error) {
-      handleFormikAPIError(error, helpers, 'Error updating profile');
+    } catch (error: any) {
+      const responseData = error?.response?.data;
+
+      if (responseData?.avatar && Array.isArray(responseData.avatar)) {
+        const avatarErrors = responseData.avatar;
+        if (avatarErrors.length > 0 && avatarErrors[0]?.message) {
+          displayToast(avatarErrors[0].message, ToastType.ERROR);
+          helpers.setFieldError('avatar', avatarErrors[0].message);
+        }
+      } else if (responseData?.banner && Array.isArray(responseData.banner)) {
+        const bannerErrors = responseData.banner;
+        if (bannerErrors.length > 0 && bannerErrors[0]?.message) {
+          displayToast(bannerErrors[0].message, ToastType.ERROR);
+          helpers.setFieldError('banner', bannerErrors[0].message);
+        }
+      } else {
+        handleFormikAPIError(error, helpers, 'Error updating profile');
+      }
     }
   };
 
