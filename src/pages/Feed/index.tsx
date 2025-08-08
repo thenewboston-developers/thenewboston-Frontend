@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -19,23 +19,37 @@ const Feed: SFC = ({className}) => {
   const posts = useSelector(getPosts);
   const hasMore = useSelector(hasMorePosts);
   const isLoading = useSelector(isLoadingPosts);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const postList = useMemo(() => Object.values(posts), [posts]);
 
   useEffect(() => {
+    // Create a new AbortController for this component instance
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     (async () => {
       try {
         dispatch(_resetPosts());
-        await dispatch(_getPosts());
-      } catch (error) {
-        displayErrorToast('Error fetching posts');
+        await dispatch(_getPosts(undefined, abortController.signal));
+      } catch (error: any) {
+        // Only show error toast if it's not a cancelled request
+        // Axios with AbortController throws 'CanceledError' with code 'ERR_CANCELED'
+        if (error?.code !== 'ERR_CANCELED' && error?.name !== 'CanceledError' && error?.name !== 'AbortError') {
+          displayErrorToast('Error fetching posts');
+        }
       }
     })();
+
+    // Cleanup: cancel any pending requests when component unmounts
+    return () => {
+      abortController.abort();
+    };
   }, [dispatch]);
 
   const fetchMorePosts = async () => {
-    if (!isLoading) {
-      await dispatch(_getPosts());
+    if (!isLoading && abortControllerRef.current) {
+      await dispatch(_getPosts(undefined, abortControllerRef.current.signal));
     }
   };
 

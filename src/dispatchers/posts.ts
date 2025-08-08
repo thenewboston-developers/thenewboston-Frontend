@@ -14,6 +14,7 @@ import {
   setPost,
   setPosts,
   startLoading,
+  stopLoading,
   unsetPost,
   updatePostLikeStatus,
   updatePostTipAmounts,
@@ -36,19 +37,31 @@ export const resetPosts = () => (dispatch: AppDispatch) => {
   dispatch(_resetPosts());
 };
 
-export const getPosts = (params?: GetPostsParams) => async (dispatch: AppDispatch) => {
+export const getPosts = (params?: GetPostsParams, abortSignal?: AbortSignal) => async (dispatch: AppDispatch) => {
   dispatch(startLoading());
 
-  const nextURL = getNextUrlFromState(store.getState().posts);
-  const responseData = await _getPosts(nextURL, params);
+  try {
+    const nextURL = getNextUrlFromState(store.getState().posts);
+    const responseData = await _getPosts(nextURL, params, abortSignal);
 
-  for (const post of responseData.results) {
-    const comments = post.comments || [];
-    dispatch(setComments(comments));
-    delete post.comments;
+    for (const post of responseData.results) {
+      const comments = post.comments || [];
+      dispatch(setComments(comments));
+      delete post.comments;
+    }
+
+    dispatch(setPosts(responseData));
+  } catch (error: any) {
+    // If the request was aborted, stop loading but don't throw
+    // Axios with AbortController throws 'CanceledError' with code 'ERR_CANCELED'
+    if (error?.code === 'ERR_CANCELED' || error?.name === 'CanceledError' || error?.name === 'AbortError') {
+      dispatch(stopLoading());
+    } else {
+      // For real errors, stop loading and throw
+      dispatch(stopLoading());
+      throw error;
+    }
   }
-
-  dispatch(setPosts(responseData));
 };
 
 export const updatePost = (id: number, data: FormData) => async (dispatch: AppDispatch) => {

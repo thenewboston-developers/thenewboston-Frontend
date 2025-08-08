@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
@@ -20,29 +20,48 @@ const Posts: SFC = ({className}) => {
   const isLoading = useSelector(isLoadingPosts);
   const posts = useSelector(getPosts);
   const userId = id ? parseInt(id, 10) : null;
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const postList = useMemo(() => {
     return Object.values(posts);
   }, [posts]);
 
   useEffect(() => {
+    if (!userId) return;
+
+    // Create a new AbortController for this component instance
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     (async () => {
       try {
-        if (!userId) return;
         dispatch(_resetPosts());
-        await dispatch(_getPosts({user: userId}));
-      } catch (error) {
-        displayErrorToast('Error fetching posts');
+        await dispatch(_getPosts({user: userId}, abortController.signal));
+      } catch (error: any) {
+        // Only show error toast if it's not a cancelled request
+        // Axios with AbortController throws 'CanceledError' with code 'ERR_CANCELED'
+        if (error?.code !== 'ERR_CANCELED' && error?.name !== 'CanceledError' && error?.name !== 'AbortError') {
+          displayErrorToast('Error fetching posts');
+        }
       }
     })();
+
+    // Cleanup: cancel any pending requests when component unmounts or userId changes
+    return () => {
+      abortController.abort();
+    };
   }, [dispatch, userId]);
 
   const fetchMorePosts = async () => {
-    if (!isLoading && userId) {
+    if (!isLoading && userId && abortControllerRef.current) {
       try {
-        await dispatch(_getPosts({user: userId}));
-      } catch (error) {
-        displayErrorToast('Error fetching more posts');
+        await dispatch(_getPosts({user: userId}, abortControllerRef.current.signal));
+      } catch (error: any) {
+        // Only show error toast if it's not a cancelled request
+        // Axios with AbortController throws 'CanceledError' with code 'ERR_CANCELED'
+        if (error?.code !== 'ERR_CANCELED' && error?.name !== 'CanceledError' && error?.name !== 'AbortError') {
+          displayErrorToast('Error fetching more posts');
+        }
       }
     }
   };
