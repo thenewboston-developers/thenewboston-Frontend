@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import UModal from 'components/Modal';
 import UPagination from 'components/Pagination';
-import {breakpoints, hiddenScroll} from 'styles';
+import {breakpoints, hiddenScroll, radioCardContainerPadding} from 'styles';
 
 export const Modal = styled(UModal)`
   max-height: 80vh;
@@ -19,6 +19,7 @@ export const Pagination = styled(UPagination)`
 
 export const RadioCardContainer = styled.div`
   ${hiddenScroll};
+  ${radioCardContainerPadding};
   display: grid;
   gap: 16px;
   grid-template-columns: repeat(3, 1fr);

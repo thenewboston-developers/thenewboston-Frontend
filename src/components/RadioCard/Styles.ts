@@ -81,6 +81,7 @@ export const CheckIcon = styled.div<{$isAnimating?: boolean; $isDeselecting?: bo
   }
 `;
 
+// If the box-shadow is updated here, make sure to update the radioCardContainerPadding
 export const Container = styled.div<{$isActive: boolean; $isAnimating?: boolean}>`
   ${radioCardStyle};
   background: ${(props) => {
