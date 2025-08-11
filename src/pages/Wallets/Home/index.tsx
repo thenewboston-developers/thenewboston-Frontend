@@ -29,11 +29,11 @@ import WalletWithdraw from '../WalletWithdraw';
 import * as S from './Styles';
 
 const Home: SFC = ({className}) => {
+  const [currencyCheckKey, setCurrencyCheckKey] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasAvailableCurrencies, setHasAvailableCurrencies] = useState(false);
   const [transfersRefreshKey, setTransfersRefreshKey] = useState(0);
   const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
-  const [currencyCheckKey, setCurrencyCheckKey] = useState(0);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
   const pagination = useSelector(getWalletsPagination);

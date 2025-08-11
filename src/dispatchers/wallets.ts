@@ -29,11 +29,6 @@ export const createWalletWithdraw = (walletId: number, data: WithdrawRequest) =>
   dispatch(setWire(wire));
 };
 
-export const getWalletDepositBalance = (walletId: number) => async (dispatch: AppDispatch) => {
-  const responseData = await _getWalletDepositBalance(walletId);
-  dispatch(setWallet(responseData));
-};
-
 export const getAllUserWallets = () => async (dispatch: AppDispatch) => {
   dispatch(setIsLoadingWallets(true));
   try {
@@ -57,6 +52,11 @@ export const getAllUserWallets = () => async (dispatch: AppDispatch) => {
 
 export const getWallet = (walletId: number) => async (dispatch: AppDispatch) => {
   const responseData = await _getWallet(walletId);
+  dispatch(setWallet(responseData));
+};
+
+export const getWalletDepositBalance = (walletId: number) => async (dispatch: AppDispatch) => {
+  const responseData = await _getWalletDepositBalance(walletId);
   dispatch(setWallet(responseData));
 };
 
