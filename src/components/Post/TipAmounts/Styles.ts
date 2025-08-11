@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {colors} from 'styles';
+import {breakpoints, colors} from 'styles';
 
 export const Amount = styled.span`
   color: ${colors.palette.gray[700]};
@@ -12,6 +12,10 @@ export const Container = styled.div`
   align-items: center;
   display: flex;
   gap: 8px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    display: none;
+  }
 `;
 
 export const CurrencyLogo = styled.img`

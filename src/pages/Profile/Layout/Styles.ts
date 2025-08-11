@@ -21,6 +21,10 @@ export const OutletContainer = styled.div`
   @media (max-width: ${breakpoints.mobile}) {
     padding: 16px 24px 24px;
   }
+
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 16px 0 24px;
+  }
 `;
 
 export const TabsWrapper = styled.div`

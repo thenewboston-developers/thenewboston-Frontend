@@ -45,6 +45,10 @@ export const CommentForm = styled.div`
 
 export const Container = styled.div`
   margin-top: 14px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 0 16px 16px 16px;
+  }
 `;
 
 export const Content = styled.div`
@@ -56,9 +60,11 @@ export const Content = styled.div`
 `;
 
 export const ContentInput = styled(UInlineInput)<{$isMobileDevice: boolean | false}>`
-  background-color: ${colors.white};
+  background-color: ${colors.background};
+  border: 1px solid ${colors.borderDarker};
   border-radius: 12px;
   flex: 1;
+  height: 40px;
   width: 100%;
 
   @media (max-width: ${breakpoints.mobile}) {
@@ -85,11 +91,12 @@ export const Icon = styled(UIcon)`
 export const IconContainer = styled.div`
   align-items: center;
   background-color: ${colors.background};
-  border-radius: 8px 0 0 8px;
+  border-radius: 7px 0 0 7px;
   cursor: pointer;
   display: flex;
+  height: 38px;
   justify-content: center;
-  padding: 8px;
+  padding: 0 8px;
   transition: all 0.2s ease;
 
   &:hover {
@@ -105,22 +112,23 @@ export const Image = styled.img`
 
 export const PriceAmountInput = styled(UInlineInput)`
   background-color: ${colors.background};
+  border: none;
   border-left: 1px solid ${colors.borderDarker};
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 7px 7px 0;
+  height: 38px;
+  padding: 8px 12px;
   width: 100px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    height: 40px;
-  }
 `;
 
 export const PriceAmountInputContainer = styled.div`
   align-items: center;
   background-color: ${colors.whiteHover};
+  border: 1px solid ${colors.borderDarker};
   border-radius: 8px;
   display: grid;
   grid-auto-flow: column;
   height: 40px;
+  overflow: hidden;
 `;
 
 export const ControlsWrapper = styled.div`
