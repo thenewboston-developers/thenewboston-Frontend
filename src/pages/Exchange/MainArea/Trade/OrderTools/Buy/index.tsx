@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {Form, Formik, FormikHelpers} from 'formik';
 
 import AvailableTotal from 'components/AvailableTotal';
@@ -7,8 +7,8 @@ import {ButtonType} from 'components/Button';
 import {CalloutType} from 'components/Callout';
 import {FormField, LogoInput} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
+import {getWalletByCurrency} from 'dispatchers/wallets';
 import {ExchangeOrderSide, ToastType} from 'enums';
-import {getWallets} from 'selectors/state';
 import {AppDispatch, AssetPair, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
@@ -20,10 +20,10 @@ interface BuyProps {
 }
 
 const Buy: SFC<BuyProps> = ({activeAssetPair, className}) => {
+  const [secondaryCurrencyBalance, setSecondaryCurrencyBalance] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const dispatch = useDispatch<AppDispatch>();
   const formikRef = useRef<any>(null);
-  const wallets = useSelector(getWallets);
 
   const initialValues = {
     price: '',
@@ -55,12 +55,18 @@ const Buy: SFC<BuyProps> = ({activeAssetPair, className}) => {
     }
   };
 
-  const secondaryCurrencyBalance = useMemo(() => {
-    const wallet = Object.values(wallets).find(
-      (_wallet) => _wallet.currency.id === activeAssetPair!.secondary_currency.id,
-    );
-    return wallet?.balance || 0;
-  }, [activeAssetPair, wallets]);
+  useEffect(() => {
+    if (!activeAssetPair) return;
+
+    (async () => {
+      try {
+        const wallet = await getWalletByCurrency(activeAssetPair.secondary_currency.id);
+        setSecondaryCurrencyBalance(wallet?.balance || 0);
+      } catch (error) {
+        setSecondaryCurrencyBalance(0);
+      }
+    })();
+  }, [activeAssetPair]);
 
   const isTotalValid = useMemo(() => total <= secondaryCurrencyBalance, [secondaryCurrencyBalance, total]);
 

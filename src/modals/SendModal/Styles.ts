@@ -19,6 +19,19 @@ export const Label = styled.span`
   min-width: 40px;
 `;
 
+export const LoaderContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 40px;
+`;
+
+export const LoadingText = styled.div`
+  color: ${colors.palette.gray[600]};
+  font-size: 14px;
+`;
+
 export const Modal = styled(UModal)`
   width: 420px;
 `;

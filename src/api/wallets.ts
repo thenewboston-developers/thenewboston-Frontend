@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-import {CreateWalletRequest, DepositResponse, Wallet, WithdrawRequest, WithdrawResponse} from 'types';
+import {
+  CreateWalletRequest,
+  DepositResponse,
+  PaginatedResponse,
+  Wallet,
+  WithdrawRequest,
+  WithdrawResponse,
+} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/wallets`;
@@ -45,10 +52,38 @@ export const getWalletDepositBalance = async (walletId: number): Promise<Wallet>
   }
 };
 
-export const getWallets = async (): Promise<Wallet[]> => {
+export const getWallet = async (walletId: number): Promise<Wallet> => {
   try {
-    const response = await axios.get<Wallet[]>(BASE_URL, authorizationHeaders());
+    const response = await axios.get<Wallet>(`${BASE_URL}/${walletId}`, authorizationHeaders());
     return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getWallets = async (params?: {
+  currency?: number;
+  page?: number;
+  page_size?: number;
+}): Promise<PaginatedResponse<Wallet>> => {
+  try {
+    const response = await axios.get<PaginatedResponse<Wallet>>(BASE_URL, {
+      ...authorizationHeaders(),
+      params,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getWalletByCurrency = async (currencyId: number): Promise<Wallet | null> => {
+  try {
+    const response = await axios.get<PaginatedResponse<Wallet>>(BASE_URL, {
+      ...authorizationHeaders(),
+      params: {currency: currencyId},
+    });
+    return response.data.results.length > 0 ? response.data.results[0] : null;
   } catch (error) {
     throw error;
   }

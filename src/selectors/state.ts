@@ -33,7 +33,9 @@ export const getTradePriceChartData = (state: RootState) => state.tradePriceChar
 export const getTrades = (state: RootState) => state.trades;
 export const getUserStats = (state: RootState) => state.userStats;
 export const getUsers = (state: RootState) => state.users;
-export const getWallets = (state: RootState) => state.wallets;
+export const getWallets = (state: RootState) => state.wallets.wallets;
+export const getWalletsPagination = (state: RootState) => state.wallets.pagination;
+export const isLoadingWallets = (state: RootState) => state.wallets.pagination.isLoading;
 export const getWires = (state: RootState) => state.wires;
 export const hasMorePosts = (state: RootState) => state.posts.hasMore;
 export const isLoadingPosts = (state: RootState) => state.posts.isLoading;

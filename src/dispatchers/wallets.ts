@@ -2,12 +2,14 @@ import {
   createWallet as _createWallet,
   createWalletDeposit as _createWalletDeposit,
   createWalletWithdraw as _createWalletWithdraw,
+  getWallet as _getWallet,
+  getWalletByCurrency as _getWalletByCurrency,
   getWalletDepositBalance as _getWalletDepositBalance,
   getWallets as _getWallets,
 } from 'api/wallets';
-import {setWallet, setWallets} from 'store/wallets';
+import {clearWallets, setIsLoadingWallets, setPaginatedWallets, setWallet, setWallets} from 'store/wallets';
 import {setWire} from 'store/wires';
-import {AppDispatch, CreateWalletRequest, WithdrawRequest} from 'types';
+import {AppDispatch, CreateWalletRequest, PaginatedResponse, Wallet, WithdrawRequest} from 'types';
 
 export const createWallet = (data: CreateWalletRequest) => async (dispatch: AppDispatch) => {
   const responseData = await _createWallet(data);
@@ -33,7 +35,44 @@ export const getWalletDepositBalance = (walletId: number) => async (dispatch: Ap
   dispatch(setWallet(responseData));
 };
 
-export const getWallets = () => async (dispatch: AppDispatch) => {
-  const responseData = await _getWallets();
-  dispatch(setWallets(responseData));
+export const getAllUserWallets = () => async (dispatch: AppDispatch) => {
+  dispatch(setIsLoadingWallets(true));
+  try {
+    const allWallets: Wallet[] = [];
+    let page = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+      // eslint-disable-next-line no-await-in-loop
+      const response = await _getWallets({page, page_size: 100});
+      allWallets.push(...response.results);
+      hasMore = !!response.next;
+      page += 1;
+    }
+
+    dispatch(setWallets(allWallets));
+  } finally {
+    dispatch(setIsLoadingWallets(false));
+  }
 };
+
+export const getWallet = (walletId: number) => async (dispatch: AppDispatch) => {
+  const responseData = await _getWallet(walletId);
+  dispatch(setWallet(responseData));
+};
+
+export const getWalletByCurrency = async (currencyId: number): Promise<Wallet | null> => {
+  return _getWalletByCurrency(currencyId);
+};
+
+export const getWallets =
+  (page: number = 1, pageSize: number = 10) =>
+  async (dispatch: AppDispatch) => {
+    dispatch(setIsLoadingWallets(true));
+    try {
+      const responseData = await _getWallets({page, page_size: pageSize});
+      dispatch(setPaginatedWallets({data: responseData, page}));
+    } finally {
+      dispatch(setIsLoadingWallets(false));
+    }
+  };

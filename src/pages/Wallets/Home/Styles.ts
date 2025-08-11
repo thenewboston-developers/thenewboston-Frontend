@@ -79,6 +79,10 @@ export const MainContent = styled.div`
   }
 `;
 
+export const PaginationContainer = styled.div`
+  margin-top: 16px;
+`;
+
 export const TabsContainer = styled.div`
   align-items: center;
   display: flex;
