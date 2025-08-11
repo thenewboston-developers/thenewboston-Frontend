@@ -38,7 +38,8 @@ const Detail: SFC = ({className}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
   const [dataRefreshTrigger, setDataRefreshTrigger] = useState(0);
-  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [deleteCurrencyConfirmationOpen, setDeleteCurrencyConfirmationOpen] = useState(false);
+  const [deleteWhitepaperConfirmationOpen, setDeleteWhitepaperConfirmationOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
   const [mintModalIsOpen, toggleMintModal] = useToggle(false);
@@ -48,11 +49,11 @@ const Detail: SFC = ({className}) => {
   const [whitepaperModalIsOpen, toggleWhitepaperModal] = useToggle(false);
   const {id} = useParams<{id: string}>();
   const currencies = useSelector(getCurrencies);
+  const currency = id ? currencies[parseInt(id)] : null;
   const dispatch = useDispatch<AppDispatch>();
   const isDeleting = useRef(false);
   const navigate = useNavigate();
   const self = useSelector(getSelf);
-  const currency = id ? currencies[parseInt(id)] : null;
 
   useEffect(() => {
     if (!id || isDeleting.current) return;
@@ -101,13 +102,29 @@ const Detail: SFC = ({className}) => {
     navigate('/currencies/home');
   };
 
-  const handleConfirmDelete = async () => {
+  const handleConfirmDeleteCurrency = async () => {
+    if (!currency) return;
+
+    try {
+      isDeleting.current = true;
+      await dispatch(_deleteCurrency(currency.id));
+      displayToast('Currency deleted!', ToastType.SUCCESS);
+      navigate('/currencies/home');
+    } catch (error) {
+      isDeleting.current = false;
+      displayErrorToast('Error deleting currency');
+    } finally {
+      setDeleteCurrencyConfirmationOpen(false);
+    }
+  };
+
+  const handleConfirmDeleteWhitepaper = async () => {
     if (!whitepaper) return;
 
     try {
       await deleteWhitepaper(whitepaper.id);
       setWhitepaper(null);
-      setDeleteConfirmationOpen(false);
+      setDeleteWhitepaperConfirmationOpen(false);
       displayToast('Whitepaper deleted!', ToastType.SUCCESS);
     } catch (error) {
       displayErrorToast('Error deleting whitepaper');
@@ -125,22 +142,12 @@ const Detail: SFC = ({className}) => {
     }
   };
 
-  const handleDelete = async () => {
-    if (!currency) return;
-
-    try {
-      isDeleting.current = true;
-      await dispatch(_deleteCurrency(currency.id));
-      displayToast('Currency deleted!', ToastType.SUCCESS);
-      navigate('/currencies/home');
-    } catch (error) {
-      isDeleting.current = false;
-      displayErrorToast('Error deleting currency');
-    }
+  const handleDeleteCurrency = () => {
+    setDeleteCurrencyConfirmationOpen(true);
   };
 
   const handleDeleteWhitepaper = () => {
-    setDeleteConfirmationOpen(true);
+    setDeleteWhitepaperConfirmationOpen(true);
   };
 
   const handleMintModalSuccess = async () => {
@@ -185,7 +192,7 @@ const Detail: SFC = ({className}) => {
     },
     {
       label: 'Delete',
-      onClick: handleDelete,
+      onClick: handleDeleteCurrency,
     },
   ];
 
@@ -269,13 +276,22 @@ const Detail: SFC = ({className}) => {
       {currencyModalIsOpen && currency && (
         <CurrencyModal close={toggleCurrencyModal} currency={currency} onSuccess={handleCurrencyModalSuccess} />
       )}
-      {deleteConfirmationOpen && (
+      {deleteCurrencyConfirmationOpen && (
         <ConfirmationModal
-          close={() => setDeleteConfirmationOpen(false)}
+          close={() => setDeleteCurrencyConfirmationOpen(false)}
+          confirmText="Delete"
+          header="Delete Currency"
+          message="Are you sure you want to delete this currency? This action cannot be undone."
+          onConfirm={handleConfirmDeleteCurrency}
+        />
+      )}
+      {deleteWhitepaperConfirmationOpen && (
+        <ConfirmationModal
+          close={() => setDeleteWhitepaperConfirmationOpen(false)}
           confirmText="Delete"
           header="Delete Whitepaper"
           message="Are you sure you want to delete this whitepaper? This action cannot be undone."
-          onConfirm={handleConfirmDelete}
+          onConfirm={handleConfirmDeleteWhitepaper}
         />
       )}
       {mintModalIsOpen && <MintModal close={toggleMintModal} currency={currency} onSuccess={handleMintModalSuccess} />}
