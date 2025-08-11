@@ -140,9 +140,24 @@ const CurrencyModal: SFC<CurrencyModalProps> = ({className, close, currency, onS
         navigate(`/currencies/${createdCurrency.id}`);
         close();
       }
-    } catch (error) {
-      const errorMessage = isEditMode ? 'Error updating currency' : 'Error creating currency';
-      handleFormikAPIError(error, helpers, errorMessage);
+    } catch (error: any) {
+      const responseData = error?.response?.data;
+
+      if (!isEditMode && responseData?.ticker && Array.isArray(responseData.ticker)) {
+        const tickerErrors = responseData.ticker;
+        if (tickerErrors.length > 0 && tickerErrors[0]?.message) {
+          helpers.setFieldError('ticker', tickerErrors[0].message);
+        }
+      } else if (responseData?.logo && Array.isArray(responseData.logo)) {
+        const logoErrors = responseData.logo;
+        if (logoErrors.length > 0 && logoErrors[0]?.message) {
+          displayErrorToast(logoErrors[0].message);
+          helpers.setFieldError('logo', logoErrors[0].message);
+        }
+      } else {
+        const errorMessage = isEditMode ? 'Error updating currency' : 'Error creating currency';
+        handleFormikAPIError(error, helpers, errorMessage);
+      }
     }
   };
 
