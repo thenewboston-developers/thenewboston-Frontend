@@ -13,8 +13,8 @@ export const AvatarContainer = styled.div`
 
 export const Container = styled.div`
   background: ${colors.white};
-  border-radius: 20px;
   border: 1px solid ${colors.palette.gray[200]};
+  border-radius: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   overflow-x: hidden;
   padding: 20px 24px;
