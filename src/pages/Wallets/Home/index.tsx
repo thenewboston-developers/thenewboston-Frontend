@@ -33,6 +33,7 @@ const Home: SFC = ({className}) => {
   const [hasAvailableCurrencies, setHasAvailableCurrencies] = useState(false);
   const [transfersRefreshKey, setTransfersRefreshKey] = useState(0);
   const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
+  const [currencyCheckKey, setCurrencyCheckKey] = useState(0);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
   const pagination = useSelector(getWalletsPagination);
@@ -64,7 +65,7 @@ const Home: SFC = ({className}) => {
         displayErrorToast('Error checking available currencies');
       }
     })();
-  }, [walletList]);
+  }, [currencyCheckKey]);
 
   useEffect(() => {
     (async () => {
@@ -196,7 +197,17 @@ const Home: SFC = ({className}) => {
           <S.ContentArea>{renderRightContent()}</S.ContentArea>
         </S.MainContent>
       </S.Container>
-      {walletCreateModalIsOpen ? <WalletCreateModal close={toggleWalletCreateModal} /> : null}
+      {walletCreateModalIsOpen ? (
+        <WalletCreateModal
+          close={async () => {
+            toggleWalletCreateModal();
+            // Refetch wallets to update the list
+            await dispatch(_getWallets(currentPage, 10));
+            // Check available currencies again
+            setCurrencyCheckKey((prev) => prev + 1);
+          }}
+        />
+      ) : null}
     </>
   );
 };
