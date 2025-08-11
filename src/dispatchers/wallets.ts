@@ -3,13 +3,12 @@ import {
   createWalletDeposit as _createWalletDeposit,
   createWalletWithdraw as _createWalletWithdraw,
   getWallet as _getWallet,
-  getWalletByCurrency as _getWalletByCurrency,
   getWalletDepositBalance as _getWalletDepositBalance,
   getWallets as _getWallets,
 } from 'api/wallets';
-import {clearWallets, setIsLoadingWallets, setPaginatedWallets, setWallet, setWallets} from 'store/wallets';
+import {setIsLoadingWallets, setPaginatedWallets, setWallet, setWallets} from 'store/wallets';
 import {setWire} from 'store/wires';
-import {AppDispatch, CreateWalletRequest, PaginatedResponse, Wallet, WithdrawRequest} from 'types';
+import {AppDispatch, CreateWalletRequest, Wallet, WithdrawRequest} from 'types';
 
 export const createWallet = (data: CreateWalletRequest) => async (dispatch: AppDispatch) => {
   const responseData = await _createWallet(data);
@@ -59,10 +58,6 @@ export const getAllUserWallets = () => async (dispatch: AppDispatch) => {
 export const getWallet = (walletId: number) => async (dispatch: AppDispatch) => {
   const responseData = await _getWallet(walletId);
   dispatch(setWallet(responseData));
-};
-
-export const getWalletByCurrency = async (currencyId: number): Promise<Wallet | null> => {
-  return _getWalletByCurrency(currencyId);
 };
 
 export const getWallets =

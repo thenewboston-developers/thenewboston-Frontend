@@ -2,11 +2,11 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {Form, Formik, FormikHelpers} from 'formik';
 
+import {getWallets} from 'api/wallets';
 import AvailableTotal from 'components/AvailableTotal';
 import {ButtonType} from 'components/Button';
 import {FormField, LogoInput} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
-import {getWalletByCurrency} from 'dispatchers/wallets';
 import {ExchangeOrderSide, ToastType} from 'enums';
 import {AppDispatch, AssetPair, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
@@ -59,7 +59,8 @@ const Sell: SFC<SellProps> = ({activeAssetPair, className}) => {
 
     (async () => {
       try {
-        const wallet = await getWalletByCurrency(activeAssetPair.primary_currency.id);
+        const response = await getWallets({currency: activeAssetPair.primary_currency.id});
+        const wallet = response.results.length > 0 ? response.results[0] : null;
         setPrimaryCurrencyBalance(wallet?.balance || 0);
       } catch (error) {
         setPrimaryCurrencyBalance(0);

@@ -76,15 +76,3 @@ export const getWallets = async (params?: {
     throw error;
   }
 };
-
-export const getWalletByCurrency = async (currencyId: number): Promise<Wallet | null> => {
-  try {
-    const response = await axios.get<PaginatedResponse<Wallet>>(BASE_URL, {
-      ...authorizationHeaders(),
-      params: {currency: currencyId},
-    });
-    return response.data.results.length > 0 ? response.data.results[0] : null;
-  } catch (error) {
-    throw error;
-  }
-};

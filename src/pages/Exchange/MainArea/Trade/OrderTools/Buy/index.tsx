@@ -2,12 +2,12 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {Form, Formik, FormikHelpers} from 'formik';
 
+import {getWallets} from 'api/wallets';
 import AvailableTotal from 'components/AvailableTotal';
 import {ButtonType} from 'components/Button';
 import {CalloutType} from 'components/Callout';
 import {FormField, LogoInput} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
-import {getWalletByCurrency} from 'dispatchers/wallets';
 import {ExchangeOrderSide, ToastType} from 'enums';
 import {AppDispatch, AssetPair, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
@@ -60,7 +60,8 @@ const Buy: SFC<BuyProps> = ({activeAssetPair, className}) => {
 
     (async () => {
       try {
-        const wallet = await getWalletByCurrency(activeAssetPair.secondary_currency.id);
+        const response = await getWallets({currency: activeAssetPair.secondary_currency.id});
+        const wallet = response.results.length > 0 ? response.results[0] : null;
         setSecondaryCurrencyBalance(wallet?.balance || 0);
       } catch (error) {
         setSecondaryCurrencyBalance(0);
