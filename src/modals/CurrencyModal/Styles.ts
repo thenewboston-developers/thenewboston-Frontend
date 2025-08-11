@@ -27,6 +27,11 @@ export const Section = styled.div`
     border-top: 1px solid ${colors.palette.gray[200]};
     margin-top: 24px;
     padding-top: 24px;
+
+    @media (max-width: ${breakpoints.mobile}) {
+      margin-top: 20px;
+      padding-top: 20px;
+    }
   }
 `;
 
@@ -35,6 +40,11 @@ export const SectionHeading = styled.h3`
   font-size: 16px;
   font-weight: 600;
   margin: 0 0 16px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 14px;
+    margin: 0 0 12px;
+  }
 `;
 
 export const SocialMediaGrid = styled.div`
