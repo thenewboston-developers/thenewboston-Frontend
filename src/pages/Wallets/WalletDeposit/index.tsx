@@ -12,8 +12,7 @@ import Loader from 'components/Loader';
 import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
 import {getWires as getWiresAction} from 'dispatchers/wires';
 import {WireType} from 'enums';
-import {useActiveWallet} from 'hooks';
-import {getWires} from 'selectors/state';
+import {getManager, getWires} from 'selectors/state';
 import {colors} from 'styles';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -23,9 +22,10 @@ import * as S from './Styles';
 const WalletDeposit: SFC = ({className}) => {
   const [createDepositRequestPending, setCreateDepositRequestPending] = useState(false);
   const [getBalanceRequestPending, setGetBalanceRequestPending] = useState(false);
-  const activeWallet = useActiveWallet();
   const dispatch = useDispatch<AppDispatch>();
+  const manager = useSelector(getManager);
   const wires = useSelector(getWires);
+  const {activeWallet} = manager;
 
   useEffect(() => {
     dispatch(getWiresAction());

@@ -13,8 +13,7 @@ import UserLabel from 'components/UserLabel';
 import {createPost} from 'dispatchers/posts';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {ToastType} from 'enums';
-import {useActiveWallet} from 'hooks';
-import {getSelf, getWallets, isLoadingWallets} from 'selectors/state';
+import {getManager, getSelf, getWallets, isLoadingWallets} from 'selectors/state';
 import {AppDispatch, SFC, UserReadSerializer} from 'types';
 import {handleFormikAPIError} from 'utils/forms';
 import {displayErrorToast, displayToast} from 'utils/toasts';
@@ -30,9 +29,9 @@ export interface SendModalProps {
 
 const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}) => {
   const [preview, setPreview] = useState<string | null>(null);
-  const activeWallet = useActiveWallet();
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector(isLoadingWallets);
+  const manager = useSelector(getManager);
   const self = useSelector(getSelf);
   const wallets = useSelector(getWallets);
 
@@ -62,9 +61,9 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
       content: '',
       image: '',
       price_amount: '',
-      wallet_id: activeWallet?.id || (walletOptions.length > 0 ? walletOptions[0].value : ''),
+      wallet_id: manager.activeWallet?.id || (walletOptions.length > 0 ? walletOptions[0].value : ''),
     }),
-    [activeWallet?.id, walletOptions],
+    [manager.activeWallet?.id, walletOptions],
   );
 
   type FormValues = typeof initialValues;

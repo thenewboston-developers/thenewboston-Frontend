@@ -1,11 +1,12 @@
 import {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 
 import {getTransfers} from 'api/transfers';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
-import {useActiveWallet} from 'hooks';
+import {getManager} from 'selectors/state';
 import {SFC, Transfer} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -20,7 +21,8 @@ const WalletTransfers: SFC = ({className}) => {
   const [previousWalletId, setPreviousWalletId] = useState<number | null>(null);
   const [totalCount, setTotalCount] = useState(0);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
-  const activeWallet = useActiveWallet();
+  const manager = useSelector(getManager);
+  const {activeWallet} = manager;
 
   useEffect(() => {
     if (!activeWallet) return;

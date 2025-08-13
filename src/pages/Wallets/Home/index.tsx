@@ -38,10 +38,7 @@ const Home: SFC = ({className}) => {
   const manager = useSelector(getManager);
   const wallets = useSelector(getWallets);
   const walletList = useMemo(() => orderBy(Object.values(wallets), [(wallet) => wallet.currency.ticker]), [wallets]);
-  const activeWallet = useMemo(
-    () => (manager.activeWalletId ? wallets[manager.activeWalletId] : null),
-    [manager.activeWalletId, wallets],
-  );
+  const {activeWallet} = manager;
 
   useEffect(() => {
     dispatch(clearWallets());
@@ -71,18 +68,18 @@ const Home: SFC = ({className}) => {
   useEffect(() => {
     (async () => {
       if (!walletList.length) return;
-      if (manager.activeWalletId && manager.activeWalletTab) return;
+      if (manager.activeWallet && manager.activeWalletTab) return;
 
       const firstWallet = walletList[0];
 
       dispatch(
         updateManager({
-          activeWalletId: firstWallet.id,
+          activeWallet: firstWallet,
           activeWalletTab: WalletTab.TRANSFERS,
         }),
       );
     })();
-  }, [dispatch, manager.activeWalletId, manager.activeWalletTab, walletList]);
+  }, [dispatch, manager.activeWallet, manager.activeWalletTab, walletList]);
 
   const handleTabClick = useCallback(
     (walletTab: WalletTab) => {
@@ -107,7 +104,7 @@ const Home: SFC = ({className}) => {
   };
 
   const renderRightContent = () => {
-    if (manager.activeWalletId) {
+    if (manager.activeWallet) {
       return renderTabContent();
     }
 
@@ -137,7 +134,7 @@ const Home: SFC = ({className}) => {
   };
 
   const renderTabs = () => {
-    if (!manager.activeWalletId) return null;
+    if (!manager.activeWallet) return null;
 
     return (
       <S.TabsContainer>
@@ -178,8 +175,8 @@ const Home: SFC = ({className}) => {
             </S.WalletSelectorWrapper>
             {renderButtonContainer()}
           </S.TopSection>
-          {manager.activeWalletId && (
-            <SendCoinsSection key={manager.activeWalletId} onTransferSuccess={handleTransferSuccess} />
+          {manager.activeWallet && (
+            <SendCoinsSection key={manager.activeWallet.id} onTransferSuccess={handleTransferSuccess} />
           )}
           {renderTabs()}
           <S.ContentArea>{renderRightContent()}</S.ContentArea>

@@ -2,9 +2,9 @@ import {useCallback, useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 
 import UserSearchInput from 'components/UserSearchInput';
-import {useActiveWallet, useToggle} from 'hooks';
+import {useToggle} from 'hooks';
 import SendModal from 'modals/SendModal';
-import {getSelf} from 'selectors/state';
+import {getManager, getSelf} from 'selectors/state';
 import {SFC, UserReadSerializer} from 'types';
 
 import * as S from './Styles';
@@ -16,8 +16,9 @@ export interface SendCoinsSectionProps {
 const SendCoinsSection: SFC<SendCoinsSectionProps> = ({className, onTransferSuccess}) => {
   const [recipient, setRecipient] = useState<UserReadSerializer | null>(null);
   const [sendModalIsOpen, toggleSendModal] = useToggle(false);
-  const activeWallet = useActiveWallet();
+  const manager = useSelector(getManager);
   const self = useSelector(getSelf);
+  const {activeWallet} = manager;
 
   const handleRecipientChange = useCallback((user: UserReadSerializer | null) => {
     setRecipient(user);
