@@ -5,13 +5,14 @@ import {
   getWalletDepositBalance as _getWalletDepositBalance,
   getWallets as _getWallets,
 } from 'api/wallets';
-import {setIsLoadingWallets, setPaginatedWallets, setWallet, setWallets} from 'store/wallets';
+import {setIsLoadingWallets, setWallet, setWallets} from 'store/wallets';
 import {setWire} from 'store/wires';
 import {AppDispatch, CreateWalletRequest, Wallet, WithdrawRequest} from 'types';
 
 export const createWallet = (data: CreateWalletRequest) => async (dispatch: AppDispatch) => {
   const responseData = await _createWallet(data);
   dispatch(setWallet(responseData));
+  return responseData;
 };
 
 export const createWalletDeposit = (walletId: number) => async (dispatch: AppDispatch) => {
@@ -53,15 +54,3 @@ export const getWalletDepositBalance = (walletId: number) => async (dispatch: Ap
   const responseData = await _getWalletDepositBalance(walletId);
   dispatch(setWallet(responseData));
 };
-
-export const getWallets =
-  (page: number = 1, pageSize: number = 10) =>
-  async (dispatch: AppDispatch) => {
-    dispatch(setIsLoadingWallets(true));
-    try {
-      const responseData = await _getWallets({page, page_size: pageSize});
-      dispatch(setPaginatedWallets({data: responseData, page}));
-    } finally {
-      dispatch(setIsLoadingWallets(false));
-    }
-  };

@@ -9,7 +9,6 @@ import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyState from 'components/EmptyState';
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
-import {getWallets as _getWallets} from 'dispatchers/wallets';
 import {WalletTab} from 'enums';
 import {useToggle} from 'hooks';
 import WalletCreateModal from 'modals/WalletCreateModal';
@@ -47,16 +46,6 @@ const Home: SFC = ({className}) => {
   useEffect(() => {
     (async () => {
       try {
-        await dispatch(_getWallets(1, 100));
-      } catch (error) {
-        displayErrorToast('Error fetching wallets');
-      }
-    })();
-  }, [dispatch]);
-
-  useEffect(() => {
-    (async () => {
-      try {
         const response = await getCurrencies({no_wallet: true, page_size: 1});
         setHasAvailableCurrencies(response.count > 0);
       } catch (error) {
@@ -64,22 +53,6 @@ const Home: SFC = ({className}) => {
       }
     })();
   }, [currencyCheckKey]);
-
-  useEffect(() => {
-    (async () => {
-      if (!walletList.length) return;
-      if (manager.activeWallet && manager.activeWalletTab) return;
-
-      const firstWallet = walletList[0];
-
-      dispatch(
-        updateManager({
-          activeWallet: firstWallet,
-          activeWalletTab: WalletTab.TRANSFERS,
-        }),
-      );
-    })();
-  }, [dispatch, manager.activeWallet, manager.activeWalletTab, walletList]);
 
   const handleTabClick = useCallback(
     (walletTab: WalletTab) => {
@@ -186,7 +159,6 @@ const Home: SFC = ({className}) => {
         <WalletCreateModal
           close={async () => {
             toggleWalletCreateModal();
-            await dispatch(_getWallets(1, 100));
             setCurrencyCheckKey((prev) => prev + 1);
           }}
         />
