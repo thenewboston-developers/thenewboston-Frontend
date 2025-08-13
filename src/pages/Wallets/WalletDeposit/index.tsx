@@ -47,18 +47,6 @@ const WalletDeposit: SFC = ({className}) => {
     );
   }
 
-  const handleTransferButtonClick = async () => {
-    setCreateDepositRequestPending(true);
-
-    try {
-      await dispatch(createWalletDeposit(activeWallet.id));
-    } catch (error) {
-      displayErrorToast('Error depositing funds');
-    } finally {
-      setCreateDepositRequestPending(false);
-    }
-  };
-
   const handleRefreshIconClick = async () => {
     setGetBalanceRequestPending(true);
 
@@ -68,6 +56,18 @@ const WalletDeposit: SFC = ({className}) => {
       displayErrorToast('Error fetching deposit balance');
     } finally {
       setGetBalanceRequestPending(false);
+    }
+  };
+
+  const handleTransferButtonClick = async () => {
+    setCreateDepositRequestPending(true);
+
+    try {
+      await dispatch(createWalletDeposit(activeWallet.id));
+    } catch (error) {
+      displayErrorToast('Error depositing funds');
+    } finally {
+      setCreateDepositRequestPending(false);
     }
   };
 
