@@ -23,7 +23,6 @@ export const getTrades = (state: RootState) => state.trades;
 export const getUserStats = (state: RootState) => state.userStats;
 export const getUsers = (state: RootState) => state.users;
 export const getWallets = (state: RootState) => state.wallets.wallets;
-export const getWalletsPagination = (state: RootState) => state.wallets.pagination;
 export const getWires = (state: RootState) => state.wires;
 export const hasMoreExchangeOrders = (state: RootState) => state.exchangeOrders.hasMore;
 export const hasMoreNotifications = (state: RootState) => state.notifications.hasMore;
