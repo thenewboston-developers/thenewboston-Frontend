@@ -3,13 +3,6 @@ import styled from 'styled-components';
 import UButton from 'components/Button';
 import {breakpoints, colors, pagePadding} from 'styles';
 
-export const Box = styled.div`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 14px;
-  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
-`;
-
 export const Button = styled(UButton)`
   width: 100%;
 
@@ -43,18 +36,6 @@ export const Container = styled.div`
 
 export const ContentArea = styled.div``;
 
-export const EmptyPageWrapper = styled.div`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 14px;
-  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
-  padding: 24px 16px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 18px 10px;
-  }
-`;
-
 export const EmptyStateWrapper = styled.div`
   background: ${colors.white};
   border: 1px solid ${colors.border};
@@ -67,24 +48,6 @@ export const EmptyStateWrapper = styled.div`
   }
 `;
 
-export const FlexContainer = styled.div`
-  align-items: center;
-  display: flex;
-
-  @media (max-width: ${breakpoints.tablet}) {
-    justify-content: end;
-  }
-`;
-
-export const LeftMenu = styled.div`
-  min-width: 271px;
-
-  @media (max-width: ${breakpoints.tablet}) {
-    min-width: auto;
-    width: 100%;
-  }
-`;
-
 export const MainContent = styled.div`
   display: flex;
   flex: 1;
@@ -94,10 +57,6 @@ export const MainContent = styled.div`
   @media (max-width: ${breakpoints.tablet}) {
     width: 100%;
   }
-`;
-
-export const PaginationContainer = styled.div`
-  margin-top: 16px;
 `;
 
 export const TabsContainer = styled.div`

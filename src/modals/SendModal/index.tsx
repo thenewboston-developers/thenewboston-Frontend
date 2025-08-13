@@ -129,7 +129,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
       <S.Modal close={close} header="Send Coins">
         <ModalBody>
           <S.LoaderContainer>
-            <Loader size={40} />
+            <Loader size={48} />
             <S.LoadingText>Loading wallets...</S.LoadingText>
           </S.LoaderContainer>
         </ModalBody>

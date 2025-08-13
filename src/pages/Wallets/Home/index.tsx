@@ -125,8 +125,8 @@ const Home: SFC = ({className}) => {
     if (!manager.activeWalletTab) return null;
 
     const tabContent = {
-      [WalletTab.TRANSFERS]: <WalletTransfers key={transfersRefreshKey} />,
       [WalletTab.DEPOSIT]: <WalletDeposit />,
+      [WalletTab.TRANSFERS]: <WalletTransfers key={transfersRefreshKey} />,
       [WalletTab.WITHDRAW]: <WalletWithdraw />,
     };
 
