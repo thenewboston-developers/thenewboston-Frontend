@@ -19,13 +19,12 @@ import {clearWallets} from 'store/wallets';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
-import SendCoinsSection from '../SendCoinsSection';
-import WalletDeposit from '../WalletDeposit';
-import WalletSelector from '../WalletSelector';
-import WalletTransfers from '../WalletTransfers';
-import WalletWithdraw from '../WalletWithdraw';
-
+import SendCoinsSection from './SendCoinsSection';
 import * as S from './Styles';
+import WalletDeposit from './WalletDeposit';
+import WalletSelector from './WalletSelector';
+import WalletTransfers from './WalletTransfers';
+import WalletWithdraw from './WalletWithdraw';
 
 const Home: SFC = ({className}) => {
   const [currencyCheckKey, setCurrencyCheckKey] = useState(0);
