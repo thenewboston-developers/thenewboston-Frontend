@@ -52,15 +52,6 @@ export const getWalletDepositBalance = async (walletId: number): Promise<Wallet>
   }
 };
 
-export const getWallet = async (walletId: number): Promise<Wallet> => {
-  try {
-    const response = await axios.get<Wallet>(`${BASE_URL}/${walletId}`, authorizationHeaders());
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const getWallets = async (params?: {
   currency?: number;
   page?: number;
