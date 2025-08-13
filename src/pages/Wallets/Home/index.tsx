@@ -6,43 +6,40 @@ import orderBy from 'lodash/orderBy';
 
 import {getCurrencies} from 'api/currencies';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
-import EmptyPage from 'components/EmptyPage';
+import EmptyState from 'components/EmptyState';
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
-import {getWallets as _getWallets} from 'dispatchers/wallets';
 import {WalletTab} from 'enums';
 import {useToggle} from 'hooks';
 import WalletCreateModal from 'modals/WalletCreateModal';
+import WalletSelectModal from 'modals/WalletSelectModal';
 import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
+import {clearWallets} from 'store/wallets';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
-import MenuItem from '../MenuItem';
-import SendCoinsSection from '../SendCoinsSection';
-import WalletDeposit from '../WalletDeposit';
-import WalletTransfers from '../WalletTransfers';
-import WalletWithdraw from '../WalletWithdraw';
-
+import SendCoinsSection from './SendCoinsSection';
 import * as S from './Styles';
+import WalletDeposit from './WalletDeposit';
+import WalletSelector from './WalletSelector';
+import WalletTransfers from './WalletTransfers';
+import WalletWithdraw from './WalletWithdraw';
 
 const Home: SFC = ({className}) => {
+  const [currencyCheckKey, setCurrencyCheckKey] = useState(0);
   const [hasAvailableCurrencies, setHasAvailableCurrencies] = useState(false);
   const [transfersRefreshKey, setTransfersRefreshKey] = useState(0);
   const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
+  const [walletSelectModalIsOpen, toggleWalletSelectModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
   const wallets = useSelector(getWallets);
   const walletList = useMemo(() => orderBy(Object.values(wallets), [(wallet) => wallet.currency.ticker]), [wallets]);
+  const {activeWallet} = manager;
 
   useEffect(() => {
-    (async () => {
-      try {
-        await dispatch(_getWallets());
-      } catch (error) {
-        displayErrorToast('Error fetching wallets');
-      }
-    })();
+    dispatch(clearWallets());
   }, [dispatch]);
 
   useEffect(() => {
@@ -54,23 +51,7 @@ const Home: SFC = ({className}) => {
         displayErrorToast('Error checking available currencies');
       }
     })();
-  }, [walletList]);
-
-  useEffect(() => {
-    (async () => {
-      if (!walletList.length) return;
-      if (manager.activeWalletId && manager.activeWalletTab) return;
-
-      const firstWallet = walletList[0];
-
-      dispatch(
-        updateManager({
-          activeWalletId: firstWallet.id,
-          activeWalletTab: WalletTab.TRANSFERS,
-        }),
-      );
-    })();
-  }, [dispatch, manager.activeWalletId, manager.activeWalletTab, walletList]);
+  }, [currencyCheckKey]);
 
   const handleTabClick = useCallback(
     (walletTab: WalletTab) => {
@@ -94,25 +75,21 @@ const Home: SFC = ({className}) => {
     );
   };
 
-  const renderMenuItems = () => {
-    return walletList.map((wallet) => <MenuItem key={wallet.id} wallet={wallet} />);
-  };
-
   const renderRightContent = () => {
-    if (manager.activeWalletId) {
+    if (manager.activeWallet) {
       return renderTabContent();
     }
 
     return (
-      <S.EmptyPageWrapper>
-        <EmptyPage
+      <S.EmptyStateWrapper>
+        <EmptyState
           actionText="create a wallet"
           bottomText="To deposit or withdraw coins,"
           graphic={LeavesEmptyState}
           onActionTextClick={toggleWalletCreateModal}
           topText="Nothing here!"
         />
-      </S.EmptyPageWrapper>
+      </S.EmptyStateWrapper>
     );
   };
 
@@ -120,8 +97,8 @@ const Home: SFC = ({className}) => {
     if (!manager.activeWalletTab) return null;
 
     const tabContent = {
-      [WalletTab.TRANSFERS]: <WalletTransfers key={transfersRefreshKey} />,
       [WalletTab.DEPOSIT]: <WalletDeposit />,
+      [WalletTab.TRANSFERS]: <WalletTransfers key={transfersRefreshKey} />,
       [WalletTab.WITHDRAW]: <WalletWithdraw />,
     };
 
@@ -129,7 +106,7 @@ const Home: SFC = ({className}) => {
   };
 
   const renderTabs = () => {
-    if (!manager.activeWalletId) return null;
+    if (!manager.activeWallet) return null;
 
     return (
       <S.TabsContainer>
@@ -163,19 +140,29 @@ const Home: SFC = ({className}) => {
   return (
     <>
       <S.Container className={className}>
-        <S.LeftMenu>
-          <S.FlexContainer>{renderButtonContainer()}</S.FlexContainer>
-          {walletList.length > 0 && <S.Box>{renderMenuItems()}</S.Box>}
-        </S.LeftMenu>
         <S.MainContent>
-          {manager.activeWalletId && (
-            <SendCoinsSection key={manager.activeWalletId} onTransferSuccess={handleTransferSuccess} />
+          <S.TopSection>
+            <S.WalletSelectorWrapper>
+              <WalletSelector activeWallet={activeWallet} onClick={toggleWalletSelectModal} />
+            </S.WalletSelectorWrapper>
+            {renderButtonContainer()}
+          </S.TopSection>
+          {manager.activeWallet && (
+            <SendCoinsSection key={manager.activeWallet.id} onTransferSuccess={handleTransferSuccess} />
           )}
           {renderTabs()}
           <S.ContentArea>{renderRightContent()}</S.ContentArea>
         </S.MainContent>
       </S.Container>
-      {walletCreateModalIsOpen ? <WalletCreateModal close={toggleWalletCreateModal} /> : null}
+      {walletCreateModalIsOpen ? (
+        <WalletCreateModal
+          close={async () => {
+            toggleWalletCreateModal();
+            setCurrencyCheckKey((prev) => prev + 1);
+          }}
+        />
+      ) : null}
+      {walletSelectModalIsOpen ? <WalletSelectModal close={toggleWalletSelectModal} /> : null}
     </>
   );
 };

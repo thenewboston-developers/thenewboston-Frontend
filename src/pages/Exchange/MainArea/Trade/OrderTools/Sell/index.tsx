@@ -1,13 +1,13 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {Form, Formik, FormikHelpers} from 'formik';
 
+import {getWallets} from 'api/wallets';
 import AvailableTotal from 'components/AvailableTotal';
 import {ButtonType} from 'components/Button';
 import {FormField, LogoInput} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
 import {ExchangeOrderSide, ToastType} from 'enums';
-import {getWallets} from 'selectors/state';
 import {AppDispatch, AssetPair, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
@@ -19,10 +19,10 @@ interface SellProps {
 }
 
 const Sell: SFC<SellProps> = ({activeAssetPair, className}) => {
+  const [primaryCurrencyBalance, setPrimaryCurrencyBalance] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const dispatch = useDispatch<AppDispatch>();
   const formikRef = useRef<any>(null);
-  const wallets = useSelector(getWallets);
 
   const initialValues = {
     price: '',
@@ -54,12 +54,19 @@ const Sell: SFC<SellProps> = ({activeAssetPair, className}) => {
     }
   };
 
-  const primaryCurrencyBalance = useMemo(() => {
-    const wallet = Object.values(wallets).find(
-      (_wallet) => _wallet.currency.id === activeAssetPair!.primary_currency.id,
-    );
-    return wallet?.balance || 0;
-  }, [activeAssetPair, wallets]);
+  useEffect(() => {
+    if (!activeAssetPair) return;
+
+    (async () => {
+      try {
+        const response = await getWallets({currency: activeAssetPair.primary_currency.id});
+        const wallet = response.results.length > 0 ? response.results[0] : null;
+        setPrimaryCurrencyBalance(wallet?.balance || 0);
+      } catch (error) {
+        setPrimaryCurrencyBalance(0);
+      }
+    })();
+  }, [activeAssetPair]);
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({

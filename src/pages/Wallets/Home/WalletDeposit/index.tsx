@@ -12,8 +12,7 @@ import Loader from 'components/Loader';
 import {createWalletDeposit, getWalletDepositBalance} from 'dispatchers/wallets';
 import {getWires as getWiresAction} from 'dispatchers/wires';
 import {WireType} from 'enums';
-import {useActiveWallet} from 'hooks';
-import {getWires} from 'selectors/state';
+import {getManager, getWires} from 'selectors/state';
 import {colors} from 'styles';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -23,9 +22,10 @@ import * as S from './Styles';
 const WalletDeposit: SFC = ({className}) => {
   const [createDepositRequestPending, setCreateDepositRequestPending] = useState(false);
   const [getBalanceRequestPending, setGetBalanceRequestPending] = useState(false);
-  const activeWallet = useActiveWallet();
   const dispatch = useDispatch<AppDispatch>();
+  const manager = useSelector(getManager);
   const wires = useSelector(getWires);
+  const {activeWallet} = manager;
 
   useEffect(() => {
     dispatch(getWiresAction());
@@ -47,19 +47,7 @@ const WalletDeposit: SFC = ({className}) => {
     );
   }
 
-  const handleButtonClick = async () => {
-    setCreateDepositRequestPending(true);
-
-    try {
-      await dispatch(createWalletDeposit(activeWallet.id));
-    } catch (error) {
-      displayErrorToast('Error depositing funds');
-    } finally {
-      setCreateDepositRequestPending(false);
-    }
-  };
-
-  const handleIconClick = async () => {
+  const handleRefreshIconClick = async () => {
     setGetBalanceRequestPending(true);
 
     try {
@@ -71,6 +59,18 @@ const WalletDeposit: SFC = ({className}) => {
     }
   };
 
+  const handleTransferButtonClick = async () => {
+    setCreateDepositRequestPending(true);
+
+    try {
+      await dispatch(createWalletDeposit(activeWallet.id));
+    } catch (error) {
+      displayErrorToast('Error depositing funds');
+    } finally {
+      setCreateDepositRequestPending(false);
+    }
+  };
+
   const renderButton = () => {
     if (!activeWallet.deposit_balance || activeWallet.deposit_balance <= 1) return null;
 
@@ -79,7 +79,7 @@ const WalletDeposit: SFC = ({className}) => {
         color={ButtonColor.success}
         disabled={createDepositRequestPending}
         isSubmitting={createDepositRequestPending}
-        onClick={handleButtonClick}
+        onClick={handleTransferButtonClick}
         text="Transfer to Main Account"
       />
     );
@@ -99,7 +99,7 @@ const WalletDeposit: SFC = ({className}) => {
 
   const renderIcon = () => {
     let content = (
-      <S.RefreshIconContainer onClick={handleIconClick}>
+      <S.RefreshIconContainer onClick={handleRefreshIconClick}>
         <MdiIcon path={mdiRefresh} size={`${20}px`} color={colors.palette.blue[700]} />
       </S.RefreshIconContainer>
     );

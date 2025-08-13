@@ -5,7 +5,6 @@ import {useLocation} from 'react-router-dom';
 import {getAssetPairs} from 'dispatchers/assetPairs';
 import {checkForDeploymentUpdate} from 'dispatchers/frontendDeployments';
 import {getNotifications} from 'dispatchers/notifications';
-import {getWallets} from 'dispatchers/wallets';
 import {useIsMobile} from 'hooks';
 import {getSelf} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
@@ -34,7 +33,6 @@ const Authenticated: SFC = ({className}) => {
           dispatch(checkForDeploymentUpdate()),
           dispatch(getAssetPairs()),
           dispatch(getNotifications()),
-          dispatch(getWallets()),
         ]);
       } catch (error) {
         displayErrorToast('Error fetching initial data');

@@ -1,4 +1,3 @@
-import useActiveWallet from 'hooks/useActiveWallet';
 import useDeploymentPolling from 'hooks/useDeploymentPolling';
 import useEventListener from 'hooks/useEventListener';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
@@ -9,7 +8,6 @@ import useUser from 'hooks/useUser';
 import useWindowSize from 'hooks/useWindowSize';
 
 export {
-  useActiveWallet,
   useDeploymentPolling,
   useEventListener,
   useIsAuthenticated,

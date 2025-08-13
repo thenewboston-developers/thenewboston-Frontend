@@ -8,7 +8,9 @@ import Loader from 'components/Loader';
 import {ModalBody, ModalFooter} from 'components/Modal';
 import RadioCard from 'components/RadioCard';
 import {createWallet} from 'dispatchers/wallets';
+import {WalletTab} from 'enums';
 import {getSelf} from 'selectors/state';
+import {updateManager} from 'store/manager';
 import {AppDispatch, Currency, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -46,16 +48,21 @@ const WalletCreateModal: SFC<WalletCreateModalProps> = ({className, close}) => {
   const handleButtonClick = async () => {
     setSubmitting(true);
     try {
-      await dispatch(
+      const wallet = await dispatch(
         createWallet({
           currency: selectedCurrencyId!,
           owner: self.id!,
         }),
       );
+      dispatch(
+        updateManager({
+          activeWallet: wallet,
+          activeWalletTab: WalletTab.TRANSFERS,
+        }),
+      );
       close();
     } catch (error) {
       displayErrorToast('Error creating wallet');
-    } finally {
       setSubmitting(false);
     }
   };

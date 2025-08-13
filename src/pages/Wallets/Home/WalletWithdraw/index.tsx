@@ -12,8 +12,7 @@ import {CURRENCY_TRANSACTION_FEE} from 'constants/protocol';
 import {createWalletWithdraw} from 'dispatchers/wallets';
 import {getWires as getWiresAction} from 'dispatchers/wires';
 import {WireType} from 'enums';
-import {useActiveWallet} from 'hooks';
-import {getWires} from 'selectors/state';
+import {getManager, getWires} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {handleFormikAPIError} from 'utils/forms';
 import yup, {accountNumberSchema} from 'utils/yup';
@@ -21,9 +20,10 @@ import yup, {accountNumberSchema} from 'utils/yup';
 import * as S from './Styles';
 
 const WalletWithdraw: SFC = ({className}) => {
-  const activeWallet = useActiveWallet();
   const dispatch = useDispatch<AppDispatch>();
+  const manager = useSelector(getManager);
   const wires = useSelector(getWires);
+  const {activeWallet} = manager;
 
   useEffect(() => {
     dispatch(getWiresAction());

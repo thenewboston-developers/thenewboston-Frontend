@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-import {CreateWalletRequest, DepositResponse, Wallet, WithdrawRequest, WithdrawResponse} from 'types';
+import {
+  CreateWalletRequest,
+  DepositResponse,
+  PaginatedResponse,
+  Wallet,
+  WithdrawRequest,
+  WithdrawResponse,
+} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/wallets`;
@@ -45,9 +52,16 @@ export const getWalletDepositBalance = async (walletId: number): Promise<Wallet>
   }
 };
 
-export const getWallets = async (): Promise<Wallet[]> => {
+export const getWallets = async (params?: {
+  currency?: number;
+  page?: number;
+  page_size?: number;
+}): Promise<PaginatedResponse<Wallet>> => {
   try {
-    const response = await axios.get<Wallet[]>(BASE_URL, authorizationHeaders());
+    const response = await axios.get<PaginatedResponse<Wallet>>(BASE_URL, {
+      ...authorizationHeaders(),
+      params,
+    });
     return response.data;
   } catch (error) {
     throw error;

@@ -1,4 +1,4 @@
-import {ChangeEvent, useMemo, useState} from 'react';
+import {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Form, Formik} from 'formik';
 
@@ -7,12 +7,13 @@ import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiPicker from 'components/EmojiPicker';
 import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
+import Loader from 'components/Loader';
 import {ModalBody, ModalFooter} from 'components/Modal';
 import UserLabel from 'components/UserLabel';
 import {createPost} from 'dispatchers/posts';
+import {getAllUserWallets} from 'dispatchers/wallets';
 import {ToastType} from 'enums';
-import {useActiveWallet} from 'hooks';
-import {getSelf, getWallets} from 'selectors/state';
+import {getManager, getSelf, getWallets, isLoadingWallets} from 'selectors/state';
 import {AppDispatch, SFC, UserReadSerializer} from 'types';
 import {handleFormikAPIError} from 'utils/forms';
 import {displayErrorToast, displayToast} from 'utils/toasts';
@@ -27,16 +28,26 @@ export interface SendModalProps {
 }
 
 const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}) => {
+  const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const isLoading = useSelector(isLoadingWallets);
+  const manager = useSelector(getManager);
   const self = useSelector(getSelf);
   const wallets = useSelector(getWallets);
 
-  const activeWallet = useActiveWallet();
-  const [preview, setPreview] = useState<string | null>(null);
+  useEffect(() => {
+    (async () => {
+      try {
+        await dispatch(getAllUserWallets());
+      } catch (error) {
+        displayErrorToast('Error fetching wallets');
+      }
+    })();
+  }, [dispatch]);
 
   const myWallets = useMemo(() => {
-    return Object.values(wallets).filter((wallet) => wallet.owner === self.id);
-  }, [self.id, wallets]);
+    return Object.values(wallets);
+  }, [wallets]);
 
   const walletOptions = useMemo(() => {
     return myWallets.map((wallet) => ({
@@ -50,9 +61,9 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
       content: '',
       image: '',
       price_amount: '',
-      wallet_id: activeWallet?.id || (walletOptions.length > 0 ? walletOptions[0].value : ''),
+      wallet_id: manager.activeWallet?.id || (walletOptions.length > 0 ? walletOptions[0].value : ''),
     }),
-    [activeWallet?.id, walletOptions],
+    [manager.activeWallet?.id, walletOptions],
   );
 
   type FormValues = typeof initialValues;
@@ -112,6 +123,19 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
       wallet_id: yup.string().required('Please select a wallet'),
     });
   }, [myWallets]);
+
+  if (isLoading) {
+    return (
+      <S.Modal close={close} header="Send Coins">
+        <ModalBody>
+          <S.LoaderContainer>
+            <Loader size={48} />
+            <S.LoadingText>Loading wallets...</S.LoadingText>
+          </S.LoaderContainer>
+        </ModalBody>
+      </S.Modal>
+    );
+  }
 
   if (myWallets.length === 0) {
     return (
