@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {getWallets} from 'api/wallets';
 import Button from 'components/Button';
@@ -7,6 +7,7 @@ import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
 import {ModalBody, ModalFooter} from 'components/Modal';
 import {ToastType} from 'enums';
+import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC, Wallet} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
@@ -22,13 +23,21 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageWallets, setCurrentPageWallets] = useState<Wallet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedWalletId, setSelectedWalletId] = useState<number | null>(null);
+  const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const dispatch = useDispatch<AppDispatch>();
+  const manager = useSelector(getManager);
 
   const pageSize = 12;
   const totalPages = Math.ceil(totalCount / pageSize);
+
+  useEffect(() => {
+    if (manager.activeWallet) {
+      setSelectedWallet(manager.activeWallet);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -50,16 +59,13 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
   };
 
   const handleButtonClick = async () => {
-    if (!selectedWalletId) return;
+    if (!selectedWallet) return;
 
     setSubmitting(true);
     try {
-      const wallet = currentPageWallets.find((w) => w.id === selectedWalletId);
-      if (wallet) {
-        dispatch(updateManager({activeWallet: wallet}));
-        displayToast(`${wallet.currency.ticker} wallet selected`, ToastType.SUCCESS);
-        close();
-      }
+      dispatch(updateManager({activeWallet: selectedWallet}));
+      displayToast(`${selectedWallet.currency.ticker} wallet selected`, ToastType.SUCCESS);
+      close();
     } catch (error) {
       displayErrorToast('Error selecting wallet');
     } finally {
@@ -68,7 +74,7 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
   };
 
   const handleWalletClick = (wallet: Wallet) => {
-    setSelectedWalletId(wallet.id === selectedWalletId ? null : wallet.id);
+    setSelectedWallet(wallet.id === selectedWallet?.id ? null : wallet);
   };
 
   const renderContent = () => {
@@ -80,7 +86,7 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
         <S.WalletCardContainer>
           {currentPageWallets.map((wallet) => (
             <WalletCard
-              isSelected={selectedWalletId === wallet.id}
+              isSelected={selectedWallet?.id === wallet.id}
               key={wallet.id}
               onClick={() => handleWalletClick(wallet)}
               wallet={wallet}
@@ -99,7 +105,7 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
       <ModalBody>{renderContent()}</ModalBody>
       <ModalFooter>
         <Button
-          disabled={selectedWalletId === null || submitting}
+          disabled={selectedWallet === null || submitting}
           isSubmitting={submitting}
           onClick={handleButtonClick}
           text="Submit"
