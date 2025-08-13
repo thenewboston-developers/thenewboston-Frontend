@@ -4,7 +4,6 @@ import {WALLETS} from 'constants/store';
 import {PaginatedResponse, Wallet, Wallets} from 'types';
 
 export interface WalletsState {
-  wallets: Wallets;
   pagination: {
     count: number;
     hasMore: boolean;
@@ -12,6 +11,7 @@ export interface WalletsState {
     next: string | null;
     page: number;
   };
+  wallets: Wallets;
 }
 
 const initialState: WalletsState = {

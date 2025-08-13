@@ -47,7 +47,7 @@ const WalletDeposit: SFC = ({className}) => {
     );
   }
 
-  const handleButtonClick = async () => {
+  const handleTransferButtonClick = async () => {
     setCreateDepositRequestPending(true);
 
     try {
@@ -59,7 +59,7 @@ const WalletDeposit: SFC = ({className}) => {
     }
   };
 
-  const handleIconClick = async () => {
+  const handleRefreshIconClick = async () => {
     setGetBalanceRequestPending(true);
 
     try {
@@ -79,7 +79,7 @@ const WalletDeposit: SFC = ({className}) => {
         color={ButtonColor.success}
         disabled={createDepositRequestPending}
         isSubmitting={createDepositRequestPending}
-        onClick={handleButtonClick}
+        onClick={handleTransferButtonClick}
         text="Transfer to Main Account"
       />
     );
@@ -99,7 +99,7 @@ const WalletDeposit: SFC = ({className}) => {
 
   const renderIcon = () => {
     let content = (
-      <S.RefreshIconContainer onClick={handleIconClick}>
+      <S.RefreshIconContainer onClick={handleRefreshIconClick}>
         <MdiIcon path={mdiRefresh} size={`${20}px`} color={colors.palette.blue[700]} />
       </S.RefreshIconContainer>
     );

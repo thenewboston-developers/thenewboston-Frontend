@@ -58,7 +58,7 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
     setCurrentPage(page);
   };
 
-  const handleButtonClick = async () => {
+  const handleSubmitButtonClick = async () => {
     if (!selectedWallet) return;
 
     setSubmitting(true);
@@ -107,7 +107,7 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
         <Button
           disabled={selectedWallet === null || submitting}
           isSubmitting={submitting}
-          onClick={handleButtonClick}
+          onClick={handleSubmitButtonClick}
           text="Submit"
         />
       </ModalFooter>
