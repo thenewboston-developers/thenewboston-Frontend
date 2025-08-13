@@ -12,13 +12,18 @@ export const Box = styled.div`
 
 export const Button = styled(UButton)`
   width: 100%;
+
+  @media (min-width: 1025px) {
+    width: auto;
+  }
 `;
 
 export const ButtonContainer = styled.div<{$hasWallets: boolean}>`
   margin-bottom: ${({$hasWallets}) => ($hasWallets ? '16px' : 0)};
+  width: 100%;
 
   @media (min-width: 1025px) {
-    flex-grow: 1;
+    width: auto;
   }
 `;
 
@@ -105,6 +110,7 @@ export const TopSection = styled.div`
   align-items: center;
   display: flex;
   gap: 16px;
+  justify-content: space-between;
 
   @media (max-width: ${breakpoints.tablet}) {
     flex-direction: column;
