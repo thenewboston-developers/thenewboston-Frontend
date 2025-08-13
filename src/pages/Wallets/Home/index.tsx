@@ -6,23 +6,23 @@ import orderBy from 'lodash/orderBy';
 
 import {getCurrencies} from 'api/currencies';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
-import EmptyPage from 'components/EmptyPage';
-import Pagination from 'components/Pagination';
+import EmptyState from 'components/EmptyState';
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
 import {getWallets as _getWallets} from 'dispatchers/wallets';
 import {WalletTab} from 'enums';
 import {useToggle} from 'hooks';
 import WalletCreateModal from 'modals/WalletCreateModal';
-import {getManager, getWallets, getWalletsPagination} from 'selectors/state';
+import WalletSelectModal from 'modals/WalletSelectModal';
+import {getManager, getWallets} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {clearWallets} from 'store/wallets';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
-import MenuItem from '../MenuItem';
 import SendCoinsSection from '../SendCoinsSection';
 import WalletDeposit from '../WalletDeposit';
+import WalletSelector from '../WalletSelector';
 import WalletTransfers from '../WalletTransfers';
 import WalletWithdraw from '../WalletWithdraw';
 
@@ -30,31 +30,32 @@ import * as S from './Styles';
 
 const Home: SFC = ({className}) => {
   const [currencyCheckKey, setCurrencyCheckKey] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
   const [hasAvailableCurrencies, setHasAvailableCurrencies] = useState(false);
   const [transfersRefreshKey, setTransfersRefreshKey] = useState(0);
   const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
+  const [walletSelectModalIsOpen, toggleWalletSelectModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
-  const pagination = useSelector(getWalletsPagination);
   const wallets = useSelector(getWallets);
   const walletList = useMemo(() => orderBy(Object.values(wallets), [(wallet) => wallet.currency.ticker]), [wallets]);
-  const totalPages = useMemo(() => Math.ceil(pagination.count / 10), [pagination.count]);
+  const activeWallet = useMemo(
+    () => (manager.activeWalletId ? wallets[manager.activeWalletId] : null),
+    [manager.activeWalletId, wallets],
+  );
 
   useEffect(() => {
     dispatch(clearWallets());
-    setCurrentPage(1);
   }, [dispatch]);
 
   useEffect(() => {
     (async () => {
       try {
-        await dispatch(_getWallets(currentPage, 10));
+        await dispatch(_getWallets(1, 100));
       } catch (error) {
         displayErrorToast('Error fetching wallets');
       }
     })();
-  }, [currentPage, dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     (async () => {
@@ -95,10 +96,6 @@ const Home: SFC = ({className}) => {
     setTransfersRefreshKey((prev) => prev + 1);
   }, []);
 
-  const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page);
-  }, []);
-
   const renderButtonContainer = () => {
     if (!hasAvailableCurrencies) return null;
 
@@ -109,25 +106,21 @@ const Home: SFC = ({className}) => {
     );
   };
 
-  const renderMenuItems = () => {
-    return walletList.map((wallet) => <MenuItem key={wallet.id} wallet={wallet} />);
-  };
-
   const renderRightContent = () => {
     if (manager.activeWalletId) {
       return renderTabContent();
     }
 
     return (
-      <S.EmptyPageWrapper>
-        <EmptyPage
+      <S.EmptyStateWrapper>
+        <EmptyState
           actionText="create a wallet"
           bottomText="To deposit or withdraw coins,"
           graphic={LeavesEmptyState}
           onActionTextClick={toggleWalletCreateModal}
           topText="Nothing here!"
         />
-      </S.EmptyPageWrapper>
+      </S.EmptyStateWrapper>
     );
   };
 
@@ -178,18 +171,13 @@ const Home: SFC = ({className}) => {
   return (
     <>
       <S.Container className={className}>
-        <S.LeftMenu>
-          <S.FlexContainer>{renderButtonContainer()}</S.FlexContainer>
-          {walletList.length > 0 && (
-            <>
-              <S.Box>{renderMenuItems()}</S.Box>
-              <S.PaginationContainer>
-                <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
-              </S.PaginationContainer>
-            </>
-          )}
-        </S.LeftMenu>
         <S.MainContent>
+          <S.TopSection>
+            <S.WalletSelectorWrapper>
+              <WalletSelector activeWallet={activeWallet} onClick={toggleWalletSelectModal} />
+            </S.WalletSelectorWrapper>
+            {renderButtonContainer()}
+          </S.TopSection>
           {manager.activeWalletId && (
             <SendCoinsSection key={manager.activeWalletId} onTransferSuccess={handleTransferSuccess} />
           )}
@@ -201,13 +189,12 @@ const Home: SFC = ({className}) => {
         <WalletCreateModal
           close={async () => {
             toggleWalletCreateModal();
-            // Refetch wallets to update the list
-            await dispatch(_getWallets(currentPage, 10));
-            // Check available currencies again
+            await dispatch(_getWallets(1, 100));
             setCurrencyCheckKey((prev) => prev + 1);
           }}
         />
       ) : null}
+      {walletSelectModalIsOpen ? <WalletSelectModal close={toggleWalletSelectModal} /> : null}
     </>
   );
 };

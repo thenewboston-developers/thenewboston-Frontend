@@ -50,6 +50,18 @@ export const EmptyPageWrapper = styled.div`
   }
 `;
 
+export const EmptyStateWrapper = styled.div`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 14px;
+  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
+  padding: 24px 16px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 18px 10px;
+  }
+`;
+
 export const FlexContainer = styled.div`
   align-items: center;
   display: flex;
@@ -87,4 +99,24 @@ export const TabsContainer = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
+`;
+
+export const TopSection = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 16px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    flex-direction: column;
+  }
+`;
+
+export const WalletSelectorWrapper = styled.div`
+  flex: 1;
+  max-width: 300px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    max-width: 100%;
+    width: 100%;
+  }
 `;
