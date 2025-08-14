@@ -20,7 +20,7 @@ export const Container = styled.div`
   }
 `;
 
-export const DataCell = styled.td<{$sticky?: boolean; $align?: 'left' | 'right'; $clickable?: boolean}>`
+export const DataCell = styled.td<{$align?: 'left' | 'right'; $clickable?: boolean; $sticky?: boolean}>`
   background: ${colors.white};
   color: ${colors.primary};
   font-size: 14px;
@@ -61,7 +61,7 @@ export const ErrorMessage = styled.div`
   justify-content: center;
 `;
 
-export const HeaderCell = styled.th<{$sticky?: boolean; $align?: 'left' | 'right'; $clickable?: boolean}>`
+export const HeaderCell = styled.th<{$align?: 'left' | 'right'; $clickable?: boolean; $sticky?: boolean}>`
   background: ${colors.white};
   border-bottom: 1px solid ${colors.border};
   color: ${colors.palette.gray[500]};
