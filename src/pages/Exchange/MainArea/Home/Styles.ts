@@ -11,8 +11,8 @@ export const CoinInfo = styled.div`
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow: hidden;
+  gap: 16px;
+  min-height: 100%;
   padding: 24px;
 
   @media (max-width: ${breakpoints.mobile}) {
@@ -71,6 +71,14 @@ export const HeaderCell = styled.th<{$sticky?: boolean; $align?: 'left' | 'right
   text-align: ${({$align}) => $align || 'left'};
   text-transform: uppercase;
 
+  &:first-child {
+    border-top-left-radius: 12px;
+  }
+
+  &:last-child {
+    border-top-right-radius: 12px;
+  }
+
   ${({$clickable}) =>
     $clickable &&
     css`
@@ -119,12 +127,6 @@ export const PercentageChange = styled.div<{$isPositive: boolean}>`
   justify-content: flex-end;
 `;
 
-export const ScrollWrapper = styled.div`
-  height: 100%;
-  overflow: auto;
-  width: 100%;
-`;
-
 export const SparklineContainer = styled.div`
   display: inline-block;
   width: 120px;
@@ -136,7 +138,8 @@ export const SparklineContainer = styled.div`
 
 export const Table = styled.table`
   background-color: ${colors.white};
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
 `;
 
@@ -148,14 +151,21 @@ export const TableRow = styled.tr`
   &:not(:last-child) td {
     border-bottom: 1px solid ${colors.border};
   }
+
+  &:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+  }
+
+  &:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+  }
 `;
 
 export const TableWrapper = styled.div`
   background-color: ${colors.white};
   border-radius: 12px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-  flex: 1;
-  overflow: hidden;
+  overflow-x: auto;
 
   @media (max-width: ${breakpoints.tablet}) {
     ${Table} {
