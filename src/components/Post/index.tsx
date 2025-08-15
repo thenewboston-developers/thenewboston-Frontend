@@ -78,8 +78,8 @@ const Post: SFC<PostProps> = ({className, post}) => {
     toggleImageModal();
   };
 
-  const renderContent = () => {
-    const words = content.split(' ');
+  const renderContent = (fullContent: string) => {
+    const words = fullContent.split(' ');
     return words.map((word, index) => {
       if (word.length > 30) return <S.LongContent key={index}>{word} </S.LongContent>;
       return word + ' ';
@@ -131,14 +131,15 @@ const Post: SFC<PostProps> = ({className, post}) => {
             {showFullContent || content.length <= 400 ? (
               <>
                 <S.TextContent>
-                  {renderContent()}
+                  {renderContent(content)}
                   {content.length > 400 && <S.TextLink onClick={toggleShowFullContent}>See less</S.TextLink>}
                 </S.TextContent>
               </>
             ) : (
               <>
                 <S.TextContent>
-                  {renderContent().slice(0, 400)}... <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
+                  {renderContent(content.substring(0, 400))}...{' '}
+                  <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
                 </S.TextContent>
               </>
             )}
