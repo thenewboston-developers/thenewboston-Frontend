@@ -6,7 +6,7 @@ import Button from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
 import {ModalBody, ModalFooter} from 'components/Modal';
-import {ToastType} from 'enums';
+import {ToastType, WalletTab} from 'enums';
 import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {AppDispatch, SFC, Wallet} from 'types';
@@ -63,7 +63,7 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
 
     setSubmitting(true);
     try {
-      dispatch(updateManager({activeWallet: selectedWallet}));
+      dispatch(updateManager({activeWallet: selectedWallet, activeWalletTab: WalletTab.TRANSFERS}));
       displayToast(`${selectedWallet.currency.ticker} wallet selected`, ToastType.SUCCESS);
       close();
     } catch (error) {
