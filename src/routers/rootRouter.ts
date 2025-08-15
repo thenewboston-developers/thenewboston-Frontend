@@ -25,10 +25,10 @@ const handleCreateTrade = (dispatch: AppDispatch, socketData: any) => {
   dispatch(setTrade(trade));
 
   const state = store.getState() as RootState;
-  const {primaryCurrencyId, secondaryCurrencyId} = getTradePriceChartData(state);
-  if (!primaryCurrencyId || !secondaryCurrencyId) return;
+  const {assetPairId} = getTradePriceChartData(state);
+  if (!assetPairId) return;
 
-  if (trade.primary_currency === primaryCurrencyId && trade.secondary_currency === secondaryCurrencyId) {
+  if (trade.asset_pair === assetPairId) {
     dispatch(processTrade(trade));
   }
 };

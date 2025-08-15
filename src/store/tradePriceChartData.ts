@@ -4,6 +4,7 @@ import {TRADE_PRICE_CHART_DATA} from 'constants/store';
 import {Candlestick, ChartTimeRange, Trade} from 'types';
 
 export interface TradePriceChartDataState {
+  assetPairId: number | null;
   candlesticks: Candlestick[];
   currentTimeRange: ChartTimeRange | null;
   intervalMinutes: number;
@@ -12,6 +13,7 @@ export interface TradePriceChartDataState {
 }
 
 const initialState: TradePriceChartDataState = {
+  assetPairId: null,
   candlesticks: [],
   currentTimeRange: null,
   intervalMinutes: 0,
@@ -118,6 +120,7 @@ const tradePriceChartData = createSlice({
       {
         payload,
       }: PayloadAction<{
+        assetPairId: number;
         candlesticks: Candlestick[];
         currentTimeRange?: ChartTimeRange;
         intervalMinutes: number;
@@ -125,6 +128,7 @@ const tradePriceChartData = createSlice({
         secondaryCurrencyId: number;
       }>,
     ) => {
+      state.assetPairId = payload.assetPairId;
       state.candlesticks = payload.candlesticks;
       state.intervalMinutes = payload.intervalMinutes;
       state.primaryCurrencyId = payload.primaryCurrencyId;

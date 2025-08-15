@@ -8,8 +8,6 @@ export interface Trade extends CreatedModified {
   id: number;
   overpayment_amount: number;
   price: number;
-  primary_currency: number; // DEPRECATED but still included
-  secondary_currency: number; // DEPRECATED but still included
   sell_order: number;
 }
 
