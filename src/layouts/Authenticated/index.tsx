@@ -2,7 +2,6 @@ import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLocation} from 'react-router-dom';
 
-import {getAssetPairs} from 'dispatchers/assetPairs';
 import {checkForDeploymentUpdate} from 'dispatchers/frontendDeployments';
 import {getNotifications} from 'dispatchers/notifications';
 import {useIsMobile} from 'hooks';
@@ -29,11 +28,7 @@ const Authenticated: SFC = ({className}) => {
   useEffect(() => {
     (async () => {
       try {
-        await Promise.all([
-          dispatch(checkForDeploymentUpdate()),
-          dispatch(getAssetPairs()),
-          dispatch(getNotifications()),
-        ]);
+        await Promise.all([dispatch(checkForDeploymentUpdate()), dispatch(getNotifications())]);
       } catch (error) {
         displayErrorToast('Error fetching initial data');
       }
