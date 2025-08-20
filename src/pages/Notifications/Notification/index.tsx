@@ -1,7 +1,7 @@
 import {ReactNode} from 'react';
 import {useDispatch} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
-import {mdiContentCopy, mdiHeart, mdiSwapHorizontal, mdiWalletBifoldOutline} from '@mdi/js';
+import {mdiAccountPlus, mdiContentCopy, mdiHeart, mdiSwapHorizontal, mdiWalletBifoldOutline} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import CurrencyLogo from 'components/CurrencyLogo';
@@ -49,6 +49,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       [NotificationType.POST_COIN_TRANSFER]: renderPostCoinTransferNotification,
       [NotificationType.POST_COMMENT]: renderPostCommentNotification,
       [NotificationType.POST_LIKE]: renderPostLikeNotification,
+      [NotificationType.PROFILE_FOLLOW]: renderProfileFollowNotification,
     };
 
     const renderFunction = notificationTypes[notification.payload.notification_type as NotificationType];
@@ -168,6 +169,33 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
           <S.TimeStamp>{longDate(post_created)}</S.TimeStamp>
         </S.TextContainer>
         {post_image_thumbnail && <S.PostThumbnail alt="Post thumbnail" src={post_image_thumbnail} />}
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
+  };
+
+  const renderProfileFollowNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.PROFILE_FOLLOW) return null;
+
+    const {follower} = notification.payload;
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/profile/${follower.id}`} onClick={(e) => e.stopPropagation()}>
+          <S.AvatarContainer>
+            <Avatar src={follower.avatar} size="45px" />
+            <S.AvatarIcon path={mdiAccountPlus} size="23px" />
+          </S.AvatarContainer>
+        </Link>
+        <S.TextContainer>
+          <S.MainText>
+            <S.Link to={`/profile/${follower.id}`} onClick={(e) => e.stopPropagation()}>
+              {follower.username}
+            </S.Link>{' '}
+            followed you
+          </S.MainText>
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
         {renderRedDot()}
       </S.NotificationContainer>
     );

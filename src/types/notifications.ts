@@ -48,11 +48,17 @@ export interface PostLikePayload {
   post_preview: string;
 }
 
+export interface ProfileFollowPayload {
+  notification_type: NotificationType.PROFILE_FOLLOW;
+  follower: UserReadSerializer;
+}
+
 export type NotificationPayload =
   | ExchangeOrderFilledPayload
   | PostCoinTransferPayload
   | PostCommentPayload
-  | PostLikePayload;
+  | PostLikePayload
+  | ProfileFollowPayload;
 
 export interface Notification extends CreatedModified {
   id: number;
