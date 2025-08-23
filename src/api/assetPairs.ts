@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {AssetPair} from 'types';
+import {AssetPair, PaginatedResponse} from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/asset-pairs`;
@@ -8,9 +8,11 @@ const BASE_URL = `${process.env.REACT_APP_API_URL}/api/asset-pairs`;
 export const getAssetPairs = async (params?: {
   primary_currency_ticker?: string;
   secondary_currency_ticker?: string;
-}): Promise<AssetPair[]> => {
+  page?: number;
+  page_size?: number;
+}): Promise<PaginatedResponse<AssetPair>> => {
   try {
-    const response = await axios.get<AssetPair[]>(BASE_URL, {
+    const response = await axios.get<PaginatedResponse<AssetPair>>(BASE_URL, {
       ...authorizationHeaders(),
       params,
     });

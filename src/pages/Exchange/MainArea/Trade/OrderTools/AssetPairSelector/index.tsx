@@ -1,8 +1,7 @@
-import {ChangeEvent} from 'react';
-import {useSelector} from 'react-redux';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
-import {getAssetPairs} from 'selectors/state';
+import AssetPairSelectModal from 'modals/AssetPairSelectModal';
 import {AssetPair, SFC} from 'types';
 
 import * as S from './Styles';
@@ -12,33 +11,29 @@ interface AssetPairSelectorProps {
 }
 
 const AssetPairSelector: SFC<AssetPairSelectorProps> = ({activeAssetPair, className}) => {
-  const assetPairs = useSelector(getAssetPairs);
   const navigate = useNavigate();
-  const {assetPairId} = useParams<{assetPairId: string}>();
-  const updatedAssetPairs = Object.entries(assetPairs);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const newAssetPairId = e.target.value;
+  const handleChange = (newAssetPairId: string) => {
+    setIsMenuOpen(false);
     navigate(`/exchange/trade/${newAssetPairId}`);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
     <S.Container className={className}>
-      <S.Content>
+      <S.Content onClick={toggleMenu}>
         <S.ImageContainer>
           <S.Image src={activeAssetPair?.primary_currency.logo} />
         </S.ImageContainer>
         <S.Ticker>{activeAssetPair?.primary_currency.ticker}</S.Ticker>
       </S.Content>
-      <S.Select id="asset-pair-selector" name="asset-pair-selector" onChange={handleChange} value={assetPairId || ''}>
-        {updatedAssetPairs.map((assetsValue, index) => {
-          return (
-            <option key={index} value={assetsValue[1].id}>
-              {assetsValue[1].primary_currency.ticker}
-            </option>
-          );
-        })}
-      </S.Select>
+      {isMenuOpen ? (
+        <AssetPairSelectModal activeAssetPair={activeAssetPair} close={toggleMenu} handleChange={handleChange} />
+      ) : null}
     </S.Container>
   );
 };
