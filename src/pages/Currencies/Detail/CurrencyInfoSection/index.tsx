@@ -47,8 +47,8 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({
           secondary_currency_ticker: DEFAULT_CURRENCY_TICKER,
         });
 
-        if (assetPairs.length > 0) {
-          setAssetPairId(assetPairs[0].id);
+        if (assetPairs.count > 0) {
+          setAssetPairId(assetPairs.results[0].id);
         }
       } catch (error) {
         displayErrorToast('Error fetching asset pair');
