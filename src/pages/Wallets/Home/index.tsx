@@ -35,7 +35,10 @@ const Home: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
   const wallets = useSelector(getWallets);
-  const walletList = useMemo(() => orderBy(Object.values(wallets), [(wallet) => wallet.currency.ticker]), [wallets]);
+  const walletList = useMemo(
+    () => orderBy(Object.values(wallets || {}), [(wallet) => wallet.currency.ticker]),
+    [wallets],
+  );
   const {activeWallet} = manager;
 
   useEffect(() => {
