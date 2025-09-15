@@ -5,6 +5,7 @@ import {Form, Formik} from 'formik';
 
 import {ButtonColor, ButtonType} from 'components/Button';
 import {FormField} from 'components/FormElements';
+import {INVITE_SYSTEM_ENABLED} from 'constants/featureFlags';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {createUser} from 'dispatchers/users';
 import {useToggle} from 'hooks';
@@ -34,12 +35,14 @@ const CreateAccountForm: SFC = () => {
 
   const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
-      const requestData = {
+      const requestData: any = {
         agree_to_terms: values.agreeToTerms,
-        invitation_code: values.invitationCode,
         password: values.password,
         username: values.username,
       };
+      if (INVITE_SYSTEM_ENABLED) {
+        requestData.invitation_code = values.invitationCode;
+      }
       const user = await dispatch(createUser(requestData));
       navigate(`/profile/${user.id}`);
     } catch (error: any) {
@@ -50,7 +53,7 @@ const CreateAccountForm: SFC = () => {
   const validationSchema = useMemo(() => {
     const reservedUsernames = ['admin', 'support', 'moderator', 'thenewboston', 'ia'];
 
-    return yup.object().shape({
+    const schema: any = {
       agreeToTerms: yup
         .boolean()
         .oneOf([true], 'You must agree to the terms and conditions and privacy policy')
@@ -59,7 +62,6 @@ const CreateAccountForm: SFC = () => {
         .string()
         .oneOf([yup.ref('password'), undefined], 'Passwords must match')
         .required('Confirm Password is required'),
-      invitationCode: yup.string().required('Invitation code is required'),
       password: yup.string().required('Password is required'),
       username: yup
         .string()
@@ -79,7 +81,13 @@ const CreateAccountForm: SFC = () => {
           return !value || !reservedUsernames.includes(value.toLowerCase());
         })
         .required('Username is required'),
-    });
+    };
+
+    if (INVITE_SYSTEM_ENABLED) {
+      schema.invitationCode = yup.string().required('Invitation code is required');
+    }
+
+    return yup.object().shape(schema);
   }, []);
 
   return (
@@ -104,9 +112,11 @@ const CreateAccountForm: SFC = () => {
                   type="password"
                 />
               </FormField>
-              <FormField>
-                <S.Input errors={errors} label="Invitation Code" name="invitationCode" touched={touched} />
-              </FormField>
+              {INVITE_SYSTEM_ENABLED && (
+                <FormField>
+                  <S.Input errors={errors} label="Invitation Code" name="invitationCode" touched={touched} />
+                </FormField>
+              )}
               <FormField>
                 <S.Checkbox
                   errors={errors}

@@ -11,6 +11,7 @@ import Icon from '@mdi/react';
 
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
+import {INVITE_SYSTEM_ENABLED} from 'constants/featureFlags';
 import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
 
@@ -53,7 +54,9 @@ const Layout: SFC = ({className}) => {
           {renderTab('Followers', `/profile/${userId}/followers`)}
           {renderTab('Following', `/profile/${userId}/following`)}
           {renderTab('Coins', `/profile/${userId}/coins`)}
-          {userId === self.id ? renderTab('Invitations', `/profile/${userId}/invitations`) : null}
+          {INVITE_SYSTEM_ENABLED && userId === self.id
+            ? renderTab('Invitations', `/profile/${userId}/invitations`)
+            : null}
         </Tabs>
       </S.TabsWrapper>
     );
