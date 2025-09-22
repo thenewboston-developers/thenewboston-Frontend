@@ -5,6 +5,15 @@ import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/asset-pairs`;
 
+export const getAssetPairById = async (id: number): Promise<AssetPair> => {
+  try {
+    const response = await axios.get<AssetPair>(`${BASE_URL}/${id}`, authorizationHeaders());
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getAssetPairs = async (params?: {
   primary_currency_ticker?: string;
   secondary_currency_ticker?: string;

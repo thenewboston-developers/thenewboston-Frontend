@@ -6,7 +6,7 @@ import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
 import OrderBookWebSocket from 'containers/OrderBookWebSocket';
 import TradeWebSocket from 'containers/TradeWebSocket';
-import {getAssetPairs as _getAssetPairs} from 'dispatchers/assetPairs';
+import {getAssetPairById as _getAssetPairById, getAssetPairs as _getAssetPairs} from 'dispatchers/assetPairs';
 import {getAssetPairs} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -36,6 +36,23 @@ const Trade: SFC = ({className}) => {
       }
     })();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!assetPairId) return;
+
+    const numericId = parseInt(assetPairId, 10);
+    if (isNaN(numericId)) return;
+
+    if (!assetPairs[numericId]) {
+      (async () => {
+        try {
+          await dispatch(_getAssetPairById(numericId));
+        } catch (error) {
+          displayErrorToast('Error fetching asset pair details');
+        }
+      })();
+    }
+  }, [assetPairId, assetPairs, dispatch]);
 
   const renderPageContent = () => {
     if (!!assetPairList.length) {
