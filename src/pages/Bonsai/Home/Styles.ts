@@ -75,3 +75,22 @@ export const CardTeaser = styled.p`
   line-height: 1.5;
   margin: 0;
 `;
+
+export const PriceRow = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+`;
+
+export const TNBLogo = styled.img`
+  border-radius: 50%;
+  height: 22px;
+  width: 22px;
+`;
+
+export const Price = styled.span`
+  color: ${colors.primary};
+  font-size: 16px;
+  font-weight: ${fonts.weight.semiBold};
+`;

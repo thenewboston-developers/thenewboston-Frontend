@@ -64,4 +64,29 @@ export const bonsaiTrees: BonsaiTree[] = [
     style: 'Broom style',
     teaser: 'A fiery maple with soft moss at the base and a perfectly symmetrical canopy.',
   },
+  {
+    description:
+      'Styled as a raft forest, this juniper showcases multiple trunks rising from a single, dramatic root mass that was set horizontally decades ago. Cascading foliage pads mirror alpine ledges, and the deadwood spine has been lime-sulfur treated for a bleached contrast.',
+    highlights: [
+      'Hand-carved shari running the full length of the raft',
+      'Mossed river stones to suggest a mountain stream',
+      'Balanced planting angle supported by hidden anchor wires',
+      'Ships with humidity dome and detailed styling history',
+    ],
+    id: 'driftwood-juniper',
+    images: [
+      'https://placehold.co/900x600/png?text=Driftwood+Juniper+1',
+      'https://placehold.co/900x600/png?text=Driftwood+Juniper+2',
+      'https://placehold.co/900x600/png?text=Driftwood+Juniper+3',
+      'https://placehold.co/900x600/png?text=Driftwood+Juniper+4',
+    ],
+    name: 'Driftwood Juniper Grove',
+    origin: 'Air-layered from a garden specimen and refined for 18 years',
+    pot: 'Custom slab with copper feet, 24in',
+    price: 5200,
+    size: '34in long, 16in tall',
+    species: 'Shimpaku Juniper',
+    style: 'Raft forest',
+    teaser: 'A dramatic juniper raft with bleached deadwood and low, flowing foliage pads.',
+  },
 ];
