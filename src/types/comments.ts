@@ -6,6 +6,7 @@ import {Dict} from 'types/generic';
 export interface Comment extends CreatedModified {
   content: string;
   id: number;
+  mentioned_users: UserReadSerializer[];
   owner: UserReadSerializer;
   post: number;
   price_amount: number | null;

@@ -5,13 +5,14 @@ import {Form, Formik, FormikHelpers} from 'formik';
 
 import {ButtonColor, ButtonType} from 'components/Button';
 import EmojiPicker from 'components/EmojiPicker';
+import MentionTextarea from 'components/MentionTextarea';
 import OutlineButton from 'components/OutlineButton';
 import {createComment} from 'dispatchers/comments';
 import {useToggle} from 'hooks';
 import CurrencySelectModal from 'modals/CurrencySelectModal';
 import {getComments, getManager} from 'selectors/state';
 import {breakpoints} from 'styles';
-import {AppDispatch, Comment as TComment, SFC} from 'types';
+import {AppDispatch, Comment as TComment, SFC, UserReadSerializer} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
@@ -27,6 +28,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   const [currencySelectModalIsOpen, toggleCurrencySelectModal] = useToggle(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileDevice, setIsMobileDevice] = useState<boolean>(window.innerWidth <= parseInt(breakpoints.mini));
+  const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>([]);
   const [startIndex, setStartIndex] = useState<number>(0);
   const comments = useSelector(getComments);
   const dispatch = useDispatch<AppDispatch>();
@@ -93,12 +95,14 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
 
       const requestData = {
         ...values,
+        mentioned_user_ids: mentionedUsers.map((u) => u.id),
         post: postId,
         price_amount,
         price_currency,
       };
       await dispatch(createComment(requestData));
       resetForm();
+      setMentionedUsers([]);
     } catch (error) {
       displayErrorToast('Error submitting the comment');
     }
@@ -141,13 +145,18 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
           {({dirty, errors, isSubmitting, isValid, touched, values, setFieldValue}) => (
             <Form>
               <S.CommentForm>
-                <S.ContentInput
-                  $isMobileDevice={isMobileDevice}
-                  errors={errors}
-                  name="content"
-                  placeholder="Add a comment..."
-                  touched={touched}
-                />
+                <S.MentionTextareaWrapper>
+                  <MentionTextarea
+                    errors={errors}
+                    label=""
+                    name="content"
+                    onChange={(e) => setFieldValue('content', e.target.value)}
+                    onMentionedUsersChange={setMentionedUsers}
+                    placeholder="Add a comment..."
+                    touched={touched}
+                    value={values.content}
+                  />
+                </S.MentionTextareaWrapper>
                 <S.ControlsWrapper>
                   <EmojiPicker field="content" setFieldValue={setFieldValue} value={values.content} />
                   <S.PriceAmountInputContainer>

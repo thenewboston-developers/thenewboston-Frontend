@@ -141,3 +141,23 @@ export const ControlsWrapper = styled.div`
     width: 100%;
   }
 `;
+
+export const MentionTextareaWrapper = styled.div`
+  flex: 1;
+  width: 100%;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
+  }
+
+  /* Style the MentionTextarea to look like an inline input */
+  textarea {
+    background-color: ${colors.background};
+    border: 1px solid ${colors.borderDarker};
+    border-radius: 12px;
+    height: 40px;
+    max-height: 120px;
+    min-height: 40px;
+    padding: 8px 12px;
+  }
+`;

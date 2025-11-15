@@ -146,6 +146,22 @@ export const Textarea = styled(UTextarea)`
 `;
 ```
 
+## 5. Import React Types
+
+Import React types directly instead of using namespace notation:
+
+```javascript
+// BEFORE
+React.ReactNode
+
+// AFTER
+import { ReactNode } from 'react'
+```
+
+## 6. Unused Imports
+
+There should never be any unused imports in the codebase. Remove all imports that are not being used in the file.
+
 ## Notes
 - Break these rules when they conflict with logic or best practices
 - Use project conventions for uncertain cases

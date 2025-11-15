@@ -15,6 +15,7 @@ export interface Post extends CreatedModified {
   image: string | null;
   is_liked: boolean;
   like_count: number;
+  mentioned_users: UserReadSerializer[];
   owner: UserReadSerializer;
   price_amount: number | null;
   price_currency: CurrencyTinySerializer | null;

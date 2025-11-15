@@ -28,6 +28,18 @@ export interface PostCoinTransferPayload {
   price_currency_ticker: string;
 }
 
+export interface CommentMentionPayload {
+  comment: string;
+  comment_id: number;
+  comment_preview: string;
+  mentioner: UserReadSerializer;
+  notification_type: NotificationType.COMMENT_MENTION;
+  post_created: string;
+  post_id: number;
+  post_image_thumbnail?: string;
+  post_preview: string;
+}
+
 export interface PostCommentPayload {
   comment: string;
   comment_preview: string;
@@ -48,16 +60,27 @@ export interface PostLikePayload {
   post_preview: string;
 }
 
+export interface PostMentionPayload {
+  mentioner: UserReadSerializer;
+  notification_type: NotificationType.POST_MENTION;
+  post_created: string;
+  post_id: number;
+  post_image_thumbnail?: string;
+  post_preview: string;
+}
+
 export interface ProfileFollowPayload {
   notification_type: NotificationType.PROFILE_FOLLOW;
   follower: UserReadSerializer;
 }
 
 export type NotificationPayload =
+  | CommentMentionPayload
   | ExchangeOrderFilledPayload
   | PostCoinTransferPayload
   | PostCommentPayload
   | PostLikePayload
+  | PostMentionPayload
   | ProfileFollowPayload;
 
 export interface Notification extends CreatedModified {

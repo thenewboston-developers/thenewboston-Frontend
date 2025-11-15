@@ -7,10 +7,11 @@ import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiPicker from 'components/EmojiPicker';
 import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
+import MentionTextarea from 'components/MentionTextarea';
 import {ModalBody, ModalFooter} from 'components/Modal';
 import {createPost, updatePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
-import {AppDispatch, Post, SFC} from 'types';
+import {AppDispatch, Post, SFC, UserReadSerializer} from 'types';
 import {handleFormikAPIError} from 'utils/forms';
 import {displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
@@ -23,6 +24,7 @@ export interface PostModalProps {
 }
 
 const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
+  const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -55,6 +57,11 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
     try {
       const requestData = new FormData();
       requestData.append('content', values.content);
+
+      // Add mentioned user IDs (each ID appended separately for DRF to parse as a list)
+      mentionedUsers.forEach((user) => {
+        requestData.append('mentioned_user_ids', user.id.toString());
+      });
 
       if (post) {
         // For updates, handle image changes
@@ -99,7 +106,15 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
             <ModalBody>
               <FormField>
                 <S.TextareaContainer>
-                  <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
+                  <MentionTextarea
+                    errors={errors}
+                    label="Content"
+                    name="content"
+                    onChange={(e) => setFieldValue('content', e.target.value)}
+                    onMentionedUsersChange={setMentionedUsers}
+                    touched={touched}
+                    value={values.content}
+                  />
                   <EmojiPicker
                     displayMode="textarea"
                     field="content"

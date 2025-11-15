@@ -5,6 +5,7 @@ import {CreatedModified} from 'types/createdModified';
 export interface CommentReadSerializer extends CreatedModified {
   content: string;
   id: number;
+  mentioned_users: UserReadSerializer[];
   owner: UserReadSerializer;
   post: number;
   price_amount: number | null;
@@ -13,6 +14,7 @@ export interface CommentReadSerializer extends CreatedModified {
 
 export interface CreateCommentRequest {
   content: string;
+  mentioned_user_ids?: number[];
   post: number;
   price_amount: number | null;
   price_currency: number | null;
