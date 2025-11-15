@@ -11,7 +11,6 @@ import {createComment} from 'dispatchers/comments';
 import {useToggle} from 'hooks';
 import CurrencySelectModal from 'modals/CurrencySelectModal';
 import {getComments, getManager} from 'selectors/state';
-import {breakpoints} from 'styles';
 import {AppDispatch, Comment as TComment, SFC, UserReadSerializer} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
@@ -27,7 +26,6 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   const [commentDetails, setCommentDetails] = useState<TComment[]>([]);
   const [currencySelectModalIsOpen, toggleCurrencySelectModal] = useToggle(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobileDevice, setIsMobileDevice] = useState<boolean>(window.innerWidth <= parseInt(breakpoints.mini));
   const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>([]);
   const [startIndex, setStartIndex] = useState<number>(0);
   const comments = useSelector(getComments);
@@ -67,16 +65,6 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     const arr = commentList.slice(0, startIndex + 4);
     setCommentDetails(arr);
   }, [commentList, startIndex]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobileDevice(window.innerWidth <= parseInt(breakpoints.mini));
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {

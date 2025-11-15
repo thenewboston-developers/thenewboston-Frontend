@@ -59,19 +59,6 @@ export const Content = styled.div`
   margin: 20px 0 10px;
 `;
 
-export const ContentInput = styled(UInlineInput)<{$isMobileDevice: boolean | false}>`
-  background-color: ${colors.background};
-  border: 1px solid ${colors.borderDarker};
-  border-radius: 12px;
-  flex: 1;
-  height: 40px;
-  width: 100%;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 100%;
-  }
-`;
-
 export const Divider = styled.div`
   border: 0;
   border-top: 1px solid ${colors.palette.gray[200]};
