@@ -1,7 +1,7 @@
 import {ReactNode} from 'react';
 import {useDispatch} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
-import {mdiAccountPlus, mdiContentCopy, mdiHeart, mdiSwapHorizontal, mdiWalletBifoldOutline} from '@mdi/js';
+import {mdiAccountPlus, mdiAt, mdiContentCopy, mdiHeart, mdiSwapHorizontal, mdiWalletBifoldOutline} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import CurrencyLogo from 'components/CurrencyLogo';
@@ -32,9 +32,11 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
 
     const notificationType = notification.payload.notification_type;
     if (
-      notificationType === NotificationType.POST_LIKE ||
+      notificationType === NotificationType.COMMENT_MENTION ||
       notificationType === NotificationType.POST_COMMENT ||
-      notificationType === NotificationType.POST_COIN_TRANSFER
+      notificationType === NotificationType.POST_COIN_TRANSFER ||
+      notificationType === NotificationType.POST_LIKE ||
+      notificationType === NotificationType.POST_MENTION
     ) {
       const {payload} = notification;
       if ('post_id' in payload) {
@@ -45,10 +47,12 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
 
   const renderContent = () => {
     const notificationTypes: {[key in NotificationType]: () => ReactNode} = {
+      [NotificationType.COMMENT_MENTION]: renderCommentMentionNotification,
       [NotificationType.EXCHANGE_ORDER_FILLED]: renderExchangeOrderFilledNotification,
       [NotificationType.POST_COIN_TRANSFER]: renderPostCoinTransferNotification,
       [NotificationType.POST_COMMENT]: renderPostCommentNotification,
       [NotificationType.POST_LIKE]: renderPostLikeNotification,
+      [NotificationType.POST_MENTION]: renderPostMentionNotification,
       [NotificationType.PROFILE_FOLLOW]: renderProfileFollowNotification,
     };
 
@@ -164,6 +168,65 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
               {liker.username}
             </S.Link>{' '}
             liked your post:
+          </S.MainText>
+          <S.PostPreviewText>{post_preview}</S.PostPreviewText>
+          <S.TimeStamp>{longDate(post_created)}</S.TimeStamp>
+        </S.TextContainer>
+        {post_image_thumbnail && <S.PostThumbnail alt="Post thumbnail" src={post_image_thumbnail} />}
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
+  };
+
+  const renderCommentMentionNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.COMMENT_MENTION) return null;
+
+    const {comment_preview, mentioner, post_created, post_image_thumbnail, post_preview} = notification.payload;
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/profile/${mentioner.id}`} onClick={(e) => e.stopPropagation()}>
+          <S.AvatarContainer>
+            <Avatar src={mentioner.avatar} size="45px" />
+            <S.AvatarIcon path={mdiAt} size="23px" />
+          </S.AvatarContainer>
+        </Link>
+        <S.TextContainer>
+          <S.MainText>
+            <S.Link to={`/profile/${mentioner.id}`} onClick={(e) => e.stopPropagation()}>
+              {mentioner.username}
+            </S.Link>{' '}
+            mentioned you in a comment:
+          </S.MainText>
+          <S.PostPreviewText>{post_preview}</S.PostPreviewText>
+          <S.CommentText>{comment_preview}</S.CommentText>
+          <S.TimeStamp>{longDate(post_created)}</S.TimeStamp>
+        </S.TextContainer>
+        {post_image_thumbnail && <S.PostThumbnail alt="Post thumbnail" src={post_image_thumbnail} />}
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
+  };
+
+  const renderPostMentionNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.POST_MENTION) return null;
+
+    const {mentioner, post_created, post_image_thumbnail, post_preview} = notification.payload;
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/profile/${mentioner.id}`} onClick={(e) => e.stopPropagation()}>
+          <S.AvatarContainer>
+            <Avatar src={mentioner.avatar} size="45px" />
+            <S.AvatarIcon path={mdiAt} size="23px" />
+          </S.AvatarContainer>
+        </Link>
+        <S.TextContainer>
+          <S.MainText>
+            <S.Link to={`/profile/${mentioner.id}`} onClick={(e) => e.stopPropagation()}>
+              {mentioner.username}
+            </S.Link>{' '}
+            mentioned you in a post:
           </S.MainText>
           <S.PostPreviewText>{post_preview}</S.PostPreviewText>
           <S.TimeStamp>{longDate(post_created)}</S.TimeStamp>

@@ -7,10 +7,11 @@ import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiPicker from 'components/EmojiPicker';
 import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
+import MentionTextarea from 'components/MentionTextarea';
 import {ModalBody, ModalFooter} from 'components/Modal';
 import {createPost, updatePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
-import {AppDispatch, Post, SFC} from 'types';
+import {AppDispatch, Post, SFC, UserReadSerializer} from 'types';
 import {handleFormikAPIError} from 'utils/forms';
 import {displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
@@ -23,6 +24,7 @@ export interface PostModalProps {
 }
 
 const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
+  const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>(post?.mentioned_users || []);
   const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -41,6 +43,10 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
     setPreview(initialValues.image);
   }, [initialValues]);
 
+  useEffect(() => {
+    setMentionedUsers(post?.mentioned_users || []);
+  }, [post]);
+
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -56,21 +62,22 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       const requestData = new FormData();
       requestData.append('content', values.content);
 
+      mentionedUsers.forEach((user) => {
+        requestData.append('mentioned_user_ids', user.id.toString());
+      });
+
       if (post) {
-        // For updates, handle image changes
+        // For updates, only append image if it's a new file
         if (!values.image && initialValues.image) {
-          // Image was cleared - use the new clear_image field
           requestData.append('clear_image', 'true');
         } else if (values.image && values.image !== initialValues.image) {
-          // New image was selected
           requestData.append('image', values.image);
         }
-        // Otherwise, image remains unchanged (don't send)
 
         await dispatch(updatePost(post.id, requestData));
         displayToast('Post updated!', ToastType.SUCCESS);
       } else {
-        // For new posts, add image if present
+        // For new posts, only append image if it's present
         if (values.image) {
           requestData.append('image', values.image);
         }
@@ -99,7 +106,16 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
             <ModalBody>
               <FormField>
                 <S.TextareaContainer>
-                  <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
+                  <MentionTextarea
+                    errors={errors}
+                    initialMentionedUsers={post?.mentioned_users || []}
+                    label="Content"
+                    name="content"
+                    onChange={(e) => setFieldValue('content', e.target.value)}
+                    onMentionedUsersChange={setMentionedUsers}
+                    touched={touched}
+                    value={values.content}
+                  />
                   <EmojiPicker
                     displayMode="textarea"
                     field="content"

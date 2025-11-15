@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiCommentTextOutline, mdiDotsVertical, mdiHeart, mdiHeartOutline} from '@mdi/js';
 
-import Linkify from 'components/Linkify';
+import ContentWithMentions from 'components/ContentWithMentions';
 import OutlineButton from 'components/OutlineButton';
 import UserLabel from 'components/UserLabel';
 import {deletePost, likePost, unlikePost} from 'dispatchers/posts';
@@ -42,6 +42,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
     image,
     is_liked,
     like_count,
+    mentioned_users,
     owner,
     price_amount,
     price_currency,
@@ -76,14 +77,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
 
   const handlePostImageClick = () => {
     toggleImageModal();
-  };
-
-  const renderContent = (fullContent: string) => {
-    const words = fullContent.split(' ');
-    return words.map((word, index) => {
-      if (word.length > 30) return <S.LongContent key={index}>{word} </S.LongContent>;
-      return word + ' ';
-    });
   };
 
   const menuOptions = [
@@ -127,23 +120,24 @@ const Post: SFC<PostProps> = ({className, post}) => {
           />
         )}
         <S.Content>
-          <Linkify>
-            {showFullContent || content.length <= 400 ? (
-              <>
-                <S.TextContent>
-                  {renderContent(content)}
-                  {content.length > 400 && <S.TextLink onClick={toggleShowFullContent}>See less</S.TextLink>}
-                </S.TextContent>
-              </>
-            ) : (
-              <>
-                <S.TextContent>
-                  {renderContent(content.substring(0, 400))}...{' '}
-                  <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
-                </S.TextContent>
-              </>
-            )}
-          </Linkify>
+          {showFullContent || content.length <= 400 ? (
+            <>
+              <S.TextContent>
+                <ContentWithMentions content={content} mentionedUsers={mentioned_users || []} />
+                {content.length > 400 && <S.TextLink onClick={toggleShowFullContent}>See less</S.TextLink>}
+              </S.TextContent>
+            </>
+          ) : (
+            <>
+              <S.TextContent>
+                <ContentWithMentions
+                  content={content.substring(0, 400) + '...'}
+                  mentionedUsers={mentioned_users || []}
+                />{' '}
+                <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
+              </S.TextContent>
+            </>
+          )}
         </S.Content>
         {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
         <S.ActionsContainer>

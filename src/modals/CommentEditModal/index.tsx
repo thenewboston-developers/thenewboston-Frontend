@@ -1,14 +1,15 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiPicker from 'components/EmojiPicker';
+import MentionTextarea from 'components/MentionTextarea';
 import {ModalBody, ModalFooter} from 'components/Modal';
 import {updateComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
-import {AppDispatch, Comment, SFC} from 'types';
+import {AppDispatch, Comment, SFC, UserReadSerializer} from 'types';
 import {handleFormikAPIError} from 'utils/forms';
 import {displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
@@ -22,6 +23,7 @@ export interface CommentEditModalProps {
 
 const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment}) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>(comment.mentioned_users || []);
 
   const initialValues = useMemo(
     () => ({
@@ -34,7 +36,12 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
 
   const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
-      await dispatch(updateComment(comment.id, values));
+      await dispatch(
+        updateComment(comment.id, {
+          content: values.content,
+          mentioned_user_ids: mentionedUsers.map((user) => user.id),
+        }),
+      );
       displayToast('Comment updated!', ToastType.SUCCESS);
       close();
     } catch (error) {
@@ -55,7 +62,16 @@ const CommentEditModal: SFC<CommentEditModalProps> = ({className, close, comment
           <Form>
             <ModalBody>
               <S.TextareaWrapper>
-                <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
+                <MentionTextarea
+                  errors={errors}
+                  initialMentionedUsers={comment.mentioned_users || []}
+                  label="Content"
+                  name="content"
+                  onChange={(e) => setFieldValue('content', e.target.value)}
+                  onMentionedUsersChange={setMentionedUsers}
+                  touched={touched}
+                  value={values.content}
+                />
                 <EmojiPicker
                   displayMode="textarea"
                   field="content"

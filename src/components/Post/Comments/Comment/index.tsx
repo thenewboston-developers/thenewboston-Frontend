@@ -3,8 +3,8 @@ import {Link} from 'react-router-dom';
 import {mdiDotsVertical} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
+import ContentWithMentions from 'components/ContentWithMentions';
 import DropdownMenu from 'components/DropdownMenu';
-import Linkify from 'components/Linkify';
 import {deleteComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
@@ -26,7 +26,7 @@ const Comment: SFC<CommentProps> = ({className, comment, isFirst = false}) => {
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
-  const {content, created_date, id, owner, price_amount, price_currency} = comment;
+  const {content, created_date, id, mentioned_users, owner, price_amount, price_currency} = comment;
 
   const handleDelete = async () => {
     try {
@@ -35,16 +35,6 @@ const Comment: SFC<CommentProps> = ({className, comment, isFirst = false}) => {
     } catch (error) {
       displayErrorToast('Error deleting comment');
     }
-  };
-
-  const renderContent = () => {
-    const words = content.split(' ');
-    return words.map((word, index) => {
-      if (word.length > 30) {
-        return <S.LongContent key={index}>{word} </S.LongContent>;
-      }
-      return word + ' ';
-    });
   };
 
   const menuOptions = [
@@ -95,7 +85,7 @@ const Comment: SFC<CommentProps> = ({className, comment, isFirst = false}) => {
             </S.ActionsContainer>
           </S.HeadSection>
           <S.Content>
-            <Linkify>{renderContent()}</Linkify>
+            <ContentWithMentions content={content} mentionedUsers={mentioned_users || []} />
           </S.Content>
         </S.CommentSection>
       </S.Container>

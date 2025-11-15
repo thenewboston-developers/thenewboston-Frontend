@@ -59,19 +59,6 @@ export const Content = styled.div`
   margin: 20px 0 10px;
 `;
 
-export const ContentInput = styled(UInlineInput)<{$isMobileDevice: boolean | false}>`
-  background-color: ${colors.background};
-  border: 1px solid ${colors.borderDarker};
-  border-radius: 12px;
-  flex: 1;
-  height: 40px;
-  width: 100%;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 100%;
-  }
-`;
-
 export const Divider = styled.div`
   border: 0;
   border-top: 1px solid ${colors.palette.gray[200]};
@@ -139,5 +126,25 @@ export const ControlsWrapper = styled.div`
   @media (max-width: ${breakpoints.mobile}) {
     justify-content: flex-end;
     width: 100%;
+  }
+`;
+
+export const MentionTextareaWrapper = styled.div`
+  flex: 1;
+  width: 100%;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
+  }
+
+  /* Style the MentionTextarea to look like an inline input */
+  textarea {
+    background-color: ${colors.background};
+    border: 1px solid ${colors.borderDarker};
+    border-radius: 12px;
+    height: 40px;
+    max-height: 120px;
+    min-height: 40px;
+    padding: 8px 12px;
   }
 `;
