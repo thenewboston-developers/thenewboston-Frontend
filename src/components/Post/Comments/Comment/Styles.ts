@@ -46,10 +46,6 @@ export const HeadSection = styled.div`
   justify-content: space-between;
 `;
 
-export const LongContent = styled.span`
-  word-break: break-all;
-`;
-
 export const PriceMini = styled(UPriceMini)`
   margin-top: 2px;
 `;

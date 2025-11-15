@@ -24,7 +24,7 @@ export interface PostModalProps {
 }
 
 const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
-  const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>([]);
+  const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>(post?.mentioned_users || []);
   const [preview, setPreview] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -42,6 +42,10 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
     if (!initialValues.image) return;
     setPreview(initialValues.image);
   }, [initialValues]);
+
+  useEffect(() => {
+    setMentionedUsers(post?.mentioned_users || []);
+  }, [post]);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -108,6 +112,7 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
                 <S.TextareaContainer>
                   <MentionTextarea
                     errors={errors}
+                    initialMentionedUsers={post?.mentioned_users || []}
                     label="Content"
                     name="content"
                     onChange={(e) => setFieldValue('content', e.target.value)}

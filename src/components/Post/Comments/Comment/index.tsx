@@ -37,16 +37,6 @@ const Comment: SFC<CommentProps> = ({className, comment, isFirst = false}) => {
     }
   };
 
-  const renderContent = () => {
-    const words = content.split(' ');
-    return words.map((word, index) => {
-      if (word.length > 30) {
-        return <S.LongContent key={index}>{word} </S.LongContent>;
-      }
-      return word + ' ';
-    });
-  };
-
   const menuOptions = [
     {
       label: 'Edit',

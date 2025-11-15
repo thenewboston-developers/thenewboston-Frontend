@@ -79,14 +79,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
     toggleImageModal();
   };
 
-  const renderContent = (fullContent: string) => {
-    const words = fullContent.split(' ');
-    return words.map((word, index) => {
-      if (word.length > 30) return <S.LongContent key={index}>{word} </S.LongContent>;
-      return word + ' ';
-    });
-  };
-
   const menuOptions = [
     {
       label: 'Edit',

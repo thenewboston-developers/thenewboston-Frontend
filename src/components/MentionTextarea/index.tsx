@@ -7,8 +7,25 @@ import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
+const extractMentionUsernames = (text: string): string[] => {
+  if (!text) return [];
+
+  const regex = /@(\w+)/g;
+  const usernames: string[] = [];
+  let match: RegExpExecArray | null = regex.exec(text);
+
+  while (match !== null) {
+    usernames.push(match[1]);
+    match = regex.exec(text);
+  }
+
+  return usernames;
+};
+
 export interface MentionTextareaProps {
   errors: {[field: string]: string};
+  dropdownYOffset?: number;
+  initialMentionedUsers?: UserReadSerializer[];
   label: string;
   maxLength?: number;
   name: string;
@@ -22,6 +39,8 @@ export interface MentionTextareaProps {
 const MentionTextarea: SFC<MentionTextareaProps> = ({
   className,
   errors,
+  dropdownYOffset = 60,
+  initialMentionedUsers,
   label,
   maxLength,
   name,
@@ -35,14 +54,54 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
   const [isSearching, setIsSearching] = useState(false);
   const [mentionQuery, setMentionQuery] = useState('');
   const [mentionStartIndex, setMentionStartIndex] = useState<number | null>(null);
-  const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>([]);
+  const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>(initialMentionedUsers ?? []);
   const [searchResults, setSearchResults] = useState<UserReadSerializer[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const dropdownItemRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const mentionCacheRef = useRef<Map<string, UserReadSerializer | null>>(new Map());
+  const pendingLookupsRef = useRef<Set<string>>(new Set());
+  const initialMentionedUsersRef = useRef<string | null>(null);
+
+  const addMentionedUser = useCallback((user: UserReadSerializer) => {
+    mentionCacheRef.current.set(user.username.toLowerCase(), user);
+    setMentionedUsers((prev) => {
+      if (prev.some((existing) => existing.id === user.id)) {
+        return prev;
+      }
+      return [...prev, user];
+    });
+  }, []);
+
+  const fetchUsersForMentions = useCallback(
+    async (usernames: string[]) => {
+      const normalized = Array.from(new Set(usernames.map((username) => username.toLowerCase())));
+      await Promise.all(
+        normalized.map(async (username) => {
+          if (mentionCacheRef.current.has(username) || pendingLookupsRef.current.has(username)) return;
+          pendingLookupsRef.current.add(username);
+
+          try {
+            const results = await searchUsers(username);
+            const exactMatch = results.find((user) => user.username.toLowerCase() === username) ?? null;
+            mentionCacheRef.current.set(username, exactMatch);
+
+            if (exactMatch) {
+              addMentionedUser(exactMatch);
+            }
+          } catch {
+            mentionCacheRef.current.set(username, null);
+          } finally {
+            pendingLookupsRef.current.delete(username);
+          }
+        }),
+      );
+    },
+    [addMentionedUser],
+  );
 
   const calculateDropdownPosition = (cursorPosition: number) => {
     if (!textareaRef.current || !containerRef.current) return;
@@ -53,17 +112,15 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
     const currentLineIndex = lines.length - 1;
     const currentLineText = lines[currentLineIndex];
 
-    // Approximate position based on line number and character position
-    const lineHeight = 24; // Approximate line height in pixels
-    const charWidth = 8; // Approximate character width in pixels
-    const top = currentLineIndex * lineHeight + 60; // 60px offset for label and padding
+    const lineHeight = 24;
+    const charWidth = 8;
+    const top = currentLineIndex * lineHeight + dropdownYOffset;
     const left = currentLineText.length * charWidth;
 
     setDropdownPosition({left, top});
   };
 
   const detectMention = (text: string, cursorPosition: number) => {
-    // Find the last @ before cursor
     const textBeforeCursor = text.substring(0, cursorPosition);
     const lastAtIndex = textBeforeCursor.lastIndexOf('@');
 
@@ -74,7 +131,6 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
       return;
     }
 
-    // Check if there's a space between @ and cursor (which would end the mention)
     const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
     if (textAfterAt.includes(' ')) {
       setShowDropdown(false);
@@ -83,13 +139,17 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
       return;
     }
 
-    // Valid mention query
     setMentionStartIndex(lastAtIndex);
     setMentionQuery(textAfterAt);
+
+    if (!textAfterAt) {
+      setShowDropdown(false);
+      return;
+    }
+
     calculateDropdownPosition(cursorPosition);
     setShowDropdown(true);
 
-    // Trigger search with debounce
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
@@ -117,7 +177,6 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
       return;
     }
 
-    // Handle arrow keys and Enter for navigation
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
@@ -136,7 +195,6 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
         setShowDropdown(false);
         break;
       default:
-        // Allow other keys to work normally
         break;
     }
   };
@@ -167,10 +225,8 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
     const beforeMention = currentValue.substring(0, mentionStartIndex);
     const afterCursor = currentValue.substring(textarea.selectionStart);
 
-    // Insert username
     const newValue = `${beforeMention}@${user.username} ${afterCursor}`;
 
-    // Update textarea value
     const syntheticEvent = {
       target: {
         name: textarea.name,
@@ -179,26 +235,17 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
     } as ChangeEvent<HTMLTextAreaElement>;
 
     onChange?.(syntheticEvent);
+    addMentionedUser(user);
 
-    // Add user to mentioned users if not already there
-    const updatedMentionedUsers = [...mentionedUsers];
-    if (!updatedMentionedUsers.find((u) => u.id === user.id)) {
-      updatedMentionedUsers.push(user);
-      setMentionedUsers(updatedMentionedUsers);
-      onMentionedUsersChange?.(updatedMentionedUsers);
-    }
-
-    // Close dropdown
     setShowDropdown(false);
     setMentionStartIndex(null);
     setMentionQuery('');
     setSearchResults([]);
     setSelectedIndex(0);
 
-    // Focus back to textarea
     setTimeout(() => {
       if (textareaRef.current) {
-        const newCursorPosition = beforeMention.length + user.username.length + 2; // +2 for @ and space
+        const newCursorPosition = beforeMention.length + user.username.length + 2;
         textareaRef.current.focus();
         textareaRef.current.setSelectionRange(newCursorPosition, newCursorPosition);
       }
@@ -243,6 +290,22 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
   };
 
   useEffect(() => {
+    const incoming = initialMentionedUsers ?? [];
+    const incomingIds = incoming
+      .map((user) => user.id)
+      .sort((a, b) => a - b)
+      .join(',');
+
+    if (incomingIds === initialMentionedUsersRef.current) return;
+    initialMentionedUsersRef.current = incomingIds;
+
+    setMentionedUsers(incoming);
+    incoming.forEach((user) => {
+      mentionCacheRef.current.set(user.username.toLowerCase(), user);
+    });
+  }, [initialMentionedUsers]);
+
+  useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -257,12 +320,10 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
     };
   }, []);
 
-  // Reset selected index when search results change
   useEffect(() => {
     setSelectedIndex(0);
   }, [searchResults]);
 
-  // Scroll selected item into view
   useEffect(() => {
     if (showDropdown && dropdownItemRefs.current[selectedIndex]) {
       dropdownItemRefs.current[selectedIndex]?.scrollIntoView({
@@ -272,17 +333,27 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
     }
   }, [selectedIndex, showDropdown]);
 
-  // Extract mentioned users from content when value changes externally
   useEffect(() => {
-    if (!value) {
-      setMentionedUsers([]);
-      onMentionedUsersChange?.([]);
-      return;
-    }
+    const usernamesInContent = extractMentionUsernames(value);
+    const normalizedSet = new Set(usernamesInContent.map((username) => username.toLowerCase()));
 
-    // This is a simplified mention extraction - it won't match users to IDs
-    // The parent component should manage the full list of mentioned users
-  }, [value, onMentionedUsersChange]);
+    setMentionedUsers((prev) => {
+      const filtered = prev.filter((user) => normalizedSet.has(user.username.toLowerCase()));
+      return filtered.length === prev.length ? prev : filtered;
+    });
+
+    const usernamesToLoad = Array.from(normalizedSet).filter(
+      (username) => !mentionCacheRef.current.has(username) && !pendingLookupsRef.current.has(username),
+    );
+
+    if (usernamesToLoad.length) {
+      fetchUsersForMentions(usernamesToLoad);
+    }
+  }, [fetchUsersForMentions, value]);
+
+  useEffect(() => {
+    onMentionedUsersChange?.(mentionedUsers);
+  }, [mentionedUsers, onMentionedUsersChange]);
 
   const isError = errors[name] && touched[name];
 

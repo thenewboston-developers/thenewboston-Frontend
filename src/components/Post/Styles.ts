@@ -194,10 +194,6 @@ export const LikeWrapper = styled.div`
   gap: 2px;
 `;
 
-export const LongContent = styled.span`
-  word-break: break-all;
-`;
-
 export const Text = styled.div`
   display: flex;
 `;

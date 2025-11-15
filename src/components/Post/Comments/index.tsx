@@ -148,6 +148,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
                 <S.MentionTextareaWrapper>
                   <MentionTextarea
                     errors={errors}
+                    dropdownYOffset={36}
                     label=""
                     name="content"
                     onChange={(e) => setFieldValue('content', e.target.value)}
