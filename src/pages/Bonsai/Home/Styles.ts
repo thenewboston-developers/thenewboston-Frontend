@@ -12,7 +12,8 @@ export const Container = styled.div`
 
 export const CardGrid = styled.div`
   display: grid;
-  gap: 20px;
+  column-gap: 20px;
+  row-gap: 32px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   margin-top: 12px;
 
@@ -54,7 +55,7 @@ export const CardImage = styled.img`
 export const CardBody = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   margin-top: 12px;
 `;
 
@@ -79,8 +80,8 @@ export const CardTeaser = styled.p`
 export const PriceRow = styled.div`
   align-items: center;
   display: flex;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 6px;
+  margin-top: 2px;
 `;
 
 export const TNBLogo = styled.img`
