@@ -62,26 +62,22 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
       const requestData = new FormData();
       requestData.append('content', values.content);
 
-      // Add mentioned user IDs (each ID appended separately for DRF to parse as a list)
       mentionedUsers.forEach((user) => {
         requestData.append('mentioned_user_ids', user.id.toString());
       });
 
       if (post) {
-        // For updates, handle image changes
+        // For updates, only append image if it's a new file
         if (!values.image && initialValues.image) {
-          // Image was cleared - use the new clear_image field
           requestData.append('clear_image', 'true');
         } else if (values.image && values.image !== initialValues.image) {
-          // New image was selected
           requestData.append('image', values.image);
         }
-        // Otherwise, image remains unchanged (don't send)
 
         await dispatch(updatePost(post.id, requestData));
         displayToast('Post updated!', ToastType.SUCCESS);
       } else {
-        // For new posts, add image if present
+        // For new posts, only append image if it's present
         if (values.image) {
           requestData.append('image', values.image);
         }
