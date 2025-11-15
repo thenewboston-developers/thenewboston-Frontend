@@ -87,7 +87,7 @@ export const StepList = styled(List)`
 export const StepNumber = styled.span`
   background-color: ${colors.palette.blue[500]};
   border-radius: 50%;
-  color: white;
+  color: ${colors.white};
   display: inline-block;
   font-size: 14px;
   font-weight: ${fonts.weight.semiBold};

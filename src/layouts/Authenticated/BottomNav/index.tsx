@@ -7,6 +7,7 @@ import {
   mdiDotsVertical,
   mdiExitToApp,
   mdiHome,
+  mdiPineTree,
   mdiSwapHorizontalCircleOutline,
   mdiWalletBifoldOutline,
 } from '@mdi/js';
@@ -25,6 +26,11 @@ const BottomNav: SFC = ({className}) => {
   const self = useSelector(getSelf);
 
   const popupOptions: PopupMenuOption[] = [
+    {
+      icon: mdiPineTree,
+      label: 'Bonsai',
+      onClick: () => navigate('/bonsai'),
+    },
     {
       icon: mdiCircleMultipleOutline,
       label: 'Currencies',
