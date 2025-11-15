@@ -1,6 +1,4 @@
 export interface BonsaiTree {
-  age: string;
-  careLevel: string;
   description: string;
   highlights: string[];
   id: string;
@@ -8,18 +6,15 @@ export interface BonsaiTree {
   name: string;
   origin: string;
   pot: string;
-  price: string;
+  price: number;
   size: string;
   species: string;
   style: string;
   teaser: string;
-  watering: string;
 }
 
 export const bonsaiTrees: BonsaiTree[] = [
   {
-    age: 'Estimated 120 years',
-    careLevel: 'Intermediate',
     description:
       'Trained in the informal upright style, this pine leans gently to mimic how harsh coastal winds carve their way through mountain groves. The canopy was thinned this winter to expose the layered pads and elegant branching structure.',
     highlights: [
@@ -38,16 +33,13 @@ export const bonsaiTrees: BonsaiTree[] = [
     name: 'Ancient Coast Pine',
     origin: 'Collected along the Pacific Northwest 30 years ago',
     pot: 'Unglazed Tokoname oval, 18in',
-    price: '4,600 TNBC',
+    price: 4600,
     size: '28in tall, 24in wide',
-    species: 'Pinus thunbergii (Japanese Black Pine)',
+    species: 'Japanese Black Pine',
     style: 'Informal upright',
     teaser: 'A windswept pine with decades of ramification and a warm patina on the bark.',
-    watering: 'Soak thoroughly every 4–5 days in growing season',
   },
   {
-    age: 'Estimated 65 years',
-    careLevel: 'Beginner friendly',
     description:
       'This maple is styled in a graceful broom silhouette with a dense crown of tiny leaves. The nebari flares evenly on all sides, and the trunk features subtle taper emphasized by soft green moss at the soil line.',
     highlights: [
@@ -66,11 +58,10 @@ export const bonsaiTrees: BonsaiTree[] = [
     name: 'Mossy Autumn Maple',
     origin: 'Field grown in Kyoto and refined in-house for 12 years',
     pot: 'Glazed oval with carved feet, 16in',
-    price: '2,850 TNBC',
+    price: 2850,
     size: '22in tall, 20in wide',
-    species: 'Acer palmatum (Japanese Maple)',
+    species: 'Japanese Maple',
     style: 'Broom style',
     teaser: 'A fiery maple with soft moss at the base and a perfectly symmetrical canopy.',
-    watering: 'Light watering every other day; prefers afternoon shade',
   },
 ];

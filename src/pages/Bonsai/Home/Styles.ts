@@ -26,19 +26,15 @@ export const CardGrid = styled.div`
 `;
 
 export const Card = styled(Link)`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 14px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   color: inherit;
   display: flex;
   flex-direction: column;
-  padding: 16px 18px 20px;
+  height: 100%;
   text-decoration: none;
-  transition: box-shadow 0.2s ease;
+  transition: opacity 0.2s ease;
 
   &:hover {
-    box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
+    opacity: 0.9;
     text-decoration: none;
   }
 
@@ -49,20 +45,17 @@ export const Card = styled(Link)`
 
 export const CardImage = styled.img`
   border-radius: 12px;
-  height: 210px;
+  flex: 1;
+  height: 100%;
   object-fit: cover;
   width: 100%;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    height: 180px;
-  }
 `;
 
 export const CardBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 12px;
 `;
 
 export const CardTitle = styled.h3`

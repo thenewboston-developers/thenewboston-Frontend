@@ -2,6 +2,7 @@ import {useEffect, useMemo, useState} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
 import {mdiArrowLeft} from '@mdi/js';
 
+import logo from 'assets/logo192.png';
 import Icon from 'components/Icon';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
 import {SFC} from 'types';
@@ -29,15 +30,11 @@ const BonsaiDetail: SFC = ({className}) => {
   const activeImage = bonsai.images[selectedImageIndex] ?? bonsai.images[0];
 
   const metadata: Array<{label: string; value: string}> = [
-    {label: 'Price', value: bonsai.price},
     {label: 'Species', value: bonsai.species},
     {label: 'Style', value: bonsai.style},
-    {label: 'Age', value: bonsai.age},
     {label: 'Size', value: bonsai.size},
     {label: 'Origin', value: bonsai.origin},
     {label: 'Pot', value: bonsai.pot},
-    {label: 'Care Level', value: bonsai.careLevel},
-    {label: 'Watering', value: bonsai.watering},
   ];
 
   return (
@@ -72,6 +69,10 @@ const BonsaiDetail: SFC = ({className}) => {
           <S.DetailsColumn>
             <S.Title>{bonsai.name}</S.Title>
             <S.Subtitle>{bonsai.teaser}</S.Subtitle>
+            <S.PriceRow>
+              <S.TNBLogo alt="TNBC logo" src={logo} />
+              <S.Price>{bonsai.price.toLocaleString()}</S.Price>
+            </S.PriceRow>
             <S.Divider />
             <S.DetailList>
               {metadata.map((meta) => (

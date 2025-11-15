@@ -130,6 +130,25 @@ export const Subtitle = styled.p`
   margin: 0;
 `;
 
+export const PriceRow = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+`;
+
+export const TNBLogo = styled.img`
+  border-radius: 50%;
+  height: 28px;
+  width: 28px;
+`;
+
+export const Price = styled.span`
+  color: ${colors.primary};
+  font-size: 24px;
+  font-weight: ${fonts.weight.bold};
+`;
+
 export const Divider = styled.hr`
   border: none;
   border-top: 1px solid ${colors.border};

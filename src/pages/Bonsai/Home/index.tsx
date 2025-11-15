@@ -15,9 +15,7 @@ const BonsaiHome: SFC = ({className}) => {
             <S.CardImage alt={tree.name} src={tree.images[0]} />
             <S.CardBody>
               <S.CardTitle>{tree.name}</S.CardTitle>
-              <S.CardMeta>
-                {tree.species} • {tree.age}
-              </S.CardMeta>
+              <S.CardMeta>{tree.species}</S.CardMeta>
               <S.CardTeaser>{tree.teaser}</S.CardTeaser>
             </S.CardBody>
           </S.Card>
