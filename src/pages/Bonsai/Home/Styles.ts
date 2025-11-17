@@ -1,6 +1,7 @@
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 
+import UPagination from 'components/Pagination';
 import {breakpoints, colors, fonts, pagePadding} from 'styles';
 
 export const Container = styled.div`
@@ -107,4 +108,9 @@ export const Price = styled.span`
   color: ${colors.primary};
   font-size: 16px;
   font-weight: ${fonts.weight.semiBold};
+`;
+
+export const Pagination = styled(UPagination)`
+  margin: 32px auto 0;
+  width: 100%;
 `;

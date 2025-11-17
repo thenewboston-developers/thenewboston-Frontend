@@ -7,6 +7,7 @@ import Detail from './Detail';
 import Home from './Home';
 import Layout from './Layout';
 import LearnMore from './LearnMore';
+import Manage from './Manage';
 
 const Bonsai: SFC = () => {
   return (
@@ -14,9 +15,11 @@ const Bonsai: SFC = () => {
       <Route element={<Layout />}>
         <Route path="/home" element={<Home />} />
         <Route path="/learn-more" element={<LearnMore />} />
-        <Route path="/manage" element={<Admin />} />
+        <Route path="/manage" element={<Manage />} />
+        <Route path="/manage/create" element={<Admin mode="create" />} />
+        <Route path="/manage/:slug" element={<Admin mode="edit" />} />
       </Route>
-      <Route path="/:bonsaiId" element={<Detail />} />
+      <Route path="/:id" element={<Detail />} />
       <Route path="*" element={<Navigate to="/bonsai/home" replace />} />
     </Routes>
   );

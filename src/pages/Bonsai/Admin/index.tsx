@@ -1,8 +1,8 @@
 import {ChangeEvent, FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {Navigate} from 'react-router-dom';
+import {Navigate, useNavigate, useParams} from 'react-router-dom';
 
-import {createBonsai, deleteBonsai, getBonsais, updateBonsai} from 'api/bonsais';
+import {createBonsai, deleteBonsai, getBonsai, updateBonsai} from 'api/bonsais';
 import {getCurrencies} from 'api/currencies';
 import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
@@ -79,17 +79,22 @@ const defaultFormValues: FormValues = {
   teaser: '',
 };
 
-const Admin: SFC = ({className}) => {
+interface AdminProps {
+  mode: 'create' | 'edit';
+}
+
+const Admin: SFC<AdminProps> = ({className, mode}) => {
   const self = useSelector(getSelf);
-  const [bonsais, setBonsais] = useState<Bonsai[]>([]);
+  const {slug} = useParams<{slug?: string}>();
+  const navigate = useNavigate();
+  const isCreateMode = mode === 'create';
   const [currencies, setCurrencies] = useState<Currency[]>([]);
-  const [selectedBonsai, setSelectedBonsai] = useState<Bonsai | null>(null);
+  const [currentBonsai, setCurrentBonsai] = useState<Bonsai | null>(null);
   const [formValues, setFormValues] = useState<FormValues>(defaultFormValues);
-  const [isLoadingBonsais, setIsLoadingBonsais] = useState(false);
+  const [isLoadingBonsai, setIsLoadingBonsai] = useState(mode === 'edit');
   const [isLoadingCurrencies, setIsLoadingCurrencies] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isCreatingNew, setIsCreatingNew] = useState(false);
 
   const mapBonsaiToForm = useCallback(
     (bonsai: Bonsai): FormValues => ({
@@ -113,35 +118,6 @@ const Admin: SFC = ({className}) => {
     [],
   );
 
-  const handleSelectBonsai = useCallback((bonsai: Bonsai) => {
-    setIsCreatingNew(false);
-    setSelectedBonsai(bonsai);
-  }, []);
-
-  const fetchBonsais = useCallback(async (shouldSelectFirst = false) => {
-    setIsLoadingBonsais(true);
-    try {
-      const response = await getBonsais();
-      setBonsais(response);
-      setSelectedBonsai((prev) => {
-        if ((shouldSelectFirst || !prev) && response.length) {
-          return response[0];
-        }
-
-        if (!prev) {
-          return prev;
-        }
-
-        const updated = response.find((bonsai) => bonsai.slug === prev.slug);
-        return updated ?? prev;
-      });
-    } catch (error) {
-      displayErrorToast('Unable to load bonsai entries');
-    } finally {
-      setIsLoadingBonsais(false);
-    }
-  }, []);
-
   const fetchCurrencies = useCallback(async () => {
     setIsLoadingCurrencies(true);
     try {
@@ -156,21 +132,37 @@ const Admin: SFC = ({className}) => {
 
   useEffect(() => {
     if (!self.is_staff) return;
-    fetchBonsais(true);
     fetchCurrencies();
-  }, [fetchBonsais, fetchCurrencies, self.is_staff]);
-
-  const handleCreateNew = () => {
-    setIsCreatingNew(true);
-    setSelectedBonsai(null);
-    setFormValues(defaultFormValues);
-  };
+  }, [fetchCurrencies, self.is_staff]);
 
   useEffect(() => {
-    if (selectedBonsai) {
-      setFormValues(mapBonsaiToForm(selectedBonsai));
+    if (!self.is_staff) return;
+    if (isCreateMode) {
+      setCurrentBonsai(null);
+      setFormValues(defaultFormValues);
+      setIsLoadingBonsai(false);
+      return;
     }
-  }, [mapBonsaiToForm, selectedBonsai]);
+
+    if (!slug) {
+      navigate('/bonsai/manage');
+      return;
+    }
+
+    (async () => {
+      setIsLoadingBonsai(true);
+      try {
+        const response = await getBonsai(slug);
+        setCurrentBonsai(response);
+        setFormValues(mapBonsaiToForm(response));
+      } catch (error) {
+        displayErrorToast('Unable to load bonsai details');
+        navigate('/bonsai/manage');
+      } finally {
+        setIsLoadingBonsai(false);
+      }
+    })();
+  }, [isCreateMode, mapBonsaiToForm, navigate, self.is_staff, slug]);
 
   const handleInputChange =
     (field: keyof FormValues) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -245,7 +237,7 @@ const Admin: SFC = ({className}) => {
 
   const buildFormData = (): FormData | null => {
     const {
-      slug,
+      slug: formSlug,
       name,
       species,
       genus,
@@ -264,7 +256,7 @@ const Admin: SFC = ({className}) => {
     } = formValues;
 
     if (
-      !slug.trim() ||
+      !formSlug.trim() ||
       !name.trim() ||
       !species.trim() ||
       !genus.trim() ||
@@ -292,7 +284,7 @@ const Admin: SFC = ({className}) => {
     }
 
     const formData = new FormData();
-    formData.append('slug', slug.trim());
+    formData.append('slug', formSlug.trim());
     formData.append('name', name.trim());
     formData.append('species', species.trim());
     formData.append('genus', genus.trim());
@@ -352,15 +344,16 @@ const Admin: SFC = ({className}) => {
     if (!formData) return;
     setIsSaving(true);
     try {
-      const response =
-        selectedBonsai && !isCreatingNew
-          ? await updateBonsai(selectedBonsai.id, formData)
-          : await createBonsai(formData);
-      setSelectedBonsai(response);
-      setFormValues(mapBonsaiToForm(response));
-      setIsCreatingNew(false);
-      displayToast(selectedBonsai && !isCreatingNew ? 'Bonsai updated' : 'Bonsai created', ToastType.SUCCESS);
-      await fetchBonsais();
+      if (!isCreateMode && currentBonsai) {
+        const response = await updateBonsai(currentBonsai.id, formData);
+        setCurrentBonsai(response);
+        setFormValues(mapBonsaiToForm(response));
+        displayToast('Bonsai updated', ToastType.SUCCESS);
+      } else {
+        await createBonsai(formData);
+        displayToast('Bonsai created', ToastType.SUCCESS);
+        navigate('/bonsai/manage');
+      }
     } catch (error) {
       displayErrorToast(error);
     } finally {
@@ -369,18 +362,15 @@ const Admin: SFC = ({className}) => {
   };
 
   const handleDelete = async () => {
-    if (!selectedBonsai) return;
+    if (!currentBonsai) return;
     // eslint-disable-next-line no-alert
     const confirmed = window.confirm('Delete this bonsai? This cannot be undone.');
     if (!confirmed) return;
     setIsDeleting(true);
     try {
-      await deleteBonsai(selectedBonsai.id);
+      await deleteBonsai(currentBonsai.id);
       displayToast('Bonsai deleted', ToastType.SUCCESS);
-      setSelectedBonsai(null);
-      setFormValues(defaultFormValues);
-      setIsCreatingNew(true);
-      await fetchBonsais(bonsais.length > 1);
+      navigate('/bonsai/manage');
     } catch (error) {
       displayErrorToast(error);
     } finally {
@@ -406,59 +396,29 @@ const Admin: SFC = ({className}) => {
     );
   }, [formValues]);
 
-  const renderBonsaiColumnContent = () => {
-    if (isLoadingBonsais) {
-      return (
-        <S.InventoryLoader>
-          <Loader size={28} />
-        </S.InventoryLoader>
-      );
-    }
-
-    if (bonsais.length) {
-      return (
-        <S.InventoryList>
-          {bonsais.map((bonsai) => (
-            <S.InventoryButton
-              $isActive={!isCreatingNew && selectedBonsai?.slug === bonsai.slug}
-              key={bonsai.slug}
-              onClick={() => handleSelectBonsai(bonsai)}
-              type="button"
-            >
-              <div>
-                <S.BonsaiName>{bonsai.name}</S.BonsaiName>
-                <S.BonsaiMeta>{bonsai.slug}</S.BonsaiMeta>
-              </div>
-              <S.StatusBadge $status={bonsai.status}>
-                {bonsai.status === 'published' ? 'Published' : 'Draft'}
-              </S.StatusBadge>
-            </S.InventoryButton>
-          ))}
-        </S.InventoryList>
-      );
-    }
-
-    return <EmptyText>No bonsai found.</EmptyText>;
-  };
-
   if (!self.is_staff) {
     return <Navigate to="/bonsai/home" replace />;
   }
 
+  const heading = isCreateMode ? 'Create Bonsai' : 'Edit Bonsai';
+
   return (
     <S.Container className={className}>
-      <SectionHeading heading="Manage Bonsai" />
-      <S.Content>
-        <S.InventoryColumn>
-          <S.InventoryColumnHeader>
-            <S.InventoryColumnTitle>Inventory</S.InventoryColumnTitle>
-            <S.SecondaryButton onClick={handleCreateNew} type="button">
-              New Bonsai
+      <SectionHeading
+        heading={heading}
+        rightContent={
+          <S.HeaderActions>
+            <S.SecondaryButton onClick={() => navigate('/bonsai/manage')} type="button">
+              Back to Manage
             </S.SecondaryButton>
-          </S.InventoryColumnHeader>
-          {renderBonsaiColumnContent()}
-        </S.InventoryColumn>
-
+          </S.HeaderActions>
+        }
+      />
+      {isLoadingBonsai ? (
+        <S.LoaderWrapper>
+          <Loader />
+        </S.LoaderWrapper>
+      ) : (
         <S.Form onSubmit={handleSubmit}>
           <S.FieldGroup>
             <S.Label>Slug</S.Label>
@@ -606,7 +566,7 @@ const Admin: SFC = ({className}) => {
           </S.ArraySection>
 
           <S.FormActions>
-            {selectedBonsai && !isCreatingNew ? (
+            {!isCreateMode && currentBonsai ? (
               <S.DangerButton disabled={isDeleting} onClick={handleDelete} type="button">
                 {isDeleting ? 'Deleting...' : 'Delete'}
               </S.DangerButton>
@@ -618,7 +578,7 @@ const Admin: SFC = ({className}) => {
             </S.PrimaryButton>
           </S.FormActions>
         </S.Form>
-      </S.Content>
+      )}
     </S.Container>
   );
 };

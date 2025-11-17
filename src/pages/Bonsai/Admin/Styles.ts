@@ -10,93 +10,19 @@ export const Container = styled.div`
   width: 100%;
 `;
 
-export const Content = styled.div`
-  align-items: flex-start;
-  display: grid;
-  gap: 24px;
-  grid-template-columns: 320px 1fr;
-
-  @media (max-width: ${breakpoints.desktop}) {
-    grid-template-columns: 1fr;
-  }
+export const HeaderActions = styled.div`
+  display: flex;
+  gap: 12px;
 `;
 
-export const InventoryColumn = styled.div`
+export const LoaderWrapper = styled.div`
+  align-items: center;
   background: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 16px;
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 20px;
-`;
-
-export const InventoryColumnHeader = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-`;
-
-export const InventoryColumnTitle = styled.h3`
-  font-size: 16px;
-  font-weight: ${fonts.weight.semiBold};
-  margin: 0;
-`;
-
-export const InventoryList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-export const InventoryButton = styled.button<{$isActive: boolean}>`
-  align-items: center;
-  background: ${({$isActive}) => ($isActive ? colors.palette.blue[50] : colors.background)};
-  border: 1px solid ${({$isActive}) => ($isActive ? colors.palette.blue[500] : colors.border)};
-  border-radius: 12px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 16px;
-  transition:
-    border 0.2s ease,
-    background 0.2s ease;
-`;
-
-export const BonsaiName = styled.div`
-  font-size: 15px;
-  font-weight: ${fonts.weight.medium};
-`;
-
-export const BonsaiMeta = styled.div`
-  color: ${colors.secondary};
-  font-size: 12px;
-  margin-top: 2px;
-`;
-
-export const StatusBadge = styled.span<{$status: string}>`
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: ${fonts.weight.medium};
-  padding: 4px 10px;
-  text-transform: capitalize;
-  ${({$status}) =>
-    $status === 'published'
-      ? css`
-          background: ${colors.palette.green[50]};
-          color: ${colors.palette.green[700]};
-        `
-      : css`
-          background: ${colors.palette.orange[50]};
-          color: ${colors.palette.orange[700]};
-        `}
-`;
-
-export const InventoryLoader = styled.div`
-  align-items: center;
-  display: flex;
   justify-content: center;
-  min-height: 160px;
+  min-height: 240px;
 `;
 
 export const Form = styled.form`

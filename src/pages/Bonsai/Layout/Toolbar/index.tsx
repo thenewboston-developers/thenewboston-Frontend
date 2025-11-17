@@ -11,12 +11,13 @@ const Toolbar: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <S.Left />
-      <S.MenuItems>
-        <ToolbarMenuLink text="Home" to="/bonsai/home" />
-        <ToolbarMenuLink text="Learn More" to="/bonsai/learn-more" />
-        {self.is_staff ? <ToolbarMenuLink text="Manage" to="/bonsai/manage" /> : null}
-      </S.MenuItems>
+      <S.Left>
+        <S.MenuItems $isCentered={!self.is_staff}>
+          <ToolbarMenuLink text="Home" to="/bonsai/home" />
+          <ToolbarMenuLink text="Learn More" to="/bonsai/learn-more" />
+          {self.is_staff ? <ToolbarMenuLink text="Manage" to="/bonsai/manage" /> : null}
+        </S.MenuItems>
+      </S.Left>
       <S.Right />
     </S.Container>
   );

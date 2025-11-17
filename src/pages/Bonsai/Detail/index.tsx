@@ -1,33 +1,42 @@
 import {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
-import {mdiArrowLeft} from '@mdi/js';
+import {mdiArrowLeft, mdiDotsVertical} from '@mdi/js';
 
-import {getBonsai} from 'api/bonsais';
+import {deleteBonsai, getBonsai} from 'api/bonsais';
+import DropdownMenu from 'components/DropdownMenu';
 import Icon from 'components/Icon';
 import Loader from 'components/Loader';
+import {ToastType} from 'enums';
+import ConfirmationModal from 'modals/ConfirmationModal';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
+import {getSelf} from 'selectors/state';
 import {Bonsai, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
 const BonsaiDetail: SFC = ({className}) => {
-  const {bonsaiId} = useParams();
+  const {id} = useParams<{id: string}>();
   const navigate = useNavigate();
+  const self = useSelector(getSelf);
   const [bonsai, setBonsai] = useState<Bonsai | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const isAdmin = self.is_staff;
 
   useEffect(() => {
-    if (!bonsaiId) return;
+    if (!id) return;
     setIsLoading(true);
     setSelectedImageIndex(0);
     setIsModalOpen(false);
     (async () => {
       try {
-        const data = await getBonsai(bonsaiId);
+        const data = await getBonsai(id);
         setBonsai(data);
         setNotFound(false);
       } catch (error: any) {
@@ -40,9 +49,38 @@ const BonsaiDetail: SFC = ({className}) => {
         setIsLoading(false);
       }
     })();
-  }, [bonsaiId]);
+  }, [id]);
 
-  if (!bonsaiId || (notFound && !isLoading)) {
+  const handleEdit = () => {
+    if (!bonsai) return;
+    navigate(`/bonsai/manage/${bonsai.slug}`);
+  };
+
+  const handleDelete = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    if (isDeleting) return;
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!bonsai || isDeleting) return;
+    setIsDeleting(true);
+    try {
+      await deleteBonsai(bonsai.id);
+      displayToast('Bonsai deleted', ToastType.SUCCESS);
+      setIsDeleteModalOpen(false);
+      navigate('/bonsai/manage');
+    } catch (error) {
+      displayErrorToast('Unable to delete bonsai');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  if (!id || (notFound && !isLoading)) {
     return <Navigate to="/bonsai/home" replace />;
   }
 
@@ -77,6 +115,17 @@ const BonsaiDetail: SFC = ({className}) => {
     {label: 'Pot', value: bonsai.pot},
   ];
 
+  const menuOptions = [
+    {
+      label: 'Edit',
+      onClick: handleEdit,
+    },
+    {
+      label: 'Delete',
+      onClick: handleDelete,
+    },
+  ];
+
   return (
     <S.Container className={className}>
       <S.Header>
@@ -84,6 +133,7 @@ const BonsaiDetail: SFC = ({className}) => {
           <Icon icon={mdiArrowLeft} size={20} />
           <span>All Bonsai</span>
         </S.BackButton>
+        {isAdmin ? <DropdownMenu icon={mdiDotsVertical} options={menuOptions} /> : null}
       </S.Header>
 
       <S.Content>
@@ -153,6 +203,15 @@ const BonsaiDetail: SFC = ({className}) => {
 
       {isModalOpen && activeImage ? (
         <FullScreenImageModal close={() => setIsModalOpen(false)} imageSrc={activeImage} />
+      ) : null}
+      {isDeleteModalOpen ? (
+        <ConfirmationModal
+          close={closeDeleteModal}
+          confirmText={isDeleting ? 'Deleting...' : 'Delete'}
+          header="Delete Bonsai"
+          message="Are you sure you want to delete this bonsai? This action cannot be undone."
+          onConfirm={handleConfirmDelete}
+        />
       ) : null}
     </S.Container>
   );

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {Bonsai, BonsaiStatus} from 'types';
+import {Bonsai, BonsaiStatus, PaginatedResponse} from 'types';
 import {BonsaiResponse} from 'types/api/bonsais';
 import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 
@@ -11,10 +11,21 @@ const normalizeBonsai = (bonsai: BonsaiResponse): Bonsai => ({
   price_amount: typeof bonsai.price_amount === 'string' ? parseFloat(bonsai.price_amount) : bonsai.price_amount,
 });
 
-export const getBonsais = async (params?: {status?: BonsaiStatus}): Promise<Bonsai[]> => {
+type BonsaiListResponse = PaginatedResponse<BonsaiResponse>;
+
+export interface GetBonsaisParams {
+  page?: number;
+  page_size?: number;
+  status?: BonsaiStatus;
+}
+
+export const getBonsais = async (params?: GetBonsaisParams): Promise<PaginatedResponse<Bonsai>> => {
   try {
-    const response = await axios.get<BonsaiResponse[]>(BASE_URL, {params});
-    return response.data.map(normalizeBonsai);
+    const response = await axios.get<BonsaiListResponse>(BASE_URL, {params});
+    return {
+      ...response.data,
+      results: response.data.results.map(normalizeBonsai),
+    };
   } catch (error) {
     throw error;
   }
