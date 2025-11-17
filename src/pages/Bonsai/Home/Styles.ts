@@ -52,6 +52,19 @@ export const CardImage = styled.img`
   width: 100%;
 `;
 
+export const CardImagePlaceholder = styled.div`
+  align-items: center;
+  background: ${colors.palette.gray[100]};
+  border-radius: 12px;
+  color: ${colors.secondary};
+  display: flex;
+  font-size: 14px;
+  justify-content: center;
+  min-height: 180px;
+  padding: 40px 20px;
+  text-align: center;
+`;
+
 export const CardBody = styled.div`
   display: flex;
   flex-direction: column;
@@ -84,7 +97,7 @@ export const PriceRow = styled.div`
   margin-top: 2px;
 `;
 
-export const TNBLogo = styled.img`
+export const CurrencyLogo = styled.img`
   border-radius: 50%;
   height: 22px;
   width: 22px;

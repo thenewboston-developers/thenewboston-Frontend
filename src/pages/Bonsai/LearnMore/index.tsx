@@ -8,12 +8,12 @@ const BonsaiLearnMore: SFC = ({className}) => {
         <S.Title>Explore the Bonsai Collection</S.Title>
 
         <S.Introduction>
-          Each bonsai tree in our nursery is photographed, documented, and paired with practical care notes so you can
+          Each bonsai in our nursery is photographed, documented, and paired with practical care notes so you can
           appreciate every branch without visiting the greenhouse. Here is how we curate and share every specimen.
         </S.Introduction>
 
         <S.Image
-          alt="Bonsai caretaker preparing a tree for display"
+          alt="Bonsai caretaker preparing a specimen for display"
           src="https://placehold.co/640x360/png?text=Bonsai+Showcase+1"
         />
 
@@ -42,7 +42,7 @@ const BonsaiLearnMore: SFC = ({className}) => {
 
           <S.Step>
             <S.StepNumber>1</S.StepNumber>
-            <S.StepTitle>Document the Tree</S.StepTitle>
+            <S.StepTitle>Document the Bonsai</S.StepTitle>
             <S.StepParagraph>
               We capture large hero images, macro shots of bark and foliage, and note the overall style, species, and
               age so the card mirrors an in-person inspection.
@@ -50,7 +50,7 @@ const BonsaiLearnMore: SFC = ({className}) => {
           </S.Step>
 
           <S.Image
-            alt="Photographing bonsai trees under studio lights"
+            alt="Photographing bonsai under studio lights"
             src="https://placehold.co/640x360/png?text=Bonsai+Showcase+2"
           />
 
@@ -68,14 +68,14 @@ const BonsaiLearnMore: SFC = ({className}) => {
             <S.StepTitle>Publish & Highlight</S.StepTitle>
             <S.StepParagraph>Once images are ready we:</S.StepParagraph>
             <S.StepList>
-              <S.ListItem>Publish the tree in the Bonsai gallery with consistent card styling</S.ListItem>
+              <S.ListItem>Publish the bonsai in the gallery with consistent card styling</S.ListItem>
               <S.ListItem>Showcase the carousel on desktop with the familiar thumbnail rail</S.ListItem>
               <S.ListItem>Enable the same full-screen lightbox interaction used throughout the app</S.ListItem>
             </S.StepList>
           </S.Step>
 
           <S.Image
-            alt="Bonsai trees being showcased in a digital gallery"
+            alt="Bonsai being showcased in a digital gallery"
             src="https://placehold.co/640x360/png?text=Bonsai+Showcase+3"
           />
         </S.Section>
@@ -91,7 +91,7 @@ const BonsaiLearnMore: SFC = ({className}) => {
             </S.Paragraph>
           </S.SubSection>
           <S.SubSection>
-            <S.SubSectionTitle>Will these trees be for sale?</S.SubSectionTitle>
+            <S.SubSectionTitle>Will these bonsai be for sale?</S.SubSectionTitle>
             <S.Paragraph>
               The first release focuses on layout polish and storytelling. Pricing, reservation CTAs, and shipping
               details will arrive in the next milestone once we wire it into the marketplace flow.

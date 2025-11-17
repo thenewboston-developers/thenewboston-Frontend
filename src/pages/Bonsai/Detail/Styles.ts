@@ -39,6 +39,13 @@ export const Content = styled.div`
   flex: 1;
 `;
 
+export const LoadingState = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 200px;
+`;
+
 export const Layout = styled.div`
   column-gap: 40px;
   display: grid;
@@ -72,12 +79,28 @@ export const MainImageButton = styled.button`
   &:focus {
     outline: 3px solid ${colors.palette.blue[300]};
   }
+
+  &:disabled {
+    cursor: default;
+  }
 `;
 
 export const MainImage = styled.img`
   height: 100%;
   object-fit: cover;
   width: 100%;
+`;
+
+export const ImagePlaceholder = styled.div`
+  align-items: center;
+  background: ${colors.palette.gray[100]};
+  color: ${colors.secondary};
+  display: flex;
+  font-size: 14px;
+  height: 100%;
+  justify-content: center;
+  padding: 40px 16px;
+  text-align: center;
 `;
 
 export const Thumbnails = styled.div`
@@ -137,7 +160,7 @@ export const PriceRow = styled.div`
   margin-top: 8px;
 `;
 
-export const TNBLogo = styled.img`
+export const CurrencyLogo = styled.img`
   border-radius: 50%;
   height: 28px;
   width: 28px;
@@ -205,4 +228,10 @@ export const HighlightList = styled.ul`
   li {
     list-style: disc;
   }
+`;
+
+export const NoHighlights = styled.p`
+  color: ${colors.secondary};
+  font-size: 14px;
+  margin: 0;
 `;

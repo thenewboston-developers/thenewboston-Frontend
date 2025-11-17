@@ -1,36 +1,76 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
 import {mdiArrowLeft} from '@mdi/js';
 
-import logo from 'assets/logo192.png';
+import {getBonsai} from 'api/bonsais';
 import Icon from 'components/Icon';
+import Loader from 'components/Loader';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
-import {SFC} from 'types';
-
-import {bonsaiTrees} from '../data';
+import {Bonsai, SFC} from 'types';
+import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
 const BonsaiDetail: SFC = ({className}) => {
   const {bonsaiId} = useParams();
-  const bonsai = useMemo(() => bonsaiTrees.find((tree) => tree.id === bonsaiId), [bonsaiId]);
+  const navigate = useNavigate();
+  const [bonsai, setBonsai] = useState<Bonsai | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
+    if (!bonsaiId) return;
+    setIsLoading(true);
     setSelectedImageIndex(0);
     setIsModalOpen(false);
-  }, [bonsai?.id]);
+    (async () => {
+      try {
+        const data = await getBonsai(bonsaiId);
+        setBonsai(data);
+        setNotFound(false);
+      } catch (error: any) {
+        if (error?.response?.status === 404) {
+          setNotFound(true);
+        } else {
+          displayErrorToast('Unable to load bonsai');
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, [bonsaiId]);
 
-  if (!bonsai) {
+  if (!bonsaiId || (notFound && !isLoading)) {
     return <Navigate to="/bonsai/home" replace />;
   }
 
-  const activeImage = bonsai.images[selectedImageIndex] ?? bonsai.images[0];
+  if (isLoading) {
+    return (
+      <S.Container className={className}>
+        <S.Header>
+          <S.BackButton onClick={() => navigate('/bonsai/home')}>
+            <Icon icon={mdiArrowLeft} size={20} />
+            <span>All Bonsai</span>
+          </S.BackButton>
+        </S.Header>
+        <S.LoadingState>
+          <Loader />
+        </S.LoadingState>
+      </S.Container>
+    );
+  }
+
+  if (!bonsai) return null;
+
+  const hasImages = bonsai.images.length > 0;
+  const activeImage = bonsai.images[selectedImageIndex]?.url ?? bonsai.images[0]?.url ?? '';
 
   const metadata: Array<{label: string; value: string}> = [
     {label: 'Species', value: bonsai.species},
+    {label: 'Genus', value: bonsai.genus},
+    {label: 'Cultivar', value: bonsai.cultivar},
     {label: 'Style', value: bonsai.style},
     {label: 'Size', value: bonsai.size},
     {label: 'Origin', value: bonsai.origin},
@@ -42,36 +82,50 @@ const BonsaiDetail: SFC = ({className}) => {
       <S.Header>
         <S.BackButton onClick={() => navigate('/bonsai/home')}>
           <Icon icon={mdiArrowLeft} size={20} />
-          <span>All Bonsai Trees</span>
+          <span>All Bonsai</span>
         </S.BackButton>
       </S.Header>
 
       <S.Content>
         <S.Layout>
           <S.MediaColumn>
-            <S.MainImageButton onClick={() => setIsModalOpen(true)} type="button">
-              <S.MainImage alt={bonsai.name} src={activeImage} />
+            <S.MainImageButton disabled={!hasImages} onClick={() => setIsModalOpen(true)} type="button">
+              {hasImages && activeImage ? (
+                <S.MainImage alt={bonsai.name} src={activeImage} />
+              ) : (
+                <S.ImagePlaceholder>No images available</S.ImagePlaceholder>
+              )}
             </S.MainImageButton>
-            <S.Thumbnails>
-              {bonsai.images.map((image, idx) => (
-                <S.ThumbnailButton
-                  $isActive={idx === selectedImageIndex}
-                  key={image}
-                  onClick={() => setSelectedImageIndex(idx)}
-                  type="button"
-                >
-                  <S.ThumbnailImage alt={`${bonsai.name} thumbnail ${idx + 1}`} src={image} />
-                </S.ThumbnailButton>
-              ))}
-            </S.Thumbnails>
+            {hasImages ? (
+              <S.Thumbnails>
+                {bonsai.images.map((image, idx) => (
+                  <S.ThumbnailButton
+                    $isActive={idx === selectedImageIndex}
+                    key={image.id}
+                    onClick={() => setSelectedImageIndex(idx)}
+                    type="button"
+                  >
+                    <S.ThumbnailImage alt={`${bonsai.name} thumbnail ${idx + 1}`} src={image.url} />
+                  </S.ThumbnailButton>
+                ))}
+              </S.Thumbnails>
+            ) : null}
           </S.MediaColumn>
 
           <S.DetailsColumn>
             <S.Title>{bonsai.name}</S.Title>
             <S.Subtitle>{bonsai.teaser}</S.Subtitle>
             <S.PriceRow>
-              <S.TNBLogo alt="TNBC logo" src={logo} />
-              <S.Price>{bonsai.price.toLocaleString()}</S.Price>
+              {bonsai.price_currency?.logo ? (
+                <S.CurrencyLogo alt={`${bonsai.price_currency.ticker} logo`} src={bonsai.price_currency.logo} />
+              ) : null}
+              <S.Price>
+                {bonsai.price_amount.toLocaleString(undefined, {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2,
+                })}{' '}
+                {bonsai.price_currency?.ticker}
+              </S.Price>
             </S.PriceRow>
             <S.Divider />
             <S.DetailList>
@@ -84,11 +138,15 @@ const BonsaiDetail: SFC = ({className}) => {
             </S.DetailList>
             <S.Description>{bonsai.description}</S.Description>
             <S.HighlightTitle>Included Highlights</S.HighlightTitle>
-            <S.HighlightList>
-              {bonsai.highlights.map((highlight: string) => (
-                <li key={highlight}>{highlight}</li>
-              ))}
-            </S.HighlightList>
+            {bonsai.highlights.length ? (
+              <S.HighlightList>
+                {bonsai.highlights.map((highlight) => (
+                  <li key={highlight.id}>{highlight.text}</li>
+                ))}
+              </S.HighlightList>
+            ) : (
+              <S.NoHighlights>Highlights coming soon.</S.NoHighlights>
+            )}
           </S.DetailsColumn>
         </S.Layout>
       </S.Content>

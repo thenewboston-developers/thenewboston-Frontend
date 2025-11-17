@@ -2,6 +2,7 @@ import {Navigate, Route, Routes} from 'react-router-dom';
 
 import {SFC} from 'types';
 
+import Admin from './Admin';
 import Detail from './Detail';
 import Home from './Home';
 import Layout from './Layout';
@@ -13,6 +14,7 @@ const Bonsai: SFC = () => {
       <Route element={<Layout />}>
         <Route path="/home" element={<Home />} />
         <Route path="/learn-more" element={<LearnMore />} />
+        <Route path="/manage" element={<Admin />} />
       </Route>
       <Route path="/:bonsaiId" element={<Detail />} />
       <Route path="*" element={<Navigate to="/bonsai/home" replace />} />
