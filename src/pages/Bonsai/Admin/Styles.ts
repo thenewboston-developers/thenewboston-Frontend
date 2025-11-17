@@ -188,6 +188,60 @@ export const ArrayItem = styled.div`
   }
 `;
 
+export const ImagePreviewWrapper = styled.div`
+  align-items: center;
+  background: ${colors.background};
+  border: 1px solid ${colors.border};
+  border-radius: 12px;
+  display: flex;
+  height: 80px;
+  justify-content: center;
+  overflow: hidden;
+  width: 80px;
+`;
+
+export const ImagePreview = styled.img`
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+`;
+
+export const ImagePlaceholder = styled.span`
+  color: ${colors.secondary};
+  font-size: 12px;
+  padding: 0 8px;
+  text-align: center;
+`;
+
+export const ImageControls = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+export const FileButton = styled.label`
+  background: ${colors.background};
+  border: 1px dashed ${colors.border};
+  border-radius: 8px;
+  color: ${colors.primary};
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: ${fonts.weight.medium};
+  padding: 8px 12px;
+  width: fit-content;
+`;
+
+export const HiddenFileInput = styled.input`
+  display: none;
+`;
+
+export const FileName = styled.span`
+  color: ${colors.secondary};
+  font-size: 12px;
+`;
+
 export const RemoveButton = styled.button`
   background: none;
   border: none;

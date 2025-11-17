@@ -34,8 +34,8 @@ const BonsaiHome: SFC = ({className}) => {
       <S.CardGrid>
         {bonsais.map((bonsai) => (
           <S.Card key={bonsai.slug} to={`/bonsai/${bonsai.slug}`}>
-            {bonsai.images[0] ? (
-              <S.CardImage alt={bonsai.name} src={bonsai.images[0].url} />
+            {bonsai.images[0]?.url ? (
+              <S.CardImage alt={bonsai.name} src={bonsai.images[0].url ?? ''} />
             ) : (
               <S.CardImagePlaceholder>No image available</S.CardImagePlaceholder>
             )}

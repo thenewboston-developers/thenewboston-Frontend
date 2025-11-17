@@ -9,7 +9,7 @@ import Loader from 'components/Loader';
 import SectionHeading from 'components/SectionHeading';
 import {ToastType} from 'enums';
 import {getSelf} from 'selectors/state';
-import {Bonsai, BonsaiPayload, Currency, SFC} from 'types';
+import {Bonsai, BonsaiStatus, Currency, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import * as S from './Styles';
@@ -20,18 +20,45 @@ interface FormHighlight {
 }
 
 interface FormImage {
+  clientId: string;
+  file?: File | null;
   id?: number;
-  url: string;
+  preview: string | null;
 }
 
-interface FormValues extends Omit<BonsaiPayload, 'price_currency_id' | 'price_amount' | 'highlights' | 'images'> {
+interface FormValues {
   cultivar: string;
+  description: string;
   genus: string;
   highlights: FormHighlight[];
   images: FormImage[];
+  name: string;
+  origin: string;
+  pot: string;
   price_amount: string;
   price_currency_id: number | '';
+  size: string;
+  slug: string;
+  species: string;
+  status: BonsaiStatus;
+  style: string;
+  teaser: string;
 }
+
+const generateImageClientId = () => Math.random().toString(36).slice(2, 11);
+
+const createEmptyFormImage = (): FormImage => ({
+  clientId: generateImageClientId(),
+  file: null,
+  preview: null,
+});
+
+const mapImageToFormImage = (image: Bonsai['images'][number]): FormImage => ({
+  clientId: generateImageClientId(),
+  file: null,
+  id: image.id,
+  preview: image.url ?? null,
+});
 
 const defaultFormValues: FormValues = {
   cultivar: '',
@@ -70,7 +97,7 @@ const Admin: SFC = ({className}) => {
       description: bonsai.description,
       genus: bonsai.genus,
       highlights: bonsai.highlights.map((highlight) => ({id: highlight.id, text: highlight.text})),
-      images: bonsai.images.map((image) => ({id: image.id, url: image.url})),
+      images: bonsai.images.map((image) => mapImageToFormImage(image)),
       name: bonsai.name,
       origin: bonsai.origin,
       pot: bonsai.pot,
@@ -175,11 +202,21 @@ const Admin: SFC = ({className}) => {
     }));
   };
 
-  const handleImageChange = (index: number, value: string) => {
-    setFormValues((prev) => ({
-      ...prev,
-      images: prev.images.map((image, idx) => (idx === index ? {...image, url: value} : image)),
-    }));
+  const handleImageFileChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormValues((prev) => ({
+        ...prev,
+        images: prev.images.map((image, idx) =>
+          idx === index ? {...image, file, preview: reader.result as string} : image,
+        ),
+      }));
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
   };
 
   const addHighlight = () =>
@@ -197,7 +234,7 @@ const Admin: SFC = ({className}) => {
   const addImage = () =>
     setFormValues((prev) => ({
       ...prev,
-      images: [...prev.images, {url: ''}],
+      images: [...prev.images, createEmptyFormImage()],
     }));
 
   const removeImage = (index: number) =>
@@ -206,7 +243,7 @@ const Admin: SFC = ({className}) => {
       images: prev.images.filter((_, idx) => idx !== index),
     }));
 
-  const buildPayload = (): BonsaiPayload | null => {
+  const buildFormData = (): FormData | null => {
     const {
       slug,
       name,
@@ -254,49 +291,71 @@ const Admin: SFC = ({className}) => {
       return null;
     }
 
-    return {
-      cultivar: cultivar.trim(),
-      slug: slug.trim(),
-      name: name.trim(),
-      species: species.trim(),
-      genus: genus.trim(),
-      style: style.trim(),
-      size: size.trim(),
-      origin: origin.trim(),
-      pot: pot.trim(),
-      teaser: teaser.trim(),
-      description: description.trim(),
-      price_amount: numericPrice.toString(),
-      price_currency_id,
-      status,
-      highlights: highlights
-        .filter((highlight) => highlight.text.trim().length)
-        .map((highlight, index) => ({
-          id: highlight.id,
-          order: index,
-          text: highlight.text.trim(),
-        })),
-      images: images
-        .filter((image) => image.url.trim().length)
-        .map((image, index) => ({
-          id: image.id,
-          order: index,
-          url: image.url.trim(),
-        })),
-    };
+    const formData = new FormData();
+    formData.append('slug', slug.trim());
+    formData.append('name', name.trim());
+    formData.append('species', species.trim());
+    formData.append('genus', genus.trim());
+    formData.append('cultivar', cultivar.trim());
+    formData.append('style', style.trim());
+    formData.append('size', size.trim());
+    formData.append('origin', origin.trim());
+    formData.append('pot', pot.trim());
+    formData.append('teaser', teaser.trim());
+    formData.append('description', description.trim());
+    formData.append('price_amount', numericPrice.toString());
+    formData.append('price_currency_id', price_currency_id.toString());
+    formData.append('status', status);
+
+    const highlightsPayload = highlights
+      .filter((highlight) => highlight.text.trim().length)
+      .map((highlight, index) => ({
+        id: highlight.id,
+        order: index,
+        text: highlight.text.trim(),
+      }));
+
+    formData.append('highlights', JSON.stringify(highlightsPayload));
+
+    const imagesPayload: {id?: number; image_field?: string; order: number}[] = [];
+
+    for (let index = 0; index < images.length; index += 1) {
+      const image = images[index];
+      if (!image.id && !image.file) {
+        displayErrorToast('Please upload a file for each new image.');
+        return null;
+      }
+
+      const metadata: {id?: number; image_field?: string; order: number} = {
+        id: image.id,
+        order: index,
+      };
+
+      if (image.file) {
+        const fieldName = `image_${image.clientId}`;
+        metadata.image_field = fieldName;
+        formData.append(fieldName, image.file);
+      }
+
+      imagesPayload.push(metadata);
+    }
+
+    formData.append('images', JSON.stringify(imagesPayload));
+
+    return formData;
   };
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (!self.is_staff) return;
-    const payload = buildPayload();
-    if (!payload) return;
+    const formData = buildFormData();
+    if (!formData) return;
     setIsSaving(true);
     try {
       const response =
         selectedBonsai && !isCreatingNew
-          ? await updateBonsai(selectedBonsai.slug, payload)
-          : await createBonsai(payload);
+          ? await updateBonsai(selectedBonsai.id, formData)
+          : await createBonsai(formData);
       setSelectedBonsai(response);
       setFormValues(mapBonsaiToForm(response));
       setIsCreatingNew(false);
@@ -316,7 +375,7 @@ const Admin: SFC = ({className}) => {
     if (!confirmed) return;
     setIsDeleting(true);
     try {
-      await deleteBonsai(selectedBonsai.slug);
+      await deleteBonsai(selectedBonsai.id);
       displayToast('Bonsai deleted', ToastType.SUCCESS);
       setSelectedBonsai(null);
       setFormValues(defaultFormValues);
@@ -512,18 +571,35 @@ const Admin: SFC = ({className}) => {
               </S.SecondaryButton>
             </S.ArrayHeader>
             {formValues.images.length ? (
-              formValues.images.map((image, index) => (
-                <S.ArrayItem key={image.id ?? index}>
-                  <S.Input
-                    onChange={(event) => handleImageChange(index, event.target.value)}
-                    placeholder="https://example.com/bonsai.jpg"
-                    value={image.url}
-                  />
-                  <S.RemoveButton onClick={() => removeImage(index)} type="button">
-                    Remove
-                  </S.RemoveButton>
-                </S.ArrayItem>
-              ))
+              formValues.images.map((image, index) => {
+                const inputId = `bonsai-image-${image.clientId}`;
+                const altText = formValues.name ? `${formValues.name} image ${index + 1}` : `Bonsai image ${index + 1}`;
+
+                return (
+                  <S.ArrayItem key={image.clientId}>
+                    <S.ImagePreviewWrapper>
+                      {image.preview ? (
+                        <S.ImagePreview alt={altText} src={image.preview} />
+                      ) : (
+                        <S.ImagePlaceholder>No image</S.ImagePlaceholder>
+                      )}
+                    </S.ImagePreviewWrapper>
+                    <S.ImageControls>
+                      <S.FileButton htmlFor={inputId}>{image.preview ? 'Replace image' : 'Upload image'}</S.FileButton>
+                      <S.HiddenFileInput
+                        accept="image/*"
+                        id={inputId}
+                        onChange={handleImageFileChange(index)}
+                        type="file"
+                      />
+                      {image.file ? <S.FileName>{image.file.name}</S.FileName> : null}
+                    </S.ImageControls>
+                    <S.RemoveButton onClick={() => removeImage(index)} type="button">
+                      Remove
+                    </S.RemoveButton>
+                  </S.ArrayItem>
+                );
+              })
             ) : (
               <EmptyText>No images yet.</EmptyText>
             )}

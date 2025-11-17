@@ -12,7 +12,7 @@ export interface BonsaiHighlight {
 export interface BonsaiImage {
   id: number;
   order: number;
-  url: string;
+  url: string | null;
 }
 
 export interface Bonsai extends CreatedModified {
@@ -67,5 +67,5 @@ export interface BonsaiHighlightPayload {
 export interface BonsaiImagePayload {
   id?: number;
   order: number;
-  url: string;
+  image_field?: string;
 }

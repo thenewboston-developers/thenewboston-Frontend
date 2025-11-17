@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-import {Bonsai, BonsaiPayload, BonsaiStatus} from 'types';
-import {BonsaiHighlightPayload, BonsaiImagePayload, BonsaiResponse} from 'types/api/bonsais';
-import {authorizationHeaders} from 'utils/authentication';
+import {Bonsai, BonsaiStatus} from 'types';
+import {BonsaiResponse} from 'types/api/bonsais';
+import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/bonsais`;
 
@@ -29,33 +29,27 @@ export const getBonsai = async (slug: string): Promise<Bonsai> => {
   }
 };
 
-export const createBonsai = async (data: BonsaiPayload): Promise<Bonsai> => {
+export const createBonsai = async (data: FormData): Promise<Bonsai> => {
   try {
-    const response = await axios.post<BonsaiResponse>(BASE_URL, data, authorizationHeaders());
+    const response = await axios.post<BonsaiResponse>(BASE_URL, data, authorizationFormHeaders());
     return normalizeBonsai(response.data);
   } catch (error) {
     throw error;
   }
 };
 
-export const updateBonsai = async (
-  slug: string,
-  data: Partial<BonsaiPayload> & {
-    highlights?: BonsaiHighlightPayload[];
-    images?: BonsaiImagePayload[];
-  },
-): Promise<Bonsai> => {
+export const updateBonsai = async (id: number, data: FormData): Promise<Bonsai> => {
   try {
-    const response = await axios.patch<BonsaiResponse>(`${BASE_URL}/${slug}`, data, authorizationHeaders());
+    const response = await axios.patch<BonsaiResponse>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
     return normalizeBonsai(response.data);
   } catch (error) {
     throw error;
   }
 };
 
-export const deleteBonsai = async (slug: string): Promise<void> => {
+export const deleteBonsai = async (id: number): Promise<void> => {
   try {
-    await axios.delete(`${BASE_URL}/${slug}`, authorizationHeaders());
+    await axios.delete(`${BASE_URL}/${id}`, authorizationHeaders());
   } catch (error) {
     throw error;
   }

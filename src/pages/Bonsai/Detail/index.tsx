@@ -105,7 +105,7 @@ const BonsaiDetail: SFC = ({className}) => {
                     onClick={() => setSelectedImageIndex(idx)}
                     type="button"
                   >
-                    <S.ThumbnailImage alt={`${bonsai.name} thumbnail ${idx + 1}`} src={image.url} />
+                    <S.ThumbnailImage alt={`${bonsai.name} thumbnail ${idx + 1}`} src={image.url ?? ''} />
                   </S.ThumbnailButton>
                 ))}
               </S.Thumbnails>
