@@ -85,7 +85,7 @@ interface AdminProps {
 
 const Admin: SFC<AdminProps> = ({className, mode}) => {
   const self = useSelector(getSelf);
-  const {slug} = useParams<{slug?: string}>();
+  const {id: bonsaiIdParam} = useParams<{id?: string}>();
   const navigate = useNavigate();
   const isCreateMode = mode === 'create';
   const [currencies, setCurrencies] = useState<Currency[]>([]);
@@ -144,7 +144,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
       return;
     }
 
-    if (!slug) {
+    if (!bonsaiIdParam) {
       navigate('/bonsai/manage');
       return;
     }
@@ -152,7 +152,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
     (async () => {
       setIsLoadingBonsai(true);
       try {
-        const response = await getBonsai(slug);
+        const response = await getBonsai(bonsaiIdParam, {useAuth: true});
         setCurrentBonsai(response);
         setFormValues(mapBonsaiToForm(response));
       } catch (error) {
@@ -162,7 +162,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
         setIsLoadingBonsai(false);
       }
     })();
-  }, [isCreateMode, mapBonsaiToForm, navigate, self.is_staff, slug]);
+  }, [bonsaiIdParam, isCreateMode, mapBonsaiToForm, navigate, self.is_staff]);
 
   const handleInputChange =
     (field: keyof FormValues) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

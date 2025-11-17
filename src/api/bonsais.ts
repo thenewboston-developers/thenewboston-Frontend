@@ -19,9 +19,25 @@ export interface GetBonsaisParams {
   status?: BonsaiStatus;
 }
 
-export const getBonsais = async (params?: GetBonsaisParams): Promise<PaginatedResponse<Bonsai>> => {
+interface BonsaiRequestOptions {
+  useAuth?: boolean;
+}
+
+const withOptionalAuthHeaders = (useAuth?: boolean) => {
+  if (!useAuth) return {};
+
+  return authorizationHeaders();
+};
+
+export const getBonsais = async (
+  params?: GetBonsaisParams,
+  options?: BonsaiRequestOptions,
+): Promise<PaginatedResponse<Bonsai>> => {
   try {
-    const response = await axios.get<BonsaiListResponse>(BASE_URL, {params});
+    const response = await axios.get<BonsaiListResponse>(BASE_URL, {
+      ...withOptionalAuthHeaders(options?.useAuth),
+      params,
+    });
     return {
       ...response.data,
       results: response.data.results.map(normalizeBonsai),
@@ -31,9 +47,9 @@ export const getBonsais = async (params?: GetBonsaisParams): Promise<PaginatedRe
   }
 };
 
-export const getBonsai = async (slug: string): Promise<Bonsai> => {
+export const getBonsai = async (slug: string, options?: BonsaiRequestOptions): Promise<Bonsai> => {
   try {
-    const response = await axios.get<BonsaiResponse>(`${BASE_URL}/${slug}`);
+    const response = await axios.get<BonsaiResponse>(`${BASE_URL}/${slug}`, withOptionalAuthHeaders(options?.useAuth));
     return normalizeBonsai(response.data);
   } catch (error) {
     throw error;

@@ -53,7 +53,7 @@ const BonsaiDetail: SFC = ({className}) => {
 
   const handleEdit = () => {
     if (!bonsai) return;
-    navigate(`/bonsai/manage/${bonsai.slug}`);
+    navigate(`/bonsai/edit/${bonsai.id}`);
   };
 
   const handleDelete = () => {

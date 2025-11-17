@@ -17,7 +17,7 @@ const Bonsai: SFC = () => {
         <Route path="/learn-more" element={<LearnMore />} />
         <Route path="/manage" element={<Manage />} />
         <Route path="/manage/create" element={<Admin mode="create" />} />
-        <Route path="/manage/:slug" element={<Admin mode="edit" />} />
+        <Route path="/edit/:id" element={<Admin mode="edit" />} />
       </Route>
       <Route path="/:id" element={<Detail />} />
       <Route path="*" element={<Navigate to="/bonsai/home" replace />} />

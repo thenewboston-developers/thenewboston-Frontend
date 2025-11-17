@@ -27,7 +27,7 @@ const Manage: SFC = ({className}) => {
     (async () => {
       setIsLoading(true);
       try {
-        const response = await getBonsais({page: currentPage, page_size: pageSize});
+        const response = await getBonsais({page: currentPage, page_size: pageSize}, {useAuth: true});
         setBonsaisData(response);
       } catch (error) {
         displayErrorToast('Unable to load bonsai entries');
@@ -58,7 +58,7 @@ const Manage: SFC = ({className}) => {
       <>
         <S.CardGrid>
           {bonsaisData.results.map((bonsai) => (
-            <S.Card key={bonsai.id} onClick={() => navigate(`/bonsai/manage/${bonsai.slug}`)} type="button">
+            <S.Card key={bonsai.id} onClick={() => navigate(`/bonsai/edit/${bonsai.id}`)} type="button">
               {bonsai.images[0]?.url ? (
                 <S.CardImage alt={bonsai.name} src={bonsai.images[0].url ?? ''} />
               ) : (
