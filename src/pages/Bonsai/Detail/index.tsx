@@ -36,7 +36,7 @@ const BonsaiDetail: SFC = ({className}) => {
     setIsModalOpen(false);
     (async () => {
       try {
-        const data = await getBonsai(id);
+        const data = await getBonsai(id, {useAuth: self.is_staff});
         setBonsai(data);
         setNotFound(false);
       } catch (error: any) {
@@ -49,7 +49,7 @@ const BonsaiDetail: SFC = ({className}) => {
         setIsLoading(false);
       }
     })();
-  }, [id]);
+  }, [id, self.is_staff]);
 
   const handleEdit = () => {
     if (!bonsai) return;

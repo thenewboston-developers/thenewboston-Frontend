@@ -57,34 +57,37 @@ const Manage: SFC = ({className}) => {
     return (
       <>
         <S.CardGrid>
-          {bonsaisData.results.map((bonsai) => (
-            <S.Card key={bonsai.id} onClick={() => navigate(`/bonsai/edit/${bonsai.id}`)} type="button">
-              {bonsai.images[0]?.url ? (
-                <S.CardImage alt={bonsai.name} src={bonsai.images[0].url ?? ''} />
-              ) : (
-                <S.CardImagePlaceholder>No image available</S.CardImagePlaceholder>
-              )}
-              <S.CardBody>
-                <S.CardHeader>
-                  <S.CardTitle>{bonsai.name}</S.CardTitle>
-                  <S.StatusBadge $status={bonsai.status}>
-                    {bonsai.status === 'published' ? 'Published' : 'Draft'}
-                  </S.StatusBadge>
-                </S.CardHeader>
-                <S.Slug>{bonsai.slug}</S.Slug>
-                <S.Dates>
-                  <S.DateItem>
-                    <S.DateLabel>Updated</S.DateLabel>
-                    <S.DateValue>{shortDate(bonsai.modified_date, false)}</S.DateValue>
-                  </S.DateItem>
-                  <S.DateItem>
-                    <S.DateLabel>Created</S.DateLabel>
-                    <S.DateValue>{shortDate(bonsai.created_date, false)}</S.DateValue>
-                  </S.DateItem>
-                </S.Dates>
-              </S.CardBody>
-            </S.Card>
-          ))}
+          {bonsaisData.results.map((bonsai) => {
+            const detailPath = `/bonsai/${bonsai.slug || bonsai.id}`;
+            return (
+              <S.Card key={bonsai.id} onClick={() => navigate(detailPath)} type="button">
+                {bonsai.images[0]?.url ? (
+                  <S.CardImage alt={bonsai.name} src={bonsai.images[0].url ?? ''} />
+                ) : (
+                  <S.CardImagePlaceholder>No image available</S.CardImagePlaceholder>
+                )}
+                <S.CardBody>
+                  <S.CardHeader>
+                    <S.CardTitle>{bonsai.name}</S.CardTitle>
+                    <S.StatusBadge $status={bonsai.status}>
+                      {bonsai.status === 'published' ? 'Published' : 'Draft'}
+                    </S.StatusBadge>
+                  </S.CardHeader>
+                  <S.Slug>{bonsai.slug}</S.Slug>
+                  <S.Dates>
+                    <S.DateItem>
+                      <S.DateLabel>Updated</S.DateLabel>
+                      <S.DateValue>{shortDate(bonsai.modified_date, false)}</S.DateValue>
+                    </S.DateItem>
+                    <S.DateItem>
+                      <S.DateLabel>Created</S.DateLabel>
+                      <S.DateValue>{shortDate(bonsai.created_date, false)}</S.DateValue>
+                    </S.DateItem>
+                  </S.Dates>
+                </S.CardBody>
+              </S.Card>
+            );
+          })}
         </S.CardGrid>
         {bonsaisData.count > pageSize ? (
           <S.Pagination

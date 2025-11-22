@@ -276,16 +276,17 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
     if (!formData) return;
 
     try {
+      let response: Bonsai;
       if (!isCreateMode && currentBonsai) {
-        const response = await updateBonsai(currentBonsai.id, formData);
+        response = await updateBonsai(currentBonsai.id, formData);
         setCurrentBonsai(response);
         setInitialValues(mapBonsaiToForm(response));
         displayToast('Bonsai updated', ToastType.SUCCESS);
       } else {
-        await createBonsai(formData);
+        response = await createBonsai(formData);
         displayToast('Bonsai created', ToastType.SUCCESS);
-        navigate('/bonsai/manage');
       }
+      navigate(`/bonsai/${response.id}`);
     } catch (error) {
       displayErrorToast(error);
     }
