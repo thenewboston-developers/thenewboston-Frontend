@@ -113,7 +113,7 @@ const BonsaiDetail: SFC = ({className}) => {
     {label: 'Size', value: bonsai.size},
     {label: 'Origin', value: bonsai.origin},
     {label: 'Pot', value: bonsai.pot},
-  ];
+  ].filter((meta) => meta.value);
 
   const menuOptions = [
     {
@@ -183,16 +183,16 @@ const BonsaiDetail: SFC = ({className}) => {
               ))}
             </S.DetailList>
             <S.Description>{bonsai.description}</S.Description>
-            <S.HighlightTitle>Included Highlights</S.HighlightTitle>
             {bonsai.highlights.length ? (
-              <S.HighlightList>
-                {bonsai.highlights.map((highlight) => (
-                  <li key={highlight.id}>{highlight.text}</li>
-                ))}
-              </S.HighlightList>
-            ) : (
-              <S.NoHighlights>Highlights coming soon.</S.NoHighlights>
-            )}
+              <>
+                <S.HighlightTitle>Included Highlights</S.HighlightTitle>
+                <S.HighlightList>
+                  {bonsai.highlights.map((highlight) => (
+                    <li key={highlight.id}>{highlight.text}</li>
+                  ))}
+                </S.HighlightList>
+              </>
+            ) : null}
           </S.DetailsColumn>
         </S.Layout>
       </S.Content>
