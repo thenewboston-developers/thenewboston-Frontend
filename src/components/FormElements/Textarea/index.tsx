@@ -6,29 +6,41 @@ import * as S from './Styles';
 
 export interface TextareaProps {
   errors: {[field: string]: string};
+  isRequired?: boolean;
   label: string;
   maxLength?: number;
   name: string;
-  placeholder?: string;
   onChange?(e: ChangeEvent<HTMLTextAreaElement>): void;
+  placeholder?: string;
+  showCharacterCount?: boolean;
   touched: {[field: string]: boolean};
 }
 
 const Textarea: SFC<TextareaProps> = ({
   className,
   errors,
+  isRequired = false,
   label,
   maxLength,
   name,
   onChange,
-  touched,
   placeholder = '',
+  showCharacterCount = false,
+  touched,
 }) => {
   const isError = errors[name] && touched[name];
 
   return (
     <>
-      <S.Label>{label}</S.Label>
+      <S.LabelRow>
+        <S.Label>
+          {label}
+          {isRequired && <S.RequiredIndicator>*</S.RequiredIndicator>}
+        </S.Label>
+        {showCharacterCount && maxLength && (
+          <S.CharacterCounter>{/* Character count handled by field value */}</S.CharacterCounter>
+        )}
+      </S.LabelRow>
       <S.Field
         $error={isError}
         className={className}

@@ -1,4 +1,5 @@
 import {LoginRequest, LoginResponse} from 'types/api/authentication';
+import {Bonsai, BonsaiHighlight, BonsaiImage, BonsaiPayload, BonsaiStatus} from 'types/api/bonsais';
 import {CommentReadSerializer, CreateCommentRequest} from 'types/api/comments';
 import {CurrencyBalance} from 'types/api/currencyBalances';
 import {CreateExchangeOrderRequest, OrderBookResponse} from 'types/api/exchangeOrders';
@@ -59,6 +60,11 @@ export {
   AssetPairs,
   Authentication,
   Block,
+  Bonsai,
+  BonsaiHighlight,
+  BonsaiImage,
+  BonsaiPayload,
+  BonsaiStatus,
   Candlestick,
   ChartTimeRange,
   ClassName,
