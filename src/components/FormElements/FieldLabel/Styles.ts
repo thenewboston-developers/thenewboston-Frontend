@@ -6,8 +6,6 @@ export const Label = styled.label`
   color: ${colors.secondary};
   font-size: 12px;
   font-weight: ${fonts.weight.medium};
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 `;
 
 export const RequiredIndicator = styled.span`

@@ -39,27 +39,6 @@ export const FieldGroup = styled.div`
   width: 100%;
 `;
 
-export const Label = styled.label`
-  color: ${colors.secondary};
-  font-size: 12px;
-  font-weight: ${fonts.weight.medium};
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-`;
-
-export const CharacterCounter = styled.span<{$isOverLimit?: boolean}>`
-  color: ${({$isOverLimit}) => ($isOverLimit ? colors.palette.red[600] : colors.secondary)};
-  font-size: 12px;
-  font-weight: ${fonts.weight.medium};
-`;
-
-export const FieldWithCounter = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-`;
-
 export const LabelRow = styled.div`
   align-items: center;
   display: flex;
@@ -191,44 +170,6 @@ export const RemoveButton = styled.button`
   cursor: pointer;
   font-size: 13px;
   padding: 6px 0;
-`;
-
-const baseButtonStyles = css`
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: ${fonts.weight.semiBold};
-  padding: 10px 18px;
-`;
-
-export const PrimaryButton = styled.button`
-  ${baseButtonStyles};
-  background: ${colors.palette.blue[600]};
-  color: ${colors.white};
-
-  &:disabled {
-    background: ${colors.border};
-    cursor: not-allowed;
-  }
-`;
-
-export const SecondaryButton = styled.button`
-  ${baseButtonStyles};
-  background: ${colors.background};
-  border: 1px solid ${colors.border};
-  color: ${colors.primary};
-`;
-
-export const DangerButton = styled.button`
-  ${baseButtonStyles};
-  background: ${colors.palette.red[100]};
-  color: ${colors.palette.red[700]};
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
 `;
 
 export const FormActions = styled.div`

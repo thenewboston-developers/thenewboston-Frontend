@@ -4,8 +4,10 @@ import {Navigate, useNavigate, useParams} from 'react-router-dom';
 
 import {createBonsai, deleteBonsai, getBonsai, updateBonsai} from 'api/bonsais';
 import {getCurrencies} from 'api/currencies';
+import Button from 'components/Button';
+import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmptyText from 'components/EmptyText';
-import {FieldLabel} from 'components/FormElements';
+import {CharacterCounter, FieldLabel} from 'components/FormElements';
 import Loader from 'components/Loader';
 import SectionHeading from 'components/SectionHeading';
 import {ToastType} from 'enums';
@@ -393,63 +395,51 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
         </S.LoaderWrapper>
       ) : (
         <S.Form onSubmit={handleSubmit}>
-          <S.FieldWithCounter>
+          <S.FieldGroup>
             <S.LabelRow>
               <FieldLabel isRequired text="Name" />
-              <S.CharacterCounter $isOverLimit={formValues.name.length > 255}>
-                {formValues.name.length}/255
-              </S.CharacterCounter>
+              <CharacterCounter currentLength={formValues.name.length} maxLength={255} />
             </S.LabelRow>
             <S.Input onChange={handleInputChange('name')} value={formValues.name} />
-          </S.FieldWithCounter>
-          <S.FieldWithCounter>
+          </S.FieldGroup>
+          <S.FieldGroup>
             <S.LabelRow>
               <FieldLabel isRequired text="Slug" />
-              <S.CharacterCounter $isOverLimit={formValues.slug.length > 255}>
-                {formValues.slug.length}/255
-              </S.CharacterCounter>
+              <CharacterCounter currentLength={formValues.slug.length} maxLength={255} />
             </S.LabelRow>
             <S.Input onChange={handleInputChange('slug')} value={formValues.slug} />
-          </S.FieldWithCounter>
+          </S.FieldGroup>
           <S.FormRow>
-            <S.FieldWithCounter>
+            <S.FieldGroup>
               <S.LabelRow>
                 <FieldLabel text="Species" />
-                <S.CharacterCounter $isOverLimit={formValues.species.length > 255}>
-                  {formValues.species.length}/255
-                </S.CharacterCounter>
+                <CharacterCounter currentLength={formValues.species.length} maxLength={255} />
               </S.LabelRow>
               <S.Input onChange={handleInputChange('species')} value={formValues.species} />
-            </S.FieldWithCounter>
-            <S.FieldWithCounter>
+            </S.FieldGroup>
+            <S.FieldGroup>
               <S.LabelRow>
                 <FieldLabel text="Genus" />
-                <S.CharacterCounter $isOverLimit={formValues.genus.length > 255}>
-                  {formValues.genus.length}/255
-                </S.CharacterCounter>
+                <CharacterCounter currentLength={formValues.genus.length} maxLength={255} />
               </S.LabelRow>
               <S.Input onChange={handleInputChange('genus')} value={formValues.genus} />
-            </S.FieldWithCounter>
-            <S.FieldWithCounter>
+            </S.FieldGroup>
+            <S.FieldGroup>
               <S.LabelRow>
                 <FieldLabel text="Style" />
-                <S.CharacterCounter $isOverLimit={formValues.style.length > 255}>
-                  {formValues.style.length}/255
-                </S.CharacterCounter>
+                <CharacterCounter currentLength={formValues.style.length} maxLength={255} />
               </S.LabelRow>
               <S.Input onChange={handleInputChange('style')} value={formValues.style} />
-            </S.FieldWithCounter>
+            </S.FieldGroup>
           </S.FormRow>
           <S.FormRow>
-            <S.FieldWithCounter>
+            <S.FieldGroup>
               <S.LabelRow>
                 <FieldLabel text="Cultivar" />
-                <S.CharacterCounter $isOverLimit={formValues.cultivar.length > 255}>
-                  {formValues.cultivar.length}/255
-                </S.CharacterCounter>
+                <CharacterCounter currentLength={formValues.cultivar.length} maxLength={255} />
               </S.LabelRow>
               <S.Input onChange={handleInputChange('cultivar')} value={formValues.cultivar} />
-            </S.FieldWithCounter>
+            </S.FieldGroup>
           </S.FormRow>
           <S.FormRow>
             <S.FieldGroup>
@@ -493,15 +483,13 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
               <S.Input onChange={handleInputChange('price_amount')} type="number" value={formValues.price_amount} />
             </S.FieldGroup>
           </S.FormRow>
-          <S.FieldWithCounter>
+          <S.FieldGroup>
             <S.LabelRow>
               <FieldLabel isRequired text="Teaser" />
-              <S.CharacterCounter $isOverLimit={formValues.teaser.length > 500}>
-                {formValues.teaser.length}/500
-              </S.CharacterCounter>
+              <CharacterCounter currentLength={formValues.teaser.length} maxLength={500} />
             </S.LabelRow>
             <S.Textarea onChange={handleInputChange('teaser')} rows={2} value={formValues.teaser} />
-          </S.FieldWithCounter>
+          </S.FieldGroup>
           <S.FieldGroup>
             <FieldLabel isRequired text="Description" />
             <S.Textarea onChange={handleInputChange('description')} rows={5} value={formValues.description} />
@@ -510,9 +498,12 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
           <S.ArraySection>
             <S.ArrayHeader>
               <S.ArrayTitle>Highlights</S.ArrayTitle>
-              <S.SecondaryButton onClick={addHighlight} type="button">
-                Add highlight
-              </S.SecondaryButton>
+              <Button
+                color={ButtonColor.secondary}
+                onClick={addHighlight}
+                text="Add highlight"
+                type={ButtonType.button}
+              />
             </S.ArrayHeader>
             {formValues.highlights.length ? (
               formValues.highlights.map((highlight, index) => (
@@ -534,9 +525,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
           <S.ArraySection>
             <S.ArrayHeader>
               <S.ArrayTitle>Images</S.ArrayTitle>
-              <S.SecondaryButton onClick={addImage} type="button">
-                Add image
-              </S.SecondaryButton>
+              <Button color={ButtonColor.secondary} onClick={addImage} text="Add image" type={ButtonType.button} />
             </S.ArrayHeader>
             {formValues.images.length ? (
               formValues.images.map((image, index) => {
@@ -575,15 +564,24 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
 
           <S.FormActions>
             {!isCreateMode && currentBonsai ? (
-              <S.DangerButton disabled={isDeleting} onClick={handleDelete} type="button">
-                {isDeleting ? 'Deleting...' : 'Delete'}
-              </S.DangerButton>
+              <Button
+                color={ButtonColor.danger}
+                disabled={isDeleting}
+                isSubmitting={isDeleting}
+                onClick={handleDelete}
+                text="Delete"
+                type={ButtonType.button}
+              />
             ) : (
               <div />
             )}
-            <S.PrimaryButton disabled={!isFormValid || isSaving} type="submit">
-              {isSaving ? 'Saving...' : 'Save'}
-            </S.PrimaryButton>
+            <Button
+              dirty={isFormValid}
+              isSubmitting={isSaving}
+              isValid={isFormValid}
+              text="Save"
+              type={ButtonType.submit}
+            />
           </S.FormActions>
         </S.Form>
       )}
