@@ -1,20 +1,21 @@
-import {ChangeEvent, FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
+import {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
-import * as yup from 'yup';
+import {FieldArray, Form, Formik} from 'formik';
 
 import {createBonsai, deleteBonsai, getBonsai, updateBonsai} from 'api/bonsais';
 import {getCurrencies} from 'api/currencies';
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmptyText from 'components/EmptyText';
-import {CharacterCounter, FieldLabel} from 'components/FormElements';
+import {FieldLabel, FormField} from 'components/FormElements';
 import Loader from 'components/Loader';
 import SectionHeading from 'components/SectionHeading';
 import {ToastType} from 'enums';
 import {getSelf} from 'selectors/state';
 import {Bonsai, BonsaiStatus, Currency, SFC} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
+import yup from 'utils/yup';
 
 import * as S from './Styles';
 
@@ -87,15 +88,6 @@ interface AdminProps {
   mode: 'create' | 'edit';
 }
 
-const priceValidationSchema = yup.object().shape({
-  price_amount: yup
-    .number()
-    .typeError('Price must be a number')
-    .required('Price is required')
-    .positive('Price must be positive')
-    .integer('Price must be a whole number'),
-});
-
 const Admin: SFC<AdminProps> = ({className, mode}) => {
   const self = useSelector(getSelf);
   const {id: bonsaiIdParam} = useParams<{id?: string}>();
@@ -103,12 +95,10 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
   const isCreateMode = mode === 'create';
   const [currencies, setCurrencies] = useState<Currency[]>([]);
   const [currentBonsai, setCurrentBonsai] = useState<Bonsai | null>(null);
-  const [formValues, setFormValues] = useState<FormValues>(defaultFormValues);
+  const [initialValues, setInitialValues] = useState<FormValues>(defaultFormValues);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isLoadingBonsai, setIsLoadingBonsai] = useState(mode === 'edit');
   const [isLoadingCurrencies, setIsLoadingCurrencies] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [priceError, setPriceError] = useState<string>('');
 
   const mapBonsaiToForm = useCallback(
     (bonsai: Bonsai): FormValues => ({
@@ -153,8 +143,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
     if (!self.is_staff) return;
     if (isCreateMode) {
       setCurrentBonsai(null);
-      setFormValues(defaultFormValues);
-      setPriceError('');
+      setInitialValues(defaultFormValues);
       setIsLoadingBonsai(false);
       return;
     }
@@ -169,8 +158,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
       try {
         const response = await getBonsai(bonsaiIdParam, {useAuth: true});
         setCurrentBonsai(response);
-        setFormValues(mapBonsaiToForm(response));
-        setPriceError('');
+        setInitialValues(mapBonsaiToForm(response));
       } catch (error) {
         displayErrorToast('Unable to load bonsai details');
         navigate('/bonsai/manage');
@@ -180,89 +168,35 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
     })();
   }, [bonsaiIdParam, isCreateMode, mapBonsaiToForm, navigate, self.is_staff]);
 
-  const handleInputChange =
-    (field: keyof FormValues) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const {value} = event.target;
-      setFormValues((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
+  const handleImageFileChange =
+    (index: number, setFieldValue: (field: string, value: any) => void, values: FormValues) =>
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
 
-      if (field === 'price_amount') {
-        priceValidationSchema
-          .validate({price_amount: value})
-          .then(() => {
-            setPriceError('');
-          })
-          .catch((error: yup.ValidationError) => {
-            setPriceError(error.message);
-          });
-      }
-    };
-
-  const handleSelectChange = (field: keyof FormValues) => (event: ChangeEvent<HTMLSelectElement>) => {
-    const {value} = event.target;
-    let nextValue: string | number | '' = value;
-
-    if (field === 'price_currency_id') {
-      nextValue = value ? Number(value) : '';
-    }
-
-    setFormValues((prev) => ({
-      ...prev,
-      [field]: nextValue,
-    }));
-  };
-
-  const handleHighlightChange = (index: number, value: string) => {
-    setFormValues((prev) => ({
-      ...prev,
-      highlights: prev.highlights.map((highlight, idx) => (idx === index ? {...highlight, text: value} : highlight)),
-    }));
-  };
-
-  const handleImageFileChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormValues((prev) => ({
-        ...prev,
-        images: prev.images.map((image, idx) =>
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const updatedImages = values.images.map((image, idx) =>
           idx === index ? {...image, file, preview: reader.result as string} : image,
-        ),
-      }));
+        );
+        setFieldValue('images', updatedImages);
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
     };
-    reader.readAsDataURL(file);
-    event.target.value = '';
+
+  const addImage = (setFieldValue: (field: string, value: any) => void, values: FormValues) => {
+    setFieldValue('images', [...values.images, createEmptyFormImage()]);
   };
 
-  const addHighlight = () =>
-    setFormValues((prev) => ({
-      ...prev,
-      highlights: [...prev.highlights, {text: ''}],
-    }));
+  const removeImage = (index: number, setFieldValue: (field: string, value: any) => void, values: FormValues) => {
+    setFieldValue(
+      'images',
+      values.images.filter((_, idx) => idx !== index),
+    );
+  };
 
-  const removeHighlight = (index: number) =>
-    setFormValues((prev) => ({
-      ...prev,
-      highlights: prev.highlights.filter((_, idx) => idx !== index),
-    }));
-
-  const addImage = () =>
-    setFormValues((prev) => ({
-      ...prev,
-      images: [...prev.images, createEmptyFormImage()],
-    }));
-
-  const removeImage = (index: number) =>
-    setFormValues((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, idx) => idx !== index),
-    }));
-
-  const buildFormData = (): FormData | null => {
+  const buildFormData = (values: FormValues): FormData | null => {
     const {
       slug: formSlug,
       name,
@@ -280,28 +214,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
       status,
       highlights,
       images,
-    } = formValues;
-
-    if (!formSlug.trim() || !name.trim() || !teaser.trim() || !description.trim()) {
-      displayErrorToast('Please complete all required text fields.');
-      return null;
-    }
-
-    if (!price_currency_id || !price_amount.trim()) {
-      displayErrorToast('Please enter a price and currency.');
-      return null;
-    }
-
-    if (priceError) {
-      displayErrorToast(priceError);
-      return null;
-    }
-
-    const numericPrice = Number(price_amount);
-    if (!Number.isInteger(numericPrice) || numericPrice < 1) {
-      displayErrorToast('Price must be a positive whole number.');
-      return null;
-    }
+    } = values;
 
     const formData = new FormData();
     formData.append('slug', formSlug.trim());
@@ -315,7 +228,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
     formData.append('pot', pot.trim());
     formData.append('teaser', teaser.trim());
     formData.append('description', description.trim());
-    formData.append('price_amount', numericPrice.toString());
+    formData.append('price_amount', price_amount.toString());
     formData.append('price_currency_id', price_currency_id.toString());
     formData.append('status', status);
 
@@ -357,17 +270,16 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
     return formData;
   };
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = async (values: FormValues): Promise<void> => {
     if (!self.is_staff) return;
-    const formData = buildFormData();
+    const formData = buildFormData(values);
     if (!formData) return;
-    setIsSaving(true);
+
     try {
       if (!isCreateMode && currentBonsai) {
         const response = await updateBonsai(currentBonsai.id, formData);
         setCurrentBonsai(response);
-        setFormValues(mapBonsaiToForm(response));
+        setInitialValues(mapBonsaiToForm(response));
         displayToast('Bonsai updated', ToastType.SUCCESS);
       } else {
         await createBonsai(formData);
@@ -376,8 +288,6 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
       }
     } catch (error) {
       displayErrorToast(error);
-    } finally {
-      setIsSaving(false);
     }
   };
 
@@ -398,16 +308,31 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
     }
   };
 
-  const isFormValid = useMemo(() => {
-    return (
-      !!formValues.slug.trim() &&
-      !!formValues.name.trim() &&
-      !!formValues.teaser.trim() &&
-      !!formValues.description.trim() &&
-      !!formValues.price_amount.trim() &&
-      !!formValues.price_currency_id
-    );
-  }, [formValues]);
+  const validationSchema = useMemo(
+    () =>
+      yup.object().shape({
+        cultivar: yup.string().max(255, 'Cultivar must be at most 255 characters'),
+        description: yup.string().required('Description is required'),
+        genus: yup.string().max(255, 'Genus must be at most 255 characters'),
+        name: yup.string().required('Name is required').max(255, 'Name must be at most 255 characters'),
+        origin: yup.string(),
+        pot: yup.string(),
+        price_amount: yup
+          .number()
+          .typeError('Price must be a number')
+          .required('Price is required')
+          .positive('Price must be positive')
+          .integer('Price must be a whole number'),
+        price_currency_id: yup.number().required('Currency is required'),
+        size: yup.string(),
+        slug: yup.string().required('Slug is required').max(255, 'Slug must be at most 255 characters'),
+        species: yup.string().max(255, 'Species must be at most 255 characters'),
+        status: yup.string().oneOf(['draft', 'published']),
+        style: yup.string().max(255, 'Style must be at most 255 characters'),
+        teaser: yup.string().required('Teaser is required').max(500, 'Teaser must be at most 500 characters'),
+      }),
+    [],
+  );
 
   if (!self.is_staff) {
     return <Navigate to="/bonsai/home" replace />;
@@ -423,200 +348,249 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
           <Loader />
         </S.LoaderWrapper>
       ) : (
-        <S.Form onSubmit={handleSubmit}>
-          <S.FieldGroup>
-            <S.LabelRow>
-              <FieldLabel isRequired text="Name" />
-              <CharacterCounter currentLength={formValues.name.length} maxLength={255} />
-            </S.LabelRow>
-            <S.Input onChange={handleInputChange('name')} value={formValues.name} />
-          </S.FieldGroup>
-          <S.FieldGroup>
-            <S.LabelRow>
-              <FieldLabel isRequired text="Slug" />
-              <CharacterCounter currentLength={formValues.slug.length} maxLength={255} />
-            </S.LabelRow>
-            <S.Input onChange={handleInputChange('slug')} value={formValues.slug} />
-          </S.FieldGroup>
-          <S.FormRow>
-            <S.FieldGroup>
-              <S.LabelRow>
-                <FieldLabel text="Species" />
-                <CharacterCounter currentLength={formValues.species.length} maxLength={255} />
-              </S.LabelRow>
-              <S.Input onChange={handleInputChange('species')} value={formValues.species} />
-            </S.FieldGroup>
-            <S.FieldGroup>
-              <S.LabelRow>
-                <FieldLabel text="Genus" />
-                <CharacterCounter currentLength={formValues.genus.length} maxLength={255} />
-              </S.LabelRow>
-              <S.Input onChange={handleInputChange('genus')} value={formValues.genus} />
-            </S.FieldGroup>
-            <S.FieldGroup>
-              <S.LabelRow>
-                <FieldLabel text="Style" />
-                <CharacterCounter currentLength={formValues.style.length} maxLength={255} />
-              </S.LabelRow>
-              <S.Input onChange={handleInputChange('style')} value={formValues.style} />
-            </S.FieldGroup>
-          </S.FormRow>
-          <S.FormRow>
-            <S.FieldGroup>
-              <S.LabelRow>
-                <FieldLabel text="Cultivar" />
-                <CharacterCounter currentLength={formValues.cultivar.length} maxLength={255} />
-              </S.LabelRow>
-              <S.Input onChange={handleInputChange('cultivar')} value={formValues.cultivar} />
-            </S.FieldGroup>
-          </S.FormRow>
-          <S.FormRow>
-            <S.FieldGroup>
-              <FieldLabel text="Size" />
-              <S.Textarea onChange={handleInputChange('size')} rows={2} value={formValues.size} />
-            </S.FieldGroup>
-            <S.FieldGroup>
-              <FieldLabel text="Origin" />
-              <S.Textarea onChange={handleInputChange('origin')} rows={2} value={formValues.origin} />
-            </S.FieldGroup>
-          </S.FormRow>
-          <S.FieldGroup>
-            <FieldLabel text="Pot" />
-            <S.Textarea onChange={handleInputChange('pot')} rows={2} value={formValues.pot} />
-          </S.FieldGroup>
-          <S.FormRow>
-            <S.FieldGroup>
-              <FieldLabel text="Status" />
-              <S.Select onChange={handleSelectChange('status')} value={formValues.status}>
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-              </S.Select>
-            </S.FieldGroup>
-            <S.FieldGroup>
-              <FieldLabel isRequired text="Currency" />
-              <S.Select
-                disabled={isLoadingCurrencies}
-                onChange={handleSelectChange('price_currency_id')}
-                value={formValues.price_currency_id}
-              >
-                <option value="">Select currency</option>
-                {currencies
-                  .slice()
-                  .sort((a, b) => a.ticker.localeCompare(b.ticker))
-                  .map((currency) => (
-                    <option key={currency.id} value={currency.id}>
-                      {currency.ticker}
-                    </option>
-                  ))}
-              </S.Select>
-            </S.FieldGroup>
-            <S.FieldGroup>
-              <FieldLabel isRequired text="Price" />
-              <S.Input onChange={handleInputChange('price_amount')} type="number" value={formValues.price_amount} />
-              {priceError ? <S.ErrorText>{priceError}</S.ErrorText> : null}
-            </S.FieldGroup>
-          </S.FormRow>
-          <S.FieldGroup>
-            <S.LabelRow>
-              <FieldLabel isRequired text="Teaser" />
-              <CharacterCounter currentLength={formValues.teaser.length} maxLength={500} />
-            </S.LabelRow>
-            <S.Textarea onChange={handleInputChange('teaser')} rows={2} value={formValues.teaser} />
-          </S.FieldGroup>
-          <S.FieldGroup>
-            <FieldLabel isRequired text="Description" />
-            <S.Textarea onChange={handleInputChange('description')} rows={5} value={formValues.description} />
-          </S.FieldGroup>
+        <Formik
+          enableReinitialize
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema}
+        >
+          {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => {
+            const formErrors = errors as {[field: string]: string};
+            const formTouched = touched as {[field: string]: boolean};
 
-          <S.ArraySection>
-            <S.ArrayHeader>
-              <S.ArrayTitle>Highlights</S.ArrayTitle>
-              <Button
-                color={ButtonColor.secondary}
-                onClick={addHighlight}
-                text="Add highlight"
-                type={ButtonType.button}
-              />
-            </S.ArrayHeader>
-            {formValues.highlights.length ? (
-              formValues.highlights.map((highlight, index) => (
-                <S.ArrayItem key={highlight.id ?? index}>
-                  <S.Input
-                    onChange={(event) => handleHighlightChange(index, event.target.value)}
-                    value={highlight.text}
-                  />
-                  <S.RemoveButton onClick={() => removeHighlight(index)} type="button">
-                    Remove
-                  </S.RemoveButton>
-                </S.ArrayItem>
-              ))
-            ) : (
-              <EmptyText>No highlights yet.</EmptyText>
-            )}
-          </S.ArraySection>
-
-          <S.ArraySection>
-            <S.ArrayHeader>
-              <S.ArrayTitle>Images</S.ArrayTitle>
-              <Button color={ButtonColor.secondary} onClick={addImage} text="Add image" type={ButtonType.button} />
-            </S.ArrayHeader>
-            {formValues.images.length ? (
-              formValues.images.map((image, index) => {
-                const inputId = `bonsai-image-${image.clientId}`;
-                const altText = formValues.name ? `${formValues.name} image ${index + 1}` : `Bonsai image ${index + 1}`;
-
-                return (
-                  <S.ArrayItem key={image.clientId}>
-                    <S.ImagePreviewWrapper>
-                      {image.preview ? (
-                        <S.ImagePreview alt={altText} src={image.preview} />
-                      ) : (
-                        <S.ImagePlaceholder>No image</S.ImagePlaceholder>
-                      )}
-                    </S.ImagePreviewWrapper>
-                    <S.ImageControls>
-                      <S.FileButton htmlFor={inputId}>{image.preview ? 'Replace image' : 'Upload image'}</S.FileButton>
-                      <S.HiddenFileInput
-                        accept="image/*"
-                        id={inputId}
-                        onChange={handleImageFileChange(index)}
-                        type="file"
+            return (
+              <Form>
+                <S.FormContent>
+                  <FormField>
+                    <S.Input
+                      errors={formErrors}
+                      isRequired
+                      label="Name"
+                      maxLength={255}
+                      name="name"
+                      touched={formTouched}
+                    />
+                  </FormField>
+                  <FormField>
+                    <S.Input
+                      errors={formErrors}
+                      isRequired
+                      label="Slug"
+                      maxLength={255}
+                      name="slug"
+                      touched={formTouched}
+                    />
+                  </FormField>
+                  <S.FormRow>
+                    <FormField>
+                      <S.Input
+                        errors={formErrors}
+                        label="Species"
+                        maxLength={255}
+                        name="species"
+                        touched={formTouched}
                       />
-                      {image.file ? <S.FileName>{image.file.name}</S.FileName> : null}
-                    </S.ImageControls>
-                    <S.RemoveButton onClick={() => removeImage(index)} type="button">
-                      Remove
-                    </S.RemoveButton>
-                  </S.ArrayItem>
-                );
-              })
-            ) : (
-              <EmptyText>No images yet.</EmptyText>
-            )}
-          </S.ArraySection>
+                    </FormField>
+                    <FormField>
+                      <S.Input errors={formErrors} label="Genus" maxLength={255} name="genus" touched={formTouched} />
+                    </FormField>
+                    <FormField>
+                      <S.Input errors={formErrors} label="Style" maxLength={255} name="style" touched={formTouched} />
+                    </FormField>
+                  </S.FormRow>
+                  <S.FormRow>
+                    <FormField>
+                      <S.Input
+                        errors={formErrors}
+                        label="Cultivar"
+                        maxLength={255}
+                        name="cultivar"
+                        touched={formTouched}
+                      />
+                    </FormField>
+                  </S.FormRow>
+                  <S.FormRow>
+                    <FormField>
+                      <S.Textarea errors={formErrors} label="Size" name="size" touched={formTouched} />
+                    </FormField>
+                    <FormField>
+                      <S.Textarea errors={formErrors} label="Origin" name="origin" touched={formTouched} />
+                    </FormField>
+                  </S.FormRow>
+                  <FormField>
+                    <S.Textarea errors={formErrors} label="Pot" name="pot" touched={formTouched} />
+                  </FormField>
+                  <S.FormRow>
+                    <FormField>
+                      <FieldLabel text="Status" />
+                      <S.Select
+                        name="status"
+                        onChange={(e) => setFieldValue('status', e.target.value)}
+                        value={values.status}
+                      >
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                      </S.Select>
+                    </FormField>
+                    <FormField>
+                      <FieldLabel isRequired text="Currency" />
+                      <S.Select
+                        $error={!!(errors.price_currency_id && touched.price_currency_id)}
+                        disabled={isLoadingCurrencies}
+                        name="price_currency_id"
+                        onChange={(e) =>
+                          setFieldValue('price_currency_id', e.target.value ? Number(e.target.value) : '')
+                        }
+                        value={values.price_currency_id}
+                      >
+                        <option value="">Select currency</option>
+                        {currencies
+                          .slice()
+                          .sort((a, b) => a.ticker.localeCompare(b.ticker))
+                          .map((currency) => (
+                            <option key={currency.id} value={currency.id}>
+                              {currency.ticker}
+                            </option>
+                          ))}
+                      </S.Select>
+                    </FormField>
+                    <FormField>
+                      <S.Input
+                        errors={formErrors}
+                        isRequired
+                        label="Price"
+                        name="price_amount"
+                        touched={formTouched}
+                        type="number"
+                      />
+                    </FormField>
+                  </S.FormRow>
+                  <FormField>
+                    <S.Textarea
+                      errors={formErrors}
+                      isRequired
+                      label="Teaser"
+                      maxLength={500}
+                      name="teaser"
+                      touched={formTouched}
+                    />
+                  </FormField>
+                  <FormField>
+                    <S.Textarea
+                      errors={formErrors}
+                      isRequired
+                      label="Description"
+                      name="description"
+                      touched={formTouched}
+                    />
+                  </FormField>
 
-          <S.FormActions>
-            {!isCreateMode && currentBonsai ? (
-              <Button
-                color={ButtonColor.danger}
-                disabled={isDeleting}
-                isSubmitting={isDeleting}
-                onClick={handleDelete}
-                text="Delete"
-                type={ButtonType.button}
-              />
-            ) : (
-              <div />
-            )}
-            <Button
-              dirty={isFormValid}
-              isSubmitting={isSaving}
-              isValid={isFormValid}
-              text="Save"
-              type={ButtonType.submit}
-            />
-          </S.FormActions>
-        </S.Form>
+                  <S.ArraySection>
+                    <FieldArray name="highlights">
+                      {(arrayHelpers) => (
+                        <>
+                          <S.ArrayHeader>
+                            <S.ArrayTitle>Highlights</S.ArrayTitle>
+                            <Button
+                              color={ButtonColor.secondary}
+                              onClick={() => arrayHelpers.push({text: ''})}
+                              text="Add highlight"
+                              type={ButtonType.button}
+                            />
+                          </S.ArrayHeader>
+                          {values.highlights.length ? (
+                            values.highlights.map((highlight, index) => (
+                              <S.ArrayItem key={highlight.id ?? index}>
+                                <S.PlainInput
+                                  onChange={(event) => setFieldValue(`highlights.${index}.text`, event.target.value)}
+                                  value={highlight.text}
+                                />
+                                <S.RemoveButton onClick={() => arrayHelpers.remove(index)} type="button">
+                                  Remove
+                                </S.RemoveButton>
+                              </S.ArrayItem>
+                            ))
+                          ) : (
+                            <EmptyText>No highlights yet.</EmptyText>
+                          )}
+                        </>
+                      )}
+                    </FieldArray>
+                  </S.ArraySection>
+
+                  <S.ArraySection>
+                    <S.ArrayHeader>
+                      <S.ArrayTitle>Images</S.ArrayTitle>
+                      <Button
+                        color={ButtonColor.secondary}
+                        onClick={() => addImage(setFieldValue, values)}
+                        text="Add image"
+                        type={ButtonType.button}
+                      />
+                    </S.ArrayHeader>
+                    {values.images.length ? (
+                      values.images.map((image, index) => {
+                        const inputId = `bonsai-image-${image.clientId}`;
+                        const altText = values.name ? `${values.name} image ${index + 1}` : `Bonsai image ${index + 1}`;
+
+                        return (
+                          <S.ArrayItem key={image.clientId}>
+                            <S.ImagePreviewWrapper>
+                              {image.preview ? (
+                                <S.ImagePreview alt={altText} src={image.preview} />
+                              ) : (
+                                <S.ImagePlaceholder>No image</S.ImagePlaceholder>
+                              )}
+                            </S.ImagePreviewWrapper>
+                            <S.ImageControls>
+                              <S.FileButton htmlFor={inputId}>
+                                {image.preview ? 'Replace image' : 'Upload image'}
+                              </S.FileButton>
+                              <S.HiddenFileInput
+                                accept="image/*"
+                                id={inputId}
+                                onChange={handleImageFileChange(index, setFieldValue, values)}
+                                type="file"
+                              />
+                              {image.file ? <S.FileName>{image.file.name}</S.FileName> : null}
+                            </S.ImageControls>
+                            <S.RemoveButton onClick={() => removeImage(index, setFieldValue, values)} type="button">
+                              Remove
+                            </S.RemoveButton>
+                          </S.ArrayItem>
+                        );
+                      })
+                    ) : (
+                      <EmptyText>No images yet.</EmptyText>
+                    )}
+                  </S.ArraySection>
+
+                  <S.FormActions>
+                    {!isCreateMode && currentBonsai ? (
+                      <Button
+                        color={ButtonColor.danger}
+                        disabled={isDeleting}
+                        isSubmitting={isDeleting}
+                        onClick={handleDelete}
+                        text="Delete"
+                        type={ButtonType.button}
+                      />
+                    ) : (
+                      <div />
+                    )}
+                    <Button
+                      dirty={dirty}
+                      isSubmitting={isSubmitting}
+                      isValid={isValid}
+                      text="Save"
+                      type={ButtonType.submit}
+                    />
+                  </S.FormActions>
+                </S.FormContent>
+              </Form>
+            );
+          }}
+        </Formik>
       )}
     </S.Container>
   );

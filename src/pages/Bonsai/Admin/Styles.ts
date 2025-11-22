@@ -1,6 +1,8 @@
-import styled, {css} from 'styled-components';
+import styled from 'styled-components';
 
-import {breakpoints, colors, fonts, pagePadding} from 'styles';
+import {breakpoints, colors, fonts, inputStyle, pagePadding} from 'styles';
+
+export {Input, Textarea} from 'components/FormElements';
 
 export const Container = styled.div`
   ${pagePadding};
@@ -22,7 +24,7 @@ export const LoaderWrapper = styled.div`
   min-height: 240px;
 `;
 
-export const Form = styled.form`
+export const FormContent = styled.div`
   background: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 16px;
@@ -32,45 +34,34 @@ export const Form = styled.form`
   padding: 24px;
 `;
 
-export const FieldGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-`;
-
-export const LabelRow = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const baseInputStyles = css`
-  border: 1px solid ${colors.border};
-  border-radius: 10px;
-  font-family: ${fonts.family.default};
-  font-size: 14px;
-  padding: 10px 12px;
+export const Select = styled.select<{$error?: boolean}>`
+  ${inputStyle};
+  appearance: none;
+  background: ${colors.whiteHover};
+  border: 1px solid ${({$error}) => ($error ? colors.palette.red[400] : colors.border)};
+  border-radius: 12px;
   width: 100%;
 
   &:focus {
-    border-color: ${colors.palette.blue[500]};
+    border-color: ${({$error}) => ($error ? colors.palette.red[400] : colors.palette.blue[200])};
     outline: none;
+  }
+
+  &:hover {
+    cursor: pointer;
   }
 `;
 
-export const Input = styled.input`
-  ${baseInputStyles};
-`;
+export const PlainInput = styled.input<{$error?: boolean}>`
+  ${inputStyle};
+  border: 1px solid ${({$error}) => ($error ? colors.palette.red[400] : colors.border)};
+  border-radius: 12px;
+  width: 100%;
 
-export const Select = styled.select`
-  ${baseInputStyles};
-  background: ${colors.white};
-`;
-
-export const Textarea = styled.textarea`
-  ${baseInputStyles};
-  resize: vertical;
+  &:focus {
+    border-color: ${({$error}) => ($error ? colors.palette.red[400] : colors.palette.blue[200])};
+    outline: none;
+  }
 `;
 
 export const FormRow = styled.div`
@@ -178,10 +169,4 @@ export const FormActions = styled.div`
   gap: 16px;
   justify-content: flex-end;
   margin-top: 8px;
-`;
-
-export const ErrorText = styled.span`
-  color: ${colors.palette.red[600]};
-  font-size: 12px;
-  margin-top: 4px;
 `;
