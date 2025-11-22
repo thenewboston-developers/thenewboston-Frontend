@@ -72,10 +72,13 @@ export const MediaColumn = styled.div`
 
 export const MainImageButton = styled.button`
   aspect-ratio: 4 / 3;
-  background: transparent;
+  align-items: center;
+  background: ${colors.palette.gray[100]};
   border: none;
   border-radius: 12px;
   cursor: zoom-in;
+  display: flex;
+  justify-content: center;
   margin: 0;
   overflow: hidden;
   padding: 0;
@@ -91,9 +94,14 @@ export const MainImageButton = styled.button`
 `;
 
 export const MainImage = styled.img`
-  height: 100%;
-  object-fit: cover;
-  width: 100%;
+  background: ${colors.palette.gray[100]};
+  border-radius: 12px;
+  display: block;
+  height: auto;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  width: auto;
 `;
 
 export const ImagePlaceholder = styled.div`
