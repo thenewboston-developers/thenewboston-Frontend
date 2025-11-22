@@ -106,7 +106,7 @@ export const ImagePlaceholder = styled.div`
 export const Thumbnails = styled.div`
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
 `;
 
 export const ThumbnailButton = styled.button<{$isActive: boolean}>`

@@ -146,7 +146,7 @@ const BonsaiDetail: SFC = ({className}) => {
                 <S.ImagePlaceholder>No images available</S.ImagePlaceholder>
               )}
             </S.MainImageButton>
-            {hasImages ? (
+            {bonsai.images.length > 1 ? (
               <S.Thumbnails>
                 {bonsai.images.map((image, idx) => (
                   <S.ThumbnailButton
@@ -170,11 +170,7 @@ const BonsaiDetail: SFC = ({className}) => {
                 <S.CurrencyLogo alt={`${bonsai.price_currency.ticker} logo`} src={bonsai.price_currency.logo} />
               ) : null}
               <S.Price>
-                {bonsai.price_amount.toLocaleString(undefined, {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2,
-                })}{' '}
-                {bonsai.price_currency?.ticker}
+                {bonsai.price_amount.toLocaleString()} {bonsai.price_currency?.ticker}
               </S.Price>
             </S.PriceRow>
             <S.Divider />
