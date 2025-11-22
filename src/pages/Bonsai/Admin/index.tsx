@@ -5,6 +5,7 @@ import {Navigate, useNavigate, useParams} from 'react-router-dom';
 import {createBonsai, deleteBonsai, getBonsai, updateBonsai} from 'api/bonsais';
 import {getCurrencies} from 'api/currencies';
 import EmptyText from 'components/EmptyText';
+import {FieldLabel} from 'components/FormElements';
 import Loader from 'components/Loader';
 import SectionHeading from 'components/SectionHeading';
 import {ToastType} from 'enums';
@@ -255,19 +256,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
       images,
     } = formValues;
 
-    if (
-      !formSlug.trim() ||
-      !name.trim() ||
-      !species.trim() ||
-      !genus.trim() ||
-      !cultivar.trim() ||
-      !style.trim() ||
-      !size.trim() ||
-      !origin.trim() ||
-      !pot.trim() ||
-      !teaser.trim() ||
-      !description.trim()
-    ) {
+    if (!formSlug.trim() || !name.trim() || !teaser.trim() || !description.trim()) {
       displayErrorToast('Please complete all required text fields.');
       return null;
     }
@@ -382,13 +371,6 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
     return (
       !!formValues.slug.trim() &&
       !!formValues.name.trim() &&
-      !!formValues.species.trim() &&
-      !!formValues.genus.trim() &&
-      !!formValues.cultivar.trim() &&
-      !!formValues.style.trim() &&
-      !!formValues.size.trim() &&
-      !!formValues.origin.trim() &&
-      !!formValues.pot.trim() &&
       !!formValues.teaser.trim() &&
       !!formValues.description.trim() &&
       !!formValues.price_amount.trim() &&
@@ -404,74 +386,95 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
 
   return (
     <S.Container className={className}>
-      <SectionHeading
-        heading={heading}
-        rightContent={
-          <S.HeaderActions>
-            <S.SecondaryButton onClick={() => navigate('/bonsai/manage')} type="button">
-              Back to Manage
-            </S.SecondaryButton>
-          </S.HeaderActions>
-        }
-      />
+      <SectionHeading heading={heading} />{' '}
       {isLoadingBonsai ? (
         <S.LoaderWrapper>
           <Loader />
         </S.LoaderWrapper>
       ) : (
         <S.Form onSubmit={handleSubmit}>
-          <S.FieldGroup>
-            <S.Label>Slug</S.Label>
-            <S.Input onChange={handleInputChange('slug')} value={formValues.slug} />
-          </S.FieldGroup>
-          <S.FieldGroup>
-            <S.Label>Name</S.Label>
+          <S.FieldWithCounter>
+            <S.LabelRow>
+              <FieldLabel isRequired text="Name" />
+              <S.CharacterCounter $isOverLimit={formValues.name.length > 255}>
+                {formValues.name.length}/255
+              </S.CharacterCounter>
+            </S.LabelRow>
             <S.Input onChange={handleInputChange('name')} value={formValues.name} />
-          </S.FieldGroup>
+          </S.FieldWithCounter>
+          <S.FieldWithCounter>
+            <S.LabelRow>
+              <FieldLabel isRequired text="Slug" />
+              <S.CharacterCounter $isOverLimit={formValues.slug.length > 255}>
+                {formValues.slug.length}/255
+              </S.CharacterCounter>
+            </S.LabelRow>
+            <S.Input onChange={handleInputChange('slug')} value={formValues.slug} />
+          </S.FieldWithCounter>
           <S.FormRow>
-            <S.FieldGroup>
-              <S.Label>Species</S.Label>
+            <S.FieldWithCounter>
+              <S.LabelRow>
+                <FieldLabel text="Species" />
+                <S.CharacterCounter $isOverLimit={formValues.species.length > 255}>
+                  {formValues.species.length}/255
+                </S.CharacterCounter>
+              </S.LabelRow>
               <S.Input onChange={handleInputChange('species')} value={formValues.species} />
-            </S.FieldGroup>
-            <S.FieldGroup>
-              <S.Label>Genus</S.Label>
+            </S.FieldWithCounter>
+            <S.FieldWithCounter>
+              <S.LabelRow>
+                <FieldLabel text="Genus" />
+                <S.CharacterCounter $isOverLimit={formValues.genus.length > 255}>
+                  {formValues.genus.length}/255
+                </S.CharacterCounter>
+              </S.LabelRow>
               <S.Input onChange={handleInputChange('genus')} value={formValues.genus} />
-            </S.FieldGroup>
-            <S.FieldGroup>
-              <S.Label>Style</S.Label>
+            </S.FieldWithCounter>
+            <S.FieldWithCounter>
+              <S.LabelRow>
+                <FieldLabel text="Style" />
+                <S.CharacterCounter $isOverLimit={formValues.style.length > 255}>
+                  {formValues.style.length}/255
+                </S.CharacterCounter>
+              </S.LabelRow>
               <S.Input onChange={handleInputChange('style')} value={formValues.style} />
-            </S.FieldGroup>
+            </S.FieldWithCounter>
           </S.FormRow>
           <S.FormRow>
-            <S.FieldGroup>
-              <S.Label>Cultivar</S.Label>
+            <S.FieldWithCounter>
+              <S.LabelRow>
+                <FieldLabel text="Cultivar" />
+                <S.CharacterCounter $isOverLimit={formValues.cultivar.length > 255}>
+                  {formValues.cultivar.length}/255
+                </S.CharacterCounter>
+              </S.LabelRow>
               <S.Input onChange={handleInputChange('cultivar')} value={formValues.cultivar} />
-            </S.FieldGroup>
+            </S.FieldWithCounter>
           </S.FormRow>
           <S.FormRow>
             <S.FieldGroup>
-              <S.Label>Size</S.Label>
-              <S.Input onChange={handleInputChange('size')} value={formValues.size} />
+              <FieldLabel text="Size" />
+              <S.Textarea onChange={handleInputChange('size')} rows={2} value={formValues.size} />
             </S.FieldGroup>
             <S.FieldGroup>
-              <S.Label>Origin</S.Label>
-              <S.Input onChange={handleInputChange('origin')} value={formValues.origin} />
+              <FieldLabel text="Origin" />
+              <S.Textarea onChange={handleInputChange('origin')} rows={2} value={formValues.origin} />
             </S.FieldGroup>
           </S.FormRow>
           <S.FieldGroup>
-            <S.Label>Pot</S.Label>
-            <S.Input onChange={handleInputChange('pot')} value={formValues.pot} />
+            <FieldLabel text="Pot" />
+            <S.Textarea onChange={handleInputChange('pot')} rows={2} value={formValues.pot} />
           </S.FieldGroup>
           <S.FormRow>
             <S.FieldGroup>
-              <S.Label>Status</S.Label>
+              <FieldLabel text="Status" />
               <S.Select onChange={handleSelectChange('status')} value={formValues.status}>
                 <option value="draft">Draft</option>
                 <option value="published">Published</option>
               </S.Select>
             </S.FieldGroup>
             <S.FieldGroup>
-              <S.Label>Currency</S.Label>
+              <FieldLabel isRequired text="Currency" />
               <S.Select
                 disabled={isLoadingCurrencies}
                 onChange={handleSelectChange('price_currency_id')}
@@ -486,16 +489,21 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
               </S.Select>
             </S.FieldGroup>
             <S.FieldGroup>
-              <S.Label>Price</S.Label>
+              <FieldLabel isRequired text="Price" />
               <S.Input onChange={handleInputChange('price_amount')} type="number" value={formValues.price_amount} />
             </S.FieldGroup>
           </S.FormRow>
-          <S.FieldGroup>
-            <S.Label>Teaser</S.Label>
+          <S.FieldWithCounter>
+            <S.LabelRow>
+              <FieldLabel isRequired text="Teaser" />
+              <S.CharacterCounter $isOverLimit={formValues.teaser.length > 500}>
+                {formValues.teaser.length}/500
+              </S.CharacterCounter>
+            </S.LabelRow>
             <S.Textarea onChange={handleInputChange('teaser')} rows={2} value={formValues.teaser} />
-          </S.FieldGroup>
+          </S.FieldWithCounter>
           <S.FieldGroup>
-            <S.Label>Description</S.Label>
+            <FieldLabel isRequired text="Description" />
             <S.Textarea onChange={handleInputChange('description')} rows={5} value={formValues.description} />
           </S.FieldGroup>
 

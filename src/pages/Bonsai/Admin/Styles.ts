@@ -7,12 +7,9 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
+  margin: 0 auto;
+  max-width: 1200px;
   width: 100%;
-`;
-
-export const HeaderActions = styled.div`
-  display: flex;
-  gap: 12px;
 `;
 
 export const LoaderWrapper = styled.div`
@@ -48,6 +45,25 @@ export const Label = styled.label`
   font-weight: ${fonts.weight.medium};
   letter-spacing: 0.04em;
   text-transform: uppercase;
+`;
+
+export const CharacterCounter = styled.span<{$isOverLimit?: boolean}>`
+  color: ${({$isOverLimit}) => ($isOverLimit ? colors.palette.red[600] : colors.secondary)};
+  font-size: 12px;
+  font-weight: ${fonts.weight.medium};
+`;
+
+export const FieldWithCounter = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+`;
+
+export const LabelRow = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const baseInputStyles = css`
