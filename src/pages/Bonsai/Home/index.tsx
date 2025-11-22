@@ -14,7 +14,7 @@ const BonsaiHome: SFC = ({className}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 
-  const pageSize = 12;
+  const pageSize = 24;
 
   useEffect(() => {
     (async () => {

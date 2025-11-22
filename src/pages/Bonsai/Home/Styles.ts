@@ -12,17 +12,21 @@ export const Container = styled.div`
 `;
 
 export const CardGrid = styled.div`
-  display: grid;
   column-gap: 20px;
-  row-gap: 32px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 12px;
+  row-gap: 32px;
+
+  @media (max-width: ${breakpoints.largeDesktop}) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 
   @media (max-width: ${breakpoints.desktop}) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  @media (max-width: ${breakpoints.tablet}) {
+  @media (max-width: ${breakpoints.mobile}) {
     grid-template-columns: 1fr;
   }
 `;
