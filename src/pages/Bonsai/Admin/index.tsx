@@ -1,6 +1,7 @@
 import {ChangeEvent, FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
+import * as yup from 'yup';
 
 import {createBonsai, deleteBonsai, getBonsai, updateBonsai} from 'api/bonsais';
 import {getCurrencies} from 'api/currencies';
@@ -86,6 +87,15 @@ interface AdminProps {
   mode: 'create' | 'edit';
 }
 
+const priceValidationSchema = yup.object().shape({
+  price_amount: yup
+    .number()
+    .typeError('Price must be a number')
+    .required('Price is required')
+    .positive('Price must be positive')
+    .integer('Price must be a whole number'),
+});
+
 const Admin: SFC<AdminProps> = ({className, mode}) => {
   const self = useSelector(getSelf);
   const {id: bonsaiIdParam} = useParams<{id?: string}>();
@@ -98,6 +108,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
   const [isLoadingCurrencies, setIsLoadingCurrencies] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [priceError, setPriceError] = useState<string>('');
 
   const mapBonsaiToForm = useCallback(
     (bonsai: Bonsai): FormValues => ({
@@ -143,6 +154,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
     if (isCreateMode) {
       setCurrentBonsai(null);
       setFormValues(defaultFormValues);
+      setPriceError('');
       setIsLoadingBonsai(false);
       return;
     }
@@ -158,6 +170,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
         const response = await getBonsai(bonsaiIdParam, {useAuth: true});
         setCurrentBonsai(response);
         setFormValues(mapBonsaiToForm(response));
+        setPriceError('');
       } catch (error) {
         displayErrorToast('Unable to load bonsai details');
         navigate('/bonsai/manage');
@@ -174,6 +187,17 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
         ...prev,
         [field]: value,
       }));
+
+      if (field === 'price_amount') {
+        priceValidationSchema
+          .validate({price_amount: value})
+          .then(() => {
+            setPriceError('');
+          })
+          .catch((error: yup.ValidationError) => {
+            setPriceError(error.message);
+          });
+      }
     };
 
   const handleSelectChange = (field: keyof FormValues) => (event: ChangeEvent<HTMLSelectElement>) => {
@@ -265,6 +289,11 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
 
     if (!price_currency_id || !price_amount.trim()) {
       displayErrorToast('Please enter a price and currency.');
+      return null;
+    }
+
+    if (priceError) {
+      displayErrorToast(priceError);
       return null;
     }
 
@@ -471,16 +500,20 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
                 value={formValues.price_currency_id}
               >
                 <option value="">Select currency</option>
-                {currencies.map((currency) => (
-                  <option key={currency.id} value={currency.id}>
-                    {currency.ticker}
-                  </option>
-                ))}
+                {currencies
+                  .slice()
+                  .sort((a, b) => a.ticker.localeCompare(b.ticker))
+                  .map((currency) => (
+                    <option key={currency.id} value={currency.id}>
+                      {currency.ticker}
+                    </option>
+                  ))}
               </S.Select>
             </S.FieldGroup>
             <S.FieldGroup>
               <FieldLabel isRequired text="Price" />
               <S.Input onChange={handleInputChange('price_amount')} type="number" value={formValues.price_amount} />
+              {priceError ? <S.ErrorText>{priceError}</S.ErrorText> : null}
             </S.FieldGroup>
           </S.FormRow>
           <S.FieldGroup>

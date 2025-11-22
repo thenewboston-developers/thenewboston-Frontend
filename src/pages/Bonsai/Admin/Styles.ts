@@ -179,3 +179,9 @@ export const FormActions = styled.div`
   justify-content: flex-end;
   margin-top: 8px;
 `;
+
+export const ErrorText = styled.span`
+  color: ${colors.palette.red[600]};
+  font-size: 12px;
+  margin-top: 4px;
+`;

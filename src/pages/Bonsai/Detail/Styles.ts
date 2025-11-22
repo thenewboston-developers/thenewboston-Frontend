@@ -37,6 +37,11 @@ export const BackButton = styled.button`
 export const Content = styled.div`
   ${pagePadding};
   flex: 1;
+  padding-top: 48px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding-top: 24px;
+  }
 `;
 
 export const LoadingState = styled.div`
