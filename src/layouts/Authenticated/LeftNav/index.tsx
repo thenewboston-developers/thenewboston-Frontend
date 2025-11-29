@@ -5,6 +5,7 @@ import {
   mdiCircleMultipleOutline,
   mdiExitToApp,
   mdiHome,
+  mdiPineTree,
   mdiSwapHorizontalCircleOutline,
   mdiWalletBifoldOutline,
 } from '@mdi/js';
@@ -24,6 +25,7 @@ const LeftNav: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Top>
+        <MenuLink icon={mdiPineTree} rootPath="/bonsai" text="Bonsai" to="/bonsai" />
         <MenuLink icon={mdiCircleMultipleOutline} rootPath="/currencies" text="Currencies" to="/currencies" />
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange" />
         <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />

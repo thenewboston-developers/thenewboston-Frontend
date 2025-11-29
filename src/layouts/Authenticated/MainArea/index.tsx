@@ -3,6 +3,7 @@ import {Navigate, Route, Routes} from 'react-router-dom';
 import Logout from 'components/Logout';
 import {
   PATH_AUTHENTICATION,
+  PATH_BONSAI,
   PATH_CURRENCIES,
   PATH_DEFAULT,
   PATH_EXCHANGE,
@@ -12,6 +13,7 @@ import {
   PATH_PROFILE,
   PATH_WALLETS,
 } from 'constants/paths';
+import Bonsai from 'pages/Bonsai';
 import Currencies from 'pages/Currencies';
 import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
@@ -28,6 +30,7 @@ const MainArea: SFC = ({className}) => {
     <S.Container className={className} id="main-scrollable-area">
       <Routes>
         <Route path="*" element={<Navigate to={PATH_DEFAULT} replace />} />
+        <Route path={PATH_BONSAI} element={<Bonsai />} />
         <Route path={PATH_CURRENCIES} element={<Currencies />} />
         <Route path={PATH_EXCHANGE} element={<Exchange />} />
         <Route path={PATH_FEED} element={<Feed />} />

@@ -1,3 +1,4 @@
+import * as S from 'components/LearnMore';
 import {MAX_MINT_AMOUNT} from 'constants/general';
 import {SFC} from 'types';
 import {formatNumber} from 'utils/numbers';
@@ -6,7 +7,6 @@ import coinsBeingSent from './assets/coins-being-sent.png';
 import coinsFlowingIntoWallet from './assets/coins-flowing-into-wallet.png';
 import currencyCreation from './assets/currency-creation.png';
 import sendingCoinsToFriend from './assets/sending-coins-to-friend.png';
-import * as S from './Styles';
 
 const LearnMore: SFC = ({className}) => {
   return (

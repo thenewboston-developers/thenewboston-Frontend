@@ -5,6 +5,7 @@ export const PATH_AUTHENTICATION = {
   LOGOUT: '/logout',
   SIGN_IN: '/sign-in',
 };
+export const PATH_BONSAI = `/bonsai/${WILDCARD}`;
 export const PATH_CURRENCIES = `/currencies/${WILDCARD}`;
 export const PATH_EXCHANGE = `/exchange/${WILDCARD}`;
 export const PATH_FEED = '/feed';
