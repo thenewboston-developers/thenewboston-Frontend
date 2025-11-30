@@ -98,6 +98,60 @@ export const ImageControls = styled.div`
   gap: 6px;
 `;
 
+export const ImageActions = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 6px;
+`;
+
+export const IconButton = styled.button`
+  align-items: center;
+  background: ${colors.whiteHover};
+  border: 1px solid ${colors.border};
+  border-radius: 8px;
+  color: ${colors.primary};
+  cursor: pointer;
+  display: inline-flex;
+  height: 34px;
+  justify-content: center;
+  padding: 6px;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+
+  &:hover:enabled {
+    background: ${colors.background};
+    border-color: ${colors.primary};
+    color: ${colors.primary};
+  }
+
+  &:disabled {
+    color: ${colors.secondary};
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+`;
+
+export const RemoveButton = styled.button`
+  background: none;
+  border: none;
+  color: ${colors.palette.red[600]};
+  cursor: pointer;
+  font-size: 13px;
+  padding: 6px 0;
+`;
+
+export const HighlightActions = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 6px;
+
+  > ${RemoveButton} {
+    margin-left: 6px;
+  }
+`;
+
 export const ImagePlaceholder = styled.span`
   color: ${colors.secondary};
   font-size: 12px;
@@ -143,15 +197,6 @@ export const PlainInput = styled.input<{$error?: boolean}>`
     border-color: ${({$error}) => ($error ? colors.palette.red[400] : colors.palette.blue[200])};
     outline: none;
   }
-`;
-
-export const RemoveButton = styled.button`
-  background: none;
-  border: none;
-  color: ${colors.palette.red[600]};
-  cursor: pointer;
-  font-size: 13px;
-  padding: 6px 0;
 `;
 
 export const Select = styled.select<{$error?: boolean}>`

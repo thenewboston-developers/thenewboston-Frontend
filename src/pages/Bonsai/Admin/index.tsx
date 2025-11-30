@@ -1,6 +1,7 @@
 import {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
+import {mdiChevronDown, mdiChevronUp} from '@mdi/js';
 import {FieldArray, Form, Formik} from 'formik';
 
 import {createBonsai, deleteBonsai, getBonsai, updateBonsai} from 'api/bonsais';
@@ -9,6 +10,7 @@ import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmptyText from 'components/EmptyText';
 import {FieldLabel, FormField} from 'components/FormElements';
+import Icon from 'components/Icon';
 import Loader from 'components/Loader';
 import SectionHeading from 'components/SectionHeading';
 import {ToastType} from 'enums';
@@ -194,6 +196,32 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
       'images',
       values.images.filter((_, idx) => idx !== index),
     );
+  };
+
+  const moveImage = (
+    fromIndex: number,
+    toIndex: number,
+    setFieldValue: (field: string, value: any) => void,
+    values: FormValues,
+  ) => {
+    if (toIndex < 0 || toIndex >= values.images.length) return;
+    const updatedImages = [...values.images];
+    const [movedImage] = updatedImages.splice(fromIndex, 1);
+    updatedImages.splice(toIndex, 0, movedImage);
+    setFieldValue('images', updatedImages);
+  };
+
+  const moveHighlight = (
+    fromIndex: number,
+    toIndex: number,
+    setFieldValue: (field: string, value: any) => void,
+    values: FormValues,
+  ) => {
+    if (toIndex < 0 || toIndex >= values.highlights.length) return;
+    const updatedHighlights = [...values.highlights];
+    const [movedHighlight] = updatedHighlights.splice(fromIndex, 1);
+    updatedHighlights.splice(toIndex, 0, movedHighlight);
+    setFieldValue('highlights', updatedHighlights);
   };
 
   const buildFormData = (values: FormValues): FormData | null => {
@@ -504,9 +532,27 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
                                   onChange={(event) => setFieldValue(`highlights.${index}.text`, event.target.value)}
                                   value={highlight.text}
                                 />
-                                <S.RemoveButton onClick={() => arrayHelpers.remove(index)} type="button">
-                                  Remove
-                                </S.RemoveButton>
+                                <S.HighlightActions>
+                                  <S.IconButton
+                                    aria-label="Move highlight up"
+                                    disabled={index === 0}
+                                    onClick={() => moveHighlight(index, index - 1, setFieldValue, values)}
+                                    type="button"
+                                  >
+                                    <Icon icon={mdiChevronUp} size={18} totalSize={18} />
+                                  </S.IconButton>
+                                  <S.IconButton
+                                    aria-label="Move highlight down"
+                                    disabled={index === values.highlights.length - 1}
+                                    onClick={() => moveHighlight(index, index + 1, setFieldValue, values)}
+                                    type="button"
+                                  >
+                                    <Icon icon={mdiChevronDown} size={18} totalSize={18} />
+                                  </S.IconButton>
+                                  <S.RemoveButton onClick={() => arrayHelpers.remove(index)} type="button">
+                                    Remove
+                                  </S.RemoveButton>
+                                </S.HighlightActions>
                               </S.ArrayItem>
                             ))
                           ) : (
@@ -552,6 +598,24 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
                                 type="file"
                               />
                               {image.file ? <S.FileName>{image.file.name}</S.FileName> : null}
+                              <S.ImageActions>
+                                <S.IconButton
+                                  aria-label="Move image up"
+                                  disabled={index === 0}
+                                  onClick={() => moveImage(index, index - 1, setFieldValue, values)}
+                                  type="button"
+                                >
+                                  <Icon icon={mdiChevronUp} size={18} totalSize={18} />
+                                </S.IconButton>
+                                <S.IconButton
+                                  aria-label="Move image down"
+                                  disabled={index === values.images.length - 1}
+                                  onClick={() => moveImage(index, index + 1, setFieldValue, values)}
+                                  type="button"
+                                >
+                                  <Icon icon={mdiChevronDown} size={18} totalSize={18} />
+                                </S.IconButton>
+                              </S.ImageActions>
                             </S.ImageControls>
                             <S.RemoveButton onClick={() => removeImage(index, setFieldValue, values)} type="button">
                               Remove
