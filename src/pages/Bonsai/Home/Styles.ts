@@ -3,13 +3,6 @@ import styled from 'styled-components';
 import UPagination from 'components/Pagination';
 import {breakpoints, pagePadding} from 'styles';
 
-export const Container = styled.div`
-  ${pagePadding};
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-`;
-
 export const CardGrid = styled.div`
   column-gap: 20px;
   display: grid;
@@ -28,6 +21,13 @@ export const CardGrid = styled.div`
   @media (max-width: ${breakpoints.mobile}) {
     grid-template-columns: 1fr;
   }
+`;
+
+export const Container = styled.div`
+  ${pagePadding};
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 `;
 
 export const Pagination = styled(UPagination)`

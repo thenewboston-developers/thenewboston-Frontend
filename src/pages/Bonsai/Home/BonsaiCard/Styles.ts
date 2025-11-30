@@ -3,6 +3,13 @@ import styled from 'styled-components';
 
 import {colors, fonts} from 'styles';
 
+export const Body = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+`;
+
 export const Container = styled(Link)`
   color: inherit;
   display: flex;
@@ -19,6 +26,12 @@ export const Container = styled(Link)`
   &:focus {
     text-decoration: none;
   }
+`;
+
+export const CurrencyLogo = styled.img`
+  border-radius: 50%;
+  height: 22px;
+  width: 22px;
 `;
 
 export const Image = styled.img`
@@ -42,17 +55,23 @@ export const ImagePlaceholder = styled.div`
   text-align: center;
 `;
 
-export const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 12px;
-`;
-
 export const Name = styled.h3`
   font-size: 20px;
   font-weight: ${fonts.weight.semiBold};
   margin: 0;
+`;
+
+export const Price = styled.span`
+  color: ${colors.primary};
+  font-size: 16px;
+  font-weight: ${fonts.weight.semiBold};
+`;
+
+export const PriceRow = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 6px;
+  margin-top: 2px;
 `;
 
 export const Species = styled.span`
@@ -65,23 +84,4 @@ export const Teaser = styled.p`
   font-size: 13px;
   line-height: 1.5;
   margin: 0;
-`;
-
-export const PriceRow = styled.div`
-  align-items: center;
-  display: flex;
-  gap: 6px;
-  margin-top: 2px;
-`;
-
-export const CurrencyLogo = styled.img`
-  border-radius: 50%;
-  height: 22px;
-  width: 22px;
-`;
-
-export const Price = styled.span`
-  color: ${colors.primary};
-  font-size: 16px;
-  font-weight: ${fonts.weight.semiBold};
 `;
