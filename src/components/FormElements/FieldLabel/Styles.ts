@@ -2,10 +2,11 @@ import styled from 'styled-components';
 
 import {colors, fonts} from 'styles';
 
-export const Label = styled.label`
+export const Container = styled.div`
   color: ${colors.secondary};
   font-size: 12px;
   font-weight: ${fonts.weight.medium};
+  margin-bottom: 8px;
 `;
 
 export const RequiredIndicator = styled.span`

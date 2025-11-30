@@ -1,8 +1,13 @@
 import styled from 'styled-components';
 
+import {Textarea as BaseTextarea} from 'components/FormElements';
 import {breakpoints, colors, fonts, inputStyle, pagePadding} from 'styles';
 
 export {Input, Textarea} from 'components/FormElements';
+
+export const TallTextarea = styled(BaseTextarea)`
+  min-height: 140px;
+`;
 
 export const Container = styled.div`
   ${pagePadding};
@@ -68,6 +73,16 @@ export const FormRow = styled.div`
   display: grid;
   gap: 16px;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+`;
+
+export const ThirdsRow = styled.div`
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  @media (max-width: ${breakpoints.tablet}) {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
 `;
 
 export const ArraySection = styled.div`

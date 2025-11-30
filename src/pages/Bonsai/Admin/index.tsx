@@ -382,24 +382,10 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
                       touched={formTouched}
                     />
                   </FormField>
-                  <S.FormRow>
-                    <FormField>
-                      <S.Input
-                        errors={formErrors}
-                        label="Species"
-                        maxLength={255}
-                        name="species"
-                        touched={formTouched}
-                      />
-                    </FormField>
+                  <S.ThirdsRow>
                     <FormField>
                       <S.Input errors={formErrors} label="Genus" maxLength={255} name="genus" touched={formTouched} />
                     </FormField>
-                    <FormField>
-                      <S.Input errors={formErrors} label="Style" maxLength={255} name="style" touched={formTouched} />
-                    </FormField>
-                  </S.FormRow>
-                  <S.FormRow>
                     <FormField>
                       <S.Input
                         errors={formErrors}
@@ -409,7 +395,19 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
                         touched={formTouched}
                       />
                     </FormField>
-                  </S.FormRow>
+                    <FormField>
+                      <S.Input
+                        errors={formErrors}
+                        label="Species"
+                        maxLength={255}
+                        name="species"
+                        touched={formTouched}
+                      />
+                    </FormField>
+                  </S.ThirdsRow>
+                  <FormField>
+                    <S.Input errors={formErrors} label="Style" maxLength={255} name="style" touched={formTouched} />
+                  </FormField>
                   <S.FormRow>
                     <FormField>
                       <S.Textarea errors={formErrors} label="Size" name="size" touched={formTouched} />
@@ -419,7 +417,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
                     </FormField>
                   </S.FormRow>
                   <FormField>
-                    <S.Textarea errors={formErrors} label="Pot" name="pot" touched={formTouched} />
+                    <S.TallTextarea errors={formErrors} label="Pot" name="pot" touched={formTouched} />
                   </FormField>
                   <S.FormRow>
                     <FormField>
@@ -477,7 +475,7 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
                     />
                   </FormField>
                   <FormField>
-                    <S.Textarea
+                    <S.TallTextarea
                       errors={formErrors}
                       isRequired
                       label="Description"
