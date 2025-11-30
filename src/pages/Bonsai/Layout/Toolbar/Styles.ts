@@ -4,22 +4,14 @@ import {toolbarStyle} from 'styles';
 
 export const Container = styled.div`
   ${toolbarStyle};
-  gap: 16px;
 `;
 
-export const Left = styled.div`
-  flex: 1;
-`;
+export const Left = styled.div``;
 
-export const MenuItems = styled.div<{$isCentered: boolean}>`
+export const MenuItems = styled.div`
   align-items: center;
   display: flex;
   gap: 8px;
-  justify-content: ${({$isCentered}) => ($isCentered ? 'center' : 'flex-start')};
 `;
 
-export const Right = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
-`;
+export const Right = styled.div``;
