@@ -9,11 +9,13 @@ export interface BonsaiCardProps {
 const BonsaiCard: SFC<BonsaiCardProps> = ({bonsai, className}) => {
   return (
     <S.Container className={className} to={`/bonsai/${bonsai.id}`}>
-      {bonsai.images[0]?.url ? (
-        <S.Image alt={bonsai.name} src={bonsai.images[0].url ?? ''} />
-      ) : (
-        <S.ImagePlaceholder>No image available</S.ImagePlaceholder>
-      )}
+      <S.ImageWrapper>
+        {bonsai.images[0]?.url ? (
+          <S.Image alt={bonsai.name} src={bonsai.images[0].url ?? ''} />
+        ) : (
+          <S.ImagePlaceholder>No image available</S.ImagePlaceholder>
+        )}
+      </S.ImageWrapper>
       <S.Body>
         <S.Name>{bonsai.name}</S.Name>
         <S.Species>{bonsai.species}</S.Species>

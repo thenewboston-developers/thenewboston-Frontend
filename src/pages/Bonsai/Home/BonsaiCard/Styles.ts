@@ -35,8 +35,7 @@ export const CurrencyLogo = styled.img`
 `;
 
 export const Image = styled.img`
-  border-radius: 12px;
-  flex: 1;
+  display: block;
   height: 100%;
   object-fit: cover;
   width: 100%;
@@ -45,14 +44,22 @@ export const Image = styled.img`
 export const ImagePlaceholder = styled.div`
   align-items: center;
   background: ${colors.palette.gray[100]};
-  border-radius: 12px;
   color: ${colors.secondary};
   display: flex;
   font-size: 14px;
+  height: 100%;
   justify-content: center;
-  min-height: 180px;
   padding: 40px 20px;
   text-align: center;
+  width: 100%;
+`;
+
+export const ImageWrapper = styled.div`
+  aspect-ratio: 3 / 2;
+  background: ${colors.palette.gray[50]};
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
 `;
 
 export const Name = styled.h3`
