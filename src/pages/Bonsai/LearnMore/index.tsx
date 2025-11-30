@@ -1,6 +1,10 @@
 import * as S from 'components/LearnMore';
 import {SFC} from 'types';
 
+import bonsai1 from './assets/bonsai-1.jpg';
+import bonsai2 from './assets/bonsai-2.jpg';
+import bonsai3 from './assets/bonsai-3.jpg';
+
 const BonsaiLearnMore: SFC = ({className}) => {
   return (
     <S.Container className={className}>
@@ -12,10 +16,7 @@ const BonsaiLearnMore: SFC = ({className}) => {
           appreciate every branch without visiting the greenhouse. Here is how we curate and share every specimen.
         </S.Introduction>
 
-        <S.Image
-          alt="Bonsai caretaker preparing a specimen for display"
-          src="https://placehold.co/640x360/png?text=Bonsai+Showcase+1"
-        />
+        <S.Image alt="Bonsai caretaker preparing a specimen for display" src={bonsai1} />
 
         <S.Section>
           <S.SectionTitle>What We Provide</S.SectionTitle>
@@ -49,10 +50,7 @@ const BonsaiLearnMore: SFC = ({className}) => {
             </S.StepParagraph>
           </S.Step>
 
-          <S.Image
-            alt="Photographing bonsai under studio lights"
-            src="https://placehold.co/640x360/png?text=Bonsai+Showcase+2"
-          />
+          <S.Image alt="Photographing bonsai under studio lights" src={bonsai2} />
 
           <S.Step>
             <S.StepNumber>2</S.StepNumber>
@@ -74,10 +72,7 @@ const BonsaiLearnMore: SFC = ({className}) => {
             </S.StepList>
           </S.Step>
 
-          <S.Image
-            alt="Bonsai being showcased in a digital gallery"
-            src="https://placehold.co/640x360/png?text=Bonsai+Showcase+3"
-          />
+          <S.Image alt="Bonsai being showcased in a digital gallery" src={bonsai3} />
         </S.Section>
 
         <S.Section>
