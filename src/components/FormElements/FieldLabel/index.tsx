@@ -3,17 +3,16 @@ import {SFC} from 'types';
 import * as S from './Styles';
 
 export interface FieldLabelProps {
-  htmlFor?: string;
   isRequired?: boolean;
   text: string;
 }
 
-const FieldLabel: SFC<FieldLabelProps> = ({className, htmlFor, isRequired = false, text}) => {
+const FieldLabel: SFC<FieldLabelProps> = ({className, isRequired = false, text}) => {
   return (
-    <S.Label className={className} htmlFor={htmlFor}>
+    <S.Container className={className}>
       {text}
       {isRequired && <S.RequiredIndicator>*</S.RequiredIndicator>}
-    </S.Label>
+    </S.Container>
   );
 };
 
