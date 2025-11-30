@@ -211,6 +211,19 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
     setFieldValue('images', updatedImages);
   };
 
+  const moveHighlight = (
+    fromIndex: number,
+    toIndex: number,
+    setFieldValue: (field: string, value: any) => void,
+    values: FormValues,
+  ) => {
+    if (toIndex < 0 || toIndex >= values.highlights.length) return;
+    const updatedHighlights = [...values.highlights];
+    const [movedHighlight] = updatedHighlights.splice(fromIndex, 1);
+    updatedHighlights.splice(toIndex, 0, movedHighlight);
+    setFieldValue('highlights', updatedHighlights);
+  };
+
   const buildFormData = (values: FormValues): FormData | null => {
     const {
       slug: formSlug,
@@ -519,9 +532,27 @@ const Admin: SFC<AdminProps> = ({className, mode}) => {
                                   onChange={(event) => setFieldValue(`highlights.${index}.text`, event.target.value)}
                                   value={highlight.text}
                                 />
-                                <S.RemoveButton onClick={() => arrayHelpers.remove(index)} type="button">
-                                  Remove
-                                </S.RemoveButton>
+                                <S.HighlightActions>
+                                  <S.IconButton
+                                    aria-label="Move highlight up"
+                                    disabled={index === 0}
+                                    onClick={() => moveHighlight(index, index - 1, setFieldValue, values)}
+                                    type="button"
+                                  >
+                                    <Icon icon={mdiChevronUp} size={18} totalSize={18} />
+                                  </S.IconButton>
+                                  <S.IconButton
+                                    aria-label="Move highlight down"
+                                    disabled={index === values.highlights.length - 1}
+                                    onClick={() => moveHighlight(index, index + 1, setFieldValue, values)}
+                                    type="button"
+                                  >
+                                    <Icon icon={mdiChevronDown} size={18} totalSize={18} />
+                                  </S.IconButton>
+                                  <S.RemoveButton onClick={() => arrayHelpers.remove(index)} type="button">
+                                    Remove
+                                  </S.RemoveButton>
+                                </S.HighlightActions>
                               </S.ArrayItem>
                             ))
                           ) : (

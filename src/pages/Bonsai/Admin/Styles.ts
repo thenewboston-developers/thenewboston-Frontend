@@ -133,6 +133,25 @@ export const IconButton = styled.button`
   }
 `;
 
+export const RemoveButton = styled.button`
+  background: none;
+  border: none;
+  color: ${colors.palette.red[600]};
+  cursor: pointer;
+  font-size: 13px;
+  padding: 6px 0;
+`;
+
+export const HighlightActions = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 6px;
+
+  > ${RemoveButton} {
+    margin-left: 6px;
+  }
+`;
+
 export const ImagePlaceholder = styled.span`
   color: ${colors.secondary};
   font-size: 12px;
@@ -178,15 +197,6 @@ export const PlainInput = styled.input<{$error?: boolean}>`
     border-color: ${({$error}) => ($error ? colors.palette.red[400] : colors.palette.blue[200])};
     outline: none;
   }
-`;
-
-export const RemoveButton = styled.button`
-  background: none;
-  border: none;
-  color: ${colors.palette.red[600]};
-  cursor: pointer;
-  font-size: 13px;
-  padding: 6px 0;
 `;
 
 export const Select = styled.select<{$error?: boolean}>`
