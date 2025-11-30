@@ -98,6 +98,41 @@ export const ImageControls = styled.div`
   gap: 6px;
 `;
 
+export const ImageActions = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 6px;
+`;
+
+export const IconButton = styled.button`
+  align-items: center;
+  background: ${colors.whiteHover};
+  border: 1px solid ${colors.border};
+  border-radius: 8px;
+  color: ${colors.primary};
+  cursor: pointer;
+  display: inline-flex;
+  height: 34px;
+  justify-content: center;
+  padding: 6px;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+
+  &:hover:enabled {
+    background: ${colors.background};
+    border-color: ${colors.primary};
+    color: ${colors.primary};
+  }
+
+  &:disabled {
+    color: ${colors.secondary};
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+`;
+
 export const ImagePlaceholder = styled.span`
   color: ${colors.secondary};
   font-size: 12px;
