@@ -116,6 +116,28 @@ export const Img = styled.img`
   }
 `;
 
+export const VideoWrapper = styled.div`
+  background: #000;
+  border-radius: 12px;
+  margin-top: 16px;
+  overflow: hidden;
+  padding-top: 56.25%;
+  position: relative;
+
+  @media (max-width: ${breakpoints.mini}) {
+    border-radius: 0;
+  }
+`;
+
+export const VideoPlayer = styled.iframe`
+  border: none;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+`;
+
 export const LikeButton = styled.button<{$animate: boolean}>`
   align-items: center;
   background: transparent;
