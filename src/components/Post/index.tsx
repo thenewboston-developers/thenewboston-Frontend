@@ -192,7 +192,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
             />
           </S.VideoWrapper>
         ) : null}
-        {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
+        {image ? <S.Image alt="image" onClick={handlePostImageClick} src={image} /> : null}
         <S.ActionsContainer>
           <S.ActionsLeft>
             <S.LikeWrapper>
