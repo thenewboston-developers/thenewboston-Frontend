@@ -10,7 +10,7 @@ const assetPairs = createSlice({
   name: ASSET_PAIRS,
   reducers: {
     setAssetPairs: (state: AssetPairs, {payload}: PayloadAction<AssetPair[]>) => {
-      return payload.reduce((acc: AssetPairs, obj) => ({...acc, [obj.id]: obj}), {});
+      return payload.reduce((acc: AssetPairs, obj) => ({...acc, [obj.id]: obj}), state);
     },
   },
 });
