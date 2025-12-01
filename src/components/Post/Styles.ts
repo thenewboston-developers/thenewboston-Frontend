@@ -102,7 +102,7 @@ export const DropdownMenu = styled(UDropdownMenu)`
   margin-top: -4px;
 `;
 
-export const Img = styled.img`
+export const Image = styled.img`
   border-radius: 12px;
   cursor: pointer;
   margin-top: 16px;
@@ -234,5 +234,27 @@ export const Top = styled.div`
 
   @media (max-width: ${breakpoints.mini}) {
     padding: 16px 16px 0 16px;
+  }
+`;
+
+export const VideoPlayer = styled.iframe`
+  border: none;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+`;
+
+export const VideoWrapper = styled.div`
+  background: #000;
+  border-radius: 12px;
+  margin-top: 16px;
+  overflow: hidden;
+  padding-top: 56.25%;
+  position: relative;
+
+  @media (max-width: ${breakpoints.mini}) {
+    border-radius: 0;
   }
 `;

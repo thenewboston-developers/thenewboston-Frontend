@@ -25,6 +25,48 @@ export interface PostProps {
   post: TPost;
 }
 
+const extractYouTubeVideoId = (text: string): string | null => {
+  const urlPattern = /https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)[^\s]+/gi;
+  const matches = text.match(urlPattern);
+
+  if (!matches) return null;
+
+  for (const match of matches) {
+    let url: URL | null = null;
+
+    try {
+      url = new URL(match);
+    } catch (error) {
+      url = null;
+    }
+
+    if (url) {
+      const host = url.host.replace(/^www\./, '');
+      const pathParts = url.pathname.split('/').filter(Boolean);
+
+      if (host === 'youtu.be' && pathParts[0]) {
+        return pathParts[0];
+      }
+
+      if (host === 'youtube.com' || host.endsWith('.youtube.com')) {
+        if (url.searchParams.get('v')) {
+          return url.searchParams.get('v');
+        }
+
+        if (pathParts[0] === 'embed' && pathParts[1]) {
+          return pathParts[1];
+        }
+
+        if (pathParts[0] === 'shorts' && pathParts[1]) {
+          return pathParts[1];
+        }
+      }
+    }
+  }
+
+  return null;
+};
+
 const Post: SFC<PostProps> = ({className, post}) => {
   const [animateLike, setAnimateLike] = useState(false);
   const [imageModalIsOpen, toggleImageModal] = useToggle(false);
@@ -50,6 +92,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
     tip_amounts,
   } = post;
   const isTransferPost = !!(recipient && price_amount && price_currency);
+  const youtubeVideoId = extractYouTubeVideoId(content);
 
   const handleDelete = async () => {
     try {
@@ -139,7 +182,17 @@ const Post: SFC<PostProps> = ({className, post}) => {
             </>
           )}
         </S.Content>
-        {image ? <S.Img alt="image" onClick={handlePostImageClick} src={image} /> : null}
+        {youtubeVideoId ? (
+          <S.VideoWrapper>
+            <S.VideoPlayer
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              src={`https://www.youtube.com/embed/${youtubeVideoId}`}
+              title="YouTube video player"
+            />
+          </S.VideoWrapper>
+        ) : null}
+        {image ? <S.Image alt="image" onClick={handlePostImageClick} src={image} /> : null}
         <S.ActionsContainer>
           <S.ActionsLeft>
             <S.LikeWrapper>
