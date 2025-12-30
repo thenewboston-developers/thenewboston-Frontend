@@ -1,9 +1,15 @@
 import styled from 'styled-components';
 
+import {breakpoints} from 'styles';
+
 export const Container = styled.div`
   margin: 0 auto;
   max-width: 720px;
   width: 100%;
+
+  @media (max-width: ${breakpoints.mini}) {
+    width: calc(100% - 48px);
+  }
 `;
 
 export const LoaderContainer = styled.div`

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {colors, fonts} from 'styles';
+import {breakpoints, colors, fonts} from 'styles';
 
 export const ButtonContainer = styled.div`
   display: flex;
@@ -15,6 +15,10 @@ export const Container = styled.div`
   max-width: 720px;
   padding: 20px 24px;
   width: 100%;
+
+  @media (max-width: ${breakpoints.mini}) {
+    width: calc(100% - 48px);
+  }
 `;
 
 export const Counter = styled.div`
