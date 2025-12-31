@@ -9,6 +9,7 @@ export const Container = styled.div`
 
   @media (max-width: ${breakpoints.mini}) {
     max-width: 100%;
+    width: calc(100% - 48px);
   }
 `;
 
@@ -18,12 +19,12 @@ export const EndMessageContainer = styled.div`
 
 export const Grid = styled.div`
   display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 
   @media (max-width: ${breakpoints.mobile}) {
-    gap: 8px;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 `;
 
