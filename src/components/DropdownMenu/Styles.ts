@@ -15,7 +15,7 @@ export const Menu = styled(UMenu)<{$isOpen?: boolean}>`
   min-width: 160px;
   overflow: hidden;
   padding: 4px;
-  z-index: 2;
+  z-index: 1101;
 
   @keyframes fadeIn {
     from {
