@@ -24,6 +24,7 @@ const Photos: SFC = ({className}) => {
   const posts = useSelector(getPosts);
   const photoPosts = useMemo(() => posts.filter((post) => post.image), [posts]);
   const userId = id ? parseInt(id, 10) : null;
+  const pageSize = 40;
 
   useEffect(() => {
     if (!userId) return;
@@ -34,7 +35,7 @@ const Photos: SFC = ({className}) => {
     (async () => {
       try {
         dispatch(_resetPosts());
-        await dispatch(_getPosts({has_image: true, owner: userId}, abortController.signal));
+        await dispatch(_getPosts({has_image: true, owner: userId, page_size: pageSize}, abortController.signal));
       } catch (error: any) {
         if (!isCancellationError(error)) {
           displayErrorToast('Error fetching photos');
@@ -50,7 +51,9 @@ const Photos: SFC = ({className}) => {
   const fetchMorePosts = async () => {
     if (!isLoading && userId && abortControllerRef.current) {
       try {
-        await dispatch(_getPosts({has_image: true, owner: userId}, abortControllerRef.current.signal));
+        await dispatch(
+          _getPosts({has_image: true, owner: userId, page_size: pageSize}, abortControllerRef.current.signal),
+        );
       } catch (error: any) {
         if (!isCancellationError(error)) {
           displayErrorToast('Error fetching more photos');

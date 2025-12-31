@@ -19,5 +19,6 @@ export interface PostReadSerializer extends CreatedModified {
 export interface GetPostsParams {
   has_image?: boolean;
   owner?: number;
+  page_size?: number;
   user?: number;
 }
