@@ -140,12 +140,16 @@ export const Photo = styled.img`
   cursor: default;
   display: block;
   height: auto;
-  max-height: 90%;
+  max-height: 90vh;
   max-width: 90%;
   object-fit: contain;
   position: relative;
   width: auto;
   z-index: 1;
+
+  @supports (height: 1dvh) {
+    max-height: 90dvh;
+  }
 `;
 
 export const Post = styled(UPost)`
