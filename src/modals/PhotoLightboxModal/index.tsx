@@ -1,9 +1,11 @@
-import {MouseEvent, useEffect, useMemo} from 'react';
+import {MouseEvent, useEffect} from 'react';
 import {createPortal} from 'react-dom';
+import {useSelector} from 'react-redux';
 import {mdiClose} from '@mdi/js';
 
 import Icon from 'components/Icon';
 import {useIsMobile} from 'hooks';
+import {getPosts} from 'selectors/state';
 import {Post as TPost, SFC} from 'types';
 
 import * as S from './Styles';
@@ -15,7 +17,8 @@ export interface PhotoLightboxModalProps {
 
 const PhotoLightboxModal: SFC<PhotoLightboxModalProps> = ({className, close, post}) => {
   const isMobile = useIsMobile();
-  const postWithoutImage = useMemo(() => ({...post, image: null}), [post]);
+  const posts = useSelector(getPosts);
+  const activePost = posts.find((storedPost) => storedPost.id === post.id) || post;
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -48,11 +51,15 @@ const PhotoLightboxModal: SFC<PhotoLightboxModalProps> = ({className, close, pos
             <Icon icon={mdiClose} size={20} />
           </S.CloseButton>
           <S.ImagePanel onClick={handleImagePanelClick}>
-            <S.Photo alt={`Post photo by ${post.owner.username}`} onClick={handlePhotoClick} src={post.image ?? ''} />
+            <S.Photo
+              alt={`Post photo by ${activePost.owner.username}`}
+              onClick={handlePhotoClick}
+              src={activePost.image ?? ''}
+            />
           </S.ImagePanel>
           {!isMobile && (
             <S.DetailsPanel>
-              <S.Post post={postWithoutImage} />
+              <S.Post post={activePost} />
             </S.DetailsPanel>
           )}
         </S.Content>

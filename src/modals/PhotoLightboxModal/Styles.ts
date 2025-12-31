@@ -155,6 +155,10 @@ export const Post = styled(UPost)`
   box-shadow: none;
   padding: 0;
 
+  img[alt='image'] {
+    display: none;
+  }
+
   ${CommentForm} {
     align-items: flex-start;
     flex-direction: column;
