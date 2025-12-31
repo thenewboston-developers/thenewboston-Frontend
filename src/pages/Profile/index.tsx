@@ -15,6 +15,7 @@ import Coins from './Coins';
 import Follower from './Follower';
 import Invitations from './Invitations';
 import Layout from './Layout';
+import Photos from './Photos';
 import Posts from './Posts';
 import * as S from './Styles';
 
@@ -53,6 +54,7 @@ const Profile: SFC = ({className}) => {
           <Route path="/followers" element={<Follower type={FollowerType.FOLLOWERS} />} />
           <Route path="/following" element={<Follower type={FollowerType.FOLLOWING} />} />
           <Route path="/invitations" element={<Invitations />} />
+          <Route path="/photos" element={<Photos />} />
         </Route>
       </Routes>
     </S.Container>

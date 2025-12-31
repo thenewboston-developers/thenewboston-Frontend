@@ -6,6 +6,7 @@ import {
   mdiAccountBoxPlusOutline,
   mdiCardsOutline,
   mdiCircleMultipleOutline,
+  mdiImageMultipleOutline,
 } from '@mdi/js';
 import Icon from '@mdi/react';
 
@@ -18,13 +19,14 @@ import {SFC} from 'types';
 import * as S from './Styles';
 import UserDetails from './UserDetails';
 
-type IconName = 'Coins' | 'Followers' | 'Following' | 'Invitations' | 'Posts';
+type IconName = 'Coins' | 'Followers' | 'Following' | 'Invitations' | 'Photos' | 'Posts';
 
 const IconMapper = {
   Coins: mdiCircleMultipleOutline,
   Followers: mdiAccountArrowDownOutline,
   Following: mdiAccountArrowUpOutline,
   Invitations: mdiAccountBoxPlusOutline,
+  Photos: mdiImageMultipleOutline,
   Posts: mdiCardsOutline,
 };
 
@@ -51,6 +53,7 @@ const Layout: SFC = ({className}) => {
       <S.TabsWrapper>
         <Tabs stackOnMobile>
           {renderTab('Posts', `/profile/${userId}`)}
+          {renderTab('Photos', `/profile/${userId}/photos`)}
           {renderTab('Followers', `/profile/${userId}/followers`)}
           {renderTab('Following', `/profile/${userId}/following`)}
           {renderTab('Coins', `/profile/${userId}/coins`)}
