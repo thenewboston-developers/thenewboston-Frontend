@@ -34,7 +34,7 @@ const Photos: SFC = ({className}) => {
     (async () => {
       try {
         dispatch(_resetPosts());
-        await dispatch(_getPosts({user: userId}, abortController.signal));
+        await dispatch(_getPosts({has_image: true, owner: userId}, abortController.signal));
       } catch (error: any) {
         if (!isCancellationError(error)) {
           displayErrorToast('Error fetching photos');
@@ -47,25 +47,10 @@ const Photos: SFC = ({className}) => {
     };
   }, [dispatch, userId]);
 
-  useEffect(() => {
-    if (!userId || isLoading || !hasMore || photoPosts.length) return;
-    if (!abortControllerRef.current) return;
-
-    (async () => {
-      try {
-        await dispatch(_getPosts({user: userId}, abortControllerRef.current!.signal));
-      } catch (error: any) {
-        if (!isCancellationError(error)) {
-          displayErrorToast('Error fetching more photos');
-        }
-      }
-    })();
-  }, [dispatch, hasMore, isLoading, photoPosts.length, userId]);
-
   const fetchMorePosts = async () => {
     if (!isLoading && userId && abortControllerRef.current) {
       try {
-        await dispatch(_getPosts({user: userId}, abortControllerRef.current.signal));
+        await dispatch(_getPosts({has_image: true, owner: userId}, abortControllerRef.current.signal));
       } catch (error: any) {
         if (!isCancellationError(error)) {
           displayErrorToast('Error fetching more photos');
@@ -83,7 +68,7 @@ const Photos: SFC = ({className}) => {
   };
 
   const renderContent = () => {
-    if (isLoading && !posts.length) {
+    if (isLoading && !photoPosts.length) {
       return (
         <S.LoaderContainer>
           <Loader size={32} />
@@ -97,7 +82,7 @@ const Photos: SFC = ({className}) => {
 
     return (
       <InfiniteScrollComponent
-        dataLength={posts.length}
+        dataLength={photoPosts.length}
         endMessage={
           photoPosts.length ? (
             <S.EndMessageContainer>
