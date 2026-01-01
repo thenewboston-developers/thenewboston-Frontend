@@ -1,4 +1,5 @@
 import {NotificationType} from 'enums';
+import {CommentReadSerializer} from 'types/api/comments';
 import {CurrencyTinySerializer} from 'types/api/tradeHistory';
 import {UserReadSerializer} from 'types/api/users';
 import {CreatedModified} from 'types/createdModified';
@@ -41,7 +42,7 @@ export interface CommentMentionPayload {
 }
 
 export interface PostCommentPayload {
-  comment: string;
+  comment: CommentReadSerializer;
   comment_preview: string;
   commenter: UserReadSerializer;
   notification_type: NotificationType.POST_COMMENT;
