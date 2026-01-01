@@ -30,7 +30,7 @@ export interface PostCoinTransferPayload {
 }
 
 export interface CommentMentionPayload {
-  comment: string;
+  comment: CommentReadSerializer;
   comment_id: number;
   comment_preview: string;
   mentioner: UserReadSerializer;

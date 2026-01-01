@@ -17,7 +17,10 @@ const handleCreateNotification = (dispatch: AppDispatch, socketData: any) => {
   const {notification, total_unread_count} = socketData;
   dispatch(setNotification(notification));
 
-  if (notification?.payload?.notification_type === NotificationType.POST_COMMENT && notification.payload.comment) {
+  if (
+    notification?.payload?.comment &&
+    [NotificationType.COMMENT_MENTION, NotificationType.POST_COMMENT].includes(notification.payload.notification_type)
+  ) {
     dispatch(setComment(notification.payload.comment));
   }
 
