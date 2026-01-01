@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 import {mdiArrowLeft} from '@mdi/js';
 
@@ -6,7 +7,8 @@ import {getPost} from 'api/posts';
 import Icon from 'components/Icon';
 import Post from 'components/Post';
 import PostSkeleton from 'components/Post/PostSkeleton';
-import {Post as TPost, SFC} from 'types';
+import {setComments} from 'store/comments';
+import {AppDispatch, Post as TPost, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
@@ -14,6 +16,7 @@ import * as S from './Styles';
 const PostDetail: SFC = ({className}) => {
   const [loading, setLoading] = useState(true);
   const [post, setPost] = useState<TPost | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const {postId} = useParams<{postId: string}>();
 
@@ -27,14 +30,18 @@ const PostDetail: SFC = ({className}) => {
       try {
         setLoading(true);
         const postData = await getPost(parseInt(postId, 10));
-        setPost(postData);
+        const {comments = [], ...postDetails} = postData;
+        if (comments.length) {
+          dispatch(setComments(comments));
+        }
+        setPost(postDetails);
       } catch (error) {
         displayErrorToast('Failed to load post');
       } finally {
         setLoading(false);
       }
     })();
-  }, [postId]);
+  }, [dispatch, postId]);
 
   const handleBackClick = () => {
     navigate('/notifications');
