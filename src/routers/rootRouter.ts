@@ -1,7 +1,8 @@
 import {DEPLOYMENT_TIMESTAMP} from 'constants/localStorage';
-import {SocketDataType} from 'enums';
+import {NotificationType, SocketDataType} from 'enums';
 import {getTradePriceChartData} from 'selectors/state';
 import {store} from 'store';
+import {setComment} from 'store/comments';
 import {setExchangeOrder} from 'store/exchangeOrders';
 import {setCurrentDeployment, setUpdateAvailable} from 'store/frontendDeployments';
 import {setNotification, setTotalUnreadCount} from 'store/notifications';
@@ -13,10 +14,18 @@ import {AppDispatch, RootState} from 'types';
 import {FrontendDeployment} from 'types/frontendDeployment';
 
 const handleCreateNotification = (dispatch: AppDispatch, socketData: any) => {
-  dispatch(setNotification(socketData.notification));
+  const {notification, total_unread_count} = socketData;
+  dispatch(setNotification(notification));
 
-  if (socketData.total_unread_count !== undefined) {
-    dispatch(setTotalUnreadCount(socketData.total_unread_count));
+  if (
+    notification?.payload?.comment &&
+    [NotificationType.COMMENT_MENTION, NotificationType.POST_COMMENT].includes(notification.payload.notification_type)
+  ) {
+    dispatch(setComment(notification.payload.comment));
+  }
+
+  if (total_unread_count !== undefined) {
+    dispatch(setTotalUnreadCount(total_unread_count));
   }
 };
 

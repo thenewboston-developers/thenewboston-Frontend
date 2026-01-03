@@ -1,6 +1,7 @@
 import {
   createPost as _createPost,
   deletePost as _deletePost,
+  getPost as _getPost,
   getPosts as _getPosts,
   getTipAmounts as _getTipAmounts,
   likePost as _likePost,
@@ -36,6 +37,18 @@ export const deletePost = (id: number) => async (dispatch: AppDispatch) => {
 
 export const resetPosts = () => (dispatch: AppDispatch) => {
   dispatch(_resetPosts());
+};
+
+export const getPost = (postId: number) => async (dispatch: AppDispatch) => {
+  const responseData = await _getPost(postId);
+  const {comments = [], ...postDetails} = responseData;
+
+  if (comments.length) {
+    dispatch(setComments(comments));
+  }
+
+  dispatch(setPost(postDetails));
+  return postDetails;
 };
 
 export const getPosts = (params?: GetPostsParams, abortSignal?: AbortSignal) => async (dispatch: AppDispatch) => {
