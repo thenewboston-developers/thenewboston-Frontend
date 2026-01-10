@@ -3,17 +3,16 @@ import {Navigate, Route, Routes} from 'react-router-dom';
 import {SFC} from 'types';
 
 import {bonsaiLearnMoreChapters} from './chapters';
+import Home from './Home';
 
 const LearnMore: SFC = () => {
-  const firstChapterPath = bonsaiLearnMoreChapters[0]?.path ?? 'chapter-1';
-
   return (
     <Routes>
-      <Route element={<Navigate replace to={firstChapterPath} />} index />
+      <Route element={<Home />} index />
       {bonsaiLearnMoreChapters.map(({Component, path}) => (
         <Route element={<Component />} key={path} path={path} />
       ))}
-      <Route element={<Navigate replace to={firstChapterPath} />} path="*" />
+      <Route element={<Navigate replace to="/bonsai/learn-more" />} path="*" />
     </Routes>
   );
 };

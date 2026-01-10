@@ -13,6 +13,7 @@ import seedlingCotyledonsFirstLeaves from '../assets/seedling-cotyledons-first-l
 import soilSeedBank from '../assets/soil-seed-bank.png';
 import storedEnergyReserves from '../assets/stored-energy-reserves.png';
 import treeSeedAnatomy from '../assets/tree-seed-anatomy.png';
+import ChapterNavigation from '../ChapterNavigation';
 import {Divider} from '../Styles';
 
 const BonsaiLearnMoreChapter1: SFC = ({className}) => {
@@ -492,6 +493,8 @@ const BonsaiLearnMoreChapter1: SFC = ({className}) => {
             src={seedGerminationRecap}
           />
         </S.Section>
+
+        <ChapterNavigation currentPath="chapter-1" />
       </S.Content>
     </S.Container>
   );

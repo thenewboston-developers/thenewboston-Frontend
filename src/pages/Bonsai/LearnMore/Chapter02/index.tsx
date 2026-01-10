@@ -1,6 +1,7 @@
 import * as S from 'components/LearnMore';
 import {SFC} from 'types';
 
+import ChapterNavigation from '../ChapterNavigation';
 import {Divider, ImagePlaceholder} from '../Styles';
 
 const BonsaiLearnMoreChapter2: SFC = ({className}) => {
@@ -492,6 +493,8 @@ const BonsaiLearnMoreChapter2: SFC = ({className}) => {
             long-term bonsai outcomes.
           </S.Paragraph>
         </S.Section>
+
+        <ChapterNavigation currentPath="chapter-2" />
       </S.Content>
     </S.Container>
   );

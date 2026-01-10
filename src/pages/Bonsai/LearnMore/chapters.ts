@@ -1,5 +1,5 @@
-import BonsaiLearnMoreChapter1 from './Chapter1';
-import BonsaiLearnMoreChapter2 from './Chapter2';
+import BonsaiLearnMoreChapter1 from './Chapter01';
+import BonsaiLearnMoreChapter2 from './Chapter02';
 
 export const bonsaiLearnMoreChapters = [
   {
