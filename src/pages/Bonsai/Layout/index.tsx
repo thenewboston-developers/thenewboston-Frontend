@@ -9,7 +9,7 @@ const Layout: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <Toolbar />
-      <S.OutletContainer>
+      <S.OutletContainer id="bonsai-scroll-container">
         <Outlet />
       </S.OutletContainer>
     </S.Container>
