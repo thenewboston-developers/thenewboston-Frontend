@@ -46,8 +46,9 @@ export const Image = styled.img`
   box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
   display: block;
   margin: 24px auto;
+  max-height: 640px;
   max-width: 640px;
-  width: 100%;
+  width: auto;
 `;
 
 export const Introduction = styled.p`
