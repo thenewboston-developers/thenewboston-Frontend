@@ -4,16 +4,20 @@ import {SFC} from 'types';
 
 import ChapterNavigation from '../ChapterNavigation';
 
+import growthRingsEarlyLateWood from './assets/growth-rings-early-late-wood.png';
+import trunkCrossSectionAnatomy from './assets/trunk-cross-section-anatomy.png';
+import xylemPhloemGrowthDirections from './assets/xylem-phloem-growth-directions.png';
+
 const BonsaiLearnMoreChapter4: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Content>
         <S.Title>Chapter 4: Trunk</S.Title>
 
-        <ImagePlaceholder>
-          Full-page image: cross-section of a mature bonsai trunk showing growth rings, cambium layer, bark, heartwood,
-          and sapwood with labels
-        </ImagePlaceholder>
+        <S.Image
+          alt="Labeled cross-section of a tree trunk showing sapwood, heartwood, growth rings, bark layers, cambium, medullary rays, and pith"
+          src={trunkCrossSectionAnatomy}
+        />
 
         <S.Section>
           <S.SectionTitle>Overview</S.SectionTitle>
@@ -52,10 +56,10 @@ const BonsaiLearnMoreChapter4: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>How Trunks Thicken</S.SectionTitle>
-          <ImagePlaceholder>
-            Diagram: cross-section of a trunk showing the cambium as a thin ring between bark and wood, with arrows
-            indicating that new wood forms inward and new bark forms outward
-          </ImagePlaceholder>
+          <S.Image
+            alt="Diagram showing xylem (wood) growing inward and phloem (inner bark) growing outward from the cambium"
+            src={xylemPhloemGrowthDirections}
+          />
           <S.Paragraph>
             Trees do not grow like animals. A branch does not get longer by stretching—it grows only at the tips. And a
             trunk does not get thicker by expanding from within—it adds new layers on the outside. Understanding this
@@ -115,10 +119,10 @@ const BonsaiLearnMoreChapter4: SFC = ({className}) => {
               heavily pruned in a small pot will add trunk diameter slowly. A tree given room to grow—in the ground or a
               large container—can add rings much faster.
             </S.Paragraph>
-            <ImagePlaceholder>
-              Cross-section showing growth rings: annotation pointing to wide rings ("favorable growing conditions") and
-              narrow rings ("stress year"), with early wood and late wood labeled within a single ring
-            </ImagePlaceholder>
+            <S.Image
+              alt="Tree stump cross-section showing early and late wood with wide and narrow growth rings for wet and dry years"
+              src={growthRingsEarlyLateWood}
+            />
           </S.SubSection>
 
           <S.SubSection>
