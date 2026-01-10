@@ -1,8 +1,20 @@
 import * as S from 'components/LearnMore';
-import {Divider, ImagePlaceholder} from 'components/LearnMore';
+import {Divider} from 'components/LearnMore';
 import {SFC} from 'types';
 
 import ChapterNavigation from '../ChapterNavigation';
+
+import cotyledonsTrueLeavesDiagram from './assets/cotyledons-true-leaves-diagram.png';
+import dampingOffSeedlings from './assets/damping-off-seedlings.png';
+import etiolatedVsCompactSeedlings from './assets/etiolated-vs-compact-seedlings.png';
+import firstYearMilestones from './assets/first-year-milestones.png';
+import healthyEtiolatedDampingOffComparison from './assets/healthy-etiolated-damping-off.png';
+import pottingUpContainerStages from './assets/potting-up-container-stages.png';
+import rootSystemPottingTiming from './assets/root-system-potting-timing.png';
+import seedReservesPhotosynthesisFlow from './assets/seed-reserves-photosynthesis-flow.png';
+import seedToSeedlingTimeline from './assets/seed-to-seedling-timeline.png';
+import seedlingSurvivalTriangle from './assets/seedling-survival-triangle.png';
+import successfulFirstYearSeedling from './assets/successful-first-year-seedling.png';
 
 const BonsaiLearnMoreChapter2: SFC = ({className}) => {
   return (
@@ -10,10 +22,10 @@ const BonsaiLearnMoreChapter2: SFC = ({className}) => {
       <S.Content>
         <S.Title>Chapter 2: Germination and the First Year</S.Title>
 
-        <ImagePlaceholder>
-          Full-page image: a timeline montage of a tree seed becoming a one-year seedling (seed to radicle to cotyledons
-          to first true leaves to a small sapling in a training pot)
-        </ImagePlaceholder>
+        <S.Image
+          alt="Timeline montage of a seed progressing from reserves to cotyledons, true leaves, and a young bonsai in a training pot"
+          src={seedToSeedlingTimeline}
+        />
 
         <S.Section>
           <S.SectionTitle>Overview</S.SectionTitle>
@@ -53,10 +65,10 @@ const BonsaiLearnMoreChapter2: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>What &quot;Success&quot; Looks Like in Year One</S.SectionTitle>
-          <ImagePlaceholder>
-            Reference photo grid: successful first-year seedlings showing thick stem base, healthy leaf color, no
-            stretch, and dense fine roots visible at pot edges
-          </ImagePlaceholder>
+          <S.Image
+            alt="Healthy first-year seedling with compact foliage and a thickening trunk base in a training pot"
+            src={successfulFirstYearSeedling}
+          />
           <S.Paragraph>
             Success in year one is not measured by height. Many seedlings can grow tall and still be weak. Bonsai
             success is measured by <S.Bold>function</S.Bold> and <S.Bold>structure</S.Bold>.
@@ -108,10 +120,10 @@ const BonsaiLearnMoreChapter2: SFC = ({className}) => {
 
           <S.SubSection>
             <S.SubSectionTitle>What &quot;failure&quot; commonly looks like</S.SubSectionTitle>
-            <ImagePlaceholder>
-              Side-by-side comparison: healthy seedling vs etiolated (stretched) seedling vs damping-off collapsed
-              seedling
-            </ImagePlaceholder>
+            <S.Image
+              alt="Comparison of healthy, etiolated, and damping-off seedlings in training pots"
+              src={healthyEtiolatedDampingOffComparison}
+            />
             <S.Paragraph>Common early failure patterns include:</S.Paragraph>
             <S.List>
               <S.ListItem>
@@ -137,9 +149,10 @@ const BonsaiLearnMoreChapter2: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>Cotyledons vs True Leaves</S.SectionTitle>
-          <ImagePlaceholder>
-            Diagram: seedling labeled with cotyledons and first true leaves, with arrows and brief descriptors
-          </ImagePlaceholder>
+          <S.Image
+            alt="Diagram labeling cotyledons and first true leaves on a seedling"
+            src={cotyledonsTrueLeavesDiagram}
+          />
           <S.Paragraph>
             Seedlings begin life with two distinct categories of leaves, and confusing them leads to bad decisions.
           </S.Paragraph>
@@ -213,10 +226,10 @@ const BonsaiLearnMoreChapter2: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>The Critical Transition: From Reserves to Photosynthesis</S.SectionTitle>
-          <ImagePlaceholder>
-            Flow diagram: seed reserves to enzymatic conversion to growth to true leaves expand to photosynthesis net
-            gain
-          </ImagePlaceholder>
+          <S.Image
+            alt="Flow diagram from seed reserves through enzymatic conversion and growth to true leaves and photosynthesis net gain"
+            src={seedReservesPhotosynthesisFlow}
+          />
           <S.Paragraph>
             The most important concept of early seedling life is that it must cross an energy threshold.
           </S.Paragraph>
@@ -285,10 +298,10 @@ const BonsaiLearnMoreChapter2: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>Light, Moisture, Airflow, and Damping-Off</S.SectionTitle>
-          <ImagePlaceholder>
-            Illustration: the seedling survival triangle with corners labeled Light, Moisture, Airflow, and a warning
-            icon near &quot;Stagnant wet air&quot;
-          </ImagePlaceholder>
+          <S.Image
+            alt="Seedling survival triangle showing light, moisture, and airflow with a stagnant wet air warning"
+            src={seedlingSurvivalTriangle}
+          />
           <S.Paragraph>
             Most first-year failures are not caused by a lack of care. They are caused by an imbalance of the three
             environmental fundamentals: light, water, and air movement.
@@ -303,9 +316,10 @@ const BonsaiLearnMoreChapter2: SFC = ({className}) => {
               <S.ListItem>Thin, soft tissue that is vulnerable to disease</S.ListItem>
               <S.ListItem>Slow transition to net-positive energy</S.ListItem>
             </S.List>
-            <ImagePlaceholder>
-              Image: etiolated seedlings reaching toward a window vs compact seedlings under strong light
-            </ImagePlaceholder>
+            <S.Image
+              alt="Etiolated seedlings reaching toward window light versus compact seedlings under strong light"
+              src={etiolatedVsCompactSeedlings}
+            />
             <S.Paragraph>
               In general, seedlings should receive enough light to grow compactly, not enough to scorch. For bonsai
               growers, compact growth early is valuable, but vigor remains the priority.
@@ -344,9 +358,7 @@ const BonsaiLearnMoreChapter2: SFC = ({className}) => {
 
           <S.SubSection>
             <S.SubSectionTitle>Damping-off</S.SubSectionTitle>
-            <ImagePlaceholder>
-              Close-up image: damping-off seedlings with a pinched, darkened soil line and collapsed tops
-            </ImagePlaceholder>
+            <S.Image alt="Close-up of damping-off seedlings collapsed at the soil line" src={dampingOffSeedlings} />
             <S.Paragraph>
               <S.Bold>Damping-off</S.Bold> is a term for seedling diseases (often caused by fungi or fungus-like
               organisms) that attack the stem near the soil line or the roots.
@@ -384,9 +396,10 @@ const BonsaiLearnMoreChapter2: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>Potting Up: When and Why</S.SectionTitle>
-          <ImagePlaceholder>
-            Photo series: seedling in a small cell, then a slightly larger pot, then a training pot with more volume
-          </ImagePlaceholder>
+          <S.Image
+            alt="Potting-up sequence from a small cell to a slightly larger pot and a training pot with more volume"
+            src={pottingUpContainerStages}
+          />
           <S.Paragraph>
             Potting up means moving a seedling into a larger container. In bonsai, container choice is a tool that
             controls growth rate, root development, and stability.
@@ -423,7 +436,7 @@ const BonsaiLearnMoreChapter2: SFC = ({className}) => {
               <S.ListItem>A root system that holds the soil together lightly when removed</S.ListItem>
               <S.ListItem>Roots beginning to reach the container edges or drainage area</S.ListItem>
             </S.List>
-            <ImagePlaceholder>Root system examples labeled: too early, ready, overdue</ImagePlaceholder>
+            <S.Image alt="Root system examples labeled too early, ready, and overdue" src={rootSystemPottingTiming} />
             <S.Paragraph>
               Avoid potting up too early. A seedling with minimal roots placed into a large, wet volume can sit in
               excess moisture and stagnate.
@@ -480,10 +493,10 @@ const BonsaiLearnMoreChapter2: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>Summary</S.SectionTitle>
-          <ImagePlaceholder>
-            One-page recap infographic: milestones of the first year with small icons for cotyledons, true leaves,
-            roots, airflow, and pot-up timing
-          </ImagePlaceholder>
+          <S.Image
+            alt="Milestones of the first year infographic showing cotyledons, true leaves, airflow and moisture, roots reaching edges, and pot up"
+            src={firstYearMilestones}
+          />
           <S.Paragraph>
             The first year of a tree seedling is a transition from inherited energy to independence. Cotyledons provide
             a temporary bridge, while true leaves and expanding roots build the seedling's long-term engine. Success is

@@ -8,6 +8,10 @@ import BonsaiLearnMoreChapter07 from './Chapter07';
 import BonsaiLearnMoreChapter08 from './Chapter08';
 import BonsaiLearnMoreChapter09 from './Chapter09';
 import BonsaiLearnMoreChapter10 from './Chapter10';
+import BonsaiLearnMoreChapter11 from './Chapter11';
+import BonsaiLearnMoreChapter12 from './Chapter12';
+import BonsaiLearnMoreChapter13 from './Chapter13';
+import BonsaiLearnMoreChapter14 from './Chapter14';
 
 export const bonsaiLearnMoreChapters = [
   {
@@ -59,5 +63,25 @@ export const bonsaiLearnMoreChapters = [
     Component: BonsaiLearnMoreChapter10,
     path: 'chapter-10',
     title: 'Chapter 10: Light and Placement',
+  },
+  {
+    Component: BonsaiLearnMoreChapter11,
+    path: 'chapter-11',
+    title: 'Chapter 11: Nutrition and Fertilizer',
+  },
+  {
+    Component: BonsaiLearnMoreChapter12,
+    path: 'chapter-12',
+    title: 'Chapter 12: Repotting and Root Work',
+  },
+  {
+    Component: BonsaiLearnMoreChapter13,
+    path: 'chapter-13',
+    title: 'Chapter 13: Winter, Dormancy, and Protection',
+  },
+  {
+    Component: BonsaiLearnMoreChapter14,
+    path: 'chapter-14',
+    title: 'Chapter 14: Pests, Disease, and Diagnosis',
   },
 ];
