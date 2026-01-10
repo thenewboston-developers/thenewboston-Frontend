@@ -1,8 +1,8 @@
 import * as S from 'components/LearnMore';
+import {Divider, ImagePlaceholder} from 'components/LearnMore';
 import {SFC} from 'types';
 
 import ChapterNavigation from '../ChapterNavigation';
-import {Divider, ImagePlaceholder} from '../Styles';
 
 const BonsaiLearnMoreChapter2: SFC = ({className}) => {
   return (

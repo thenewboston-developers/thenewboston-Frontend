@@ -1,20 +1,21 @@
 import * as S from 'components/LearnMore';
+import {Divider} from 'components/LearnMore';
 import {SFC} from 'types';
 
-import dicotVsConiferSeed from '../assets/dicot-vs-conifer-seed.png';
-import germinatingTreeSeed from '../assets/germinating-tree-seed.png';
-import germinationEnvironmentalCues from '../assets/germination-environmental-cues.png';
-import seedDormancyTimeline from '../assets/seed-dormancy-timeline.png';
-import seedGerminationRecap from '../assets/seed-germination-recap.png';
-import seedGerminationSequence from '../assets/seed-germination-sequence.png';
-import seedOrientationRootShoot from '../assets/seed-orientation-root-shoot.png';
-import seedScarification from '../assets/seed-scarification.png';
-import seedlingCotyledonsFirstLeaves from '../assets/seedling-cotyledons-first-leaves.png';
-import soilSeedBank from '../assets/soil-seed-bank.png';
-import storedEnergyReserves from '../assets/stored-energy-reserves.png';
-import treeSeedAnatomy from '../assets/tree-seed-anatomy.png';
 import ChapterNavigation from '../ChapterNavigation';
-import {Divider} from '../Styles';
+
+import dicotVsConiferSeed from './assets/dicot-vs-conifer-seed.png';
+import germinatingTreeSeed from './assets/germinating-tree-seed.png';
+import germinationEnvironmentalCues from './assets/germination-environmental-cues.png';
+import seedDormancyTimeline from './assets/seed-dormancy-timeline.png';
+import seedGerminationRecap from './assets/seed-germination-recap.png';
+import seedGerminationSequence from './assets/seed-germination-sequence.png';
+import seedOrientationRootShoot from './assets/seed-orientation-root-shoot.png';
+import seedScarification from './assets/seed-scarification.png';
+import seedlingCotyledonsFirstLeaves from './assets/seedling-cotyledons-first-leaves.png';
+import soilSeedBank from './assets/soil-seed-bank.png';
+import storedEnergyReserves from './assets/stored-energy-reserves.png';
+import treeSeedAnatomy from './assets/tree-seed-anatomy.png';
 
 const BonsaiLearnMoreChapter1: SFC = ({className}) => {
   return (
