@@ -6,33 +6,6 @@ import {SFC} from 'types';
 
 import {bonsaiLearnMoreChapters} from '../chapters';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 32px 24px;
-`;
-
-const Title = styled.h1`
-  color: ${colors.primary};
-  font-size: 32px;
-  font-weight: ${fonts.weight.bold};
-  margin-bottom: 8px;
-`;
-
-const Subtitle = styled.p`
-  color: ${colors.secondary};
-  font-size: 16px;
-  margin-bottom: 32px;
-`;
-
-const ChapterList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
 const ChapterCard = styled(Link)`
   background-color: ${colors.white};
   border: 1px solid ${colors.border};
@@ -48,7 +21,14 @@ const ChapterCard = styled(Link)`
   &:hover {
     border-color: ${colors.palette.blue[300]};
     box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
+    text-decoration: none;
   }
+`;
+
+const ChapterList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 const ChapterNumber = styled.span`
@@ -63,6 +43,27 @@ const ChapterTitle = styled.h2`
   font-size: 20px;
   font-weight: ${fonts.weight.semiBold};
   margin-top: 4px;
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 32px 24px;
+`;
+
+const Subtitle = styled.p`
+  color: ${colors.secondary};
+  font-size: 16px;
+  margin-bottom: 32px;
+`;
+
+const Title = styled.h1`
+  color: ${colors.primary};
+  font-size: 32px;
+  font-weight: ${fonts.weight.bold};
+  margin-bottom: 8px;
 `;
 
 const BonsaiLearnMoreHome: SFC = ({className}) => {
