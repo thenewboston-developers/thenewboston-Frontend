@@ -19,6 +19,8 @@ export const Content = styled.div`
 `;
 
 export const Image = styled.img`
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
   display: block;
   margin: 24px auto;
   max-width: 640px;

@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
-import * as LearnMore from 'components/LearnMore';
+import {colors} from 'styles';
 
-export const BonsaiImage = styled(LearnMore.Image)`
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+export const Divider = styled.hr`
+  border: none;
+  border-top: 1px solid ${colors.border};
+  margin: 32px 0;
 `;
