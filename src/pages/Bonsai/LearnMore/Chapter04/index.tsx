@@ -5,7 +5,9 @@ import {SFC} from 'types';
 import ChapterNavigation from '../ChapterNavigation';
 
 import growthRingsEarlyLateWood from './assets/growth-rings-early-late-wood.png';
+import trunkChopTechnique from './assets/trunk-chop-technique.png';
 import trunkCrossSectionAnatomy from './assets/trunk-cross-section-anatomy.png';
+import trunkTaperComparison from './assets/trunk-taper-comparison.png';
 import xylemPhloemGrowthDirections from './assets/xylem-phloem-growth-directions.png';
 
 const BonsaiLearnMoreChapter4: SFC = ({className}) => {
@@ -158,10 +160,10 @@ const BonsaiLearnMoreChapter4: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>Taper, Movement, and Trunk Line</S.SectionTitle>
-          <ImagePlaceholder>
-            Three bonsai trunk silhouettes side by side: (1) straight trunk with no taper (marked as weak), (2) trunk
-            with taper but no movement (acceptable), (3) trunk with taper and natural movement (ideal)
-          </ImagePlaceholder>
+          <S.Image
+            alt="Comparison of bonsai trunks labeled weak straight trunk, acceptable tapered trunk, and ideal tapered curved trunk"
+            src={trunkTaperComparison}
+          />
           <S.Paragraph>
             The trunk is the backbone of bonsai design. Its shape establishes the tree's fundamental character before a
             single branch is considered. Three qualities define trunk excellence: <S.Bold>taper</S.Bold>,{' '}
@@ -221,10 +223,10 @@ const BonsaiLearnMoreChapter4: SFC = ({className}) => {
                 well-grown nursery stock.
               </S.ListItem>
             </S.List>
-            <ImagePlaceholder>
-              Step-by-step diagram: trunk chop technique showing (1) original straight trunk, (2) cut made above a side
-              branch, (3) side branch trained as new leader, (4) result after healing showing taper at the transition
-            </ImagePlaceholder>
+            <S.Image
+              alt="Trunk chop technique diagram showing four steps from straight trunk to taper after healing"
+              src={trunkChopTechnique}
+            />
           </S.SubSection>
 
           <S.SubSection>
