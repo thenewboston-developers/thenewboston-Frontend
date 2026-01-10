@@ -40,6 +40,7 @@ const NavButton = styled(Link)`
   &:hover {
     border-color: ${colors.palette.blue[300]};
     box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
+    text-decoration: none;
   }
 `;
 
