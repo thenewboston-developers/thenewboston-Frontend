@@ -5,6 +5,9 @@ import BonsaiLearnMoreChapter04 from './Chapter04';
 import BonsaiLearnMoreChapter05 from './Chapter05';
 import BonsaiLearnMoreChapter06 from './Chapter06';
 import BonsaiLearnMoreChapter07 from './Chapter07';
+import BonsaiLearnMoreChapter08 from './Chapter08';
+import BonsaiLearnMoreChapter09 from './Chapter09';
+import BonsaiLearnMoreChapter10 from './Chapter10';
 
 export const bonsaiLearnMoreChapters = [
   {
@@ -41,5 +44,20 @@ export const bonsaiLearnMoreChapters = [
     Component: BonsaiLearnMoreChapter07,
     path: 'chapter-7',
     title: 'Chapter 7: Flowers, Fruit, and Cones',
+  },
+  {
+    Component: BonsaiLearnMoreChapter08,
+    path: 'chapter-8',
+    title: 'Chapter 8: Soil and Substrates',
+  },
+  {
+    Component: BonsaiLearnMoreChapter09,
+    path: 'chapter-9',
+    title: 'Chapter 9: Water',
+  },
+  {
+    Component: BonsaiLearnMoreChapter10,
+    path: 'chapter-10',
+    title: 'Chapter 10: Light and Placement',
   },
 ];
