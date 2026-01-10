@@ -1,8 +1,23 @@
 import * as S from 'components/LearnMore';
-import {Divider, ImagePlaceholder} from 'components/LearnMore';
+import {Divider} from 'components/LearnMore';
 import {SFC} from 'types';
 
 import ChapterNavigation from '../ChapterNavigation';
+
+import auxinsCytokininsHormoneFlow from './assets/auxins-cytokinins-hormone-flow.png';
+import bonsaiPotRootZones from './assets/bonsai-pot-root-zones.png';
+import carbohydrateStorageFlow from './assets/carbohydrate-storage-flow.png';
+import idealNebariTopView from './assets/ideal-nebari-top-view.png';
+import mycorrhizaeEctoVsArbuscular from './assets/mycorrhizae-ecto-vs-arbuscular.png';
+import mycorrhizalNetwork from './assets/mycorrhizal-network.png';
+import nebariBonsaiExample from './assets/nebari-bonsai-example.png';
+import rootPruningMistakes from './assets/root-pruning-mistakes.png';
+import rootPruningSteps from './assets/root-pruning-steps.png';
+import rootSystemOverview from './assets/root-system-overview.png';
+import rootTypesTapLateralFeeder from './assets/root-types-tap-lateral-feeder.png';
+import rootWaterMineralUptake from './assets/root-water-mineral-uptake.png';
+import tapRootReductionBeforeAfter from './assets/tap-root-reduction-before-after.png';
+import tileMethodNebari from './assets/tile-method-nebari.png';
 
 const BonsaiLearnMoreChapter3: SFC = ({className}) => {
   return (
@@ -10,10 +25,10 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
       <S.Content>
         <S.Title>Chapter 3: Roots</S.Title>
 
-        <ImagePlaceholder>
-          Full-page image: cross-section of a bonsai pot showing the complete root system with labeled zones—tap root
-          remnant at center, lateral roots spreading outward, and fine feeder roots near the soil surface
-        </ImagePlaceholder>
+        <S.Image
+          alt="Cross-section of a bonsai pot showing the tap root remnant, lateral roots, and fine feeder roots"
+          src={bonsaiPotRootZones}
+        />
 
         <S.Section>
           <S.SectionTitle>Overview</S.SectionTitle>
@@ -52,10 +67,10 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>Root Types</S.SectionTitle>
-          <ImagePlaceholder>
-            Diagram: three-panel illustration showing (1) a seedling with a dominant tap root, (2) a mature tree with
-            extensive lateral roots, and (3) a close-up of fine feeder roots with root hairs
-          </ImagePlaceholder>
+          <S.Image
+            alt="Three-panel diagram showing a dominant tap root, a mature tree's lateral roots, and fine feeder roots"
+            src={rootTypesTapLateralFeeder}
+          />
           <S.Paragraph>
             Not all roots are the same. Trees produce different types of roots for different purposes, and understanding
             these types helps explain why certain bonsai techniques work.
@@ -80,10 +95,10 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
               straight down serves no purpose in a shallow pot and prevents the radial root spread that creates good
               nebari. However, removing a tap root too aggressively on a young seedling can cause significant stress.
             </S.Paragraph>
-            <ImagePlaceholder>
-              Before/after illustration: seedling with long tap root vs same seedling after tap root reduction with
-              lateral roots beginning to spread
-            </ImagePlaceholder>
+            <S.Image
+              alt="Before-and-after comparison of a seedling with a long tap root and after tap root reduction"
+              src={tapRootReductionBeforeAfter}
+            />
           </S.SubSection>
 
           <S.SubSection>
@@ -132,10 +147,10 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
                 <S.Bold>Sensitivity</S.Bold>: they are the first to suffer from drought, waterlogging, or toxicity
               </S.ListItem>
             </S.List>
-            <ImagePlaceholder>
-              Microscopic view: feeder root with visible root hairs extending into soil particles, with labels showing
-              water and mineral uptake
-            </ImagePlaceholder>
+            <S.Image
+              alt="Diagram showing water and mineral uptake through feeder roots toward the trunk"
+              src={rootWaterMineralUptake}
+            />
             <S.Paragraph>
               A healthy bonsai has a dense network of feeder roots. Root pruning, when done correctly, stimulates the
               production of new feeder roots, which is one reason repotting can rejuvenate a stagnant tree.
@@ -165,10 +180,10 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>Root Function</S.SectionTitle>
-          <ImagePlaceholder>
-            Diagram: stylized tree showing the flow of water and minerals up through roots into the trunk, and
-            carbohydrates flowing down from leaves into root storage
-          </ImagePlaceholder>
+          <S.Image
+            alt="Diagram showing water and minerals moving up the trunk and carbohydrates moving down to root storage"
+            src={carbohydrateStorageFlow}
+          />
           <S.Paragraph>
             Roots do more than simply anchor the tree in place. They are active organs that perform several essential
             functions.
@@ -238,10 +253,10 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
               This is why a tree with a vigorous root system tends to produce strong top growth. The roots are not just
               supplying water and nutrients—they are sending chemical signals that stimulate growth above ground.
             </S.Paragraph>
-            <ImagePlaceholder>
-              Simplified diagram: root tip producing cytokinins that travel upward, shoot tip producing auxins that
-              travel downward, with arrows showing bidirectional hormone flow
-            </ImagePlaceholder>
+            <S.Image
+              alt="Simplified diagram of auxins moving downward and cytokinins moving upward between shoots and roots"
+              src={auxinsCytokininsHormoneFlow}
+            />
           </S.SubSection>
 
           <S.SubSection>
@@ -276,10 +291,10 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>Root Pruning: Why It Works and When It Fails</S.SectionTitle>
-          <ImagePlaceholder>
-            Step-by-step illustration: (1) root-bound tree removed from pot, (2) outer roots being combed out, (3) roots
-            pruned back, (4) tree repotted with fresh soil and new root growth beginning
-          </ImagePlaceholder>
+          <S.Image
+            alt="Four-step illustration of root pruning from removing the tree to repotting"
+            src={rootPruningSteps}
+          />
           <S.Paragraph>
             Root pruning is one of the defining techniques of bonsai. It allows trees to live indefinitely in small
             containers—something that would be impossible without periodic root management. But root pruning is not
@@ -339,10 +354,10 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
                 the tree with no way to generate or access energy
               </S.ListItem>
             </S.List>
-            <ImagePlaceholder>
-              Warning diagram: common root pruning mistakes including over-pruning, dry roots during work, and immediate
-              full sun exposure
-            </ImagePlaceholder>
+            <S.Image
+              alt="Warning diagram showing root pruning mistakes like over-pruning and dry roots"
+              src={rootPruningMistakes}
+            />
           </S.SubSection>
 
           <S.SubSection>
@@ -396,10 +411,10 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>Nebari: Building the Surface Root Base</S.SectionTitle>
-          <ImagePlaceholder>
-            Photo grid: examples of excellent nebari on mature bonsai—radial roots spreading evenly from trunk base,
-            visible buttressing, surface roots that complement the tree's character
-          </ImagePlaceholder>
+          <S.Image
+            alt="Mature bonsai with a strong nebari root flare spreading across the soil surface"
+            src={nebariBonsaiExample}
+          />
           <S.Paragraph>
             <S.Bold>Nebari</S.Bold> is the Japanese term for the visible surface roots of a bonsai. It is one of the
             features that most strongly communicates age, stability, and quality. A tree with powerful nebari appears
@@ -428,10 +443,10 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
                 <S.Bold>Proportional to the trunk</S.Bold>: root flare that matches the tree's overall scale
               </S.ListItem>
             </S.List>
-            <ImagePlaceholder>
-              Diagram: top-down view of ideal nebari showing radial root spread, with annotations marking good features
-              and common problems to avoid
-            </ImagePlaceholder>
+            <S.Image
+              alt="Top-down diagram of ideal nebari with radial root distribution and highlighted issues"
+              src={idealNebariTopView}
+            />
           </S.SubSection>
 
           <S.SubSection>
@@ -484,10 +499,7 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
                 <S.Bold>Root grafting</S.Bold>: grafting new roots into gaps where the existing nebari is incomplete
               </S.ListItem>
             </S.List>
-            <ImagePlaceholder>
-              Illustration series: tile method showing root plate placement, tourniquet method showing wire placement
-              and swelling, air layer showing root development at wrap point
-            </ImagePlaceholder>
+            <S.Image alt="Tile method illustration showing roots spreading over a flat plate" src={tileMethodNebari} />
           </S.SubSection>
 
           <S.SubSection>
@@ -526,10 +538,7 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>Mycorrhizae: The Hidden Partnership</S.SectionTitle>
-          <ImagePlaceholder>
-            Microscopic illustration: tree root cross-section showing mycorrhizal fungi extending from root cells into
-            surrounding soil, with labels showing nutrient and water exchange
-          </ImagePlaceholder>
+          <S.Image alt="Two trees connected underground by a mycorrhizal root network" src={mycorrhizalNetwork} />
           <S.Paragraph>
             Most trees do not absorb nutrients alone. They form partnerships with fungi called{' '}
             <S.Bold>mycorrhizae</S.Bold> (from Greek: &quot;fungus-root&quot;). These fungi colonize root tissue and
@@ -574,10 +583,10 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
                 other trees—not visible without a microscope
               </S.ListItem>
             </S.List>
-            <ImagePlaceholder>
-              Side-by-side comparison: ectomycorrhizal root tips (visible fungal sheath) vs arbuscular mycorrhizal roots
-              (appear normal externally, microscopic view shows internal structures)
-            </ImagePlaceholder>
+            <S.Image
+              alt="Side-by-side comparison of ectomycorrhizal root tips and arbuscular mycorrhizal roots"
+              src={mycorrhizaeEctoVsArbuscular}
+            />
           </S.SubSection>
 
           <S.SubSection>
@@ -654,11 +663,7 @@ const BonsaiLearnMoreChapter3: SFC = ({className}) => {
 
         <S.Section>
           <S.SectionTitle>Summary</S.SectionTitle>
-          <ImagePlaceholder>
-            One-page recap infographic: root system diagram showing all root types, arrows indicating functions (water
-            uptake, mineral absorption, hormone production, storage), and a small nebari example with the mycorrhizal
-            partnership illustrated
-          </ImagePlaceholder>
+          <S.Image alt="Root system overview showing a tree's roots with a bonsai inset" src={rootSystemOverview} />
           <S.Paragraph>
             Roots are the foundation of every bonsai, both functionally and aesthetically. Understanding the different
             root types—tap, lateral, feeder, and the microscopic root hairs—explains why certain techniques work and
