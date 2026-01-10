@@ -13,14 +13,14 @@ const Bonsai: SFC = () => {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/home" element={<Home />} />
-        <Route path="/learn-more" element={<LearnMore />} />
-        <Route path="/manage" element={<Manage />} />
-        <Route path="/manage/create" element={<Admin mode="create" />} />
-        <Route path="/edit/:id" element={<Admin mode="edit" />} />
+        <Route element={<Home />} path="/home" />
+        <Route element={<LearnMore />} path="/learn-more/*" />
+        <Route element={<Manage />} path="/manage" />
+        <Route element={<Admin mode="create" />} path="/manage/create" />
+        <Route element={<Admin mode="edit" />} path="/edit/:id" />
       </Route>
-      <Route path="/:id" element={<Detail />} />
-      <Route path="*" element={<Navigate to="/bonsai/home" replace />} />
+      <Route element={<Detail />} path="/:id" />
+      <Route element={<Navigate replace to="/bonsai/home" />} path="*" />
     </Routes>
   );
 };
