@@ -25,6 +25,14 @@ import {AssetPair, AssetPairs} from 'types/assetPairs';
 import {Authentication} from 'types/authentication';
 import {Block} from 'types/blocks';
 import {Comment, Comments} from 'types/comments';
+import {
+  ConnectFiveChallenge,
+  ConnectFiveChallengePaginatedResponse,
+  ConnectFiveMatch,
+  ConnectFiveMatchPaginatedResponse,
+  ConnectFiveMatchPlayer,
+  ConnectFiveState,
+} from 'types/connectFive';
 import {CreatedModified} from 'types/createdModified';
 import {Currencies, Currency} from 'types/currencies';
 import {ExchangeOrder, ExchangeOrderPaginatedResponse, ExchangeOrders, ExchangeOrdersState} from 'types/exchangeOrders';
@@ -71,6 +79,12 @@ export {
   Comment,
   CommentReadSerializer,
   Comments,
+  ConnectFiveChallenge,
+  ConnectFiveChallengePaginatedResponse,
+  ConnectFiveMatch,
+  ConnectFiveMatchPaginatedResponse,
+  ConnectFiveMatchPlayer,
+  ConnectFiveState,
   CreateCommentRequest,
   CreatedModified,
   CreateExchangeOrderRequest,

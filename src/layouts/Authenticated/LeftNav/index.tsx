@@ -4,6 +4,7 @@ import {
   mdiBell,
   mdiCircleMultipleOutline,
   mdiExitToApp,
+  mdiGamepadVariantOutline,
   mdiHome,
   mdiPineTree,
   mdiSwapHorizontalCircleOutline,
@@ -27,6 +28,7 @@ const LeftNav: SFC = ({className}) => {
       <S.Top>
         <MenuLink icon={mdiPineTree} rootPath="/bonsai" text="Bonsai" to="/bonsai" />
         <MenuLink icon={mdiCircleMultipleOutline} rootPath="/currencies" text="Currencies" to="/currencies" />
+        <MenuLink icon={mdiGamepadVariantOutline} rootPath="/connect-five" text="Connect 5" to="/connect-five" />
         <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange" />
         <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
         <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications">

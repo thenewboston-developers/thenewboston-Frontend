@@ -17,6 +17,7 @@ import {LOGOUT_USER} from 'store/actions';
 import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
 import commentsReducer from 'store/comments';
+import connectFiveReducer from 'store/connectFive';
 import currenciesReducer from 'store/currencies';
 import exchangeOrdersReducer from 'store/exchangeOrders';
 import followersReducer from 'store/followers';
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
   assetPairs: assetPairsReducer,
   authentication: authenticationReducer,
   comments: commentsReducer,
+  connectFive: connectFiveReducer,
   currencies: currenciesReducer,
   exchangeOrders: exchangeOrdersReducer,
   followers: followersReducer,

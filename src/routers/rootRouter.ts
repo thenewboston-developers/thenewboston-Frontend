@@ -3,6 +3,7 @@ import {NotificationType, SocketDataType} from 'enums';
 import {getTradePriceChartData} from 'selectors/state';
 import {store} from 'store';
 import {setComment} from 'store/comments';
+import {upsertChallenge, upsertMatch} from 'store/connectFive';
 import {setExchangeOrder} from 'store/exchangeOrders';
 import {setCurrentDeployment, setUpdateAvailable} from 'store/frontendDeployments';
 import {setNotification, setTotalUnreadCount} from 'store/notifications';
@@ -22,6 +23,17 @@ const handleCreateNotification = (dispatch: AppDispatch, socketData: any) => {
     [NotificationType.COMMENT_MENTION, NotificationType.POST_COMMENT].includes(notification.payload.notification_type)
   ) {
     dispatch(setComment(notification.payload.comment));
+  }
+
+  if (
+    notification?.payload?.notification_type === NotificationType.CONNECT_FIVE_CHALLENGE &&
+    notification.payload.challenge
+  ) {
+    const state = store.getState() as RootState;
+    const selfId = state.self.id;
+    if (selfId) {
+      dispatch(upsertChallenge({challenge: notification.payload.challenge, selfId}));
+    }
   }
 
   if (total_unread_count !== undefined) {
@@ -61,6 +73,16 @@ const rootRouter = (dispatch: AppDispatch, event: MessageEvent) => {
   if ([SocketDataType.CREATE_EXCHANGE_ORDER, SocketDataType.UPDATE_EXCHANGE_ORDER].includes(type)) {
     dispatch(setExchangeOrder(socketData.exchange_order));
     dispatch(updateOrderBookOrder(socketData.exchange_order));
+  } else if (type === SocketDataType.UPDATE_CONNECT_FIVE_CHALLENGE) {
+    const state = store.getState() as RootState;
+    const selfId = state.self.id;
+    if (selfId) {
+      dispatch(upsertChallenge({challenge: socketData.challenge, selfId}));
+    }
+  } else if (type === SocketDataType.UPDATE_CONNECT_FIVE_MATCH) {
+    if (socketData.match) {
+      dispatch(upsertMatch(socketData.match));
+    }
   } else if (type === SocketDataType.CREATE_NOTIFICATION) {
     handleCreateNotification(dispatch, socketData);
   } else if (type === SocketDataType.CREATE_TRADE) {

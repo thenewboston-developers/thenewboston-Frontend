@@ -28,6 +28,7 @@ const App = () => {
     return (
       <>
         <FrontendDeploymentWebSocket />
+        <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/connect-five/${self.id}`} />
         <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/notifications/${self.id}`} />
         <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/wallet/${self.id}`} />
       </>
