@@ -20,6 +20,10 @@ import {upsertChallenge, upsertMatch} from 'store/connectFive';
 import {AppDispatch, ConnectFiveMatch, ConnectFiveMatchPlayer, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
+import bombIcon from './assets/bomb.svg';
+import cross4Icon from './assets/cross4.svg';
+import horizontal2Icon from './assets/horizontal2.svg';
+import vertical2Icon from './assets/vertical2.svg';
 import * as S from './Styles';
 
 const BOARD_SIZE = 14;
@@ -52,6 +56,13 @@ const SPECIAL_LABELS: Record<ConnectFiveSpecialType, string> = {
   [ConnectFiveSpecialType.CROSS4]: 'Cross 4',
   [ConnectFiveSpecialType.H2]: 'Horizontal 2',
   [ConnectFiveSpecialType.V2]: 'Vertical 2',
+};
+
+const SPECIAL_ICONS: Record<ConnectFiveSpecialType, string> = {
+  [ConnectFiveSpecialType.BOMB]: bombIcon,
+  [ConnectFiveSpecialType.CROSS4]: cross4Icon,
+  [ConnectFiveSpecialType.H2]: horizontal2Icon,
+  [ConnectFiveSpecialType.V2]: vertical2Icon,
 };
 
 const MOVE_TO_SPECIAL_TYPE: Record<ConnectFiveMoveType, ConnectFiveSpecialType | null> = {
@@ -603,12 +614,16 @@ const ConnectFiveGame: SFC = ({className}) => {
         <S.PurchaseList>
           {(Object.values(ConnectFiveSpecialType) as ConnectFiveSpecialType[]).map((specialType) => (
             <S.PurchaseRow key={specialType}>
-              <S.PurchaseInfo>
-                <S.PurchaseName>{SPECIAL_LABELS[specialType]}</S.PurchaseName>
-                <S.PurchaseMeta>
-                  Cost: {SPECIAL_PRICES[specialType]} TNB · Inventory: {getInventoryCount(selfMatchPlayer, specialType)}
-                </S.PurchaseMeta>
-              </S.PurchaseInfo>
+              <S.PurchaseLeft>
+                <S.SpecialIcon src={SPECIAL_ICONS[specialType]} alt={SPECIAL_LABELS[specialType]} />
+                <S.PurchaseInfo>
+                  <S.PurchaseName>{SPECIAL_LABELS[specialType]}</S.PurchaseName>
+                  <S.PurchaseMeta>
+                    Cost: {SPECIAL_PRICES[specialType]} TNB · Inventory:{' '}
+                    {getInventoryCount(selfMatchPlayer, specialType)}
+                  </S.PurchaseMeta>
+                </S.PurchaseInfo>
+              </S.PurchaseLeft>
               <Button
                 disabled={isPurchasing || selfMatchPlayer.remaining_spend < SPECIAL_PRICES[specialType]}
                 onClick={() => handlePurchase(specialType)}

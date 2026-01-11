@@ -200,6 +200,12 @@ export const PurchaseInfo = styled.div`
   gap: 4px;
 `;
 
+export const PurchaseLeft = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 12px;
+`;
+
 export const PurchaseList = styled.div`
   display: flex;
   flex-direction: column;
@@ -232,6 +238,11 @@ export const PurchaseRow = styled.div`
   display: flex;
   gap: 12px;
   justify-content: space-between;
+`;
+
+export const SpecialIcon = styled.img`
+  height: 24px;
+  width: 24px;
 `;
 
 export const SpendList = styled.div`
