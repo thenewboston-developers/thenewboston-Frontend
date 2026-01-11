@@ -331,8 +331,11 @@ const ConnectFiveGame: SFC = ({className}) => {
         {match.board_state.map((row, y) =>
           row.map((value, x) => {
             const cellKey = getCellKey(x, y);
+            const isAnchor = hoverPosition?.x === x && hoverPosition?.y === y;
+            const isCross4Anchor = activeMoveType === ConnectFiveMoveType.CROSS4 && isAnchor;
             const isPreview = previewKeys.has(cellKey);
             const isInvalid = isPreview && !previewState.isValid;
+            const shouldEnableClick = previewState.isValid && (isPreview || isCross4Anchor);
 
             return (
               <S.Cell
@@ -340,7 +343,7 @@ const ConnectFiveGame: SFC = ({className}) => {
                 $isPreview={isPreview}
                 $isPreviewInvalid={isInvalid}
                 onClick={() => {
-                  if (!previewState.isValid || !isPreview) return;
+                  if (!shouldEnableClick) return;
                   handleCellClick(x, y);
                 }}
                 onMouseEnter={() => handleCellHover(x, y)}
