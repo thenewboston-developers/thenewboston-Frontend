@@ -144,31 +144,38 @@ export const Piece = styled.div<{$variant: 'playerA' | 'playerB'}>`
   width: 70%;
 `;
 
-export const PlayerCard = styled.div<{$isActive: boolean}>`
+export const Clock = styled.div<{$isActive: boolean}>`
   align-items: center;
-  background: ${colors.white};
+  background: ${({$isActive}) => ($isActive ? colors.palette.green[50] : colors.white)};
   border: 1px solid ${({$isActive}) => ($isActive ? colors.palette.green[400] : colors.border)};
-  border-radius: 16px;
+  border-radius: 12px;
+  color: ${({$isActive}) => ($isActive ? colors.palette.green[700] : colors.primary)};
   display: flex;
-  gap: 12px;
-  padding: 12px;
+  font-size: 16px;
+  font-weight: ${fonts.weight.semiBold};
+  justify-content: center;
+  min-width: 80px;
+  padding: 8px 16px;
 `;
 
-export const PlayerMeta = styled.div`
-  color: ${colors.secondary};
-  font-size: 12px;
+export const PlayerInfo = styled.div<{$isActive: boolean}>`
+  align-items: center;
+  color: ${({$isActive}) => ($isActive ? colors.palette.green[700] : colors.primary)};
+  display: flex;
+  gap: 10px;
 `;
 
 export const PlayerName = styled.div`
-  color: ${colors.primary};
+  color: inherit;
   font-size: 14px;
   font-weight: ${fonts.weight.medium};
 `;
 
-export const Players = styled.div`
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+export const PlayerRow = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
 `;
 
 export const Preview = styled.div<{$isInvalid: boolean}>`
@@ -227,6 +234,61 @@ export const PurchaseRow = styled.div`
   justify-content: space-between;
 `;
 
+export const SpendList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const SpendPanel = styled.div`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+`;
+
+export const SpendProgressBar = styled.div`
+  background-color: ${colors.palette.gray[200]};
+  border-radius: 2px;
+  height: 4px;
+  overflow: hidden;
+  position: relative;
+`;
+
+export const SpendProgressFill = styled.div<{$percentage: number}>`
+  background-color: ${colors.palette.blue[500]};
+  height: 100%;
+  transition: width 0.3s ease;
+  width: ${({$percentage}) => $percentage}%;
+`;
+
+export const SpendRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+export const SpendRowHeader = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const SpendRowName = styled.span`
+  color: ${colors.primary};
+  font-size: 12px;
+  font-weight: ${fonts.weight.semiBold};
+`;
+
+export const SpendRowValue = styled.span`
+  color: ${colors.secondary};
+  font-size: 12px;
+  font-weight: ${fonts.weight.semiBold};
+`;
+
 export const Sidebar = styled.aside`
   display: flex;
   flex-direction: column;
@@ -266,6 +328,17 @@ export const ToolButton = styled.button<{$isActive: boolean; $isDisabled: boolea
   border: 1px solid ${({$isActive}) => ($isActive ? colors.palette.blue[400] : colors.border)};
   border-radius: 14px;
   cursor: ${({$isDisabled}) => ($isDisabled ? 'not-allowed' : 'pointer')};
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: ${({$isDisabled}) => ($isDisabled ? 0.5 : 1)};
+  padding: 10px 14px;
+`;
+
+export const ToolButtonReadOnly = styled.div<{$isDisabled: boolean}>`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
   gap: 4px;
