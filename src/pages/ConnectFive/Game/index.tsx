@@ -181,7 +181,7 @@ const ConnectFiveGame: SFC = ({className}) => {
   const [activeMoveType, setActiveMoveType] = useState<ConnectFiveMoveType>(ConnectFiveMoveType.SINGLE);
   const [hoverPosition, setHoverPosition] = useState<{x: number; y: number} | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [purchasingSpecial, setPurchasingSpecial] = useState<ConnectFiveSpecialType | null>(null);
+  const [purchasingSpecials, setPurchasingSpecials] = useState<Set<ConnectFiveSpecialType>>(new Set());
   const [isSubmittingMove, setIsSubmittingMove] = useState(false);
   const [now, setNow] = useState(Date.now());
 
@@ -259,7 +259,7 @@ const ConnectFiveGame: SFC = ({className}) => {
       if (!match) return;
 
       try {
-        setPurchasingSpecial(specialType);
+        setPurchasingSpecials((prev) => new Set(prev).add(specialType));
         const updatedMatch = await purchaseConnectFiveSpecial(match.id, {
           special_type: specialType,
         });
@@ -267,7 +267,11 @@ const ConnectFiveGame: SFC = ({className}) => {
       } catch (error) {
         displayErrorToast('Purchase failed. Check your spend limit.');
       } finally {
-        setPurchasingSpecial(null);
+        setPurchasingSpecials((prev) => {
+          const next = new Set(prev);
+          next.delete(specialType);
+          return next;
+        });
       }
     },
     [dispatch, match],
@@ -625,8 +629,8 @@ const ConnectFiveGame: SFC = ({className}) => {
                 </S.PurchaseInfo>
               </S.PurchaseLeft>
               <Button
-                disabled={purchasingSpecial !== null || selfMatchPlayer.remaining_spend < SPECIAL_PRICES[specialType]}
-                isSubmitting={purchasingSpecial === specialType}
+                disabled={selfMatchPlayer.remaining_spend < SPECIAL_PRICES[specialType]}
+                isSubmitting={purchasingSpecials.has(specialType)}
                 onClick={() => handlePurchase(specialType)}
                 text="Buy"
               />
