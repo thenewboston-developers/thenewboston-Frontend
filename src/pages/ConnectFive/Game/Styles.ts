@@ -1,6 +1,35 @@
-import styled, {css} from 'styled-components';
+import styled, {css, keyframes} from 'styled-components';
 
 import {colors, fonts, pagePadding} from 'styles';
+
+const pulse = keyframes`
+  0%, 80%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
+const shimmer = keyframes`
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+`;
+
+const float = keyframes`
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+`;
 
 export const Board = styled.div`
   background: ${colors.border};
@@ -119,22 +148,121 @@ export const PanelTitle = styled.h3`
   margin: 0;
 `;
 
-export const PendingState = styled.div`
+export const PendingState = styled.div<{$variant?: 'challenger' | 'opponent'}>`
+  align-items: center;
+  background: ${({$variant}) =>
+    $variant === 'opponent'
+      ? `linear-gradient(135deg, ${colors.palette.orange[50]} 0%, ${colors.palette.red[50]} 100%)`
+      : `linear-gradient(135deg, ${colors.palette.blue[50]} 0%, ${colors.palette.orange[50]} 100%)`};
+  border: 1px solid ${({$variant}) => ($variant === 'opponent' ? colors.palette.orange[200] : colors.palette.blue[200])};
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 48px 32px;
+`;
+
+export const PendingIcon = styled.div<{$variant?: 'challenger' | 'opponent'}>`
+  align-items: center;
+  animation: ${float} 3s ease-in-out infinite;
+  background: ${({$variant}) =>
+    $variant === 'opponent'
+      ? `linear-gradient(135deg, ${colors.palette.orange[500]} 0%, ${colors.palette.orange[700]} 100%)`
+      : `linear-gradient(135deg, ${colors.palette.blue[500]} 0%, ${colors.palette.blue[700]} 100%)`};
+  border-radius: 50%;
+  display: flex;
+  height: 80px;
+  justify-content: center;
+  width: 80px;
+`;
+
+export const PendingIconInner = styled.div<{$variant?: 'challenger' | 'opponent'}>`
   background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 20px;
-  padding: 24px;
+  border-radius: 50%;
+  height: 40px;
+  position: relative;
+  width: 40px;
+
+  &::before,
+  &::after {
+    background: ${({$variant}) => ($variant === 'opponent' ? colors.palette.orange[500] : colors.palette.blue[500])};
+    border-radius: 50%;
+    content: '';
+    height: 12px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+  }
+
+  &::before {
+    left: 6px;
+  }
+
+  &::after {
+    right: 6px;
+  }
+`;
+
+export const PendingContent = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+`;
+
+export const PendingTitle = styled.h2<{$variant?: 'challenger' | 'opponent'}>`
+  background: ${({$variant}) =>
+    $variant === 'opponent'
+      ? `linear-gradient(135deg, ${colors.palette.orange[600]} 0%, ${colors.palette.orange[800]} 100%)`
+      : `linear-gradient(135deg, ${colors.palette.blue[600]} 0%, ${colors.palette.blue[800]} 100%)`};
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 24px;
+  font-weight: ${fonts.weight.semiBold};
+  margin: 0;
 `;
 
 export const PendingText = styled.p`
   color: ${colors.secondary};
-  margin: 8px 0 0;
+  font-size: 16px;
+  margin: 0;
+  max-width: 320px;
 `;
 
-export const PendingTitle = styled.h2`
-  color: ${colors.primary};
-  font-size: 18px;
-  margin: 0;
+export const PendingDots = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+`;
+
+export const PendingDot = styled.span<{$delay: number; $variant?: 'challenger' | 'opponent'}>`
+  animation: ${pulse} 1.4s ease-in-out infinite;
+  animation-delay: ${({$delay}) => $delay}s;
+  background: ${({$variant}) => ($variant === 'opponent' ? colors.palette.orange[500] : colors.palette.blue[500])};
+  border-radius: 50%;
+  height: 12px;
+  width: 12px;
+`;
+
+export const PendingShimmer = styled.div<{$variant?: 'challenger' | 'opponent'}>`
+  animation: ${shimmer} 2s linear infinite;
+  background: ${({$variant}) =>
+    $variant === 'opponent'
+      ? `linear-gradient(90deg, transparent 0%, rgba(255, 152, 0, 0.15) 50%, transparent 100%)`
+      : `linear-gradient(90deg, transparent 0%, rgba(47, 92, 129, 0.1) 50%, transparent 100%)`};
+  background-size: 200% 100%;
+  border-radius: 8px;
+  height: 4px;
+  margin-top: 4px;
+  width: 200px;
+`;
+
+export const PendingChallengerName = styled.span`
+  color: ${colors.palette.orange[700]};
+  font-weight: ${fonts.weight.semiBold};
 `;
 
 export const Piece = styled.div<{$variant: 'playerA' | 'playerB'}>`

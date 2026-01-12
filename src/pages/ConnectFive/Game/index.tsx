@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 
@@ -14,11 +14,17 @@ import Avatar from 'components/Avatar';
 import Badge, {BadgeStyle} from 'components/Badge';
 import Button from 'components/Button';
 import EmptyText from 'components/EmptyText';
-import {ConnectFiveChallengeStatus, ConnectFiveMatchStatus, ConnectFiveMoveType, ConnectFiveSpecialType} from 'enums';
+import {
+  ConnectFiveChallengeStatus,
+  ConnectFiveMatchStatus,
+  ConnectFiveMoveType,
+  ConnectFiveSpecialType,
+  ToastType,
+} from 'enums';
 import {getConnectFiveChallengesById, getConnectFiveMatchesById, getSelf} from 'selectors/state';
 import {upsertChallenge, upsertMatch} from 'store/connectFive';
 import {AppDispatch, ConnectFiveMatch, ConnectFiveMatchPlayer, SFC} from 'types';
-import {displayErrorToast} from 'utils/toasts';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import bombIcon from './assets/bomb.svg';
 import cross4Icon from './assets/cross4.svg';
@@ -181,13 +187,14 @@ const ConnectFiveGame: SFC = ({className}) => {
   const [activeMoveType, setActiveMoveType] = useState<ConnectFiveMoveType>(ConnectFiveMoveType.SINGLE);
   const [hoverPosition, setHoverPosition] = useState<{x: number; y: number} | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [purchasingSpecials, setPurchasingSpecials] = useState<Set<ConnectFiveSpecialType>>(new Set());
   const [isSubmittingMove, setIsSubmittingMove] = useState(false);
   const [now, setNow] = useState(Date.now());
+  const [purchasingSpecials, setPurchasingSpecials] = useState<Set<ConnectFiveSpecialType>>(new Set());
 
   const {challengeId} = useParams();
   const challengesById = useSelector(getConnectFiveChallengesById);
   const dispatch = useDispatch<AppDispatch>();
+  const hasHandledCancellation = useRef(false);
   const matchesById = useSelector(getConnectFiveMatchesById);
   const navigate = useNavigate();
   const self = useSelector(getSelf);
@@ -378,6 +385,15 @@ const ConnectFiveGame: SFC = ({className}) => {
   }, [match, now, selfPlayer]);
 
   useEffect(() => {
+    if (challenge?.status !== ConnectFiveChallengeStatus.CANCELLED) return;
+    if (hasHandledCancellation.current) return;
+
+    hasHandledCancellation.current = true;
+    displayToast('Challenge has been cancelled.', ToastType.SUCCESS);
+    navigate('/connect-five/home', {replace: true});
+  }, [challenge?.status, navigate]);
+
+  useEffect(() => {
     if (!isMatchActive) return;
 
     const intervalId = setInterval(() => {
@@ -439,38 +455,6 @@ const ConnectFiveGame: SFC = ({className}) => {
         )}
       </S.Board>
     );
-  };
-
-  const renderChallengeActions = () => {
-    if (!challenge || !self) return null;
-
-    if (challenge.status === ConnectFiveChallengeStatus.PENDING) {
-      if (challenge.challenger.id === self.id) {
-        return (
-          <S.StatusBanner>
-            <S.StatusText>Challenge sent. Awaiting acceptance.</S.StatusText>
-            <Button onClick={handleCancelChallenge} text="Cancel challenge" />
-          </S.StatusBanner>
-        );
-      }
-
-      return (
-        <S.StatusBanner>
-          <S.StatusText>{challenge.challenger.username} challenged you to Connect 5.</S.StatusText>
-          <Button onClick={handleAcceptChallenge} text="Accept challenge" />
-        </S.StatusBanner>
-      );
-    }
-
-    if (challenge.status === ConnectFiveChallengeStatus.CANCELLED) {
-      return (
-        <S.StatusBanner>
-          <S.StatusText>Challenge was cancelled.</S.StatusText>
-        </S.StatusBanner>
-      );
-    }
-
-    return null;
   };
 
   const renderMatchInfo = () => {
@@ -641,6 +625,46 @@ const ConnectFiveGame: SFC = ({className}) => {
     );
   };
 
+  const renderPendingState = () => {
+    if (!challenge || !self) return null;
+
+    const isChallenger = challenge.challenger.id === self.id;
+    const variant = isChallenger ? 'challenger' : 'opponent';
+
+    return (
+      <S.PendingState $variant={variant}>
+        <S.PendingIcon $variant={variant}>
+          <S.PendingIconInner $variant={variant} />
+        </S.PendingIcon>
+        <S.PendingContent>
+          <S.PendingTitle $variant={variant}>
+            {isChallenger ? 'Awaiting Opponent' : "You've Been Challenged!"}
+          </S.PendingTitle>
+          <S.PendingText>
+            {isChallenger ? (
+              'Your challenge has been sent. Waiting for your opponent to accept.'
+            ) : (
+              <>
+                <S.PendingChallengerName>{challenge.challenger.username}</S.PendingChallengerName> wants to play Connect
+                5 against you.
+              </>
+            )}
+          </S.PendingText>
+          <S.PendingDots>
+            <S.PendingDot $delay={0} $variant={variant} />
+            <S.PendingDot $delay={0.2} $variant={variant} />
+            <S.PendingDot $delay={0.4} $variant={variant} />
+          </S.PendingDots>
+          <S.PendingShimmer $variant={variant} />
+        </S.PendingContent>
+        <Button
+          onClick={isChallenger ? handleCancelChallenge : handleAcceptChallenge}
+          text={isChallenger ? 'Cancel challenge' : 'Accept challenge'}
+        />
+      </S.PendingState>
+    );
+  };
+
   if (isLoading) {
     return (
       <S.Container className={className}>
@@ -670,8 +694,6 @@ const ConnectFiveGame: SFC = ({className}) => {
         <Button onClick={() => navigate('/connect-five/home')} text="Back to lobby" />
       </S.Header>
 
-      {renderChallengeActions()}
-
       {match ? (
         <S.GameLayout>
           <S.BoardSection>
@@ -694,10 +716,7 @@ const ConnectFiveGame: SFC = ({className}) => {
           </S.Sidebar>
         </S.GameLayout>
       ) : (
-        <S.PendingState>
-          <S.PendingTitle>Challenge pending</S.PendingTitle>
-          <S.PendingText>Waiting for the opponent to accept the challenge.</S.PendingText>
-        </S.PendingState>
+        renderPendingState()
       )}
     </S.Container>
   );
