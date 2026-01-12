@@ -2,6 +2,15 @@ import styled, {css, keyframes} from 'styled-components';
 
 import {colors, fonts, pagePadding} from 'styles';
 
+const float = keyframes`
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+`;
+
 const pulse = keyframes`
   0%, 80%, 100% {
     opacity: 0.3;
@@ -19,15 +28,6 @@ const shimmer = keyframes`
   }
   100% {
     background-position: 200% 0;
-  }
-`;
-
-const float = keyframes`
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
   }
 `;
 
@@ -73,6 +73,20 @@ export const Cell = styled.button<{$isPreview: boolean; $isPreviewInvalid: boole
     css`
       background: ${colors.palette.red[50]};
     `}
+`;
+
+export const Clock = styled.div<{$isActive: boolean}>`
+  align-items: center;
+  background: ${({$isActive}) => ($isActive ? colors.palette.green[50] : colors.white)};
+  border: 1px solid ${({$isActive}) => ($isActive ? colors.palette.green[400] : colors.border)};
+  border-radius: 12px;
+  color: ${({$isActive}) => ($isActive ? colors.palette.green[700] : colors.primary)};
+  display: flex;
+  font-size: 16px;
+  font-weight: ${fonts.weight.semiBold};
+  justify-content: center;
+  min-width: 80px;
+  padding: 8px 16px;
 `;
 
 export const Container = styled.div`
@@ -148,18 +162,32 @@ export const PanelTitle = styled.h3`
   margin: 0;
 `;
 
-export const PendingState = styled.div<{$variant?: 'challenger' | 'opponent'}>`
+export const PendingChallengerName = styled.span`
+  color: ${colors.palette.orange[700]};
+  font-weight: ${fonts.weight.semiBold};
+`;
+
+export const PendingContent = styled.div`
   align-items: center;
-  background: ${({$variant}) =>
-    $variant === 'opponent'
-      ? `linear-gradient(135deg, ${colors.palette.orange[50]} 0%, ${colors.palette.red[50]} 100%)`
-      : `linear-gradient(135deg, ${colors.palette.blue[50]} 0%, ${colors.palette.orange[50]} 100%)`};
-  border: 1px solid ${({$variant}) => ($variant === 'opponent' ? colors.palette.orange[200] : colors.palette.blue[200])};
-  border-radius: 24px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding: 48px 32px;
+  gap: 12px;
+  text-align: center;
+`;
+
+export const PendingDot = styled.span<{$delay: number; $variant?: 'challenger' | 'opponent'}>`
+  animation: ${pulse} 1.4s ease-in-out infinite;
+  animation-delay: ${({$delay}) => $delay}s;
+  background: ${({$variant}) => ($variant === 'opponent' ? colors.palette.orange[500] : colors.palette.blue[500])};
+  border-radius: 50%;
+  height: 12px;
+  width: 12px;
+`;
+
+export const PendingDots = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
 `;
 
 export const PendingIcon = styled.div<{$variant?: 'challenger' | 'opponent'}>`
@@ -204,49 +232,6 @@ export const PendingIconInner = styled.div<{$variant?: 'challenger' | 'opponent'
   }
 `;
 
-export const PendingContent = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  text-align: center;
-`;
-
-export const PendingTitle = styled.h2<{$variant?: 'challenger' | 'opponent'}>`
-  background: ${({$variant}) =>
-    $variant === 'opponent'
-      ? `linear-gradient(135deg, ${colors.palette.orange[600]} 0%, ${colors.palette.orange[800]} 100%)`
-      : `linear-gradient(135deg, ${colors.palette.blue[600]} 0%, ${colors.palette.blue[800]} 100%)`};
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  font-size: 24px;
-  font-weight: ${fonts.weight.semiBold};
-  margin: 0;
-`;
-
-export const PendingText = styled.p`
-  color: ${colors.secondary};
-  font-size: 16px;
-  margin: 0;
-  max-width: 320px;
-`;
-
-export const PendingDots = styled.div`
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-`;
-
-export const PendingDot = styled.span<{$delay: number; $variant?: 'challenger' | 'opponent'}>`
-  animation: ${pulse} 1.4s ease-in-out infinite;
-  animation-delay: ${({$delay}) => $delay}s;
-  background: ${({$variant}) => ($variant === 'opponent' ? colors.palette.orange[500] : colors.palette.blue[500])};
-  border-radius: 50%;
-  height: 12px;
-  width: 12px;
-`;
-
 export const PendingShimmer = styled.div<{$variant?: 'challenger' | 'opponent'}>`
   animation: ${shimmer} 2s linear infinite;
   background: ${({$variant}) =>
@@ -260,9 +245,38 @@ export const PendingShimmer = styled.div<{$variant?: 'challenger' | 'opponent'}>
   width: 200px;
 `;
 
-export const PendingChallengerName = styled.span`
-  color: ${colors.palette.orange[700]};
+export const PendingState = styled.div<{$variant?: 'challenger' | 'opponent'}>`
+  align-items: center;
+  background: ${({$variant}) =>
+    $variant === 'opponent'
+      ? `linear-gradient(135deg, ${colors.palette.orange[50]} 0%, ${colors.palette.red[50]} 100%)`
+      : `linear-gradient(135deg, ${colors.palette.blue[50]} 0%, ${colors.palette.orange[50]} 100%)`};
+  border: 1px solid ${({$variant}) => ($variant === 'opponent' ? colors.palette.orange[200] : colors.palette.blue[200])};
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 48px 32px;
+`;
+
+export const PendingText = styled.p`
+  color: ${colors.secondary};
+  font-size: 16px;
+  margin: 0;
+  max-width: 320px;
+`;
+
+export const PendingTitle = styled.h2<{$variant?: 'challenger' | 'opponent'}>`
+  -webkit-background-clip: text;
+  background: ${({$variant}) =>
+    $variant === 'opponent'
+      ? `linear-gradient(135deg, ${colors.palette.orange[600]} 0%, ${colors.palette.orange[800]} 100%)`
+      : `linear-gradient(135deg, ${colors.palette.blue[600]} 0%, ${colors.palette.blue[800]} 100%)`};
+  background-clip: text;
+  color: transparent;
+  font-size: 24px;
   font-weight: ${fonts.weight.semiBold};
+  margin: 0;
 `;
 
 export const Piece = styled.div<{$variant: 'playerA' | 'playerB'}>`
@@ -270,20 +284,6 @@ export const Piece = styled.div<{$variant: 'playerA' | 'playerB'}>`
   border-radius: 50%;
   height: 70%;
   width: 70%;
-`;
-
-export const Clock = styled.div<{$isActive: boolean}>`
-  align-items: center;
-  background: ${({$isActive}) => ($isActive ? colors.palette.green[50] : colors.white)};
-  border: 1px solid ${({$isActive}) => ($isActive ? colors.palette.green[400] : colors.border)};
-  border-radius: 12px;
-  color: ${({$isActive}) => ($isActive ? colors.palette.green[700] : colors.primary)};
-  display: flex;
-  font-size: 16px;
-  font-weight: ${fonts.weight.semiBold};
-  justify-content: center;
-  min-width: 80px;
-  padding: 8px 16px;
 `;
 
 export const PlayerInfo = styled.div<{$isActive: boolean}>`
@@ -368,6 +368,12 @@ export const PurchaseRow = styled.div`
   justify-content: space-between;
 `;
 
+export const Sidebar = styled.aside`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
 export const SpecialIcon = styled.img`
   height: 24px;
   width: 24px;
@@ -426,28 +432,6 @@ export const SpendRowValue = styled.span`
   color: ${colors.secondary};
   font-size: 12px;
   font-weight: ${fonts.weight.semiBold};
-`;
-
-export const Sidebar = styled.aside`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-export const StatusBanner = styled.div`
-  align-items: center;
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 16px;
-  display: flex;
-  gap: 16px;
-  justify-content: space-between;
-  padding: 16px;
-`;
-
-export const StatusText = styled.span`
-  color: ${colors.primary};
-  font-weight: ${fonts.weight.medium};
 `;
 
 export const Title = styled.h1`
