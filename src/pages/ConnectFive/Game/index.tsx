@@ -160,6 +160,18 @@ const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
   return {badgeStyle: BadgeStyle.neutral, label: 'Finished'};
 };
 
+const getFinishReasonLabel = (match: ConnectFiveMatch): string | null => {
+  if (match.status === ConnectFiveMatchStatus.FINISHED_CONNECT5) {
+    return 'Connect 5';
+  }
+
+  if (match.status === ConnectFiveMatchStatus.FINISHED_TIMEOUT) {
+    return 'Timeout';
+  }
+
+  return null;
+};
+
 const getPreviewCells = (moveType: ConnectFiveMoveType, x: number, y: number): Array<{x: number; y: number}> => {
   if (moveType === ConnectFiveMoveType.SINGLE || moveType === ConnectFiveMoveType.BOMB) {
     return [{x, y}];
@@ -487,6 +499,7 @@ const ConnectFiveGame: SFC = ({className}) => {
     if (!match) return null;
 
     const isActive = match.status === ConnectFiveMatchStatus.ACTIVE;
+    const finishReason = getFinishReasonLabel(match);
     const statusBadge = getStatusBadge(match, self?.id);
 
     return (
@@ -495,6 +508,12 @@ const ConnectFiveGame: SFC = ({className}) => {
           <S.InfoLabel>Status</S.InfoLabel>
           <Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</Badge>
         </S.InfoRow>
+        {finishReason && (
+          <S.InfoRow>
+            <S.InfoLabel>Finish reason</S.InfoLabel>
+            <S.InfoValue>{finishReason}</S.InfoValue>
+          </S.InfoRow>
+        )}
         <S.InfoRow>
           <S.InfoLabel>Prize pool</S.InfoLabel>
           <S.InfoValue>{match.prize_pool_total.toLocaleString()} TNB</S.InfoValue>
@@ -627,7 +646,7 @@ const ConnectFiveGame: SFC = ({className}) => {
   };
 
   const renderPurchasePanel = () => {
-    if (!match || !selfMatchPlayer) return null;
+    if (!match || !selfMatchPlayer || !isMatchActive) return null;
 
     const playerSide = getPlayerSide(match, self?.id);
 

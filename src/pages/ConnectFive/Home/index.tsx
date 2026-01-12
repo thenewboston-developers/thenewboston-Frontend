@@ -149,11 +149,17 @@ const ConnectFiveHome: SFC = ({className}) => {
   const validationSchema = useMemo(() => {
     return yup.object().shape({
       maxSpendAmount: yup.number().integer('Enter a whole number').min(0).required('Max spend is required'),
-      opponent: yup.mixed().required('Opponent is required'),
+      opponent: yup
+        .mixed()
+        .required('Opponent is required')
+        .test('not-self', "You can't challenge yourself", (value) => {
+          if (!value || !self?.id) return true;
+          return (value as UserReadSerializer).id !== self.id;
+        }),
       stakeAmount: yup.number().integer('Enter a whole number').min(0).required('Stake is required'),
       timeLimitSeconds: yup.string().required('Time limit is required'),
     });
-  }, []);
+  }, [self?.id]);
 
   useEffect(() => {
     const loadData = async () => {
