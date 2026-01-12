@@ -408,7 +408,7 @@ export const SpendProgressBar = styled.div`
 `;
 
 export const SpendProgressFill = styled.div<{$percentage: number}>`
-  background-color: ${colors.palette.blue[500]};
+  background-color: ${colors.palette.green[500]};
   height: 100%;
   transition: width 0.3s ease;
   width: ${({$percentage}) => $percentage}%;
@@ -462,6 +462,7 @@ export const ToolButton = styled.button<{$isActive: boolean; $isDisabled: boolea
     return colors.white;
   }};
   border: 0;
+  border-radius: 0;
   border-right: 1px solid ${colors.border};
   box-shadow: ${({$isActive, $isDisabled}) =>
     $isActive && !$isDisabled ? `inset 0 0 0 2px ${colors.palette.blue[500]}` : 'none'};
@@ -475,14 +476,22 @@ export const ToolButton = styled.button<{$isActive: boolean; $isDisabled: boolea
   position: relative;
   width: 52px;
 
+  &:first-child {
+    border-bottom-left-radius: 12px;
+    border-top-left-radius: 12px;
+  }
+
   &:last-child {
+    border-bottom-right-radius: 12px;
     border-right: 0;
+    border-top-right-radius: 12px;
   }
 `;
 
 export const ToolButtonReadOnly = styled.div<{$isDisabled: boolean}>`
   align-items: center;
   background: ${({$isDisabled}) => ($isDisabled ? colors.palette.gray[100] : colors.white)};
+  border-radius: 0;
   border-right: 1px solid ${colors.border};
   display: flex;
   filter: ${({$isDisabled}) => ($isDisabled ? 'grayscale(1)' : 'none')};
@@ -493,8 +502,15 @@ export const ToolButtonReadOnly = styled.div<{$isDisabled: boolean}>`
   position: relative;
   width: 52px;
 
+  &:first-child {
+    border-bottom-left-radius: 12px;
+    border-top-left-radius: 12px;
+  }
+
   &:last-child {
+    border-bottom-right-radius: 12px;
     border-right: 0;
+    border-top-right-radius: 12px;
   }
 `;
 

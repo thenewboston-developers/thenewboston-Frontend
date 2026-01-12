@@ -10,10 +10,10 @@ import {
   purchaseConnectFiveSpecial,
   submitConnectFiveMove,
 } from 'api/connectFive';
-import Avatar from 'components/Avatar';
 import Badge, {BadgeStyle} from 'components/Badge';
 import Button from 'components/Button';
 import EmptyText from 'components/EmptyText';
+import UserLabel from 'components/UserLabel';
 import {
   ConnectFiveChallengeStatus,
   ConnectFiveMatchStatus,
@@ -64,6 +64,13 @@ const ORDERED_MOVE_TYPES: ConnectFiveMoveType[] = [
   ConnectFiveMoveType.V2,
   ConnectFiveMoveType.CROSS4,
   ConnectFiveMoveType.BOMB,
+];
+
+const ORDERED_SPECIAL_TYPES: ConnectFiveSpecialType[] = [
+  ConnectFiveSpecialType.H2,
+  ConnectFiveSpecialType.V2,
+  ConnectFiveSpecialType.CROSS4,
+  ConnectFiveSpecialType.BOMB,
 ];
 
 const SPECIAL_LABELS: Record<ConnectFiveSpecialType, string> = {
@@ -564,12 +571,18 @@ const ConnectFiveGame: SFC = ({className}) => {
   ) => {
     if (!player) return null;
 
-    return (
-      <S.PlayerInfo $isActive={isActive}>
-        <Avatar size="36px" src={player.avatar} />
-        <S.PlayerName>{player.username}</S.PlayerName>
-      </S.PlayerInfo>
-    );
+    const isSelf = player.id === self?.id;
+    let description = 'Waiting';
+
+    if (isActive) {
+      description = isSelf ? 'Your turn' : 'Their turn';
+    } else if (isSelf) {
+      description = 'Waiting for opponent';
+    } else {
+      description = 'Waiting for you';
+    }
+
+    return <UserLabel avatar={player.avatar} description={description} id={player.id} username={player.username} />;
   };
 
   const renderPurchasePanel = () => {
@@ -582,16 +595,13 @@ const ConnectFiveGame: SFC = ({className}) => {
           <S.PanelSubtitle>Remaining spend: {selfMatchPlayer.remaining_spend.toLocaleString()} TNB</S.PanelSubtitle>
         </S.PanelHeader>
         <S.PurchaseList>
-          {(Object.values(ConnectFiveSpecialType) as ConnectFiveSpecialType[]).map((specialType) => (
+          {ORDERED_SPECIAL_TYPES.map((specialType) => (
             <S.PurchaseRow key={specialType}>
               <S.PurchaseLeft>
                 <S.SpecialIcon alt={SPECIAL_LABELS[specialType]} src={SPECIAL_ICONS[specialType]} />
                 <S.PurchaseInfo>
                   <S.PurchaseName>{SPECIAL_LABELS[specialType]}</S.PurchaseName>
-                  <S.PurchaseMeta>
-                    Cost: {SPECIAL_PRICES[specialType]} TNB · Inventory:{' '}
-                    {getInventoryCount(selfMatchPlayer, specialType)}
-                  </S.PurchaseMeta>
+                  <S.PurchaseMeta>Cost: {SPECIAL_PRICES[specialType]} TNB</S.PurchaseMeta>
                 </S.PurchaseInfo>
               </S.PurchaseLeft>
               <Button
