@@ -131,9 +131,12 @@ export const InfoValue = styled.span`
   font-weight: ${fonts.weight.medium};
 `;
 
-export const LoadingState = styled.div`
-  color: ${colors.secondary};
-  font-size: 14px;
+export const LoadingContainer = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 50vh;
+  width: 100%;
 `;
 
 export const MatchInfo = styled.div`

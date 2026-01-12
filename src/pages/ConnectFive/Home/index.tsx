@@ -376,12 +376,16 @@ const ConnectFiveHome: SFC = ({className}) => {
   const renderIncomingChallenges = () => {
     if (isLoading) return <S.EmptyState>Loading challenges...</S.EmptyState>;
     if (!incomingChallenges.length) return <EmptyText>No incoming challenges.</EmptyText>;
-    return incomingChallenges.map((challenge) =>
-      renderChallengeCard(
-        challenge,
-        challenge.challenger,
-        <Button onClick={() => handleAcceptChallenge(challenge.id)} text="Accept" />,
-      ),
+    return (
+      <S.ChallengeList>
+        {incomingChallenges.map((challenge) =>
+          renderChallengeCard(
+            challenge,
+            challenge.challenger,
+            <Button onClick={() => handleAcceptChallenge(challenge.id)} text="Accept" />,
+          ),
+        )}
+      </S.ChallengeList>
     );
   };
 
@@ -442,12 +446,16 @@ const ConnectFiveHome: SFC = ({className}) => {
   const renderOutgoingChallenges = () => {
     if (isLoading) return <S.EmptyState>Loading challenges...</S.EmptyState>;
     if (!outgoingChallenges.length) return <EmptyText>No outgoing challenges.</EmptyText>;
-    return outgoingChallenges.map((challenge) =>
-      renderChallengeCard(
-        challenge,
-        challenge.opponent,
-        <Button onClick={() => handleCancelChallenge(challenge.id)} text="Cancel" />,
-      ),
+    return (
+      <S.ChallengeList>
+        {outgoingChallenges.map((challenge) =>
+          renderChallengeCard(
+            challenge,
+            challenge.opponent,
+            <Button onClick={() => handleCancelChallenge(challenge.id)} text="Cancel" />,
+          ),
+        )}
+      </S.ChallengeList>
     );
   };
 
@@ -516,23 +524,23 @@ const ConnectFiveHome: SFC = ({className}) => {
           </Formik>
         </S.Section>
 
-        <S.Section>
-          <S.SectionTitle>Incoming challenges</S.SectionTitle>
+        <S.GamesSection>
+          <S.GamesSectionTitle>Incoming challenges</S.GamesSectionTitle>
           {renderIncomingChallenges()}
-        </S.Section>
-
-        <S.Section>
-          <S.SectionTitle>Outgoing challenges</S.SectionTitle>
-          {renderOutgoingChallenges()}
-        </S.Section>
+        </S.GamesSection>
 
         <S.GamesSection>
-          <S.SectionTitle>Active games</S.SectionTitle>
+          <S.GamesSectionTitle>Outgoing challenges</S.GamesSectionTitle>
+          {renderOutgoingChallenges()}
+        </S.GamesSection>
+
+        <S.GamesSection>
+          <S.GamesSectionTitle>Active games</S.GamesSectionTitle>
           {renderActiveMatches()}
         </S.GamesSection>
 
         <S.GamesSection>
-          <S.SectionTitle>Game history</S.SectionTitle>
+          <S.GamesSectionTitle>Game history</S.GamesSectionTitle>
           {renderCompletedMatches()}
         </S.GamesSection>
       </S.Content>

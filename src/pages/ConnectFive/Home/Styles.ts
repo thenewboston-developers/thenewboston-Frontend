@@ -58,6 +58,12 @@ export const ChallengeInfoValue = styled.span`
   font-weight: ${fonts.weight.medium};
 `;
 
+export const ChallengeList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
 export const Container = styled.div`
   ${pagePadding};
   ${hiddenScroll};
@@ -93,7 +99,13 @@ export const FormRow = styled.div`
 export const GamesSection = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+`;
+
+export const GamesSectionTitle = styled.h2`
+  color: ${colors.primary};
+  font-size: 18px;
+  margin: 0;
 `;
 
 export const MatchCard = styled.button`

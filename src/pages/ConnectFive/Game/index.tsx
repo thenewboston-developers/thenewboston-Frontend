@@ -13,6 +13,7 @@ import {
 import Badge, {BadgeStyle} from 'components/Badge';
 import Button from 'components/Button';
 import EmptyText from 'components/EmptyText';
+import Loader from 'components/Loader';
 import {
   ConnectFiveChallengeStatus,
   ConnectFiveMatchStatus,
@@ -726,10 +727,9 @@ const ConnectFiveGame: SFC = ({className}) => {
   if (isLoading) {
     return (
       <S.Container className={className}>
-        <S.Header>
-          <S.Title>Connect 5</S.Title>
-        </S.Header>
-        <S.LoadingState>Loading game...</S.LoadingState>
+        <S.LoadingContainer>
+          <Loader />
+        </S.LoadingContainer>
       </S.Container>
     );
   }
@@ -737,9 +737,6 @@ const ConnectFiveGame: SFC = ({className}) => {
   if (!challenge) {
     return (
       <S.Container className={className}>
-        <S.Header>
-          <S.Title>Connect 5</S.Title>
-        </S.Header>
         <EmptyText>Challenge not found.</EmptyText>
       </S.Container>
     );
@@ -748,7 +745,6 @@ const ConnectFiveGame: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Header>
-        <S.Title>Connect 5 Game</S.Title>
         <Button onClick={() => navigate('/connect-five/home')} text="Back to lobby" />
       </S.Header>
 
