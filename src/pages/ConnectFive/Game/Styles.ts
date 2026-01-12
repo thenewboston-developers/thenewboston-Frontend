@@ -307,10 +307,14 @@ export const PlayerRow = styled.div`
 `;
 
 export const Preview = styled.div<{$isInvalid: boolean}>`
-  border-radius: 12px;
-  inset: 8px;
+  border-radius: 50%;
+  height: 70%;
+  left: 50%;
   opacity: 0.6;
   position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
 
   ${({$isInvalid}) =>
     $isInvalid
@@ -318,7 +322,7 @@ export const Preview = styled.div<{$isInvalid: boolean}>`
           background: ${colors.palette.red[300]};
         `
       : css`
-          background: ${colors.palette.green[200]};
+          background: ${colors.palette.gray[300]};
         `}
 `;
 
@@ -441,41 +445,75 @@ export const Title = styled.h1`
 `;
 
 export const Toolbar = styled.div`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 12px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-wrap: nowrap;
+  gap: 0;
+  overflow: hidden;
 `;
 
 export const ToolButton = styled.button<{$isActive: boolean; $isDisabled: boolean}>`
-  background: ${({$isActive}) => ($isActive ? colors.palette.blue[100] : colors.white)};
-  border: 1px solid ${({$isActive}) => ($isActive ? colors.palette.blue[400] : colors.border)};
-  border-radius: 14px;
+  align-items: center;
+  background: ${({$isActive, $isDisabled}) => {
+    if ($isDisabled) return colors.palette.gray[100];
+    if ($isActive) return colors.palette.blue[100];
+    return colors.white;
+  }};
+  border: 0;
+  border-right: 1px solid ${colors.border};
+  box-shadow: ${({$isActive, $isDisabled}) =>
+    $isActive && !$isDisabled ? `inset 0 0 0 2px ${colors.palette.blue[500]}` : 'none'};
   cursor: ${({$isDisabled}) => ($isDisabled ? 'not-allowed' : 'pointer')};
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  filter: ${({$isDisabled}) => ($isDisabled ? 'grayscale(1)' : 'none')};
+  height: 52px;
+  justify-content: center;
   opacity: ${({$isDisabled}) => ($isDisabled ? 0.5 : 1)};
-  padding: 10px 14px;
+  padding: 6px;
+  position: relative;
+  width: 52px;
+
+  &:last-child {
+    border-right: 0;
+  }
 `;
 
 export const ToolButtonReadOnly = styled.div<{$isDisabled: boolean}>`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 14px;
+  align-items: center;
+  background: ${({$isDisabled}) => ($isDisabled ? colors.palette.gray[100] : colors.white)};
+  border-right: 1px solid ${colors.border};
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  filter: ${({$isDisabled}) => ($isDisabled ? 'grayscale(1)' : 'none')};
+  height: 52px;
+  justify-content: center;
   opacity: ${({$isDisabled}) => ($isDisabled ? 0.5 : 1)};
-  padding: 10px 14px;
+  padding: 6px;
+  position: relative;
+  width: 52px;
+
+  &:last-child {
+    border-right: 0;
+  }
 `;
 
 export const ToolCount = styled.span`
-  color: ${colors.secondary};
-  font-size: 12px;
+  background: ${colors.white};
+  border-radius: 6px;
+  bottom: 4px;
+  color: ${colors.palette.gray[700]};
+  font-size: 10px;
+  font-weight: ${fonts.weight.semiBold};
+  line-height: 1;
+  padding: 1px 4px;
+  pointer-events: none;
+  position: absolute;
+  right: 4px;
 `;
 
-export const ToolLabel = styled.span`
-  color: ${colors.primary};
-  font-size: 13px;
-  font-weight: ${fonts.weight.medium};
+export const ToolIcon = styled.img`
+  display: block;
+  height: 24px;
+  width: 24px;
 `;

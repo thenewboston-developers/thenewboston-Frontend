@@ -29,6 +29,7 @@ import {displayErrorToast, displayToast} from 'utils/toasts';
 import bombIcon from './assets/bomb.svg';
 import cross4Icon from './assets/cross4.svg';
 import horizontal2Icon from './assets/horizontal2.svg';
+import singleIcon from './assets/single.svg';
 import vertical2Icon from './assets/vertical2.svg';
 import * as S from './Styles';
 
@@ -47,6 +48,14 @@ const TOOL_LABELS: Record<ConnectFiveMoveType, string> = {
   [ConnectFiveMoveType.H2]: 'Horizontal 2',
   [ConnectFiveMoveType.SINGLE]: 'Single',
   [ConnectFiveMoveType.V2]: 'Vertical 2',
+};
+
+const TOOL_ICONS: Record<ConnectFiveMoveType, string> = {
+  [ConnectFiveMoveType.BOMB]: bombIcon,
+  [ConnectFiveMoveType.CROSS4]: cross4Icon,
+  [ConnectFiveMoveType.H2]: horizontal2Icon,
+  [ConnectFiveMoveType.SINGLE]: singleIcon,
+  [ConnectFiveMoveType.V2]: vertical2Icon,
 };
 
 const ORDERED_MOVE_TYPES: ConnectFiveMoveType[] = [
@@ -272,6 +281,13 @@ const ConnectFiveGame: SFC = ({className}) => {
           y,
         });
         dispatch(upsertMatch(updatedMatch));
+        const usedSpecialType = MOVE_TO_SPECIAL_TYPE[activeMoveType];
+        if (usedSpecialType) {
+          const updatedSelfPlayer = getMatchPlayer(updatedMatch, self.id);
+          if (getInventoryCount(updatedSelfPlayer, usedSpecialType) === 0) {
+            setActiveMoveType(ConnectFiveMoveType.SINGLE);
+          }
+        }
         setHoverPosition(null);
       } catch (error) {
         displayErrorToast('Move rejected. Please try another position.');
@@ -448,10 +464,6 @@ const ConnectFiveGame: SFC = ({className}) => {
           <S.InfoLabel>Prize pool</S.InfoLabel>
           <S.InfoValue>{match.prize_pool_total.toLocaleString()} TNB</S.InfoValue>
         </S.InfoRow>
-        <S.InfoRow>
-          <S.InfoLabel>Max spend</S.InfoLabel>
-          <S.InfoValue>{match.max_spend_amount.toLocaleString()} TNB</S.InfoValue>
-        </S.InfoRow>
         {!isActive && match.winner && (
           <S.InfoRow>
             <S.InfoLabel>Winner</S.InfoLabel>
@@ -520,6 +532,8 @@ const ConnectFiveGame: SFC = ({className}) => {
               <S.ToolButton
                 $isActive={activeMoveType === moveType}
                 $isDisabled={isDisabled}
+                aria-label={TOOL_LABELS[moveType]}
+                disabled={isDisabled}
                 key={moveType}
                 onClick={() => {
                   if (isDisabled) return;
@@ -527,16 +541,16 @@ const ConnectFiveGame: SFC = ({className}) => {
                 }}
                 type="button"
               >
-                <S.ToolLabel>{TOOL_LABELS[moveType]}</S.ToolLabel>
-                {!isSingle && <S.ToolCount>x{inventory}</S.ToolCount>}
+                <S.ToolIcon alt={TOOL_LABELS[moveType]} src={TOOL_ICONS[moveType]} />
+                {!isSingle && <S.ToolCount>{inventory}</S.ToolCount>}
               </S.ToolButton>
             );
           }
 
           return (
             <S.ToolButtonReadOnly $isDisabled={isDisabled} key={moveType}>
-              <S.ToolLabel>{TOOL_LABELS[moveType]}</S.ToolLabel>
-              {!isSingle && <S.ToolCount>x{inventory}</S.ToolCount>}
+              <S.ToolIcon alt={TOOL_LABELS[moveType]} src={TOOL_ICONS[moveType]} />
+              {!isSingle && <S.ToolCount>{inventory}</S.ToolCount>}
             </S.ToolButtonReadOnly>
           );
         })}
