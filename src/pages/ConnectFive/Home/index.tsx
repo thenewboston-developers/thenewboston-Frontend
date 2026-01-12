@@ -1,7 +1,7 @@
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {mdiArrowRight, mdiArrowRightBold} from '@mdi/js';
+import {mdiArrowRight} from '@mdi/js';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
 
@@ -60,6 +60,29 @@ const initialValues = {
 
 type FormValues = typeof initialValues;
 
+const getChallengeStatusBadge = (status: string) => {
+  const label = status.replace('_', ' ');
+  const formattedLabel = label.charAt(0).toUpperCase() + label.slice(1);
+
+  if (status === ConnectFiveChallengeStatus.PENDING) {
+    return {badgeStyle: BadgeStyle.primary, label: 'Pending'};
+  }
+
+  if (status === ConnectFiveChallengeStatus.ACCEPTED) {
+    return {badgeStyle: BadgeStyle.success, label: 'Accepted'};
+  }
+
+  if (status === ConnectFiveChallengeStatus.CANCELLED) {
+    return {badgeStyle: BadgeStyle.warning, label: 'Cancelled'};
+  }
+
+  if (status === ConnectFiveChallengeStatus.EXPIRED) {
+    return {badgeStyle: BadgeStyle.danger, label: 'Expired'};
+  }
+
+  return {badgeStyle: BadgeStyle.neutral, label: formattedLabel};
+};
+
 const getFinishReasonLabel = (match: ConnectFiveMatch): string | null => {
   if (match.status === ConnectFiveMatchStatus.FINISHED_CONNECT5) {
     return 'Connect 5';
@@ -108,7 +131,6 @@ const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
 const ConnectFiveHome: SFC = ({className}) => {
   const [activeMatchesPage, setActiveMatchesPage] = useState(1);
   const [completedMatchesPage, setCompletedMatchesPage] = useState(1);
-  const [hoveredMatchId, setHoveredMatchId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const activeMatches = useSelector(getConnectFiveActiveMatches);
@@ -223,14 +245,6 @@ const ConnectFiveHome: SFC = ({className}) => {
     [navigate],
   );
 
-  const handleMatchCardHover = useCallback((matchId: number) => {
-    setHoveredMatchId(matchId);
-  }, []);
-
-  const handleMatchCardMouseLeave = useCallback(() => {
-    setHoveredMatchId(null);
-  }, []);
-
   const handleOpponentChange = useCallback(
     (
       user: UserReadSerializer | null,
@@ -304,18 +318,40 @@ const ConnectFiveHome: SFC = ({className}) => {
     );
   };
 
-  const renderChallengeCard = (challenge: ConnectFiveChallenge, actions?: ReactNode) => {
+  const renderChallengeCard = (
+    challenge: ConnectFiveChallenge,
+    opponent: UserReadSerializer | null,
+    actions?: ReactNode,
+  ) => {
+    const createdLabel = shortDate(challenge.created_date, true);
+    const statusBadge = getChallengeStatusBadge(challenge.status);
+
     return (
       <S.ChallengeCard key={challenge.id}>
         <S.ChallengeHeader>
-          <S.ChallengeTitle>Challenge #{challenge.id}</S.ChallengeTitle>
-          <S.ChallengeStatus>{challenge.status}</S.ChallengeStatus>
+          <UserLabel
+            avatar={opponent?.avatar ?? null}
+            clickable={false}
+            description={`Created ${createdLabel}`}
+            id={opponent?.id ?? null}
+            username={opponent?.username ?? 'Unknown player'}
+          />
+          <Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</Badge>
         </S.ChallengeHeader>
-        <S.ChallengeDetails>
-          <span>Stake: {challenge.stake_amount.toLocaleString()} TNB</span>
-          <span>Max spend: {challenge.max_spend_amount.toLocaleString()} TNB</span>
-          <span>Time: {Math.round(challenge.time_limit_seconds / 60)} min</span>
-        </S.ChallengeDetails>
+        <S.ChallengeInfo>
+          <S.ChallengeInfoRow>
+            <S.ChallengeInfoLabel>Stake</S.ChallengeInfoLabel>
+            <S.ChallengeInfoValue>{challenge.stake_amount.toLocaleString()} TNB</S.ChallengeInfoValue>
+          </S.ChallengeInfoRow>
+          <S.ChallengeInfoRow>
+            <S.ChallengeInfoLabel>Max spend</S.ChallengeInfoLabel>
+            <S.ChallengeInfoValue>{challenge.max_spend_amount.toLocaleString()} TNB</S.ChallengeInfoValue>
+          </S.ChallengeInfoRow>
+          <S.ChallengeInfoRow>
+            <S.ChallengeInfoLabel>Time limit</S.ChallengeInfoLabel>
+            <S.ChallengeInfoValue>{Math.round(challenge.time_limit_seconds / 60)} min</S.ChallengeInfoValue>
+          </S.ChallengeInfoRow>
+        </S.ChallengeInfo>
         {actions && <S.ChallengeActions>{actions}</S.ChallengeActions>}
       </S.ChallengeCard>
     );
@@ -341,7 +377,11 @@ const ConnectFiveHome: SFC = ({className}) => {
     if (isLoading) return <S.EmptyState>Loading challenges...</S.EmptyState>;
     if (!incomingChallenges.length) return <EmptyText>No incoming challenges.</EmptyText>;
     return incomingChallenges.map((challenge) =>
-      renderChallengeCard(challenge, <Button onClick={() => handleAcceptChallenge(challenge.id)} text="Accept" />),
+      renderChallengeCard(
+        challenge,
+        challenge.challenger,
+        <Button onClick={() => handleAcceptChallenge(challenge.id)} text="Accept" />,
+      ),
     );
   };
 
@@ -349,7 +389,6 @@ const ConnectFiveHome: SFC = ({className}) => {
     const createdLabel = shortDate(match.created_date, true);
     const finishReason = getFinishReasonLabel(match);
     const isActive = match.status === ConnectFiveMatchStatus.ACTIVE;
-    const isHovered = hoveredMatchId === match.id;
     const opponent = getOpponent(match, self?.id);
     const statusBadge = getStatusBadge(match, self?.id);
 
@@ -357,16 +396,11 @@ const ConnectFiveHome: SFC = ({className}) => {
       <S.MatchCard
         aria-label={`Open game ${match.id}`}
         key={match.id}
-        onBlur={handleMatchCardMouseLeave}
         onClick={() => handleMatchCardClick(match.challenge)}
-        onFocus={() => handleMatchCardHover(match.id)}
-        onMouseEnter={() => handleMatchCardHover(match.id)}
-        onMouseLeave={handleMatchCardMouseLeave}
         type="button"
       >
         <S.MatchHeader>
           <S.MatchHeaderMain>
-            <S.MatchTitle>Game #{match.id}</S.MatchTitle>
             <UserLabel
               avatar={opponent?.avatar ?? null}
               clickable={false}
@@ -375,7 +409,7 @@ const ConnectFiveHome: SFC = ({className}) => {
               username={opponent?.username ?? 'Unknown player'}
             />
           </S.MatchHeaderMain>
-          <S.MatchIcon data-match-icon="true" path={isHovered ? mdiArrowRightBold : mdiArrowRight} size="20px" />
+          <S.MatchIcon path={mdiArrowRight} size="20px" />
         </S.MatchHeader>
         <S.MatchInfo>
           <S.MatchInfoRow>
@@ -409,7 +443,11 @@ const ConnectFiveHome: SFC = ({className}) => {
     if (isLoading) return <S.EmptyState>Loading challenges...</S.EmptyState>;
     if (!outgoingChallenges.length) return <EmptyText>No outgoing challenges.</EmptyText>;
     return outgoingChallenges.map((challenge) =>
-      renderChallengeCard(challenge, <Button onClick={() => handleCancelChallenge(challenge.id)} text="Cancel" />),
+      renderChallengeCard(
+        challenge,
+        challenge.opponent,
+        <Button onClick={() => handleCancelChallenge(challenge.id)} text="Cancel" />,
+      ),
     );
   };
 

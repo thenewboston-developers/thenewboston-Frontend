@@ -7,41 +7,55 @@ import {colors, fonts, hiddenScroll, pagePadding} from 'styles';
 export const ChallengeActions = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-top: 16px;
 `;
 
 export const ChallengeCard = styled.div`
+  align-items: stretch;
   background: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   padding: 16px;
 `;
 
-export const ChallengeDetails = styled.div`
-  color: ${colors.secondary};
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-`;
-
 export const ChallengeHeader = styled.div`
-  align-items: center;
+  align-items: flex-start;
   display: flex;
+  gap: 16px;
   justify-content: space-between;
-  margin-bottom: 8px;
+  width: 100%;
 `;
 
-export const ChallengeStatus = styled.span`
-  color: ${colors.palette.blue[600]};
+export const ChallengeInfo = styled.div`
+  background: ${colors.palette.gray[50]};
+  border: 1px solid ${colors.border};
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  width: 100%;
+`;
+
+export const ChallengeInfoLabel = styled.span`
+  color: ${colors.secondary};
   font-size: 12px;
-  font-weight: ${fonts.weight.medium};
   text-transform: uppercase;
 `;
 
-export const ChallengeTitle = styled.h3`
+export const ChallengeInfoRow = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+export const ChallengeInfoValue = styled.span`
   color: ${colors.primary};
-  font-size: 16px;
-  margin: 0;
+  font-weight: ${fonts.weight.medium};
 `;
 
 export const Container = styled.div`
@@ -83,6 +97,7 @@ export const GamesSection = styled.section`
 `;
 
 export const MatchCard = styled.button`
+  align-items: stretch;
   background: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 16px;
@@ -101,11 +116,6 @@ export const MatchCard = styled.button`
   &:hover {
     background: ${colors.whiteHover};
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-
-    [data-match-icon='true'] {
-      color: ${colors.palette.blue[600]};
-      transform: translateX(2px);
-    }
   }
 
   &:focus-visible {
@@ -120,20 +130,20 @@ export const MatchHeader = styled.div`
   display: flex;
   gap: 16px;
   justify-content: space-between;
+  width: 100%;
 `;
 
 export const MatchHeaderMain = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 `;
 
 export const MatchIcon = styled(Icon)`
   color: ${colors.palette.gray[500]};
   flex-shrink: 0;
-  transition:
-    color 0.2s ease,
-    transform 0.2s ease;
 `;
 
 export const MatchInfo = styled.div`
@@ -144,6 +154,7 @@ export const MatchInfo = styled.div`
   flex-direction: column;
   gap: 8px;
   padding: 12px;
+  width: 100%;
 `;
 
 export const MatchInfoLabel = styled.span`
@@ -156,6 +167,7 @@ export const MatchInfoRow = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
+  width: 100%;
 `;
 
 export const MatchInfoValue = styled.span`
@@ -169,12 +181,6 @@ export const MatchList = styled.div`
   gap: 16px;
 `;
 
-export const MatchTitle = styled.h3`
-  color: ${colors.primary};
-  font-size: 16px;
-  margin: 0;
-`;
-
 export const Pagination = styled(UPagination)`
   align-self: center;
   margin-top: 12px;
@@ -184,6 +190,7 @@ export const Section = styled.section`
   background: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   padding: 20px;
 `;
 
