@@ -1,7 +1,9 @@
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import {mdiArrowRight, mdiArrowRightBold} from '@mdi/js';
 import {Formik, FormikHelpers} from 'formik';
+import orderBy from 'lodash/orderBy';
 
 import {
   acceptConnectFiveChallenge,
@@ -10,10 +12,11 @@ import {
   getConnectFiveChallenges,
   getConnectFiveMatches,
 } from 'api/connectFive';
+import Badge, {BadgeStyle} from 'components/Badge';
 import Button, {ButtonType} from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import {FormField, Input, Select} from 'components/FormElements';
-import SectionHeading from 'components/SectionHeading';
+import UserLabel from 'components/UserLabel';
 import UserSearchInput from 'components/UserSearchInput';
 import {ConnectFiveChallengeStatus, ConnectFiveMatchStatus} from 'enums';
 import {
@@ -33,6 +36,7 @@ import {
   upsertMatch,
 } from 'store/connectFive';
 import {AppDispatch, ConnectFiveChallenge, ConnectFiveMatch, SelectOption, SFC, UserReadSerializer} from 'types';
+import {shortDate} from 'utils/dates';
 import {handleFormikAPIError} from 'utils/forms';
 import yup from 'utils/yup';
 
@@ -45,6 +49,8 @@ const timeLimitOptions: SelectOption[] = [
   {displayName: '30 minutes', value: '1800'},
 ];
 
+const MATCHES_PER_PAGE = 10;
+
 const initialValues = {
   maxSpendAmount: '',
   opponent: null as UserReadSerializer | null,
@@ -54,7 +60,55 @@ const initialValues = {
 
 type FormValues = typeof initialValues;
 
+const getFinishReasonLabel = (match: ConnectFiveMatch): string | null => {
+  if (match.status === ConnectFiveMatchStatus.FINISHED_CONNECT5) {
+    return 'Connect 5';
+  }
+
+  if (match.status === ConnectFiveMatchStatus.FINISHED_TIMEOUT) {
+    return 'Timeout';
+  }
+
+  return null;
+};
+
+const getOpponent = (match: ConnectFiveMatch, selfId?: number | null): UserReadSerializer | null => {
+  if (selfId) {
+    if (match.player_a.id === selfId) return match.player_b;
+    if (match.player_b.id === selfId) return match.player_a;
+  }
+
+  return match.player_b ?? match.player_a;
+};
+
+const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
+  if (match.status === ConnectFiveMatchStatus.ACTIVE) {
+    return {badgeStyle: BadgeStyle.primary, label: 'In progress'};
+  }
+
+  if (match.status === ConnectFiveMatchStatus.DRAW) {
+    return {badgeStyle: BadgeStyle.neutral, label: 'Draw'};
+  }
+
+  if (match.status === ConnectFiveMatchStatus.CANCELLED) {
+    return {badgeStyle: BadgeStyle.warning, label: 'Cancelled'};
+  }
+
+  if (match.winner && selfId) {
+    if (match.winner === selfId) {
+      return {badgeStyle: BadgeStyle.success, label: 'You won!'};
+    }
+
+    return {badgeStyle: BadgeStyle.danger, label: 'You lost'};
+  }
+
+  return {badgeStyle: BadgeStyle.neutral, label: 'Finished'};
+};
+
 const ConnectFiveHome: SFC = ({className}) => {
+  const [activeMatchesPage, setActiveMatchesPage] = useState(1);
+  const [completedMatchesPage, setCompletedMatchesPage] = useState(1);
+  const [hoveredMatchId, setHoveredMatchId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const activeMatches = useSelector(getConnectFiveActiveMatches);
@@ -65,6 +119,47 @@ const ConnectFiveHome: SFC = ({className}) => {
   const outgoingChallenges = useSelector(getConnectFiveOutgoingChallenges);
   const self = useSelector(getSelf);
 
+  const activeMatchesSorted = useMemo(() => {
+    return orderBy(activeMatches, ['created_date'], ['desc']);
+  }, [activeMatches]);
+
+  const activeMatchesTotalPages = useMemo(() => {
+    return Math.ceil(activeMatchesSorted.length / MATCHES_PER_PAGE);
+  }, [activeMatchesSorted.length]);
+
+  const completedMatchesSorted = useMemo(() => {
+    return orderBy(completedMatches, ['created_date'], ['desc']);
+  }, [completedMatches]);
+
+  const completedMatchesTotalPages = useMemo(() => {
+    return Math.ceil(completedMatchesSorted.length / MATCHES_PER_PAGE);
+  }, [completedMatchesSorted.length]);
+
+  const paginatedActiveMatches = useMemo(() => {
+    const startIndex = (activeMatchesPage - 1) * MATCHES_PER_PAGE;
+    return activeMatchesSorted.slice(startIndex, startIndex + MATCHES_PER_PAGE);
+  }, [activeMatchesPage, activeMatchesSorted]);
+
+  const paginatedCompletedMatches = useMemo(() => {
+    const startIndex = (completedMatchesPage - 1) * MATCHES_PER_PAGE;
+    return completedMatchesSorted.slice(startIndex, startIndex + MATCHES_PER_PAGE);
+  }, [completedMatchesPage, completedMatchesSorted]);
+
+  const validationSchema = useMemo(() => {
+    return yup.object().shape({
+      maxSpendAmount: yup.number().integer('Enter a whole number').min(0).required('Max spend is required'),
+      opponent: yup
+        .mixed()
+        .required('Opponent is required')
+        .test('not-self', "You can't challenge yourself", (value) => {
+          if (!value || !self?.id) return true;
+          return (value as UserReadSerializer).id !== self.id;
+        }),
+      stakeAmount: yup.number().integer('Enter a whole number').min(0).required('Stake is required'),
+      timeLimitSeconds: yup.string().required('Time limit is required'),
+    });
+  }, [self?.id]);
+
   const handleAcceptChallenge = useCallback(
     async (challengeId: number) => {
       const match = await acceptConnectFiveChallenge(challengeId);
@@ -74,6 +169,10 @@ const ConnectFiveHome: SFC = ({className}) => {
     },
     [dispatch, navigate],
   );
+
+  const handleActiveMatchesPageChange = useCallback((page: number) => {
+    setActiveMatchesPage(page);
+  }, []);
 
   const handleCancelChallenge = useCallback(
     async (challengeId: number) => {
@@ -113,6 +212,25 @@ const ConnectFiveHome: SFC = ({className}) => {
     [dispatch, navigate, self?.id],
   );
 
+  const handleCompletedMatchesPageChange = useCallback((page: number) => {
+    setCompletedMatchesPage(page);
+  }, []);
+
+  const handleMatchCardClick = useCallback(
+    (challengeId: number) => {
+      navigate(`/connect-five/games/${challengeId}`);
+    },
+    [navigate],
+  );
+
+  const handleMatchCardHover = useCallback((matchId: number) => {
+    setHoveredMatchId(matchId);
+  }, []);
+
+  const handleMatchCardMouseLeave = useCallback(() => {
+    setHoveredMatchId(null);
+  }, []);
+
   const handleOpponentChange = useCallback(
     (
       user: UserReadSerializer | null,
@@ -146,21 +264,6 @@ const ConnectFiveHome: SFC = ({className}) => {
     dispatch(setCompletedMatches(matches.filter((match) => match.status !== ConnectFiveMatchStatus.ACTIVE)));
   }, [dispatch]);
 
-  const validationSchema = useMemo(() => {
-    return yup.object().shape({
-      maxSpendAmount: yup.number().integer('Enter a whole number').min(0).required('Max spend is required'),
-      opponent: yup
-        .mixed()
-        .required('Opponent is required')
-        .test('not-self', "You can't challenge yourself", (value) => {
-          if (!value || !self?.id) return true;
-          return (value as UserReadSerializer).id !== self.id;
-        }),
-      stakeAmount: yup.number().integer('Enter a whole number').min(0).required('Stake is required'),
-      timeLimitSeconds: yup.string().required('Time limit is required'),
-    });
-  }, [self?.id]);
-
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
@@ -171,10 +274,34 @@ const ConnectFiveHome: SFC = ({className}) => {
     loadData();
   }, [loadChallenges, loadMatches]);
 
+  useEffect(() => {
+    if (activeMatchesTotalPages && activeMatchesPage > activeMatchesTotalPages) {
+      setActiveMatchesPage(activeMatchesTotalPages);
+    } else if (!activeMatchesTotalPages && activeMatchesPage !== 1) {
+      setActiveMatchesPage(1);
+    }
+
+    if (completedMatchesTotalPages && completedMatchesPage > completedMatchesTotalPages) {
+      setCompletedMatchesPage(completedMatchesTotalPages);
+    } else if (!completedMatchesTotalPages && completedMatchesPage !== 1) {
+      setCompletedMatchesPage(1);
+    }
+  }, [activeMatchesPage, activeMatchesTotalPages, completedMatchesPage, completedMatchesTotalPages]);
+
   const renderActiveMatches = () => {
     if (isLoading) return <S.EmptyState>Loading games...</S.EmptyState>;
-    if (!activeMatches.length) return <EmptyText>No active games.</EmptyText>;
-    return activeMatches.map(renderMatchCard);
+    if (!activeMatchesSorted.length) return <EmptyText>No active games.</EmptyText>;
+
+    return (
+      <>
+        <S.MatchList>{paginatedActiveMatches.map(renderMatchCard)}</S.MatchList>
+        <S.Pagination
+          currentPage={activeMatchesPage}
+          onPageChange={handleActiveMatchesPageChange}
+          totalPages={activeMatchesTotalPages}
+        />
+      </>
+    );
   };
 
   const renderChallengeCard = (challenge: ConnectFiveChallenge, actions?: ReactNode) => {
@@ -196,8 +323,18 @@ const ConnectFiveHome: SFC = ({className}) => {
 
   const renderCompletedMatches = () => {
     if (isLoading) return <S.EmptyState>Loading games...</S.EmptyState>;
-    if (!completedMatches.length) return <EmptyText>No completed games.</EmptyText>;
-    return completedMatches.map(renderMatchCard);
+    if (!completedMatchesSorted.length) return <EmptyText>No completed games.</EmptyText>;
+
+    return (
+      <>
+        <S.MatchList>{paginatedCompletedMatches.map(renderMatchCard)}</S.MatchList>
+        <S.Pagination
+          currentPage={completedMatchesPage}
+          onPageChange={handleCompletedMatchesPageChange}
+          totalPages={completedMatchesTotalPages}
+        />
+      </>
+    );
   };
 
   const renderIncomingChallenges = () => {
@@ -209,21 +346,61 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   const renderMatchCard = (match: ConnectFiveMatch) => {
-    const statusLabel = match.status.replace('finished_', '').replace('_', ' ');
+    const createdLabel = shortDate(match.created_date, true);
+    const finishReason = getFinishReasonLabel(match);
+    const isActive = match.status === ConnectFiveMatchStatus.ACTIVE;
+    const isHovered = hoveredMatchId === match.id;
+    const opponent = getOpponent(match, self?.id);
+    const statusBadge = getStatusBadge(match, self?.id);
 
     return (
-      <S.MatchCard key={match.id}>
+      <S.MatchCard
+        aria-label={`Open game ${match.id}`}
+        key={match.id}
+        onBlur={handleMatchCardMouseLeave}
+        onClick={() => handleMatchCardClick(match.challenge)}
+        onFocus={() => handleMatchCardHover(match.id)}
+        onMouseEnter={() => handleMatchCardHover(match.id)}
+        onMouseLeave={handleMatchCardMouseLeave}
+        type="button"
+      >
         <S.MatchHeader>
-          <S.MatchTitle>Game #{match.id}</S.MatchTitle>
-          <S.MatchStatus>{statusLabel}</S.MatchStatus>
+          <S.MatchHeaderMain>
+            <S.MatchTitle>Game #{match.id}</S.MatchTitle>
+            <UserLabel
+              avatar={opponent?.avatar ?? null}
+              clickable={false}
+              description={`Created ${createdLabel}`}
+              id={opponent?.id ?? null}
+              username={opponent?.username ?? 'Unknown player'}
+            />
+          </S.MatchHeaderMain>
+          <S.MatchIcon data-match-icon="true" path={isHovered ? mdiArrowRightBold : mdiArrowRight} size="20px" />
         </S.MatchHeader>
-        <S.MatchDetails>
-          <span>Prize pool: {match.prize_pool_total.toLocaleString()} TNB</span>
-          <span>Time limit: {Math.round(match.time_limit_seconds / 60)} min</span>
-        </S.MatchDetails>
-        <S.MatchActions>
-          <Button onClick={() => navigate(`/connect-five/games/${match.challenge}`)} text="Open" />
-        </S.MatchActions>
+        <S.MatchInfo>
+          <S.MatchInfoRow>
+            <S.MatchInfoLabel>Status</S.MatchInfoLabel>
+            <Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</Badge>
+          </S.MatchInfoRow>
+          {finishReason && (
+            <S.MatchInfoRow>
+              <S.MatchInfoLabel>Finish reason</S.MatchInfoLabel>
+              <S.MatchInfoValue>{finishReason}</S.MatchInfoValue>
+            </S.MatchInfoRow>
+          )}
+          <S.MatchInfoRow>
+            <S.MatchInfoLabel>Prize pool</S.MatchInfoLabel>
+            <S.MatchInfoValue>{match.prize_pool_total.toLocaleString()} TNB</S.MatchInfoValue>
+          </S.MatchInfoRow>
+          {!isActive && match.winner && (
+            <S.MatchInfoRow>
+              <S.MatchInfoLabel>Winner</S.MatchInfoLabel>
+              <S.MatchInfoValue>
+                {match.winner === match.player_a.id ? match.player_a.username : match.player_b.username}
+              </S.MatchInfoValue>
+            </S.MatchInfoRow>
+          )}
+        </S.MatchInfo>
       </S.MatchCard>
     );
   };
@@ -238,11 +415,6 @@ const ConnectFiveHome: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <S.Header>
-        <SectionHeading heading="Connect 5" />
-        <S.Subtitle>Challenge another player to a TNB-only Connect 5 match.</S.Subtitle>
-      </S.Header>
-
       <S.Content>
         <S.Section>
           <S.SectionTitle>Send a challenge</S.SectionTitle>
@@ -316,15 +488,15 @@ const ConnectFiveHome: SFC = ({className}) => {
           {renderOutgoingChallenges()}
         </S.Section>
 
-        <S.Section>
+        <S.GamesSection>
           <S.SectionTitle>Active games</S.SectionTitle>
           {renderActiveMatches()}
-        </S.Section>
+        </S.GamesSection>
 
-        <S.Section>
+        <S.GamesSection>
           <S.SectionTitle>Game history</S.SectionTitle>
           {renderCompletedMatches()}
-        </S.Section>
+        </S.GamesSection>
       </S.Content>
     </S.Container>
   );

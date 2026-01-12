@@ -1,5 +1,7 @@
+import Icon from '@mdi/react';
 import styled from 'styled-components';
 
+import UPagination from 'components/Pagination';
 import {colors, fonts, hiddenScroll, pagePadding} from 'styles';
 
 export const ChallengeActions = styled.div`
@@ -74,48 +76,108 @@ export const FormRow = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 `;
 
-export const Header = styled.div`
-  margin-bottom: 24px;
-`;
-
-export const MatchActions = styled.div`
+export const GamesSection = styled.section`
   display: flex;
-  justify-content: flex-end;
-  margin-top: 16px;
+  flex-direction: column;
+  gap: 16px;
 `;
 
-export const MatchCard = styled.div`
+export const MatchCard = styled.button`
   background: ${colors.white};
   border: 1px solid ${colors.border};
   border-radius: 16px;
-  padding: 16px;
-`;
-
-export const MatchDetails = styled.div`
-  color: ${colors.secondary};
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-direction: column;
+  font-family: inherit;
+  gap: 16px;
+  outline: none;
+  padding: 16px;
+  text-align: left;
+  transition: all 0.2s ease;
+  width: 100%;
+
+  &:hover {
+    background: ${colors.whiteHover};
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+
+    [data-match-icon='true'] {
+      color: ${colors.palette.blue[600]};
+      transform: translateX(2px);
+    }
+  }
+
+  &:focus-visible {
+    box-shadow:
+      0 0 0 2px ${colors.palette.blue[200]},
+      0 1px 3px rgba(0, 0, 0, 0.08);
+  }
 `;
 
 export const MatchHeader = styled.div`
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+`;
+
+export const MatchHeaderMain = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+export const MatchIcon = styled(Icon)`
+  color: ${colors.palette.gray[500]};
+  flex-shrink: 0;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+`;
+
+export const MatchInfo = styled.div`
+  background: ${colors.palette.gray[50]};
+  border: 1px solid ${colors.border};
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+`;
+
+export const MatchInfoLabel = styled.span`
+  color: ${colors.secondary};
+  font-size: 12px;
+  text-transform: uppercase;
+`;
+
+export const MatchInfoRow = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
 `;
 
-export const MatchStatus = styled.span`
-  color: ${colors.palette.green[600]};
-  font-size: 12px;
+export const MatchInfoValue = styled.span`
+  color: ${colors.primary};
   font-weight: ${fonts.weight.medium};
-  text-transform: uppercase;
+`;
+
+export const MatchList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 export const MatchTitle = styled.h3`
   color: ${colors.primary};
   font-size: 16px;
   margin: 0;
+`;
+
+export const Pagination = styled(UPagination)`
+  align-self: center;
+  margin-top: 12px;
 `;
 
 export const Section = styled.section`
@@ -129,12 +191,6 @@ export const SectionTitle = styled.h2`
   color: ${colors.primary};
   font-size: 18px;
   margin: 0 0 16px;
-`;
-
-export const Subtitle = styled.p`
-  color: ${colors.secondary};
-  font-size: 14px;
-  margin: 8px 0 0;
 `;
 
 export const SubmitRow = styled.div`
