@@ -2,6 +2,7 @@ import {NotificationType} from 'enums';
 import {CommentReadSerializer} from 'types/api/comments';
 import {CurrencyTinySerializer} from 'types/api/tradeHistory';
 import {UserReadSerializer} from 'types/api/users';
+import {ConnectFiveChallenge} from 'types/connectFive';
 import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
 import {PaginatedResponse, Pagination} from 'types/pagination';
@@ -41,6 +42,17 @@ export interface CommentMentionPayload {
   post_preview: string;
 }
 
+export interface ConnectFiveChallengePayload {
+  challenger: UserReadSerializer;
+  challenge?: ConnectFiveChallenge;
+  challenge_id: number;
+  expires_at: string;
+  max_spend_amount: number;
+  notification_type: NotificationType.CONNECT_FIVE_CHALLENGE;
+  stake_amount: number;
+  time_limit_seconds: number;
+}
+
 export interface PostCommentPayload {
   comment: CommentReadSerializer;
   comment_preview: string;
@@ -77,6 +89,7 @@ export interface ProfileFollowPayload {
 
 export type NotificationPayload =
   | CommentMentionPayload
+  | ConnectFiveChallengePayload
   | ExchangeOrderFilledPayload
   | PostCoinTransferPayload
   | PostCommentPayload

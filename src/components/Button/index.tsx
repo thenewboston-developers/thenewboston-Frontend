@@ -60,7 +60,7 @@ const Button: SFC<ButtonProps> = ({
       onClick={onClick}
       type={type}
     >
-      {type === ButtonType.submit && isSubmitting ? <Loader size={12} /> : renderButtonContent()}
+      {isSubmitting ? <Loader size={12} /> : renderButtonContent()}
     </S.Button>
   );
 };

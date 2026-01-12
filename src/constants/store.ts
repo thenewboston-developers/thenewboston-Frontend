@@ -1,6 +1,7 @@
 export const ASSET_PAIRS = 'assetPairs';
 export const AUTHENTICATION = 'authentication';
 export const COMMENTS = 'comments';
+export const CONNECT_FIVE = 'connectFive';
 export const CURRENCIES = 'currencies';
 export const EXCHANGE_ORDERS = 'exchangeOrders';
 export const FOLLOWERS = 'followers';

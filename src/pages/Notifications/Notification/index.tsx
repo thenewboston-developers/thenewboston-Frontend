@@ -1,7 +1,15 @@
 import {ReactNode} from 'react';
 import {useDispatch} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
-import {mdiAccountPlus, mdiAt, mdiContentCopy, mdiHeart, mdiSwapHorizontal, mdiWalletBifoldOutline} from '@mdi/js';
+import {
+  mdiAccountPlus,
+  mdiAt,
+  mdiContentCopy,
+  mdiGamepadVariantOutline,
+  mdiHeart,
+  mdiSwapHorizontal,
+  mdiWalletBifoldOutline,
+} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import CurrencyLogo from 'components/CurrencyLogo';
@@ -33,12 +41,17 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     const notificationType = notification.payload.notification_type;
     if (
       notificationType === NotificationType.COMMENT_MENTION ||
+      notificationType === NotificationType.CONNECT_FIVE_CHALLENGE ||
       notificationType === NotificationType.POST_COMMENT ||
       notificationType === NotificationType.POST_COIN_TRANSFER ||
       notificationType === NotificationType.POST_LIKE ||
       notificationType === NotificationType.POST_MENTION
     ) {
       const {payload} = notification;
+      if (notificationType === NotificationType.CONNECT_FIVE_CHALLENGE && 'challenge_id' in payload) {
+        navigate(`/connect-five/games/${payload.challenge_id}`);
+        return;
+      }
       if ('post_id' in payload) {
         navigate(`/posts/${payload.post_id}`);
       }
@@ -48,6 +61,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const renderContent = () => {
     const notificationTypes: {[key in NotificationType]: () => ReactNode} = {
       [NotificationType.COMMENT_MENTION]: renderCommentMentionNotification,
+      [NotificationType.CONNECT_FIVE_CHALLENGE]: renderConnectFiveChallengeNotification,
       [NotificationType.EXCHANGE_ORDER_FILLED]: renderExchangeOrderFilledNotification,
       [NotificationType.POST_COIN_TRANSFER]: renderPostCoinTransferNotification,
       [NotificationType.POST_COMMENT]: renderPostCommentNotification,
@@ -257,6 +271,38 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
             </S.Link>{' '}
             followed you
           </S.MainText>
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
+  };
+
+  const renderConnectFiveChallengeNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.CONNECT_FIVE_CHALLENGE) return null;
+
+    const {challenger, max_spend_amount, stake_amount, time_limit_seconds} = notification.payload;
+    const minutes = Math.round(time_limit_seconds / 60);
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/connect-five/games/${notification.payload.challenge_id}`}>
+          <S.AvatarContainer>
+            <Avatar src={challenger.avatar} size="45px" />
+            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
+          </S.AvatarContainer>
+        </Link>
+        <S.TextContainer>
+          <S.MainText>
+            <S.Link to={`/profile/${challenger.id}`} onClick={(e) => e.stopPropagation()}>
+              {challenger.username}
+            </S.Link>{' '}
+            challenged you to Connect 5
+          </S.MainText>
+          <S.PostPreviewText>
+            Stake: {stake_amount.toLocaleString()} TNB · Max spend: {max_spend_amount.toLocaleString()} TNB · Time:{' '}
+            {minutes} min
+          </S.PostPreviewText>
           <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
         </S.TextContainer>
         {renderRedDot()}
