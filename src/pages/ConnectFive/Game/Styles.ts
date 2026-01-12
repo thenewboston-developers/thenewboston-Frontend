@@ -1,5 +1,6 @@
 import styled, {css, keyframes} from 'styled-components';
 
+import UAvatar from 'components/Avatar';
 import {colors, fonts, pagePadding} from 'styles';
 
 const float = keyframes`
@@ -286,17 +287,43 @@ export const Piece = styled.div<{$variant: 'playerA' | 'playerB'}>`
   width: 70%;
 `;
 
-export const PlayerInfo = styled.div<{$isActive: boolean}>`
-  align-items: center;
-  color: ${({$isActive}) => ($isActive ? colors.palette.green[700] : colors.primary)};
-  display: flex;
-  gap: 10px;
+export const PlayerAvatar = styled(UAvatar)<{$variant: 'playerA' | 'playerB'}>`
+  margin-right: 12px;
+  position: relative;
+
+  &::after {
+    background: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
+    border: 2px solid ${colors.background};
+    border-radius: 50%;
+    bottom: -2px;
+    content: '';
+    height: 12px;
+    position: absolute;
+    right: -2px;
+    width: 12px;
+  }
 `;
 
-export const PlayerName = styled.div`
-  color: inherit;
+export const PlayerLabel = styled.div`
+  align-items: center;
+  display: flex;
+`;
+
+export const PlayerLabelDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+export const PlayerName = styled.span<{$isClickable: boolean}>`
+  color: ${colors.black};
   font-size: 14px;
-  font-weight: ${fonts.weight.medium};
+  font-weight: ${fonts.weight.semiBold};
+  text-decoration: none;
+
+  &:hover {
+    cursor: ${({$isClickable}) => ($isClickable ? 'pointer' : 'default')};
+  }
 `;
 
 export const PlayerRow = styled.div`
@@ -304,6 +331,11 @@ export const PlayerRow = styled.div`
   display: flex;
   gap: 16px;
   justify-content: space-between;
+`;
+
+export const PlayerSideText = styled.span<{$variant: 'playerA' | 'playerB'}>`
+  color: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
+  font-size: 12px;
 `;
 
 export const Preview = styled.div<{$isInvalid: boolean}>`
@@ -378,7 +410,9 @@ export const Sidebar = styled.aside`
   gap: 16px;
 `;
 
-export const SpecialIcon = styled.img`
+export const SpecialIcon = styled.svg<{$variant: 'playerA' | 'playerB'}>`
+  color: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
+  display: block;
   height: 24px;
   width: 24px;
 `;
@@ -528,7 +562,8 @@ export const ToolCount = styled.span`
   right: 4px;
 `;
 
-export const ToolIcon = styled.img`
+export const ToolIcon = styled.svg<{$variant: 'playerA' | 'playerB'}>`
+  color: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
   display: block;
   height: 24px;
   width: 24px;
