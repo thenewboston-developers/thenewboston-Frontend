@@ -28,9 +28,12 @@ import {Comment, Comments} from 'types/comments';
 import {
   ConnectFiveChallenge,
   ConnectFiveChallengePaginatedResponse,
+  ConnectFiveLeaderboardEntry,
+  ConnectFiveLeaderboardPaginatedResponse,
   ConnectFiveMatch,
   ConnectFiveMatchPaginatedResponse,
   ConnectFiveMatchPlayer,
+  ConnectFiveRematchStatus,
   ConnectFiveState,
 } from 'types/connectFive';
 import {CreatedModified} from 'types/createdModified';
@@ -81,9 +84,12 @@ export {
   Comments,
   ConnectFiveChallenge,
   ConnectFiveChallengePaginatedResponse,
+  ConnectFiveLeaderboardEntry,
+  ConnectFiveLeaderboardPaginatedResponse,
   ConnectFiveMatch,
   ConnectFiveMatchPaginatedResponse,
   ConnectFiveMatchPlayer,
+  ConnectFiveRematchStatus,
   ConnectFiveState,
   CreateCommentRequest,
   CreatedModified,

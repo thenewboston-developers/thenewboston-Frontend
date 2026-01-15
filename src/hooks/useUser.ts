@@ -18,6 +18,7 @@ const useUser = (id: string | undefined): UserReadSerializer | null => {
         avatar: self.avatar,
         banner: self.banner,
         bio: self.bio || '',
+        connect_five_elo: self.connect_five_elo,
         discord_username: self.discord_username,
         facebook_username: self.facebook_username,
         github_username: self.github_username,

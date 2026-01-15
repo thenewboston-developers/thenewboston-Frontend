@@ -4,8 +4,10 @@ import {ConnectFiveMoveType, ConnectFiveSpecialType} from 'enums';
 import {
   ConnectFiveChallenge,
   ConnectFiveChallengePaginatedResponse,
+  ConnectFiveLeaderboardPaginatedResponse,
   ConnectFiveMatch,
   ConnectFiveMatchPaginatedResponse,
+  ConnectFiveRematchStatus,
 } from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
@@ -28,6 +30,19 @@ export const cancelConnectFiveChallenge = async (challengeId: number): Promise<C
   try {
     const response = await axios.post<ConnectFiveChallenge>(
       `${BASE_URL}/challenges/${challengeId}/cancel`,
+      {},
+      authorizationHeaders(),
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const declineConnectFiveChallenge = async (challengeId: number): Promise<ConnectFiveChallenge> => {
+  try {
+    const response = await axios.post<ConnectFiveChallenge>(
+      `${BASE_URL}/challenges/${challengeId}/decline`,
       {},
       authorizationHeaders(),
     );
@@ -114,6 +129,38 @@ export const getConnectFiveMatches = async (params?: {
   }
 };
 
+export const getConnectFiveLeaderboard = async (params?: {
+  page?: number;
+  url?: string;
+}): Promise<ConnectFiveLeaderboardPaginatedResponse> => {
+  try {
+    const requestUrl = params?.url || `${BASE_URL}/leaderboard`;
+    const response = await axios.get<ConnectFiveLeaderboardPaginatedResponse>(requestUrl, {
+      ...authorizationHeaders(),
+      params: params?.url
+        ? undefined
+        : {
+            page: params?.page,
+          },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getConnectFiveRematchStatus = async (matchId: number): Promise<ConnectFiveRematchStatus> => {
+  try {
+    const response = await axios.get<ConnectFiveRematchStatus>(
+      `${BASE_URL}/matches/${matchId}/rematch-status`,
+      authorizationHeaders(),
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const purchaseConnectFiveSpecial = async (
   matchId: number,
   data: {quantity?: number; special_type: ConnectFiveSpecialType},
@@ -138,6 +185,19 @@ export const submitConnectFiveMove = async (
     const response = await axios.post<ConnectFiveMatch>(
       `${BASE_URL}/matches/${matchId}/move`,
       data,
+      authorizationHeaders(),
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const requestConnectFiveRematch = async (matchId: number): Promise<ConnectFiveChallenge> => {
+  try {
+    const response = await axios.post<ConnectFiveChallenge>(
+      `${BASE_URL}/matches/${matchId}/rematch`,
+      {},
       authorizationHeaders(),
     );
     return response.data;

@@ -1,6 +1,7 @@
 import styled, {css, keyframes} from 'styled-components';
 
 import UAvatar from 'components/Avatar';
+import UModal from 'components/Modal';
 import {colors, fonts, pagePadding} from 'styles';
 
 const float = keyframes`
@@ -95,6 +96,35 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
+`;
+
+export const EloChange = styled.div`
+  background: ${colors.palette.gray[50]};
+  border: 1px solid ${colors.border};
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px;
+`;
+
+export const EloChangeLabel = styled.span`
+  color: ${colors.secondary};
+  font-size: 12px;
+  text-transform: uppercase;
+`;
+
+export const EloChangeValue = styled.div<{$variant: 'down' | 'equal' | 'up'}>`
+  align-items: center;
+  color: ${({$variant}) => {
+    if ($variant === 'up') return colors.palette.green[600];
+    if ($variant === 'down') return colors.palette.red[600];
+    return colors.palette.gray[600];
+  }};
+  display: flex;
+  font-size: 16px;
+  font-weight: ${fonts.weight.semiBold};
+  gap: 8px;
 `;
 
 export const GameLayout = styled.div`
@@ -405,6 +435,40 @@ export const PurchaseRow = styled.div`
   display: flex;
   gap: 12px;
   justify-content: space-between;
+`;
+
+export const RematchNotice = styled.div`
+  color: ${colors.palette.red[600]};
+  font-size: 12px;
+  margin-top: 8px;
+`;
+
+export const RematchStateText = styled.div<{$variant: 'neutral' | 'warning'}>`
+  color: ${({$variant}) => ($variant === 'warning' ? colors.palette.red[600] : colors.secondary)};
+  font-size: 14px;
+  margin-top: 8px;
+`;
+
+export const ResultModal = styled(UModal)`
+  max-width: calc(100vw - 32px);
+  width: 420px;
+`;
+
+export const ResultOutcome = styled.span<{$variant: 'draw' | 'loss' | 'win'}>`
+  color: ${({$variant}) => {
+    if ($variant === 'win') return colors.palette.green[600];
+    if ($variant === 'loss') return colors.palette.red[600];
+    return colors.palette.gray[600];
+  }};
+  font-size: 18px;
+  font-weight: ${fonts.weight.semiBold};
+`;
+
+export const ResultSummary = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
 `;
 
 export const Sidebar = styled.aside`
