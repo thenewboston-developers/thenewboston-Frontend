@@ -1092,7 +1092,7 @@ const ConnectFiveGame: SFC = ({className}) => {
     return (
       <S.ResultModal close={handleResultModalClose} header="Game Results">
         <ModalBody>
-          <S.ResultSummary>
+          <S.ResultSummary $variant={resultVariant}>
             <S.ResultOutcome $variant={resultVariant}>{resultLabel}</S.ResultOutcome>
           </S.ResultSummary>
           <S.EloChange>

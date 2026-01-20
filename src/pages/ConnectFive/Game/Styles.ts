@@ -166,18 +166,33 @@ export const Container = styled.div`
 `;
 
 export const EloChange = styled.div`
-  background: ${colors.palette.gray[50]};
-  border: 1px solid ${colors.border};
-  border-radius: 12px;
+  background: linear-gradient(135deg, ${colors.white} 0%, ${colors.palette.gray[50]} 100%);
+  border: 1px solid ${colors.palette.gray[200]};
+  border-radius: 14px;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px 16px;
+  gap: 10px;
+  overflow: hidden;
+  padding: 14px 16px;
+  position: relative;
+
+  &::before {
+    background: linear-gradient(90deg, ${colors.palette.blue[200]} 0%, rgba(255, 255, 255, 0) 100%);
+    content: '';
+    height: 2px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
 `;
 
 export const EloChangeLabel = styled.span`
   color: ${colors.secondary};
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: ${fonts.weight.semiBold};
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 `;
 
@@ -189,7 +204,8 @@ export const EloChangeValue = styled.div<{$variant: 'down' | 'equal' | 'up'}>`
     return colors.palette.gray[600];
   }};
   display: flex;
-  font-size: 16px;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.semiBold};
   gap: 8px;
 `;
@@ -620,15 +636,23 @@ export const PurchaseRow = styled.div`
 `;
 
 export const RematchNotice = styled.div`
+  background: ${colors.palette.red[50]};
+  border: 1px solid ${colors.palette.red[200]};
+  border-radius: 10px;
   color: ${colors.palette.red[600]};
   font-size: 12px;
   margin-top: 8px;
+  padding: 8px 10px;
 `;
 
 export const RematchStateText = styled.div<{$variant: 'neutral' | 'warning'}>`
+  background: ${({$variant}) => ($variant === 'warning' ? colors.palette.red[50] : colors.palette.gray[50])};
+  border: 1px solid ${({$variant}) => ($variant === 'warning' ? colors.palette.red[200] : colors.palette.gray[200])};
+  border-radius: 10px;
   color: ${({$variant}) => ($variant === 'warning' ? colors.palette.red[600] : colors.secondary)};
   font-size: 14px;
   margin-top: 8px;
+  padding: 8px 10px;
 `;
 
 export const ResultModal = styled(UModal)`
@@ -642,15 +666,72 @@ export const ResultOutcome = styled.span<{$variant: 'draw' | 'loss' | 'win'}>`
     if ($variant === 'loss') return colors.palette.red[600];
     return colors.palette.gray[600];
   }};
-  font-size: 18px;
+  font-size: 22px;
   font-weight: ${fonts.weight.semiBold};
+  letter-spacing: 0.1em;
+  position: relative;
+  text-shadow: 0 6px 16px rgba(15, 23, 42, 0.2);
+  text-transform: uppercase;
+  z-index: 1;
 `;
 
-export const ResultSummary = styled.div`
+export const ResultSummary = styled.div<{$variant: 'draw' | 'loss' | 'win'}>`
+  align-items: center;
+  background: ${({$variant}) => {
+    if ($variant === 'win') return `linear-gradient(140deg, ${colors.palette.green[50]} 0%, ${colors.white} 70%)`;
+    if ($variant === 'loss') return `linear-gradient(140deg, ${colors.palette.red[50]} 0%, ${colors.white} 70%)`;
+    return `linear-gradient(140deg, ${colors.palette.gray[50]} 0%, ${colors.white} 70%)`;
+  }};
+  border: 1px solid
+    ${({$variant}) => {
+      if ($variant === 'win') return colors.palette.green[200];
+      if ($variant === 'loss') return colors.palette.red[200];
+      return colors.palette.gray[200];
+    }};
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   margin-bottom: 16px;
+  overflow: hidden;
+  padding: 16px;
+  position: relative;
+  text-align: center;
+
+  &::before {
+    background: ${({$variant}) => {
+      if ($variant === 'win')
+        return `linear-gradient(90deg, ${colors.palette.green[400]} 0%, rgba(255, 255, 255, 0) 100%)`;
+      if ($variant === 'loss')
+        return `linear-gradient(90deg, ${colors.palette.red[400]} 0%, rgba(255, 255, 255, 0) 100%)`;
+      return `linear-gradient(90deg, ${colors.palette.gray[400]} 0%, rgba(255, 255, 255, 0) 100%)`;
+    }};
+    content: '';
+    height: 3px;
+    left: 0;
+    opacity: 0.7;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  &::after {
+    background: ${({$variant}) => {
+      if ($variant === 'win')
+        return `radial-gradient(circle, ${colors.palette.green[100]} 0%, rgba(255, 255, 255, 0) 70%)`;
+      if ($variant === 'loss')
+        return `radial-gradient(circle, ${colors.palette.red[100]} 0%, rgba(255, 255, 255, 0) 70%)`;
+      return `radial-gradient(circle, ${colors.palette.gray[100]} 0%, rgba(255, 255, 255, 0) 70%)`;
+    }};
+    content: '';
+    height: 160px;
+    opacity: 0.6;
+    position: absolute;
+    right: -70px;
+    top: -70px;
+    width: 160px;
+  }
 `;
 
 export const Sidebar = styled.aside`
