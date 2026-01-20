@@ -37,23 +37,23 @@ const shimmer = keyframes`
 const impact = keyframes`
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.15);
+    transform: translate(-50%, -50%) scale(0.16);
   }
   20% {
-    opacity: 0.85;
+    opacity: 0.9;
   }
   60% {
-    opacity: 0.4;
+    opacity: 0.45;
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1.8);
+    transform: translate(-50%, -50%) scale(1.85);
   }
 `;
 
 const impactGlow = keyframes`
   0% {
-    opacity: 0.5;
+    opacity: 0.55;
   }
   100% {
     opacity: 0;
@@ -140,7 +140,7 @@ export const Cell = styled.button<{$isPreview: boolean; $isPreviewInvalid: boole
   ${({$isPreviewInvalid}) =>
     $isPreviewInvalid &&
     css`
-      background-color: rgba(239, 83, 80, 0.18);
+      cursor: not-allowed;
     `}
 `;
 
@@ -214,30 +214,30 @@ export const Header = styled.div`
 export const ImpactRing = styled.span<{$variant: 'black' | 'white'}>`
   --impact-color: ${({$variant}) => ($variant === 'black' ? '255, 255, 255' : '0, 0, 0')};
 
-  animation: ${impactGlow} 0.6s ease-out forwards;
+  animation: ${impactGlow} 0.65s ease-out forwards;
   background: radial-gradient(
     circle,
-    rgba(var(--impact-color), 0.35) 0%,
-    rgba(var(--impact-color), 0.18) 38%,
+    rgba(var(--impact-color), 0.42) 0%,
+    rgba(var(--impact-color), 0.2) 40%,
     transparent 68%
   );
   border-radius: 50%;
-  height: 90%;
+  height: 92%;
   left: 50%;
   opacity: 0;
   pointer-events: none;
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
+  width: 92%;
   z-index: 1;
 
   &::before,
   &::after {
-    animation: ${impact} 0.9s ease-out forwards;
+    animation: ${impact} 0.95s ease-out forwards;
     border: 2px solid rgba(var(--impact-color), 0.7);
     border-radius: 50%;
-    box-shadow: 0 0 18px rgba(var(--impact-color), 0.4);
+    box-shadow: 0 0 20px rgba(var(--impact-color), 0.45);
     content: '';
     height: 100%;
     left: 50%;
@@ -249,9 +249,9 @@ export const ImpactRing = styled.span<{$variant: 'black' | 'white'}>`
   }
 
   &::after {
-    animation-delay: 0.12s;
+    animation-delay: 0.14s;
     border-width: 1px;
-    box-shadow: 0 0 24px rgba(var(--impact-color), 0.45);
+    box-shadow: 0 0 26px rgba(var(--impact-color), 0.4);
   }
 `;
 
@@ -480,10 +480,13 @@ export const PlayerAvatar = styled(UAvatar)<{$variant: 'black' | 'white'}>`
 
   &::after {
     background: ${({$variant}) => ($variant === 'black' ? colors.black : colors.white)};
-    border: 2px solid ${({$variant}) => ($variant === 'black' ? colors.background : colors.palette.gray[700])};
+    border: 2px solid ${colors.background};
     border-radius: 50%;
     bottom: -2px;
-    box-shadow: ${({$variant}) => ($variant === 'white' ? '0 1px 2px rgba(0, 0, 0, 0.35)' : 'none')};
+    box-shadow: ${({$variant}) =>
+      $variant === 'white'
+        ? '0 0 0 1px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.12)'
+        : '0 0 0 1px rgba(255, 255, 255, 0.12), 0 1px 2px rgba(0, 0, 0, 0.2)'};
     content: '';
     height: 12px;
     position: absolute;
@@ -541,8 +544,14 @@ export const Preview = styled.div<{$isInvalid: boolean; $variant: 'black' | 'whi
   ${({$isInvalid, $variant}) =>
     $isInvalid
       ? css`
-          background: ${colors.palette.red[300]};
-          border-color: ${colors.palette.red[500]};
+          background: radial-gradient(
+            circle,
+            rgba(239, 83, 80, 0.12) 0%,
+            rgba(239, 83, 80, 0.35) 55%,
+            rgba(239, 83, 80, 0.65) 100%
+          );
+          border-color: rgba(239, 83, 80, 0.9);
+          box-shadow: 0 0 10px rgba(239, 83, 80, 0.45);
         `
       : css`
           background: ${$variant === 'black' ? 'rgba(20, 20, 20, 0.65)' : 'rgba(248, 245, 239, 0.7)'};
