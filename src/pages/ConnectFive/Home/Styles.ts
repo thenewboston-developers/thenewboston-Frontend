@@ -169,6 +169,12 @@ export const MatchInfo = styled.div`
   width: 100%;
 `;
 
+export const MatchInfoGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
 export const MatchInfoLabel = styled.span`
   color: ${colors.secondary};
   font-size: 12px;

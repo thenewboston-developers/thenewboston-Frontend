@@ -1,6 +1,7 @@
 export enum ConnectFiveChallengeStatus {
   ACCEPTED = 'accepted',
   CANCELLED = 'cancelled',
+  DECLINED = 'declined',
   EXPIRED = 'expired',
   PENDING = 'pending',
 }

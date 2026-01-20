@@ -1,6 +1,8 @@
 import styled, {css, keyframes} from 'styled-components';
 
 import UAvatar from 'components/Avatar';
+import UIcon from 'components/Icon';
+import UModal from 'components/Modal';
 import {colors, fonts, pagePadding} from 'styles';
 
 const float = keyframes`
@@ -32,14 +34,132 @@ const shimmer = keyframes`
   }
 `;
 
+const impact = keyframes`
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.16);
+  }
+  20% {
+    opacity: 0.99;
+  }
+  60% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.05);
+  }
+`;
+
+const impactGlow = keyframes`
+  0% {
+    opacity: 0.65;
+  }
+  100% {
+    opacity: 0;
+  }
+`;
+
+const starTwinkle = keyframes`
+  0%, 100% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(0.9) rotate(-8deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1) rotate(8deg);
+  }
+`;
+
+const resultPulse = keyframes`
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+`;
+
+const resultShine = keyframes`
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
+`;
+
+const fadeInUp = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const eloPop = keyframes`
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
+const winPulse = keyframes`
+  0%, 100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.08);
+  }
+`;
+
 export const Board = styled.div`
-  background: ${colors.border};
-  border-radius: 12px;
+  --board-grid-inset: calc(100% / 28);
+
+  aspect-ratio: 1 / 1;
+  background-color: #d7b07a;
+  background-image:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(circle at 18% 28%, rgba(120, 82, 46, 0.2), transparent 55%),
+    radial-gradient(circle at 76% 72%, rgba(120, 82, 46, 0.12), transparent 60%),
+    linear-gradient(90deg, rgba(145, 100, 59, 0.16) 0%, rgba(117, 80, 44, 0.08) 100%);
+  border: 2px solid #b48353;
+  border-radius: 16px;
+  box-shadow:
+    inset 0 0 0 1px rgba(73, 46, 19, 0.35),
+    0 12px 22px rgba(36, 22, 9, 0.2);
   display: grid;
-  gap: 1px;
+  gap: 0;
   grid-template-columns: repeat(14, minmax(0, 1fr));
+  grid-template-rows: repeat(14, minmax(0, 1fr));
+  margin: 0 auto;
+  max-width: calc(100vh - 360px);
   overflow: hidden;
+  position: relative;
   width: 100%;
+
+  &::before {
+    background-image:
+      linear-gradient(to right, rgba(76, 52, 24, 0.55) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(76, 52, 24, 0.55) 1px, transparent 1px);
+    background-position: 0 0;
+    background-size: calc((100% - 1px) / 13) calc((100% - 1px) / 13);
+    content: '';
+    inset: var(--board-grid-inset);
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+  }
 `;
 
 export const BoardSection = styled.section`
@@ -48,31 +168,22 @@ export const BoardSection = styled.section`
   gap: 16px;
 `;
 
-export const BoardWrapper = styled.div`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px;
-`;
-
 export const Cell = styled.button<{$isPreview: boolean; $isPreviewInvalid: boolean}>`
   align-items: center;
   aspect-ratio: 1 / 1;
-  background: ${colors.white};
+  background-color: transparent;
   border: 0;
   cursor: pointer;
   display: flex;
   justify-content: center;
   padding: 0;
   position: relative;
+  z-index: 1;
 
   ${({$isPreviewInvalid}) =>
     $isPreviewInvalid &&
     css`
-      background: ${colors.palette.red[50]};
+      cursor: not-allowed;
     `}
 `;
 
@@ -97,6 +208,40 @@ export const Container = styled.div`
   gap: 24px;
 `;
 
+export const EloChange = styled.div`
+  animation: ${fadeInUp} 0.4s ease-out 0.15s both;
+  background: ${colors.white};
+  border: 1px solid ${colors.palette.gray[200]};
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+`;
+
+export const EloChangeLabel = styled.span`
+  color: ${colors.secondary};
+  font-size: 11px;
+  font-weight: ${fonts.weight.semiBold};
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+`;
+
+export const EloChangeValue = styled.div<{$variant: 'down' | 'equal' | 'up'}>`
+  align-items: center;
+  animation: ${eloPop} 0.5s ease-out 0.3s both;
+  color: ${({$variant}) => {
+    if ($variant === 'up') return colors.palette.green[600];
+    if ($variant === 'down') return colors.palette.red[600];
+    return colors.palette.gray[600];
+  }};
+  display: flex;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.bold};
+  gap: 8px;
+`;
+
 export const GameLayout = styled.div`
   display: grid;
   gap: 24px;
@@ -112,6 +257,57 @@ export const Header = styled.div`
   display: flex;
   gap: 16px;
   justify-content: space-between;
+`;
+
+export const ImpactRing = styled.span<{$variant: 'black' | 'white'}>`
+  --impact-color: ${({$variant}) => ($variant === 'black' ? '0, 0, 0' : '255, 255, 255')};
+
+  animation: ${impactGlow} 0.65s ease-out forwards;
+  background:
+    radial-gradient(
+      circle at 48% 52%,
+      rgba(var(--impact-color), 0.52) 0%,
+      rgba(var(--impact-color), 0.26) 42%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 52% 48%,
+      rgba(var(--impact-color), 0.4) 0%,
+      rgba(var(--impact-color), 0.2) 36%,
+      transparent 72%
+    );
+  border-radius: 50%;
+  height: 92%;
+  left: 50%;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 92%;
+  z-index: 1;
+
+  &::before,
+  &::after {
+    animation: ${impact} 0.95s ease-out forwards;
+    border: 2px solid rgba(var(--impact-color), 0.7);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(var(--impact-color), 0.45);
+    content: '';
+    height: 100%;
+    left: 50%;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+  }
+
+  &::after {
+    animation-delay: 0.14s;
+    border-width: 1px;
+    box-shadow: 0 0 26px rgba(var(--impact-color), 0.4);
+  }
 `;
 
 export const InfoLabel = styled.span`
@@ -283,22 +479,65 @@ export const PendingTitle = styled.h2<{$variant?: 'challenger' | 'opponent'}>`
   margin: 0;
 `;
 
-export const Piece = styled.div<{$variant: 'playerA' | 'playerB'}>`
-  background: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
+export const Piece = styled.div<{$isLastMove: boolean; $isWinning: boolean; $variant: 'black' | 'white'}>`
+  background: ${({$variant}) => ($variant === 'black' ? '#141414' : '#f8f5ef')};
+  border: 1px solid ${({$variant}) => ($variant === 'black' ? '#0a0a0a' : '#2b2b2b')};
   border-radius: 50%;
+  box-shadow: ${({$isWinning, $variant}) => {
+    const baseShadow =
+      $variant === 'black'
+        ? '0 6px 10px rgba(0, 0, 0, 0.35)'
+        : '0 6px 10px rgba(0, 0, 0, 0.25), inset 0 -2px 3px rgba(0, 0, 0, 0.18)';
+    const winningShadow = $isWinning
+      ? `, 0 0 0 3px ${colors.palette.orange[400]}, 0 0 14px rgba(255, 152, 0, 0.45)`
+      : '';
+
+    return `${baseShadow}${winningShadow}`;
+  }};
   height: 70%;
+  position: relative;
+  transform-origin: center;
   width: 70%;
+  z-index: 2;
+
+  &::after {
+    border-radius: 50%;
+    content: '';
+    height: 16%;
+    left: 50%;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 16%;
+  }
+
+  ${({$isLastMove, $variant}) =>
+    $isLastMove &&
+    css`
+      &::after {
+        background: ${$variant === 'black' ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.7)'};
+        box-shadow: 0 0 6px ${$variant === 'black' ? 'rgba(255, 255, 255, 0.45)' : 'rgba(0, 0, 0, 0.35)'};
+        opacity: 1;
+      }
+    `}
+
+  ${({$isWinning}) =>
+    $isWinning &&
+    css`
+      animation: ${winPulse} 1.6s ease-in-out infinite;
+    `}
 `;
 
-export const PlayerAvatar = styled(UAvatar)<{$variant: 'playerA' | 'playerB'}>`
+export const PlayerAvatar = styled(UAvatar)<{$variant: 'black' | 'white'}>`
   margin-right: 12px;
   position: relative;
 
   &::after {
-    background: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
-    border: 2px solid ${colors.background};
+    background: ${({$variant}) => ($variant === 'black' ? colors.black : colors.white)};
     border-radius: 50%;
     bottom: -2px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     content: '';
     height: 12px;
     position: absolute;
@@ -336,12 +575,13 @@ export const PlayerRow = styled.div`
   justify-content: space-between;
 `;
 
-export const PlayerSideText = styled.span<{$variant: 'playerA' | 'playerB'}>`
-  color: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
+export const PlayerSideText = styled.span<{$variant: 'black' | 'white'}>`
+  color: ${({$variant}) => ($variant === 'black' ? colors.black : colors.palette.gray[600])};
   font-size: 12px;
 `;
 
-export const Preview = styled.div<{$isInvalid: boolean}>`
+export const Preview = styled.div<{$isInvalid: boolean; $variant: 'black' | 'white'}>`
+  border: 1px solid transparent;
   border-radius: 50%;
   height: 70%;
   left: 50%;
@@ -350,15 +590,35 @@ export const Preview = styled.div<{$isInvalid: boolean}>`
   top: 50%;
   transform: translate(-50%, -50%);
   width: 70%;
+  z-index: 3;
 
-  ${({$isInvalid}) =>
+  ${({$isInvalid, $variant}) =>
     $isInvalid
       ? css`
-          background: ${colors.palette.red[300]};
+          background: radial-gradient(
+            circle,
+            rgba(239, 83, 80, 0.12) 0%,
+            rgba(239, 83, 80, 0.35) 55%,
+            rgba(239, 83, 80, 0.65) 100%
+          );
+          border-color: rgba(239, 83, 80, 0.9);
+          box-shadow: 0 0 10px rgba(239, 83, 80, 0.45);
         `
       : css`
-          background: ${colors.palette.gray[300]};
+          background: ${$variant === 'black' ? 'rgba(20, 20, 20, 0.65)' : 'rgba(248, 245, 239, 0.7)'};
+          border-color: ${$variant === 'black' ? 'rgba(0, 0, 0, 0.75)' : 'rgba(0, 0, 0, 0.2)'};
         `}
+`;
+
+export const PrizePoolPanel = styled.div`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  gap: 16px;
+  padding: 16px;
 `;
 
 export const PurchaseInfo = styled.div`
@@ -407,15 +667,127 @@ export const PurchaseRow = styled.div`
   justify-content: space-between;
 `;
 
+export const RematchNotice = styled.div`
+  animation: ${fadeInUp} 0.3s ease-out 0.2s both;
+  background: ${colors.palette.red[50]};
+  border: 1px solid ${colors.palette.red[200]};
+  border-radius: 10px;
+  color: ${colors.palette.red[600]};
+  font-size: 12px;
+  font-weight: ${fonts.weight.medium};
+  margin-top: 12px;
+  padding: 10px 12px;
+  text-align: center;
+`;
+
+export const RematchStateText = styled.div<{$variant: 'neutral' | 'warning'}>`
+  animation: ${fadeInUp} 0.3s ease-out 0.2s both;
+  background: ${({$variant}) => ($variant === 'warning' ? colors.palette.red[50] : colors.palette.gray[50])};
+  border: 1px solid ${({$variant}) => ($variant === 'warning' ? colors.palette.red[200] : colors.palette.gray[200])};
+  border-radius: 10px;
+  color: ${({$variant}) => ($variant === 'warning' ? colors.palette.red[600] : colors.secondary)};
+  font-size: 14px;
+  font-weight: ${fonts.weight.medium};
+  margin-top: 12px;
+  padding: 10px 12px;
+  text-align: center;
+`;
+
+export const ResultModal = styled(UModal)`
+  max-width: calc(100vw - 32px);
+  width: 420px;
+`;
+
+export const ResultOutcome = styled.span<{$variant: 'draw' | 'loss' | 'win'}>`
+  -webkit-background-clip: text;
+  background: ${({$variant}) => {
+    if ($variant === 'win')
+      return `linear-gradient(135deg, ${colors.palette.green[500]} 0%, ${colors.palette.green[700]} 100%)`;
+    if ($variant === 'loss')
+      return `linear-gradient(135deg, ${colors.palette.red[500]} 0%, ${colors.palette.red[700]} 100%)`;
+    return `linear-gradient(135deg, ${colors.palette.gray[500]} 0%, ${colors.palette.gray[700]} 100%)`;
+  }};
+  background-clip: text;
+  color: transparent;
+  font-size: 32px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: 0.05em;
+  position: relative;
+  text-transform: uppercase;
+  z-index: 1;
+`;
+
+export const ResultSummary = styled.div<{$variant: 'draw' | 'loss' | 'win'}>`
+  align-items: center;
+  animation: ${resultPulse} 2s ease-in-out infinite;
+  background: ${({$variant}) => {
+    if ($variant === 'win')
+      return `linear-gradient(145deg, ${colors.palette.green[50]} 0%, ${colors.palette.green[100]} 50%, ${colors.palette.green[50]} 100%)`;
+    if ($variant === 'loss')
+      return `linear-gradient(145deg, ${colors.palette.red[50]} 0%, ${colors.palette.red[100]} 50%, ${colors.palette.red[50]} 100%)`;
+    return `linear-gradient(145deg, ${colors.palette.gray[50]} 0%, ${colors.palette.gray[100]} 50%, ${colors.palette.gray[50]} 100%)`;
+  }};
+  border: 2px solid
+    ${({$variant}) => {
+      if ($variant === 'win') return colors.palette.green[300];
+      if ($variant === 'loss') return colors.palette.red[300];
+      return colors.palette.gray[300];
+    }};
+  border-radius: 20px;
+  box-shadow: ${({$variant}) => {
+    if ($variant === 'win') return `0 8px 32px rgba(34, 197, 94, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8)`;
+    if ($variant === 'loss') return `0 8px 32px rgba(239, 68, 68, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8)`;
+    return `0 8px 32px rgba(107, 114, 128, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8)`;
+  }};
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  padding: 28px 24px;
+  position: relative;
+  text-align: center;
+
+  &::before {
+    animation: ${resultShine} 3s ease-in-out infinite;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+    content: '';
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 50%;
+    z-index: 0;
+  }
+
+  &::after {
+    background: ${({$variant}) => {
+      if ($variant === 'win')
+        return `radial-gradient(circle at 80% 20%, ${colors.palette.green[200]} 0%, transparent 50%)`;
+      if ($variant === 'loss')
+        return `radial-gradient(circle at 80% 20%, ${colors.palette.red[200]} 0%, transparent 50%)`;
+      return `radial-gradient(circle at 80% 20%, ${colors.palette.gray[200]} 0%, transparent 50%)`;
+    }};
+    content: '';
+    height: 100%;
+    left: 0;
+    opacity: 0.6;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+`;
+
 export const Sidebar = styled.aside`
   display: flex;
   flex-direction: column;
   gap: 16px;
 `;
 
-export const SpecialIcon = styled.svg<{$variant: 'playerA' | 'playerB'}>`
-  color: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
+export const SpecialIcon = styled.svg<{$variant: 'black' | 'white'}>`
+  color: ${({$variant}) => ($variant === 'black' ? colors.black : colors.white)};
   display: block;
+  filter: ${({$variant}) => ($variant === 'white' ? 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5))' : 'none')};
   height: 24px;
   width: 24px;
 `;
@@ -565,9 +937,21 @@ export const ToolCount = styled.span`
   right: 4px;
 `;
 
-export const ToolIcon = styled.svg<{$variant: 'playerA' | 'playerB'}>`
-  color: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
+export const ToolIcon = styled.svg<{$variant: 'black' | 'white'}>`
+  color: ${({$variant}) => ($variant === 'black' ? colors.black : colors.white)};
   display: block;
+  filter: ${({$variant}) => ($variant === 'white' ? 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5))' : 'none')};
   height: 24px;
   width: 24px;
+`;
+
+export const WinningStar = styled(UIcon)`
+  animation: ${starTwinkle} 1.4s ease-in-out infinite;
+  color: ${colors.palette.orange[400]};
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  z-index: 4;
 `;

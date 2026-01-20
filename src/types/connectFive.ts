@@ -22,7 +22,11 @@ export interface ConnectFiveMatch extends CreatedModified {
   id: number;
   max_spend_amount: number;
   player_a: UserReadSerializer;
+  player_a_elo_after: number | null;
+  player_a_elo_before: number | null;
   player_b: UserReadSerializer;
+  player_b_elo_after: number | null;
+  player_b_elo_before: number | null;
   players: ConnectFiveMatchPlayer[];
   prize_pool_total: number;
   status: string;
@@ -41,6 +45,7 @@ export interface ConnectFiveChallenge extends CreatedModified {
   match_id: number | null;
   max_spend_amount: number;
   opponent: UserReadSerializer;
+  rematch_for: number | null;
   stake_amount: number;
   status: string;
   time_limit_seconds: number;
@@ -48,7 +53,24 @@ export interface ConnectFiveChallenge extends CreatedModified {
 
 export interface ConnectFiveChallengePaginatedResponse extends PaginatedResponse<ConnectFiveChallenge> {}
 
+export interface ConnectFiveLeaderboardEntry {
+  draws: number;
+  elo: number;
+  losses: number;
+  matches_played: number;
+  user: UserReadSerializer;
+  wins: number;
+}
+
+export interface ConnectFiveLeaderboardPaginatedResponse extends PaginatedResponse<ConnectFiveLeaderboardEntry> {}
+
 export interface ConnectFiveMatchPaginatedResponse extends PaginatedResponse<ConnectFiveMatch> {}
+
+export interface ConnectFiveRematchStatus {
+  can_rematch: boolean;
+  challenge: ConnectFiveChallenge | null;
+  insufficient_funds: boolean;
+}
 
 export interface ConnectFiveState {
   activeMatches: ConnectFiveMatch[];

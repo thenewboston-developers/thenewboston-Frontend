@@ -7,6 +7,7 @@ const initialState: Self = {
   avatar: null,
   banner: null,
   bio: null,
+  connect_five_elo: null,
   discord_username: null,
   facebook_username: null,
   github_username: null,

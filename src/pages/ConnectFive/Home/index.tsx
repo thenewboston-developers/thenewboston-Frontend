@@ -16,6 +16,7 @@ import Badge, {BadgeStyle} from 'components/Badge';
 import Button, {ButtonType} from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import {FormField, Input, Select} from 'components/FormElements';
+import PrizePoolBreakdown from 'components/PrizePoolBreakdown';
 import UserLabel from 'components/UserLabel';
 import UserSearchInput from 'components/UserSearchInput';
 import {ConnectFiveChallengeStatus, ConnectFiveMatchStatus} from 'enums';
@@ -39,6 +40,8 @@ import {AppDispatch, ConnectFiveChallenge, ConnectFiveMatch, SelectOption, SFC, 
 import {shortDate} from 'utils/dates';
 import {handleFormikAPIError} from 'utils/forms';
 import yup from 'utils/yup';
+
+import ConnectFiveNavigation from '../Navigation';
 
 import * as S from './Styles';
 
@@ -102,6 +105,13 @@ const getOpponent = (match: ConnectFiveMatch, selfId?: number | null): UserReadS
   }
 
   return match.player_b ?? match.player_a;
+};
+
+const getPrizePoolTotals = (match: ConnectFiveMatch) => {
+  const spent = match.players?.reduce((total, player) => total + player.spent_total, 0) ?? 0;
+  const total = match.prize_pool_total;
+
+  return {initial: Math.max(total - spent, 0), spent, total};
 };
 
 const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
@@ -394,6 +404,7 @@ const ConnectFiveHome: SFC = ({className}) => {
     const finishReason = getFinishReasonLabel(match);
     const isActive = match.status === ConnectFiveMatchStatus.ACTIVE;
     const opponent = getOpponent(match, self?.id);
+    const prizePoolTotals = getPrizePoolTotals(match);
     const statusBadge = getStatusBadge(match, self?.id);
 
     return (
@@ -426,10 +437,15 @@ const ConnectFiveHome: SFC = ({className}) => {
               <S.MatchInfoValue>{finishReason}</S.MatchInfoValue>
             </S.MatchInfoRow>
           )}
-          <S.MatchInfoRow>
+          <S.MatchInfoGroup>
             <S.MatchInfoLabel>Prize pool</S.MatchInfoLabel>
-            <S.MatchInfoValue>{match.prize_pool_total.toLocaleString()} TNB</S.MatchInfoValue>
-          </S.MatchInfoRow>
+            <PrizePoolBreakdown
+              initial={prizePoolTotals.initial}
+              spent={prizePoolTotals.spent}
+              ticker="TNB"
+              total={prizePoolTotals.total}
+            />
+          </S.MatchInfoGroup>
           {!isActive && match.winner && (
             <S.MatchInfoRow>
               <S.MatchInfoLabel>Winner</S.MatchInfoLabel>
@@ -462,6 +478,7 @@ const ConnectFiveHome: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Content>
+        <ConnectFiveNavigation />
         <S.Section>
           <S.SectionTitle>Send a challenge</S.SectionTitle>
           <Formik initialValues={initialValues} onSubmit={handleChallengeSubmit} validationSchema={validationSchema}>
