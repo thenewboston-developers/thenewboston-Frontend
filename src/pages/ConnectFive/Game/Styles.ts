@@ -40,20 +40,20 @@ const impact = keyframes`
     transform: translate(-50%, -50%) scale(0.16);
   }
   20% {
-    opacity: 0.95;
+    opacity: 0.99;
   }
   60% {
-    opacity: 0.5;
+    opacity: 0.55;
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1.95);
+    transform: translate(-50%, -50%) scale(2.05);
   }
 `;
 
 const impactGlow = keyframes`
   0% {
-    opacity: 0.6;
+    opacity: 0.65;
   }
   100% {
     opacity: 0;
@@ -212,15 +212,22 @@ export const Header = styled.div`
 `;
 
 export const ImpactRing = styled.span<{$variant: 'black' | 'white'}>`
-  --impact-color: ${({$variant}) => ($variant === 'black' ? '255, 255, 255' : '0, 0, 0')};
+  --impact-color: ${({$variant}) => ($variant === 'black' ? '0, 0, 0' : '255, 255, 255')};
 
   animation: ${impactGlow} 0.65s ease-out forwards;
-  background: radial-gradient(
-    circle,
-    rgba(var(--impact-color), 0.48) 0%,
-    rgba(var(--impact-color), 0.24) 40%,
-    transparent 68%
-  );
+  background:
+    radial-gradient(
+      circle at 48% 52%,
+      rgba(var(--impact-color), 0.52) 0%,
+      rgba(var(--impact-color), 0.26) 42%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 52% 48%,
+      rgba(var(--impact-color), 0.4) 0%,
+      rgba(var(--impact-color), 0.2) 36%,
+      transparent 72%
+    );
   border-radius: 50%;
   height: 92%;
   left: 50%;
@@ -561,6 +568,7 @@ export const PrizePoolPanel = styled.div`
   border-radius: 16px;
   display: flex;
   flex-direction: column;
+  font-size: 13px;
   gap: 16px;
   padding: 16px;
 `;

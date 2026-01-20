@@ -1,4 +1,4 @@
-import {ComponentType, SVGProps, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {ComponentType, SVGProps, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {mdiArrowDownBold, mdiArrowUpBold, mdiMinus, mdiStar} from '@mdi/js';
@@ -638,7 +638,7 @@ const ConnectFiveGame: SFC = ({className}) => {
     return new Set<string>();
   }, [match]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!match) {
       previousBoardStateRef.current = null;
       previousMatchIdRef.current = null;
