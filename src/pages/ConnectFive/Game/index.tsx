@@ -42,7 +42,7 @@ import * as S from './Styles';
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
-type PlayerSide = 'playerA' | 'playerB';
+type PlayerSide = 'black' | 'white';
 
 type RematchAction = 'accept' | 'cancel' | 'decline' | 'request';
 type RematchViewState = 'accepted' | 'cancelled' | 'declined' | 'idle' | 'requestedByMe' | 'requestedByOpponent';
@@ -149,7 +149,7 @@ const getMatchPlayer = (match: ConnectFiveMatch | null, userId?: number | null):
 
 const getPlayerSide = (match: ConnectFiveMatch | null, userId?: number | null): PlayerSide | null => {
   if (!match || !userId) return null;
-  return match.player_a.id === userId ? 'playerA' : 'playerB';
+  return match.player_a.id === userId ? 'black' : 'white';
 };
 
 const getPlayerLabel = (player: {connect_five_elo: number | null; username: string}) => {
@@ -684,8 +684,8 @@ const ConnectFiveGame: SFC = ({className}) => {
                 onMouseLeave={() => setHoverPosition(null)}
                 type="button"
               >
-                {value === 1 && <S.Piece $variant="playerA" />}
-                {value === 2 && <S.Piece $variant="playerB" />}
+                {value === 1 && <S.Piece $variant="black" />}
+                {value === 2 && <S.Piece $variant="white" />}
                 {isPreview && <S.Preview $isInvalid={isInvalid} />}
               </S.Cell>
             );
@@ -834,6 +834,7 @@ const ConnectFiveGame: SFC = ({className}) => {
     if (!playerSide) return null;
 
     const profilePath = `/profile/${player.id}`;
+    const sideLabel = playerSide === 'black' ? 'Black' : 'White';
 
     return (
       <S.PlayerLabel>
@@ -844,6 +845,7 @@ const ConnectFiveGame: SFC = ({className}) => {
           <S.PlayerName $isClickable as={Link} to={profilePath}>
             {getPlayerLabel(player)}
           </S.PlayerName>
+          <S.PlayerSideText $variant={playerSide}>{sideLabel}</S.PlayerSideText>
         </S.PlayerLabelDetails>
       </S.PlayerLabel>
     );
@@ -1067,7 +1069,7 @@ const ConnectFiveGame: SFC = ({className}) => {
               {renderPieceToolbar(opponentMatchPlayer, false, opponentPlayer?.id)}
               {renderClock(opponentClock, match.active_player?.id === opponentPlayer?.id)}
             </S.PlayerRow>
-            <S.BoardWrapper>{renderBoard()}</S.BoardWrapper>
+            {renderBoard()}
             <S.PlayerRow>
               {renderPlayerInfo(selfPlayer)}
               {renderPieceToolbar(selfMatchPlayer, true, self?.id)}

@@ -34,13 +34,42 @@ const shimmer = keyframes`
 `;
 
 export const Board = styled.div`
-  background: ${colors.border};
-  border-radius: 12px;
+  --board-grid-inset: calc(100% / 28);
+
+  aspect-ratio: 1 / 1;
+  background-color: #d7b07a;
+  background-image:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(circle at 18% 28%, rgba(120, 82, 46, 0.2), transparent 55%),
+    radial-gradient(circle at 76% 72%, rgba(120, 82, 46, 0.12), transparent 60%),
+    linear-gradient(90deg, rgba(145, 100, 59, 0.16) 0%, rgba(117, 80, 44, 0.08) 100%);
+  border: 2px solid #b48353;
+  border-radius: 16px;
+  box-shadow:
+    inset 0 0 0 1px rgba(73, 46, 19, 0.35),
+    0 12px 22px rgba(36, 22, 9, 0.2);
   display: grid;
-  gap: 1px;
+  gap: 0;
   grid-template-columns: repeat(14, minmax(0, 1fr));
+  grid-template-rows: repeat(14, minmax(0, 1fr));
+  margin: 0 auto;
+  max-width: calc(100vh - 360px);
   overflow: hidden;
+  position: relative;
   width: 100%;
+
+  &::before {
+    background-image:
+      linear-gradient(to right, rgba(76, 52, 24, 0.55) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(76, 52, 24, 0.55) 1px, transparent 1px);
+    background-position: 0 0;
+    background-size: calc((100% - 1px) / 13) calc((100% - 1px) / 13);
+    content: '';
+    inset: var(--board-grid-inset);
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+  }
 `;
 
 export const BoardSection = styled.section`
@@ -49,31 +78,22 @@ export const BoardSection = styled.section`
   gap: 16px;
 `;
 
-export const BoardWrapper = styled.div`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px;
-`;
-
 export const Cell = styled.button<{$isPreview: boolean; $isPreviewInvalid: boolean}>`
   align-items: center;
   aspect-ratio: 1 / 1;
-  background: ${colors.white};
+  background-color: transparent;
   border: 0;
   cursor: pointer;
   display: flex;
   justify-content: center;
   padding: 0;
   position: relative;
+  z-index: 1;
 
   ${({$isPreviewInvalid}) =>
     $isPreviewInvalid &&
     css`
-      background: ${colors.palette.red[50]};
+      background-color: rgba(239, 83, 80, 0.18);
     `}
 `;
 
@@ -313,22 +333,28 @@ export const PendingTitle = styled.h2<{$variant?: 'challenger' | 'opponent'}>`
   margin: 0;
 `;
 
-export const Piece = styled.div<{$variant: 'playerA' | 'playerB'}>`
-  background: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
+export const Piece = styled.div<{$variant: 'black' | 'white'}>`
+  background: ${({$variant}) => ($variant === 'black' ? '#141414' : '#f8f5ef')};
+  border: 1px solid ${({$variant}) => ($variant === 'black' ? '#0a0a0a' : '#2b2b2b')};
   border-radius: 50%;
+  box-shadow: ${({$variant}) =>
+    $variant === 'black'
+      ? '0 6px 10px rgba(0, 0, 0, 0.35)'
+      : '0 6px 10px rgba(0, 0, 0, 0.25), inset 0 -2px 3px rgba(0, 0, 0, 0.18)'};
   height: 70%;
   width: 70%;
 `;
 
-export const PlayerAvatar = styled(UAvatar)<{$variant: 'playerA' | 'playerB'}>`
+export const PlayerAvatar = styled(UAvatar)<{$variant: 'black' | 'white'}>`
   margin-right: 12px;
   position: relative;
 
   &::after {
-    background: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
-    border: 2px solid ${colors.background};
+    background: ${({$variant}) => ($variant === 'black' ? colors.black : colors.white)};
+    border: 2px solid ${({$variant}) => ($variant === 'black' ? colors.background : colors.palette.gray[700])};
     border-radius: 50%;
     bottom: -2px;
+    box-shadow: ${({$variant}) => ($variant === 'white' ? '0 1px 2px rgba(0, 0, 0, 0.35)' : 'none')};
     content: '';
     height: 12px;
     position: absolute;
@@ -366,8 +392,8 @@ export const PlayerRow = styled.div`
   justify-content: space-between;
 `;
 
-export const PlayerSideText = styled.span<{$variant: 'playerA' | 'playerB'}>`
-  color: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
+export const PlayerSideText = styled.span<{$variant: 'black' | 'white'}>`
+  color: ${({$variant}) => ($variant === 'black' ? colors.black : colors.palette.gray[600])};
   font-size: 12px;
 `;
 
@@ -477,9 +503,10 @@ export const Sidebar = styled.aside`
   gap: 16px;
 `;
 
-export const SpecialIcon = styled.svg<{$variant: 'playerA' | 'playerB'}>`
-  color: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
+export const SpecialIcon = styled.svg<{$variant: 'black' | 'white'}>`
+  color: ${({$variant}) => ($variant === 'black' ? colors.black : colors.white)};
   display: block;
+  filter: ${({$variant}) => ($variant === 'white' ? 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5))' : 'none')};
   height: 24px;
   width: 24px;
 `;
@@ -629,9 +656,10 @@ export const ToolCount = styled.span`
   right: 4px;
 `;
 
-export const ToolIcon = styled.svg<{$variant: 'playerA' | 'playerB'}>`
-  color: ${({$variant}) => ($variant === 'playerA' ? colors.palette.blue[500] : colors.palette.orange[500])};
+export const ToolIcon = styled.svg<{$variant: 'black' | 'white'}>`
+  color: ${({$variant}) => ($variant === 'black' ? colors.black : colors.white)};
   display: block;
+  filter: ${({$variant}) => ($variant === 'white' ? 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5))' : 'none')};
   height: 24px;
   width: 24px;
 `;
