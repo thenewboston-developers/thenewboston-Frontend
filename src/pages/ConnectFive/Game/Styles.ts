@@ -71,6 +71,49 @@ const starTwinkle = keyframes`
   }
 `;
 
+const resultPulse = keyframes`
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+`;
+
+const resultShine = keyframes`
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
+`;
+
+const fadeInUp = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const eloPop = keyframes`
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
 const winPulse = keyframes`
   0%, 100% {
     transform: scale(1);
@@ -166,26 +209,14 @@ export const Container = styled.div`
 `;
 
 export const EloChange = styled.div`
-  background: linear-gradient(135deg, ${colors.white} 0%, ${colors.palette.gray[50]} 100%);
+  animation: ${fadeInUp} 0.4s ease-out 0.15s both;
+  background: ${colors.white};
   border: 1px solid ${colors.palette.gray[200]};
   border-radius: 14px;
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  overflow: hidden;
+  gap: 6px;
   padding: 14px 16px;
-  position: relative;
-
-  &::before {
-    background: linear-gradient(90deg, ${colors.palette.blue[200]} 0%, rgba(255, 255, 255, 0) 100%);
-    content: '';
-    height: 2px;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-  }
 `;
 
 export const EloChangeLabel = styled.span`
@@ -198,15 +229,16 @@ export const EloChangeLabel = styled.span`
 
 export const EloChangeValue = styled.div<{$variant: 'down' | 'equal' | 'up'}>`
   align-items: center;
+  animation: ${eloPop} 0.5s ease-out 0.3s both;
   color: ${({$variant}) => {
     if ($variant === 'up') return colors.palette.green[600];
     if ($variant === 'down') return colors.palette.red[600];
     return colors.palette.gray[600];
   }};
   display: flex;
-  font-size: 18px;
+  font-size: 20px;
   font-variant-numeric: tabular-nums;
-  font-weight: ${fonts.weight.semiBold};
+  font-weight: ${fonts.weight.bold};
   gap: 8px;
 `;
 
@@ -636,23 +668,29 @@ export const PurchaseRow = styled.div`
 `;
 
 export const RematchNotice = styled.div`
+  animation: ${fadeInUp} 0.3s ease-out 0.2s both;
   background: ${colors.palette.red[50]};
   border: 1px solid ${colors.palette.red[200]};
   border-radius: 10px;
   color: ${colors.palette.red[600]};
   font-size: 12px;
-  margin-top: 8px;
-  padding: 8px 10px;
+  font-weight: ${fonts.weight.medium};
+  margin-top: 12px;
+  padding: 10px 12px;
+  text-align: center;
 `;
 
 export const RematchStateText = styled.div<{$variant: 'neutral' | 'warning'}>`
+  animation: ${fadeInUp} 0.3s ease-out 0.2s both;
   background: ${({$variant}) => ($variant === 'warning' ? colors.palette.red[50] : colors.palette.gray[50])};
   border: 1px solid ${({$variant}) => ($variant === 'warning' ? colors.palette.red[200] : colors.palette.gray[200])};
   border-radius: 10px;
   color: ${({$variant}) => ($variant === 'warning' ? colors.palette.red[600] : colors.secondary)};
   font-size: 14px;
-  margin-top: 8px;
-  padding: 8px 10px;
+  font-weight: ${fonts.weight.medium};
+  margin-top: 12px;
+  padding: 10px 12px;
+  text-align: center;
 `;
 
 export const ResultModal = styled(UModal)`
@@ -661,76 +699,82 @@ export const ResultModal = styled(UModal)`
 `;
 
 export const ResultOutcome = styled.span<{$variant: 'draw' | 'loss' | 'win'}>`
-  color: ${({$variant}) => {
-    if ($variant === 'win') return colors.palette.green[600];
-    if ($variant === 'loss') return colors.palette.red[600];
-    return colors.palette.gray[600];
+  -webkit-background-clip: text;
+  background: ${({$variant}) => {
+    if ($variant === 'win')
+      return `linear-gradient(135deg, ${colors.palette.green[500]} 0%, ${colors.palette.green[700]} 100%)`;
+    if ($variant === 'loss')
+      return `linear-gradient(135deg, ${colors.palette.red[500]} 0%, ${colors.palette.red[700]} 100%)`;
+    return `linear-gradient(135deg, ${colors.palette.gray[500]} 0%, ${colors.palette.gray[700]} 100%)`;
   }};
-  font-size: 22px;
-  font-weight: ${fonts.weight.semiBold};
-  letter-spacing: 0.1em;
+  background-clip: text;
+  color: transparent;
+  font-size: 32px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: 0.05em;
   position: relative;
-  text-shadow: 0 6px 16px rgba(15, 23, 42, 0.2);
   text-transform: uppercase;
   z-index: 1;
 `;
 
 export const ResultSummary = styled.div<{$variant: 'draw' | 'loss' | 'win'}>`
   align-items: center;
+  animation: ${resultPulse} 2s ease-in-out infinite;
   background: ${({$variant}) => {
-    if ($variant === 'win') return `linear-gradient(140deg, ${colors.palette.green[50]} 0%, ${colors.white} 70%)`;
-    if ($variant === 'loss') return `linear-gradient(140deg, ${colors.palette.red[50]} 0%, ${colors.white} 70%)`;
-    return `linear-gradient(140deg, ${colors.palette.gray[50]} 0%, ${colors.white} 70%)`;
+    if ($variant === 'win')
+      return `linear-gradient(145deg, ${colors.palette.green[50]} 0%, ${colors.palette.green[100]} 50%, ${colors.palette.green[50]} 100%)`;
+    if ($variant === 'loss')
+      return `linear-gradient(145deg, ${colors.palette.red[50]} 0%, ${colors.palette.red[100]} 50%, ${colors.palette.red[50]} 100%)`;
+    return `linear-gradient(145deg, ${colors.palette.gray[50]} 0%, ${colors.palette.gray[100]} 50%, ${colors.palette.gray[50]} 100%)`;
   }};
-  border: 1px solid
+  border: 2px solid
     ${({$variant}) => {
-      if ($variant === 'win') return colors.palette.green[200];
-      if ($variant === 'loss') return colors.palette.red[200];
-      return colors.palette.gray[200];
+      if ($variant === 'win') return colors.palette.green[300];
+      if ($variant === 'loss') return colors.palette.red[300];
+      return colors.palette.gray[300];
     }};
-  border-radius: 16px;
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+  border-radius: 20px;
+  box-shadow: ${({$variant}) => {
+    if ($variant === 'win') return `0 8px 32px rgba(34, 197, 94, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8)`;
+    if ($variant === 'loss') return `0 8px 32px rgba(239, 68, 68, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8)`;
+    return `0 8px 32px rgba(107, 114, 128, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8)`;
+  }};
   display: flex;
   flex-direction: column;
   gap: 6px;
   margin-bottom: 16px;
   overflow: hidden;
-  padding: 16px;
+  padding: 28px 24px;
   position: relative;
   text-align: center;
 
   &::before {
-    background: ${({$variant}) => {
-      if ($variant === 'win')
-        return `linear-gradient(90deg, ${colors.palette.green[400]} 0%, rgba(255, 255, 255, 0) 100%)`;
-      if ($variant === 'loss')
-        return `linear-gradient(90deg, ${colors.palette.red[400]} 0%, rgba(255, 255, 255, 0) 100%)`;
-      return `linear-gradient(90deg, ${colors.palette.gray[400]} 0%, rgba(255, 255, 255, 0) 100%)`;
-    }};
+    animation: ${resultShine} 3s ease-in-out infinite;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
     content: '';
-    height: 3px;
-    left: 0;
-    opacity: 0.7;
+    height: 100%;
     position: absolute;
     top: 0;
-    width: 100%;
+    width: 50%;
+    z-index: 0;
   }
 
   &::after {
     background: ${({$variant}) => {
       if ($variant === 'win')
-        return `radial-gradient(circle, ${colors.palette.green[100]} 0%, rgba(255, 255, 255, 0) 70%)`;
+        return `radial-gradient(circle at 80% 20%, ${colors.palette.green[200]} 0%, transparent 50%)`;
       if ($variant === 'loss')
-        return `radial-gradient(circle, ${colors.palette.red[100]} 0%, rgba(255, 255, 255, 0) 70%)`;
-      return `radial-gradient(circle, ${colors.palette.gray[100]} 0%, rgba(255, 255, 255, 0) 70%)`;
+        return `radial-gradient(circle at 80% 20%, ${colors.palette.red[200]} 0%, transparent 50%)`;
+      return `radial-gradient(circle at 80% 20%, ${colors.palette.gray[200]} 0%, transparent 50%)`;
     }};
     content: '';
-    height: 160px;
+    height: 100%;
+    left: 0;
     opacity: 0.6;
+    pointer-events: none;
     position: absolute;
-    right: -70px;
-    top: -70px;
-    width: 160px;
+    top: 0;
+    width: 100%;
   }
 `;
 
