@@ -40,20 +40,20 @@ const impact = keyframes`
     transform: translate(-50%, -50%) scale(0.16);
   }
   20% {
-    opacity: 0.9;
+    opacity: 0.95;
   }
   60% {
-    opacity: 0.45;
+    opacity: 0.5;
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1.85);
+    transform: translate(-50%, -50%) scale(1.95);
   }
 `;
 
 const impactGlow = keyframes`
   0% {
-    opacity: 0.55;
+    opacity: 0.6;
   }
   100% {
     opacity: 0;
@@ -217,8 +217,8 @@ export const ImpactRing = styled.span<{$variant: 'black' | 'white'}>`
   animation: ${impactGlow} 0.65s ease-out forwards;
   background: radial-gradient(
     circle,
-    rgba(var(--impact-color), 0.42) 0%,
-    rgba(var(--impact-color), 0.2) 40%,
+    rgba(var(--impact-color), 0.48) 0%,
+    rgba(var(--impact-color), 0.24) 40%,
     transparent 68%
   );
   border-radius: 50%;
@@ -480,13 +480,9 @@ export const PlayerAvatar = styled(UAvatar)<{$variant: 'black' | 'white'}>`
 
   &::after {
     background: ${({$variant}) => ($variant === 'black' ? colors.black : colors.white)};
-    border: 2px solid ${colors.background};
     border-radius: 50%;
     bottom: -2px;
-    box-shadow: ${({$variant}) =>
-      $variant === 'white'
-        ? '0 0 0 1px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.12)'
-        : '0 0 0 1px rgba(255, 255, 255, 0.12), 0 1px 2px rgba(0, 0, 0, 0.2)'};
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     content: '';
     height: 12px;
     position: absolute;
