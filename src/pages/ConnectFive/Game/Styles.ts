@@ -1,6 +1,7 @@
 import styled, {css, keyframes} from 'styled-components';
 
 import UAvatar from 'components/Avatar';
+import UIcon from 'components/Icon';
 import UModal from 'components/Modal';
 import {colors, fonts, pagePadding} from 'styles';
 
@@ -30,6 +31,52 @@ const shimmer = keyframes`
   }
   100% {
     background-position: 200% 0;
+  }
+`;
+
+const impact = keyframes`
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.15);
+  }
+  20% {
+    opacity: 0.85;
+  }
+  60% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.8);
+  }
+`;
+
+const impactGlow = keyframes`
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+`;
+
+const starTwinkle = keyframes`
+  0%, 100% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(0.9) rotate(-8deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1) rotate(8deg);
+  }
+`;
+
+const winPulse = keyframes`
+  0%, 100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.08);
   }
 `;
 
@@ -162,6 +209,50 @@ export const Header = styled.div`
   display: flex;
   gap: 16px;
   justify-content: space-between;
+`;
+
+export const ImpactRing = styled.span<{$variant: 'black' | 'white'}>`
+  --impact-color: ${({$variant}) => ($variant === 'black' ? '255, 255, 255' : '0, 0, 0')};
+
+  animation: ${impactGlow} 0.6s ease-out forwards;
+  background: radial-gradient(
+    circle,
+    rgba(var(--impact-color), 0.35) 0%,
+    rgba(var(--impact-color), 0.18) 38%,
+    transparent 68%
+  );
+  border-radius: 50%;
+  height: 90%;
+  left: 50%;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  z-index: 1;
+
+  &::before,
+  &::after {
+    animation: ${impact} 0.9s ease-out forwards;
+    border: 2px solid rgba(var(--impact-color), 0.7);
+    border-radius: 50%;
+    box-shadow: 0 0 18px rgba(var(--impact-color), 0.4);
+    content: '';
+    height: 100%;
+    left: 50%;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+  }
+
+  &::after {
+    animation-delay: 0.12s;
+    border-width: 1px;
+    box-shadow: 0 0 24px rgba(var(--impact-color), 0.45);
+  }
 `;
 
 export const InfoLabel = styled.span`
@@ -333,16 +424,54 @@ export const PendingTitle = styled.h2<{$variant?: 'challenger' | 'opponent'}>`
   margin: 0;
 `;
 
-export const Piece = styled.div<{$variant: 'black' | 'white'}>`
+export const Piece = styled.div<{$isLastMove: boolean; $isWinning: boolean; $variant: 'black' | 'white'}>`
   background: ${({$variant}) => ($variant === 'black' ? '#141414' : '#f8f5ef')};
   border: 1px solid ${({$variant}) => ($variant === 'black' ? '#0a0a0a' : '#2b2b2b')};
   border-radius: 50%;
-  box-shadow: ${({$variant}) =>
-    $variant === 'black'
-      ? '0 6px 10px rgba(0, 0, 0, 0.35)'
-      : '0 6px 10px rgba(0, 0, 0, 0.25), inset 0 -2px 3px rgba(0, 0, 0, 0.18)'};
+  box-shadow: ${({$isWinning, $variant}) => {
+    const baseShadow =
+      $variant === 'black'
+        ? '0 6px 10px rgba(0, 0, 0, 0.35)'
+        : '0 6px 10px rgba(0, 0, 0, 0.25), inset 0 -2px 3px rgba(0, 0, 0, 0.18)';
+    const winningShadow = $isWinning
+      ? `, 0 0 0 3px ${colors.palette.orange[400]}, 0 0 14px rgba(255, 152, 0, 0.45)`
+      : '';
+
+    return `${baseShadow}${winningShadow}`;
+  }};
   height: 70%;
+  position: relative;
+  transform-origin: center;
   width: 70%;
+  z-index: 2;
+
+  &::after {
+    border-radius: 50%;
+    content: '';
+    height: 16%;
+    left: 50%;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 16%;
+  }
+
+  ${({$isLastMove, $variant}) =>
+    $isLastMove &&
+    css`
+      &::after {
+        background: ${$variant === 'black' ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.7)'};
+        box-shadow: 0 0 6px ${$variant === 'black' ? 'rgba(255, 255, 255, 0.45)' : 'rgba(0, 0, 0, 0.35)'};
+        opacity: 1;
+      }
+    `}
+
+  ${({$isWinning}) =>
+    $isWinning &&
+    css`
+      animation: ${winPulse} 1.6s ease-in-out infinite;
+    `}
 `;
 
 export const PlayerAvatar = styled(UAvatar)<{$variant: 'black' | 'white'}>`
@@ -397,7 +526,8 @@ export const PlayerSideText = styled.span<{$variant: 'black' | 'white'}>`
   font-size: 12px;
 `;
 
-export const Preview = styled.div<{$isInvalid: boolean}>`
+export const Preview = styled.div<{$isInvalid: boolean; $variant: 'black' | 'white'}>`
+  border: 1px solid transparent;
   border-radius: 50%;
   height: 70%;
   left: 50%;
@@ -406,15 +536,28 @@ export const Preview = styled.div<{$isInvalid: boolean}>`
   top: 50%;
   transform: translate(-50%, -50%);
   width: 70%;
+  z-index: 3;
 
-  ${({$isInvalid}) =>
+  ${({$isInvalid, $variant}) =>
     $isInvalid
       ? css`
           background: ${colors.palette.red[300]};
+          border-color: ${colors.palette.red[500]};
         `
       : css`
-          background: ${colors.palette.gray[300]};
+          background: ${$variant === 'black' ? 'rgba(20, 20, 20, 0.65)' : 'rgba(248, 245, 239, 0.7)'};
+          border-color: ${$variant === 'black' ? 'rgba(0, 0, 0, 0.75)' : 'rgba(0, 0, 0, 0.2)'};
         `}
+`;
+
+export const PrizePoolPanel = styled.div`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
 `;
 
 export const PurchaseInfo = styled.div`
@@ -662,4 +805,15 @@ export const ToolIcon = styled.svg<{$variant: 'black' | 'white'}>`
   filter: ${({$variant}) => ($variant === 'white' ? 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5))' : 'none')};
   height: 24px;
   width: 24px;
+`;
+
+export const WinningStar = styled(UIcon)`
+  animation: ${starTwinkle} 1.4s ease-in-out infinite;
+  color: ${colors.palette.orange[400]};
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  z-index: 4;
 `;

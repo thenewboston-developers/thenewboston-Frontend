@@ -1,7 +1,7 @@
 import {ComponentType, SVGProps, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate, useParams} from 'react-router-dom';
-import {mdiArrowDownBold, mdiArrowUpBold, mdiMinus} from '@mdi/js';
+import {mdiArrowDownBold, mdiArrowUpBold, mdiMinus, mdiStar} from '@mdi/js';
 
 import {
   acceptConnectFiveChallenge,
@@ -21,6 +21,7 @@ import EmptyText from 'components/EmptyText';
 import Icon from 'components/Icon';
 import Loader from 'components/Loader';
 import {ModalBody, ModalFooter} from 'components/Modal';
+import PrizePoolBreakdown from 'components/PrizePoolBreakdown';
 import {
   ConnectFiveChallengeStatus,
   ConnectFiveMatchStatus,
@@ -257,10 +258,12 @@ const ConnectFiveGame: SFC = ({className}) => {
   const [activeMoveType, setActiveMoveType] = useState<ConnectFiveMoveType>(ConnectFiveMoveType.SINGLE);
   const [hoverPosition, setHoverPosition] = useState<{x: number; y: number} | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [rematchAction, setRematchAction] = useState<RematchAction | null>(null);
   const [isSubmittingMove, setIsSubmittingMove] = useState(false);
+  const [lastMoveKeys, setLastMoveKeys] = useState<Set<string>>(new Set());
+  const [lastMoveSequence, setLastMoveSequence] = useState(0);
   const [now, setNow] = useState(Date.now());
   const [purchasingSpecials, setPurchasingSpecials] = useState<Set<ConnectFiveSpecialType>>(new Set());
+  const [rematchAction, setRematchAction] = useState<RematchAction | null>(null);
   const [rematchStatus, setRematchStatus] = useState<ConnectFiveRematchStatus | null>(null);
   const [resultModalIsOpen, setResultModalIsOpen] = useState(false);
   const isRematchSubmitting = rematchAction !== null;
@@ -480,6 +483,8 @@ const ConnectFiveGame: SFC = ({className}) => {
 
   const hasHandledCancellation = useRef(false);
   const hasOpenedResultModal = useRef(false);
+  const previousBoardStateRef = useRef<number[][] | null>(null);
+  const previousMatchIdRef = useRef<number | null>(null);
   const isMatchActive = matchStatus === ConnectFiveMatchStatus.ACTIVE;
   const rematchViewState = useMemo<RematchViewState>(() => {
     if (!rematchChallenge) return 'idle';
@@ -592,6 +597,99 @@ const ConnectFiveGame: SFC = ({className}) => {
     return formatRemainingTime(remaining);
   }, [match, now, selfPlayer]);
 
+  const previewVariant: PlayerSide = playerValue === 1 ? 'black' : 'white';
+  const winningKeys = useMemo(() => {
+    if (!match || match.status !== ConnectFiveMatchStatus.FINISHED_CONNECT5 || !match.winner) {
+      return new Set<string>();
+    }
+
+    const winnerValue = match.winner === match.player_a.id ? 1 : 2;
+    const directions = [
+      {x: 1, y: 0},
+      {x: 0, y: 1},
+      {x: 1, y: 1},
+      {x: 1, y: -1},
+    ];
+
+    for (let y = 0; y < match.board_state.length; y += 1) {
+      for (let x = 0; x < match.board_state[y].length; x += 1) {
+        if (match.board_state[y][x] === winnerValue) {
+          for (const direction of directions) {
+            const lineKeys: string[] = [];
+
+            for (let step = 0; step < 5; step += 1) {
+              const nextX = x + direction.x * step;
+              const nextY = y + direction.y * step;
+
+              if (!isWithinBoard(nextX, nextY)) break;
+              if (match.board_state[nextY][nextX] !== winnerValue) break;
+
+              lineKeys.push(getCellKey(nextX, nextY));
+            }
+
+            if (lineKeys.length === 5) {
+              return new Set(lineKeys);
+            }
+          }
+        }
+      }
+    }
+
+    return new Set<string>();
+  }, [match]);
+
+  useEffect(() => {
+    if (!match) {
+      previousBoardStateRef.current = null;
+      previousMatchIdRef.current = null;
+      setLastMoveKeys(new Set());
+      setLastMoveSequence(0);
+      return;
+    }
+
+    if (previousMatchIdRef.current !== match.id) {
+      previousMatchIdRef.current = match.id;
+      previousBoardStateRef.current = match.board_state;
+      setLastMoveKeys(new Set());
+      setLastMoveSequence(0);
+      return;
+    }
+
+    const previousBoardState = previousBoardStateRef.current;
+
+    if (!previousBoardState) {
+      previousBoardStateRef.current = match.board_state;
+      return;
+    }
+
+    let hasChanges = false;
+    const nextMoveKeys: string[] = [];
+
+    match.board_state.forEach((row, y) => {
+      row.forEach((value, x) => {
+        const previousValue = previousBoardState[y]?.[x];
+
+        if (value === previousValue) return;
+
+        hasChanges = true;
+
+        if (value === 1 || value === 2) {
+          nextMoveKeys.push(getCellKey(x, y));
+        }
+      });
+    });
+
+    if (!hasChanges) return;
+
+    setLastMoveKeys(new Set(nextMoveKeys));
+
+    if (nextMoveKeys.length) {
+      setLastMoveSequence((prev) => prev + 1);
+    }
+
+    previousBoardStateRef.current = match.board_state;
+  }, [match]);
+
   useEffect(() => {
     if (challenge?.status !== ConnectFiveChallengeStatus.CANCELLED) return;
     if (hasHandledCancellation.current) return;
@@ -669,6 +767,9 @@ const ConnectFiveGame: SFC = ({className}) => {
             const isCross4Anchor = activeMoveType === ConnectFiveMoveType.CROSS4 && isAnchor;
             const isPreview = previewKeys.has(cellKey);
             const isInvalid = isPreview && !previewState.isValid;
+            const isLastMove = lastMoveKeys.has(cellKey);
+            const isWinningCell = winningKeys.has(cellKey);
+            const pieceVariant = value === 1 ? 'black' : 'white';
             const shouldEnableClick = previewState.isValid && (isPreview || isCross4Anchor);
 
             return (
@@ -684,9 +785,13 @@ const ConnectFiveGame: SFC = ({className}) => {
                 onMouseLeave={() => setHoverPosition(null)}
                 type="button"
               >
-                {value === 1 && <S.Piece $variant="black" />}
-                {value === 2 && <S.Piece $variant="white" />}
-                {isPreview && <S.Preview $isInvalid={isInvalid} />}
+                {isLastMove && value !== 0 && (
+                  <S.ImpactRing $variant={pieceVariant} key={`impact-${lastMoveSequence}-${cellKey}`} />
+                )}
+                {value === 1 && <S.Piece $isLastMove={isLastMove} $isWinning={isWinningCell} $variant="black" />}
+                {value === 2 && <S.Piece $isLastMove={isLastMove} $isWinning={isWinningCell} $variant="white" />}
+                {isWinningCell && <S.WinningStar aria-hidden icon={mdiStar} size={16} totalSize="unset" />}
+                {isPreview && <S.Preview $isInvalid={isInvalid} $variant={previewVariant} />}
               </S.Cell>
             );
           }),
@@ -718,10 +823,6 @@ const ConnectFiveGame: SFC = ({className}) => {
             <S.InfoValue>{finishReason}</S.InfoValue>
           </S.InfoRow>
         )}
-        <S.InfoRow>
-          <S.InfoLabel>Prize pool</S.InfoLabel>
-          <S.InfoValue>{match.prize_pool_total.toLocaleString()} TNB</S.InfoValue>
-        </S.InfoRow>
         {!isActive && match.winner && (
           <S.InfoRow>
             <S.InfoLabel>Winner</S.InfoLabel>
@@ -731,6 +832,23 @@ const ConnectFiveGame: SFC = ({className}) => {
           </S.InfoRow>
         )}
       </S.MatchInfo>
+    );
+  };
+
+  const renderPrizePoolPanel = () => {
+    if (!match) return null;
+
+    const prizePoolSpent = match.players?.reduce((total, player) => total + player.spent_total, 0) ?? 0;
+    const prizePoolTotal = match.prize_pool_total;
+    const prizePoolInitial = Math.max(prizePoolTotal - prizePoolSpent, 0);
+
+    return (
+      <S.PrizePoolPanel>
+        <S.PanelHeader>
+          <S.PanelTitle>Prize pool</S.PanelTitle>
+        </S.PanelHeader>
+        <PrizePoolBreakdown initial={prizePoolInitial} spent={prizePoolSpent} ticker="TNB" total={prizePoolTotal} />
+      </S.PrizePoolPanel>
     );
   };
 
@@ -1078,6 +1196,7 @@ const ConnectFiveGame: SFC = ({className}) => {
           </S.BoardSection>
           <S.Sidebar>
             {renderMatchInfo()}
+            {renderPrizePoolPanel()}
             {renderSpendPanel()}
             {renderPurchasePanel()}
           </S.Sidebar>
