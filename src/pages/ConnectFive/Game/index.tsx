@@ -102,12 +102,43 @@ const MOVE_TO_SPECIAL_TYPE: Record<ConnectFiveMoveType, ConnectFiveSpecialType |
 };
 
 const BOMB_SHARD_CONFIG = [
-  {delay: 0.02, offsetX: -34, offsetY: -32, size: 10},
-  {delay: 0.06, offsetX: 38, offsetY: -18, size: 8},
-  {delay: 0.12, offsetX: -42, offsetY: 14, size: 9},
-  {delay: 0.08, offsetX: 22, offsetY: 42, size: 7},
-  {delay: 0.14, offsetX: -12, offsetY: 46, size: 6},
-  {delay: 0.04, offsetX: 44, offsetY: 18, size: 9},
+  {delay: 0.01, offsetX: -55, offsetY: -50, size: 8},
+  {delay: 0.03, offsetX: 60, offsetY: -35, size: 7},
+  {delay: 0.05, offsetX: -65, offsetY: 20, size: 9},
+  {delay: 0.02, offsetX: 50, offsetY: 55, size: 6},
+  {delay: 0.04, offsetX: -25, offsetY: 65, size: 7},
+  {delay: 0.06, offsetX: 70, offsetY: 10, size: 8},
+  {delay: 0.03, offsetX: -10, offsetY: -60, size: 6},
+  {delay: 0.05, offsetX: 35, offsetY: -55, size: 5},
+];
+
+const BOMB_FRAGMENT_CONFIG = [
+  // Large pieces - main shards
+  {delay: 0.0, offsetX: -70, offsetY: -45, rotation: -35, size: 14},
+  {delay: 0.01, offsetX: 65, offsetY: -55, rotation: 40, size: 13},
+  {delay: 0.02, offsetX: -60, offsetY: 50, rotation: -50, size: 12},
+  {delay: 0.01, offsetX: 70, offsetY: 40, rotation: 55, size: 14},
+  {delay: 0.02, offsetX: -15, offsetY: -75, rotation: 15, size: 11},
+  {delay: 0.03, offsetX: 20, offsetY: 70, rotation: -25, size: 12},
+  // Medium pieces - secondary shards
+  {delay: 0.03, offsetX: -80, offsetY: -10, rotation: -70, size: 10},
+  {delay: 0.04, offsetX: 85, offsetY: -15, rotation: 65, size: 9},
+  {delay: 0.04, offsetX: -45, offsetY: -65, rotation: -20, size: 9},
+  {delay: 0.05, offsetX: 50, offsetY: 60, rotation: 30, size: 10},
+  {delay: 0.05, offsetX: -55, offsetY: 65, rotation: -45, size: 8},
+  {delay: 0.06, offsetX: 40, offsetY: -70, rotation: 50, size: 9},
+  // Small pieces - debris
+  {delay: 0.04, offsetX: -90, offsetY: 25, rotation: -80, size: 7},
+  {delay: 0.05, offsetX: 80, offsetY: 50, rotation: 75, size: 6},
+  {delay: 0.06, offsetX: -35, offsetY: 80, rotation: -35, size: 7},
+  {delay: 0.07, offsetX: 25, offsetY: -80, rotation: 45, size: 6},
+  {delay: 0.06, offsetX: -75, offsetY: -40, rotation: -60, size: 6},
+  {delay: 0.07, offsetX: 90, offsetY: -30, rotation: 85, size: 5},
+  // Tiny pieces - particles
+  {delay: 0.05, offsetX: -100, offsetY: 0, rotation: -90, size: 5},
+  {delay: 0.06, offsetX: 95, offsetY: 20, rotation: 70, size: 4},
+  {delay: 0.07, offsetX: 0, offsetY: -90, rotation: 0, size: 5},
+  {delay: 0.08, offsetX: 5, offsetY: 95, rotation: 10, size: 4},
 ];
 
 const getCellKey = (x: number, y: number): string => `${x}-${y}`;
@@ -809,6 +840,18 @@ const ConnectFiveGame: SFC = ({className}) => {
                     <S.BombFlash />
                     <S.BombRing />
                     <S.BombSmoke />
+                    {bombPieceVariant &&
+                      BOMB_FRAGMENT_CONFIG.map((fragment, index) => (
+                        <S.BombFragment
+                          $delay={fragment.delay}
+                          $offsetX={fragment.offsetX}
+                          $offsetY={fragment.offsetY}
+                          $rotation={fragment.rotation}
+                          $size={fragment.size}
+                          $variant={bombPieceVariant}
+                          key={`bomb-fragment-${bombBlastSequence}-${cellKey}-${index}`}
+                        />
+                      ))}
                     {BOMB_SHARD_CONFIG.map((shard, index) => (
                       <S.BombShard
                         $delay={shard.delay}

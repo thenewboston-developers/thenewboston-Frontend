@@ -65,41 +65,64 @@ const bombFlash = keyframes`
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.2);
   }
-  35% {
+  15% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  30% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1.7);
+    transform: translate(-50%, -50%) scale(2);
   }
 `;
 
 const bombRing = keyframes`
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.2);
+    transform: translate(-50%, -50%) scale(0.3);
   }
-  40% {
-    opacity: 0.9;
+  20% {
+    opacity: 1;
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(2.4);
+    transform: translate(-50%, -50%) scale(2.8);
   }
 `;
 
 const bombShard = keyframes`
   0% {
+    filter: brightness(2);
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
   }
-  30% {
+  15% {
+    filter: brightness(1.6);
+    opacity: 1;
+  }
+  100% {
+    filter: brightness(0.9);
+    opacity: 0;
+    transform: translate(calc(-50% + var(--blast-x)), calc(-50% + var(--blast-y))) scale(0.9) rotate(200deg);
+  }
+`;
+
+const bombFragment = keyframes`
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6) rotate(var(--fragment-rotation));
+  }
+  18% {
     opacity: 1;
   }
   100% {
     opacity: 0;
-    transform: translate(calc(-50% + var(--blast-x)), calc(-50% + var(--blast-y))) scale(0.9) rotate(160deg);
+    transform: translate(calc(-50% + var(--fragment-x)), calc(-50% + var(--fragment-y)))
+      scale(0.95)
+      rotate(calc(var(--fragment-rotation) + 160deg));
   }
 `;
 
@@ -119,16 +142,24 @@ const bombSmoke = keyframes`
 
 const bombPiece = keyframes`
   0% {
+    filter: brightness(1);
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
   }
-  45% {
+  25% {
+    filter: brightness(1.2);
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.12);
   }
+  60% {
+    filter: blur(0.8px);
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(1.25);
+  }
   100% {
+    filter: blur(1.8px);
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1.6) rotate(24deg);
+    transform: translate(-50%, -50%) scale(1.4);
   }
 `;
 
@@ -232,6 +263,20 @@ export const Board = styled.div`
     position: absolute;
     z-index: 0;
   }
+
+  &::after {
+    background-color: rgba(76, 52, 24, 0.55);
+    border-radius: 50%;
+    content: '';
+    height: 7px;
+    left: 50%;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 7px;
+    z-index: 1;
+  }
 `;
 
 export const BoardSection = styled.section`
@@ -251,7 +296,7 @@ export const BombBlast = styled.span`
 `;
 
 export const BombBlastPiece = styled.span<{$variant: 'black' | 'white'}>`
-  animation: ${bombPiece} 0.65s ease-out forwards;
+  animation: ${bombPiece} 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   background: ${({$variant}) => ($variant === 'black' ? '#141414' : '#f8f5ef')};
   border: 1px solid ${({$variant}) => ($variant === 'black' ? '#0a0a0a' : '#2b2b2b')};
   border-radius: 50%;
@@ -269,51 +314,89 @@ export const BombBlastPiece = styled.span<{$variant: 'black' | 'white'}>`
 `;
 
 export const BombFlash = styled.span`
-  animation: ${bombFlash} 0.6s ease-out forwards;
+  animation: ${bombFlash} 0.45s ease-out forwards;
   background: radial-gradient(
     circle,
-    rgba(255, 244, 214, 0.95) 0%,
-    rgba(255, 176, 64, 0.85) 40%,
-    rgba(255, 102, 0, 0.45) 70%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 240, 200, 0.98) 20%,
+    rgba(255, 180, 60, 0.9) 45%,
+    rgba(255, 100, 0, 0.6) 70%,
     transparent 100%
   );
   border-radius: 50%;
-  height: 88%;
+  height: 100%;
   left: 50%;
   opacity: 0;
   position: absolute;
   top: 50%;
-  width: 88%;
+  width: 100%;
 `;
 
 export const BombRing = styled.span`
-  animation: ${bombRing} 0.75s ease-out forwards;
-  border: 2px solid rgba(255, 173, 60, 0.7);
+  animation: ${bombRing} 0.5s ease-out forwards;
+  border: 3px solid rgba(255, 180, 60, 0.85);
   border-radius: 50%;
-  box-shadow: 0 0 12px rgba(255, 138, 0, 0.6);
-  height: 90%;
+  box-shadow:
+    0 0 16px rgba(255, 138, 0, 0.8),
+    0 0 30px rgba(255, 80, 0, 0.4);
+  height: 95%;
   left: 50%;
   opacity: 0;
   position: absolute;
   top: 50%;
-  width: 90%;
+  width: 95%;
 `;
 
-export const BombShard = styled.span<{$delay: number; $offsetX: number; $offsetY: number; $size: number}>`
-  --blast-x: ${({$offsetX}) => `${$offsetX}%`};
-  --blast-y: ${({$offsetY}) => `${$offsetY}%`};
+export const BombFragment = styled.span<{
+  $delay: number;
+  $offsetX: number;
+  $offsetY: number;
+  $rotation: number;
+  $size: number;
+  $variant: 'black' | 'white';
+}>`
+  --fragment-x: ${({$offsetX}) => `${$offsetX}px`};
+  --fragment-y: ${({$offsetY}) => `${$offsetY}px`};
+  --fragment-rotation: ${({$rotation}) => `${$rotation}deg`};
 
-  animation: ${bombShard} 0.7s ease-out forwards;
+  animation: ${bombFragment} 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   animation-delay: ${({$delay}) => `${$delay}s`};
-  background: linear-gradient(145deg, #ffd28a 0%, #ff8a00 45%, #ff4d00 100%);
-  border-radius: 999px;
-  box-shadow: 0 0 6px rgba(255, 138, 0, 0.6);
+  background: ${({$variant}) =>
+    $variant === 'black'
+      ? 'linear-gradient(135deg, #2a2a2a 0%, #141414 50%, #0a0a0a 100%)'
+      : 'linear-gradient(135deg, #ffffff 0%, #f8f5ef 50%, #e8e4dc 100%)'};
+  border: 1px solid ${({$variant}) => ($variant === 'black' ? '#000000' : '#c0b8a8')};
+  box-shadow: ${({$variant}) =>
+    $variant === 'black'
+      ? '0 3px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+      : '0 3px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.8)'};
+  clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
   height: ${({$size}) => `${$size}%`};
   left: 50%;
   opacity: 0;
   position: absolute;
   top: 50%;
-  width: ${({$size}) => `${$size * 0.35}%`};
+  width: ${({$size}) => `${$size * 0.7}%`};
+  z-index: 5;
+`;
+
+export const BombShard = styled.span<{$delay: number; $offsetX: number; $offsetY: number; $size: number}>`
+  --blast-x: ${({$offsetX}) => `${$offsetX}px`};
+  --blast-y: ${({$offsetY}) => `${$offsetY}px`};
+
+  animation: ${bombShard} 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation-delay: ${({$delay}) => `${$delay}s`};
+  background: linear-gradient(145deg, #fff4d6 0%, #ffb040 30%, #ff6b00 70%, #ff3d00 100%);
+  border-radius: 50%;
+  box-shadow:
+    0 0 10px rgba(255, 138, 0, 0.9),
+    0 0 20px rgba(255, 80, 0, 0.5);
+  height: ${({$size}) => `${$size}%`};
+  left: 50%;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  width: ${({$size}) => `${$size}%`};
 `;
 
 export const BombSmoke = styled.span`
