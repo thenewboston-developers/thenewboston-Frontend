@@ -304,12 +304,12 @@ export const BombBlastPiece = styled.span<{$variant: 'black' | 'white'}>`
     $variant === 'black'
       ? '0 8px 16px rgba(0, 0, 0, 0.45)'
       : '0 8px 14px rgba(0, 0, 0, 0.35), inset 0 -2px 3px rgba(0, 0, 0, 0.18)'};
-  height: 70%;
+  height: 75%;
   left: 50%;
   opacity: 1;
   position: absolute;
   top: 50%;
-  width: 70%;
+  width: 75%;
   z-index: 3;
 `;
 
@@ -755,10 +755,10 @@ export const Piece = styled.div<{$isLastMove: boolean; $isWinning: boolean; $var
 
     return `${baseShadow}${winningShadow}`;
   }};
-  height: 70%;
+  height: 75%;
   position: relative;
   transform-origin: center;
-  width: 70%;
+  width: 75%;
   z-index: 2;
 
   &::after {
@@ -844,13 +844,13 @@ export const PlayerSideText = styled.span<{$variant: 'black' | 'white'}>`
 export const Preview = styled.div<{$isInvalid: boolean; $variant: 'black' | 'white'}>`
   border: 1px solid transparent;
   border-radius: 50%;
-  height: 70%;
+  height: 75%;
   left: 50%;
   opacity: 0.6;
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 70%;
+  width: 75%;
   z-index: 3;
 
   ${({$isInvalid, $variant}) =>
