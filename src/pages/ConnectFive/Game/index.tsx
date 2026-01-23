@@ -357,6 +357,7 @@ const ConnectFiveGame: SFC = ({className}) => {
   const [rematchAction, setRematchAction] = useState<RematchAction | null>(null);
   const [rematchStatus, setRematchStatus] = useState<ConnectFiveRematchStatus | null>(null);
   const [resultModalIsOpen, setResultModalIsOpen] = useState(false);
+  const [resultTnbDelta, setResultTnbDelta] = useState(0);
   const isRematchSubmitting = rematchAction !== null;
 
   const {challengeId} = useParams();
@@ -383,6 +384,15 @@ const ConnectFiveGame: SFC = ({className}) => {
 
     return getRandomResultLabel(LOSS_RESULT_LABELS);
   }, [matchId, matchStatus, matchWinnerId, resultModalIsOpen, selfId]);
+  const tnbDeltaTarget = useMemo(() => {
+    if (!challenge || !match || selfId == null) return null;
+    if (match.status === ConnectFiveMatchStatus.DRAW) return null;
+
+    const isWinner = match.winner === selfId;
+    const amount = isWinner ? match.prize_pool_total : challenge.stake_amount;
+
+    return isWinner ? amount : -amount;
+  }, [challenge, match, selfId]);
   const rematchChallenge = useMemo(() => {
     if (!match) return rematchStatus?.challenge ?? null;
 
@@ -868,6 +878,48 @@ const ConnectFiveGame: SFC = ({className}) => {
   }, [matchId, matchStatus]);
 
   useEffect(() => {
+    if (!resultModalIsOpen) {
+      setResultTnbDelta(0);
+      return;
+    }
+
+    if (tnbDeltaTarget == null) {
+      setResultTnbDelta(0);
+      return;
+    }
+
+    setResultTnbDelta(0);
+
+    if (tnbDeltaTarget === 0) return;
+
+    const step = tnbDeltaTarget > 0 ? 1 : -1;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+    const startTimeoutId = setTimeout(() => {
+      intervalId = setInterval(() => {
+        setResultTnbDelta((current) => {
+          const nextValue = current + step;
+
+          if ((step > 0 && nextValue >= tnbDeltaTarget) || (step < 0 && nextValue <= tnbDeltaTarget)) {
+            if (intervalId !== null) {
+              clearInterval(intervalId);
+            }
+            return tnbDeltaTarget;
+          }
+
+          return nextValue;
+        });
+      }, 60);
+    }, 200);
+
+    return () => {
+      clearTimeout(startTimeoutId);
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [resultModalIsOpen, tnbDeltaTarget]);
+
+  useEffect(() => {
     if (!matchStatus || matchStatus === ConnectFiveMatchStatus.ACTIVE) return;
     if (matchStatus === ConnectFiveMatchStatus.CANCELLED) return;
 
@@ -1234,9 +1286,7 @@ const ConnectFiveGame: SFC = ({className}) => {
     const isDraw = match.status === ConnectFiveMatchStatus.DRAW;
     const isWinner = match.winner === self.id;
     const tnbDeltaLabel =
-      !isDraw && challenge
-        ? `${isWinner ? '+' : '-'}${(isWinner ? match.prize_pool_total : challenge.stake_amount).toLocaleString()} TNB`
-        : null;
+      tnbDeltaTarget !== null ? `${resultTnbDelta > 0 ? '+' : ''}${resultTnbDelta.toLocaleString()} TNB` : null;
     const tnbVariant: 'loss' | 'win' = isWinner ? 'win' : 'loss';
     let resultVariant: 'draw' | 'loss' | 'win' = 'loss';
     let resultLabel = resultOutcomeLabel ?? 'You lost';
