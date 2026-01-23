@@ -98,9 +98,6 @@ const ConnectFiveLeaderboard: SFC = ({className}) => {
     <S.Container className={className}>
       <S.Content>
         <ConnectFiveNavigation />
-        <S.Header>
-          <S.LeaderboardTitle>Connect Five Leaderboard</S.LeaderboardTitle>
-        </S.Header>
         {renderLeaderboardTable()}
         <S.Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
       </S.Content>
