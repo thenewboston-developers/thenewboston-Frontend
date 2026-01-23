@@ -35,7 +35,6 @@ import {AppDispatch, ConnectFiveMatch, ConnectFiveMatchPlayer, ConnectFiveRematc
 import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import {ReactComponent as BombIcon} from './assets/bomb.svg';
-import {ReactComponent as Cross4Icon} from './assets/cross4.svg';
 import {ReactComponent as Horizontal2Icon} from './assets/horizontal2.svg';
 import {ReactComponent as SingleIcon} from './assets/single.svg';
 import {ReactComponent as Vertical2Icon} from './assets/vertical2.svg';
@@ -48,18 +47,16 @@ type PlayerSide = 'black' | 'white';
 type RematchAction = 'accept' | 'cancel' | 'decline' | 'request';
 type RematchViewState = 'accepted' | 'cancelled' | 'declined' | 'idle' | 'requestedByMe' | 'requestedByOpponent';
 
-const BOARD_SIZE = 14;
+const BOARD_SIZE = 15;
 
 const SPECIAL_PRICES: Record<ConnectFiveSpecialType, number> = {
   [ConnectFiveSpecialType.BOMB]: 3,
-  [ConnectFiveSpecialType.CROSS4]: 8,
   [ConnectFiveSpecialType.H2]: 4,
   [ConnectFiveSpecialType.V2]: 4,
 };
 
 const TOOL_LABELS: Record<ConnectFiveMoveType, string> = {
   [ConnectFiveMoveType.BOMB]: 'Bomb',
-  [ConnectFiveMoveType.CROSS4]: 'Cross 4',
   [ConnectFiveMoveType.H2]: 'Horizontal 2',
   [ConnectFiveMoveType.SINGLE]: 'Single',
   [ConnectFiveMoveType.V2]: 'Vertical 2',
@@ -67,7 +64,6 @@ const TOOL_LABELS: Record<ConnectFiveMoveType, string> = {
 
 const TOOL_ICONS: Record<ConnectFiveMoveType, IconComponent> = {
   [ConnectFiveMoveType.BOMB]: BombIcon,
-  [ConnectFiveMoveType.CROSS4]: Cross4Icon,
   [ConnectFiveMoveType.H2]: Horizontal2Icon,
   [ConnectFiveMoveType.SINGLE]: SingleIcon,
   [ConnectFiveMoveType.V2]: Vertical2Icon,
@@ -77,38 +73,73 @@ const ORDERED_MOVE_TYPES: ConnectFiveMoveType[] = [
   ConnectFiveMoveType.SINGLE,
   ConnectFiveMoveType.H2,
   ConnectFiveMoveType.V2,
-  ConnectFiveMoveType.CROSS4,
   ConnectFiveMoveType.BOMB,
 ];
 
 const ORDERED_SPECIAL_TYPES: ConnectFiveSpecialType[] = [
   ConnectFiveSpecialType.H2,
   ConnectFiveSpecialType.V2,
-  ConnectFiveSpecialType.CROSS4,
   ConnectFiveSpecialType.BOMB,
 ];
 
 const SPECIAL_LABELS: Record<ConnectFiveSpecialType, string> = {
   [ConnectFiveSpecialType.BOMB]: 'Bomb',
-  [ConnectFiveSpecialType.CROSS4]: 'Cross 4',
   [ConnectFiveSpecialType.H2]: 'Horizontal 2',
   [ConnectFiveSpecialType.V2]: 'Vertical 2',
 };
 
 const SPECIAL_ICONS: Record<ConnectFiveSpecialType, IconComponent> = {
   [ConnectFiveSpecialType.BOMB]: BombIcon,
-  [ConnectFiveSpecialType.CROSS4]: Cross4Icon,
   [ConnectFiveSpecialType.H2]: Horizontal2Icon,
   [ConnectFiveSpecialType.V2]: Vertical2Icon,
 };
 
 const MOVE_TO_SPECIAL_TYPE: Record<ConnectFiveMoveType, ConnectFiveSpecialType | null> = {
   [ConnectFiveMoveType.BOMB]: ConnectFiveSpecialType.BOMB,
-  [ConnectFiveMoveType.CROSS4]: ConnectFiveSpecialType.CROSS4,
   [ConnectFiveMoveType.H2]: ConnectFiveSpecialType.H2,
   [ConnectFiveMoveType.SINGLE]: null,
   [ConnectFiveMoveType.V2]: ConnectFiveSpecialType.V2,
 };
+
+const BOMB_SHARD_CONFIG = [
+  {delay: 0.01, offsetX: -55, offsetY: -50, size: 8},
+  {delay: 0.03, offsetX: 60, offsetY: -35, size: 7},
+  {delay: 0.05, offsetX: -65, offsetY: 20, size: 9},
+  {delay: 0.02, offsetX: 50, offsetY: 55, size: 6},
+  {delay: 0.04, offsetX: -25, offsetY: 65, size: 7},
+  {delay: 0.06, offsetX: 70, offsetY: 10, size: 8},
+  {delay: 0.03, offsetX: -10, offsetY: -60, size: 6},
+  {delay: 0.05, offsetX: 35, offsetY: -55, size: 5},
+];
+
+const BOMB_FRAGMENT_CONFIG = [
+  // Large pieces - main shards
+  {delay: 0.0, offsetX: -70, offsetY: -45, rotation: -35, size: 14},
+  {delay: 0.01, offsetX: 65, offsetY: -55, rotation: 40, size: 13},
+  {delay: 0.02, offsetX: -60, offsetY: 50, rotation: -50, size: 12},
+  {delay: 0.01, offsetX: 70, offsetY: 40, rotation: 55, size: 14},
+  {delay: 0.02, offsetX: -15, offsetY: -75, rotation: 15, size: 11},
+  {delay: 0.03, offsetX: 20, offsetY: 70, rotation: -25, size: 12},
+  // Medium pieces - secondary shards
+  {delay: 0.03, offsetX: -80, offsetY: -10, rotation: -70, size: 10},
+  {delay: 0.04, offsetX: 85, offsetY: -15, rotation: 65, size: 9},
+  {delay: 0.04, offsetX: -45, offsetY: -65, rotation: -20, size: 9},
+  {delay: 0.05, offsetX: 50, offsetY: 60, rotation: 30, size: 10},
+  {delay: 0.05, offsetX: -55, offsetY: 65, rotation: -45, size: 8},
+  {delay: 0.06, offsetX: 40, offsetY: -70, rotation: 50, size: 9},
+  // Small pieces - debris
+  {delay: 0.04, offsetX: -90, offsetY: 25, rotation: -80, size: 7},
+  {delay: 0.05, offsetX: 80, offsetY: 50, rotation: 75, size: 6},
+  {delay: 0.06, offsetX: -35, offsetY: 80, rotation: -35, size: 7},
+  {delay: 0.07, offsetX: 25, offsetY: -80, rotation: 45, size: 6},
+  {delay: 0.06, offsetX: -75, offsetY: -40, rotation: -60, size: 6},
+  {delay: 0.07, offsetX: 90, offsetY: -30, rotation: 85, size: 5},
+  // Tiny pieces - particles
+  {delay: 0.05, offsetX: -100, offsetY: 0, rotation: -90, size: 5},
+  {delay: 0.06, offsetX: 95, offsetY: 20, rotation: 70, size: 4},
+  {delay: 0.07, offsetX: 0, offsetY: -90, rotation: 0, size: 5},
+  {delay: 0.08, offsetX: 5, offsetY: 95, rotation: 10, size: 4},
+];
 
 const getCellKey = (x: number, y: number): string => `${x}-${y}`;
 
@@ -135,7 +166,6 @@ const getInventoryCount = (player: ConnectFiveMatchPlayer | null, specialType: C
 
   const mapping: Record<ConnectFiveSpecialType, number> = {
     [ConnectFiveSpecialType.BOMB]: player.inventory_bomb,
-    [ConnectFiveSpecialType.CROSS4]: player.inventory_cross4,
     [ConnectFiveSpecialType.H2]: player.inventory_h2,
     [ConnectFiveSpecialType.V2]: player.inventory_v2,
   };
@@ -221,15 +251,6 @@ const getPreviewCells = (moveType: ConnectFiveMoveType, x: number, y: number): A
     ];
   }
 
-  if (moveType === ConnectFiveMoveType.CROSS4) {
-    return [
-      {x: x - 1, y},
-      {x: x + 1, y},
-      {x, y: y - 1},
-      {x, y: y + 1},
-    ];
-  }
-
   return [];
 };
 
@@ -256,6 +277,9 @@ const formatRemainingTime = (milliseconds: number): string => {
 
 const ConnectFiveGame: SFC = ({className}) => {
   const [activeMoveType, setActiveMoveType] = useState<ConnectFiveMoveType>(ConnectFiveMoveType.SINGLE);
+  const [bombBlastKeys, setBombBlastKeys] = useState<Set<string>>(new Set());
+  const [bombBlastPieces, setBombBlastPieces] = useState<Record<string, PlayerSide>>({});
+  const [bombBlastSequence, setBombBlastSequence] = useState(0);
   const [hoverPosition, setHoverPosition] = useState<{x: number; y: number} | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmittingMove, setIsSubmittingMove] = useState(false);
@@ -642,6 +666,9 @@ const ConnectFiveGame: SFC = ({className}) => {
     if (!match) {
       previousBoardStateRef.current = null;
       previousMatchIdRef.current = null;
+      setBombBlastKeys(new Set());
+      setBombBlastPieces({});
+      setBombBlastSequence(0);
       setLastMoveKeys(new Set());
       setLastMoveSequence(0);
       return;
@@ -650,6 +677,9 @@ const ConnectFiveGame: SFC = ({className}) => {
     if (previousMatchIdRef.current !== match.id) {
       previousMatchIdRef.current = match.id;
       previousBoardStateRef.current = match.board_state;
+      setBombBlastKeys(new Set());
+      setBombBlastPieces({});
+      setBombBlastSequence(0);
       setLastMoveKeys(new Set());
       setLastMoveSequence(0);
       return;
@@ -663,6 +693,8 @@ const ConnectFiveGame: SFC = ({className}) => {
     }
 
     let hasChanges = false;
+    const nextBombKeys: string[] = [];
+    const nextBombPieces: Record<string, PlayerSide> = {};
     const nextMoveKeys: string[] = [];
 
     match.board_state.forEach((row, y) => {
@@ -672,6 +704,12 @@ const ConnectFiveGame: SFC = ({className}) => {
         if (value === previousValue) return;
 
         hasChanges = true;
+
+        if ((previousValue === 1 || previousValue === 2) && value === 0) {
+          const bombKey = getCellKey(x, y);
+          nextBombKeys.push(bombKey);
+          nextBombPieces[bombKey] = previousValue === 1 ? 'black' : 'white';
+        }
 
         if (value === 1 || value === 2) {
           nextMoveKeys.push(getCellKey(x, y));
@@ -685,6 +723,15 @@ const ConnectFiveGame: SFC = ({className}) => {
 
     if (nextMoveKeys.length) {
       setLastMoveSequence((prev) => prev + 1);
+    }
+
+    if (nextBombKeys.length) {
+      setBombBlastKeys(new Set(nextBombKeys));
+      setBombBlastPieces(nextBombPieces);
+      setBombBlastSequence((prev) => prev + 1);
+    } else {
+      setBombBlastKeys(new Set());
+      setBombBlastPieces({});
     }
 
     previousBoardStateRef.current = match.board_state;
@@ -763,14 +810,14 @@ const ConnectFiveGame: SFC = ({className}) => {
         {match.board_state.map((row, y) =>
           row.map((value, x) => {
             const cellKey = getCellKey(x, y);
-            const isAnchor = hoverPosition?.x === x && hoverPosition?.y === y;
-            const isCross4Anchor = activeMoveType === ConnectFiveMoveType.CROSS4 && isAnchor;
+            const isBombBlast = bombBlastKeys.has(cellKey);
             const isPreview = previewKeys.has(cellKey);
             const isInvalid = isPreview && !previewState.isValid;
             const isLastMove = lastMoveKeys.has(cellKey);
             const isWinningCell = winningKeys.has(cellKey);
+            const bombPieceVariant = bombBlastPieces[cellKey];
             const pieceVariant = value === 1 ? 'black' : 'white';
-            const shouldEnableClick = previewState.isValid && (isPreview || isCross4Anchor);
+            const shouldEnableClick = previewState.isValid && isPreview;
 
             return (
               <S.Cell
@@ -787,6 +834,35 @@ const ConnectFiveGame: SFC = ({className}) => {
               >
                 {isLastMove && value !== 0 && (
                   <S.ImpactRing $variant={pieceVariant} key={`impact-${lastMoveSequence}-${cellKey}`} />
+                )}
+                {isBombBlast && (
+                  <S.BombBlast aria-hidden key={`bomb-${bombBlastSequence}-${cellKey}`}>
+                    <S.BombFlash />
+                    <S.BombRing />
+                    <S.BombSmoke />
+                    {bombPieceVariant &&
+                      BOMB_FRAGMENT_CONFIG.map((fragment, index) => (
+                        <S.BombFragment
+                          $delay={fragment.delay}
+                          $offsetX={fragment.offsetX}
+                          $offsetY={fragment.offsetY}
+                          $rotation={fragment.rotation}
+                          $size={fragment.size}
+                          $variant={bombPieceVariant}
+                          key={`bomb-fragment-${bombBlastSequence}-${cellKey}-${index}`}
+                        />
+                      ))}
+                    {BOMB_SHARD_CONFIG.map((shard, index) => (
+                      <S.BombShard
+                        $delay={shard.delay}
+                        $offsetX={shard.offsetX}
+                        $offsetY={shard.offsetY}
+                        $size={shard.size}
+                        key={`bomb-shard-${bombBlastSequence}-${cellKey}-${index}`}
+                      />
+                    ))}
+                    {bombPieceVariant && <S.BombBlastPiece $variant={bombPieceVariant} />}
+                  </S.BombBlast>
                 )}
                 {value === 1 && <S.Piece $isLastMove={isLastMove} $isWinning={isWinningCell} $variant="black" />}
                 {value === 2 && <S.Piece $isLastMove={isLastMove} $isWinning={isWinningCell} $variant="white" />}

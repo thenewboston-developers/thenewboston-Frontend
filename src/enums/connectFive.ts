@@ -16,7 +16,6 @@ export enum ConnectFiveMatchStatus {
 
 export enum ConnectFiveMoveType {
   BOMB = 'BOMB',
-  CROSS4 = 'CROSS4',
   H2 = 'H2',
   SINGLE = 'SINGLE',
   V2 = 'V2',
@@ -24,7 +23,6 @@ export enum ConnectFiveMoveType {
 
 export enum ConnectFiveSpecialType {
   BOMB = 'BOMB',
-  CROSS4 = 'CROSS4',
   H2 = 'H2',
   V2 = 'V2',
 }

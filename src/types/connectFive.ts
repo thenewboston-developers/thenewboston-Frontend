@@ -4,7 +4,6 @@ import {PaginatedResponse} from 'types/pagination';
 
 export interface ConnectFiveMatchPlayer {
   inventory_bomb: number;
-  inventory_cross4: number;
   inventory_h2: number;
   inventory_v2: number;
   remaining_spend: number;
