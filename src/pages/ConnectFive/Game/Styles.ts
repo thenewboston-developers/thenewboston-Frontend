@@ -275,7 +275,7 @@ export const Board = styled.div`
     top: 50%;
     transform: translate(-50%, -50%);
     width: 7px;
-    z-index: 1;
+    z-index: 0;
   }
 `;
 
