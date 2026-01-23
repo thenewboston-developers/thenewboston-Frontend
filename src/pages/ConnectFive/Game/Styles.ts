@@ -304,12 +304,12 @@ export const BombBlastPiece = styled.span<{$variant: 'black' | 'white'}>`
     $variant === 'black'
       ? '0 8px 16px rgba(0, 0, 0, 0.45)'
       : '0 8px 14px rgba(0, 0, 0, 0.35), inset 0 -2px 3px rgba(0, 0, 0, 0.18)'};
-  height: 70%;
+  height: 75%;
   left: 50%;
   opacity: 1;
   position: absolute;
   top: 50%;
-  width: 70%;
+  width: 75%;
   z-index: 3;
 `;
 
@@ -453,14 +453,18 @@ export const Container = styled.div`
 `;
 
 export const EloChange = styled.div`
+  align-items: center;
   animation: ${fadeInUp} 0.4s ease-out 0.15s both;
-  background: ${colors.white};
-  border: 1px solid ${colors.palette.gray[200]};
-  border-radius: 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 14px 16px;
+  gap: 4px;
+  margin: 24px 0;
+`;
+
+export const EloChangeArrow = styled(UIcon)`
+  color: ${colors.palette.gray[400]};
+  flex-shrink: 0;
+  margin: 0 -4px;
 `;
 
 export const EloChangeLabel = styled.span`
@@ -469,6 +473,12 @@ export const EloChangeLabel = styled.span`
   font-weight: ${fonts.weight.semiBold};
   letter-spacing: 0.2em;
   text-transform: uppercase;
+`;
+
+export const EloChangeRow = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 8px;
 `;
 
 export const EloChangeValue = styled.div<{$variant: 'down' | 'equal' | 'up'}>`
@@ -480,10 +490,17 @@ export const EloChangeValue = styled.div<{$variant: 'down' | 'equal' | 'up'}>`
     return colors.palette.gray[600];
   }};
   display: flex;
-  font-size: 20px;
+  font-size: 18px;
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.bold};
-  gap: 8px;
+  gap: 6px;
+`;
+
+export const EloNumber = styled.span`
+  color: ${colors.primary};
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.semiBold};
 `;
 
 export const GameLayout = styled.div`
@@ -738,10 +755,10 @@ export const Piece = styled.div<{$isLastMove: boolean; $isWinning: boolean; $var
 
     return `${baseShadow}${winningShadow}`;
   }};
-  height: 70%;
+  height: 75%;
   position: relative;
   transform-origin: center;
-  width: 70%;
+  width: 75%;
   z-index: 2;
 
   &::after {
@@ -827,13 +844,13 @@ export const PlayerSideText = styled.span<{$variant: 'black' | 'white'}>`
 export const Preview = styled.div<{$isInvalid: boolean; $variant: 'black' | 'white'}>`
   border: 1px solid transparent;
   border-radius: 50%;
-  height: 70%;
+  height: 75%;
   left: 50%;
   opacity: 0.6;
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 70%;
+  width: 75%;
   z-index: 3;
 
   ${({$isInvalid, $variant}) =>
@@ -961,6 +978,11 @@ export const ResultOutcome = styled.span<{$variant: 'draw' | 'loss' | 'win'}>`
   z-index: 1;
 `;
 
+export const ResultFaceIcon = styled(UIcon)<{$variant: 'loss' | 'win'}>`
+  color: ${({$variant}) => ($variant === 'win' ? colors.palette.green[500] : colors.palette.red[500])};
+  flex-shrink: 0;
+`;
+
 export const ResultSummary = styled.div<{$variant: 'draw' | 'loss' | 'win'}>`
   align-items: center;
   animation: ${resultPulse} 2s ease-in-out infinite;
@@ -986,7 +1008,7 @@ export const ResultSummary = styled.div<{$variant: 'draw' | 'loss' | 'win'}>`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
   overflow: hidden;
   padding: 28px 24px;
   position: relative;
@@ -1020,6 +1042,21 @@ export const ResultSummary = styled.div<{$variant: 'draw' | 'loss' | 'win'}>`
     top: 0;
     width: 100%;
   }
+`;
+
+export const ResultTnbChange = styled.div`
+  align-items: center;
+  animation: ${fadeInUp} 0.4s ease-out 0.2s both;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+`;
+
+export const ResultTnbChangeValue = styled.span<{$variant: 'loss' | 'win'}>`
+  color: ${({$variant}) => ($variant === 'win' ? colors.palette.green[600] : colors.palette.red[600])};
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.bold};
 `;
 
 export const Sidebar = styled.aside`

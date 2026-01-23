@@ -1,7 +1,15 @@
 import {ComponentType, SVGProps, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate, useParams} from 'react-router-dom';
-import {mdiArrowDownBold, mdiArrowUpBold, mdiMinus, mdiStar} from '@mdi/js';
+import {
+  mdiArrowRight,
+  mdiEmoticonExcitedOutline,
+  mdiEmoticonSadOutline,
+  mdiMinus,
+  mdiStar,
+  mdiTrendingDown,
+  mdiTrendingUp,
+} from '@mdi/js';
 
 import {
   acceptConnectFiveChallenge,
@@ -92,6 +100,65 @@ const SPECIAL_ICONS: Record<ConnectFiveSpecialType, IconComponent> = {
   [ConnectFiveSpecialType.BOMB]: BombIcon,
   [ConnectFiveSpecialType.H2]: Horizontal2Icon,
   [ConnectFiveSpecialType.V2]: Vertical2Icon,
+};
+
+const LOSS_RESULT_LABELS = [
+  'Awful',
+  'Booo',
+  'Career low',
+  'Embarrassing',
+  'Gross',
+  'Hard to watch',
+  'Oof',
+  'Outclassed',
+  'Painful to watch',
+  'Rock bottom',
+  'That was brutal',
+  'That was a mess',
+  'That was painful',
+  'That was rough',
+  'That was ugly',
+  'Tough scene',
+  'Train wreck',
+  'Utter humiliation',
+  'You got obliterated',
+  'You lost',
+  'Yikes',
+  'Sad',
+  'Collapsed',
+  'Skill gap confirmed',
+  'You stink',
+  'You suck',
+];
+
+const WIN_RESULT_LABELS = [
+  'Absolute massacre',
+  'Absolute unit',
+  'Clinical',
+  'Crushed it',
+  'Masterclass',
+  'Money',
+  'Nice Hoss!',
+  'Noice',
+  'Pure art',
+  'Pure dominance',
+  'EZ',
+  'Free ELO',
+  'Smoked it',
+  'Straight domination',
+  'Sweet!',
+  'That was filthy',
+  'Too easy',
+  'Tutorial mode',
+  'Unstoppable',
+  'Well done',
+  'You destroyed them',
+  'You owned that',
+  'You won!',
+];
+
+const getRandomResultLabel = (labels: string[]): string => {
+  return labels[Math.floor(Math.random() * labels.length)];
 };
 
 const MOVE_TO_SPECIAL_TYPE: Record<ConnectFiveMoveType, ConnectFiveSpecialType | null> = {
@@ -290,6 +357,7 @@ const ConnectFiveGame: SFC = ({className}) => {
   const [rematchAction, setRematchAction] = useState<RematchAction | null>(null);
   const [rematchStatus, setRematchStatus] = useState<ConnectFiveRematchStatus | null>(null);
   const [resultModalIsOpen, setResultModalIsOpen] = useState(false);
+  const [resultTnbDelta, setResultTnbDelta] = useState(0);
   const isRematchSubmitting = rematchAction !== null;
 
   const {challengeId} = useParams();
@@ -301,8 +369,30 @@ const ConnectFiveGame: SFC = ({className}) => {
   const match = challenge?.match_id ? matchesById[challenge.match_id] : null;
   const matchId = match?.id;
   const matchStatus = match?.status;
+  const matchWinnerId = match?.winner;
   const navigate = useNavigate();
   const self = useSelector(getSelf);
+  const selfId = self?.id;
+  const resultOutcomeLabel = useMemo(() => {
+    if (!resultModalIsOpen || matchId == null || selfId == null) return null;
+
+    if (matchStatus === ConnectFiveMatchStatus.DRAW) return 'Draw';
+
+    if (matchWinnerId === selfId) {
+      return getRandomResultLabel(WIN_RESULT_LABELS);
+    }
+
+    return getRandomResultLabel(LOSS_RESULT_LABELS);
+  }, [matchId, matchStatus, matchWinnerId, resultModalIsOpen, selfId]);
+  const tnbDeltaTarget = useMemo(() => {
+    if (!challenge || !match || selfId == null) return null;
+    if (match.status === ConnectFiveMatchStatus.DRAW) return null;
+
+    const isWinner = match.winner === selfId;
+    const amount = isWinner ? match.prize_pool_total : challenge.stake_amount;
+
+    return isWinner ? amount : -amount;
+  }, [challenge, match, selfId]);
   const rematchChallenge = useMemo(() => {
     if (!match) return rematchStatus?.challenge ?? null;
 
@@ -788,6 +878,48 @@ const ConnectFiveGame: SFC = ({className}) => {
   }, [matchId, matchStatus]);
 
   useEffect(() => {
+    if (!resultModalIsOpen) {
+      setResultTnbDelta(0);
+      return;
+    }
+
+    if (tnbDeltaTarget == null) {
+      setResultTnbDelta(0);
+      return;
+    }
+
+    setResultTnbDelta(0);
+
+    if (tnbDeltaTarget === 0) return;
+
+    const step = tnbDeltaTarget > 0 ? 1 : -1;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+    const startTimeoutId = setTimeout(() => {
+      intervalId = setInterval(() => {
+        setResultTnbDelta((current) => {
+          const nextValue = current + step;
+
+          if ((step > 0 && nextValue >= tnbDeltaTarget) || (step < 0 && nextValue <= tnbDeltaTarget)) {
+            if (intervalId !== null) {
+              clearInterval(intervalId);
+            }
+            return tnbDeltaTarget;
+          }
+
+          return nextValue;
+        });
+      }, 60);
+    }, 200);
+
+    return () => {
+      clearTimeout(startTimeoutId);
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [resultModalIsOpen, tnbDeltaTarget]);
+
+  useEffect(() => {
     if (!matchStatus || matchStatus === ConnectFiveMatchStatus.ACTIVE) return;
     if (matchStatus === ConnectFiveMatchStatus.CANCELLED) return;
 
@@ -1092,18 +1224,15 @@ const ConnectFiveGame: SFC = ({className}) => {
     if (eloSnapshot) {
       if (eloDelta > 0) {
         eloDeltaLabel = `+${eloDelta}`;
-        eloIcon = mdiArrowUpBold;
+        eloIcon = mdiTrendingUp;
       } else if (eloDelta < 0) {
         eloDeltaLabel = `${eloDelta}`;
-        eloIcon = mdiArrowDownBold;
+        eloIcon = mdiTrendingDown;
       } else {
         eloDeltaLabel = '=';
       }
     }
 
-    const eloText = eloSnapshot
-      ? `${eloSnapshot.before} -> ${eloSnapshot.after} (${eloDeltaLabel})`
-      : 'ELO update unavailable';
     const eloVariant = getEloVariant(eloDelta);
     const rematchMessage = (() => {
       if (rematchViewState === 'requestedByMe') return 'Waiting for opponent...';
@@ -1154,15 +1283,20 @@ const ConnectFiveGame: SFC = ({className}) => {
         />
       );
     }
+    const isDraw = match.status === ConnectFiveMatchStatus.DRAW;
+    const isWinner = match.winner === self.id;
+    const tnbDeltaLabel =
+      tnbDeltaTarget !== null ? `${resultTnbDelta > 0 ? '+' : ''}${resultTnbDelta.toLocaleString()} TNB` : null;
+    const tnbVariant: 'loss' | 'win' = isWinner ? 'win' : 'loss';
     let resultVariant: 'draw' | 'loss' | 'win' = 'loss';
-    let resultLabel = 'You lost';
+    let resultLabel = resultOutcomeLabel ?? 'You lost';
 
-    if (match.status === ConnectFiveMatchStatus.DRAW) {
+    if (isDraw) {
       resultVariant = 'draw';
       resultLabel = 'Draw';
-    } else if (match.winner === self.id) {
+    } else if (isWinner) {
       resultVariant = 'win';
-      resultLabel = 'You won!';
+      resultLabel = resultOutcomeLabel ?? 'You won!';
     }
 
     return (
@@ -1173,11 +1307,26 @@ const ConnectFiveGame: SFC = ({className}) => {
           </S.ResultSummary>
           <S.EloChange>
             <S.EloChangeLabel>Your ELO</S.EloChangeLabel>
-            <S.EloChangeValue $variant={eloVariant}>
-              <Icon icon={eloIcon} size={18} />
-              <span>{eloText}</span>
-            </S.EloChangeValue>
+            <S.EloChangeRow>
+              <S.EloNumber>{eloSnapshot?.before ?? '--'}</S.EloNumber>
+              <S.EloChangeArrow icon={mdiArrowRight} size={18} />
+              <S.EloNumber>{eloSnapshot?.after ?? '--'}</S.EloNumber>
+              <S.EloChangeValue $variant={eloVariant}>
+                <span>({eloDeltaLabel})</span>
+                <Icon icon={eloIcon} size={20} />
+              </S.EloChangeValue>
+            </S.EloChangeRow>
           </S.EloChange>
+          {tnbDeltaLabel && (
+            <S.ResultTnbChange>
+              <S.ResultFaceIcon
+                $variant={tnbVariant}
+                icon={isWinner ? mdiEmoticonExcitedOutline : mdiEmoticonSadOutline}
+                size={32}
+              />
+              <S.ResultTnbChangeValue $variant={tnbVariant}>{tnbDeltaLabel}</S.ResultTnbChangeValue>
+            </S.ResultTnbChange>
+          )}
           {rematchMessage && <S.RematchStateText $variant={rematchMessageVariant}>{rematchMessage}</S.RematchStateText>}
           {showInsufficientFunds && <S.RematchNotice>Insufficient funds for rematch</S.RematchNotice>}
         </ModalBody>
