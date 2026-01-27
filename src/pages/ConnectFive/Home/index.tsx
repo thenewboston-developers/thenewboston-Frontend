@@ -16,6 +16,7 @@ import Badge, {BadgeStyle} from 'components/Badge';
 import Button, {ButtonType} from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import {FormField, Input, Select} from 'components/FormElements';
+import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
 import UserSearchInput from 'components/UserSearchInput';
 import {ConnectFiveChallengeStatus, ConnectFiveMatchStatus} from 'enums';
@@ -135,7 +136,7 @@ const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
 const ConnectFiveHome: SFC = ({className}) => {
   const [activeMatchesPage, setActiveMatchesPage] = useState(1);
   const [completedMatchesPage, setCompletedMatchesPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const activeMatches = useSelector(getConnectFiveActiveMatches);
   const completedMatches = useSelector(getConnectFiveCompletedMatches);
@@ -284,9 +285,12 @@ const ConnectFiveHome: SFC = ({className}) => {
 
   useEffect(() => {
     const loadData = async () => {
-      setIsLoading(true);
-      await Promise.all([loadChallenges(), loadMatches()]);
-      setIsLoading(false);
+      try {
+        setIsLoading(true);
+        await Promise.all([loadChallenges(), loadMatches()]);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     loadData();
@@ -307,7 +311,13 @@ const ConnectFiveHome: SFC = ({className}) => {
   }, [activeMatchesPage, activeMatchesTotalPages, completedMatchesPage, completedMatchesTotalPages]);
 
   const renderActiveMatches = () => {
-    if (isLoading) return <S.EmptyState>Loading games...</S.EmptyState>;
+    if (isLoading) {
+      return (
+        <S.EmptyState>
+          <Loader />
+        </S.EmptyState>
+      );
+    }
     if (!activeMatchesSorted.length) return <EmptyText>No active games.</EmptyText>;
 
     return (
@@ -362,7 +372,13 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   const renderCompletedMatches = () => {
-    if (isLoading) return <S.EmptyState>Loading games...</S.EmptyState>;
+    if (isLoading) {
+      return (
+        <S.EmptyState>
+          <Loader />
+        </S.EmptyState>
+      );
+    }
     if (!completedMatchesSorted.length) return <EmptyText>No completed games.</EmptyText>;
 
     return (
@@ -378,7 +394,13 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   const renderIncomingChallenges = () => {
-    if (isLoading) return <S.EmptyState>Loading challenges...</S.EmptyState>;
+    if (isLoading) {
+      return (
+        <S.EmptyState>
+          <Loader />
+        </S.EmptyState>
+      );
+    }
     if (!incomingChallenges.length) return <EmptyText>No incoming challenges.</EmptyText>;
     return (
       <S.ChallengeList>
@@ -444,7 +466,13 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   const renderOutgoingChallenges = () => {
-    if (isLoading) return <S.EmptyState>Loading challenges...</S.EmptyState>;
+    if (isLoading) {
+      return (
+        <S.EmptyState>
+          <Loader />
+        </S.EmptyState>
+      );
+    }
     if (!outgoingChallenges.length) return <EmptyText>No outgoing challenges.</EmptyText>;
     return (
       <S.ChallengeList>
