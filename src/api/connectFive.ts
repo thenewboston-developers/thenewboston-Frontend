@@ -177,6 +177,19 @@ export const purchaseConnectFiveSpecial = async (
   }
 };
 
+export const resignConnectFiveMatch = async (matchId: number): Promise<ConnectFiveMatch> => {
+  try {
+    const response = await axios.post<ConnectFiveMatch>(
+      `${BASE_URL}/matches/${matchId}/resign`,
+      {},
+      authorizationHeaders(),
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const submitConnectFiveMove = async (
   matchId: number,
   data: {move_type: ConnectFiveMoveType; x: number; y: number},

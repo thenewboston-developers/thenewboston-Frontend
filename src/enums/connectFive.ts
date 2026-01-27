@@ -11,6 +11,7 @@ export enum ConnectFiveMatchStatus {
   CANCELLED = 'cancelled',
   DRAW = 'draw',
   FINISHED_CONNECT5 = 'finished_connect5',
+  FINISHED_RESIGN = 'finished_resign',
   FINISHED_TIMEOUT = 'finished_timeout',
 }
 

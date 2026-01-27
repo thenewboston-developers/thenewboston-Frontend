@@ -20,6 +20,7 @@ import {
   getConnectFiveRematchStatus,
   purchaseConnectFiveSpecial,
   requestConnectFiveRematch,
+  resignConnectFiveMatch,
   submitConnectFiveMove,
 } from 'api/connectFive';
 import Badge, {BadgeStyle} from 'components/Badge';
@@ -37,6 +38,7 @@ import {
   ConnectFiveSpecialType,
   ToastType,
 } from 'enums';
+import ConfirmationModal from 'modals/ConfirmationModal';
 import {getConnectFiveChallengesById, getConnectFiveMatchesById, getSelf} from 'selectors/state';
 import {upsertChallenge, upsertMatch} from 'store/connectFive';
 import {AppDispatch, ConnectFiveMatch, ConnectFiveMatchPlayer, ConnectFiveRematchStatus, SFC} from 'types';
@@ -292,6 +294,10 @@ const getFinishReasonLabel = (match: ConnectFiveMatch): string | null => {
     return 'Connect 5';
   }
 
+  if (match.status === ConnectFiveMatchStatus.FINISHED_RESIGN) {
+    return 'Resignation';
+  }
+
   if (match.status === ConnectFiveMatchStatus.FINISHED_TIMEOUT) {
     return 'Timeout';
   }
@@ -349,6 +355,7 @@ const ConnectFiveGame: SFC = ({className}) => {
   const [bombBlastSequence, setBombBlastSequence] = useState(0);
   const [hoverPosition, setHoverPosition] = useState<{x: number; y: number} | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isResigning, setIsResigning] = useState(false);
   const [isSubmittingMove, setIsSubmittingMove] = useState(false);
   const [lastMoveKeys, setLastMoveKeys] = useState<Set<string>>(new Set());
   const [lastMoveSequence, setLastMoveSequence] = useState(0);
@@ -356,6 +363,7 @@ const ConnectFiveGame: SFC = ({className}) => {
   const [purchasingSpecials, setPurchasingSpecials] = useState<Set<ConnectFiveSpecialType>>(new Set());
   const [rematchAction, setRematchAction] = useState<RematchAction | null>(null);
   const [rematchStatus, setRematchStatus] = useState<ConnectFiveRematchStatus | null>(null);
+  const [resignModalIsOpen, setResignModalIsOpen] = useState(false);
   const [resultModalIsOpen, setResultModalIsOpen] = useState(false);
   const [resultTnbDelta, setResultTnbDelta] = useState(0);
   const isRematchSubmitting = rematchAction !== null;
@@ -586,6 +594,27 @@ const ConnectFiveGame: SFC = ({className}) => {
       setRematchAction(null);
     }
   }, [dispatch, rematchChallenge, self?.id]);
+
+  const handleResignConfirm = useCallback(async () => {
+    if (!match || match.status !== ConnectFiveMatchStatus.ACTIVE) return;
+    if (isResigning) return;
+
+    try {
+      setIsResigning(true);
+      const updatedMatch = await resignConnectFiveMatch(match.id);
+      dispatch(upsertMatch(updatedMatch));
+      setResignModalIsOpen(false);
+    } catch (error) {
+      displayErrorToast('Failed to resign match.');
+    } finally {
+      setIsResigning(false);
+    }
+  }, [dispatch, isResigning, match]);
+
+  const handleResignModalClose = useCallback(() => {
+    if (isResigning) return;
+    setResignModalIsOpen(false);
+  }, [isResigning]);
 
   const handleResultModalClose = useCallback(() => {
     setResultModalIsOpen(false);
@@ -1213,6 +1242,25 @@ const ConnectFiveGame: SFC = ({className}) => {
     );
   };
 
+  const renderResignPanel = () => {
+    if (!match || !isMatchActive) return null;
+
+    return (
+      <S.PurchasePanel>
+        <S.PanelHeader>
+          <S.PanelTitle>Resign</S.PanelTitle>
+          <S.PanelSubtitle>Resigning ends the match immediately.</S.PanelSubtitle>
+        </S.PanelHeader>
+        <Button
+          color={ButtonColor.danger}
+          isSubmitting={isResigning}
+          onClick={() => setResignModalIsOpen(true)}
+          text="Resign game"
+        />
+      </S.PurchasePanel>
+    );
+  };
+
   const renderResultModal = () => {
     if (!resultModalIsOpen || !match || !self) return null;
 
@@ -1424,12 +1472,22 @@ const ConnectFiveGame: SFC = ({className}) => {
             {renderPrizePoolPanel()}
             {renderSpendPanel()}
             {renderPurchasePanel()}
+            {renderResignPanel()}
           </S.Sidebar>
         </S.GameLayout>
       ) : (
         renderPendingState()
       )}
       {renderResultModal()}
+      {resignModalIsOpen ? (
+        <ConfirmationModal
+          close={handleResignModalClose}
+          confirmText={isResigning ? 'Resigning...' : 'Resign'}
+          header="Resign game"
+          message="Are you sure you want to resign? This will end the match immediately."
+          onConfirm={handleResignConfirm}
+        />
+      ) : null}
     </S.Container>
   );
 };
