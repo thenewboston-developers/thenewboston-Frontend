@@ -90,6 +90,10 @@ const getFinishReasonLabel = (match: ConnectFiveMatch): string | null => {
     return 'Connect 5';
   }
 
+  if (match.status === ConnectFiveMatchStatus.FINISHED_RESIGN) {
+    return 'Resignation';
+  }
+
   if (match.status === ConnectFiveMatchStatus.FINISHED_TIMEOUT) {
     return 'Timeout';
   }
