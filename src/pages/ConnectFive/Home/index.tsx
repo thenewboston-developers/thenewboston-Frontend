@@ -40,8 +40,6 @@ import {shortDate} from 'utils/dates';
 import {handleFormikAPIError} from 'utils/forms';
 import yup from 'utils/yup';
 
-import ConnectFiveNavigation from '../Navigation';
-
 import * as S from './Styles';
 
 const timeLimitOptions: SelectOption[] = [
@@ -464,7 +462,6 @@ const ConnectFiveHome: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Content>
-        <ConnectFiveNavigation />
         <S.Section>
           <S.SectionTitle>Send a challenge</S.SectionTitle>
           <Formik initialValues={initialValues} onSubmit={handleChallengeSubmit} validationSchema={validationSchema}>

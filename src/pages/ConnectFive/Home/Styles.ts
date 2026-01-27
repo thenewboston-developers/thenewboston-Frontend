@@ -2,7 +2,7 @@ import Icon from '@mdi/react';
 import styled from 'styled-components';
 
 import UPagination from 'components/Pagination';
-import {colors, fonts, hiddenScroll, pagePadding} from 'styles';
+import {colors, fonts, pagePadding} from 'styles';
 
 export const ChallengeActions = styled.div`
   display: flex;
@@ -66,9 +66,6 @@ export const ChallengeList = styled.div`
 
 export const Container = styled.div`
   ${pagePadding};
-  ${hiddenScroll};
-  height: 100%;
-  overflow-y: auto;
 `;
 
 export const Content = styled.div`

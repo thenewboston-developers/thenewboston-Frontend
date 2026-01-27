@@ -2,17 +2,14 @@ import styled from 'styled-components';
 
 import UAvatar from 'components/Avatar';
 import UPagination from 'components/Pagination';
-import {colors, fonts, hiddenScroll, pagePadding} from 'styles';
+import {colors, fonts, pagePadding} from 'styles';
 
 export const Avatar = styled(UAvatar)`
   border: 2px solid ${colors.white};
 `;
 
 export const Container = styled.div`
-  ${hiddenScroll};
   ${pagePadding};
-  height: 100%;
-  overflow-y: auto;
 `;
 
 export const Content = styled.div`
