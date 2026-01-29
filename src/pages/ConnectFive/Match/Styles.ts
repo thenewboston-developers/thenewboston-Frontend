@@ -648,6 +648,9 @@ export const PendingDot = styled.span<{$delay: number; $variant?: 'challenger' |
 export const PendingDots = styled.div`
   display: flex;
   gap: 8px;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 8px;
 `;
 
@@ -702,6 +705,8 @@ export const PendingShimmer = styled.div<{$variant?: 'challenger' | 'opponent'}>
   background-size: 200% 100%;
   border-radius: 8px;
   height: 4px;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 4px;
   width: 200px;
 `;

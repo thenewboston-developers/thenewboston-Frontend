@@ -251,12 +251,13 @@ const ConnectFiveHome: SFC = ({className}) => {
         if (self?.id) {
           dispatch(upsertChallenge({challenge, selfId: self.id}));
         }
+        navigate(`/connect-five/challenges/${challenge.id}`);
         helpers.resetForm();
       } catch (error) {
         handleFormikAPIError(error, helpers, 'Error creating challenge');
       }
     },
-    [dispatch, self?.id],
+    [dispatch, navigate, self?.id],
   );
 
   const handleCompletedMatchesPageChange = useCallback((page: number) => {
