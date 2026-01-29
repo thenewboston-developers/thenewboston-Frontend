@@ -53,7 +53,6 @@ export interface ConnectFiveChallenge extends CreatedModified {
 export interface ConnectFiveChallengePaginatedResponse extends PaginatedResponse<ConnectFiveChallenge> {}
 
 export interface ConnectFiveLeaderboardEntry {
-  draws: number;
   elo: number;
   losses: number;
   matches_played: number;

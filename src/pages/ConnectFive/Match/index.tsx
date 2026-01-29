@@ -270,10 +270,6 @@ const getStatusBadge = (match: ConnectFiveMatchType, selfId?: number | null) => 
     return {badgeStyle: BadgeStyle.primary, label: 'In progress'};
   }
 
-  if (match.status === ConnectFiveMatchStatus.DRAW) {
-    return {badgeStyle: BadgeStyle.neutral, label: 'Draw'};
-  }
-
   if (match.status === ConnectFiveMatchStatus.CANCELLED) {
     return {badgeStyle: BadgeStyle.warning, label: 'Cancelled'};
   }
@@ -292,6 +288,10 @@ const getStatusBadge = (match: ConnectFiveMatchType, selfId?: number | null) => 
 const getFinishReasonLabel = (match: ConnectFiveMatchType): string | null => {
   if (match.status === ConnectFiveMatchStatus.FINISHED_CONNECT5) {
     return 'Connect 5';
+  }
+
+  if (match.status === ConnectFiveMatchStatus.FINISHED_FULL_BOARD) {
+    return 'Full board';
   }
 
   if (match.status === ConnectFiveMatchStatus.FINISHED_RESIGN) {
@@ -388,17 +388,14 @@ const ConnectFiveMatch: SFC = ({className}) => {
   const resultOutcomeLabel = useMemo(() => {
     if (!resultModalIsOpen || matchIdNumber == null || participantId == null) return null;
 
-    if (matchStatus === ConnectFiveMatchStatus.DRAW) return 'Draw';
-
     if (matchWinnerId === participantId) {
       return getRandomResultLabel(WIN_RESULT_LABELS);
     }
 
     return getRandomResultLabel(LOSS_RESULT_LABELS);
-  }, [matchIdNumber, matchStatus, matchWinnerId, participantId, resultModalIsOpen]);
+  }, [matchIdNumber, matchWinnerId, participantId, resultModalIsOpen]);
   const tnbDeltaTarget = useMemo(() => {
     if (!challenge || !match || participantId == null) return null;
-    if (match.status === ConnectFiveMatchStatus.DRAW) return null;
 
     const isWinner = match.winner === participantId;
     const amount = isWinner ? match.prize_pool_total : challenge.stake_amount;
@@ -1308,18 +1305,14 @@ const ConnectFiveMatch: SFC = ({className}) => {
         />
       );
     }
-    const isDraw = match.status === ConnectFiveMatchStatus.DRAW;
     const isWinner = match.winner === self.id;
     const tnbDeltaLabel =
       tnbDeltaTarget !== null ? `${resultTnbDelta > 0 ? '+' : ''}${resultTnbDelta.toLocaleString()} TNB` : null;
     const tnbVariant: 'loss' | 'win' = isWinner ? 'win' : 'loss';
-    let resultVariant: 'draw' | 'loss' | 'win' = 'loss';
+    let resultVariant: 'loss' | 'win' = 'loss';
     let resultLabel = resultOutcomeLabel ?? 'You lost';
 
-    if (isDraw) {
-      resultVariant = 'draw';
-      resultLabel = 'Draw';
-    } else if (isWinner) {
+    if (isWinner) {
       resultVariant = 'win';
       resultLabel = resultOutcomeLabel ?? 'You won!';
     }

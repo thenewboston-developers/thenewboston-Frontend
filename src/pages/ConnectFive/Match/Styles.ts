@@ -964,14 +964,14 @@ export const ResultModal = styled(UModal)`
   width: 420px;
 `;
 
-export const ResultOutcome = styled.span<{$variant: 'draw' | 'loss' | 'win'}>`
+export const ResultOutcome = styled.span<{$variant: 'loss' | 'win'}>`
   -webkit-background-clip: text;
   background: ${({$variant}) => {
-    if ($variant === 'win')
+    if ($variant === 'win') {
       return `linear-gradient(135deg, ${colors.palette.green[500]} 0%, ${colors.palette.green[700]} 100%)`;
-    if ($variant === 'loss')
-      return `linear-gradient(135deg, ${colors.palette.red[500]} 0%, ${colors.palette.red[700]} 100%)`;
-    return `linear-gradient(135deg, ${colors.palette.gray[500]} 0%, ${colors.palette.gray[700]} 100%)`;
+    }
+
+    return `linear-gradient(135deg, ${colors.palette.red[500]} 0%, ${colors.palette.red[700]} 100%)`;
   }};
   background-clip: text;
   color: transparent;
@@ -988,27 +988,29 @@ export const ResultFaceIcon = styled(UIcon)<{$variant: 'loss' | 'win'}>`
   flex-shrink: 0;
 `;
 
-export const ResultSummary = styled.div<{$variant: 'draw' | 'loss' | 'win'}>`
+export const ResultSummary = styled.div<{$variant: 'loss' | 'win'}>`
   align-items: center;
   animation: ${resultPulse} 2s ease-in-out infinite;
   background: ${({$variant}) => {
-    if ($variant === 'win')
+    if ($variant === 'win') {
       return `linear-gradient(145deg, ${colors.palette.green[50]} 0%, ${colors.palette.green[100]} 50%, ${colors.palette.green[50]} 100%)`;
-    if ($variant === 'loss')
-      return `linear-gradient(145deg, ${colors.palette.red[50]} 0%, ${colors.palette.red[100]} 50%, ${colors.palette.red[50]} 100%)`;
-    return `linear-gradient(145deg, ${colors.palette.gray[50]} 0%, ${colors.palette.gray[100]} 50%, ${colors.palette.gray[50]} 100%)`;
+    }
+
+    return `linear-gradient(145deg, ${colors.palette.red[50]} 0%, ${colors.palette.red[100]} 50%, ${colors.palette.red[50]} 100%)`;
   }};
   border: 2px solid
     ${({$variant}) => {
       if ($variant === 'win') return colors.palette.green[300];
-      if ($variant === 'loss') return colors.palette.red[300];
-      return colors.palette.gray[300];
+
+      return colors.palette.red[300];
     }};
   border-radius: 20px;
   box-shadow: ${({$variant}) => {
-    if ($variant === 'win') return `0 8px 32px rgba(34, 197, 94, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8)`;
-    if ($variant === 'loss') return `0 8px 32px rgba(239, 68, 68, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8)`;
-    return `0 8px 32px rgba(107, 114, 128, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8)`;
+    if ($variant === 'win') {
+      return `0 8px 32px rgba(34, 197, 94, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8)`;
+    }
+
+    return `0 8px 32px rgba(239, 68, 68, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8)`;
   }};
   display: flex;
   flex-direction: column;
@@ -1032,11 +1034,11 @@ export const ResultSummary = styled.div<{$variant: 'draw' | 'loss' | 'win'}>`
 
   &::after {
     background: ${({$variant}) => {
-      if ($variant === 'win')
+      if ($variant === 'win') {
         return `radial-gradient(circle at 80% 20%, ${colors.palette.green[200]} 0%, transparent 50%)`;
-      if ($variant === 'loss')
-        return `radial-gradient(circle at 80% 20%, ${colors.palette.red[200]} 0%, transparent 50%)`;
-      return `radial-gradient(circle at 80% 20%, ${colors.palette.gray[200]} 0%, transparent 50%)`;
+      }
+
+      return `radial-gradient(circle at 80% 20%, ${colors.palette.red[200]} 0%, transparent 50%)`;
     }};
     content: '';
     height: 100%;

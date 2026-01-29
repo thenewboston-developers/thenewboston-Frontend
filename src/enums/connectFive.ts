@@ -9,8 +9,8 @@ export enum ConnectFiveChallengeStatus {
 export enum ConnectFiveMatchStatus {
   ACTIVE = 'active',
   CANCELLED = 'cancelled',
-  DRAW = 'draw',
   FINISHED_CONNECT5 = 'finished_connect5',
+  FINISHED_FULL_BOARD = 'finished_full_board',
   FINISHED_RESIGN = 'finished_resign',
   FINISHED_TIMEOUT = 'finished_timeout',
 }
