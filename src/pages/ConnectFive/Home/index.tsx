@@ -90,6 +90,10 @@ const getFinishReasonLabel = (match: ConnectFiveMatch): string | null => {
     return 'Connect 5';
   }
 
+  if (match.status === ConnectFiveMatchStatus.FINISHED_FULL_BOARD) {
+    return 'Full board';
+  }
+
   if (match.status === ConnectFiveMatchStatus.FINISHED_RESIGN) {
     return 'Resignation';
   }
@@ -113,10 +117,6 @@ const getOpponent = (match: ConnectFiveMatch, selfId?: number | null): UserReadS
 const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
   if (match.status === ConnectFiveMatchStatus.ACTIVE) {
     return {badgeStyle: BadgeStyle.primary, label: 'In progress'};
-  }
-
-  if (match.status === ConnectFiveMatchStatus.DRAW) {
-    return {badgeStyle: BadgeStyle.neutral, label: 'Draw'};
   }
 
   if (match.status === ConnectFiveMatchStatus.CANCELLED) {
