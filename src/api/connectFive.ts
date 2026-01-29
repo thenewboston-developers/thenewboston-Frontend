@@ -4,6 +4,8 @@ import {ConnectFiveMoveType, ConnectFiveSpecialType} from 'enums';
 import {
   ConnectFiveChallenge,
   ConnectFiveChallengePaginatedResponse,
+  ConnectFiveChatMessage,
+  ConnectFiveChatMessagePaginatedResponse,
   ConnectFiveLeaderboardPaginatedResponse,
   ConnectFiveMatch,
   ConnectFiveMatchPaginatedResponse,
@@ -66,6 +68,22 @@ export const createConnectFiveChallenge = async (data: {
   }
 };
 
+export const createConnectFiveChatMessage = async (
+  matchId: number,
+  data: {message: string},
+): Promise<ConnectFiveChatMessage> => {
+  try {
+    const response = await axios.post<ConnectFiveChatMessage>(
+      `${BASE_URL}/matches/${matchId}/chat`,
+      data,
+      authorizationHeaders(),
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getConnectFiveChallenge = async (
   challengeId: number,
   params?: {mine?: string},
@@ -74,6 +92,27 @@ export const getConnectFiveChallenge = async (
     const response = await axios.get<ConnectFiveChallenge>(`${BASE_URL}/challenges/${challengeId}`, {
       ...authorizationHeaders(),
       params,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getConnectFiveChatMessages = async (params: {
+  matchId: number;
+  page_size?: number;
+  url?: string;
+}): Promise<ConnectFiveChatMessagePaginatedResponse> => {
+  try {
+    const requestUrl = params.url || `${BASE_URL}/matches/${params.matchId}/chat`;
+    const response = await axios.get<ConnectFiveChatMessagePaginatedResponse>(requestUrl, {
+      ...authorizationHeaders(),
+      params: params.url
+        ? undefined
+        : {
+            page_size: params.page_size,
+          },
     });
     return response.data;
   } catch (error) {
