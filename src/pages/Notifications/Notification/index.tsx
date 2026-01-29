@@ -49,7 +49,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     ) {
       const {payload} = notification;
       if (notificationType === NotificationType.CONNECT_FIVE_CHALLENGE && 'challenge_id' in payload) {
-        navigate(`/connect-five/games/${payload.challenge_id}`);
+        navigate('/connect-five/home');
         return;
       }
       if ('post_id' in payload) {
@@ -286,7 +286,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
 
     return (
       <S.NotificationContainer>
-        <Link to={`/connect-five/games/${notification.payload.challenge_id}`}>
+        <Link to="/connect-five/home">
           <S.AvatarContainer>
             <Avatar src={challenger.avatar} size="45px" />
             <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />

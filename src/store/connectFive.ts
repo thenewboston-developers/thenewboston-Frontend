@@ -104,9 +104,15 @@ const connectFive = createSlice({
         }
       }
     },
-    upsertMatch: (state: ConnectFiveState, {payload}: PayloadAction<ConnectFiveMatch>) => {
-      const match = payload;
+    upsertMatch: (
+      state: ConnectFiveState,
+      {payload}: PayloadAction<{match: ConnectFiveMatch; selfId?: number | null}>,
+    ) => {
+      const {match, selfId} = payload;
       state.matchesById[match.id] = match;
+
+      if (!selfId) return;
+      if (match.player_a.id !== selfId && match.player_b.id !== selfId) return;
 
       if (match.status === ConnectFiveMatchStatus.ACTIVE) {
         upsertMatchInList(state.activeMatches, match);

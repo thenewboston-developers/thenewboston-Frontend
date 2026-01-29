@@ -503,7 +503,7 @@ export const EloNumber = styled.span`
   font-weight: ${fonts.weight.semiBold};
 `;
 
-export const GameLayout = styled.div`
+export const MatchLayout = styled.div`
   display: grid;
   gap: 24px;
   grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);

@@ -93,18 +93,6 @@ export const FormRow = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 `;
 
-export const GamesSection = styled.section`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-export const GamesSectionTitle = styled.h2`
-  color: ${colors.primary};
-  font-size: 18px;
-  margin: 0;
-`;
-
 export const MatchCard = styled.button`
   align-items: stretch;
   background: ${colors.white};
@@ -196,9 +184,51 @@ export const MatchList = styled.div`
   gap: 16px;
 `;
 
+export const MatchesSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const MatchesSectionTitle = styled.h2`
+  color: ${colors.primary};
+  font-size: 18px;
+  margin: 0;
+`;
+
 export const Pagination = styled(UPagination)`
   align-self: center;
   margin-top: 12px;
+`;
+
+export const PublicMatchMeta = styled.span`
+  color: ${colors.secondary};
+  font-size: 12px;
+`;
+
+export const PublicMatchPlayer = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 8px;
+`;
+
+export const PublicMatchPlayerName = styled.span`
+  color: ${colors.primary};
+  font-weight: ${fonts.weight.medium};
+`;
+
+export const PublicMatchPlayers = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+`;
+
+export const PublicMatchVersus = styled.span`
+  color: ${colors.secondary};
+  font-size: 12px;
+  font-weight: ${fonts.weight.semiBold};
+  text-transform: uppercase;
 `;
 
 export const Section = styled.section`

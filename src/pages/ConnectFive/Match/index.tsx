@@ -31,18 +31,18 @@ import Icon from 'components/Icon';
 import Loader from 'components/Loader';
 import {ModalBody, ModalFooter} from 'components/Modal';
 import PrizePoolBreakdown from 'components/PrizePoolBreakdown';
-import {
-  ConnectFiveChallengeStatus,
-  ConnectFiveMatchStatus,
-  ConnectFiveMoveType,
-  ConnectFiveSpecialType,
-  ToastType,
-} from 'enums';
+import {ConnectFiveChallengeStatus, ConnectFiveMatchStatus, ConnectFiveMoveType, ConnectFiveSpecialType} from 'enums';
 import ConfirmationModal from 'modals/ConfirmationModal';
 import {getConnectFiveChallengesById, getConnectFiveMatchesById, getSelf} from 'selectors/state';
 import {upsertChallenge, upsertMatch} from 'store/connectFive';
-import {AppDispatch, ConnectFiveMatch, ConnectFiveMatchPlayer, ConnectFiveRematchStatus, SFC} from 'types';
-import {displayErrorToast, displayToast} from 'utils/toasts';
+import {
+  AppDispatch,
+  ConnectFiveMatch as ConnectFiveMatchType,
+  ConnectFiveMatchPlayer,
+  ConnectFiveRematchStatus,
+  SFC,
+} from 'types';
+import {displayErrorToast} from 'utils/toasts';
 
 import {ReactComponent as BombIcon} from './assets/bomb.svg';
 import {ReactComponent as Horizontal2Icon} from './assets/horizontal2.svg';
@@ -212,7 +212,7 @@ const BOMB_FRAGMENT_CONFIG = [
 
 const getCellKey = (x: number, y: number): string => `${x}-${y}`;
 
-const getEloSnapshot = (match: ConnectFiveMatch | null, userId?: number | null) => {
+const getEloSnapshot = (match: ConnectFiveMatchType | null, userId?: number | null) => {
   if (!match || !userId) return null;
 
   const isPlayerA = match.player_a.id === userId;
@@ -242,12 +242,12 @@ const getInventoryCount = (player: ConnectFiveMatchPlayer | null, specialType: C
   return mapping[specialType];
 };
 
-const getMatchPlayer = (match: ConnectFiveMatch | null, userId?: number | null): ConnectFiveMatchPlayer | null => {
+const getMatchPlayer = (match: ConnectFiveMatchType | null, userId?: number | null): ConnectFiveMatchPlayer | null => {
   if (!match || !userId) return null;
   return match.players.find((player) => player.user.id === userId) || null;
 };
 
-const getPlayerSide = (match: ConnectFiveMatch | null, userId?: number | null): PlayerSide | null => {
+const getPlayerSide = (match: ConnectFiveMatchType | null, userId?: number | null): PlayerSide | null => {
   if (!match || !userId) return null;
   return match.player_a.id === userId ? 'black' : 'white';
 };
@@ -265,7 +265,7 @@ const getSpendProgress = (player: ConnectFiveMatchPlayer | null, maxSpendAmount:
   return {percentage, remaining, spent};
 };
 
-const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
+const getStatusBadge = (match: ConnectFiveMatchType, selfId?: number | null) => {
   if (match.status === ConnectFiveMatchStatus.ACTIVE) {
     return {badgeStyle: BadgeStyle.primary, label: 'In progress'};
   }
@@ -289,7 +289,7 @@ const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
   return {badgeStyle: BadgeStyle.neutral, label: 'Finished'};
 };
 
-const getFinishReasonLabel = (match: ConnectFiveMatch): string | null => {
+const getFinishReasonLabel = (match: ConnectFiveMatchType): string | null => {
   if (match.status === ConnectFiveMatchStatus.FINISHED_CONNECT5) {
     return 'Connect 5';
   }
@@ -327,7 +327,7 @@ const getPreviewCells = (moveType: ConnectFiveMoveType, x: number, y: number): A
   return [];
 };
 
-const getRemainingMs = (match: ConnectFiveMatch | null, userId?: number, now = Date.now()): number => {
+const getRemainingMs = (match: ConnectFiveMatchType | null, userId?: number, now = Date.now()): number => {
   if (!match || !userId) return 0;
 
   const isPlayerA = match.player_a.id === userId;
@@ -348,7 +348,7 @@ const formatRemainingTime = (milliseconds: number): string => {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
 
-const ConnectFiveGame: SFC = ({className}) => {
+const ConnectFiveMatch: SFC = ({className}) => {
   const [activeMoveType, setActiveMoveType] = useState<ConnectFiveMoveType>(ConnectFiveMoveType.SINGLE);
   const [bombBlastKeys, setBombBlastKeys] = useState<Set<string>>(new Set());
   const [bombBlastPieces, setBombBlastPieces] = useState<Record<string, PlayerSide>>({});
@@ -368,40 +368,45 @@ const ConnectFiveGame: SFC = ({className}) => {
   const [resultTnbDelta, setResultTnbDelta] = useState(0);
   const isRematchSubmitting = rematchAction !== null;
 
-  const {challengeId} = useParams();
-  const challengeIdNumber = challengeId ? Number(challengeId) : null;
   const challengesById = useSelector(getConnectFiveChallengesById);
-  const challenge = challengeIdNumber ? challengesById[challengeIdNumber] : null;
   const dispatch = useDispatch<AppDispatch>();
+  const {matchId} = useParams();
   const matchesById = useSelector(getConnectFiveMatchesById);
-  const match = challenge?.match_id ? matchesById[challenge.match_id] : null;
-  const matchId = match?.id;
-  const matchStatus = match?.status;
-  const matchWinnerId = match?.winner;
   const navigate = useNavigate();
   const self = useSelector(getSelf);
+
+  const matchIdNumber = matchId ? Number(matchId) : null;
+  const match = matchIdNumber ? matchesById[matchIdNumber] : null;
+  const matchStatus = match?.status;
+  const matchWinnerId = match?.winner;
   const selfId = self?.id;
+  const isParticipant = !!match && !!selfId && (match.player_a.id === selfId || match.player_b.id === selfId);
+  const isSpectator = !!match && !isParticipant;
+  const participantId = isParticipant ? selfId : null;
+  const challengeId = match?.challenge ?? null;
+  const challenge = challengeId ? challengesById[challengeId] : null;
   const resultOutcomeLabel = useMemo(() => {
-    if (!resultModalIsOpen || matchId == null || selfId == null) return null;
+    if (!resultModalIsOpen || matchIdNumber == null || participantId == null) return null;
 
     if (matchStatus === ConnectFiveMatchStatus.DRAW) return 'Draw';
 
-    if (matchWinnerId === selfId) {
+    if (matchWinnerId === participantId) {
       return getRandomResultLabel(WIN_RESULT_LABELS);
     }
 
     return getRandomResultLabel(LOSS_RESULT_LABELS);
-  }, [matchId, matchStatus, matchWinnerId, resultModalIsOpen, selfId]);
+  }, [matchIdNumber, matchStatus, matchWinnerId, participantId, resultModalIsOpen]);
   const tnbDeltaTarget = useMemo(() => {
-    if (!challenge || !match || selfId == null) return null;
+    if (!challenge || !match || participantId == null) return null;
     if (match.status === ConnectFiveMatchStatus.DRAW) return null;
 
-    const isWinner = match.winner === selfId;
+    const isWinner = match.winner === participantId;
     const amount = isWinner ? match.prize_pool_total : challenge.stake_amount;
 
     return isWinner ? amount : -amount;
-  }, [challenge, match, selfId]);
+  }, [challenge, match, participantId]);
   const rematchChallenge = useMemo(() => {
+    if (isSpectator) return null;
     if (!match) return rematchStatus?.challenge ?? null;
 
     const rematchCandidates = Object.values(challengesById).filter(
@@ -418,32 +423,11 @@ const ConnectFiveGame: SFC = ({className}) => {
 
     if (!rematchStatus?.challenge) return null;
     return challengesById[rematchStatus.challenge.id] ?? rematchStatus.challenge;
-  }, [challengesById, match, rematchStatus?.challenge]);
-
-  const handleAcceptChallenge = useCallback(async () => {
-    if (!challengeIdNumber) return;
-
-    try {
-      const matchData = await acceptConnectFiveChallenge(challengeIdNumber);
-      dispatch(upsertMatch(matchData));
-    } catch (error) {
-      displayErrorToast('Failed to accept challenge');
-    }
-  }, [challengeIdNumber, dispatch]);
-
-  const handleCancelChallenge = useCallback(async () => {
-    if (!challengeIdNumber) return;
-
-    try {
-      const updatedChallenge = await cancelConnectFiveChallenge(challengeIdNumber);
-      dispatch(upsertChallenge({challenge: updatedChallenge, selfId: self?.id}));
-    } catch (error) {
-      displayErrorToast('Failed to cancel challenge');
-    }
-  }, [challengeIdNumber, dispatch, self?.id]);
+  }, [challengesById, isSpectator, match, rematchStatus?.challenge]);
 
   const handleCellClick = useCallback(
     async (x: number, y: number) => {
+      if (isSpectator) return;
       if (!match || !self || match.status !== ConnectFiveMatchStatus.ACTIVE) return;
       if (match.active_player?.id !== self.id) return;
 
@@ -456,7 +440,7 @@ const ConnectFiveGame: SFC = ({className}) => {
           x,
           y,
         });
-        dispatch(upsertMatch(updatedMatch));
+        dispatch(upsertMatch({match: updatedMatch, selfId}));
         const usedSpecialType = MOVE_TO_SPECIAL_TYPE[activeMoveType];
         if (usedSpecialType) {
           const updatedSelfPlayer = getMatchPlayer(updatedMatch, self.id);
@@ -471,21 +455,23 @@ const ConnectFiveGame: SFC = ({className}) => {
         setIsSubmittingMove(false);
       }
     },
-    [activeMoveType, dispatch, isSubmittingMove, match, self],
+    [activeMoveType, dispatch, isSpectator, isSubmittingMove, match, self, selfId],
   );
 
   const handleCellHover = useCallback(
     (x: number, y: number) => {
+      if (isSpectator) return;
       if (!match || match.status !== ConnectFiveMatchStatus.ACTIVE) return;
       if (!self || match.active_player?.id !== self.id) return;
 
       setHoverPosition({x, y});
     },
-    [match, self],
+    [isSpectator, match, self],
   );
 
   const handlePurchase = useCallback(
     async (specialType: ConnectFiveSpecialType) => {
+      if (isSpectator) return;
       if (!match) return;
 
       try {
@@ -493,7 +479,7 @@ const ConnectFiveGame: SFC = ({className}) => {
         const updatedMatch = await purchaseConnectFiveSpecial(match.id, {
           special_type: specialType,
         });
-        dispatch(upsertMatch(updatedMatch));
+        dispatch(upsertMatch({match: updatedMatch, selfId}));
       } catch (error) {
         displayErrorToast('Purchase failed. Check your spend limit.');
       } finally {
@@ -504,18 +490,19 @@ const ConnectFiveGame: SFC = ({className}) => {
         });
       }
     },
-    [dispatch, match],
+    [dispatch, isSpectator, match, selfId],
   );
 
   const handleRematchAccept = useCallback(async () => {
+    if (isSpectator) return;
     if (!rematchChallenge || rematchChallenge.status !== ConnectFiveChallengeStatus.PENDING) return;
 
     try {
       setRematchAction('accept');
       const matchData = await acceptConnectFiveChallenge(rematchChallenge.id);
-      dispatch(upsertMatch(matchData));
+      dispatch(upsertMatch({match: matchData, selfId}));
       setResultModalIsOpen(false);
-      navigate(`/connect-five/games/${matchData.challenge}`);
+      navigate(`/connect-five/matches/${matchData.id}`);
     } catch (error) {
       const message = (error as {response?: {data?: {detail?: string}}})?.response?.data?.detail;
       if (message === 'Insufficient funds for rematch.') {
@@ -526,9 +513,10 @@ const ConnectFiveGame: SFC = ({className}) => {
     } finally {
       setRematchAction(null);
     }
-  }, [dispatch, navigate, rematchChallenge]);
+  }, [dispatch, isSpectator, navigate, rematchChallenge, selfId]);
 
   const handleRematchRequest = useCallback(async () => {
+    if (isSpectator) return;
     if (!match) return;
 
     try {
@@ -553,9 +541,10 @@ const ConnectFiveGame: SFC = ({className}) => {
     } finally {
       setRematchAction(null);
     }
-  }, [dispatch, match, self?.id]);
+  }, [dispatch, isSpectator, match, self?.id]);
 
   const handleRematchCancel = useCallback(async () => {
+    if (isSpectator) return;
     if (!rematchChallenge || rematchChallenge.status !== ConnectFiveChallengeStatus.PENDING) return;
     if (rematchChallenge.challenger.id !== self?.id) return;
 
@@ -573,9 +562,10 @@ const ConnectFiveGame: SFC = ({className}) => {
     } finally {
       setRematchAction(null);
     }
-  }, [dispatch, rematchChallenge, self?.id]);
+  }, [dispatch, isSpectator, rematchChallenge, self?.id]);
 
   const handleRematchDecline = useCallback(async () => {
+    if (isSpectator) return;
     if (!rematchChallenge || rematchChallenge.status !== ConnectFiveChallengeStatus.PENDING) return;
     if (rematchChallenge.challenger.id === self?.id) return;
 
@@ -593,23 +583,24 @@ const ConnectFiveGame: SFC = ({className}) => {
     } finally {
       setRematchAction(null);
     }
-  }, [dispatch, rematchChallenge, self?.id]);
+  }, [dispatch, isSpectator, rematchChallenge, self?.id]);
 
   const handleResignConfirm = useCallback(async () => {
+    if (isSpectator) return;
     if (!match || match.status !== ConnectFiveMatchStatus.ACTIVE) return;
     if (isResigning) return;
 
     try {
       setIsResigning(true);
       const updatedMatch = await resignConnectFiveMatch(match.id);
-      dispatch(upsertMatch(updatedMatch));
+      dispatch(upsertMatch({match: updatedMatch, selfId}));
       setResignModalIsOpen(false);
     } catch (error) {
       displayErrorToast('Failed to resign match.');
     } finally {
       setIsResigning(false);
     }
-  }, [dispatch, isResigning, match]);
+  }, [dispatch, isResigning, isSpectator, match, selfId]);
 
   const handleResignModalClose = useCallback(() => {
     if (isResigning) return;
@@ -624,12 +615,12 @@ const ConnectFiveGame: SFC = ({className}) => {
     setActiveMoveType(moveType);
   }, []);
 
-  const hasHandledCancellation = useRef(false);
   const hasOpenedResultModal = useRef(false);
   const previousBoardStateRef = useRef<number[][] | null>(null);
   const previousMatchIdRef = useRef<number | null>(null);
   const isMatchActive = matchStatus === ConnectFiveMatchStatus.ACTIVE;
   const rematchViewState = useMemo<RematchViewState>(() => {
+    if (isSpectator) return 'idle';
     if (!rematchChallenge) return 'idle';
 
     if (rematchChallenge.status === ConnectFiveChallengeStatus.PENDING) {
@@ -642,66 +633,70 @@ const ConnectFiveGame: SFC = ({className}) => {
     if (rematchChallenge.status === ConnectFiveChallengeStatus.ACCEPTED) return 'accepted';
 
     return 'idle';
-  }, [rematchChallenge, self?.id]);
+  }, [isSpectator, rematchChallenge, self?.id]);
   const hasRematchChallenge = !!rematchChallenge;
-  const canRequestRematch = !hasRematchChallenge && (rematchStatus?.can_rematch ?? false);
-  const showInsufficientFunds = !hasRematchChallenge && (rematchStatus?.insufficient_funds ?? false);
+  const canRequestRematch = !isSpectator && !hasRematchChallenge && (rematchStatus?.can_rematch ?? false);
+  const showInsufficientFunds = !isSpectator && !hasRematchChallenge && (rematchStatus?.insufficient_funds ?? false);
   const loadMatch = useCallback(
     async (matchIdValue: number) => {
-      const matchData = await getConnectFiveMatch(matchIdValue);
-      dispatch(upsertMatch(matchData));
+      const matchData = await getConnectFiveMatch(matchIdValue, {mine: 'any'});
+      dispatch(upsertMatch({match: matchData, selfId}));
     },
-    [dispatch],
+    [dispatch, selfId],
   );
 
-  const loadChallenge = useCallback(async () => {
-    if (!challengeIdNumber) return;
-
-    const challengeData = await getConnectFiveChallenge(challengeIdNumber);
-    dispatch(upsertChallenge({challenge: challengeData, selfId: self?.id}));
-
-    if (challengeData.match_id) {
-      await loadMatch(challengeData.match_id);
-    }
-  }, [challengeIdNumber, dispatch, loadMatch, self?.id]);
+  const loadChallenge = useCallback(
+    async (challengeIdValue: number) => {
+      const challengeData = await getConnectFiveChallenge(challengeIdValue, {mine: 'any'});
+      dispatch(upsertChallenge({challenge: challengeData, selfId}));
+    },
+    [dispatch, selfId],
+  );
 
   const loadRematchStatus = useCallback(async () => {
-    if (!matchId) return;
+    if (!match?.id || isSpectator) return;
 
     try {
-      const response = await getConnectFiveRematchStatus(matchId);
+      const response = await getConnectFiveRematchStatus(match.id);
       setRematchStatus(response);
     } catch (error) {
       displayErrorToast('Unable to load rematch status.');
     }
-  }, [matchId]);
+  }, [isSpectator, match?.id]);
 
+  const playerAMatchPlayer = useMemo(() => getMatchPlayer(match, match?.player_a.id), [match]);
+  const playerBMatchPlayer = useMemo(() => getMatchPlayer(match, match?.player_b.id), [match]);
   const opponentMatchPlayer = useMemo(() => {
-    if (!match || !self) return null;
-    const opponentId = match.player_a.id === self.id ? match.player_b.id : match.player_a.id;
+    if (!match || !selfId) return null;
+    const opponentId = match.player_a.id === selfId ? match.player_b.id : match.player_a.id;
     return getMatchPlayer(match, opponentId);
-  }, [match, self]);
-
+  }, [match, selfId]);
   const opponentPlayer = useMemo(() => {
-    if (!match || !self) return null;
-    return match.player_a.id === self.id ? match.player_b : match.player_a;
-  }, [match, self]);
-
+    if (!match || !selfId) return null;
+    return match.player_a.id === selfId ? match.player_b : match.player_a;
+  }, [match, selfId]);
+  const playerAClock = useMemo(() => {
+    if (!match) return '0:00';
+    const remaining = getRemainingMs(match, match.player_a.id, now);
+    return formatRemainingTime(remaining);
+  }, [match, now]);
+  const playerBClock = useMemo(() => {
+    if (!match) return '0:00';
+    const remaining = getRemainingMs(match, match.player_b.id, now);
+    return formatRemainingTime(remaining);
+  }, [match, now]);
   const opponentClock = useMemo(() => {
     if (!match || !opponentPlayer) return '0:00';
     const remaining = getRemainingMs(match, opponentPlayer.id, now);
     return formatRemainingTime(remaining);
   }, [match, now, opponentPlayer]);
-
-  const playerAMatchPlayer = useMemo(() => getMatchPlayer(match, match?.player_a.id), [match]);
-  const playerBMatchPlayer = useMemo(() => getMatchPlayer(match, match?.player_b.id), [match]);
   const playerValue = useMemo(() => {
-    if (!match || !self) return 0;
-    return match.player_a.id === self.id ? 1 : 2;
-  }, [match, self]);
+    if (!match || !selfId) return 0;
+    return match.player_a.id === selfId ? 1 : 2;
+  }, [match, selfId]);
 
   const previewState = useMemo(() => {
-    if (!match || !self || !hoverPosition) return {cells: [], isValid: false};
+    if (!match || !self || !hoverPosition || isSpectator) return {cells: [], isValid: false};
     if (match.status !== ConnectFiveMatchStatus.ACTIVE) return {cells: [], isValid: false};
     if (match.active_player?.id !== self.id) return {cells: [], isValid: false};
 
@@ -723,22 +718,31 @@ const ConnectFiveGame: SFC = ({className}) => {
     });
 
     return {cells, isValid};
-  }, [activeMoveType, hoverPosition, match, playerValue, self]);
+  }, [activeMoveType, hoverPosition, isSpectator, match, playerValue, self]);
   const previewKeys = useMemo(() => {
     return new Set(previewState.cells.map((cell) => getCellKey(cell.x, cell.y)));
   }, [previewState.cells]);
 
-  const selfMatchPlayer = useMemo(() => getMatchPlayer(match, self?.id), [match, self?.id]);
+  const selfMatchPlayer = useMemo(() => getMatchPlayer(match, selfId), [match, selfId]);
   const selfPlayer = useMemo(() => {
-    if (!match || !self) return null;
-    return match.player_a.id === self.id ? match.player_a : match.player_b;
-  }, [match, self]);
+    if (!match || !selfId) return null;
+    return match.player_a.id === selfId ? match.player_a : match.player_b;
+  }, [match, selfId]);
 
   const selfClock = useMemo(() => {
     if (!match || !selfPlayer) return '0:00';
     const remaining = getRemainingMs(match, selfPlayer.id, now);
     return formatRemainingTime(remaining);
   }, [match, now, selfPlayer]);
+
+  const bottomMatchPlayer = isSpectator ? playerBMatchPlayer : selfMatchPlayer;
+  const bottomPlayer = isSpectator ? (match?.player_b ?? null) : selfPlayer;
+  const bottomPlayerId = bottomPlayer?.id ?? null;
+  const bottomClock = isSpectator ? playerBClock : selfClock;
+  const topMatchPlayer = isSpectator ? playerAMatchPlayer : opponentMatchPlayer;
+  const topPlayer = isSpectator ? (match?.player_a ?? null) : opponentPlayer;
+  const topPlayerId = topPlayer?.id ?? null;
+  const topClock = isSpectator ? playerAClock : opponentClock;
 
   const previewVariant: PlayerSide = playerValue === 1 ? 'black' : 'white';
   const winningKeys = useMemo(() => {
@@ -857,15 +861,6 @@ const ConnectFiveGame: SFC = ({className}) => {
   }, [match]);
 
   useEffect(() => {
-    if (challenge?.status !== ConnectFiveChallengeStatus.CANCELLED) return;
-    if (hasHandledCancellation.current) return;
-
-    hasHandledCancellation.current = true;
-    displayToast('Challenge has been cancelled.', ToastType.SUCCESS);
-    navigate('/connect-five/home', {replace: true});
-  }, [challenge?.status, navigate]);
-
-  useEffect(() => {
     if (!isMatchActive) return;
 
     const intervalId = setInterval(() => {
@@ -880,16 +875,32 @@ const ConnectFiveGame: SFC = ({className}) => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        await loadChallenge();
+        if (!matchIdNumber) return;
+        setIsLoading(true);
+        await loadMatch(matchIdNumber);
       } catch (error) {
-        displayErrorToast('Unable to load game details.');
+        displayErrorToast('Unable to load match details.');
       } finally {
         setIsLoading(false);
       }
     };
 
     loadData();
-  }, [loadChallenge]);
+  }, [loadMatch, matchIdNumber]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (!challengeId) return;
+
+      try {
+        await loadChallenge(challengeId);
+      } catch (error) {
+        displayErrorToast('Unable to load match details.');
+      }
+    };
+
+    loadData();
+  }, [challengeId, loadChallenge]);
 
   useEffect(() => {
     if (!matchStatus || matchStatus === ConnectFiveMatchStatus.ACTIVE) {
@@ -900,11 +911,12 @@ const ConnectFiveGame: SFC = ({className}) => {
     }
 
     if (matchStatus === ConnectFiveMatchStatus.CANCELLED) return;
+    if (isSpectator) return;
     if (hasOpenedResultModal.current) return;
 
     hasOpenedResultModal.current = true;
     setResultModalIsOpen(true);
-  }, [matchId, matchStatus]);
+  }, [isSpectator, match?.id, matchStatus]);
 
   useEffect(() => {
     if (!resultModalIsOpen) {
@@ -953,15 +965,17 @@ const ConnectFiveGame: SFC = ({className}) => {
     if (matchStatus === ConnectFiveMatchStatus.CANCELLED) return;
 
     loadRematchStatus();
-  }, [loadRematchStatus, matchId, matchStatus]);
+  }, [loadRematchStatus, match?.id, matchStatus]);
 
   useEffect(() => {
+    if (isSpectator) return;
     if (!rematchChallenge || rematchChallenge.status !== ConnectFiveChallengeStatus.ACCEPTED) return;
-    if (challengeIdNumber === rematchChallenge.id) return;
+    if (!rematchChallenge.match_id) return;
+    if (match?.id === rematchChallenge.match_id) return;
 
     setResultModalIsOpen(false);
-    navigate(`/connect-five/games/${rematchChallenge.id}`);
-  }, [challengeIdNumber, navigate, rematchChallenge]);
+    navigate(`/connect-five/matches/${rematchChallenge.match_id}`);
+  }, [isSpectator, match?.id, navigate, rematchChallenge]);
 
   const renderBoard = () => {
     if (!match) return null;
@@ -978,7 +992,7 @@ const ConnectFiveGame: SFC = ({className}) => {
             const isWinningCell = winningKeys.has(cellKey);
             const bombPieceVariant = bombBlastPieces[cellKey];
             const pieceVariant = value === 1 ? 'black' : 'white';
-            const shouldEnableClick = previewState.isValid && isPreview;
+            const shouldEnableClick = !isSpectator && previewState.isValid && isPreview;
 
             return (
               <S.Cell
@@ -1046,7 +1060,7 @@ const ConnectFiveGame: SFC = ({className}) => {
 
     const isActive = match.status === ConnectFiveMatchStatus.ACTIVE;
     const finishReason = getFinishReasonLabel(match);
-    const statusBadge = getStatusBadge(match, self?.id);
+    const statusBadge = getStatusBadge(match, participantId);
 
     return (
       <S.MatchInfo>
@@ -1086,46 +1100,6 @@ const ConnectFiveGame: SFC = ({className}) => {
         </S.PanelHeader>
         <PrizePoolBreakdown initial={prizePoolInitial} spent={prizePoolSpent} ticker="TNB" total={prizePoolTotal} />
       </S.PrizePoolPanel>
-    );
-  };
-
-  const renderPendingState = () => {
-    if (!challenge || !self) return null;
-
-    const isChallenger = challenge.challenger.id === self.id;
-    const variant = isChallenger ? 'challenger' : 'opponent';
-
-    return (
-      <S.PendingState $variant={variant}>
-        <S.PendingIcon $variant={variant}>
-          <S.PendingIconInner $variant={variant} />
-        </S.PendingIcon>
-        <S.PendingContent>
-          <S.PendingTitle $variant={variant}>
-            {isChallenger ? 'Awaiting Opponent' : "You've Been Challenged!"}
-          </S.PendingTitle>
-          <S.PendingText>
-            {isChallenger ? (
-              'Your challenge has been sent. Waiting for your opponent to accept.'
-            ) : (
-              <>
-                <S.PendingChallengerName>{challenge.challenger.username}</S.PendingChallengerName> wants to play Connect
-                5 against you.
-              </>
-            )}
-          </S.PendingText>
-          <S.PendingDots>
-            <S.PendingDot $delay={0} $variant={variant} />
-            <S.PendingDot $delay={0.2} $variant={variant} />
-            <S.PendingDot $delay={0.4} $variant={variant} />
-          </S.PendingDots>
-          <S.PendingShimmer $variant={variant} />
-        </S.PendingContent>
-        <Button
-          onClick={isChallenger ? handleCancelChallenge : handleAcceptChallenge}
-          text={isChallenger ? 'Cancel challenge' : 'Accept challenge'}
-        />
-      </S.PendingState>
     );
   };
 
@@ -1207,17 +1181,18 @@ const ConnectFiveGame: SFC = ({className}) => {
   };
 
   const renderPurchasePanel = () => {
-    if (!match || !selfMatchPlayer || !isMatchActive) return null;
+    if (!match || !isMatchActive) return null;
 
-    const playerSide = getPlayerSide(match, self?.id);
-
-    if (!playerSide) return null;
+    const playerSide = (!isSpectator ? getPlayerSide(match, self?.id) : 'black') ?? 'black';
+    const canPurchase = !!selfMatchPlayer && !isSpectator;
 
     return (
       <S.PurchasePanel>
         <S.PanelHeader>
           <S.PanelTitle>Purchase specials</S.PanelTitle>
-          <S.PanelSubtitle>Remaining spend: {selfMatchPlayer.remaining_spend.toLocaleString()} TNB</S.PanelSubtitle>
+          {canPurchase && (
+            <S.PanelSubtitle>Remaining spend: {selfMatchPlayer.remaining_spend.toLocaleString()} TNB</S.PanelSubtitle>
+          )}
         </S.PanelHeader>
         <S.PurchaseList>
           {ORDERED_SPECIAL_TYPES.map((specialType) => (
@@ -1229,12 +1204,14 @@ const ConnectFiveGame: SFC = ({className}) => {
                   <S.PurchaseMeta>Cost: {SPECIAL_PRICES[specialType]} TNB</S.PurchaseMeta>
                 </S.PurchaseInfo>
               </S.PurchaseLeft>
-              <Button
-                disabled={selfMatchPlayer.remaining_spend < SPECIAL_PRICES[specialType]}
-                isSubmitting={purchasingSpecials.has(specialType)}
-                onClick={() => handlePurchase(specialType)}
-                text="Buy"
-              />
+              {canPurchase && (
+                <Button
+                  disabled={selfMatchPlayer.remaining_spend < SPECIAL_PRICES[specialType]}
+                  isSubmitting={purchasingSpecials.has(specialType)}
+                  onClick={() => handlePurchase(specialType)}
+                  text="Buy"
+                />
+              )}
             </S.PurchaseRow>
           ))}
         </S.PurchaseList>
@@ -1243,7 +1220,7 @@ const ConnectFiveGame: SFC = ({className}) => {
   };
 
   const renderResignPanel = () => {
-    if (!match || !isMatchActive) return null;
+    if (!match || !isMatchActive || isSpectator) return null;
 
     return (
       <S.PurchasePanel>
@@ -1255,14 +1232,14 @@ const ConnectFiveGame: SFC = ({className}) => {
           color={ButtonColor.danger}
           isSubmitting={isResigning}
           onClick={() => setResignModalIsOpen(true)}
-          text="Resign game"
+          text="Resign match"
         />
       </S.PurchasePanel>
     );
   };
 
   const renderResultModal = () => {
-    if (!resultModalIsOpen || !match || !self) return null;
+    if (!resultModalIsOpen || !match || !self || isSpectator) return null;
 
     const eloSnapshot = getEloSnapshot(match, self.id);
     const eloDelta = eloSnapshot?.delta ?? 0;
@@ -1348,7 +1325,7 @@ const ConnectFiveGame: SFC = ({className}) => {
     }
 
     return (
-      <S.ResultModal close={handleResultModalClose} header="Game Results">
+      <S.ResultModal close={handleResultModalClose} header="Match Results">
         <ModalBody>
           <S.ResultSummary $variant={resultVariant}>
             <S.ResultOutcome $variant={resultVariant}>{resultLabel}</S.ResultOutcome>
@@ -1438,10 +1415,10 @@ const ConnectFiveGame: SFC = ({className}) => {
     );
   }
 
-  if (!challenge) {
+  if (!match) {
     return (
       <S.Container className={className}>
-        <EmptyText>Challenge not found.</EmptyText>
+        <EmptyText>Match not found.</EmptyText>
       </S.Container>
     );
   }
@@ -1452,38 +1429,34 @@ const ConnectFiveGame: SFC = ({className}) => {
         <Button onClick={() => navigate('/connect-five/home')} text="Back to lobby" />
       </S.Header>
 
-      {match ? (
-        <S.GameLayout>
-          <S.BoardSection>
-            <S.PlayerRow>
-              {renderPlayerInfo(opponentPlayer)}
-              {renderPieceToolbar(opponentMatchPlayer, false, opponentPlayer?.id)}
-              {renderClock(opponentClock, match.active_player?.id === opponentPlayer?.id)}
-            </S.PlayerRow>
-            {renderBoard()}
-            <S.PlayerRow>
-              {renderPlayerInfo(selfPlayer)}
-              {renderPieceToolbar(selfMatchPlayer, true, self?.id)}
-              {renderClock(selfClock, match.active_player?.id === selfPlayer?.id)}
-            </S.PlayerRow>
-          </S.BoardSection>
-          <S.Sidebar>
-            {renderMatchInfo()}
-            {renderPrizePoolPanel()}
-            {renderSpendPanel()}
-            {renderPurchasePanel()}
-            {renderResignPanel()}
-          </S.Sidebar>
-        </S.GameLayout>
-      ) : (
-        renderPendingState()
-      )}
+      <S.MatchLayout>
+        <S.BoardSection>
+          <S.PlayerRow>
+            {renderPlayerInfo(topPlayer)}
+            {renderPieceToolbar(topMatchPlayer, false, topPlayerId)}
+            {renderClock(topClock, match.active_player?.id === topPlayerId)}
+          </S.PlayerRow>
+          {renderBoard()}
+          <S.PlayerRow>
+            {renderPlayerInfo(bottomPlayer)}
+            {renderPieceToolbar(bottomMatchPlayer, !isSpectator, bottomPlayerId)}
+            {renderClock(bottomClock, match.active_player?.id === bottomPlayerId)}
+          </S.PlayerRow>
+        </S.BoardSection>
+        <S.Sidebar>
+          {renderMatchInfo()}
+          {renderPrizePoolPanel()}
+          {renderSpendPanel()}
+          {renderPurchasePanel()}
+          {renderResignPanel()}
+        </S.Sidebar>
+      </S.MatchLayout>
       {renderResultModal()}
-      {resignModalIsOpen ? (
+      {resignModalIsOpen && !isSpectator ? (
         <ConfirmationModal
           close={handleResignModalClose}
           confirmText={isResigning ? 'Resigning...' : 'Resign'}
-          header="Resign game"
+          header="Resign match"
           message="Are you sure you want to resign? This will end the match immediately."
           onConfirm={handleResignConfirm}
         />
@@ -1492,4 +1465,4 @@ const ConnectFiveGame: SFC = ({className}) => {
   );
 };
 
-export default ConnectFiveGame;
+export default ConnectFiveMatch;

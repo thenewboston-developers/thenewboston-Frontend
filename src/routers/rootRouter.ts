@@ -81,7 +81,9 @@ const rootRouter = (dispatch: AppDispatch, event: MessageEvent) => {
     }
   } else if (type === SocketDataType.UPDATE_CONNECT_FIVE_MATCH) {
     if (socketData.match) {
-      dispatch(upsertMatch(socketData.match));
+      const state = store.getState() as RootState;
+      const selfId = state.self.id;
+      dispatch(upsertMatch({match: socketData.match, selfId}));
     }
   } else if (type === SocketDataType.CREATE_NOTIFICATION) {
     handleCreateNotification(dispatch, socketData);
