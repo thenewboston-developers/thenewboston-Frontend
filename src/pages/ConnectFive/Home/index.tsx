@@ -54,7 +54,7 @@ const timeLimitOptions: SelectOption[] = [
 const MATCHES_PER_PAGE = 10;
 
 const initialValues = {
-  maxSpendAmount: '',
+  maxSpendAmount: 0,
   opponent: null as UserReadSerializer | null,
   stakeAmount: '',
   timeLimitSeconds: '600',

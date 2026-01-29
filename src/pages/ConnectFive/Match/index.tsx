@@ -1425,10 +1425,6 @@ const ConnectFiveMatch: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <S.Header>
-        <Button onClick={() => navigate('/connect-five/home')} text="Back to lobby" />
-      </S.Header>
-
       <S.MatchLayout>
         <S.BoardSection>
           <S.PlayerRow>
