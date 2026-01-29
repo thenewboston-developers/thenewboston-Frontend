@@ -503,7 +503,7 @@ export const EloNumber = styled.span`
   font-weight: ${fonts.weight.semiBold};
 `;
 
-export const GameLayout = styled.div`
+export const MatchLayout = styled.div`
   display: grid;
   gap: 24px;
   grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
@@ -648,6 +648,9 @@ export const PendingDot = styled.span<{$delay: number; $variant?: 'challenger' |
 export const PendingDots = styled.div`
   display: flex;
   gap: 8px;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 8px;
 `;
 
@@ -702,6 +705,8 @@ export const PendingShimmer = styled.div<{$variant?: 'challenger' | 'opponent'}>
   background-size: 200% 100%;
   border-radius: 8px;
   height: 4px;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 4px;
   width: 200px;
 `;

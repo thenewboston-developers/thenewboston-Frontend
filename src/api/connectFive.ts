@@ -66,12 +66,15 @@ export const createConnectFiveChallenge = async (data: {
   }
 };
 
-export const getConnectFiveChallenge = async (challengeId: number): Promise<ConnectFiveChallenge> => {
+export const getConnectFiveChallenge = async (
+  challengeId: number,
+  params?: {mine?: string},
+): Promise<ConnectFiveChallenge> => {
   try {
-    const response = await axios.get<ConnectFiveChallenge>(
-      `${BASE_URL}/challenges/${challengeId}`,
-      authorizationHeaders(),
-    );
+    const response = await axios.get<ConnectFiveChallenge>(`${BASE_URL}/challenges/${challengeId}`, {
+      ...authorizationHeaders(),
+      params,
+    });
     return response.data;
   } catch (error) {
     throw error;
@@ -100,9 +103,12 @@ export const getConnectFiveChallenges = async (params?: {
   }
 };
 
-export const getConnectFiveMatch = async (matchId: number): Promise<ConnectFiveMatch> => {
+export const getConnectFiveMatch = async (matchId: number, params?: {mine?: string}): Promise<ConnectFiveMatch> => {
   try {
-    const response = await axios.get<ConnectFiveMatch>(`${BASE_URL}/matches/${matchId}`, authorizationHeaders());
+    const response = await axios.get<ConnectFiveMatch>(`${BASE_URL}/matches/${matchId}`, {
+      ...authorizationHeaders(),
+      params,
+    });
     return response.data;
   } catch (error) {
     throw error;
@@ -110,6 +116,7 @@ export const getConnectFiveMatch = async (matchId: number): Promise<ConnectFiveM
 };
 
 export const getConnectFiveMatches = async (params?: {
+  mine?: string;
   status?: string;
   url?: string;
 }): Promise<ConnectFiveMatchPaginatedResponse> => {
@@ -120,6 +127,7 @@ export const getConnectFiveMatches = async (params?: {
       params: params?.url
         ? undefined
         : {
+            mine: params?.mine,
             status: params?.status,
           },
     });

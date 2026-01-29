@@ -7,8 +7,6 @@ import Loader from 'components/Loader';
 import {ConnectFiveLeaderboardEntry, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
-import ConnectFiveNavigation from '../Navigation';
-
 import * as S from './Styles';
 
 const PAGE_SIZE = 25;
@@ -97,7 +95,6 @@ const ConnectFiveLeaderboard: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Content>
-        <ConnectFiveNavigation />
         {renderLeaderboardTable()}
         <S.Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
       </S.Content>
