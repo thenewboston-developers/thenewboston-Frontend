@@ -1,6 +1,7 @@
 export enum SocketDataType {
   UPDATE_CONNECT_FIVE_CHALLENGE = 'update.connect_five_challenge',
   UPDATE_CONNECT_FIVE_MATCH = 'update.connect_five_match',
+  CREATE_CONNECT_FIVE_CHAT_MESSAGE = 'create.connect_five_chat_message',
   CREATE_EXCHANGE_ORDER = 'create.exchange_order',
   CREATE_NOTIFICATION = 'create.notification',
   CREATE_TRADE = 'create.trade',

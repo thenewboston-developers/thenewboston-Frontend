@@ -27,6 +27,8 @@ import {Comment, Comments} from 'types/comments';
 import {
   ConnectFiveChallenge,
   ConnectFiveChallengePaginatedResponse,
+  ConnectFiveChatMessage,
+  ConnectFiveChatMessagePaginatedResponse,
   ConnectFiveLeaderboardEntry,
   ConnectFiveLeaderboardPaginatedResponse,
   ConnectFiveMatch,
@@ -78,6 +80,8 @@ export {
   Comments,
   ConnectFiveChallenge,
   ConnectFiveChallengePaginatedResponse,
+  ConnectFiveChatMessage,
+  ConnectFiveChatMessagePaginatedResponse,
   ConnectFiveLeaderboardEntry,
   ConnectFiveLeaderboardPaginatedResponse,
   ConnectFiveMatch,

@@ -48,6 +48,7 @@ import {ReactComponent as BombIcon} from './assets/bomb.svg';
 import {ReactComponent as Horizontal2Icon} from './assets/horizontal2.svg';
 import {ReactComponent as SingleIcon} from './assets/single.svg';
 import {ReactComponent as Vertical2Icon} from './assets/vertical2.svg';
+import ConnectFiveChat from './Chat';
 import * as S from './Styles';
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
@@ -1434,6 +1435,7 @@ const ConnectFiveMatch: SFC = ({className}) => {
         </S.BoardSection>
         <S.Sidebar>
           {renderMatchInfo()}
+          <ConnectFiveChat matchId={match.id} />
           {renderPrizePoolPanel()}
           {renderSpendPanel()}
           {renderPurchasePanel()}

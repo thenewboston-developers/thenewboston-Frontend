@@ -11,6 +11,13 @@ export interface ConnectFiveMatchPlayer {
   user: UserReadSerializer;
 }
 
+export interface ConnectFiveChatMessage extends CreatedModified {
+  id: number;
+  match: number;
+  message: string;
+  sender: UserReadSerializer;
+}
+
 export interface ConnectFiveMatch extends CreatedModified {
   active_player: UserReadSerializer | null;
   board_state: number[][];
@@ -51,6 +58,8 @@ export interface ConnectFiveChallenge extends CreatedModified {
 }
 
 export interface ConnectFiveChallengePaginatedResponse extends PaginatedResponse<ConnectFiveChallenge> {}
+
+export interface ConnectFiveChatMessagePaginatedResponse extends PaginatedResponse<ConnectFiveChatMessage> {}
 
 export interface ConnectFiveLeaderboardEntry {
   elo: number;
