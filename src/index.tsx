@@ -9,6 +9,7 @@ import {BrowserRouter} from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import {PersistGate} from 'redux-persist/integration/react';
 
+import GoogleAnalyticsPageViewTracker from 'components/GoogleAnalyticsPageViewTracker';
 import App from 'containers/App';
 import {persistor, store} from 'store';
 import {colors} from 'styles';
@@ -32,6 +33,7 @@ root.render(
       <ToastifyStyle />
       <SkeletonTheme highlightColor={colors.palette.gray[300]} baseColor={colors.whiteSmoke}>
         <BrowserRouter>
+          <GoogleAnalyticsPageViewTracker />
           <Sentry.ErrorBoundary fallback={<p>An error has occurred. Please refresh the page.</p>}>
             <App />
           </Sentry.ErrorBoundary>
