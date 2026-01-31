@@ -340,14 +340,7 @@ const ConnectFiveChallenge: SFC = ({className}) => {
     );
   }
 
-  return (
-    <MatchStyles.Container className={className}>
-      <MatchStyles.Header>
-        <Button onClick={handleReturnHome} text="Back to lobby" />
-      </MatchStyles.Header>
-      {renderContent()}
-    </MatchStyles.Container>
-  );
+  return <MatchStyles.Container className={className}>{renderContent()}</MatchStyles.Container>;
 };
 
 export default ConnectFiveChallenge;
