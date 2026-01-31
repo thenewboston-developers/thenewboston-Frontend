@@ -18,12 +18,19 @@ import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import Comments from './Comments';
 import * as S from './Styles';
-import TipAmounts from './TipAmounts';
+import CoinTransferAmounts from './TipAmounts';
 import TransferInfo from './TransferInfo';
 
 export interface PostProps {
   post: TPost;
 }
+
+type CoinTransferAmount = {
+  currency: {
+    ticker: string;
+  };
+  total_amount: number;
+};
 
 const extractYouTubeVideoId = (text: string): string | null => {
   const urlPattern = /https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)[^\s]+/gi;
@@ -71,23 +78,29 @@ const formatAmountWithTicker = (amount: number, ticker: string): string => {
   return `${amount.toLocaleString()} ${ticker}`;
 };
 
-const getCommentTipLine = (comment: TComment): string | null => {
+const getCommentCoinTransferLine = (comment: TComment): string | null => {
   if (!comment.price_amount || !comment.price_currency) return null;
-  return `Tip: ${formatAmountWithTicker(comment.price_amount, comment.price_currency.ticker)}`;
+  return `Coin transfer: ${formatAmountWithTicker(comment.price_amount, comment.price_currency.ticker)}`;
 };
 
-const getPostTipLines = (tipAmounts: TPost['tip_amounts']): string[] => {
-  if (!tipAmounts || tipAmounts.length === 0) return [];
-  return tipAmounts.map((tip) => `- ${formatAmountWithTicker(tip.total_amount, tip.currency.ticker)}`);
+const getPostCoinTransferLines = (transferAmounts: CoinTransferAmount[]): string[] => {
+  if (!transferAmounts || transferAmounts.length === 0) return [];
+  return transferAmounts.map(
+    (transfer) => `- ${formatAmountWithTicker(transfer.total_amount, transfer.currency.ticker)}`,
+  );
 };
 
 const sortCommentsByDate = (comments: TComment[]): TComment[] => {
   return [...comments].sort((a, b) => new Date(a.created_date).getTime() - new Date(b.created_date).getTime());
 };
 
-const buildConversationMarkdown = (post: TPost, comments: TComment[]): string => {
+const buildConversationMarkdown = (
+  post: TPost,
+  comments: TComment[],
+  transferAmounts: CoinTransferAmount[],
+): string => {
   const lines: string[] = [];
-  const tipLines = getPostTipLines(post.tip_amounts);
+  const coinTransferLines = getPostCoinTransferLines(transferAmounts);
   const isTransferPost = !!(post.recipient && post.price_amount && post.price_currency);
 
   lines.push(`# Post by @${post.owner.username}`);
@@ -111,10 +124,10 @@ const buildConversationMarkdown = (post: TPost, comments: TComment[]): string =>
   lines.push('## Post');
   lines.push(post.content);
 
-  if (tipLines.length) {
+  if (coinTransferLines.length) {
     lines.push('');
-    lines.push('## Tips');
-    lines.push(...tipLines);
+    lines.push('## Coin Transfers');
+    lines.push(...coinTransferLines);
   }
 
   lines.push('');
@@ -125,14 +138,14 @@ const buildConversationMarkdown = (post: TPost, comments: TComment[]): string =>
   }
 
   comments.forEach((comment, index) => {
-    const commentTipLine = getCommentTipLine(comment);
+    const commentCoinTransferLine = getCommentCoinTransferLine(comment);
 
     lines.push('');
     lines.push(`### ${index + 1}. @${comment.owner.username}`);
     lines.push(`- Created: ${longDate(comment.created_date)}`);
 
-    if (commentTipLine) {
-      lines.push(`- ${commentTipLine}`);
+    if (commentCoinTransferLine) {
+      lines.push(`- ${commentCoinTransferLine}`);
     }
 
     lines.push('');
@@ -165,7 +178,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
     price_amount,
     price_currency,
     recipient,
-    tip_amounts,
+    tip_amounts: coin_transfer_amounts,
   } = post;
   const isTransferPost = !!(recipient && price_amount && price_currency);
   const isOwner = owner.id === self.id;
@@ -175,7 +188,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
 
   const handleCopyForLlm = async () => {
     try {
-      await navigator.clipboard.writeText(buildConversationMarkdown(post, commentsForPost));
+      await navigator.clipboard.writeText(buildConversationMarkdown(post, commentsForPost, coin_transfer_amounts));
       displayToast('Conversation copied for LLM.', ToastType.SUCCESS);
     } catch (error) {
       displayErrorToast('Error copying conversation');
@@ -318,7 +331,9 @@ const Post: SFC<PostProps> = ({className, post}) => {
               text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
             />
           </S.ActionsLeft>
-          {tip_amounts && tip_amounts.length > 0 && <TipAmounts tipAmounts={tip_amounts} />}
+          {coin_transfer_amounts && coin_transfer_amounts.length > 0 && (
+            <CoinTransferAmounts tipAmounts={coin_transfer_amounts} />
+          )}
         </S.ActionsContainer>
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
