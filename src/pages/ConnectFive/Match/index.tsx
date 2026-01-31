@@ -59,6 +59,8 @@ type RematchAction = 'accept' | 'cancel' | 'decline' | 'request';
 type RematchViewState = 'accepted' | 'cancelled' | 'declined' | 'idle' | 'requestedByMe' | 'requestedByOpponent';
 
 const BOARD_SIZE = 15;
+const RESULT_TNB_ANIMATION_DELAY_MS = 200;
+const RESULT_TNB_ANIMATION_DURATION_MS = 2400;
 
 const SPECIAL_PRICES: Record<ConnectFiveSpecialType, number> = {
   [ConnectFiveSpecialType.BOMB]: 3,
@@ -931,29 +933,32 @@ const ConnectFiveMatch: SFC = ({className}) => {
 
     if (tnbDeltaTarget === 0) return;
 
-    const step = tnbDeltaTarget > 0 ? 1 : -1;
-    let intervalId: ReturnType<typeof setInterval> | null = null;
+    let animationFrameId: number | null = null;
+    let startTime: number | null = null;
     const startTimeoutId = setTimeout(() => {
-      intervalId = setInterval(() => {
-        setResultTnbDelta((current) => {
-          const nextValue = current + step;
+      const animate = (timestamp: number) => {
+        if (startTime === null) {
+          startTime = timestamp;
+        }
 
-          if ((step > 0 && nextValue >= tnbDeltaTarget) || (step < 0 && nextValue <= tnbDeltaTarget)) {
-            if (intervalId !== null) {
-              clearInterval(intervalId);
-            }
-            return tnbDeltaTarget;
-          }
+        const elapsedMs = timestamp - startTime;
+        const progress = Math.min(elapsedMs / RESULT_TNB_ANIMATION_DURATION_MS, 1);
+        const nextValue = progress >= 1 ? tnbDeltaTarget : Math.round(tnbDeltaTarget * progress);
 
-          return nextValue;
-        });
-      }, 60);
-    }, 200);
+        setResultTnbDelta(nextValue);
+
+        if (progress < 1) {
+          animationFrameId = requestAnimationFrame(animate);
+        }
+      };
+
+      animationFrameId = requestAnimationFrame(animate);
+    }, RESULT_TNB_ANIMATION_DELAY_MS);
 
     return () => {
       clearTimeout(startTimeoutId);
-      if (intervalId !== null) {
-        clearInterval(intervalId);
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
       }
     };
   }, [resultModalIsOpen, tnbDeltaTarget]);
