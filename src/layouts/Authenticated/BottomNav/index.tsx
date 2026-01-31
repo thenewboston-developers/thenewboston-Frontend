@@ -6,6 +6,7 @@ import {
   mdiCircleMultipleOutline,
   mdiDotsVertical,
   mdiExitToApp,
+  mdiGamepadVariantOutline,
   mdiHome,
   mdiSwapHorizontalCircleOutline,
   mdiWalletBifoldOutline,
@@ -29,6 +30,11 @@ const BottomNav: SFC = ({className}) => {
       icon: mdiCircleMultipleOutline,
       label: 'Currencies',
       onClick: () => navigate('/currencies'),
+    },
+    {
+      icon: mdiGamepadVariantOutline,
+      label: 'Connect 5',
+      onClick: () => navigate('/connect-five'),
     },
     {
       icon: mdiWalletBifoldOutline,
