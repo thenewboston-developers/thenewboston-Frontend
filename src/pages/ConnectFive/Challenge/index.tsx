@@ -239,12 +239,7 @@ const ConnectFiveChallenge: SFC = ({className}) => {
             </>
           );
         }
-        return (
-          <>
-            We&apos;ll take you to the match as soon as{' '}
-            <MatchStyles.PendingChallengerName>{opponentName}</MatchStyles.PendingChallengerName> accepts.
-          </>
-        );
+        return <>We&apos;ll take you to the match as soon as {opponentName} accepts.</>;
       }
 
       if (challenge.status === ConnectFiveChallengeStatus.ACCEPTED) {
