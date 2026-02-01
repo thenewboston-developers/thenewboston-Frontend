@@ -244,7 +244,6 @@ export const ProfileHeaderContent = styled.div`
   align-items: center;
   display: flex;
   gap: 20px;
-  padding: 8px 0;
   position: relative;
   z-index: 1;
 
@@ -258,7 +257,7 @@ export const ProfileMeta = styled.div`
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  font-size: 14px;
+  font-size: 15px;
   gap: 12px;
 `;
 
@@ -282,8 +281,8 @@ export const ProfileMetaSeparator = styled.span`
 
 export const ProfileUsername = styled.h1`
   color: ${colors.primary};
-  font-size: 26px;
-  font-weight: ${fonts.weight.extraBold};
+  font-size: 31px;
+  font-weight: ${fonts.weight.bold};
   letter-spacing: -0.02em;
   line-height: 1.1;
   margin: 0;

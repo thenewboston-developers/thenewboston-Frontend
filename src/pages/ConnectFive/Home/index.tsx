@@ -497,7 +497,7 @@ const ConnectFiveHome: SFC = ({className}) => {
   const isRecordLoading = isLeaderboardLoading || (!selfLeaderboardEntry && isMatchesLoading);
   const rankLabel = (() => {
     if (isLeaderboardLoading) {
-      return '-';
+      return 'Rank -';
     }
 
     if (selfLeaderboardRank) {
@@ -801,7 +801,7 @@ const ConnectFiveHome: SFC = ({className}) => {
         <S.ProfileHeader>
           <S.ProfileHeaderContent>
             <S.ProfileAvatarWrapper>
-              <Avatar size="96px" src={self?.avatar ?? null} />
+              <Avatar size="120px" src={self?.avatar ?? null} />
             </S.ProfileAvatarWrapper>
             <S.ProfileDetails>
               <S.ProfileUsername>{self?.username ?? 'Unknown player'}</S.ProfileUsername>
