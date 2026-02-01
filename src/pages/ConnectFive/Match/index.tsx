@@ -47,6 +47,10 @@ import {displayErrorToast} from 'utils/toasts';
 import {ReactComponent as BombIcon} from './assets/bomb.svg';
 import {ReactComponent as Horizontal2Icon} from './assets/horizontal2.svg';
 import {ReactComponent as SingleIcon} from './assets/single.svg';
+import connectFiveBombSound from './assets/sounds/connect-five-bomb.mp3';
+import connectFiveDoubleSound from './assets/sounds/connect-five-double.mp3';
+import connectFivePieceSound from './assets/sounds/connect-five-piece.mp3';
+import connectFiveWinSound from './assets/sounds/connect-five-win.mp3';
 import {ReactComponent as Vertical2Icon} from './assets/vertical2.svg';
 import ConnectFiveChat from './Chat';
 import * as S from './Styles';
@@ -171,6 +175,13 @@ const MOVE_TO_SPECIAL_TYPE: Record<ConnectFiveMoveType, ConnectFiveSpecialType |
   [ConnectFiveMoveType.H2]: ConnectFiveSpecialType.H2,
   [ConnectFiveMoveType.SINGLE]: null,
   [ConnectFiveMoveType.V2]: ConnectFiveSpecialType.V2,
+};
+
+const MOVE_SOUNDS: Record<ConnectFiveMoveType, string> = {
+  [ConnectFiveMoveType.BOMB]: connectFiveBombSound,
+  [ConnectFiveMoveType.H2]: connectFiveDoubleSound,
+  [ConnectFiveMoveType.SINGLE]: connectFivePieceSound,
+  [ConnectFiveMoveType.V2]: connectFiveDoubleSound,
 };
 
 const BOMB_SHARD_CONFIG = [
@@ -842,6 +853,21 @@ const ConnectFiveMatch: SFC = ({className}) => {
 
     if (!hasChanges) return;
 
+    let soundSource: string | null = null;
+
+    if (nextBombKeys.length) {
+      soundSource = MOVE_SOUNDS[ConnectFiveMoveType.BOMB];
+    } else if (nextMoveKeys.length === 2) {
+      soundSource = MOVE_SOUNDS[ConnectFiveMoveType.H2];
+    } else if (nextMoveKeys.length === 1) {
+      soundSource = MOVE_SOUNDS[ConnectFiveMoveType.SINGLE];
+    }
+
+    if (soundSource) {
+      const audio = new Audio(soundSource);
+      audio.play().catch(() => undefined);
+    }
+
     setLastMoveKeys(new Set(nextMoveKeys));
 
     if (nextMoveKeys.length) {
@@ -936,6 +962,11 @@ const ConnectFiveMatch: SFC = ({className}) => {
     let animationFrameId: number | null = null;
     let startTime: number | null = null;
     const startTimeoutId = setTimeout(() => {
+      if (tnbDeltaTarget > 0) {
+        const audio = new Audio(connectFiveWinSound);
+        audio.play().catch(() => undefined);
+      }
+
       const animate = (timestamp: number) => {
         if (startTime === null) {
           startTime = timestamp;
