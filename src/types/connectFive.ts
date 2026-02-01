@@ -18,6 +18,11 @@ export interface ConnectFiveChatMessage extends CreatedModified {
   sender: UserReadSerializer;
 }
 
+export interface ConnectFiveEloSnapshot {
+  date: string;
+  elo: number;
+}
+
 export interface ConnectFiveMatch extends CreatedModified {
   active_player: UserReadSerializer | null;
   board_state: number[][];

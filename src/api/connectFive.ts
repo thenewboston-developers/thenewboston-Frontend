@@ -6,6 +6,7 @@ import {
   ConnectFiveChallengePaginatedResponse,
   ConnectFiveChatMessage,
   ConnectFiveChatMessagePaginatedResponse,
+  ConnectFiveEloSnapshot,
   ConnectFiveLeaderboardPaginatedResponse,
   ConnectFiveMatch,
   ConnectFiveMatchPaginatedResponse,
@@ -136,6 +137,15 @@ export const getConnectFiveChallenges = async (params?: {
             status: params?.status,
           },
     });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getConnectFiveEloSnapshots = async (): Promise<ConnectFiveEloSnapshot[]> => {
+  try {
+    const response = await axios.get<ConnectFiveEloSnapshot[]>(`${BASE_URL}/elo-snapshots`, authorizationHeaders());
     return response.data;
   } catch (error) {
     throw error;

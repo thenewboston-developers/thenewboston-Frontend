@@ -4,12 +4,14 @@ import {useNavigate} from 'react-router-dom';
 import {mdiArrowRight} from '@mdi/js';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
+import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
 import {
   acceptConnectFiveChallenge,
   cancelConnectFiveChallenge,
   createConnectFiveChallenge,
   getConnectFiveChallenges,
+  getConnectFiveEloSnapshots,
   getConnectFiveMatches,
 } from 'api/connectFive';
 import Avatar from 'components/Avatar';
@@ -37,9 +39,19 @@ import {
   upsertChallenge,
   upsertMatch,
 } from 'store/connectFive';
-import {AppDispatch, ConnectFiveChallenge, ConnectFiveMatch, SelectOption, SFC, UserReadSerializer} from 'types';
+import {colors} from 'styles';
+import {
+  AppDispatch,
+  ConnectFiveChallenge,
+  ConnectFiveEloSnapshot,
+  ConnectFiveMatch,
+  SelectOption,
+  SFC,
+  UserReadSerializer,
+} from 'types';
 import {shortDate} from 'utils/dates';
 import {handleFormikAPIError} from 'utils/forms';
+import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
@@ -142,6 +154,9 @@ const isMatchParticipant = (match: ConnectFiveMatch, userId?: number | null): bo
 const ConnectFiveHome: SFC = ({className}) => {
   const [activeMatchesPage, setActiveMatchesPage] = useState(1);
   const [completedMatchesPage, setCompletedMatchesPage] = useState(1);
+  const [eloError, setEloError] = useState<string | null>(null);
+  const [eloSnapshots, setEloSnapshots] = useState<ConnectFiveEloSnapshot[]>([]);
+  const [isEloLoading, setIsEloLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [publicMatches, setPublicMatches] = useState<ConnectFiveMatch[]>([]);
   const [publicMatchesPage, setPublicMatchesPage] = useState(1);
@@ -169,6 +184,10 @@ const ConnectFiveHome: SFC = ({className}) => {
   const completedMatchesTotalPages = useMemo(() => {
     return Math.ceil(completedMatchesSorted.length / MATCHES_PER_PAGE);
   }, [completedMatchesSorted.length]);
+
+  const eloChartData = useMemo(() => {
+    return orderBy(eloSnapshots, ['date'], ['asc']);
+  }, [eloSnapshots]);
 
   const publicMatchesSorted = useMemo(() => {
     return orderBy(publicMatches, ['created_date'], ['desc']);
@@ -207,6 +226,24 @@ const ConnectFiveHome: SFC = ({className}) => {
       timeLimitSeconds: yup.string().required('Time limit is required'),
     });
   }, [self?.id]);
+
+  const formatEloDate = (value: string, options: Intl.DateTimeFormatOptions) => {
+    const [year, month, day] = value.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.toLocaleDateString(undefined, options);
+  };
+
+  const formatEloDateLabel = (value: string) => {
+    return formatEloDate(value, {day: 'numeric', month: 'short'});
+  };
+
+  const formatEloTooltipLabel = (value: string) => {
+    return formatEloDate(value, {day: 'numeric', month: 'short', year: 'numeric'});
+  };
+
+  const formatEloValue = (value: number) => {
+    return value.toLocaleString();
+  };
 
   const handleAcceptChallenge = useCallback(
     async (challengeId: number) => {
@@ -264,10 +301,6 @@ const ConnectFiveHome: SFC = ({className}) => {
     setCompletedMatchesPage(page);
   }, []);
 
-  const handlePublicMatchesPageChange = useCallback((page: number) => {
-    setPublicMatchesPage(page);
-  }, []);
-
   const handleMatchCardClick = useCallback(
     (matchId: number) => {
       navigate(`/connect-five/matches/${matchId}`);
@@ -287,6 +320,10 @@ const ConnectFiveHome: SFC = ({className}) => {
     [],
   );
 
+  const handlePublicMatchesPageChange = useCallback((page: number) => {
+    setPublicMatchesPage(page);
+  }, []);
+
   const loadChallenges = useCallback(async () => {
     const incomingResponse = await getConnectFiveChallenges({
       mine: 'received',
@@ -300,6 +337,20 @@ const ConnectFiveHome: SFC = ({className}) => {
     dispatch(setIncomingChallenges(incomingResponse.results));
     dispatch(setOutgoingChallenges(outgoingResponse.results));
   }, [dispatch]);
+
+  const loadEloSnapshots = useCallback(async () => {
+    try {
+      setEloError(null);
+      setIsEloLoading(true);
+      const response = await getConnectFiveEloSnapshots();
+      setEloSnapshots(response);
+    } catch (error) {
+      displayErrorToast('Unable to load ELO history.');
+      setEloError('Unable to load ELO history.');
+    } finally {
+      setIsEloLoading(false);
+    }
+  }, []);
 
   const loadMatches = useCallback(async () => {
     const [selfMatchesResponse, publicMatchesResponse] = await Promise.all([
@@ -330,6 +381,10 @@ const ConnectFiveHome: SFC = ({className}) => {
   }, [loadChallenges, loadMatches]);
 
   useEffect(() => {
+    loadEloSnapshots();
+  }, [loadEloSnapshots]);
+
+  useEffect(() => {
     if (activeMatchesTotalPages && activeMatchesPage > activeMatchesTotalPages) {
       setActiveMatchesPage(activeMatchesTotalPages);
     } else if (!activeMatchesTotalPages && activeMatchesPage !== 1) {
@@ -354,6 +409,56 @@ const ConnectFiveHome: SFC = ({className}) => {
     publicMatchesPage,
     publicMatchesTotalPages,
   ]);
+
+  const renderEloChart = () => {
+    if (isEloLoading) {
+      return (
+        <S.EloChartBody>
+          <Loader />
+        </S.EloChartBody>
+      );
+    }
+
+    if (eloError) {
+      return (
+        <S.EloChartBody>
+          <EmptyText>{eloError}</EmptyText>
+        </S.EloChartBody>
+      );
+    }
+
+    if (!eloChartData.length) {
+      return (
+        <S.EloChartBody>
+          <EmptyText>No ELO history yet.</EmptyText>
+        </S.EloChartBody>
+      );
+    }
+
+    return (
+      <S.EloChartBody>
+        <S.EloChartWrapper>
+          <ResponsiveContainer height="100%" width="100%">
+            <LineChart data={eloChartData} margin={{bottom: 0, left: 0, right: 0, top: 0}}>
+              <CartesianGrid stroke={colors.border} strokeDasharray="3 3" />
+              <XAxis dataKey="date" stroke={colors.secondary} tickFormatter={formatEloDateLabel} />
+              <YAxis stroke={colors.secondary} tickFormatter={formatEloValue} width={48} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: colors.white,
+                  border: `1px solid ${colors.border}`,
+                  borderRadius: '8px',
+                }}
+                formatter={(value) => formatEloValue(Number(value))}
+                labelFormatter={formatEloTooltipLabel}
+              />
+              <Line dataKey="elo" dot={false} stroke={colors.palette.blue[500]} strokeWidth={2} type="monotone" />
+            </LineChart>
+          </ResponsiveContainer>
+        </S.EloChartWrapper>
+      </S.EloChartBody>
+    );
+  };
 
   const renderYourMatches = () => {
     if (isLoading) {
@@ -612,67 +717,73 @@ const ConnectFiveHome: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Content>
-        <S.Section>
-          <S.SectionTitle>Send a challenge</S.SectionTitle>
-          <Formik initialValues={initialValues} onSubmit={handleChallengeSubmit} validationSchema={validationSchema}>
-            {({
-              dirty,
-              errors,
-              handleSubmit,
-              isSubmitting,
-              isValid,
-              setFieldTouched,
-              setFieldValue,
-              touched,
-              values,
-            }) => (
-              <S.Form onSubmit={handleSubmit}>
-                <FormField>
-                  <UserSearchInput
-                    errors={errors}
-                    label="Search for recipient"
-                    name="opponent"
-                    onChange={(user) => handleOpponentChange(user, setFieldTouched, setFieldValue)}
-                    touched={touched}
-                    value={values.opponent}
-                  />
-                </FormField>
-                <S.FormRow>
+        <S.TopRow>
+          <S.Section>
+            <S.SectionTitle>Your ELO</S.SectionTitle>
+            {renderEloChart()}
+          </S.Section>
+          <S.Section>
+            <S.SectionTitle>Send a challenge</S.SectionTitle>
+            <Formik initialValues={initialValues} onSubmit={handleChallengeSubmit} validationSchema={validationSchema}>
+              {({
+                dirty,
+                errors,
+                handleSubmit,
+                isSubmitting,
+                isValid,
+                setFieldTouched,
+                setFieldValue,
+                touched,
+                values,
+              }) => (
+                <S.Form onSubmit={handleSubmit}>
                   <FormField>
-                    <Input errors={errors} label="Stake (TNB)" name="stakeAmount" touched={touched} type="number" />
-                  </FormField>
-                  <FormField>
-                    <Input
+                    <UserSearchInput
                       errors={errors}
-                      label="Max spend (TNB)"
-                      name="maxSpendAmount"
+                      label="Search for recipient"
+                      name="opponent"
+                      onChange={(user) => handleOpponentChange(user, setFieldTouched, setFieldValue)}
                       touched={touched}
-                      type="number"
+                      value={values.opponent}
                     />
                   </FormField>
-                </S.FormRow>
-                <FormField>
-                  <Select
-                    errors={errors}
-                    label="Total time per player"
-                    name="timeLimitSeconds"
-                    options={timeLimitOptions}
-                    touched={touched}
-                  />
-                </FormField>
-                <S.SubmitRow>
-                  <Button
-                    dirty={dirty}
-                    isSubmitting={isSubmitting}
-                    isValid={isValid}
-                    text={isSubmitting ? 'Sending...' : 'Send challenge'}
-                    type={ButtonType.submit}
-                  />
-                </S.SubmitRow>
-              </S.Form>
-            )}
-          </Formik>
-        </S.Section>
+                  <S.FormRow>
+                    <FormField>
+                      <Input errors={errors} label="Stake (TNB)" name="stakeAmount" touched={touched} type="number" />
+                    </FormField>
+                    <FormField>
+                      <Input
+                        errors={errors}
+                        label="Max spend (TNB)"
+                        name="maxSpendAmount"
+                        touched={touched}
+                        type="number"
+                      />
+                    </FormField>
+                  </S.FormRow>
+                  <FormField>
+                    <Select
+                      errors={errors}
+                      label="Total time per player"
+                      name="timeLimitSeconds"
+                      options={timeLimitOptions}
+                      touched={touched}
+                    />
+                  </FormField>
+                  <S.SubmitRow>
+                    <Button
+                      dirty={dirty}
+                      isSubmitting={isSubmitting}
+                      isValid={isValid}
+                      text={isSubmitting ? 'Sending...' : 'Send challenge'}
+                      type={ButtonType.submit}
+                    />
+                  </S.SubmitRow>
+                </S.Form>
+              )}
+            </Formik>
+          </S.Section>
+        </S.TopRow>
 
         <S.MatchesSection>
           <S.MatchesSectionTitle>Incoming challenges</S.MatchesSectionTitle>

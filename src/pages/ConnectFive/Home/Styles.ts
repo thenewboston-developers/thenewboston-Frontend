@@ -2,7 +2,7 @@ import Icon from '@mdi/react';
 import styled from 'styled-components';
 
 import UPagination from 'components/Pagination';
-import {colors, fonts, pagePadding} from 'styles';
+import {breakpoints, colors, fonts, pagePadding} from 'styles';
 
 export const ChallengeActions = styled.div`
   display: flex;
@@ -79,6 +79,19 @@ export const Content = styled.div`
 export const EmptyState = styled.div`
   color: ${colors.secondary};
   font-size: 14px;
+`;
+
+export const EloChartBody = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 240px;
+  width: 100%;
+`;
+
+export const EloChartWrapper = styled.div`
+  height: 240px;
+  width: 100%;
 `;
 
 export const Form = styled.form`
@@ -248,4 +261,15 @@ export const SectionTitle = styled.h2`
 export const SubmitRow = styled.div`
   display: flex;
   justify-content: flex-end;
+`;
+
+export const TopRow = styled.div`
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr;
+
+  @media (min-width: ${breakpoints.tablet}) {
+    align-items: stretch;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
 `;
