@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom';
 import {mdiArrowRight} from '@mdi/js';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
-import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
+import {Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
 import {
   acceptConnectFiveChallenge,
@@ -439,7 +439,7 @@ const ConnectFiveHome: SFC = ({className}) => {
       <S.EloChartBody>
         <S.EloChartWrapper>
           <ResponsiveContainer height="100%" width="100%">
-            <LineChart data={eloChartData} margin={{bottom: 0, left: 0, right: 0, top: 0}}>
+            <AreaChart data={eloChartData} margin={{bottom: 0, left: 0, right: 0, top: 0}}>
               <CartesianGrid stroke={colors.border} strokeDasharray="3 3" />
               <XAxis dataKey="date" stroke={colors.secondary} tickFormatter={formatEloDateLabel} />
               <YAxis stroke={colors.secondary} tickFormatter={formatEloValue} width={48} />
@@ -452,8 +452,14 @@ const ConnectFiveHome: SFC = ({className}) => {
                 formatter={(value) => formatEloValue(Number(value))}
                 labelFormatter={formatEloTooltipLabel}
               />
-              <Line dataKey="elo" dot={false} stroke={colors.palette.blue[500]} strokeWidth={2} type="monotone" />
-            </LineChart>
+              <Area
+                dataKey="elo"
+                fill="rgba(59, 130, 246, 0.15)"
+                stroke={colors.palette.blue[500]}
+                strokeWidth={2}
+                type="monotone"
+              />
+            </AreaChart>
           </ResponsiveContainer>
         </S.EloChartWrapper>
       </S.EloChartBody>
