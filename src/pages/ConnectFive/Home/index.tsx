@@ -718,10 +718,10 @@ const ConnectFiveHome: SFC = ({className}) => {
     <S.Container className={className}>
       <S.Content>
         <S.TopRow>
-          <S.Section>
+          <S.EloSection>
             <S.SectionTitle>Your ELO</S.SectionTitle>
             {renderEloChart()}
-          </S.Section>
+          </S.EloSection>
           <S.Section>
             <S.SectionTitle>Send a challenge</S.SectionTitle>
             <Formik initialValues={initialValues} onSubmit={handleChallengeSubmit} validationSchema={validationSchema}>

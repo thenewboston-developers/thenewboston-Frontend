@@ -84,13 +84,14 @@ export const EmptyState = styled.div`
 export const EloChartBody = styled.div`
   align-items: center;
   display: flex;
+  flex: 1;
   justify-content: center;
   min-height: 240px;
   width: 100%;
 `;
 
 export const EloChartWrapper = styled.div`
-  height: 240px;
+  height: 100%;
   width: 100%;
 `;
 
@@ -261,6 +262,11 @@ export const SectionTitle = styled.h2`
 export const SubmitRow = styled.div`
   display: flex;
   justify-content: flex-end;
+`;
+
+export const EloSection = styled(Section)`
+  display: flex;
+  flex-direction: column;
 `;
 
 export const TopRow = styled.div`
