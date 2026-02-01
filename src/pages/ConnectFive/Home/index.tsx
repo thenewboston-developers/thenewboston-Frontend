@@ -12,6 +12,7 @@ import {
   createConnectFiveChallenge,
   getConnectFiveChallenges,
   getConnectFiveEloSnapshots,
+  getConnectFiveLeaderboard,
   getConnectFiveMatches,
 } from 'api/connectFive';
 import Avatar from 'components/Avatar';
@@ -44,6 +45,7 @@ import {
   AppDispatch,
   ConnectFiveChallenge,
   ConnectFiveEloSnapshot,
+  ConnectFiveLeaderboardEntry,
   ConnectFiveMatch,
   SelectOption,
   SFC,
@@ -162,8 +164,12 @@ const ConnectFiveHome: SFC = ({className}) => {
   const [eloError, setEloError] = useState<string | null>(null);
   const [eloSnapshots, setEloSnapshots] = useState<ConnectFiveEloSnapshot[]>([]);
   const [isEloLoading, setIsEloLoading] = useState(true);
+  const [isLeaderboardLoading, setIsLeaderboardLoading] = useState(true);
+  const [isMatchesLoading, setIsMatchesLoading] = useState(true);
   const [publicMatches, setPublicMatches] = useState<ConnectFiveMatch[]>([]);
   const [publicMatchesPage, setPublicMatchesPage] = useState(1);
+  const [selfLeaderboardEntry, setSelfLeaderboardEntry] = useState<ConnectFiveLeaderboardEntry | null>(null);
+  const [selfLeaderboardRank, setSelfLeaderboardRank] = useState<number | null>(null);
 
   const activeMatches = useSelector(getConnectFiveActiveMatches);
   const completedMatches = useSelector(getConnectFiveCompletedMatches);
@@ -188,6 +194,26 @@ const ConnectFiveHome: SFC = ({className}) => {
   const completedMatchesTotalPages = useMemo(() => {
     return Math.ceil(completedMatchesSorted.length / MATCHES_PER_PAGE);
   }, [completedMatchesSorted.length]);
+
+  const selfMatchRecord = useMemo(() => {
+    if (!self?.id) {
+      return {losses: 0, wins: 0};
+    }
+
+    return completedMatches.reduce(
+      (record, match) => {
+        if (!match.winner) return record;
+        if (match.winner === self.id) {
+          record.wins += 1;
+          return record;
+        }
+
+        record.losses += 1;
+        return record;
+      },
+      {losses: 0, wins: 0},
+    );
+  }, [completedMatches, self?.id]);
 
   const eloChartData = useMemo(() => {
     return orderBy(eloSnapshots, ['date'], ['asc']);
@@ -356,19 +382,74 @@ const ConnectFiveHome: SFC = ({className}) => {
     }
   }, []);
 
-  const loadMatches = useCallback(async () => {
-    const [selfMatchesResponse, publicMatchesResponse] = await Promise.all([
-      getConnectFiveMatches({mine: 'self'}),
-      getConnectFiveMatches({mine: 'exclude', status: ConnectFiveMatchStatus.ACTIVE}),
-    ]);
-    const selfMatches = selfMatchesResponse.results;
-    const filteredPublicMatches = self?.id
-      ? publicMatchesResponse.results.filter((match) => !isMatchParticipant(match, self.id))
-      : publicMatchesResponse.results;
+  const loadLeaderboardEntry = useCallback(async () => {
+    if (!self?.id) {
+      setSelfLeaderboardEntry(null);
+      setSelfLeaderboardRank(null);
+      setIsLeaderboardLoading(false);
+      return;
+    }
 
-    dispatch(setActiveMatches(selfMatches.filter((match) => match.status === ConnectFiveMatchStatus.ACTIVE)));
-    dispatch(setCompletedMatches(selfMatches.filter((match) => match.status !== ConnectFiveMatchStatus.ACTIVE)));
-    setPublicMatches(filteredPublicMatches);
+    setIsLeaderboardLoading(true);
+
+    try {
+      const fetchLeaderboardEntry = async (
+        url: string | null,
+        entriesProcessed: number,
+      ): Promise<{entry: ConnectFiveLeaderboardEntry; rank: number} | null> => {
+        const response = url ? await getConnectFiveLeaderboard({url}) : await getConnectFiveLeaderboard();
+        const entryIndex = response.results.findIndex((entry) => entry.user.id === self.id);
+
+        if (entryIndex !== -1) {
+          return {
+            entry: response.results[entryIndex],
+            rank: entriesProcessed + entryIndex + 1,
+          };
+        }
+
+        if (!response.next) {
+          return null;
+        }
+
+        return fetchLeaderboardEntry(response.next, entriesProcessed + response.results.length);
+      };
+
+      const result = await fetchLeaderboardEntry(null, 0);
+
+      if (!result) {
+        setSelfLeaderboardEntry(null);
+        setSelfLeaderboardRank(null);
+        return;
+      }
+
+      setSelfLeaderboardEntry(result.entry);
+      setSelfLeaderboardRank(result.rank);
+    } catch (error) {
+      displayErrorToast('Unable to load leaderboard info.');
+    } finally {
+      setIsLeaderboardLoading(false);
+    }
+  }, [self?.id]);
+
+  const loadMatches = useCallback(async () => {
+    setIsMatchesLoading(true);
+
+    try {
+      const [selfMatchesResponse, publicMatchesResponse] = await Promise.all([
+        getConnectFiveMatches({mine: 'self'}),
+        getConnectFiveMatches({mine: 'exclude', status: ConnectFiveMatchStatus.ACTIVE}),
+      ]);
+      const selfMatches = selfMatchesResponse.results;
+      const filteredPublicMatches = self?.id
+        ? publicMatchesResponse.results.filter((match) => !isMatchParticipant(match, self.id))
+        : publicMatchesResponse.results;
+
+      dispatch(setActiveMatches(selfMatches.filter((match) => match.status === ConnectFiveMatchStatus.ACTIVE)));
+      dispatch(setCompletedMatches(selfMatches.filter((match) => match.status !== ConnectFiveMatchStatus.ACTIVE)));
+      setPublicMatches(filteredPublicMatches);
+    } finally {
+      setIsMatchesLoading(false);
+    }
   }, [dispatch, self?.id]);
 
   useEffect(() => {
@@ -382,6 +463,10 @@ const ConnectFiveHome: SFC = ({className}) => {
   useEffect(() => {
     loadEloSnapshots();
   }, [loadEloSnapshots]);
+
+  useEffect(() => {
+    loadLeaderboardEntry();
+  }, [loadLeaderboardEntry]);
 
   useEffect(() => {
     if (activeMatchesTotalPages && activeMatchesPage > activeMatchesTotalPages) {
@@ -408,6 +493,30 @@ const ConnectFiveHome: SFC = ({className}) => {
     publicMatchesPage,
     publicMatchesTotalPages,
   ]);
+
+  const isRecordLoading = isLeaderboardLoading || (!selfLeaderboardEntry && isMatchesLoading);
+  const rankLabel = (() => {
+    if (isLeaderboardLoading) {
+      return '-';
+    }
+
+    if (selfLeaderboardRank) {
+      return `Rank #${selfLeaderboardRank}`;
+    }
+
+    return 'Rank: Unranked';
+  })();
+  const recordLabel = (() => {
+    if (isRecordLoading) {
+      return '-';
+    }
+
+    if (selfLeaderboardEntry) {
+      return `${selfLeaderboardEntry.wins}W - ${selfLeaderboardEntry.losses}L`;
+    }
+
+    return `${selfMatchRecord.wins}W - ${selfMatchRecord.losses}L`;
+  })();
 
   const renderEloChart = () => {
     if (isEloLoading) {
@@ -495,7 +604,7 @@ const ConnectFiveHome: SFC = ({className}) => {
           <UserLabel
             avatar={opponent?.avatar ?? null}
             clickable={false}
-            description={`Created ${createdLabel}`}
+            description={createdLabel}
             id={opponent?.id ?? null}
             username={opponent?.username ?? 'Unknown player'}
           />
@@ -585,7 +694,7 @@ const ConnectFiveHome: SFC = ({className}) => {
             <UserLabel
               avatar={opponent?.avatar ?? null}
               clickable={false}
-              description={`Created ${createdLabel}`}
+              description={createdLabel}
               id={opponent?.id ?? null}
               username={opponent?.username ?? 'Unknown player'}
             />
@@ -643,7 +752,7 @@ const ConnectFiveHome: SFC = ({className}) => {
                 <S.PublicMatchPlayerName>{match.player_b.username}</S.PublicMatchPlayerName>
               </S.PublicMatchPlayer>
             </S.PublicMatchPlayers>
-            <S.PublicMatchMeta>{`Created ${createdLabel}`}</S.PublicMatchMeta>
+            <S.PublicMatchMeta>{createdLabel}</S.PublicMatchMeta>
           </S.MatchHeaderMain>
           <S.MatchIcon path={mdiArrowRight} size="20px" />
         </S.MatchHeader>
@@ -689,6 +798,21 @@ const ConnectFiveHome: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Content>
+        <S.ProfileHeader>
+          <S.ProfileHeaderContent>
+            <S.ProfileAvatarWrapper>
+              <Avatar size="96px" src={self?.avatar ?? null} />
+            </S.ProfileAvatarWrapper>
+            <S.ProfileDetails>
+              <S.ProfileUsername>{self?.username ?? 'Unknown player'}</S.ProfileUsername>
+              <S.ProfileMeta>
+                <S.ProfileMetaItem>{rankLabel}</S.ProfileMetaItem>
+                <S.ProfileMetaSeparator>|</S.ProfileMetaSeparator>
+                <S.ProfileMetaItem>{`Record ${recordLabel}`}</S.ProfileMetaItem>
+              </S.ProfileMeta>
+            </S.ProfileDetails>
+          </S.ProfileHeaderContent>
+        </S.ProfileHeader>
         <S.TopRow>
           <S.EloSection>
             <S.SectionTitle>Your ELO</S.SectionTitle>

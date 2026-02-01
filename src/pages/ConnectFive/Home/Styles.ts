@@ -219,6 +219,76 @@ export const Pagination = styled(UPagination)`
   margin-top: 12px;
 `;
 
+export const ProfileAvatarWrapper = styled.div`
+  align-items: center;
+  background: linear-gradient(135deg, ${colors.palette.blue[500]}, ${colors.palette.green[400]});
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(47, 92, 129, 0.25);
+  display: flex;
+  flex-shrink: 0;
+  padding: 4px;
+`;
+
+export const ProfileDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+`;
+
+export const ProfileHeader = styled.div`
+  padding: 14px 0;
+`;
+
+export const ProfileHeaderContent = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 20px;
+  padding: 8px 0;
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+`;
+
+export const ProfileMeta = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 14px;
+  gap: 12px;
+`;
+
+export const ProfileMetaItem = styled.span`
+  color: ${colors.palette.blue[700]};
+  font-weight: ${fonts.weight.semiBold};
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+`;
+
+export const ProfileMetaSeparator = styled.span`
+  color: ${colors.palette.gray[400]};
+  font-size: 12px;
+  font-weight: ${fonts.weight.bold};
+  line-height: 1;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    display: none;
+  }
+`;
+
+export const ProfileUsername = styled.h1`
+  color: ${colors.primary};
+  font-size: 26px;
+  font-weight: ${fonts.weight.extraBold};
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+`;
+
 export const PublicMatchMeta = styled.span`
   color: ${colors.secondary};
   font-size: 12px;
