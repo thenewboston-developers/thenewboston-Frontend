@@ -9,16 +9,18 @@ export const ChallengeActions = styled.div`
   justify-content: flex-end;
 `;
 
-export const ChallengeCard = styled.div`
+export const ChallengeCard = styled.div<{$borderColor?: string}>`
   align-items: stretch;
   background: ${colors.white};
   border: 1px solid ${colors.border};
+  border-left: ${({$borderColor}) => ($borderColor ? `4px solid ${$borderColor}` : `1px solid ${colors.border}`)};
   border-radius: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 16px;
+  padding-left: ${({$borderColor}) => ($borderColor ? '12px' : '16px')};
 `;
 
 export const ChallengeHeader = styled.div`
@@ -107,10 +109,11 @@ export const FormRow = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 `;
 
-export const MatchCard = styled.button`
+export const MatchCard = styled.button<{$borderColor?: string}>`
   align-items: stretch;
   background: ${colors.white};
   border: 1px solid ${colors.border};
+  border-left: ${({$borderColor}) => ($borderColor ? `4px solid ${$borderColor}` : `1px solid ${colors.border}`)};
   border-radius: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   cursor: pointer;
@@ -120,6 +123,7 @@ export const MatchCard = styled.button`
   gap: 16px;
   outline: none;
   padding: 16px;
+  padding-left: ${({$borderColor}) => ($borderColor ? '12px' : '16px')};
   text-align: left;
   transition: all 0.2s ease;
   width: 100%;

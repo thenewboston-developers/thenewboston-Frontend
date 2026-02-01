@@ -146,6 +146,11 @@ const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
   return {badgeStyle: BadgeStyle.neutral, label: 'Finished'};
 };
 
+const getMatchHistoryBorderColor = (match: ConnectFiveMatch, selfId?: number | null): string | null => {
+  if (match.status === ConnectFiveMatchStatus.ACTIVE || !selfId || !match.winner) return null;
+  return match.winner === selfId ? colors.palette.green[500] : colors.palette.red[500];
+};
+
 const isMatchParticipant = (match: ConnectFiveMatch, userId?: number | null): boolean => {
   if (!userId) return false;
   return match.player_a.id === userId || match.player_b.id === userId;
@@ -463,7 +468,9 @@ const ConnectFiveHome: SFC = ({className}) => {
   const renderYourMatches = () => {
     return (
       <>
-        <S.MatchList>{paginatedActiveMatches.map(renderMatchCard)}</S.MatchList>
+        <S.MatchList>
+          {paginatedActiveMatches.map((match) => renderMatchCard(match, colors.palette.blue[500]))}
+        </S.MatchList>
         <S.Pagination
           currentPage={activeMatchesPage}
           onPageChange={handleActiveMatchesPageChange}
@@ -477,12 +484,13 @@ const ConnectFiveHome: SFC = ({className}) => {
     challenge: ConnectFiveChallenge,
     opponent: UserReadSerializer | null,
     actions?: ReactNode,
+    borderColor?: string,
   ) => {
     const createdLabel = shortDate(challenge.created_date, true);
     const statusBadge = getChallengeStatusBadge(challenge.status);
 
     return (
-      <S.ChallengeCard key={challenge.id}>
+      <S.ChallengeCard $borderColor={borderColor} key={challenge.id}>
         <S.ChallengeHeader>
           <UserLabel
             avatar={opponent?.avatar ?? null}
@@ -515,7 +523,11 @@ const ConnectFiveHome: SFC = ({className}) => {
   const renderCompletedMatches = () => {
     return (
       <>
-        <S.MatchList>{paginatedCompletedMatches.map(renderMatchCard)}</S.MatchList>
+        <S.MatchList>
+          {paginatedCompletedMatches.map((match) =>
+            renderMatchCard(match, getMatchHistoryBorderColor(match, self?.id)),
+          )}
+        </S.MatchList>
         <S.Pagination
           currentPage={completedMatchesPage}
           onPageChange={handleCompletedMatchesPageChange}
@@ -546,13 +558,14 @@ const ConnectFiveHome: SFC = ({className}) => {
             challenge,
             challenge.challenger,
             <Button onClick={() => handleAcceptChallenge(challenge.id)} text="Accept" />,
+            colors.palette.blue[500],
           ),
         )}
       </S.ChallengeList>
     );
   };
 
-  const renderMatchCard = (match: ConnectFiveMatch) => {
+  const renderMatchCard = (match: ConnectFiveMatch, borderColor?: string | null) => {
     const createdLabel = shortDate(match.created_date, true);
     const finishReason = getFinishReasonLabel(match);
     const isActive = match.status === ConnectFiveMatchStatus.ACTIVE;
@@ -561,6 +574,7 @@ const ConnectFiveHome: SFC = ({className}) => {
 
     return (
       <S.MatchCard
+        $borderColor={borderColor ?? undefined}
         aria-label={`Open match ${match.id}`}
         key={match.id}
         onClick={() => handleMatchCardClick(match.id)}
@@ -610,6 +624,7 @@ const ConnectFiveHome: SFC = ({className}) => {
 
     return (
       <S.MatchCard
+        $borderColor={colors.palette.blue[500]}
         aria-label={`Open match ${match.id}`}
         key={match.id}
         onClick={() => handleMatchCardClick(match.id)}
@@ -664,6 +679,7 @@ const ConnectFiveHome: SFC = ({className}) => {
             challenge,
             challenge.opponent,
             <Button onClick={() => handleCancelChallenge(challenge.id)} text="Cancel" />,
+            colors.palette.blue[500],
           ),
         )}
       </S.ChallengeList>
