@@ -109,6 +109,12 @@ export const FormRow = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 `;
 
+export const LoadMoreRow = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+`;
+
 export const MatchCard = styled.button<{$borderColor?: string}>`
   align-items: stretch;
   background: ${colors.white};

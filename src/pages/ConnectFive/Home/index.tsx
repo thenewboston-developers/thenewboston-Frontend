@@ -17,7 +17,7 @@ import {
 } from 'api/connectFive';
 import Avatar from 'components/Avatar';
 import Badge, {BadgeStyle} from 'components/Badge';
-import Button, {ButtonType} from 'components/Button';
+import Button, {ButtonColor, ButtonType} from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import {FormField, Input, Select} from 'components/FormElements';
 import Loader from 'components/Loader';
@@ -194,6 +194,7 @@ const ConnectFiveHome: SFC = ({className}) => {
   const completedMatchesTotalPages = useMemo(() => {
     return Math.ceil(completedMatchesSorted.length / MATCHES_PER_PAGE);
   }, [completedMatchesSorted.length]);
+  const hasMoreCompletedMatches = completedMatchesPage < completedMatchesTotalPages;
 
   const selfMatchRecord = useMemo(() => {
     if (!self?.id) {
@@ -232,9 +233,8 @@ const ConnectFiveHome: SFC = ({className}) => {
     return activeMatchesSorted.slice(startIndex, startIndex + MATCHES_PER_PAGE);
   }, [activeMatchesPage, activeMatchesSorted]);
 
-  const paginatedCompletedMatches = useMemo(() => {
-    const startIndex = (completedMatchesPage - 1) * MATCHES_PER_PAGE;
-    return completedMatchesSorted.slice(startIndex, startIndex + MATCHES_PER_PAGE);
+  const visibleCompletedMatches = useMemo(() => {
+    return completedMatchesSorted.slice(0, completedMatchesPage * MATCHES_PER_PAGE);
   }, [completedMatchesPage, completedMatchesSorted]);
 
   const paginatedPublicMatches = useMemo(() => {
@@ -327,9 +327,9 @@ const ConnectFiveHome: SFC = ({className}) => {
     [dispatch, navigate, self?.id],
   );
 
-  const handleCompletedMatchesPageChange = useCallback((page: number) => {
-    setCompletedMatchesPage(page);
-  }, []);
+  const handleCompletedMatchesLoadMore = useCallback(() => {
+    setCompletedMatchesPage((page) => (page < completedMatchesTotalPages ? page + 1 : page));
+  }, [completedMatchesTotalPages]);
 
   const handleMatchCardClick = useCallback(
     (matchId: number) => {
@@ -633,15 +633,13 @@ const ConnectFiveHome: SFC = ({className}) => {
     return (
       <>
         <S.MatchList>
-          {paginatedCompletedMatches.map((match) =>
-            renderMatchCard(match, getMatchHistoryBorderColor(match, self?.id)),
-          )}
+          {visibleCompletedMatches.map((match) => renderMatchCard(match, getMatchHistoryBorderColor(match, self?.id)))}
         </S.MatchList>
-        <S.Pagination
-          currentPage={completedMatchesPage}
-          onPageChange={handleCompletedMatchesPageChange}
-          totalPages={completedMatchesTotalPages}
-        />
+        {hasMoreCompletedMatches && (
+          <S.LoadMoreRow>
+            <Button color={ButtonColor.secondary} onClick={handleCompletedMatchesLoadMore} text="Load more" />
+          </S.LoadMoreRow>
+        )}
       </>
     );
   };
