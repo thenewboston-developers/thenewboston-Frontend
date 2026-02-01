@@ -7,7 +7,7 @@ export const Container = styled(ULink)<{$isActive: boolean; $isMobileDevice: boo
   align-items: center;
   background: ${({$isActive, $isMobileDevice}) => ($isActive && $isMobileDevice ? `${colors.border}` : 'transparent')};
   border-bottom: 2px solid
-    ${({$isActive, $isMobileDevice}) => ($isActive && !$isMobileDevice ? `${colors.black}` : 'transparent')};
+    ${({$isActive, $isMobileDevice}) => ($isActive && !$isMobileDevice ? `${colors.palette.red[500]}` : 'transparent')};
   color: ${colors.black};
   display: flex;
   font-weight: ${({$isActive}) => ($isActive ? fonts.weight.bold : fonts.weight.regular)};

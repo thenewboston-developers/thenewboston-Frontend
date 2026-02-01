@@ -2,23 +2,25 @@ import Icon from '@mdi/react';
 import styled from 'styled-components';
 
 import UPagination from 'components/Pagination';
-import {colors, fonts, pagePadding} from 'styles';
+import {breakpoints, colors, fonts, pagePadding} from 'styles';
 
 export const ChallengeActions = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
 
-export const ChallengeCard = styled.div`
+export const ChallengeCard = styled.div<{$borderColor?: string}>`
   align-items: stretch;
   background: ${colors.white};
   border: 1px solid ${colors.border};
+  border-left: ${({$borderColor}) => ($borderColor ? `4px solid ${$borderColor}` : `1px solid ${colors.border}`)};
   border-radius: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 16px;
+  padding-left: ${({$borderColor}) => ($borderColor ? '12px' : '16px')};
 `;
 
 export const ChallengeHeader = styled.div`
@@ -81,6 +83,20 @@ export const EmptyState = styled.div`
   font-size: 14px;
 `;
 
+export const EloChartBody = styled.div`
+  align-items: center;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  min-height: 240px;
+  width: 100%;
+`;
+
+export const EloChartWrapper = styled.div`
+  height: 100%;
+  width: 100%;
+`;
+
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -93,10 +109,17 @@ export const FormRow = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 `;
 
-export const MatchCard = styled.button`
+export const LoadMoreRow = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+`;
+
+export const MatchCard = styled.button<{$borderColor?: string}>`
   align-items: stretch;
   background: ${colors.white};
   border: 1px solid ${colors.border};
+  border-left: ${({$borderColor}) => ($borderColor ? `4px solid ${$borderColor}` : `1px solid ${colors.border}`)};
   border-radius: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   cursor: pointer;
@@ -106,6 +129,7 @@ export const MatchCard = styled.button`
   gap: 16px;
   outline: none;
   padding: 16px;
+  padding-left: ${({$borderColor}) => ($borderColor ? '12px' : '16px')};
   text-align: left;
   transition: all 0.2s ease;
   width: 100%;
@@ -201,6 +225,75 @@ export const Pagination = styled(UPagination)`
   margin-top: 12px;
 `;
 
+export const ProfileAvatarWrapper = styled.div`
+  align-items: center;
+  background: linear-gradient(135deg, ${colors.palette.blue[500]}, ${colors.palette.green[400]});
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(47, 92, 129, 0.25);
+  display: flex;
+  flex-shrink: 0;
+  padding: 4px;
+`;
+
+export const ProfileDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+`;
+
+export const ProfileHeader = styled.div`
+  padding: 14px 0;
+`;
+
+export const ProfileHeaderContent = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+`;
+
+export const ProfileMeta = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 15px;
+  gap: 12px;
+`;
+
+export const ProfileMetaItem = styled.span`
+  color: ${colors.palette.blue[700]};
+  font-weight: ${fonts.weight.semiBold};
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+`;
+
+export const ProfileMetaSeparator = styled.span`
+  color: ${colors.palette.gray[400]};
+  font-size: 12px;
+  font-weight: ${fonts.weight.bold};
+  line-height: 1;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    display: none;
+  }
+`;
+
+export const ProfileUsername = styled.h1`
+  color: ${colors.primary};
+  font-size: 31px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+`;
+
 export const PublicMatchMeta = styled.span`
   color: ${colors.secondary};
   font-size: 12px;
@@ -248,4 +341,20 @@ export const SectionTitle = styled.h2`
 export const SubmitRow = styled.div`
   display: flex;
   justify-content: flex-end;
+`;
+
+export const EloSection = styled(Section)`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const TopRow = styled.div`
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr;
+
+  @media (min-width: ${breakpoints.tablet}) {
+    align-items: stretch;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
 `;

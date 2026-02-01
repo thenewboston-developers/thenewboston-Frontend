@@ -4,17 +4,20 @@ import {useNavigate} from 'react-router-dom';
 import {mdiArrowRight} from '@mdi/js';
 import {Formik, FormikHelpers} from 'formik';
 import orderBy from 'lodash/orderBy';
+import {Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
 import {
   acceptConnectFiveChallenge,
   cancelConnectFiveChallenge,
   createConnectFiveChallenge,
   getConnectFiveChallenges,
+  getConnectFiveEloSnapshots,
+  getConnectFiveLeaderboard,
   getConnectFiveMatches,
 } from 'api/connectFive';
 import Avatar from 'components/Avatar';
 import Badge, {BadgeStyle} from 'components/Badge';
-import Button, {ButtonType} from 'components/Button';
+import Button, {ButtonColor, ButtonType} from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import {FormField, Input, Select} from 'components/FormElements';
 import Loader from 'components/Loader';
@@ -37,9 +40,20 @@ import {
   upsertChallenge,
   upsertMatch,
 } from 'store/connectFive';
-import {AppDispatch, ConnectFiveChallenge, ConnectFiveMatch, SelectOption, SFC, UserReadSerializer} from 'types';
+import {colors} from 'styles';
+import {
+  AppDispatch,
+  ConnectFiveChallenge,
+  ConnectFiveEloSnapshot,
+  ConnectFiveLeaderboardEntry,
+  ConnectFiveMatch,
+  SelectOption,
+  SFC,
+  UserReadSerializer,
+} from 'types';
 import {shortDate} from 'utils/dates';
 import {handleFormikAPIError} from 'utils/forms';
+import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
@@ -134,6 +148,11 @@ const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
   return {badgeStyle: BadgeStyle.neutral, label: 'Finished'};
 };
 
+const getMatchHistoryBorderColor = (match: ConnectFiveMatch, selfId?: number | null): string | null => {
+  if (match.status === ConnectFiveMatchStatus.ACTIVE || !selfId || !match.winner) return null;
+  return match.winner === selfId ? colors.palette.green[500] : colors.palette.red[500];
+};
+
 const isMatchParticipant = (match: ConnectFiveMatch, userId?: number | null): boolean => {
   if (!userId) return false;
   return match.player_a.id === userId || match.player_b.id === userId;
@@ -142,9 +161,15 @@ const isMatchParticipant = (match: ConnectFiveMatch, userId?: number | null): bo
 const ConnectFiveHome: SFC = ({className}) => {
   const [activeMatchesPage, setActiveMatchesPage] = useState(1);
   const [completedMatchesPage, setCompletedMatchesPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
+  const [eloError, setEloError] = useState<string | null>(null);
+  const [eloSnapshots, setEloSnapshots] = useState<ConnectFiveEloSnapshot[]>([]);
+  const [isEloLoading, setIsEloLoading] = useState(true);
+  const [isLeaderboardLoading, setIsLeaderboardLoading] = useState(true);
+  const [isMatchesLoading, setIsMatchesLoading] = useState(true);
   const [publicMatches, setPublicMatches] = useState<ConnectFiveMatch[]>([]);
   const [publicMatchesPage, setPublicMatchesPage] = useState(1);
+  const [selfLeaderboardEntry, setSelfLeaderboardEntry] = useState<ConnectFiveLeaderboardEntry | null>(null);
+  const [selfLeaderboardRank, setSelfLeaderboardRank] = useState<number | null>(null);
 
   const activeMatches = useSelector(getConnectFiveActiveMatches);
   const completedMatches = useSelector(getConnectFiveCompletedMatches);
@@ -169,6 +194,31 @@ const ConnectFiveHome: SFC = ({className}) => {
   const completedMatchesTotalPages = useMemo(() => {
     return Math.ceil(completedMatchesSorted.length / MATCHES_PER_PAGE);
   }, [completedMatchesSorted.length]);
+  const hasMoreCompletedMatches = completedMatchesPage < completedMatchesTotalPages;
+
+  const selfMatchRecord = useMemo(() => {
+    if (!self?.id) {
+      return {losses: 0, wins: 0};
+    }
+
+    return completedMatches.reduce(
+      (record, match) => {
+        if (!match.winner) return record;
+        if (match.winner === self.id) {
+          record.wins += 1;
+          return record;
+        }
+
+        record.losses += 1;
+        return record;
+      },
+      {losses: 0, wins: 0},
+    );
+  }, [completedMatches, self?.id]);
+
+  const eloChartData = useMemo(() => {
+    return orderBy(eloSnapshots, ['date'], ['asc']);
+  }, [eloSnapshots]);
 
   const publicMatchesSorted = useMemo(() => {
     return orderBy(publicMatches, ['created_date'], ['desc']);
@@ -183,9 +233,8 @@ const ConnectFiveHome: SFC = ({className}) => {
     return activeMatchesSorted.slice(startIndex, startIndex + MATCHES_PER_PAGE);
   }, [activeMatchesPage, activeMatchesSorted]);
 
-  const paginatedCompletedMatches = useMemo(() => {
-    const startIndex = (completedMatchesPage - 1) * MATCHES_PER_PAGE;
-    return completedMatchesSorted.slice(startIndex, startIndex + MATCHES_PER_PAGE);
+  const visibleCompletedMatches = useMemo(() => {
+    return completedMatchesSorted.slice(0, completedMatchesPage * MATCHES_PER_PAGE);
   }, [completedMatchesPage, completedMatchesSorted]);
 
   const paginatedPublicMatches = useMemo(() => {
@@ -207,6 +256,24 @@ const ConnectFiveHome: SFC = ({className}) => {
       timeLimitSeconds: yup.string().required('Time limit is required'),
     });
   }, [self?.id]);
+
+  const formatEloDate = (value: string, options: Intl.DateTimeFormatOptions) => {
+    const [year, month, day] = value.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.toLocaleDateString(undefined, options);
+  };
+
+  const formatEloDateLabel = (value: string) => {
+    return formatEloDate(value, {day: 'numeric', month: 'short'});
+  };
+
+  const formatEloTooltipLabel = (value: string) => {
+    return formatEloDate(value, {day: 'numeric', month: 'short', year: 'numeric'});
+  };
+
+  const formatEloValue = (value: number) => {
+    return value.toLocaleString();
+  };
 
   const handleAcceptChallenge = useCallback(
     async (challengeId: number) => {
@@ -260,13 +327,9 @@ const ConnectFiveHome: SFC = ({className}) => {
     [dispatch, navigate, self?.id],
   );
 
-  const handleCompletedMatchesPageChange = useCallback((page: number) => {
-    setCompletedMatchesPage(page);
-  }, []);
-
-  const handlePublicMatchesPageChange = useCallback((page: number) => {
-    setPublicMatchesPage(page);
-  }, []);
+  const handleCompletedMatchesLoadMore = useCallback(() => {
+    setCompletedMatchesPage((page) => (page < completedMatchesTotalPages ? page + 1 : page));
+  }, [completedMatchesTotalPages]);
 
   const handleMatchCardClick = useCallback(
     (matchId: number) => {
@@ -287,6 +350,10 @@ const ConnectFiveHome: SFC = ({className}) => {
     [],
   );
 
+  const handlePublicMatchesPageChange = useCallback((page: number) => {
+    setPublicMatchesPage(page);
+  }, []);
+
   const loadChallenges = useCallback(async () => {
     const incomingResponse = await getConnectFiveChallenges({
       mine: 'received',
@@ -301,33 +368,105 @@ const ConnectFiveHome: SFC = ({className}) => {
     dispatch(setOutgoingChallenges(outgoingResponse.results));
   }, [dispatch]);
 
-  const loadMatches = useCallback(async () => {
-    const [selfMatchesResponse, publicMatchesResponse] = await Promise.all([
-      getConnectFiveMatches({mine: 'self'}),
-      getConnectFiveMatches({mine: 'exclude', status: ConnectFiveMatchStatus.ACTIVE}),
-    ]);
-    const selfMatches = selfMatchesResponse.results;
-    const filteredPublicMatches = self?.id
-      ? publicMatchesResponse.results.filter((match) => !isMatchParticipant(match, self.id))
-      : publicMatchesResponse.results;
+  const loadEloSnapshots = useCallback(async () => {
+    try {
+      setEloError(null);
+      setIsEloLoading(true);
+      const response = await getConnectFiveEloSnapshots();
+      setEloSnapshots(response);
+    } catch (error) {
+      displayErrorToast('Unable to load ELO history.');
+      setEloError('Unable to load ELO history.');
+    } finally {
+      setIsEloLoading(false);
+    }
+  }, []);
 
-    dispatch(setActiveMatches(selfMatches.filter((match) => match.status === ConnectFiveMatchStatus.ACTIVE)));
-    dispatch(setCompletedMatches(selfMatches.filter((match) => match.status !== ConnectFiveMatchStatus.ACTIVE)));
-    setPublicMatches(filteredPublicMatches);
+  const loadLeaderboardEntry = useCallback(async () => {
+    if (!self?.id) {
+      setSelfLeaderboardEntry(null);
+      setSelfLeaderboardRank(null);
+      setIsLeaderboardLoading(false);
+      return;
+    }
+
+    setIsLeaderboardLoading(true);
+
+    try {
+      const fetchLeaderboardEntry = async (
+        url: string | null,
+        entriesProcessed: number,
+      ): Promise<{entry: ConnectFiveLeaderboardEntry; rank: number} | null> => {
+        const response = url ? await getConnectFiveLeaderboard({url}) : await getConnectFiveLeaderboard();
+        const entryIndex = response.results.findIndex((entry) => entry.user.id === self.id);
+
+        if (entryIndex !== -1) {
+          return {
+            entry: response.results[entryIndex],
+            rank: entriesProcessed + entryIndex + 1,
+          };
+        }
+
+        if (!response.next) {
+          return null;
+        }
+
+        return fetchLeaderboardEntry(response.next, entriesProcessed + response.results.length);
+      };
+
+      const result = await fetchLeaderboardEntry(null, 0);
+
+      if (!result) {
+        setSelfLeaderboardEntry(null);
+        setSelfLeaderboardRank(null);
+        return;
+      }
+
+      setSelfLeaderboardEntry(result.entry);
+      setSelfLeaderboardRank(result.rank);
+    } catch (error) {
+      displayErrorToast('Unable to load leaderboard info.');
+    } finally {
+      setIsLeaderboardLoading(false);
+    }
+  }, [self?.id]);
+
+  const loadMatches = useCallback(async () => {
+    setIsMatchesLoading(true);
+
+    try {
+      const [selfMatchesResponse, publicMatchesResponse] = await Promise.all([
+        getConnectFiveMatches({mine: 'self'}),
+        getConnectFiveMatches({mine: 'exclude', status: ConnectFiveMatchStatus.ACTIVE}),
+      ]);
+      const selfMatches = selfMatchesResponse.results;
+      const filteredPublicMatches = self?.id
+        ? publicMatchesResponse.results.filter((match) => !isMatchParticipant(match, self.id))
+        : publicMatchesResponse.results;
+
+      dispatch(setActiveMatches(selfMatches.filter((match) => match.status === ConnectFiveMatchStatus.ACTIVE)));
+      dispatch(setCompletedMatches(selfMatches.filter((match) => match.status !== ConnectFiveMatchStatus.ACTIVE)));
+      setPublicMatches(filteredPublicMatches);
+    } finally {
+      setIsMatchesLoading(false);
+    }
   }, [dispatch, self?.id]);
 
   useEffect(() => {
     const loadData = async () => {
-      try {
-        setIsLoading(true);
-        await Promise.all([loadChallenges(), loadMatches()]);
-      } finally {
-        setIsLoading(false);
-      }
+      await Promise.all([loadChallenges(), loadMatches()]);
     };
 
     loadData();
   }, [loadChallenges, loadMatches]);
+
+  useEffect(() => {
+    loadEloSnapshots();
+  }, [loadEloSnapshots]);
+
+  useEffect(() => {
+    loadLeaderboardEntry();
+  }, [loadLeaderboardEntry]);
 
   useEffect(() => {
     if (activeMatchesTotalPages && activeMatchesPage > activeMatchesTotalPages) {
@@ -355,19 +494,92 @@ const ConnectFiveHome: SFC = ({className}) => {
     publicMatchesTotalPages,
   ]);
 
-  const renderYourMatches = () => {
-    if (isLoading) {
+  const isRecordLoading = isLeaderboardLoading || (!selfLeaderboardEntry && isMatchesLoading);
+  const rankLabel = (() => {
+    if (isLeaderboardLoading) {
+      return 'Rank -';
+    }
+
+    if (selfLeaderboardRank) {
+      return `Rank #${selfLeaderboardRank}`;
+    }
+
+    return 'Rank: Unranked';
+  })();
+  const recordLabel = (() => {
+    if (isRecordLoading) {
+      return '-';
+    }
+
+    if (selfLeaderboardEntry) {
+      return `${selfLeaderboardEntry.wins}W - ${selfLeaderboardEntry.losses}L`;
+    }
+
+    return `${selfMatchRecord.wins}W - ${selfMatchRecord.losses}L`;
+  })();
+
+  const renderEloChart = () => {
+    if (isEloLoading) {
       return (
-        <S.EmptyState>
+        <S.EloChartBody>
           <Loader />
-        </S.EmptyState>
+        </S.EloChartBody>
       );
     }
-    if (!activeMatchesSorted.length) return <EmptyText>No active matches.</EmptyText>;
+
+    if (eloError) {
+      return (
+        <S.EloChartBody>
+          <EmptyText>{eloError}</EmptyText>
+        </S.EloChartBody>
+      );
+    }
+
+    if (!eloChartData.length) {
+      return (
+        <S.EloChartBody>
+          <EmptyText>No ELO history yet.</EmptyText>
+        </S.EloChartBody>
+      );
+    }
 
     return (
+      <S.EloChartBody>
+        <S.EloChartWrapper>
+          <ResponsiveContainer height="100%" width="100%">
+            <AreaChart data={eloChartData} margin={{bottom: 0, left: 0, right: 0, top: 0}}>
+              <CartesianGrid stroke={colors.border} strokeDasharray="3 3" />
+              <XAxis dataKey="date" stroke={colors.secondary} tickFormatter={formatEloDateLabel} />
+              <YAxis stroke={colors.secondary} tickFormatter={formatEloValue} width={48} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: colors.white,
+                  border: `1px solid ${colors.border}`,
+                  borderRadius: '8px',
+                }}
+                formatter={(value) => formatEloValue(Number(value))}
+                labelFormatter={formatEloTooltipLabel}
+              />
+              <Area
+                dataKey="elo"
+                fill="rgba(59, 130, 246, 0.15)"
+                stroke={colors.palette.blue[500]}
+                strokeWidth={2}
+                type="monotone"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </S.EloChartWrapper>
+      </S.EloChartBody>
+    );
+  };
+
+  const renderYourMatches = () => {
+    return (
       <>
-        <S.MatchList>{paginatedActiveMatches.map(renderMatchCard)}</S.MatchList>
+        <S.MatchList>
+          {paginatedActiveMatches.map((match) => renderMatchCard(match, colors.palette.blue[500]))}
+        </S.MatchList>
         <S.Pagination
           currentPage={activeMatchesPage}
           onPageChange={handleActiveMatchesPageChange}
@@ -381,17 +593,18 @@ const ConnectFiveHome: SFC = ({className}) => {
     challenge: ConnectFiveChallenge,
     opponent: UserReadSerializer | null,
     actions?: ReactNode,
+    borderColor?: string,
   ) => {
     const createdLabel = shortDate(challenge.created_date, true);
     const statusBadge = getChallengeStatusBadge(challenge.status);
 
     return (
-      <S.ChallengeCard key={challenge.id}>
+      <S.ChallengeCard $borderColor={borderColor} key={challenge.id}>
         <S.ChallengeHeader>
           <UserLabel
             avatar={opponent?.avatar ?? null}
             clickable={false}
-            description={`Created ${createdLabel}`}
+            description={createdLabel}
             id={opponent?.id ?? null}
             username={opponent?.username ?? 'Unknown player'}
           />
@@ -417,38 +630,21 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   const renderCompletedMatches = () => {
-    if (isLoading) {
-      return (
-        <S.EmptyState>
-          <Loader />
-        </S.EmptyState>
-      );
-    }
-    if (!completedMatchesSorted.length) return <EmptyText>No completed matches.</EmptyText>;
-
     return (
       <>
-        <S.MatchList>{paginatedCompletedMatches.map(renderMatchCard)}</S.MatchList>
-        <S.Pagination
-          currentPage={completedMatchesPage}
-          onPageChange={handleCompletedMatchesPageChange}
-          totalPages={completedMatchesTotalPages}
-        />
+        <S.MatchList>
+          {visibleCompletedMatches.map((match) => renderMatchCard(match, getMatchHistoryBorderColor(match, self?.id)))}
+        </S.MatchList>
+        {hasMoreCompletedMatches && (
+          <S.LoadMoreRow>
+            <Button color={ButtonColor.secondary} onClick={handleCompletedMatchesLoadMore} text="Load more" />
+          </S.LoadMoreRow>
+        )}
       </>
     );
   };
 
   const renderPublicMatches = () => {
-    if (isLoading) {
-      return (
-        <S.EmptyState>
-          <Loader />
-        </S.EmptyState>
-      );
-    }
-
-    if (!publicMatchesSorted.length) return <EmptyText>No public matches.</EmptyText>;
-
     return (
       <>
         <S.MatchList>{paginatedPublicMatches.map(renderPublicMatchCard)}</S.MatchList>
@@ -462,14 +658,6 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   const renderIncomingChallenges = () => {
-    if (isLoading) {
-      return (
-        <S.EmptyState>
-          <Loader />
-        </S.EmptyState>
-      );
-    }
-    if (!incomingChallenges.length) return <EmptyText>No incoming challenges.</EmptyText>;
     return (
       <S.ChallengeList>
         {incomingChallenges.map((challenge) =>
@@ -477,13 +665,14 @@ const ConnectFiveHome: SFC = ({className}) => {
             challenge,
             challenge.challenger,
             <Button onClick={() => handleAcceptChallenge(challenge.id)} text="Accept" />,
+            colors.palette.blue[500],
           ),
         )}
       </S.ChallengeList>
     );
   };
 
-  const renderMatchCard = (match: ConnectFiveMatch) => {
+  const renderMatchCard = (match: ConnectFiveMatch, borderColor?: string | null) => {
     const createdLabel = shortDate(match.created_date, true);
     const finishReason = getFinishReasonLabel(match);
     const isActive = match.status === ConnectFiveMatchStatus.ACTIVE;
@@ -492,6 +681,7 @@ const ConnectFiveHome: SFC = ({className}) => {
 
     return (
       <S.MatchCard
+        $borderColor={borderColor ?? undefined}
         aria-label={`Open match ${match.id}`}
         key={match.id}
         onClick={() => handleMatchCardClick(match.id)}
@@ -502,7 +692,7 @@ const ConnectFiveHome: SFC = ({className}) => {
             <UserLabel
               avatar={opponent?.avatar ?? null}
               clickable={false}
-              description={`Created ${createdLabel}`}
+              description={createdLabel}
               id={opponent?.id ?? null}
               username={opponent?.username ?? 'Unknown player'}
             />
@@ -541,6 +731,7 @@ const ConnectFiveHome: SFC = ({className}) => {
 
     return (
       <S.MatchCard
+        $borderColor={colors.palette.blue[500]}
         aria-label={`Open match ${match.id}`}
         key={match.id}
         onClick={() => handleMatchCardClick(match.id)}
@@ -559,7 +750,7 @@ const ConnectFiveHome: SFC = ({className}) => {
                 <S.PublicMatchPlayerName>{match.player_b.username}</S.PublicMatchPlayerName>
               </S.PublicMatchPlayer>
             </S.PublicMatchPlayers>
-            <S.PublicMatchMeta>{`Created ${createdLabel}`}</S.PublicMatchMeta>
+            <S.PublicMatchMeta>{createdLabel}</S.PublicMatchMeta>
           </S.MatchHeaderMain>
           <S.MatchIcon path={mdiArrowRight} size="20px" />
         </S.MatchHeader>
@@ -588,14 +779,6 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   const renderOutgoingChallenges = () => {
-    if (isLoading) {
-      return (
-        <S.EmptyState>
-          <Loader />
-        </S.EmptyState>
-      );
-    }
-    if (!outgoingChallenges.length) return <EmptyText>No outgoing challenges.</EmptyText>;
     return (
       <S.ChallengeList>
         {outgoingChallenges.map((challenge) =>
@@ -603,6 +786,7 @@ const ConnectFiveHome: SFC = ({className}) => {
             challenge,
             challenge.opponent,
             <Button onClick={() => handleCancelChallenge(challenge.id)} text="Cancel" />,
+            colors.palette.blue[500],
           ),
         )}
       </S.ChallengeList>
@@ -612,92 +796,123 @@ const ConnectFiveHome: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Content>
-        <S.Section>
-          <S.SectionTitle>Send a challenge</S.SectionTitle>
-          <Formik initialValues={initialValues} onSubmit={handleChallengeSubmit} validationSchema={validationSchema}>
-            {({
-              dirty,
-              errors,
-              handleSubmit,
-              isSubmitting,
-              isValid,
-              setFieldTouched,
-              setFieldValue,
-              touched,
-              values,
-            }) => (
-              <S.Form onSubmit={handleSubmit}>
-                <FormField>
-                  <UserSearchInput
-                    errors={errors}
-                    label="Search for recipient"
-                    name="opponent"
-                    onChange={(user) => handleOpponentChange(user, setFieldTouched, setFieldValue)}
-                    touched={touched}
-                    value={values.opponent}
-                  />
-                </FormField>
-                <S.FormRow>
+        <S.ProfileHeader>
+          <S.ProfileHeaderContent>
+            <S.ProfileAvatarWrapper>
+              <Avatar size="120px" src={self?.avatar ?? null} />
+            </S.ProfileAvatarWrapper>
+            <S.ProfileDetails>
+              <S.ProfileUsername>{self?.username ?? 'Unknown player'}</S.ProfileUsername>
+              <S.ProfileMeta>
+                <S.ProfileMetaItem>{rankLabel}</S.ProfileMetaItem>
+                <S.ProfileMetaSeparator>|</S.ProfileMetaSeparator>
+                <S.ProfileMetaItem>{`Record ${recordLabel}`}</S.ProfileMetaItem>
+              </S.ProfileMeta>
+            </S.ProfileDetails>
+          </S.ProfileHeaderContent>
+        </S.ProfileHeader>
+        <S.TopRow>
+          <S.EloSection>
+            <S.SectionTitle>Your ELO</S.SectionTitle>
+            {renderEloChart()}
+          </S.EloSection>
+          <S.Section>
+            <S.SectionTitle>Send a challenge</S.SectionTitle>
+            <Formik initialValues={initialValues} onSubmit={handleChallengeSubmit} validationSchema={validationSchema}>
+              {({
+                dirty,
+                errors,
+                handleSubmit,
+                isSubmitting,
+                isValid,
+                setFieldTouched,
+                setFieldValue,
+                touched,
+                values,
+              }) => (
+                <S.Form onSubmit={handleSubmit}>
                   <FormField>
-                    <Input errors={errors} label="Stake (TNB)" name="stakeAmount" touched={touched} type="number" />
-                  </FormField>
-                  <FormField>
-                    <Input
+                    <UserSearchInput
                       errors={errors}
-                      label="Max spend (TNB)"
-                      name="maxSpendAmount"
+                      label="Search for recipient"
+                      name="opponent"
+                      onChange={(user) => handleOpponentChange(user, setFieldTouched, setFieldValue)}
                       touched={touched}
-                      type="number"
+                      value={values.opponent}
                     />
                   </FormField>
-                </S.FormRow>
-                <FormField>
-                  <Select
-                    errors={errors}
-                    label="Total time per player"
-                    name="timeLimitSeconds"
-                    options={timeLimitOptions}
-                    touched={touched}
-                  />
-                </FormField>
-                <S.SubmitRow>
-                  <Button
-                    dirty={dirty}
-                    isSubmitting={isSubmitting}
-                    isValid={isValid}
-                    text={isSubmitting ? 'Sending...' : 'Send challenge'}
-                    type={ButtonType.submit}
-                  />
-                </S.SubmitRow>
-              </S.Form>
-            )}
-          </Formik>
-        </S.Section>
+                  <S.FormRow>
+                    <FormField>
+                      <Input errors={errors} label="Stake (TNB)" name="stakeAmount" touched={touched} type="number" />
+                    </FormField>
+                    <FormField>
+                      <Input
+                        errors={errors}
+                        label="Max spend (TNB)"
+                        name="maxSpendAmount"
+                        touched={touched}
+                        type="number"
+                      />
+                    </FormField>
+                  </S.FormRow>
+                  <FormField>
+                    <Select
+                      errors={errors}
+                      label="Total time per player"
+                      name="timeLimitSeconds"
+                      options={timeLimitOptions}
+                      touched={touched}
+                    />
+                  </FormField>
+                  <S.SubmitRow>
+                    <Button
+                      dirty={dirty}
+                      isSubmitting={isSubmitting}
+                      isValid={isValid}
+                      text={isSubmitting ? 'Sending...' : 'Send challenge'}
+                      type={ButtonType.submit}
+                    />
+                  </S.SubmitRow>
+                </S.Form>
+              )}
+            </Formik>
+          </S.Section>
+        </S.TopRow>
 
-        <S.MatchesSection>
-          <S.MatchesSectionTitle>Incoming challenges</S.MatchesSectionTitle>
-          {renderIncomingChallenges()}
-        </S.MatchesSection>
+        {incomingChallenges.length > 0 && (
+          <S.MatchesSection>
+            <S.MatchesSectionTitle>Incoming challenges</S.MatchesSectionTitle>
+            {renderIncomingChallenges()}
+          </S.MatchesSection>
+        )}
 
-        <S.MatchesSection>
-          <S.MatchesSectionTitle>Outgoing challenges</S.MatchesSectionTitle>
-          {renderOutgoingChallenges()}
-        </S.MatchesSection>
+        {outgoingChallenges.length > 0 && (
+          <S.MatchesSection>
+            <S.MatchesSectionTitle>Outgoing challenges</S.MatchesSectionTitle>
+            {renderOutgoingChallenges()}
+          </S.MatchesSection>
+        )}
 
-        <S.MatchesSection>
-          <S.MatchesSectionTitle>Your matches</S.MatchesSectionTitle>
-          {renderYourMatches()}
-        </S.MatchesSection>
+        {activeMatchesSorted.length > 0 && (
+          <S.MatchesSection>
+            <S.MatchesSectionTitle>Your matches</S.MatchesSectionTitle>
+            {renderYourMatches()}
+          </S.MatchesSection>
+        )}
 
-        <S.MatchesSection>
-          <S.MatchesSectionTitle>Public matches</S.MatchesSectionTitle>
-          {renderPublicMatches()}
-        </S.MatchesSection>
+        {publicMatchesSorted.length > 0 && (
+          <S.MatchesSection>
+            <S.MatchesSectionTitle>Public matches</S.MatchesSectionTitle>
+            {renderPublicMatches()}
+          </S.MatchesSection>
+        )}
 
-        <S.MatchesSection>
-          <S.MatchesSectionTitle>Match history</S.MatchesSectionTitle>
-          {renderCompletedMatches()}
-        </S.MatchesSection>
+        {completedMatchesSorted.length > 0 && (
+          <S.MatchesSection>
+            <S.MatchesSectionTitle>Match history</S.MatchesSectionTitle>
+            {renderCompletedMatches()}
+          </S.MatchesSection>
+        )}
       </S.Content>
     </S.Container>
   );
