@@ -157,7 +157,6 @@ const ConnectFiveHome: SFC = ({className}) => {
   const [eloError, setEloError] = useState<string | null>(null);
   const [eloSnapshots, setEloSnapshots] = useState<ConnectFiveEloSnapshot[]>([]);
   const [isEloLoading, setIsEloLoading] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
   const [publicMatches, setPublicMatches] = useState<ConnectFiveMatch[]>([]);
   const [publicMatchesPage, setPublicMatchesPage] = useState(1);
 
@@ -369,12 +368,7 @@ const ConnectFiveHome: SFC = ({className}) => {
 
   useEffect(() => {
     const loadData = async () => {
-      try {
-        setIsLoading(true);
-        await Promise.all([loadChallenges(), loadMatches()]);
-      } finally {
-        setIsLoading(false);
-      }
+      await Promise.all([loadChallenges(), loadMatches()]);
     };
 
     loadData();
@@ -467,15 +461,6 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   const renderYourMatches = () => {
-    if (isLoading) {
-      return (
-        <S.EmptyState>
-          <Loader />
-        </S.EmptyState>
-      );
-    }
-    if (!activeMatchesSorted.length) return <EmptyText>No active matches.</EmptyText>;
-
     return (
       <>
         <S.MatchList>{paginatedActiveMatches.map(renderMatchCard)}</S.MatchList>
@@ -528,15 +513,6 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   const renderCompletedMatches = () => {
-    if (isLoading) {
-      return (
-        <S.EmptyState>
-          <Loader />
-        </S.EmptyState>
-      );
-    }
-    if (!completedMatchesSorted.length) return <EmptyText>No completed matches.</EmptyText>;
-
     return (
       <>
         <S.MatchList>{paginatedCompletedMatches.map(renderMatchCard)}</S.MatchList>
@@ -550,16 +526,6 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   const renderPublicMatches = () => {
-    if (isLoading) {
-      return (
-        <S.EmptyState>
-          <Loader />
-        </S.EmptyState>
-      );
-    }
-
-    if (!publicMatchesSorted.length) return <EmptyText>No public matches.</EmptyText>;
-
     return (
       <>
         <S.MatchList>{paginatedPublicMatches.map(renderPublicMatchCard)}</S.MatchList>
@@ -573,14 +539,6 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   const renderIncomingChallenges = () => {
-    if (isLoading) {
-      return (
-        <S.EmptyState>
-          <Loader />
-        </S.EmptyState>
-      );
-    }
-    if (!incomingChallenges.length) return <EmptyText>No incoming challenges.</EmptyText>;
     return (
       <S.ChallengeList>
         {incomingChallenges.map((challenge) =>
@@ -699,14 +657,6 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   const renderOutgoingChallenges = () => {
-    if (isLoading) {
-      return (
-        <S.EmptyState>
-          <Loader />
-        </S.EmptyState>
-      );
-    }
-    if (!outgoingChallenges.length) return <EmptyText>No outgoing challenges.</EmptyText>;
     return (
       <S.ChallengeList>
         {outgoingChallenges.map((challenge) =>
@@ -791,30 +741,40 @@ const ConnectFiveHome: SFC = ({className}) => {
           </S.Section>
         </S.TopRow>
 
-        <S.MatchesSection>
-          <S.MatchesSectionTitle>Incoming challenges</S.MatchesSectionTitle>
-          {renderIncomingChallenges()}
-        </S.MatchesSection>
+        {incomingChallenges.length > 0 && (
+          <S.MatchesSection>
+            <S.MatchesSectionTitle>Incoming challenges</S.MatchesSectionTitle>
+            {renderIncomingChallenges()}
+          </S.MatchesSection>
+        )}
 
-        <S.MatchesSection>
-          <S.MatchesSectionTitle>Outgoing challenges</S.MatchesSectionTitle>
-          {renderOutgoingChallenges()}
-        </S.MatchesSection>
+        {outgoingChallenges.length > 0 && (
+          <S.MatchesSection>
+            <S.MatchesSectionTitle>Outgoing challenges</S.MatchesSectionTitle>
+            {renderOutgoingChallenges()}
+          </S.MatchesSection>
+        )}
 
-        <S.MatchesSection>
-          <S.MatchesSectionTitle>Your matches</S.MatchesSectionTitle>
-          {renderYourMatches()}
-        </S.MatchesSection>
+        {activeMatchesSorted.length > 0 && (
+          <S.MatchesSection>
+            <S.MatchesSectionTitle>Your matches</S.MatchesSectionTitle>
+            {renderYourMatches()}
+          </S.MatchesSection>
+        )}
 
-        <S.MatchesSection>
-          <S.MatchesSectionTitle>Public matches</S.MatchesSectionTitle>
-          {renderPublicMatches()}
-        </S.MatchesSection>
+        {publicMatchesSorted.length > 0 && (
+          <S.MatchesSection>
+            <S.MatchesSectionTitle>Public matches</S.MatchesSectionTitle>
+            {renderPublicMatches()}
+          </S.MatchesSection>
+        )}
 
-        <S.MatchesSection>
-          <S.MatchesSectionTitle>Match history</S.MatchesSectionTitle>
-          {renderCompletedMatches()}
-        </S.MatchesSection>
+        {completedMatchesSorted.length > 0 && (
+          <S.MatchesSection>
+            <S.MatchesSectionTitle>Match history</S.MatchesSectionTitle>
+            {renderCompletedMatches()}
+          </S.MatchesSection>
+        )}
       </S.Content>
     </S.Container>
   );
