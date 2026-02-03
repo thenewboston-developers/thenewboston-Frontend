@@ -1,4 +1,4 @@
-import {ComponentType, SVGProps, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
+import {ComponentType, SVGProps, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {
@@ -391,6 +391,8 @@ const ConnectFiveMatch: SFC = ({className}) => {
 
   const matchIdNumber = matchId ? Number(matchId) : null;
   const match = matchIdNumber ? matchesById[matchIdNumber] : null;
+  const matchBoardState = match?.board_state ?? null;
+  const matchIdValue = match?.id ?? null;
   const matchStatus = match?.status;
   const matchWinnerId = match?.winner;
   const selfId = self?.id;
@@ -649,8 +651,8 @@ const ConnectFiveMatch: SFC = ({className}) => {
   const canRequestRematch = !isSpectator && !hasRematchChallenge && (rematchStatus?.can_rematch ?? false);
   const showInsufficientFunds = !isSpectator && !hasRematchChallenge && (rematchStatus?.insufficient_funds ?? false);
   const loadMatch = useCallback(
-    async (matchIdValue: number) => {
-      const matchData = await getConnectFiveMatch(matchIdValue, {mine: 'any'});
+    async (matchIdForLoad: number) => {
+      const matchData = await getConnectFiveMatch(matchIdForLoad, {mine: 'any'});
       dispatch(upsertMatch({match: matchData, selfId}));
     },
     [dispatch, selfId],
@@ -796,33 +798,33 @@ const ConnectFiveMatch: SFC = ({className}) => {
     return new Set<string>();
   }, [match]);
 
-  useLayoutEffect(() => {
-    if (!match) {
+  useEffect(() => {
+    const resetAnimationState = () => {
+      setBombBlastKeys((prev) => (prev.size ? new Set() : prev));
+      setBombBlastPieces((prev) => (Object.keys(prev).length ? {} : prev));
+      setBombBlastSequence(0);
+      setLastMoveKeys((prev) => (prev.size ? new Set() : prev));
+      setLastMoveSequence(0);
+    };
+
+    if (matchIdValue == null || !matchBoardState) {
       previousBoardStateRef.current = null;
       previousMatchIdRef.current = null;
-      setBombBlastKeys(new Set());
-      setBombBlastPieces({});
-      setBombBlastSequence(0);
-      setLastMoveKeys(new Set());
-      setLastMoveSequence(0);
+      resetAnimationState();
       return;
     }
 
-    if (previousMatchIdRef.current !== match.id) {
-      previousMatchIdRef.current = match.id;
-      previousBoardStateRef.current = match.board_state;
-      setBombBlastKeys(new Set());
-      setBombBlastPieces({});
-      setBombBlastSequence(0);
-      setLastMoveKeys(new Set());
-      setLastMoveSequence(0);
+    if (previousMatchIdRef.current !== matchIdValue) {
+      previousMatchIdRef.current = matchIdValue;
+      previousBoardStateRef.current = matchBoardState;
+      resetAnimationState();
       return;
     }
 
     const previousBoardState = previousBoardStateRef.current;
 
     if (!previousBoardState) {
-      previousBoardStateRef.current = match.board_state;
+      previousBoardStateRef.current = matchBoardState;
       return;
     }
 
@@ -831,7 +833,7 @@ const ConnectFiveMatch: SFC = ({className}) => {
     const nextBombPieces: Record<string, PlayerSide> = {};
     const nextMoveKeys: string[] = [];
 
-    match.board_state.forEach((row, y) => {
+    matchBoardState.forEach((row, y) => {
       row.forEach((value, x) => {
         const previousValue = previousBoardState[y]?.[x];
 
@@ -851,7 +853,10 @@ const ConnectFiveMatch: SFC = ({className}) => {
       });
     });
 
-    if (!hasChanges) return;
+    if (!hasChanges) {
+      previousBoardStateRef.current = matchBoardState;
+      return;
+    }
 
     let soundSource: string | null = null;
 
@@ -868,7 +873,13 @@ const ConnectFiveMatch: SFC = ({className}) => {
       audio.play().catch(() => undefined);
     }
 
-    setLastMoveKeys(new Set(nextMoveKeys));
+    setLastMoveKeys((prev) => {
+      if (!nextMoveKeys.length) {
+        return prev.size ? new Set() : prev;
+      }
+
+      return new Set(nextMoveKeys);
+    });
 
     if (nextMoveKeys.length) {
       setLastMoveSequence((prev) => prev + 1);
@@ -879,12 +890,12 @@ const ConnectFiveMatch: SFC = ({className}) => {
       setBombBlastPieces(nextBombPieces);
       setBombBlastSequence((prev) => prev + 1);
     } else {
-      setBombBlastKeys(new Set());
-      setBombBlastPieces({});
+      setBombBlastKeys((prev) => (prev.size ? new Set() : prev));
+      setBombBlastPieces((prev) => (Object.keys(prev).length ? {} : prev));
     }
 
-    previousBoardStateRef.current = match.board_state;
-  }, [match]);
+    previousBoardStateRef.current = matchBoardState;
+  }, [matchBoardState, matchIdValue]);
 
   useEffect(() => {
     if (!isMatchActive) return;
