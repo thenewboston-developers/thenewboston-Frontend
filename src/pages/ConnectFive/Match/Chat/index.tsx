@@ -9,6 +9,8 @@ import {ConnectFiveChatMessage, SFC} from 'types';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast} from 'utils/toasts';
 
+import * as MatchStyles from '../Styles';
+
 import * as S from './Styles';
 
 interface ConnectFiveChatProps {
@@ -30,6 +32,7 @@ const ConnectFiveChat: SFC<ConnectFiveChatProps> = ({className, matchId}) => {
 
   const chatListRef = useRef<HTMLDivElement | null>(null);
   const pendingScrollAdjustRef = useRef<{previousScrollHeight: number; previousScrollTop: number} | null>(null);
+
   useEffect(() => {
     let isMounted = true;
 
@@ -233,10 +236,10 @@ const ConnectFiveChat: SFC<ConnectFiveChatProps> = ({className, matchId}) => {
 
     return (
       <S.ChatPanel className={className}>
-        <S.PanelHeader>
-          <S.PanelTitle>Match chat</S.PanelTitle>
-          <S.PanelSubtitle>Chat with players and spectators.</S.PanelSubtitle>
-        </S.PanelHeader>
+        <MatchStyles.PanelHeader>
+          <MatchStyles.PanelTitle>Match chat</MatchStyles.PanelTitle>
+          <MatchStyles.PanelSubtitle>Chat with players and spectators.</MatchStyles.PanelSubtitle>
+        </MatchStyles.PanelHeader>
         <S.ChatMessages onScroll={handleChatScroll} ref={chatListRef}>
           {isLoadingOlderMessages ? <S.ChatStatus>Loading older messages...</S.ChatStatus> : null}
           {renderChatMessages()}
