@@ -217,6 +217,7 @@ const ConnectFiveMatch: SFC = ({className}) => {
   const navigate = useNavigate();
   const previousBoardStateRef = useRef<number[][] | null>(null);
   const previousMatchIdRef = useRef<number | null>(null);
+  const previousRematchViewStateRef = useRef<RematchViewState | null>(null);
   const self = useSelector(getSelf);
 
   const matchIdNumber = matchId ? Number(matchId) : null;
@@ -848,10 +849,19 @@ const ConnectFiveMatch: SFC = ({className}) => {
     if (!rematchChallenge || rematchChallenge.status !== ConnectFiveChallengeStatus.ACCEPTED) return;
     if (!rematchChallenge.match_id) return;
     if (match?.id === rematchChallenge.match_id) return;
+    if (previousRematchViewStateRef.current !== 'requestedByMe') return;
 
     setResultModalIsOpen(false);
     navigate(`/connect-five/matches/${rematchChallenge.match_id}`);
   }, [isSpectator, match?.id, navigate, rematchChallenge]);
+
+  useEffect(() => {
+    previousRematchViewStateRef.current = rematchViewState;
+  }, [rematchViewState]);
+
+  useEffect(() => {
+    previousRematchViewStateRef.current = null;
+  }, [matchIdValue]);
 
   if (isLoading) {
     return (
