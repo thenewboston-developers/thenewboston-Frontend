@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import {mdiCommentTextOutline, mdiDotsVertical, mdiHeart, mdiHeartOutline} from '@mdi/js';
 
 import ContentWithMentions from 'components/ContentWithMentions';
@@ -76,6 +77,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const [showFullContent, setShowFullContent] = useState(false);
   const comments = useSelector(getComments);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const self = useSelector(getSelf);
 
   const {
@@ -94,7 +96,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
   } = post;
   const isTransferPost = !!(recipient && price_amount && price_currency);
   const isOwner = owner.id === self.id;
-  const isStaff = self.is_staff;
   const youtubeVideoId = extractYouTubeVideoId(content);
   const commentsForPost = Object.values(comments)
     .filter((comment) => comment.post === id)
@@ -116,6 +117,10 @@ const Post: SFC<PostProps> = ({className, post}) => {
     } catch (error) {
       displayErrorToast('Error deleting post');
     }
+  };
+
+  const handleGoToPost = () => {
+    navigate(`/posts/${id}`);
   };
 
   const handleLikeClick = async () => {
@@ -142,14 +147,14 @@ const Post: SFC<PostProps> = ({className, post}) => {
   };
 
   const menuOptions = [
-    ...(isStaff
-      ? [
-          {
-            label: 'Copy as JSON',
-            onClick: handleCopyAsJson,
-          },
-        ]
-      : []),
+    {
+      label: 'Go to post',
+      onClick: handleGoToPost,
+    },
+    {
+      label: 'Copy as JSON',
+      onClick: handleCopyAsJson,
+    },
     ...(isOwner
       ? [
           {
