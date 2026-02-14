@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 import {Input as UInput, Select as USelect, Textarea as UTextarea} from 'components/FormElements';
-import UModal from 'components/Modal';
-import {colors} from 'styles';
+import UModal, {ModalBody as UModalBody, ModalFooter as UModalFooter} from 'components/Modal';
+import {breakpoints, colors} from 'styles';
 
 export const Arrow = styled.div`
   color: ${colors.palette.gray[500]};
@@ -33,7 +33,46 @@ export const LoadingText = styled.div`
 `;
 
 export const Modal = styled(UModal)`
-  width: 420px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 24px);
+  width: min(420px, calc(100vw - 24px));
+
+  @supports (height: 1dvh) {
+    max-height: calc(100dvh - 24px);
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: calc(100vw - 16px);
+  }
+
+  > div:last-child {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  > div:last-child > form {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+  }
+`;
+
+export const ModalBody = styled(UModalBody)`
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+`;
+
+export const ModalFooter = styled(UModalFooter)`
+  background: ${colors.white};
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-top: 1px solid ${colors.palette.gray[100]};
+  flex-shrink: 0;
 `;
 
 export const NoWalletsMessage = styled.div`
