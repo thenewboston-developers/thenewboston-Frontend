@@ -12,8 +12,8 @@ import FullScreenImageModal from 'modals/FullScreenImageModal';
 import PostLikesModal from 'modals/PostLikesModal';
 import PostModal from 'modals/PostModal';
 import {getComments, getSelf} from 'selectors/state';
-import {AppDispatch, Comment as TComment, Post as TPost, SFC} from 'types';
-import {longDate, shortDate} from 'utils/dates';
+import {AppDispatch, Post as TPost, SFC} from 'types';
+import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import Comments from './Comments';
@@ -24,13 +24,6 @@ import TransferInfo from './TransferInfo';
 export interface PostProps {
   post: TPost;
 }
-
-type CoinTransferAmount = {
-  currency: {
-    ticker: string;
-  };
-  total_amount: number;
-};
 
 const extractYouTubeVideoId = (text: string): string | null => {
   const urlPattern = /https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)[^\s]+/gi;
@@ -74,87 +67,6 @@ const extractYouTubeVideoId = (text: string): string | null => {
   return null;
 };
 
-const formatAmountWithTicker = (amount: number, ticker: string): string => {
-  return `${amount.toLocaleString()} ${ticker}`;
-};
-
-const getCommentCoinTransferLine = (comment: TComment): string | null => {
-  if (!comment.price_amount || !comment.price_currency) return null;
-  return `Coin transfer: ${formatAmountWithTicker(comment.price_amount, comment.price_currency.ticker)}`;
-};
-
-const getPostCoinTransferLines = (transferAmounts: CoinTransferAmount[]): string[] => {
-  if (!transferAmounts || transferAmounts.length === 0) return [];
-  return transferAmounts.map(
-    (transfer) => `- ${formatAmountWithTicker(transfer.total_amount, transfer.currency.ticker)}`,
-  );
-};
-
-const sortCommentsByDate = (comments: TComment[]): TComment[] => {
-  return [...comments].sort((a, b) => new Date(a.created_date).getTime() - new Date(b.created_date).getTime());
-};
-
-const buildConversationMarkdown = (
-  post: TPost,
-  comments: TComment[],
-  transferAmounts: CoinTransferAmount[],
-): string => {
-  const lines: string[] = [];
-  const coinTransferLines = getPostCoinTransferLines(transferAmounts);
-  const isTransferPost = !!(post.recipient && post.price_amount && post.price_currency);
-
-  lines.push(`# Post by @${post.owner.username}`);
-  lines.push(`- Post ID: ${post.id}`);
-  lines.push(`- Created: ${longDate(post.created_date)}`);
-
-  if (post.image) {
-    lines.push(`- Image: ${post.image}`);
-  }
-
-  if (isTransferPost) {
-    lines.push(
-      `- Transfer: @${post.owner.username} sent ${formatAmountWithTicker(
-        post.price_amount!,
-        post.price_currency!.ticker,
-      )} to @${post.recipient!.username}`,
-    );
-  }
-
-  lines.push('');
-  lines.push('## Post');
-  lines.push(post.content);
-
-  if (coinTransferLines.length) {
-    lines.push('');
-    lines.push('## Coin Transfers');
-    lines.push(...coinTransferLines);
-  }
-
-  lines.push('');
-  lines.push(`## Comments (${comments.length})`);
-
-  if (comments.length === 0) {
-    return lines.join('\n');
-  }
-
-  comments.forEach((comment, index) => {
-    const commentCoinTransferLine = getCommentCoinTransferLine(comment);
-
-    lines.push('');
-    lines.push(`### ${index + 1}. @${comment.owner.username}`);
-    lines.push(`- Created: ${longDate(comment.created_date)}`);
-
-    if (commentCoinTransferLine) {
-      lines.push(`- ${commentCoinTransferLine}`);
-    }
-
-    lines.push('');
-    lines.push(comment.content);
-  });
-
-  return lines.join('\n');
-};
-
 const Post: SFC<PostProps> = ({className, post}) => {
   const [animateLike, setAnimateLike] = useState(false);
   const [imageModalIsOpen, toggleImageModal] = useToggle(false);
@@ -184,14 +96,16 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const isOwner = owner.id === self.id;
   const isStaff = self.is_staff;
   const youtubeVideoId = extractYouTubeVideoId(content);
-  const commentsForPost = sortCommentsByDate(Object.values(comments).filter((comment) => comment.post === id));
+  const commentsForPost = Object.values(comments)
+    .filter((comment) => comment.post === id)
+    .sort((a, b) => new Date(a.created_date).getTime() - new Date(b.created_date).getTime());
 
-  const handleCopyForLlm = async () => {
+  const handleCopyAsJson = async () => {
     try {
-      await navigator.clipboard.writeText(buildConversationMarkdown(post, commentsForPost, coin_transfer_amounts));
-      displayToast('Conversation copied for LLM.', ToastType.SUCCESS);
+      await navigator.clipboard.writeText(JSON.stringify({...post, comments: commentsForPost}, null, 2));
+      displayToast('Post JSON copied.', ToastType.SUCCESS);
     } catch (error) {
-      displayErrorToast('Error copying conversation');
+      displayErrorToast('Error copying post JSON');
     }
   };
 
@@ -231,8 +145,8 @@ const Post: SFC<PostProps> = ({className, post}) => {
     ...(isStaff
       ? [
           {
-            label: 'Copy for LLM',
-            onClick: handleCopyForLlm,
+            label: 'Copy as JSON',
+            onClick: handleCopyAsJson,
           },
         ]
       : []),
