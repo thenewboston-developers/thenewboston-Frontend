@@ -8,7 +8,6 @@ import EmojiPicker from 'components/EmojiPicker';
 import {FileInput, FormField} from 'components/FormElements';
 import ImagePreview from 'components/ImagePreview';
 import Loader from 'components/Loader';
-import {ModalBody, ModalFooter} from 'components/Modal';
 import UserLabel from 'components/UserLabel';
 import {createPost} from 'dispatchers/posts';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -127,12 +126,12 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
   if (isLoading) {
     return (
       <S.Modal close={close} header="Send Coins">
-        <ModalBody>
+        <S.ModalBody>
           <S.LoaderContainer>
             <Loader size={48} />
             <S.LoadingText>Loading wallets...</S.LoadingText>
           </S.LoaderContainer>
-        </ModalBody>
+        </S.ModalBody>
       </S.Modal>
     );
   }
@@ -153,7 +152,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
-            <ModalBody>
+            <S.ModalBody>
               <S.TransferInfo>
                 <S.UserRow>
                   <S.Label>From</S.Label>
@@ -204,9 +203,9 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
                 }}
                 src={preview}
               />
-            </ModalBody>
+            </S.ModalBody>
 
-            <ModalFooter>
+            <S.ModalFooter>
               <Button color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
@@ -216,7 +215,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
                 text="Send"
                 type={ButtonType.submit}
               />
-            </ModalFooter>
+            </S.ModalFooter>
           </Form>
         )}
       </Formik>
