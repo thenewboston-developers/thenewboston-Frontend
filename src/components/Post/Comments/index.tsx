@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {mdiPlusCircle, mdiSend} from '@mdi/js';
+import {mdiSend} from '@mdi/js';
 import {Form, Formik, FormikHelpers} from 'formik';
 
 import {ButtonColor, ButtonType} from 'components/Button';
@@ -25,7 +25,6 @@ export interface CommentsProps {
 const Comments: SFC<CommentsProps> = ({className, postId}) => {
   const [commentDetails, setCommentDetails] = useState<TComment[]>([]);
   const [currencySelectModalIsOpen, toggleCurrencySelectModal] = useToggle(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>([]);
   const [startIndex, setStartIndex] = useState<number>(0);
   const comments = useSelector(getComments);
@@ -92,33 +91,48 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
       resetForm();
       setMentionedUsers([]);
     } catch (error) {
+      const errorData = (error as {response?: {data?: unknown}}).response?.data;
+      const errorText = JSON.stringify(errorData || '').toLowerCase();
+
+      if (errorText.includes('insufficient funds')) {
+        const tipCurrencyTicker = manager.activeCommentCurrency?.ticker;
+        displayErrorToast(
+          tipCurrencyTicker
+            ? `You don't have enough ${tipCurrencyTicker} to send this tip amount`
+            : "You don't have enough funds to send this tip amount",
+        );
+        return;
+      }
+
       displayErrorToast('Error submitting the comment');
     }
+  };
+
+  const handleTipCurrencyButtonClick = () => {
+    toggleCurrencySelectModal();
   };
 
   const renderComments = () => {
     return commentDetails.map((comment, index) => <Comment comment={comment} isFirst={index === 0} key={index} />);
   };
 
-  const renderSelectCurrencyElement = () => {
-    if (manager.activeCommentCurrency) {
+  const renderTipCurrencyControl = (errors: {[field: string]: string}, touched: {[field: string]: boolean}) => {
+    if (!manager.activeCommentCurrency) {
       return (
-        <S.IconContainer onClick={toggleMenu}>
-          <S.Image alt="logo" src={manager.activeCommentCurrency.logo} />
-        </S.IconContainer>
+        <S.TipCurrencyButton onClick={handleTipCurrencyButtonClick} type="button">
+          Tip Currency
+        </S.TipCurrencyButton>
       );
     }
 
     return (
-      <S.IconContainer onClick={toggleMenu}>
-        <S.Icon path={mdiPlusCircle} size="24px" />
-      </S.IconContainer>
+      <S.PriceAmountInputContainer>
+        <S.IconContainer onClick={handleTipCurrencyButtonClick}>
+          <S.Image alt={`${manager.activeCommentCurrency.ticker} logo`} src={manager.activeCommentCurrency.logo} />
+        </S.IconContainer>
+        <S.PriceAmountInput errors={errors} name="price_amount" placeholder="Amount" touched={touched} type="number" />
+      </S.PriceAmountInputContainer>
     );
-  };
-
-  const toggleMenu = () => {
-    toggleCurrencySelectModal();
-    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
@@ -148,16 +162,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
                 </S.MentionTextareaWrapper>
                 <S.ControlsWrapper>
                   <EmojiPicker field="content" setFieldValue={setFieldValue} value={values.content} />
-                  <S.PriceAmountInputContainer>
-                    {renderSelectCurrencyElement()}
-                    <S.PriceAmountInput
-                      errors={errors}
-                      name="price_amount"
-                      placeholder="Amount"
-                      touched={touched}
-                      type="number"
-                    />
-                  </S.PriceAmountInputContainer>
+                  {renderTipCurrencyControl(errors, touched)}
                   <S.Button
                     color={ButtonColor.secondary}
                     dirty={dirty}

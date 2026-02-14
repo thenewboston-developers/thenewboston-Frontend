@@ -1,22 +1,25 @@
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiArrowDownCircle, mdiArrowUpCircle, mdiSwapHorizontal} from '@mdi/js';
 import Icon from '@mdi/react';
 import orderBy from 'lodash/orderBy';
 
 import {getCurrencies} from 'api/currencies';
+import {getWallets} from 'api/wallets';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyState from 'components/EmptyState';
 import Tab from 'components/Tab';
 import Tabs from 'components/Tabs';
+import {DEFAULT_CURRENCY_TICKER} from 'constants/general';
+import {createWallet} from 'dispatchers/wallets';
 import {WalletTab} from 'enums';
 import {useToggle} from 'hooks';
 import WalletCreateModal from 'modals/WalletCreateModal';
 import WalletSelectModal from 'modals/WalletSelectModal';
-import {getManager, getWallets} from 'selectors/state';
+import {getManager, getSelf, getWallets as getWalletsState} from 'selectors/state';
 import {updateManager} from 'store/manager';
 import {clearWallets} from 'store/wallets';
-import {AppDispatch, SFC} from 'types';
+import {AppDispatch, SFC, Wallet} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
 import SendCoinsSection from './SendCoinsSection';
@@ -32,9 +35,11 @@ const Home: SFC = ({className}) => {
   const [transfersRefreshKey, setTransfersRefreshKey] = useState(0);
   const [walletCreateModalIsOpen, toggleWalletCreateModal] = useToggle(false);
   const [walletSelectModalIsOpen, toggleWalletSelectModal] = useToggle(false);
+  const defaultWalletInitializationAttemptedRef = useRef(false);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
-  const wallets = useSelector(getWallets);
+  const self = useSelector(getSelf);
+  const wallets = useSelector(getWalletsState);
   const walletList = useMemo(
     () => orderBy(Object.values(wallets || {}), [(wallet) => wallet.currency.ticker]),
     [wallets],
@@ -55,6 +60,67 @@ const Home: SFC = ({className}) => {
       }
     })();
   }, [currencyCheckKey]);
+
+  useEffect(() => {
+    if (defaultWalletInitializationAttemptedRef.current) return;
+
+    if (manager.activeWallet) {
+      defaultWalletInitializationAttemptedRef.current = true;
+      return;
+    }
+
+    if (self.id === null) return;
+    const selfId = self.id;
+
+    defaultWalletInitializationAttemptedRef.current = true;
+
+    (async () => {
+      let defaultCurrencyId: number | null = null;
+      let existingWallet: Wallet | null = null;
+
+      try {
+        const currenciesResponse = await getCurrencies({page_size: 100, search: DEFAULT_CURRENCY_TICKER});
+        const defaultCurrency = currenciesResponse.results.find(
+          ({ticker}) => ticker.toUpperCase() === DEFAULT_CURRENCY_TICKER,
+        );
+
+        if (!defaultCurrency) {
+          displayErrorToast(`${DEFAULT_CURRENCY_TICKER} currency is unavailable`);
+          return;
+        }
+
+        defaultCurrencyId = defaultCurrency.id;
+        const walletsResponse = await getWallets({currency: defaultCurrencyId, page_size: 1});
+        existingWallet = walletsResponse.results[0] || null;
+      } catch (error) {
+        displayErrorToast('Error checking default wallet');
+        return;
+      }
+
+      if (existingWallet) {
+        dispatch(updateManager({activeWallet: existingWallet, activeWalletTab: WalletTab.TRANSFERS}));
+        return;
+      }
+
+      if (defaultCurrencyId === null) {
+        displayErrorToast('Error checking default wallet');
+        return;
+      }
+
+      try {
+        const wallet = await dispatch(
+          createWallet({
+            currency: defaultCurrencyId,
+            owner: selfId,
+          }),
+        );
+
+        dispatch(updateManager({activeWallet: wallet, activeWalletTab: WalletTab.TRANSFERS}));
+      } catch (error) {
+        displayErrorToast('Error creating wallet');
+      }
+    })();
+  }, [dispatch, manager.activeWallet, self.id]);
 
   const handleTabClick = useCallback(
     (walletTab: WalletTab) => {

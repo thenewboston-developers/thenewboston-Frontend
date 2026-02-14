@@ -1,11 +1,10 @@
-import {useEffect, useState} from 'react';
+import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {getWallets} from 'api/wallets';
-import Button from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
-import {ModalBody, ModalFooter} from 'components/Modal';
+import {ModalBody} from 'components/Modal';
 import {ToastType, WalletTab} from 'enums';
 import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
@@ -20,75 +19,175 @@ export interface WalletSelectModalProps {
 }
 
 const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
+  const [animationType, setAnimationType] = useState<'deselect' | 'select' | null>(null);
+  const [animationWalletId, setAnimationWalletId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageWallets, setCurrentPageWallets] = useState<Wallet[]>([]);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [totalCount, setTotalCount] = useState(0);
+  const [contentContainerHeight, setContentContainerHeight] = useState<number | null>(null);
+  const closeModalTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const contentContainerRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
-
   const pageSize = 12;
+  const requestIdRef = useRef(0);
   const totalPages = Math.ceil(totalCount / pageSize);
 
   useEffect(() => {
-    if (manager.activeWallet) {
-      setSelectedWallet(manager.activeWallet);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const debounceTimeout = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm.trim());
+    }, 300);
+
+    return () => {
+      clearTimeout(debounceTimeout);
+    };
+  }, [searchTerm]);
 
   useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
+    let isCancelled = false;
+
     (async () => {
       setIsLoading(true);
       try {
-        const response = await getWallets({page: currentPage, page_size: pageSize});
+        const response = await getWallets({
+          page: currentPage,
+          page_size: pageSize,
+          search: debouncedSearchTerm || undefined,
+        });
+
+        if (isCancelled || requestIdRef.current !== requestId) {
+          return;
+        }
+
         setCurrentPageWallets(response.results);
         setTotalCount(response.count);
       } catch (error) {
+        if (isCancelled || requestIdRef.current !== requestId) {
+          return;
+        }
+
+        setCurrentPageWallets([]);
+        setTotalCount(0);
         displayErrorToast('Error fetching wallets');
       } finally {
-        setIsLoading(false);
+        if (!isCancelled && requestIdRef.current === requestId) {
+          setIsLoading(false);
+        }
       }
     })();
-  }, [currentPage]);
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [currentPage, debouncedSearchTerm, pageSize]);
+
+  useEffect(() => {
+    return () => {
+      if (closeModalTimeoutRef.current) {
+        clearTimeout(closeModalTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const contentContainerElement = contentContainerRef.current;
+    if (!contentContainerElement) {
+      return;
+    }
+
+    const handleContentContainerResize = () => {
+      setContentContainerHeight(contentContainerElement.getBoundingClientRect().height);
+    };
+
+    handleContentContainerResize();
+    window.addEventListener('resize', handleContentContainerResize);
+
+    return () => {
+      window.removeEventListener('resize', handleContentContainerResize);
+    };
+  }, [currentPageWallets, totalPages]);
+
+  const handleSelectedWalletCardAnimationComplete = () => {
+    if (!animationType) {
+      return;
+    }
+
+    if (closeModalTimeoutRef.current) {
+      clearTimeout(closeModalTimeoutRef.current);
+    }
+
+    const closeDelayInMilliseconds = animationType === 'select' ? 500 : 300;
+    closeModalTimeoutRef.current = setTimeout(() => {
+      closeModalTimeoutRef.current = null;
+      setAnimationType(null);
+      setAnimationWalletId(null);
+      close();
+    }, closeDelayInMilliseconds);
+  };
+
+  const handleWalletCardClick = (wallet: Wallet) => {
+    const isCurrentlySelected = manager.activeWallet?.id === wallet.id;
+
+    if (isCurrentlySelected) {
+      setAnimationType('deselect');
+      setAnimationWalletId(wallet.id);
+      dispatch(updateManager({activeWallet: null, activeWalletTab: null}));
+      displayToast(`${wallet.currency.ticker} wallet deselected`, ToastType.SUCCESS);
+      return;
+    }
+
+    setAnimationType('select');
+    setAnimationWalletId(wallet.id);
+    dispatch(updateManager({activeWallet: wallet, activeWalletTab: WalletTab.TRANSFERS}));
+    displayToast(`${wallet.currency.ticker} wallet selected`, ToastType.SUCCESS);
+  };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const handleSubmitButtonClick = async () => {
-    if (!selectedWallet) return;
-
-    setSubmitting(true);
-    try {
-      dispatch(updateManager({activeWallet: selectedWallet, activeWalletTab: WalletTab.TRANSFERS}));
-      displayToast(`${selectedWallet.currency.ticker} wallet selected`, ToastType.SUCCESS);
-      close();
-    } catch (error) {
-      displayErrorToast('Error selecting wallet');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleWalletClick = (wallet: Wallet) => {
-    setSelectedWallet(wallet.id === selectedWallet?.id ? null : wallet);
+  const handleSearchInputChange = ({target}: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(target.value);
   };
 
   const renderContent = () => {
-    if (isLoading) return <Loader />;
-    if (!currentPageWallets.length) return <EmptyText>No wallets available</EmptyText>;
+    const hasSearchTerm = debouncedSearchTerm !== '';
+
+    if (isLoading) {
+      if (contentContainerHeight === null) {
+        return <Loader />;
+      }
+
+      return (
+        <S.LoaderContainer $height={contentContainerHeight}>
+          <Loader />
+        </S.LoaderContainer>
+      );
+    }
+    if (!currentPageWallets.length) {
+      return <EmptyText>{hasSearchTerm ? 'No wallets found' : 'No wallets available'}</EmptyText>;
+    }
 
     return (
-      <>
+      <S.ContentContainer ref={contentContainerRef}>
         <S.WalletCardContainer>
           {currentPageWallets.map((wallet) => (
             <WalletCard
-              isSelected={selectedWallet?.id === wallet.id}
+              isSelected={manager.activeWallet?.id === wallet.id}
               key={wallet.id}
-              onClick={() => handleWalletClick(wallet)}
+              onAnimationComplete={
+                wallet.id === animationWalletId ? handleSelectedWalletCardAnimationComplete : undefined
+              }
+              onClick={() => handleWalletCardClick(wallet)}
               wallet={wallet}
             />
           ))}
@@ -96,21 +195,16 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
         {totalPages > 1 && (
           <S.Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
         )}
-      </>
+      </S.ContentContainer>
     );
   };
 
   return (
-    <S.Modal className={className} close={close} header="Select Wallet">
-      <ModalBody>{renderContent()}</ModalBody>
-      <ModalFooter>
-        <Button
-          disabled={selectedWallet === null || submitting}
-          isSubmitting={submitting}
-          onClick={handleSubmitButtonClick}
-          text="Submit"
-        />
-      </ModalFooter>
+    <S.Modal className={className} close={close} header="Select a Wallet">
+      <ModalBody>
+        <S.SearchInput onChange={handleSearchInputChange} placeholder="Search wallets..." value={searchTerm} />
+        {renderContent()}
+      </ModalBody>
     </S.Modal>
   );
 };

@@ -1,4 +1,3 @@
-import UIcon from '@mdi/react';
 import styled from 'styled-components';
 
 import UButton from 'components/Button';
@@ -66,15 +65,6 @@ export const Divider = styled.div`
   margin: 0 16px;
 `;
 
-export const Icon = styled(UIcon)`
-  color: ${colors.secondary};
-
-  &:hover {
-    color: ${colors.backgroundDark};
-    cursor: pointer;
-  }
-`;
-
 export const IconContainer = styled.div`
   align-items: center;
   background-color: ${colors.background};
@@ -116,6 +106,23 @@ export const PriceAmountInputContainer = styled.div`
   grid-auto-flow: column;
   height: 40px;
   overflow: hidden;
+`;
+
+export const TipCurrencyButton = styled.button`
+  background-color: ${colors.background};
+  border: 1px solid ${colors.borderDarker};
+  border-radius: 8px;
+  color: ${colors.secondary};
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  height: 40px;
+  padding: 0 14px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: ${colors.palette.gray[100]};
+  }
 `;
 
 export const ControlsWrapper = styled.div`
