@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import {useLayoutEffect, useRef, useState} from 'react';
 import {mdiCheck} from '@mdi/js';
 
 import Icon from 'components/Icon';
@@ -8,29 +8,47 @@ import * as S from './Styles';
 
 interface WalletCardProps {
   isSelected: boolean;
+  onAnimationComplete?: () => void;
   onClick: () => void;
   wallet: Wallet;
 }
 
-const WalletCard: SFC<WalletCardProps> = ({className, isSelected, onClick, wallet}) => {
+const WalletCard: SFC<WalletCardProps> = ({className, isSelected, onAnimationComplete, onClick, wallet}) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isDeselecting, setIsDeselecting] = useState(false);
-  const [wasSelected, setWasSelected] = useState(isSelected);
+  const wasSelectedRef = useRef(isSelected);
 
-  useMemo(() => {
+  useLayoutEffect(() => {
+    let animationTimeout: ReturnType<typeof setTimeout> | null = null;
+    const wasSelected = wasSelectedRef.current;
+
     if (wasSelected && !isSelected) {
+      setIsAnimating(false);
       setIsDeselecting(true);
-      setTimeout(() => {
+      animationTimeout = setTimeout(() => {
         setIsDeselecting(false);
+        if (onAnimationComplete) {
+          onAnimationComplete();
+        }
       }, 200);
     } else if (!wasSelected && isSelected) {
+      setIsDeselecting(false);
       setIsAnimating(true);
-      setTimeout(() => {
+      animationTimeout = setTimeout(() => {
         setIsAnimating(false);
+        if (onAnimationComplete) {
+          onAnimationComplete();
+        }
       }, 500);
     }
-    setWasSelected(isSelected);
-  }, [isSelected, wasSelected]);
+    wasSelectedRef.current = isSelected;
+
+    return () => {
+      if (animationTimeout) {
+        clearTimeout(animationTimeout);
+      }
+    };
+  }, [isSelected, onAnimationComplete]);
 
   const handleClick = () => {
     onClick();

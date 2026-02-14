@@ -25,13 +25,13 @@ const LeftNav: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Top>
-        <MenuLink icon={mdiCircleMultipleOutline} rootPath="/currencies" text="Currencies" to="/currencies" />
-        <MenuLink icon={mdiGamepadVariantOutline} rootPath="/connect-five" text="Connect 5" to="/connect-five" />
-        <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange" />
         <MenuLink icon={mdiHome} rootPath="/feed" text="Home" to="/feed" />
+        <MenuLink icon={mdiGamepadVariantOutline} rootPath="/connect-five" text="Connect 5" to="/connect-five" />
         <MenuLink icon={mdiBell} rootPath="/notifications" text="Notifications" to="/notifications">
           <BadgeCount />
         </MenuLink>
+        <MenuLink icon={mdiSwapHorizontalCircleOutline} rootPath="/exchange" text="Exchange" to="/exchange" />
+        <MenuLink icon={mdiCircleMultipleOutline} rootPath="/currencies" text="Currencies" to="/currencies" />
         <MenuLink icon={mdiAccount} rootPath={`/profile/${self.id}`} text="Profile" to={`/profile/${self.id}`} />
         <MenuLink icon={mdiWalletBifoldOutline} rootPath="/wallets" text="Wallets" to="/wallets" />
         <CreatePostButton />

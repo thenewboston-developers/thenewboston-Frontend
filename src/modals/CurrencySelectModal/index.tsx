@@ -1,16 +1,17 @@
-import {useEffect, useState} from 'react';
+import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {getWallets} from 'api/wallets';
 import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
 import {ModalBody} from 'components/Modal';
-import RadioCard from 'components/RadioCard';
-import {getCurrencies} from 'dispatchers/currencies';
 import {ToastType} from 'enums';
 import {getManager} from 'selectors/state';
 import {updateManager} from 'store/manager';
-import {AppDispatch, Currency, PaginatedResponse, SFC} from 'types';
+import {AppDispatch, SFC, Wallet} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
+
+import WalletCard from '../WalletSelectModal/WalletCard';
 
 import * as S from './Styles';
 
@@ -19,95 +20,162 @@ export interface CurrencySelectModalProps {
 }
 
 const CurrencySelectModal: SFC<CurrencySelectModalProps> = ({className, close}) => {
-  const [animationType, setAnimationType] = useState<'select' | 'deselect' | null>(null);
-  const [currenciesData, setCurrenciesData] = useState<PaginatedResponse<Currency> | null>(null);
+  const [animationCurrencyId, setAnimationCurrencyId] = useState<number | null>(null);
+  const [animationType, setAnimationType] = useState<'deselect' | 'select' | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageWallets, setCurrentPageWallets] = useState<Wallet[]>([]);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [totalCount, setTotalCount] = useState(0);
+  const closeModalTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentRequestIdRef = useRef(0);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
-
   const pageSize = 12;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   useEffect(() => {
+    const debounceTimeout = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm.trim());
+    }, 300);
+
+    return () => {
+      clearTimeout(debounceTimeout);
+    };
+  }, [searchTerm]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    const requestId = currentRequestIdRef.current + 1;
+    currentRequestIdRef.current = requestId;
+    let isCancelled = false;
+
     (async () => {
       setIsLoading(true);
       try {
-        const data = await dispatch(getCurrencies({page: currentPage, page_size: pageSize}));
-        setCurrenciesData(data);
+        const response = await getWallets({
+          page: currentPage,
+          page_size: pageSize,
+          search: debouncedSearchTerm || undefined,
+        });
+
+        if (isCancelled || currentRequestIdRef.current !== requestId) {
+          return;
+        }
+
+        setCurrentPageWallets(response.results);
+        setTotalCount(response.count);
       } catch (error) {
-        displayErrorToast('Error fetching currencies');
+        if (isCancelled || currentRequestIdRef.current !== requestId) {
+          return;
+        }
+
+        setCurrentPageWallets([]);
+        setTotalCount(0);
+        displayErrorToast('Error fetching wallets');
       } finally {
-        setIsLoading(false);
+        if (!isCancelled && currentRequestIdRef.current === requestId) {
+          setIsLoading(false);
+        }
       }
     })();
-  }, [currentPage, dispatch]);
 
-  const handleAnimationComplete = () => {
-    if (animationType === 'select') {
-      // For selection, wait to complete 1 second total
-      setTimeout(() => {
-        close();
-      }, 500);
-    } else if (animationType === 'deselect') {
-      // For deselection, close faster (0.2s animation + 0.3s delay = 0.5s total)
-      setTimeout(() => {
-        close();
-      }, 300);
+    return () => {
+      isCancelled = true;
+    };
+  }, [currentPage, debouncedSearchTerm, pageSize]);
+
+  useEffect(() => {
+    return () => {
+      if (closeModalTimeoutRef.current) {
+        clearTimeout(closeModalTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleCurrencyWalletCardAnimationComplete = () => {
+    if (!animationType) {
+      return;
     }
-    setAnimationType(null);
+
+    if (closeModalTimeoutRef.current) {
+      clearTimeout(closeModalTimeoutRef.current);
+    }
+
+    const closeDelayInMilliseconds = animationType === 'select' ? 500 : 300;
+    closeModalTimeoutRef.current = setTimeout(() => {
+      closeModalTimeoutRef.current = null;
+      setAnimationCurrencyId(null);
+      setAnimationType(null);
+      close();
+    }, closeDelayInMilliseconds);
   };
 
-  const handleCurrencyClick = (currency: Currency) => {
-    const isCurrentlySelected = manager.activeCommentCurrency?.id === currency.id;
+  const handleCurrencyWalletClick = (wallet: Wallet) => {
+    const isCurrentlySelected = manager.activeCommentCurrency?.id === wallet.currency.id;
 
     if (isCurrentlySelected) {
-      // Start deselection
+      setAnimationCurrencyId(wallet.currency.id);
       setAnimationType('deselect');
       dispatch(updateManager({activeCommentCurrency: null}));
-      displayToast(`${currency.ticker} deselected`, ToastType.SUCCESS);
-    } else {
-      // Start selection
-      setAnimationType('select');
-      dispatch(updateManager({activeCommentCurrency: currency}));
-      displayToast(`${currency.ticker} selected`, ToastType.SUCCESS);
+      displayToast(`${wallet.currency.ticker} deselected`, ToastType.SUCCESS);
+      return;
     }
+
+    setAnimationCurrencyId(wallet.currency.id);
+    setAnimationType('select');
+    dispatch(updateManager({activeCommentCurrency: wallet.currency}));
+    displayToast(`${wallet.currency.ticker} selected`, ToastType.SUCCESS);
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
+  const handleSearchInputChange = ({target}: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(target.value);
+  };
+
   const renderContent = () => {
+    const hasSearchTerm = debouncedSearchTerm !== '';
+
     if (isLoading) return <Loader />;
-    if (!currenciesData || !currenciesData.results.length) return <EmptyText>No currencies available</EmptyText>;
+    if (!currentPageWallets.length) {
+      return <EmptyText>{hasSearchTerm ? 'No currencies found' : 'No wallets available'}</EmptyText>;
+    }
 
     return (
       <>
-        <S.RadioCardContainer>
-          {currenciesData.results.map((_currency) => {
-            return (
-              <RadioCard
-                currency={_currency}
-                isSelected={manager.activeCommentCurrency?.id === _currency.id}
-                key={_currency.id}
-                onAnimationComplete={handleAnimationComplete}
-                onClick={() => handleCurrencyClick(_currency)}
-              />
-            );
-          })}
-        </S.RadioCardContainer>
-        <S.Pagination
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-          totalPages={Math.ceil(currenciesData.count / pageSize)}
-        />
+        <S.WalletCardContainer>
+          {currentPageWallets.map((wallet) => (
+            <WalletCard
+              isSelected={manager.activeCommentCurrency?.id === wallet.currency.id}
+              key={wallet.id}
+              onAnimationComplete={
+                wallet.currency.id === animationCurrencyId ? handleCurrencyWalletCardAnimationComplete : undefined
+              }
+              onClick={() => handleCurrencyWalletClick(wallet)}
+              wallet={wallet}
+            />
+          ))}
+        </S.WalletCardContainer>
+        {totalPages > 1 ? (
+          <S.Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+        ) : null}
       </>
     );
   };
 
   return (
-    <S.Modal className={className} close={close} header="Currencies">
-      <ModalBody>{renderContent()}</ModalBody>
+    <S.Modal className={className} close={close} header="Select a Currency">
+      <ModalBody>
+        <S.SearchInput onChange={handleSearchInputChange} placeholder="Search currencies..." value={searchTerm} />
+        {renderContent()}
+      </ModalBody>
     </S.Modal>
   );
 };

@@ -56,6 +56,7 @@ export const getWallets = async (params?: {
   currency?: number;
   page?: number;
   page_size?: number;
+  search?: string;
 }): Promise<PaginatedResponse<Wallet>> => {
   try {
     const response = await axios.get<PaginatedResponse<Wallet>>(BASE_URL, {
