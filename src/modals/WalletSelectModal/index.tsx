@@ -27,7 +27,9 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [totalCount, setTotalCount] = useState(0);
+  const [contentContainerHeight, setContentContainerHeight] = useState<number | null>(null);
   const closeModalTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const contentContainerRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
   const pageSize = 12;
@@ -96,6 +98,24 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
     };
   }, []);
 
+  useEffect(() => {
+    const contentContainerElement = contentContainerRef.current;
+    if (!contentContainerElement) {
+      return;
+    }
+
+    const handleContentContainerResize = () => {
+      setContentContainerHeight(contentContainerElement.getBoundingClientRect().height);
+    };
+
+    handleContentContainerResize();
+    window.addEventListener('resize', handleContentContainerResize);
+
+    return () => {
+      window.removeEventListener('resize', handleContentContainerResize);
+    };
+  }, [currentPageWallets, totalPages]);
+
   const handleSelectedWalletCardAnimationComplete = () => {
     if (!animationType) {
       return;
@@ -142,13 +162,23 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
   const renderContent = () => {
     const hasSearchTerm = debouncedSearchTerm !== '';
 
-    if (isLoading) return <Loader />;
+    if (isLoading) {
+      if (contentContainerHeight === null) {
+        return <Loader />;
+      }
+
+      return (
+        <S.LoaderContainer $height={contentContainerHeight}>
+          <Loader />
+        </S.LoaderContainer>
+      );
+    }
     if (!currentPageWallets.length) {
       return <EmptyText>{hasSearchTerm ? 'No wallets found' : 'No wallets available'}</EmptyText>;
     }
 
     return (
-      <>
+      <S.ContentContainer ref={contentContainerRef}>
         <S.WalletCardContainer>
           {currentPageWallets.map((wallet) => (
             <WalletCard
@@ -165,7 +195,7 @@ const WalletSelectModal: SFC<WalletSelectModalProps> = ({className, close}) => {
         {totalPages > 1 && (
           <S.Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
         )}
-      </>
+      </S.ContentContainer>
     );
   };
 

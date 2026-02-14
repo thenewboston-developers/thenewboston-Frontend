@@ -13,6 +13,15 @@ export const Modal = styled(UModal)`
   }
 `;
 
+export const ContentContainer = styled.div``;
+
+export const LoaderContainer = styled.div<{$height: number}>`
+  align-items: center;
+  display: flex;
+  height: ${({$height}) => `${$height}px`};
+  justify-content: center;
+`;
+
 export const Pagination = styled(UPagination)`
   margin-top: 24px;
 `;
