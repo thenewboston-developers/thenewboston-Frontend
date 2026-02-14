@@ -20,7 +20,8 @@ export const deleteCurrency = (id: number) => async (dispatch: AppDispatch) => {
 };
 
 export const getCurrencies =
-  (params?: {ordering?: string; page?: number; page_size?: number}) => async (dispatch: AppDispatch) => {
+  (params?: {ordering?: string; page?: number; page_size?: number; search?: string}) =>
+  async (dispatch: AppDispatch) => {
     const responseData = await _getCurrencies({
       ordering: '-modified_date',
       ...params,

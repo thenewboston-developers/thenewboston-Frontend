@@ -27,6 +27,7 @@ export const getCurrencies = async (params?: {
   ordering?: string;
   page?: number;
   page_size?: number;
+  search?: string;
 }): Promise<PaginatedResponse<Currency>> => {
   try {
     const response = await axios.get<PaginatedResponse<Currency>>(BASE_URL, {
