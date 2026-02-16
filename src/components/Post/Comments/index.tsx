@@ -8,7 +8,7 @@ import {createComment, syncPostComments} from 'dispatchers/comments';
 import {useToggle} from 'hooks';
 import CurrencySelectModal from 'modals/CurrencySelectModal';
 import rootRouter from 'routers/rootRouter';
-import {getComments, getManager} from 'selectors/state';
+import {getComments, getManager, getSelf} from 'selectors/state';
 import {AppDispatch, Comment as TComment, SFC, UserReadSerializer} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
@@ -38,17 +38,20 @@ const Comments: SFC<CommentsProps> = ({className, composerAvatar, postId}) => {
   const [hasCommentHistoryOverflow, setHasCommentHistoryOverflow] = useState(false);
   const [isCommentInputFocused, setIsCommentInputFocused] = useState(false);
   const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>([]);
+  const [optimisticComments, setOptimisticComments] = useState<TComment[]>([]);
   const commentPaneRef = useRef<HTMLDivElement | null>(null);
   const isCommentInputFocusedRef = useRef(false);
   const manualSocketCloseRef = useRef(false);
+  const nextOptimisticCommentIdRef = useRef(-1);
   const previousCommentCountRef = useRef(0);
   const shouldAutoscrollRef = useRef(true);
   const socketRef = useRef<WebSocket | null>(null);
   const comments = useSelector(getComments);
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
+  const self = useSelector(getSelf);
 
-  const commentList = useMemo(() => {
+  const persistedCommentList = useMemo(() => {
     return Object.values(comments)
       .filter(({post}) => post === postId)
       .sort((commentA, commentB) => {
@@ -58,6 +61,34 @@ const Comments: SFC<CommentsProps> = ({className, composerAvatar, postId}) => {
         return commentA.id - commentB.id;
       });
   }, [comments, postId]);
+
+  const commentList = useMemo(() => {
+    const deduplicatedOptimisticComments = optimisticComments.filter((optimisticComment) => {
+      return !persistedCommentList.some((persistedComment) => {
+        const createdDateDifference = Math.abs(
+          new Date(persistedComment.created_date).getTime() - new Date(optimisticComment.created_date).getTime(),
+        );
+        const optimisticPriceCurrencyId = optimisticComment.price_currency?.id || null;
+        const persistedPriceCurrencyId = persistedComment.price_currency?.id || null;
+
+        return (
+          persistedComment.content === optimisticComment.content &&
+          persistedComment.owner.id === optimisticComment.owner.id &&
+          persistedComment.post === optimisticComment.post &&
+          persistedComment.price_amount === optimisticComment.price_amount &&
+          persistedPriceCurrencyId === optimisticPriceCurrencyId &&
+          createdDateDifference < 5000
+        );
+      });
+    });
+
+    return [...persistedCommentList, ...deduplicatedOptimisticComments].sort((commentA, commentB) => {
+      const createdDateDifference =
+        new Date(commentA.created_date).getTime() - new Date(commentB.created_date).getTime();
+      if (createdDateDifference !== 0) return createdDateDifference;
+      return commentA.id - commentB.id;
+    });
+  }, [optimisticComments, persistedCommentList]);
 
   const initialValues = {
     content: '',
@@ -97,35 +128,91 @@ const Comments: SFC<CommentsProps> = ({className, composerAvatar, postId}) => {
   }, []);
 
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
-    try {
-      const trimmedContent = values.content.trim();
-      if (!trimmedContent) return;
+    const trimmedContent = values.content.trim();
+    if (!trimmedContent) return;
 
-      let price_amount = values.price_amount === '' ? null : parseInt(values.price_amount, 10);
-      let price_currency = manager.activeCommentCurrency?.id || null;
+    let price_amount = values.price_amount === '' ? null : parseInt(values.price_amount, 10);
+    let price_currency = manager.activeCommentCurrency?.id || null;
 
-      if (price_amount && !price_currency) {
-        displayErrorToast('Please select a currency for the amount');
-        return;
-      }
+    if (price_amount && !price_currency) {
+      displayErrorToast('Please select a currency for the amount');
+      return;
+    }
 
-      if (!price_amount || !price_currency) {
-        price_amount = null;
-        price_currency = null;
-      }
+    if (!price_amount || !price_currency) {
+      price_amount = null;
+      price_currency = null;
+    }
 
-      const requestData = {
-        ...values,
+    const requestData = {
+      ...values,
+      content: trimmedContent,
+      mentioned_user_ids: mentionedUsers.map((user) => user.id),
+      post: postId,
+      price_amount,
+      price_currency,
+    };
+    const optimisticCommentId = nextOptimisticCommentIdRef.current;
+    nextOptimisticCommentIdRef.current -= 1;
+    const optimisticOwner =
+      self.id && self.username
+        ? {
+            avatar: self.avatar,
+            banner: self.banner,
+            bio: self.bio || '',
+            connect_five_elo: self.connect_five_elo,
+            discord_username: self.discord_username,
+            facebook_username: self.facebook_username,
+            github_username: self.github_username,
+            id: self.id,
+            instagram_username: self.instagram_username,
+            is_staff: self.is_staff,
+            linkedin_username: self.linkedin_username,
+            pinterest_username: self.pinterest_username,
+            reddit_username: self.reddit_username,
+            tiktok_username: self.tiktok_username,
+            twitch_username: self.twitch_username,
+            username: self.username,
+            x_username: self.x_username,
+            youtube_username: self.youtube_username,
+          }
+        : null;
+    const optimisticPriceCurrency =
+      price_amount && price_currency && manager.activeCommentCurrency
+        ? {
+            id: manager.activeCommentCurrency.id,
+            logo: manager.activeCommentCurrency.logo,
+            ticker: manager.activeCommentCurrency.ticker,
+          }
+        : null;
+
+    if (optimisticOwner) {
+      const optimisticComment: TComment = {
         content: trimmedContent,
-        mentioned_user_ids: mentionedUsers.map((user) => user.id),
+        created_date: new Date(),
+        id: optimisticCommentId,
+        mentioned_users: mentionedUsers,
+        modified_date: new Date(),
+        owner: optimisticOwner,
         post: postId,
         price_amount,
-        price_currency,
+        price_currency: optimisticPriceCurrency,
       };
+      setOptimisticComments((previousOptimisticComments) => [...previousOptimisticComments, optimisticComment]);
+    }
+
+    resetForm();
+    setMentionedUsers([]);
+
+    try {
       await dispatch(createComment(requestData));
-      resetForm();
-      setMentionedUsers([]);
+      setOptimisticComments((previousOptimisticComments) =>
+        previousOptimisticComments.filter(({id}) => id !== optimisticCommentId),
+      );
     } catch (error) {
+      setOptimisticComments((previousOptimisticComments) =>
+        previousOptimisticComments.filter(({id}) => id !== optimisticCommentId),
+      );
       const errorData = (error as {response?: {data?: unknown}}).response?.data;
       const errorText = JSON.stringify(errorData || '').toLowerCase();
 

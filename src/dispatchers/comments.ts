@@ -14,8 +14,10 @@ export const createComment = (data: CreateCommentRequest) => async (dispatch: Ap
 
   // Update tip amounts if the comment includes a tip
   if (data.price_amount && data.price_currency && data.post) {
-    await dispatch(updateTipAmounts(data.post));
+    dispatch(updateTipAmounts(data.post)).catch(() => undefined);
   }
+
+  return responseData;
 };
 
 export const deleteComment = (id: number) => async (dispatch: AppDispatch) => {

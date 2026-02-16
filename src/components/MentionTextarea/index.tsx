@@ -382,7 +382,7 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
 
   return (
     <S.Container className={className} ref={containerRef}>
-      <S.Label>{label}</S.Label>
+      {label ? <S.Label>{label}</S.Label> : null}
       <S.Field
         $disableResize={!!maxRows}
         $error={isError}
