@@ -36,6 +36,7 @@ export const CommentForm = styled.div`
 `;
 
 export const CommentHistory = styled.div<{$hasOverflow: boolean}>`
+  background: #fbfbfb;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -77,6 +78,7 @@ export const CommentHistory = styled.div<{$hasOverflow: boolean}>`
 `;
 
 export const CommentHistorySection = styled.div`
+  background: #fbfbfb;
   padding: 0 0 0 24px;
 
   @media (max-width: ${breakpoints.mini}) {

@@ -19,6 +19,7 @@ import * as S from './Styles';
 const AUTO_SCROLL_THRESHOLD_PX = 80;
 
 type CommentConnectionStatus = 'connected' | 'disconnected' | 'error' | 'syncing';
+type OptimisticComment = TComment & {baselinePersistedCommentId: number};
 
 const COMMENT_CONNECTION_LABELS: Record<CommentConnectionStatus, string> = {
   connected: 'Connected',
@@ -38,7 +39,7 @@ const Comments: SFC<CommentsProps> = ({className, composerAvatar, postId}) => {
   const [hasCommentHistoryOverflow, setHasCommentHistoryOverflow] = useState(false);
   const [isCommentInputFocused, setIsCommentInputFocused] = useState(false);
   const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>([]);
-  const [optimisticComments, setOptimisticComments] = useState<TComment[]>([]);
+  const [optimisticComments, setOptimisticComments] = useState<OptimisticComment[]>([]);
   const commentPaneRef = useRef<HTMLDivElement | null>(null);
   const isCommentInputFocusedRef = useRef(false);
   const manualSocketCloseRef = useRef(false);
@@ -63,23 +64,31 @@ const Comments: SFC<CommentsProps> = ({className, composerAvatar, postId}) => {
   }, [comments, postId]);
 
   const commentList = useMemo(() => {
+    const matchedPersistedCommentIds = new Set<number>();
     const deduplicatedOptimisticComments = optimisticComments.filter((optimisticComment) => {
-      return !persistedCommentList.some((persistedComment) => {
-        const createdDateDifference = Math.abs(
-          new Date(persistedComment.created_date).getTime() - new Date(optimisticComment.created_date).getTime(),
-        );
-        const optimisticPriceCurrencyId = optimisticComment.price_currency?.id || null;
+      const optimisticPriceAmount =
+        optimisticComment.price_amount === null ? null : Number(optimisticComment.price_amount);
+      const optimisticPriceCurrencyId = optimisticComment.price_currency?.id || null;
+      const matchingPersistedComment = persistedCommentList.find((persistedComment) => {
+        if (matchedPersistedCommentIds.has(persistedComment.id)) return false;
+        if (persistedComment.id <= optimisticComment.baselinePersistedCommentId) return false;
+
+        const persistedPriceAmount =
+          persistedComment.price_amount === null ? null : Number(persistedComment.price_amount);
         const persistedPriceCurrencyId = persistedComment.price_currency?.id || null;
 
         return (
-          persistedComment.content === optimisticComment.content &&
+          persistedComment.content.trim() === optimisticComment.content.trim() &&
           persistedComment.owner.id === optimisticComment.owner.id &&
           persistedComment.post === optimisticComment.post &&
-          persistedComment.price_amount === optimisticComment.price_amount &&
-          persistedPriceCurrencyId === optimisticPriceCurrencyId &&
-          createdDateDifference < 5000
+          persistedPriceAmount === optimisticPriceAmount &&
+          persistedPriceCurrencyId === optimisticPriceCurrencyId
         );
       });
+
+      if (!matchingPersistedComment) return true;
+      matchedPersistedCommentIds.add(matchingPersistedComment.id);
+      return false;
     });
 
     return [...persistedCommentList, ...deduplicatedOptimisticComments].sort((commentA, commentB) => {
@@ -152,6 +161,7 @@ const Comments: SFC<CommentsProps> = ({className, composerAvatar, postId}) => {
       price_amount,
       price_currency,
     };
+    const latestPersistedCommentId = persistedCommentList[persistedCommentList.length - 1]?.id || 0;
     const optimisticCommentId = nextOptimisticCommentIdRef.current;
     nextOptimisticCommentIdRef.current -= 1;
     const optimisticOwner =
@@ -187,7 +197,8 @@ const Comments: SFC<CommentsProps> = ({className, composerAvatar, postId}) => {
         : null;
 
     if (optimisticOwner) {
-      const optimisticComment: TComment = {
+      const optimisticComment: OptimisticComment = {
+        baselinePersistedCommentId: latestPersistedCommentId,
         content: trimmedContent,
         created_date: new Date(),
         id: optimisticCommentId,

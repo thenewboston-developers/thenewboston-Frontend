@@ -13,6 +13,7 @@ import FullScreenImageModal from 'modals/FullScreenImageModal';
 import PostLikesModal from 'modals/PostLikesModal';
 import PostModal from 'modals/PostModal';
 import {getComments, getSelf} from 'selectors/state';
+import {breakpoints} from 'styles';
 import {AppDispatch, Post as TPost, SFC} from 'types';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
@@ -68,10 +69,18 @@ const extractYouTubeVideoId = (text: string): string | null => {
   return null;
 };
 
+const getInitialIsOpenCommentBox = () => {
+  if (typeof window === 'undefined') {
+    return true;
+  }
+
+  return window.innerWidth >= parseInt(breakpoints.mobile, 10);
+};
+
 const Post: SFC<PostProps> = ({className, post}) => {
   const [animateLike, setAnimateLike] = useState(false);
   const [imageModalIsOpen, toggleImageModal] = useToggle(false);
-  const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
+  const [isOpenCommentBox, setIsOpenCommentBox] = useState(getInitialIsOpenCommentBox);
   const [likesModalIsOpen, toggleLikesModal] = useToggle(false);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
   const [showFullContent, setShowFullContent] = useState(false);
@@ -100,6 +109,9 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const commentsForPost = Object.values(comments)
     .filter((comment) => comment.post === id)
     .sort((a, b) => new Date(a.created_date).getTime() - new Date(b.created_date).getTime());
+  const commentCount = commentsForPost.length;
+  const collapsedCommentButtonText =
+    commentCount > 0 ? `${commentCount} ${commentCount === 1 ? 'comment' : 'comments'}` : 'Comment';
 
   const handleCopyAsJson = async () => {
     try {
@@ -248,7 +260,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
               <OutlineButton
                 iconLeft={mdiCommentTextOutline}
                 onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
-                text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
+                text={isOpenCommentBox ? 'Hide Comments' : collapsedCommentButtonText}
               />
             </S.ActionsLeft>
             {coin_transfer_amounts && coin_transfer_amounts.length > 0 && (
