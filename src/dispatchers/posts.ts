@@ -9,7 +9,7 @@ import {
   updatePost as _updatePost,
 } from 'api/posts';
 import {store} from 'store';
-import {setComments} from 'store/comments';
+import {setCommentsForPost} from 'store/comments';
 import {
   resetPosts as _resetPosts,
   setPost,
@@ -43,9 +43,7 @@ export const getPost = (postId: number) => async (dispatch: AppDispatch) => {
   const responseData = await _getPost(postId);
   const {comments = [], ...postDetails} = responseData;
 
-  if (comments.length) {
-    dispatch(setComments(comments));
-  }
+  dispatch(setCommentsForPost({comments, postId}));
 
   dispatch(setPost(postDetails));
   return postDetails;
@@ -60,7 +58,7 @@ export const getPosts = (params?: GetPostsParams, abortSignal?: AbortSignal) => 
 
     for (const post of responseData.results) {
       const comments = post.comments || [];
-      dispatch(setComments(comments));
+      dispatch(setCommentsForPost({comments, postId: post.id}));
       delete post.comments;
     }
 
@@ -79,7 +77,7 @@ export const updatePost = (id: number, data: FormData) => async (dispatch: AppDi
   const responseData = await _updatePost(id, data);
 
   const comments = responseData.comments || [];
-  dispatch(setComments(comments));
+  dispatch(setCommentsForPost({comments, postId: id}));
   delete responseData.comments;
 
   dispatch(setPost(responseData));

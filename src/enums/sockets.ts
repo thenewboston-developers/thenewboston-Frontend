@@ -1,10 +1,13 @@
 export enum SocketDataType {
+  CREATE_COMMENT = 'create.comment',
   UPDATE_CONNECT_FIVE_CHALLENGE = 'update.connect_five_challenge',
   UPDATE_CONNECT_FIVE_MATCH = 'update.connect_five_match',
   CREATE_CONNECT_FIVE_CHAT_MESSAGE = 'create.connect_five_chat_message',
+  DELETE_COMMENT = 'delete.comment',
   CREATE_EXCHANGE_ORDER = 'create.exchange_order',
   CREATE_NOTIFICATION = 'create.notification',
   CREATE_TRADE = 'create.trade',
+  UPDATE_COMMENT = 'update.comment',
   UPDATE_EXCHANGE_ORDER = 'update.exchange_order',
   UPDATE_FRONTEND_DEPLOYMENT = 'update.frontend_deployment',
   UPDATE_WALLET = 'update.wallet',

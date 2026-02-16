@@ -170,7 +170,7 @@ export const Post = styled(UPost)`
   }
 
   ${ControlsWrapper} {
-    justify-content: flex-end;
+    justify-content: space-between;
     width: 100%;
   }
 `;

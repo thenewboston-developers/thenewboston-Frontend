@@ -28,8 +28,10 @@ export interface MentionTextareaProps {
   initialMentionedUsers?: UserReadSerializer[];
   label: string;
   maxLength?: number;
+  maxRows?: number;
   name: string;
   onChange?(e: ChangeEvent<HTMLTextAreaElement>): void;
+  onKeyDown?(e: KeyboardEvent<HTMLTextAreaElement>): void;
   onMentionedUsersChange?(users: UserReadSerializer[]): void;
   placeholder?: string;
   touched: {[field: string]: boolean};
@@ -43,8 +45,10 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
   initialMentionedUsers,
   label,
   maxLength,
+  maxRows,
   name,
   onChange,
+  onKeyDown,
   onMentionedUsersChange,
   placeholder = '',
   touched,
@@ -65,6 +69,21 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
   const mentionCacheRef = useRef<Map<string, UserReadSerializer | null>>(new Map());
   const pendingLookupsRef = useRef<Set<string>>(new Set());
   const initialMentionedUsersRef = useRef<string | null>(null);
+
+  const resizeTextarea = useCallback(() => {
+    if (!maxRows || !textareaRef.current) return;
+
+    const textarea = textareaRef.current;
+    const computedStyle = window.getComputedStyle(textarea);
+    const lineHeight = parseFloat(computedStyle.lineHeight) || 20;
+    const paddingBottom = parseFloat(computedStyle.paddingBottom) || 0;
+    const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+    const maxHeight = lineHeight * maxRows + paddingTop + paddingBottom;
+
+    textarea.style.height = 'auto';
+    textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
+    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
+  }, [maxRows]);
 
   const addMentionedUser = useCallback((user: UserReadSerializer) => {
     mentionCacheRef.current.set(user.username.toLowerCase(), user);
@@ -173,30 +192,30 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
   }, []);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (!showDropdown || searchResults.length === 0) {
-      return;
+    if (showDropdown && searchResults.length > 0) {
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          setSelectedIndex((prev) => (prev + 1) % searchResults.length);
+          return;
+        case 'ArrowUp':
+          e.preventDefault();
+          setSelectedIndex((prev) => (prev - 1 + searchResults.length) % searchResults.length);
+          return;
+        case 'Enter':
+          e.preventDefault();
+          handleSelectUser(searchResults[selectedIndex]);
+          return;
+        case 'Escape':
+          e.preventDefault();
+          setShowDropdown(false);
+          return;
+        default:
+          break;
+      }
     }
 
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setSelectedIndex((prev) => (prev + 1) % searchResults.length);
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setSelectedIndex((prev) => (prev - 1 + searchResults.length) % searchResults.length);
-        break;
-      case 'Enter':
-        e.preventDefault();
-        handleSelectUser(searchResults[selectedIndex]);
-        break;
-      case 'Escape':
-        e.preventDefault();
-        setShowDropdown(false);
-        break;
-      default:
-        break;
-    }
+    onKeyDown?.(e);
   };
 
   const handleSearch = useCallback(async (query: string) => {
@@ -355,12 +374,17 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
     onMentionedUsersChange?.(mentionedUsers);
   }, [mentionedUsers, onMentionedUsersChange]);
 
+  useEffect(() => {
+    resizeTextarea();
+  }, [resizeTextarea, value]);
+
   const isError = errors[name] && touched[name];
 
   return (
     <S.Container className={className} ref={containerRef}>
       <S.Label>{label}</S.Label>
       <S.Field
+        $disableResize={!!maxRows}
         $error={isError}
         component="textarea"
         innerRef={textareaRef}
@@ -369,6 +393,7 @@ const MentionTextarea: SFC<MentionTextareaProps> = ({
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
+        rows={maxRows ? 1 : undefined}
         value={value}
       />
       <S.SecondaryContainer>{isError && <S.ErrorMessage>{errors[name]}</S.ErrorMessage>}</S.SecondaryContainer>

@@ -181,80 +181,82 @@ const Post: SFC<PostProps> = ({className, post}) => {
   return (
     <>
       <S.Container className={className}>
-        <S.Top>
-          <UserLabel
-            avatar={owner.avatar}
-            description={shortDate(created_date, true)}
-            id={owner.id}
-            username={owner.username}
-          />
-          {renderDropdownMenu()}
-        </S.Top>
-        {isTransferPost && (
-          <TransferInfo
-            owner={owner}
-            priceAmount={price_amount!}
-            priceCurrency={price_currency!}
-            recipient={recipient!}
-          />
-        )}
-        <S.Content>
-          {showFullContent || content.length <= 400 ? (
-            <>
-              <S.TextContent>
-                <ContentWithMentions content={content} mentionedUsers={mentioned_users || []} />
-                {content.length > 400 && <S.TextLink onClick={toggleShowFullContent}>See less</S.TextLink>}
-              </S.TextContent>
-            </>
-          ) : (
-            <>
-              <S.TextContent>
-                <ContentWithMentions
-                  content={content.substring(0, 400) + '...'}
-                  mentionedUsers={mentioned_users || []}
-                />{' '}
-                <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
-              </S.TextContent>
-            </>
-          )}
-        </S.Content>
-        {youtubeVideoId ? (
-          <S.VideoWrapper>
-            <S.VideoPlayer
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              src={`https://www.youtube.com/embed/${youtubeVideoId}`}
-              title="YouTube video player"
+        <S.Body $isCommentBoxOpen={isOpenCommentBox}>
+          <S.Top>
+            <UserLabel
+              avatar={owner.avatar}
+              description={shortDate(created_date, true)}
+              id={owner.id}
+              username={owner.username}
             />
-          </S.VideoWrapper>
-        ) : null}
-        {image ? <S.Image alt="image" onClick={handlePostImageClick} src={image} /> : null}
-        <S.ActionsContainer>
-          <S.ActionsLeft>
-            <S.LikeWrapper>
-              <S.LikeButton $animate={animateLike} onClick={handleLikeClick}>
-                <S.LikeIcon
-                  $animate={animateLike}
-                  $isLiked={is_liked}
-                  icon={is_liked ? mdiHeart : mdiHeartOutline}
-                  size={20}
-                />
-              </S.LikeButton>
-              <S.LikeCount onClick={toggleLikesModal}>
-                {like_count} {like_count === 1 ? 'like' : 'likes'}
-              </S.LikeCount>
-            </S.LikeWrapper>
-            <OutlineButton
-              iconLeft={mdiCommentTextOutline}
-              onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
-              text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
+            {renderDropdownMenu()}
+          </S.Top>
+          {isTransferPost && (
+            <TransferInfo
+              owner={owner}
+              priceAmount={price_amount!}
+              priceCurrency={price_currency!}
+              recipient={recipient!}
             />
-          </S.ActionsLeft>
-          {coin_transfer_amounts && coin_transfer_amounts.length > 0 && (
-            <CoinTransferAmounts tipAmounts={coin_transfer_amounts} />
           )}
-        </S.ActionsContainer>
-        {isOpenCommentBox && <Comments postId={post.id} />}
+          <S.Content>
+            {showFullContent || content.length <= 400 ? (
+              <>
+                <S.TextContent>
+                  <ContentWithMentions content={content} mentionedUsers={mentioned_users || []} />
+                  {content.length > 400 && <S.TextLink onClick={toggleShowFullContent}>See less</S.TextLink>}
+                </S.TextContent>
+              </>
+            ) : (
+              <>
+                <S.TextContent>
+                  <ContentWithMentions
+                    content={content.substring(0, 400) + '...'}
+                    mentionedUsers={mentioned_users || []}
+                  />{' '}
+                  <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
+                </S.TextContent>
+              </>
+            )}
+          </S.Content>
+          {youtubeVideoId ? (
+            <S.VideoWrapper>
+              <S.VideoPlayer
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                src={`https://www.youtube.com/embed/${youtubeVideoId}`}
+                title="YouTube video player"
+              />
+            </S.VideoWrapper>
+          ) : null}
+          {image ? <S.Image alt="image" onClick={handlePostImageClick} src={image} /> : null}
+          <S.ActionsContainer>
+            <S.ActionsLeft>
+              <S.LikeWrapper>
+                <S.LikeButton $animate={animateLike} onClick={handleLikeClick}>
+                  <S.LikeIcon
+                    $animate={animateLike}
+                    $isLiked={is_liked}
+                    icon={is_liked ? mdiHeart : mdiHeartOutline}
+                    size={20}
+                  />
+                </S.LikeButton>
+                <S.LikeCount onClick={toggleLikesModal}>
+                  {like_count} {like_count === 1 ? 'like' : 'likes'}
+                </S.LikeCount>
+              </S.LikeWrapper>
+              <OutlineButton
+                iconLeft={mdiCommentTextOutline}
+                onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
+                text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
+              />
+            </S.ActionsLeft>
+            {coin_transfer_amounts && coin_transfer_amounts.length > 0 && (
+              <CoinTransferAmounts tipAmounts={coin_transfer_amounts} />
+            )}
+          </S.ActionsContainer>
+        </S.Body>
+        {isOpenCommentBox && <Comments composerAvatar={self.avatar} postId={post.id} />}
       </S.Container>
       {imageModalIsOpen && image ? <FullScreenImageModal close={toggleImageModal} imageSrc={image} /> : null}
       {likesModalIsOpen ? <PostLikesModal close={toggleLikesModal} postId={post.id} /> : null}

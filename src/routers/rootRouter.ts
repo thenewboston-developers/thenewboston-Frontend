@@ -2,7 +2,7 @@ import {DEPLOYMENT_TIMESTAMP} from 'constants/localStorage';
 import {NotificationType, SocketDataType} from 'enums';
 import {getTradePriceChartData} from 'selectors/state';
 import {store} from 'store';
-import {setComment} from 'store/comments';
+import {setComment, unsetComment} from 'store/comments';
 import {upsertChallenge, upsertMatch} from 'store/connectFive';
 import {setExchangeOrder} from 'store/exchangeOrders';
 import {setCurrentDeployment, setUpdateAvailable} from 'store/frontendDeployments';
@@ -41,6 +41,16 @@ const handleCreateNotification = (dispatch: AppDispatch, socketData: any) => {
   }
 };
 
+const handleCreateOrUpdateComment = (dispatch: AppDispatch, socketData: any) => {
+  if (!socketData.comment) return;
+  dispatch(setComment(socketData.comment));
+};
+
+const handleDeleteComment = (dispatch: AppDispatch, socketData: any) => {
+  if (socketData.comment_id === undefined || socketData.comment_id === null) return;
+  dispatch(unsetComment(socketData.comment_id));
+};
+
 const handleCreateTrade = (dispatch: AppDispatch, socketData: any) => {
   const {trade} = socketData;
   dispatch(setTrade(trade));
@@ -73,6 +83,10 @@ const rootRouter = (dispatch: AppDispatch, event: MessageEvent) => {
   if ([SocketDataType.CREATE_EXCHANGE_ORDER, SocketDataType.UPDATE_EXCHANGE_ORDER].includes(type)) {
     dispatch(setExchangeOrder(socketData.exchange_order));
     dispatch(updateOrderBookOrder(socketData.exchange_order));
+  } else if ([SocketDataType.CREATE_COMMENT, SocketDataType.UPDATE_COMMENT].includes(type)) {
+    handleCreateOrUpdateComment(dispatch, socketData);
+  } else if (type === SocketDataType.DELETE_COMMENT) {
+    handleDeleteComment(dispatch, socketData);
   } else if (type === SocketDataType.UPDATE_CONNECT_FIVE_CHALLENGE) {
     const state = store.getState() as RootState;
     const selfId = state.self.id;

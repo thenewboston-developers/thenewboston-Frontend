@@ -60,12 +60,20 @@ export const ActionsLeft = styled.div`
   gap: 16px;
 `;
 
+export const Body = styled.div<{$isCommentBoxOpen: boolean}>`
+  padding: 20px 24px ${({$isCommentBoxOpen}) => ($isCommentBoxOpen ? 0 : 20)}px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 0;
+  }
+`;
+
 export const Container = styled.div`
   background: #fff;
   border: 1px solid ${colors.palette.gray[200]};
   border-radius: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  padding: 20px 24px;
+  padding: 0;
   transition: all 0.2s ease;
 
   @media (max-width: ${breakpoints.mini}) {

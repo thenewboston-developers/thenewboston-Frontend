@@ -41,13 +41,13 @@ export const ErrorMessage = styled.div`
   margin-top: 6px;
 `;
 
-export const Field = styled(UField)`
+export const Field = styled(UField)<{$disableResize?: boolean}>`
   ${inputStyle};
   border: 1px solid ${({$error}) => ($error ? colors.palette.red[400] : colors.border)};
   border-radius: 12px;
   display: block;
   height: auto;
-  resize: vertical;
+  resize: ${({$disableResize}) => ($disableResize ? 'none' : 'vertical')};
   width: 100%;
 `;
 

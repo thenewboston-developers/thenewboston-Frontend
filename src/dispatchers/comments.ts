@@ -3,8 +3,9 @@ import {
   deleteComment as _deleteComment,
   updateComment as _updateComment,
 } from 'api/comments';
+import {getPost as _getPost} from 'api/posts';
 import {updateTipAmounts} from 'dispatchers/posts';
-import {setComment, unsetComment} from 'store/comments';
+import {setComment, setCommentsForPost, unsetComment} from 'store/comments';
 import {AppDispatch, CreateCommentRequest} from 'types';
 
 export const createComment = (data: CreateCommentRequest) => async (dispatch: AppDispatch) => {
@@ -25,4 +26,9 @@ export const deleteComment = (id: number) => async (dispatch: AppDispatch) => {
 export const updateComment = (id: number, data: Partial<CreateCommentRequest>) => async (dispatch: AppDispatch) => {
   const responseData = await _updateComment(id, data);
   dispatch(setComment(responseData));
+};
+
+export const syncPostComments = (postId: number) => async (dispatch: AppDispatch) => {
+  const responseData = await _getPost(postId);
+  dispatch(setCommentsForPost({comments: responseData.comments || [], postId}));
 };

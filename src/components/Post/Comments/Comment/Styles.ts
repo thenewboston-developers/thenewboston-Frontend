@@ -4,27 +4,29 @@ import UPriceMini from 'components/PriceMini';
 import {colors, fonts} from 'styles';
 
 export const ActionsContainer = styled.div`
+  align-items: center;
   display: flex;
   gap: 8px;
 `;
 
 export const CommentSection = styled.div`
-  background: ${colors.background};
-  border-radius: 0 12px 12px 12px;
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
-  padding: 10px 14px 12px;
+  gap: 3px;
+  min-width: 0;
 `;
 
-export const Container = styled.div<{$isFirst: boolean}>`
+export const Container = styled.div`
   display: flex;
   gap: 10px;
-  margin-top: ${({$isFirst}) => ($isFirst ? '14px' : '12px')};
   width: 100%;
 `;
 
 export const Content = styled.div`
+  color: ${colors.palette.gray[800]};
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.32;
   overflow-wrap: break-word;
   word-wrap: break-word;
 `;
@@ -41,16 +43,17 @@ export const Dot = styled.div`
 `;
 
 export const HeadSection = styled.div`
-  align-items: flex-start;
+  align-items: center;
   display: flex;
   justify-content: space-between;
 `;
 
 export const PriceMini = styled(UPriceMini)`
-  margin-top: 2px;
+  margin-top: 1px;
 `;
 
 export const Username = styled.div`
+  color: ${colors.palette.gray[900]};
   font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
 `;
