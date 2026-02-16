@@ -212,10 +212,18 @@ export const PriceAmountInputContainer = styled.div`
   overflow: hidden;
 `;
 
-export const SectionDivider = styled.div`
-  background-color: ${colors.palette.gray[200]};
-  height: 1px;
+export const SectionDivider = styled.div<{$position: 'bottom' | 'top'}>`
+  background: ${({$position}) =>
+    $position === 'top'
+      ? 'linear-gradient(to bottom, rgba(17, 24, 39, 0.08) 0%, rgba(17, 24, 39, 0) 100%)'
+      : 'linear-gradient(to top, rgba(17, 24, 39, 0.08) 0%, rgba(17, 24, 39, 0) 100%)'};
+  height: 6px;
+  pointer-events: none;
+  position: relative;
   width: 100%;
+  z-index: 1;
+
+  ${({$position}) => ($position === 'top' ? 'margin-bottom: -6px;' : 'margin-top: -6px;')}
 `;
 
 export const TipCurrencyButton = styled.button`

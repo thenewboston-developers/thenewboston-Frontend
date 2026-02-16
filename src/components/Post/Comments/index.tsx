@@ -308,7 +308,7 @@ const Comments: SFC<CommentsProps> = ({className, composerAvatar, postId}) => {
       <S.Container className={className}>
         {commentList.length ? (
           <>
-            {hasCommentHistoryOverflow ? <S.SectionDivider /> : null}
+            {hasCommentHistoryOverflow ? <S.SectionDivider $position="top" /> : null}
             <S.CommentHistorySection>
               <S.CommentHistory
                 $hasOverflow={hasCommentHistoryOverflow}
@@ -318,7 +318,7 @@ const Comments: SFC<CommentsProps> = ({className, composerAvatar, postId}) => {
                 {renderComments()}
               </S.CommentHistory>
             </S.CommentHistorySection>
-            {hasCommentHistoryOverflow ? <S.SectionDivider /> : null}
+            {hasCommentHistoryOverflow ? <S.SectionDivider $position="bottom" /> : null}
           </>
         ) : null}
         <Formik
