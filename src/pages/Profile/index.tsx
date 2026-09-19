@@ -1,7 +1,8 @@
 import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Route, Routes, useParams} from 'react-router-dom';
+import {Route, useParams} from 'react-router-dom';
 
+import SentryRoutes from 'components/SentryRoutes';
 import {getInvitationLimit} from 'dispatchers/invitationLimits';
 import {getInvitations} from 'dispatchers/invitations';
 import {getUser} from 'dispatchers/users';
@@ -46,7 +47,7 @@ const Profile: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <Routes>
+      <SentryRoutes>
         <Route element={<Layout />}>
           {/* TODO: replace hardcoded paths with constants */}
           <Route index element={<Posts />} />
@@ -56,7 +57,7 @@ const Profile: SFC = ({className}) => {
           <Route path="/invitations" element={<Invitations />} />
           <Route path="/photos" element={<Photos />} />
         </Route>
-      </Routes>
+      </SentryRoutes>
     </S.Container>
   );
 };

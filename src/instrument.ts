@@ -31,9 +31,10 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0,
   replaysSessionSampleRate: 0.1,
 
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  tracesSampleRate: 1.0,
+  tracePropagationTargets: [/^https:\/\/thenewboston\.network\/api(?:\/|$)/],
+
+  // Sample performance traces separately from error reporting.
+  tracesSampleRate: 0.1,
 
   // This sets the sample rate to be 100%. You may want to change this in production.
   sampleRate: 1.0,
