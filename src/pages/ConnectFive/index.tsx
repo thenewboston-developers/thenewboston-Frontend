@@ -1,5 +1,6 @@
-import {Navigate, Route, Routes} from 'react-router-dom';
+import {Navigate, Route} from 'react-router-dom';
 
+import SentryRoutes from 'components/SentryRoutes';
 import {SFC} from 'types';
 
 import Challenge from './Challenge';
@@ -10,7 +11,7 @@ import Match from './Match';
 
 const ConnectFive: SFC = () => {
   return (
-    <Routes>
+    <SentryRoutes>
       <Route element={<Layout />}>
         <Route element={<Challenge />} path="/challenges/:challengeId" />
         <Route element={<Home />} path="/home" />
@@ -18,7 +19,7 @@ const ConnectFive: SFC = () => {
         <Route element={<Match />} path="/matches/:matchId" />
       </Route>
       <Route element={<Navigate replace to="/connect-five/home" />} path="*" />
-    </Routes>
+    </SentryRoutes>
   );
 };
 

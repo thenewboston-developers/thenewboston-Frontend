@@ -1,5 +1,6 @@
-import {Navigate, Route, Routes} from 'react-router-dom';
+import {Navigate, Route} from 'react-router-dom';
 
+import SentryRoutes from 'components/SentryRoutes';
 import {SFC} from 'types';
 
 import Home from './Home';
@@ -11,13 +12,13 @@ import Trade from './Trade';
 const MainArea: SFC = ({className}) => {
   return (
     <S.Container className={className}>
-      <Routes>
+      <SentryRoutes>
         <Route index element={<Navigate to="/exchange/home" replace />} />
         <Route path="/home" element={<Home />} />
         <Route path="/learn-more" element={<LearnMore />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/trade/:assetPairId" element={<Trade />} />
-      </Routes>
+      </SentryRoutes>
     </S.Container>
   );
 };

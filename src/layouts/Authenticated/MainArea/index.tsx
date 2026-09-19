@@ -1,6 +1,7 @@
-import {Navigate, Route, Routes} from 'react-router-dom';
+import {Navigate, Route} from 'react-router-dom';
 
 import Logout from 'components/Logout';
+import SentryRoutes from 'components/SentryRoutes';
 import {
   PATH_AUTHENTICATION,
   PATH_CONNECT_FIVE,
@@ -28,7 +29,7 @@ import * as S from './Styles';
 const MainArea: SFC = ({className}) => {
   return (
     <S.Container className={className} id="main-scrollable-area">
-      <Routes>
+      <SentryRoutes>
         <Route path="*" element={<Navigate to={PATH_DEFAULT} replace />} />
         <Route path={PATH_CONNECT_FIVE} element={<ConnectFive />} />
         <Route path={PATH_CURRENCIES} element={<Currencies />} />
@@ -39,7 +40,7 @@ const MainArea: SFC = ({className}) => {
         <Route path={PATH_PROFILE} element={<Profile />} />
         <Route path={PATH_AUTHENTICATION.LOGOUT} element={<Logout />} />
         <Route path={PATH_WALLETS} element={<Wallets />} />
-      </Routes>
+      </SentryRoutes>
     </S.Container>
   );
 };
