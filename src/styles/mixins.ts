@@ -4,6 +4,15 @@ import breakpoints from 'styles/breakpoints';
 import colors from 'styles/colors';
 import {TOOLBAR_HEIGHT} from 'styles/constants';
 import fonts from 'styles/fonts';
+import radii from 'styles/radii';
+import shadows from 'styles/shadows';
+
+export const cardStyle = css`
+  background: ${colors.white};
+  border: 1px solid ${colors.borderSubtle};
+  border-radius: ${radii.large};
+  box-shadow: ${shadows.card};
+`;
 
 export const feedPagePadding = css`
   padding: 0 32px;
@@ -170,8 +179,8 @@ export const radioCardContainerPadding = css`
 
 export const toolbarStyle = css`
   align-items: center;
-  background: #fff;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  background: ${colors.white};
+  border-bottom: 1px solid ${colors.borderSubtle};
   display: flex;
   height: ${`${TOOLBAR_HEIGHT}px`};
   justify-content: space-between;

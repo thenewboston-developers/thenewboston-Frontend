@@ -1,10 +1,11 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiSend} from '@mdi/js';
+import MdiIcon from '@mdi/react';
 import {Form, Formik, FormikHelpers} from 'formik';
 
-import {ButtonColor, ButtonType} from 'components/Button';
 import EmojiPicker from 'components/EmojiPicker';
+import Loader from 'components/Loader';
 import MentionTextarea from 'components/MentionTextarea';
 import OutlineButton from 'components/OutlineButton';
 import {createComment} from 'dispatchers/comments';
@@ -127,7 +128,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
 
     return (
       <S.PriceAmountInputContainer>
-        <S.IconContainer onClick={handleTipCurrencyButtonClick}>
+        <S.IconContainer aria-label="Change tip currency" onClick={handleTipCurrencyButtonClick} type="button">
           <S.Image alt={`${manager.activeCommentCurrency.ticker} logo`} src={manager.activeCommentCurrency.logo} />
         </S.IconContainer>
         <S.PriceAmountInput errors={errors} name="price_amount" placeholder="Amount" touched={touched} type="number" />
@@ -149,8 +150,8 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
               <S.CommentForm>
                 <S.MentionTextareaWrapper>
                   <MentionTextarea
-                    errors={errors}
                     dropdownYOffset={36}
+                    errors={errors}
                     label=""
                     name="content"
                     onChange={(e) => setFieldValue('content', e.target.value)}
@@ -163,16 +164,9 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
                 <S.ControlsWrapper>
                   <EmojiPicker field="content" setFieldValue={setFieldValue} value={values.content} />
                   {renderTipCurrencyControl(errors, touched)}
-                  <S.Button
-                    color={ButtonColor.secondary}
-                    dirty={dirty}
-                    disabled={isSubmitting}
-                    iconLeft={mdiSend}
-                    isSubmitting={isSubmitting}
-                    isValid={isValid}
-                    text=""
-                    type={ButtonType.submit}
-                  />
+                  <S.SendButton aria-label="Post comment" disabled={!dirty || isSubmitting || !isValid} type="submit">
+                    {isSubmitting ? <Loader size={12} /> : <MdiIcon path={mdiSend} size="18px" />}
+                  </S.SendButton>
                 </S.ControlsWrapper>
               </S.CommentForm>
             </Form>

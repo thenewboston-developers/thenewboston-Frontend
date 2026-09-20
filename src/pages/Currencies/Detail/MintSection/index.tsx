@@ -26,7 +26,13 @@ const MintSection: SFC<MintSectionProps> = ({
   const mints = useSelector(getMintsSelector);
 
   const renderMintsList = () => {
-    if (loadingMints) return <Loader />;
+    if (loadingMints) {
+      return (
+        <S.LoaderPanel>
+          <Loader />
+        </S.LoaderPanel>
+      );
+    }
 
     if (!mintsData || mintsData.results.length === 0) {
       const isExternalCurrency = currency.domain !== null;
@@ -54,26 +60,28 @@ const MintSection: SFC<MintSectionProps> = ({
 
     return (
       <>
-        <S.Table>
-          <S.TableHeader>
-            <S.TableRow>
-              <S.TableHead>Amount</S.TableHead>
-              <S.TableHead>Date</S.TableHead>
-            </S.TableRow>
-          </S.TableHeader>
-          <S.TableBody>
-            {mintsList.map((mint) => (
-              <S.TableRow key={mint.id}>
-                <S.TableData>
-                  <S.Amount>{mint.amount.toLocaleString()}</S.Amount>
-                </S.TableData>
-                <S.TableData>
-                  <S.Date>{longDate(mint.created_date)}</S.Date>
-                </S.TableData>
+        <S.TableWrapper>
+          <S.Table>
+            <S.TableHeader>
+              <S.TableRow>
+                <S.TableHead>Amount</S.TableHead>
+                <S.TableHead>Date</S.TableHead>
               </S.TableRow>
-            ))}
-          </S.TableBody>
-        </S.Table>
+            </S.TableHeader>
+            <S.TableBody>
+              {mintsList.map((mint) => (
+                <S.TableRow key={mint.id}>
+                  <S.TableData>
+                    <S.Amount>{mint.amount.toLocaleString()}</S.Amount>
+                  </S.TableData>
+                  <S.TableData>
+                    <S.Date>{longDate(mint.created_date)}</S.Date>
+                  </S.TableData>
+                </S.TableRow>
+              ))}
+            </S.TableBody>
+          </S.Table>
+        </S.TableWrapper>
         {mintsData.count > 20 && (
           <S.Pagination
             currentPage={currentPage}

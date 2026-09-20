@@ -1,113 +1,101 @@
-import {Link as RouterLink} from 'react-router-dom';
+import {Link as ULink} from 'react-router-dom';
+import UMdiIcon from '@mdi/react';
 import styled from 'styled-components';
 
-import UIcon from 'components/Icon';
-import {breakpoints, colors, fonts} from 'styles';
+import {breakpoints, colors, fonts, radii, shadows} from 'styles';
+
+export const Amount = styled.div`
+  align-items: baseline;
+  display: flex;
+  flex-shrink: 0;
+  gap: 4px;
+  margin-left: auto;
+`;
+
+export const AmountValue = styled.span`
+  color: ${colors.primary};
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.01em;
+`;
+
+export const Arrow = styled(UMdiIcon)`
+  color: ${colors.secondary};
+  flex-shrink: 0;
+`;
 
 export const Container = styled.div`
   align-items: center;
-  background: linear-gradient(
-    135deg,
-    ${colors.palette.blue[100]} 0%,
-    ${colors.palette.green[50]} 50%,
-    ${colors.palette.blue[50]} 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 16px;
-  box-shadow:
-    0 2px 12px rgba(47, 92, 129, 0.08),
-    0 1px 2px rgba(0, 0, 0, 0.04);
+  background: ${colors.palette.gray[50]};
+  border: 1px solid ${colors.borderSubtle};
+  border-radius: ${radii.medium};
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
   margin-top: 12px;
-  padding: 14px 16px;
-  position: relative;
+  padding: 12px 16px;
 
   @media (max-width: ${breakpoints.mini}) {
     margin-left: 16px;
     margin-right: 16px;
   }
-
-  &::before {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
-    border-radius: 16px;
-    content: '';
-    height: 100%;
-    left: 0;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    width: 100%;
-  }
-`;
-
-export const Content = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  position: relative;
-  z-index: 1;
 `;
 
 export const CurrencyLogo = styled.img`
+  background: ${colors.white};
+  border: 1px solid ${colors.borderSubtle};
   border-radius: 50%;
-  height: 100%;
-  width: 100%;
+  flex-shrink: 0;
+  height: 36px;
+  object-fit: cover;
+  width: 36px;
 `;
 
-export const Date = styled.div`
-  color: ${colors.palette.gray[600]};
-  font-size: 12px;
-  margin-top: 2px;
-`;
-
-export const GraphicWrapper = styled.div`
-  align-items: center;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.06),
-    0 1px 2px rgba(0, 0, 0, 0.04);
+export const Details = styled.div`
   display: flex;
-  height: 40px;
-  justify-content: center;
-  margin-right: 14px;
-  position: relative;
-  width: 40px;
-  z-index: 1;
+  flex: 1 1 160px;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 `;
 
-export const Icon = styled(UIcon)`
-  & path {
-    fill: ${colors.palette.gray[600]} !important;
-  }
-`;
-
-export const Link = styled(RouterLink)`
-  color: ${colors.palette.blue[800]};
+export const Label = styled.div`
+  color: ${colors.secondary};
+  font-size: 11px;
   font-weight: ${fonts.weight.semiBold};
-  text-decoration: none;
-  transition: all 0.2s ease;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+`;
 
-  &:hover {
-    color: ${colors.palette.blue[600]};
-    text-decoration: underline;
-    text-shadow: 0 1px 2px rgba(26, 64, 96, 0.1);
+export const Link = styled(ULink)`
+  border-radius: 4px;
+  color: ${colors.primary};
+  font-size: 14px;
+  font-weight: ${fonts.weight.semiBold};
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:focus-visible {
+    box-shadow: ${shadows.focusRing};
+    outline: none;
   }
 `;
 
-export const Text = styled.div`
-  color: ${colors.palette.darkGray[400]};
-  font-size: 14px;
-  letter-spacing: 0.01em;
+// Wrapping keeps a short name fully readable when the other name is long enough to need the ellipsis
+export const Parties = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 6px;
+  min-width: 0;
+`;
 
-  strong {
-    background: linear-gradient(135deg, ${colors.palette.green[700]} 0%, ${colors.palette.green[600]} 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: ${fonts.weight.bold};
-    text-shadow: 0 1px 2px rgba(19, 136, 19, 0.05);
-  }
+export const Ticker = styled.span`
+  color: ${colors.secondary};
+  font-size: 12px;
+  font-weight: ${fonts.weight.semiBold};
 `;

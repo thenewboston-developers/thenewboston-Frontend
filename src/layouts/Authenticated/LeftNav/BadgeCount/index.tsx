@@ -5,12 +5,16 @@ import {SFC} from 'types';
 
 import * as S from './Styles';
 
+const MAX_DISPLAY_COUNT = 99;
+
 const BadgeCount: SFC = ({className}) => {
   const totalUnreadCount = useSelector(getTotalUnreadNotificationCount);
 
   if (totalUnreadCount <= 0) return null;
 
-  return <S.BadgeCount className={className}>{totalUnreadCount}</S.BadgeCount>;
+  const displayCount = totalUnreadCount > MAX_DISPLAY_COUNT ? `${MAX_DISPLAY_COUNT}+` : totalUnreadCount;
+
+  return <S.BadgeCount className={className}>{displayCount}</S.BadgeCount>;
 };
 
 export default BadgeCount;

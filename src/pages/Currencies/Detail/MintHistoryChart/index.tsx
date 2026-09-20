@@ -3,7 +3,7 @@ import {Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis
 
 import {getMintChartData} from 'api/mintChartData';
 import Loader from 'components/Loader';
-import {colors} from 'styles';
+import {colors, radii, shadows} from 'styles';
 import {Currency, MintChartDataResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -48,6 +48,10 @@ const MintHistoryChart: SFC<MintHistoryChartProps> = ({className, currency, refr
     })();
   }, [currency.id, refreshTrigger]);
 
+  const formatTooltipValue = (value: number) => {
+    return value.toLocaleString();
+  };
+
   const formatYAxis = (value: number) => {
     if (value >= 1000000) {
       return `${(value / 1000000).toFixed(1)}M`;
@@ -56,10 +60,6 @@ const MintHistoryChart: SFC<MintHistoryChartProps> = ({className, currency, refr
       return `${(value / 1000).toFixed(1)}K`;
     }
     return value.toString();
-  };
-
-  const formatTooltipValue = (value: number) => {
-    return value.toLocaleString();
   };
 
   if (loading) {
@@ -82,14 +82,39 @@ const MintHistoryChart: SFC<MintHistoryChartProps> = ({className, currency, refr
       <S.ChartWrapper>
         <ResponsiveContainer height={300} width="100%">
           <BarChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke={colors.border} />
-            <XAxis dataKey="date" stroke={colors.secondary} />
-            <YAxis tickFormatter={formatYAxis} stroke={colors.secondary} />
-            <Tooltip
-              formatter={formatTooltipValue}
-              contentStyle={{backgroundColor: colors.white, border: `1px solid ${colors.border}`, borderRadius: '8px'}}
+            <CartesianGrid stroke={colors.borderSubtle} strokeDasharray="3 3" vertical={false} />
+            <XAxis
+              axisLine={{stroke: colors.borderSubtle}}
+              dataKey="date"
+              stroke={colors.secondary}
+              tick={{fontSize: 12}}
+              tickLine={false}
             />
-            <Bar dataKey="total" fill={colors.palette.blue[500]} name="Cumulative Total" radius={[4, 4, 0, 0]} />
+            <YAxis
+              axisLine={false}
+              stroke={colors.secondary}
+              tick={{fontSize: 12}}
+              tickFormatter={formatYAxis}
+              tickLine={false}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: colors.white,
+                border: `1px solid ${colors.borderSubtle}`,
+                borderRadius: radii.medium,
+                boxShadow: shadows.popover,
+                fontSize: '13px',
+              }}
+              cursor={{fill: colors.palette.gray[100]}}
+              formatter={formatTooltipValue}
+            />
+            <Bar
+              dataKey="total"
+              fill={colors.palette.blue[500]}
+              maxBarSize={64}
+              name="Cumulative Total"
+              radius={[4, 4, 0, 0]}
+            />
           </BarChart>
         </ResponsiveContainer>
       </S.ChartWrapper>

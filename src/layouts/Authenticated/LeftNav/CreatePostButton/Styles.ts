@@ -1,40 +1,64 @@
 import UIcon from '@mdi/react';
 import styled from 'styled-components';
 
-import {breakpoints, colors, fonts} from 'styles';
+import {navFocusVisible, visuallyHidden} from 'layouts/Authenticated/mixins';
+import {breakpoints, colors, fonts, radii} from 'styles';
 
-const HEIGHT = 48;
+const HEIGHT = 44;
 
-export const Container = styled.div`
+export const Button = styled.button`
   align-items: center;
-  background: ${colors.palette.darkGray['300']};
-  border-radius: ${`${HEIGHT / 2}px`};
+  background: ${colors.accent};
+  border: none;
+  border-radius: ${radii.medium};
   color: ${colors.white};
+  cursor: pointer;
   display: flex;
-  font-weight: ${fonts.weight.bold};
-  height: ${`${HEIGHT}px`};
+  flex-shrink: 0;
+  font-family: ${fonts.family.default};
+  font-size: 15px;
+  font-weight: ${fonts.weight.semiBold};
+  gap: 8px;
+  height: ${HEIGHT}px;
   justify-content: center;
-  margin-top: 24px;
-  padding: 0 12px;
-  transition: background 0.3s ease;
+  margin-top: 16px;
+  padding: 0 16px;
+  position: relative;
+  transition: background 0.15s ease;
+  width: 100%;
 
-  &:hover {
-    background: ${colors.palette.darkGray['400']};
-    cursor: pointer;
-    text-decoration: none;
+  /* Touch devices keep :hover applied after a tap, so the hover background is limited to real pointers */
+  @media (hover: hover) {
+    &:hover {
+      background: ${colors.accentHover};
+    }
+  }
+
+  ${navFocusVisible};
+
+  @media (max-width: ${breakpoints.tablet}) {
+    gap: 0;
+    padding: 0;
+    width: ${HEIGHT}px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background 0.15s ease,
+      transform 0.15s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
   }
 `;
 
 export const Icon = styled(UIcon)`
-  @media (min-width: ${breakpoints.tablet}) {
-    display: none;
-  }
+  flex-shrink: 0;
 `;
 
-export const Text = styled.div`
-  font-size: 17px;
-
+export const Text = styled.span`
   @media (max-width: ${breakpoints.tablet}) {
-    display: none;
+    ${visuallyHidden};
   }
 `;

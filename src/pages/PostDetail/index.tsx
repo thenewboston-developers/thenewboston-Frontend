@@ -47,7 +47,7 @@ const PostDetail: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Header>
-        <S.BackButton onClick={handleBackClick}>
+        <S.BackButton onClick={handleBackClick} type="button">
           <Icon icon={mdiArrowLeft} size={20} />
           <span>Back to Notifications</span>
         </S.BackButton>

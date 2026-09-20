@@ -1,4 +1,4 @@
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import {SFC} from 'types';
 
@@ -6,27 +6,42 @@ import * as S from './Styles';
 
 export interface UserLabelProps {
   avatar: string | null;
+  avatarSize?: string;
   clickable?: boolean;
   description: string;
   id: number | null;
   username: string;
 }
 
-const UserLabel: SFC<UserLabelProps> = ({avatar, className, clickable = true, description, id, username}) => {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    if (!id || !clickable) return;
-    navigate(`/profile/${id}`);
-  };
+const UserLabel: SFC<UserLabelProps> = ({
+  avatar,
+  avatarSize = '44px',
+  className,
+  clickable = true,
+  description,
+  id,
+  username,
+}) => {
+  const isClickable = !!id && clickable;
+  const profilePath = `/profile/${id}`;
 
   const renderAvatar = () => {
-    if (!id || !clickable) return <S.Avatar src={avatar} size={'44px'} />;
+    if (!isClickable) return <S.Avatar size={avatarSize} src={avatar} />;
 
     return (
-      <Link to={`/profile/${id}`}>
-        <S.Avatar src={avatar} size={'44px'} />
-      </Link>
+      <S.AvatarLink aria-hidden="true" tabIndex={-1} to={profilePath}>
+        <S.Avatar size={avatarSize} src={avatar} />
+      </S.AvatarLink>
+    );
+  };
+
+  const renderUsername = () => {
+    if (!isClickable) return <S.Username $isClickable={false}>{username}</S.Username>;
+
+    return (
+      <S.Username $isClickable as={Link} to={profilePath}>
+        {username}
+      </S.Username>
     );
   };
 
@@ -34,10 +49,8 @@ const UserLabel: SFC<UserLabelProps> = ({avatar, className, clickable = true, de
     <S.Container className={className}>
       {renderAvatar()}
       <S.Right>
-        <S.Username $id={clickable ? id : null} onClick={handleClick}>
-          {username}
-        </S.Username>
-        <S.Description>{description}</S.Description>
+        {renderUsername()}
+        {description ? <S.Description>{description}</S.Description> : null}
       </S.Right>
     </S.Container>
   );

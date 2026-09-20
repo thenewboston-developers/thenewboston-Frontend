@@ -1,23 +1,38 @@
 import styled from 'styled-components';
 
-import {colors} from 'styles';
+import {colors, fonts, radii, shadows} from 'styles';
 
 export const Menu = styled.div`
   background: ${colors.white};
-  border-radius: 3px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-  padding: 6px 0;
+  border: 1px solid ${colors.borderSubtle};
+  border-radius: ${radii.medium};
+  box-shadow: ${shadows.popover};
+  padding: 4px;
   position: fixed;
 `;
 
 export const Option = styled.div`
   align-items: center;
+  border-radius: ${radii.small};
+  color: ${colors.primary};
+  cursor: pointer;
   display: flex;
-  padding: 8px 12px;
-  transition: background 0.1s;
+  font-size: 14px;
+  font-weight: ${fonts.weight.medium};
+  min-height: 36px;
+  padding: 0 12px;
+  transition: background 0.15s ease;
+  user-select: none;
   white-space: nowrap;
 
+  /* The ring is inset so neighboring options and the menu padding never cover it */
+  &:focus-visible {
+    background: ${colors.whiteHover};
+    box-shadow: inset ${shadows.focusRing};
+    outline: none;
+  }
+
   &:hover {
-    cursor: pointer;
+    background: ${colors.whiteHover};
   }
 `;

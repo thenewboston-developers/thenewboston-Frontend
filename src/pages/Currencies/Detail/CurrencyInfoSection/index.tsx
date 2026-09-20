@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {mdiWeb} from '@mdi/js';
 
 import {getAssetPairs} from 'api/assetPairs';
-import Badge, {BadgeStyle} from 'components/Badge';
 import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
 import DateDisplay from 'components/DateDisplay';
@@ -67,55 +67,68 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({
   const showMintButton = isOwner && isInternalCurrency;
   const showTradeButton = currency.ticker !== DEFAULT_CURRENCY_TICKER && assetPairId;
 
+  const renderActionButtons = () => {
+    if (!showMintButton && !showTradeButton) return null;
+
+    return (
+      <S.ActionButtonContainer>
+        {showMintButton && <Button onClick={onMintClick} text="Mint" />}
+        {showTradeButton && (
+          <Button color={ButtonColor.primary} disabled={isLoadingAssetPair} onClick={handleTradeClick} text="Trade" />
+        )}
+      </S.ActionButtonContainer>
+    );
+  };
+
+  const renderDomain = () => {
+    if (!currency.domain) return <S.InternalChip>Internal</S.InternalChip>;
+
+    return (
+      <S.CurrencyDomain>
+        <S.DomainIcon icon={mdiWeb} size={16} totalSize="unset" />
+        <S.CurrencyDomainText title={currency.domain}>{currency.domain}</S.CurrencyDomainText>
+      </S.CurrencyDomain>
+    );
+  };
+
+  const renderTotalMinted = () => {
+    if (totalAmountMinted === null) return null;
+
+    return (
+      <S.StatTile>
+        <S.StatLabel>Total Minted</S.StatLabel>
+        <S.StatValue>{totalAmountMinted.toLocaleString()}</S.StatValue>
+      </S.StatTile>
+    );
+  };
+
   return (
     <S.CurrencyPanel className={className}>
-      <S.CurrencyLogo logo={currency.logo} width="150px" />
-      <S.CurrencyContent>
-        <S.CurrencyInfoContainer>
-          <S.HeaderRow>
-            <S.TickerBadgeContainer>
-              <S.CurrencyName>{currency.ticker}</S.CurrencyName>
-              {currency.domain ? (
-                <S.CurrencyDomain>{currency.domain}</S.CurrencyDomain>
-              ) : (
-                <Badge badgeStyle={BadgeStyle.info}>Internal</Badge>
-              )}
-            </S.TickerBadgeContainer>
-            {totalAmountMinted !== null && (
-              <S.TotalMintedInfo>
-                <S.TotalMintedLabel>Total Minted</S.TotalMintedLabel>
-                <S.TotalMintedValue>{totalAmountMinted.toLocaleString()}</S.TotalMintedValue>
-              </S.TotalMintedInfo>
-            )}
-          </S.HeaderRow>
-          <S.CurrencyInfo>
-            {currency.description && <S.CurrencyDescription>{currency.description}</S.CurrencyDescription>}
-            <S.MetadataRow>
-              <UserLabel
-                avatar={currency.owner.avatar}
-                description="Owner"
-                id={currency.owner.id}
-                username={currency.owner.username}
-              />
-              <DateDisplay createdDate={currency.created_date} modifiedDate={currency.modified_date} />
-            </S.MetadataRow>
-            <SocialLinks entity={currency} />
-            {(showMintButton || showTradeButton) && (
-              <S.ActionButtonContainer>
-                {showMintButton && <Button onClick={onMintClick} text="Mint" />}
-                {showTradeButton && (
-                  <Button
-                    color={ButtonColor.primary}
-                    disabled={isLoadingAssetPair}
-                    onClick={handleTradeClick}
-                    text="Trade"
-                  />
-                )}
-              </S.ActionButtonContainer>
-            )}
-          </S.CurrencyInfo>
-        </S.CurrencyInfoContainer>
-      </S.CurrencyContent>
+      <S.Banner />
+      <S.Body>
+        <S.TopRow>
+          <S.CurrencyLogo logo={currency.logo} width="88px" />
+          {renderActionButtons()}
+        </S.TopRow>
+        <S.HeaderRow>
+          <S.Identity>
+            <S.CurrencyName>{currency.ticker}</S.CurrencyName>
+            {renderDomain()}
+          </S.Identity>
+          {renderTotalMinted()}
+        </S.HeaderRow>
+        {currency.description && <S.CurrencyDescription>{currency.description}</S.CurrencyDescription>}
+        <S.MetadataRow>
+          <UserLabel
+            avatar={currency.owner.avatar}
+            description="Owner"
+            id={currency.owner.id}
+            username={currency.owner.username}
+          />
+          <DateDisplay createdDate={currency.created_date} modifiedDate={currency.modified_date} />
+        </S.MetadataRow>
+        <SocialLinks entity={currency} />
+      </S.Body>
     </S.CurrencyPanel>
   );
 };

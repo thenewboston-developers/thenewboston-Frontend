@@ -1,11 +1,9 @@
-import {useState} from 'react';
+import {KeyboardEvent, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {mdiCommentTextOutline, mdiDotsVertical, mdiHeart, mdiHeartOutline} from '@mdi/js';
 
 import ContentWithMentions from 'components/ContentWithMentions';
-import OutlineButton from 'components/OutlineButton';
-import UserLabel from 'components/UserLabel';
 import {deletePost, likePost, unlikePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
@@ -19,12 +17,13 @@ import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import Comments from './Comments';
 import * as S from './Styles';
-import CoinTransferAmounts from './TipAmounts';
 import TransferInfo from './TransferInfo';
 
 export interface PostProps {
   post: TPost;
 }
+
+const CONTENT_PREVIEW_LENGTH = 400;
 
 const extractYouTubeVideoId = (text: string): string | null => {
   const urlPattern = /https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)[^\s]+/gi;
@@ -94,12 +93,17 @@ const Post: SFC<PostProps> = ({className, post}) => {
     recipient,
     tip_amounts: coin_transfer_amounts,
   } = post;
+  const isLongContent = content.length > CONTENT_PREVIEW_LENGTH;
   const isTransferPost = !!(recipient && price_amount && price_currency);
   const isOwner = owner.id === self.id;
   const youtubeVideoId = extractYouTubeVideoId(content);
   const commentsForPost = Object.values(comments)
     .filter((comment) => comment.post === id)
     .sort((a, b) => new Date(a.created_date).getTime() - new Date(b.created_date).getTime());
+
+  const handleCommentToggleClick = () => {
+    setIsOpenCommentBox(!isOpenCommentBox);
+  };
 
   const handleCopyAsJson = async () => {
     try {
@@ -139,6 +143,13 @@ const Post: SFC<PostProps> = ({className, post}) => {
   };
 
   const handlePostImageClick = () => {
+    toggleImageModal();
+  };
+
+  const handlePostImageKeyDown = (e: KeyboardEvent<HTMLImageElement>) => {
+    if (e.repeat) return;
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
     toggleImageModal();
   };
 
@@ -182,8 +193,9 @@ const Post: SFC<PostProps> = ({className, post}) => {
     <>
       <S.Container className={className}>
         <S.Top>
-          <UserLabel
+          <S.UserLabel
             avatar={owner.avatar}
+            avatarSize="40px"
             description={shortDate(created_date, true)}
             id={owner.id}
             username={owner.username}
@@ -199,24 +211,19 @@ const Post: SFC<PostProps> = ({className, post}) => {
           />
         )}
         <S.Content>
-          {showFullContent || content.length <= 400 ? (
-            <>
-              <S.TextContent>
-                <ContentWithMentions content={content} mentionedUsers={mentioned_users || []} />
-                {content.length > 400 && <S.TextLink onClick={toggleShowFullContent}>See less</S.TextLink>}
-              </S.TextContent>
-            </>
-          ) : (
-            <>
-              <S.TextContent>
-                <ContentWithMentions
-                  content={content.substring(0, 400) + '...'}
-                  mentionedUsers={mentioned_users || []}
-                />{' '}
-                <S.TextLink onClick={toggleShowFullContent}>See more</S.TextLink>
-              </S.TextContent>
-            </>
-          )}
+          <S.TextContent>
+            <ContentWithMentions
+              content={
+                isLongContent && !showFullContent ? content.substring(0, CONTENT_PREVIEW_LENGTH) + '...' : content
+              }
+              mentionedUsers={mentioned_users || []}
+            />
+            {isLongContent && (
+              <S.TextLink aria-expanded={showFullContent} onClick={toggleShowFullContent} type="button">
+                {showFullContent ? 'See less' : 'See more'}
+              </S.TextLink>
+            )}
+          </S.TextContent>
         </S.Content>
         {youtubeVideoId ? (
           <S.VideoWrapper>
@@ -228,30 +235,46 @@ const Post: SFC<PostProps> = ({className, post}) => {
             />
           </S.VideoWrapper>
         ) : null}
-        {image ? <S.Image alt="image" onClick={handlePostImageClick} src={image} /> : null}
+        {image ? (
+          <S.Image
+            alt="image"
+            aria-label="View image full screen"
+            onClick={handlePostImageClick}
+            onKeyDown={handlePostImageKeyDown}
+            role="button"
+            src={image}
+            tabIndex={0}
+          />
+        ) : null}
         <S.ActionsContainer>
           <S.ActionsLeft>
             <S.LikeWrapper>
-              <S.LikeButton $animate={animateLike} onClick={handleLikeClick}>
+              <S.LikeButton
+                $animate={animateLike}
+                $isLiked={is_liked}
+                aria-label="Like"
+                aria-pressed={is_liked}
+                onClick={handleLikeClick}
+                type="button"
+              >
                 <S.LikeIcon
                   $animate={animateLike}
-                  $isLiked={is_liked}
                   icon={is_liked ? mdiHeart : mdiHeartOutline}
                   size={20}
+                  totalSize="unset"
                 />
               </S.LikeButton>
-              <S.LikeCount onClick={toggleLikesModal}>
-                {like_count} {like_count === 1 ? 'like' : 'likes'}
+              <S.LikeCount onClick={toggleLikesModal} type="button">
+                {like_count.toLocaleString()} {like_count === 1 ? 'like' : 'likes'}
               </S.LikeCount>
             </S.LikeWrapper>
-            <OutlineButton
-              iconLeft={mdiCommentTextOutline}
-              onClick={() => setIsOpenCommentBox(!isOpenCommentBox)}
-              text={isOpenCommentBox ? 'Hide Comments' : 'Comment'}
-            />
+            <S.CommentToggle aria-expanded={isOpenCommentBox} onClick={handleCommentToggleClick} type="button">
+              <S.ActionIcon icon={mdiCommentTextOutline} size={18} totalSize="unset" />
+              {isOpenCommentBox ? 'Hide Comments' : 'Comment'}
+            </S.CommentToggle>
           </S.ActionsLeft>
           {coin_transfer_amounts && coin_transfer_amounts.length > 0 && (
-            <CoinTransferAmounts tipAmounts={coin_transfer_amounts} />
+            <S.TipAmounts tipAmounts={coin_transfer_amounts} />
           )}
         </S.ActionsContainer>
         {isOpenCommentBox && <Comments postId={post.id} />}

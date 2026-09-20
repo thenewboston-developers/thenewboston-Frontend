@@ -196,33 +196,44 @@ const Detail: SFC = ({className}) => {
     },
   ];
 
+  const renderHeader = () => {
+    return (
+      <S.Header>
+        <S.BackButton onClick={handleBackClick} type="button">
+          <Icon icon={mdiArrowLeft} size={20} />
+          <span>All Currencies</span>
+        </S.BackButton>
+        {currency && isOwner && !loading && <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />}
+      </S.Header>
+    );
+  };
+
   if (loading)
     return (
-      <S.LoaderWrapper>
-        <Loader />
-      </S.LoaderWrapper>
+      <S.Container className={className}>
+        {renderHeader()}
+        <S.LoaderWrapper>
+          <Loader />
+        </S.LoaderWrapper>
+      </S.Container>
     );
 
   if (!currency)
     return (
-      <EmptyPage
-        bottomText="The requested currency could not be found"
-        graphic={LeavesEmptyState}
-        topText="Currency not found"
-      />
+      <S.Container className={className}>
+        {renderHeader()}
+        <EmptyPage
+          bottomText="The requested currency could not be found"
+          graphic={LeavesEmptyState}
+          topText="Currency not found"
+        />
+      </S.Container>
     );
 
   return (
     <>
       <S.Container className={className}>
-        <S.Header>
-          <S.BackButton onClick={handleBackClick}>
-            <Icon icon={mdiArrowLeft} size={20} />
-            <span>All Currencies</span>
-          </S.BackButton>
-          {isOwner && <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />}
-        </S.Header>
-
+        {renderHeader()}
         <S.ScrollableContent>
           <S.Content>
             <CurrencyInfoSection

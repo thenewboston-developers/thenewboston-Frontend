@@ -1,24 +1,29 @@
 import styled from 'styled-components';
 
-import {colors} from 'styles';
+import {breakpoints, cardStyle, colors, fonts} from 'styles';
 
 export const ChartTitle = styled.h3`
-  color: ${colors.black};
-  font-size: 18px;
-  font-weight: 600;
+  color: ${colors.primary};
+  font-size: 16px;
+  font-weight: ${fonts.weight.semiBold};
+  letter-spacing: -0.01em;
   margin-bottom: 16px;
 `;
 
 export const ChartWrapper = styled.div`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-  padding: 24px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  min-width: 0;
 `;
 
 export const Container = styled.div`
-  margin-bottom: 32px;
+  ${cardStyle};
+  min-width: 0;
+  padding: 24px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 16px;
+  }
 `;
 
 export const LoaderWrapper = styled.div`

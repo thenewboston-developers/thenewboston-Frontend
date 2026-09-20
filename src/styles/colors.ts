@@ -1,11 +1,15 @@
 /* eslint-disable sort-keys */
 
 const colors = {
+  accent: '#dc0d16',
+  accentHover: '#b00a12',
+  accentSoft: 'rgba(220, 13, 22, 0.08)',
   background: '#f3f4f7',
   backgroundDark: '#22272e',
   black: '#000000',
   border: '#efeff4',
   borderDarker: '#d7d7df',
+  borderSubtle: '#e6e8ec',
   buttonDark: '#030303',
   buttonDarkDisabledBackground: '#f2f2f2',
   buttonDarkDisabledText: '#909090',
@@ -15,6 +19,15 @@ const colors = {
   white: '#ffffff',
   whiteHover: '#f3f4f6',
   whiteSmoke: '#ebebeb',
+  nav: {
+    active: 'rgba(177, 186, 196, 0.14)',
+    background: '#0d1117',
+    border: 'rgba(240, 246, 252, 0.08)',
+    hover: 'rgba(177, 186, 196, 0.08)',
+    text: '#9aa7b4',
+    textActive: '#ffffff',
+    textMuted: '#6e7b88',
+  },
   palette: {
     blue: {
       '50': '#e8f4fa',

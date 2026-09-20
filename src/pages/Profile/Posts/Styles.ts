@@ -2,9 +2,12 @@ import styled from 'styled-components';
 
 import {breakpoints, colors} from 'styles';
 
+// Matches the profile header column (pages/Profile/Layout ContentWrapper) so the posts line up with it
+const PROFILE_COLUMN_MAX_WIDTH = '720px';
+
 export const Container = styled.div`
   margin: 0 auto;
-  max-width: 720px;
+  max-width: ${PROFILE_COLUMN_MAX_WIDTH};
   width: 100%;
 
   @media (max-width: ${breakpoints.mini}) {
@@ -35,7 +38,7 @@ export const PostsWrapper = styled.div`
     gap: 0;
 
     & > div:first-child {
-      border-top: 1px solid ${colors.palette.gray[200]};
+      border-top: 1px solid ${colors.borderSubtle};
     }
   }
 `;

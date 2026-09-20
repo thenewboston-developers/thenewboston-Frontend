@@ -1,76 +1,76 @@
-import styled from 'styled-components';
+import styled, {css, keyframes} from 'styled-components';
 
-import Icon from 'components/Icon';
-import {colors, fonts} from 'styles';
-import {Menu as UMenu, Option} from 'styles/components/DropMenuStyle';
+import {colors, shadows} from 'styles';
+import {Menu as UMenu, Option as UOption} from 'styles/components/DropMenuStyle';
 
-export const Menu = styled(UMenu)<{$isOpen?: boolean}>`
-  animation: fadeIn 0.2s ease;
-  background: ${colors.white};
-  border: 1px solid ${colors.palette.gray[200]};
-  border-radius: 10px;
-  box-shadow:
-    0 10px 25px rgba(0, 0, 0, 0.1),
-    0 4px 10px rgba(0, 0, 0, 0.05);
-  min-width: 160px;
-  overflow: hidden;
-  padding: 4px;
+const menuEnter = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+// Shared with the positioning math in index.tsx: the menu always keeps this distance from the viewport edges
+export const MENU_VIEWPORT_MARGIN = 8;
+
+export const Menu = styled(UMenu)`
+  max-width: calc(100vw - ${MENU_VIEWPORT_MARGIN * 2}px);
+  min-width: 168px;
   z-index: 1101;
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  @media (prefers-reduced-motion: no-preference) {
+    animation: ${menuEnter} 0.15s ease;
   }
 `;
 
-export const MenuIcon = styled(Icon)<{$isOpen: boolean}>`
-  background: ${({$isOpen = false}) => ($isOpen ? 'rgba(144, 157, 171, 0.08)' : 'transparent')};
-  border-radius: 6px;
-  color: ${({$isOpen = false}) => ($isOpen ? colors.palette.gray[700] : colors.palette.gray[600])};
-  cursor: pointer;
-  padding: 2px;
-  transition:
-    background 0.3s ease,
-    color 0.2s ease;
-
-  &:hover {
-    background: rgba(144, 157, 171, 0.08);
-    color: ${colors.palette.gray[700]};
-  }
-`;
-
-export const MenuOption = styled(Option)<{$MenuIndex: number}>`
-  background: transparent;
-  border-radius: 6px;
-  font-size: 13px;
-  margin: 1px 0;
-  padding: 8px 10px;
-  transition: background 0.25s ease;
-
-  &:hover {
-    background: rgba(144, 157, 171, 0.08);
-  }
-
-  &:active {
-    background: rgba(144, 157, 171, 0.12);
-  }
-`;
-
-export const OptionLabel = styled.div<{$label: string}>`
+export const MenuButton = styled.button<{$isOpen: boolean}>`
   align-items: center;
-  color: ${({$label = ''}) => ($label === 'Delete' ? colors.palette.red[500] : colors.palette.gray[700])};
+  background: ${({$isOpen}) => ($isOpen ? colors.whiteHover : 'transparent')};
+  border: none;
+  color: ${({$isOpen}) => ($isOpen ? colors.primary : colors.secondary)};
+  cursor: pointer;
   display: flex;
-  font-weight: ${fonts.weight.medium};
-  justify-content: flex-start;
-  transition: color 0.15s ease;
+  flex-shrink: 0;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
 
-  &:hover {
-    color: ${({$label = ''}) => ($label === 'Delete' ? colors.palette.red[600] : colors.black)};
+  /* Doubled specificity so legacy "button { ... }" rules in consumer wrappers cannot reshape the trigger */
+  && {
+    border-radius: 50%;
+    padding: 0;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
   }
+
+  &:focus-visible {
+    box-shadow: ${shadows.focusRing};
+    outline: none;
+  }
+
+  /* Hover is limited to real pointers so a tap cannot leave the trigger looking active after the menu closes */
+  @media (hover: hover) {
+    &&:hover {
+      background: ${colors.whiteHover};
+      color: ${colors.primary};
+    }
+  }
+`;
+
+export const MenuOption = styled(UOption)<{$isDestructive: boolean}>`
+  ${({$isDestructive}) =>
+    $isDestructive &&
+    css`
+      color: ${colors.palette.red[500]};
+
+      &:focus-visible,
+      &:hover {
+        background: ${colors.accentSoft};
+      }
+    `}
 `;

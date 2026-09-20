@@ -8,6 +8,7 @@ export const Container = styled.div`
 `;
 
 export const OutletContainer = styled.div`
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
 `;

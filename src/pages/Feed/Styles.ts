@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 import {breakpoints, colors, feedPagePadding} from 'styles';
 
+const FEED_COLUMN_MAX_WIDTH = '680px';
+
 export const Container = styled.div`
   ${feedPagePadding};
   height: 100%;
@@ -15,9 +17,17 @@ export const EndMessageContainer = styled.div`
   margin: 16px 0 32px;
 `;
 
+export const LoaderContainer = styled.div`
+  margin: 16px 0 32px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    margin: 0;
+  }
+`;
+
 export const PostContainer = styled.div`
   margin: 24px auto 16px;
-  max-width: 720px;
+  max-width: ${FEED_COLUMN_MAX_WIDTH};
 
   @media (max-width: ${breakpoints.mobile}) {
     margin: 16px auto;
@@ -26,14 +36,6 @@ export const PostContainer = styled.div`
   @media (max-width: ${breakpoints.mini}) {
     margin: 0;
     max-width: 100%;
-  }
-`;
-
-export const LoaderContainer = styled.div`
-  margin: 16px 0 32px;
-
-  @media (max-width: ${breakpoints.mini}) {
-    margin: 0;
   }
 `;
 
@@ -46,7 +48,7 @@ export const PostsWrapper = styled.div`
     gap: 0;
 
     & > div:first-child {
-      border-top: 1px solid ${colors.palette.gray[200]};
+      border-top: 1px solid ${colors.borderSubtle};
     }
   }
 `;
@@ -56,9 +58,10 @@ export const SkeletonContainer = styled.div`
   flex-direction: column;
   gap: 16px;
   margin: 0 auto;
-  max-width: 720px;
+  max-width: ${FEED_COLUMN_MAX_WIDTH};
 
   @media (max-width: ${breakpoints.mini}) {
     gap: 0;
+    max-width: 100%;
   }
 `;
