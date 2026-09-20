@@ -1,9 +1,9 @@
 import {useCallback, useEffect, useState} from 'react';
-import {Link} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 
 import {getConnectFiveLeaderboard} from 'api/connectFive';
-import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
+import {getSelf} from 'selectors/state';
 import {ConnectFiveLeaderboardEntry, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -16,6 +16,8 @@ const ConnectFiveLeaderboard: SFC = ({className}) => {
   const [entries, setEntries] = useState<ConnectFiveLeaderboardEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
+
+  const self = useSelector(getSelf);
 
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
@@ -41,14 +43,14 @@ const ConnectFiveLeaderboard: SFC = ({className}) => {
   const renderLeaderboardTable = () => {
     if (isLoading) {
       return (
-        <S.EmptyState>
+        <S.LoaderPanel>
           <Loader />
-        </S.EmptyState>
+        </S.LoaderPanel>
       );
     }
 
     if (!entries.length) {
-      return <EmptyText>No ranked players yet.</EmptyText>;
+      return <S.EmptyText>No ranked players yet.</S.EmptyText>;
     }
 
     return (
@@ -64,24 +66,33 @@ const ConnectFiveLeaderboard: SFC = ({className}) => {
           </S.TableHeader>
           <S.TableBody>
             {entries.map((entry, index) => {
+              const isSelf = !!self?.id && entry.user.id === self.id;
               const rank = (currentPage - 1) * PAGE_SIZE + index + 1;
+              const record = `${entry.wins}W - ${entry.losses}L`;
 
               return (
-                <S.TableRow key={entry.user.id}>
-                  <S.TableData>{`#${rank}`}</S.TableData>
+                <S.TableRow $isSelf={isSelf} key={entry.user.id}>
+                  <S.TableData>
+                    <S.Rank>{`#${rank}`}</S.Rank>
+                  </S.TableData>
                   <S.TableData>
                     <S.UserCell>
-                      <Link to={`/profile/${entry.user.id}`}>
-                        <S.Avatar size="40px" src={entry.user.avatar} />
-                      </Link>
-                      <S.Username as={Link} to={`/profile/${entry.user.id}`}>
-                        {entry.user.username}
-                      </S.Username>
+                      <S.UserLabel
+                        avatar={entry.user.avatar}
+                        avatarSize="40px"
+                        description=""
+                        id={entry.user.id}
+                        username={entry.user.username}
+                      />
+                      {isSelf && <S.SelfChip>You</S.SelfChip>}
                     </S.UserCell>
                   </S.TableData>
-                  <S.TableData>{entry.elo}</S.TableData>
                   <S.TableData>
-                    <S.Record>{`${entry.wins}W - ${entry.losses}L`}</S.Record>
+                    <S.Elo>{entry.elo}</S.Elo>
+                    <S.StackedRecord>{record}</S.StackedRecord>
+                  </S.TableData>
+                  <S.TableData>
+                    <S.Record>{record}</S.Record>
                   </S.TableData>
                 </S.TableRow>
               );

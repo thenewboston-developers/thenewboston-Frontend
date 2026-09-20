@@ -69,6 +69,7 @@ const PieceToolbar: SFC<PieceToolbarProps> = ({
               $isActive={activeMoveType === moveType}
               $isDisabled={isDisabled}
               aria-label={TOOL_LABELS[moveType]}
+              aria-pressed={activeMoveType === moveType}
               disabled={isDisabled}
               key={moveType}
               onClick={() => {

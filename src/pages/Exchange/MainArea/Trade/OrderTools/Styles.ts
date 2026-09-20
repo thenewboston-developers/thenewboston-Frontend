@@ -1,26 +1,51 @@
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
+import UTab from 'components/Tab';
 import UTabs from 'components/Tabs';
+import {cardStyle, colors} from 'styles';
 
-export const Container = styled.div``;
+import {NEGATIVE_TEXT_COLOR, POSITIVE_TEXT_COLOR} from '../../mixins';
 
+// The doubled specificity keeps the accent in place while the tab is hovered (the shared Tab sets its own hover color)
+const activeTabMixin = (color: string) => css`
+  &&,
+  &&:hover {
+    color: ${color};
+  }
+`;
+
+export const BuyTab = styled(UTab)`
+  flex: 1;
+  ${({isActive}) => isActive && activeTabMixin(POSITIVE_TEXT_COLOR)};
+`;
+
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+`;
+
+// The panel has nothing to show until the asset pair is loaded
 export const Panel = styled.div`
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-  margin-top: 16px;
+  ${cardStyle};
+  color: ${colors.primary};
   padding: 20px;
+
+  &:empty {
+    display: none;
+  }
+`;
+
+export const SellTab = styled(UTab)`
+  flex: 1;
+  ${({isActive}) => isActive && activeTabMixin(NEGATIVE_TEXT_COLOR)};
 `;
 
 export const TabContent = styled.div`
-  margin-top: 24px;
+  margin-top: 20px;
 `;
 
 export const Tabs = styled(UTabs)`
-  margin: 0 auto;
-`;
-
-export const TabsWrapper = styled.div`
-  display: flex;
-  justify-content: center;
+  width: 100%;
 `;

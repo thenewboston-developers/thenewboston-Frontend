@@ -1,40 +1,53 @@
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 
-import {colors} from 'styles';
+import {colors, fonts, radii, shadows} from 'styles';
 
+import {fillStatusBadgeWrapperStyle, NEGATIVE_TEXT_COLOR, POSITIVE_TEXT_COLOR} from '../../../mixins';
+
+const ARROW_SIZE = 10;
+
+const tooltipEnter = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% + 4px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%);
+  }
+`;
+
+// The arrow is a rotated square that continues the border of the popover along its two lower edges
 export const Container = styled.div`
-  animation: fadeIn 0.3s ease-out;
-  background: ${colors.primary};
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: ${colors.white};
+  border: 1px solid ${colors.borderSubtle};
+  border-radius: ${radii.medium};
+  box-shadow: ${shadows.popover};
   left: 50%;
   padding: 12px 16px;
+  pointer-events: none;
   position: absolute;
+  text-align: left;
   top: -10px;
   transform: translate(-50%, -100%);
   white-space: nowrap;
   z-index: 1000;
 
   &::after {
-    border-color: ${colors.primary} transparent transparent transparent;
-    border-style: solid;
-    border-width: 6px 6px 0 6px;
-    bottom: -6px;
+    background: ${colors.white};
+    border-bottom: 1px solid ${colors.borderSubtle};
+    border-right: 1px solid ${colors.borderSubtle};
+    bottom: ${`-${ARROW_SIZE / 2 + 1}px`};
     content: '';
-    left: 50%;
+    height: ${`${ARROW_SIZE}px`};
+    left: ${`calc(50% - ${ARROW_SIZE / 2}px)`};
     position: absolute;
-    transform: translateX(-50%);
+    transform: rotate(45deg);
+    width: ${`${ARROW_SIZE}px`};
   }
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translate(-50%, -95%);
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, -100%);
-    }
+  @media (prefers-reduced-motion: no-preference) {
+    animation: ${tooltipEnter} 0.2s ease-out;
   }
 `;
 
@@ -45,10 +58,14 @@ export const Content = styled.div`
   min-width: 250px;
 `;
 
+export const FillStatusBadgeWrapper = styled.span<{$status: number}>`
+  ${fillStatusBadgeWrapperStyle};
+`;
+
 export const Label = styled.span`
-  color: ${colors.palette.gray['400']};
+  color: ${colors.secondary};
   font-size: 12px;
-  font-weight: 500;
+  font-weight: ${fonts.weight.medium};
   min-width: 100px;
 `;
 
@@ -61,11 +78,12 @@ export const Row = styled.div`
 
 export const Value = styled.span<{$type?: 'buy' | 'sell'}>`
   color: ${({$type}) => {
-    if ($type === 'buy') return colors.palette.green['300'];
-    if ($type === 'sell') return colors.palette.red['300'];
-    return colors.white;
+    if ($type === 'buy') return POSITIVE_TEXT_COLOR;
+    if ($type === 'sell') return NEGATIVE_TEXT_COLOR;
+    return colors.primary;
   }};
   font-size: 13px;
-  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.semiBold};
   text-align: right;
 `;

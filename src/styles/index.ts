@@ -4,6 +4,8 @@ import {TOOLBAR_HEIGHT} from 'styles/constants';
 import fonts from 'styles/fonts';
 import {
   cardStyle,
+  controlStyle,
+  eyebrowStyle,
   feedPagePadding,
   formLabel,
   hiddenScroll,
@@ -21,6 +23,8 @@ export {
   breakpoints,
   cardStyle,
   colors,
+  controlStyle,
+  eyebrowStyle,
   feedPagePadding,
   fonts,
   formLabel,

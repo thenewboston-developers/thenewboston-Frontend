@@ -41,7 +41,9 @@ const Tooltip: SFC<TooltipProps> = ({order, activeAssetPair, date, time, type}) 
         <S.Row>
           <S.Label>Status:</S.Label>
           <S.Value>
-            <FillStatusBadge status={order.status} />
+            <S.FillStatusBadgeWrapper $status={order.status}>
+              <FillStatusBadge status={order.status} />
+            </S.FillStatusBadgeWrapper>
           </S.Value>
         </S.Row>
       </S.Content>

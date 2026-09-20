@@ -1,9 +1,8 @@
 import {ComponentType, SVGProps} from 'react';
 
-import Badge, {BadgeStyle} from 'components/Badge';
+import {BadgeStyle} from 'components/Badge';
 import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
-import PrizePoolBreakdown from 'components/PrizePoolBreakdown';
 import {ConnectFiveMatchStatus, ConnectFiveSpecialType} from 'enums';
 import {ConnectFiveMatch, ConnectFiveMatchPlayer, SFC} from 'types';
 
@@ -129,7 +128,7 @@ const MatchSidebar: SFC<MatchSidebarProps> = ({
       <MatchStyles.MatchInfo>
         <MatchStyles.InfoRow>
           <MatchStyles.InfoLabel>Status</MatchStyles.InfoLabel>
-          <Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</Badge>
+          <MatchStyles.Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</MatchStyles.Badge>
         </MatchStyles.InfoRow>
         {finishReason && (
           <MatchStyles.InfoRow>
@@ -159,7 +158,7 @@ const MatchSidebar: SFC<MatchSidebarProps> = ({
         <MatchStyles.PanelHeader>
           <MatchStyles.PanelTitle>Prize pool</MatchStyles.PanelTitle>
         </MatchStyles.PanelHeader>
-        <PrizePoolBreakdown initial={prizePoolInitial} spent={prizePoolSpent} ticker="TNB" total={prizePoolTotal} />
+        <S.PrizePoolBreakdown initial={prizePoolInitial} spent={prizePoolSpent} ticker="TNB" total={prizePoolTotal} />
       </S.PrizePoolPanel>
     );
   };
@@ -247,7 +246,13 @@ const MatchSidebar: SFC<MatchSidebarProps> = ({
                   <S.SpendRowName>{player.username}</S.SpendRowName>
                   <S.SpendRowValue>{spentLabel}</S.SpendRowValue>
                 </S.SpendRowHeader>
-                <S.SpendProgressBar>
+                <S.SpendProgressBar
+                  aria-label={`${player.username} spend progress`}
+                  aria-valuemax={100}
+                  aria-valuemin={0}
+                  aria-valuenow={Math.round(spendProgress.percentage)}
+                  role="progressbar"
+                >
                   <S.SpendProgressFill $percentage={spendProgress.percentage} />
                 </S.SpendProgressBar>
               </S.SpendRow>

@@ -56,7 +56,7 @@ const Orders: SFC = ({className}) => {
   const getOrderSkeleton = (n: number) => {
     const skeletons = Array.from({length: n}, (_, i) => (
       <S.OrderSkeletonContainer key={i}>
-        <Skeleton width="100%" height="100px" />
+        <Skeleton height="132px" width="100%" />
       </S.OrderSkeletonContainer>
     ));
     return <S.SkeletonContainer>{skeletons}</S.SkeletonContainer>;
@@ -107,7 +107,7 @@ const Orders: SFC = ({className}) => {
   return (
     <>
       <S.Container className={className} id="orders-content">
-        {renderOrders()}
+        <S.Content>{renderOrders()}</S.Content>
       </S.Container>
       {tradesModalIsOpen ? <TradesModal close={toggleTradesModal} order={selectedOrder} /> : null}
     </>

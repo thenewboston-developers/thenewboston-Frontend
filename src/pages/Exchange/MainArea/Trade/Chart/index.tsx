@@ -8,7 +8,7 @@ import Loader from 'components/Loader';
 import {getTradePriceChartData as fetchTradePriceChartData} from 'dispatchers/tradePriceChartData';
 import {getTradePriceChartData} from 'selectors/state';
 import {clearTradePriceChartData} from 'store/tradePriceChartData';
-import {colors} from 'styles';
+import {colors, radii, shadows} from 'styles';
 import {AppDispatch, AssetPair, Candlestick, ChartTimeRange, SFC} from 'types';
 import {chartDisplayDate} from 'utils/dates';
 import {displayErrorToast} from 'utils/toasts';
@@ -174,8 +174,7 @@ const Chart: SFC<ChartProps> = ({activeAssetPair, className}) => {
             .tickSize(-height)
             .tickFormat(() => ''),
         )
-        .style('stroke-dasharray', '3,3')
-        .style('opacity', 0.3);
+        .style('stroke-dasharray', '3,3');
 
       g.append('g')
         .attr('class', 'grid')
@@ -185,8 +184,7 @@ const Chart: SFC<ChartProps> = ({activeAssetPair, className}) => {
             .tickSize(-width)
             .tickFormat(() => ''),
         )
-        .style('stroke-dasharray', '3,3')
-        .style('opacity', 0.3);
+        .style('stroke-dasharray', '3,3');
 
       // X Axis
       // Adjust tick count based on data density to prevent overcrowding
@@ -228,7 +226,7 @@ const Chart: SFC<ChartProps> = ({activeAssetPair, className}) => {
         .attr('transform', `translate(0,${height})`)
         .call(d3.axisBottom(xScale).ticks(xAxisTickCount).tickFormat(formatXAxisLabel))
         .style('font-size', '12px')
-        .style('color', colors.palette.gray[600]);
+        .style('color', colors.secondary);
 
       // Y Axis
       g.append('g')
@@ -239,7 +237,7 @@ const Chart: SFC<ChartProps> = ({activeAssetPair, className}) => {
             .tickPadding(10),
         )
         .style('font-size', '12px')
-        .style('color', colors.palette.gray[600]);
+        .style('color', colors.secondary);
 
       // Candlestick width based on data density
       // Adjust width based on number of data points to handle variable length data
@@ -304,11 +302,15 @@ const Chart: SFC<ChartProps> = ({activeAssetPair, className}) => {
         .attr('class', 'd3-tooltip')
         .style('opacity', 0)
         .style('position', 'absolute')
-        .style('background', 'white')
-        .style('border', '1px solid #ddd')
-        .style('border-radius', '4px')
-        .style('padding', '8px')
+        .style('background', colors.white)
+        .style('border', `1px solid ${colors.borderSubtle}`)
+        .style('border-radius', radii.small)
+        .style('box-shadow', shadows.popover)
+        .style('color', colors.primary)
         .style('font-size', '12px')
+        .style('font-variant-numeric', 'tabular-nums')
+        .style('line-height', '1.5')
+        .style('padding', '10px 12px')
         .style('pointer-events', 'none');
 
       // Invisible overlay for mouse events
@@ -430,7 +432,7 @@ const Chart: SFC<ChartProps> = ({activeAssetPair, className}) => {
             </S.CurrentPrice>
 
             <S.PriceChange $isPositive={isPositive}>
-              <S.ChangeArrow $isPositive={isPositive}>{isPositive ? '▲' : '▼'}</S.ChangeArrow>
+              <S.ChangeArrow>{isPositive ? '▲' : '▼'}</S.ChangeArrow>
               {Math.abs(priceChange).toFixed(2)}%
             </S.PriceChange>
           </S.PriceWrapper>
@@ -452,9 +454,15 @@ const Chart: SFC<ChartProps> = ({activeAssetPair, className}) => {
         </S.PriceSection>
 
         <S.ChartControls>
-          <S.TimeframeButtons>
+          <S.TimeframeButtons aria-label="Chart time range" role="group">
             {(['ALL', '1Y', '3M', '1M', '1W', '1D'] as const).map((tf) => (
-              <S.TimeframeButton $active={timeframe === tf} key={tf} onClick={() => setTimeframe(tf)}>
+              <S.TimeframeButton
+                $active={timeframe === tf}
+                aria-pressed={timeframe === tf}
+                key={tf}
+                onClick={() => setTimeframe(tf)}
+                type="button"
+              >
                 {tf}
               </S.TimeframeButton>
             ))}

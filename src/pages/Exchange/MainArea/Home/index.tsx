@@ -1,18 +1,19 @@
-import {useEffect, useState} from 'react';
+import {MouseEvent, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {mdiMenuDown, mdiMenuUp} from '@mdi/js';
+import {mdiArrowDown, mdiArrowUp, mdiMenuDown, mdiMenuUp} from '@mdi/js';
 import {Area, AreaChart, ResponsiveContainer} from 'recharts';
 
 import {getTradeHistoryItems} from 'api/tradeHistoryItems';
-import Icon from 'components/Icon';
 import Loader from 'components/Loader';
-import Pagination from 'components/Pagination';
+import {colors} from 'styles';
 import {SFC, TradeHistoryItem} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
 const PAGE_SIZE = 100;
+
+type ChangeDirection = 'down' | 'flat' | 'up';
 
 type SortField =
   | 'asset_pair__primary_currency__ticker'
@@ -62,8 +63,26 @@ const Home: SFC = ({className}) => {
     return Math.floor(value).toLocaleString();
   };
 
+  const getAriaSort = (field: SortField) => {
+    if (sortState.field !== field) return undefined;
+    return sortState.direction === 'asc' ? 'ascending' : 'descending';
+  };
+
+  // The direction follows the displayed (rounded) value, so a change that reads as 0.00% stays neutral
+  const getChangeDirection = (value: number): ChangeDirection => {
+    const roundedValue = Number(value.toFixed(2));
+    if (roundedValue > 0) return 'up';
+    if (roundedValue < 0) return 'down';
+    return 'flat';
+  };
+
   const handleCoinClick = (assetPairId: number) => {
     navigate(`/exchange/trade/${assetPairId}`);
+  };
+
+  // The link navigates on its own, so the click must not reach the row handler and navigate a second time
+  const handleCoinLinkClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.stopPropagation();
   };
 
   const handlePageChange = (page: number) => {
@@ -86,23 +105,52 @@ const Home: SFC = ({className}) => {
     });
   };
 
-  const renderSortIcon = (field: SortField, position: 'left' | 'right' = 'right') => {
+  const renderPercentageChange = (value: number) => {
+    const direction = getChangeDirection(value);
+
+    return (
+      <S.PercentageChange $direction={direction}>
+        {direction !== 'flat' && (
+          <>
+            <S.ChangeIcon path={direction === 'up' ? mdiMenuUp : mdiMenuDown} size="18px" />
+            <S.VisuallyHidden>{direction === 'up' ? 'Up' : 'Down'}</S.VisuallyHidden>
+          </>
+        )}
+        {formatPercentage(value)}%
+      </S.PercentageChange>
+    );
+  };
+
+  const renderSortableHeaderCell = (field: SortField, label: string, align: 'left' | 'right' = 'right') => {
+    return (
+      <S.HeaderCell $align={align} aria-sort={getAriaSort(field)} scope="col">
+        <S.SortButton $isActive={sortState.field === field} onClick={() => handleSort(field)} type="button">
+          {align === 'right' && renderSortIcon(field)}
+          {label}
+          {align === 'left' && renderSortIcon(field)}
+        </S.SortButton>
+      </S.HeaderCell>
+    );
+  };
+
+  const renderSortIcon = (field: SortField) => {
     if (sortState.field !== field) return null;
-    const icon = <Icon icon={sortState.direction === 'asc' ? mdiMenuUp : mdiMenuDown} size={16} />;
-    return position === 'left' ? icon : icon;
+    return <S.SortIcon path={sortState.direction === 'asc' ? mdiArrowUp : mdiArrowDown} size="14px" />;
   };
 
   const renderSparkline = (data: number[]) => {
     const chartData = data.map((value) => ({value}));
     const isPositive = data[data.length - 1] >= data[0];
+    const color = isPositive ? colors.palette.green[600] : colors.palette.red[500];
 
     return (
       <ResponsiveContainer height={40} width="100%">
         <AreaChart data={chartData} margin={{bottom: 0, left: 0, right: 0, top: 0}}>
           <Area
             dataKey="value"
-            fill={isPositive ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'}
-            stroke={isPositive ? '#22c55e' : '#ef4444'}
+            fill={color}
+            fillOpacity={0.1}
+            stroke={color}
             strokeWidth={1.5}
             type="monotone"
             yAxisId={0}
@@ -115,9 +163,11 @@ const Home: SFC = ({className}) => {
   if (loading) {
     return (
       <S.Container className={className}>
-        <S.LoaderContainer>
-          <Loader size={48} />
-        </S.LoaderContainer>
+        <S.Content>
+          <S.LoaderPanel>
+            <Loader />
+          </S.LoaderPanel>
+        </S.Content>
       </S.Container>
     );
   }
@@ -125,101 +175,70 @@ const Home: SFC = ({className}) => {
   if (error) {
     return (
       <S.Container className={className}>
-        <S.ErrorMessage>{error}</S.ErrorMessage>
+        <S.Content>
+          <S.ErrorMessage>{error}</S.ErrorMessage>
+        </S.Content>
+      </S.Container>
+    );
+  }
+
+  if (!tradeHistoryItems.length) {
+    return (
+      <S.Container className={className}>
+        <S.Content>
+          <S.EmptyState>
+            <S.EmptyText>No markets to display</S.EmptyText>
+            <S.EmptySubtext>There is no trading activity to show yet.</S.EmptySubtext>
+          </S.EmptyState>
+        </S.Content>
       </S.Container>
     );
   }
 
   return (
     <S.Container className={className}>
-      <S.TableWrapper>
-        <S.Table>
-          <S.TableHeader>
-            <S.TableRow>
-              <S.HeaderCell $clickable $sticky onClick={() => handleSort('asset_pair__primary_currency__ticker')}>
-                <S.HeaderContent>
-                  Coin
-                  {renderSortIcon('asset_pair__primary_currency__ticker', 'right')}
-                </S.HeaderContent>
-              </S.HeaderCell>
-              <S.HeaderCell $align="right" $clickable onClick={() => handleSort('price')}>
-                <S.HeaderContent $align="right">
-                  {renderSortIcon('price', 'left')}
-                  Price (TNB)
-                </S.HeaderContent>
-              </S.HeaderCell>
-              <S.HeaderCell $align="right" $clickable onClick={() => handleSort('change_1h')}>
-                <S.HeaderContent $align="right">
-                  {renderSortIcon('change_1h', 'left')}
-                  1h
-                </S.HeaderContent>
-              </S.HeaderCell>
-              <S.HeaderCell $align="right" $clickable onClick={() => handleSort('change_24h')}>
-                <S.HeaderContent $align="right">
-                  {renderSortIcon('change_24h', 'left')}
-                  24h
-                </S.HeaderContent>
-              </S.HeaderCell>
-              <S.HeaderCell $align="right" $clickable onClick={() => handleSort('change_7d')}>
-                <S.HeaderContent $align="right">
-                  {renderSortIcon('change_7d', 'left')}
-                  7d
-                </S.HeaderContent>
-              </S.HeaderCell>
-              <S.HeaderCell $align="right" $clickable onClick={() => handleSort('volume_24h')}>
-                <S.HeaderContent $align="right">
-                  {renderSortIcon('volume_24h', 'left')}
-                  24h Volume
-                </S.HeaderContent>
-              </S.HeaderCell>
-              <S.HeaderCell $align="right" $clickable onClick={() => handleSort('market_cap')}>
-                <S.HeaderContent $align="right">
-                  {renderSortIcon('market_cap', 'left')}
-                  Market Cap (TNB)
-                </S.HeaderContent>
-              </S.HeaderCell>
-              <S.HeaderCell $align="right">Last 7 Days</S.HeaderCell>
-            </S.TableRow>
-          </S.TableHeader>
-          <S.TableBody>
-            {tradeHistoryItems.map((item, index) => (
-              <S.TableRow key={index}>
-                <S.DataCell $clickable $sticky onClick={() => handleCoinClick(item.asset_pair.id)}>
-                  <S.CoinInfo>
-                    <S.Logo alt={item.asset_pair.primary_currency.ticker} src={item.asset_pair.primary_currency.logo} />
-                    <S.TickerPair>{item.asset_pair.primary_currency.ticker}</S.TickerPair>
-                  </S.CoinInfo>
-                </S.DataCell>
-                <S.DataCell $align="right">{formatWholeNumber(item.price)}</S.DataCell>
-                <S.DataCell $align="right">
-                  <S.PercentageChange $isPositive={item.change_1h >= 0}>
-                    <Icon icon={item.change_1h >= 0 ? mdiMenuUp : mdiMenuDown} size={24} />
-                    {formatPercentage(item.change_1h)}%
-                  </S.PercentageChange>
-                </S.DataCell>
-                <S.DataCell $align="right">
-                  <S.PercentageChange $isPositive={item.change_24h >= 0}>
-                    <Icon icon={item.change_24h >= 0 ? mdiMenuUp : mdiMenuDown} size={24} />
-                    {formatPercentage(item.change_24h)}%
-                  </S.PercentageChange>
-                </S.DataCell>
-                <S.DataCell $align="right">
-                  <S.PercentageChange $isPositive={item.change_7d >= 0}>
-                    <Icon icon={item.change_7d >= 0 ? mdiMenuUp : mdiMenuDown} size={24} />
-                    {formatPercentage(item.change_7d)}%
-                  </S.PercentageChange>
-                </S.DataCell>
-                <S.DataCell $align="right">{formatWholeNumber(item.volume_24h)}</S.DataCell>
-                <S.DataCell $align="right">{formatWholeNumber(item.market_cap)}</S.DataCell>
-                <S.DataCell $align="right">
-                  <S.SparklineContainer>{renderSparkline(item.sparkline)}</S.SparklineContainer>
-                </S.DataCell>
+      <S.Content>
+        <S.TableWrapper>
+          <S.Table aria-label="Markets">
+            <S.TableHeader>
+              <S.TableRow>
+                {renderSortableHeaderCell('asset_pair__primary_currency__ticker', 'Coin', 'left')}
+                {renderSortableHeaderCell('price', 'Price (TNB)')}
+                {renderSortableHeaderCell('change_1h', '1h')}
+                {renderSortableHeaderCell('change_24h', '24h')}
+                {renderSortableHeaderCell('change_7d', '7d')}
+                {renderSortableHeaderCell('volume_24h', '24h Volume')}
+                {renderSortableHeaderCell('market_cap', 'Market Cap (TNB)')}
+                <S.HeaderCell $align="right" scope="col">
+                  Last 7 Days
+                </S.HeaderCell>
               </S.TableRow>
-            ))}
-          </S.TableBody>
-        </S.Table>
-      </S.TableWrapper>
-      <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+            </S.TableHeader>
+            <S.TableBody>
+              {tradeHistoryItems.map((item, index) => (
+                <S.TableRow key={index} onClick={() => handleCoinClick(item.asset_pair.id)}>
+                  <S.DataCell>
+                    <S.CoinLink onClick={handleCoinLinkClick} to={`/exchange/trade/${item.asset_pair.id}`}>
+                      <S.Logo alt="" src={item.asset_pair.primary_currency.logo} />
+                      <S.Ticker>{item.asset_pair.primary_currency.ticker}</S.Ticker>
+                    </S.CoinLink>
+                  </S.DataCell>
+                  <S.DataCell $align="right">{formatWholeNumber(item.price)}</S.DataCell>
+                  <S.DataCell $align="right">{renderPercentageChange(item.change_1h)}</S.DataCell>
+                  <S.DataCell $align="right">{renderPercentageChange(item.change_24h)}</S.DataCell>
+                  <S.DataCell $align="right">{renderPercentageChange(item.change_7d)}</S.DataCell>
+                  <S.DataCell $align="right">{formatWholeNumber(item.volume_24h)}</S.DataCell>
+                  <S.DataCell $align="right">{formatWholeNumber(item.market_cap)}</S.DataCell>
+                  <S.DataCell $align="right">
+                    <S.SparklineContainer>{renderSparkline(item.sparkline)}</S.SparklineContainer>
+                  </S.DataCell>
+                </S.TableRow>
+              ))}
+            </S.TableBody>
+          </S.Table>
+        </S.TableWrapper>
+        <S.Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+      </S.Content>
     </S.Container>
   );
 };

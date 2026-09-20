@@ -1,5 +1,3 @@
-import {Link} from 'react-router-dom';
-
 import {SFC} from 'types';
 
 import * as S from './Styles';
@@ -9,27 +7,29 @@ interface PlayerInfoProps {
   playerSide: 'black' | 'white' | null;
 }
 
-const getPlayerLabel = (player: {connect_five_elo: number | null; username: string}) => {
-  if (typeof player.connect_five_elo !== 'number') return player.username;
-  return `${player.username} (${player.connect_five_elo})`;
-};
-
 const PlayerInfo: SFC<PlayerInfoProps> = ({className, player, playerSide}) => {
   if (!player || !playerSide) return null;
 
+  const hasElo = typeof player.connect_five_elo === 'number';
   const profilePath = `/profile/${player.id}`;
   const sideLabel = playerSide === 'black' ? 'Black' : 'White';
 
   return (
     <S.PlayerLabel className={className}>
-      <Link to={profilePath}>
+      <S.PlayerAvatarLink aria-hidden="true" tabIndex={-1} to={profilePath}>
         <S.PlayerAvatar $variant={playerSide} size="44px" src={player.avatar} />
-      </Link>
+      </S.PlayerAvatarLink>
       <S.PlayerLabelDetails>
-        <S.PlayerName $isClickable as={Link} to={profilePath}>
-          {getPlayerLabel(player)}
-        </S.PlayerName>
-        <S.PlayerSideText $variant={playerSide}>{sideLabel}</S.PlayerSideText>
+        <S.PlayerName to={profilePath}>{player.username}</S.PlayerName>
+        <S.PlayerMeta>
+          <S.PlayerSideText>{sideLabel}</S.PlayerSideText>
+          {hasElo && (
+            <>
+              <span aria-hidden="true">&middot;</span>
+              <S.PlayerElo>{`ELO ${player.connect_five_elo}`}</S.PlayerElo>
+            </>
+          )}
+        </S.PlayerMeta>
       </S.PlayerLabelDetails>
     </S.PlayerLabel>
   );

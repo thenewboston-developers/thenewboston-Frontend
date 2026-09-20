@@ -14,6 +14,49 @@ export const cardStyle = css`
   box-shadow: ${shadows.card};
 `;
 
+// Modern look for inputs, selects and other field-like controls (set the height and padding where it is used)
+export const controlStyle = css`
+  background-color: ${colors.white};
+  border: 1px solid ${colors.borderSubtle};
+  border-radius: ${radii.medium};
+  color: ${colors.primary};
+  font-family: ${fonts.family.default};
+  font-size: 14px;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &::placeholder {
+    color: ${colors.secondary};
+    opacity: 1;
+  }
+
+  &:hover {
+    border-color: ${colors.borderDarker};
+  }
+
+  /* The border shares the color of shadows.focusRing, so the border and the ring read as a single outline */
+  &:focus {
+    border-color: ${colors.palette.blue[500]};
+    box-shadow: ${shadows.focusRing};
+  }
+
+  &:disabled {
+    background-color: ${colors.palette.gray[50]};
+    cursor: not-allowed;
+  }
+`;
+
+// Tiny uppercase label used for table headers, stat captions and field captions
+export const eyebrowStyle = css`
+  color: ${colors.secondary};
+  font-size: 11px;
+  font-weight: ${fonts.weight.semiBold};
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+`;
+
 export const feedPagePadding = css`
   padding: 0 32px;
 
