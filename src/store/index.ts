@@ -74,7 +74,7 @@ const persistConfig = {
   key: 'thenewboston',
   migrate: createMigrate(migrations, {debug: false}),
   storage,
-  version: 1,
+  version: 2,
   blacklist: ['frontendDeployments'],
 };
 

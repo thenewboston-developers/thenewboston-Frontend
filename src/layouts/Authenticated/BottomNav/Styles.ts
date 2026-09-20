@@ -1,26 +1,27 @@
-import MdiIcon from '@mdi/react';
+import UIcon from '@mdi/react';
 import styled from 'styled-components';
 
-import {colors, fonts} from 'styles';
+import {bottomNavTextStyle} from 'layouts/Authenticated/mixins';
+import {colors} from 'styles';
 
 export const Container = styled.nav`
-  background: ${colors.backgroundDark};
-  border-top: 1px solid ${colors.border};
+  background: ${colors.nav.background};
+  border-top: 1px solid ${colors.nav.border};
   display: flex;
   flex-shrink: 0;
   justify-content: space-around;
-  padding: 8px 0;
+  padding: 0 4px env(safe-area-inset-bottom, 0);
 `;
 
-export const Icon = styled(MdiIcon)`
-  color: ${colors.palette.gray[300]};
+export const Icon = styled(UIcon)`
+  flex-shrink: 0;
 `;
 
-export const IconWrapper = styled.div`
+export const IconWrapper = styled.span`
+  display: flex;
   position: relative;
 `;
 
 export const Text = styled.span`
-  font-size: 11px;
-  font-weight: ${fonts.weight.semiBold};
+  ${bottomNavTextStyle};
 `;

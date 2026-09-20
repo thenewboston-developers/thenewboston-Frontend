@@ -1,10 +1,8 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {Link} from 'react-router-dom';
 import {mdiDotsVertical} from '@mdi/js';
 
 import Avatar from 'components/Avatar';
 import ContentWithMentions from 'components/ContentWithMentions';
-import DropdownMenu from 'components/DropdownMenu';
 import {deleteComment} from 'dispatchers/comments';
 import {ToastType} from 'enums';
 import {useToggle} from 'hooks';
@@ -27,6 +25,7 @@ const Comment: SFC<CommentProps> = ({className, comment, isFirst = false}) => {
   const self = useSelector(getSelf);
 
   const {content, created_date, id, mentioned_users, owner, price_amount, price_currency} = comment;
+  const profilePath = `/profile/${owner.id}`;
 
   const handleDelete = async () => {
     try {
@@ -50,44 +49,47 @@ const Comment: SFC<CommentProps> = ({className, comment, isFirst = false}) => {
 
   const renderDropdownMenu = () => {
     if (self.id !== owner.id) return null;
-    return <DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
+    return <S.DropdownMenu icon={mdiDotsVertical} options={menuOptions} />;
   };
 
-  const renderNameDateContainer = () => {
+  const renderMetadata = () => {
     return (
-      <S.UsernameDateContainer>
-        <Link to={`/profile/${owner.id}`}>
-          <S.Username>{owner.username}</S.Username>
-        </Link>
-        <S.Dot>·</S.Dot>
+      <S.Metadata>
         <S.Date>{shortDate(created_date, true)}</S.Date>
-      </S.UsernameDateContainer>
+        {renderPriceMini()}
+      </S.Metadata>
     );
   };
 
   const renderPriceMini = () => {
     if (!price_amount || !price_currency) return null;
-    return <S.PriceMini currency={price_currency} price={price_amount} />;
+
+    return (
+      <>
+        <S.Dot aria-hidden="true">·</S.Dot>
+        <S.PriceMini currency={price_currency} price={price_amount} />
+      </>
+    );
   };
 
   return (
     <>
       <S.Container $isFirst={isFirst} className={className}>
-        <Link to={`/profile/${owner.id}`}>
-          <Avatar src={owner.avatar} />
-        </Link>
-        <S.CommentSection>
-          <S.HeadSection>
-            {renderNameDateContainer()}
-            <S.ActionsContainer>
-              {renderPriceMini()}
-              {renderDropdownMenu()}
-            </S.ActionsContainer>
-          </S.HeadSection>
-          <S.Content>
-            <ContentWithMentions content={content} mentionedUsers={mentioned_users || []} />
-          </S.Content>
-        </S.CommentSection>
+        <S.AvatarLink aria-hidden="true" tabIndex={-1} to={profilePath}>
+          <Avatar size="32px" src={owner.avatar} />
+        </S.AvatarLink>
+        <S.Main>
+          <S.BubbleRow>
+            <S.Bubble>
+              <S.Username to={profilePath}>{owner.username}</S.Username>
+              <S.Content>
+                <ContentWithMentions content={content} mentionedUsers={mentioned_users || []} />
+              </S.Content>
+            </S.Bubble>
+            {renderDropdownMenu()}
+          </S.BubbleRow>
+          {renderMetadata()}
+        </S.Main>
       </S.Container>
       {commentEditModalIsOpen ? <CommentEditModal close={toggleCommentEditModal} comment={comment} /> : null}
     </>

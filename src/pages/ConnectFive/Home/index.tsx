@@ -16,13 +16,12 @@ import {
   getConnectFiveMatches,
 } from 'api/connectFive';
 import Avatar from 'components/Avatar';
-import Badge, {BadgeStyle} from 'components/Badge';
+import {BadgeStyle} from 'components/Badge';
 import Button, {ButtonColor, ButtonType} from 'components/Button';
 import EmptyText from 'components/EmptyText';
-import {FormField, Input, Select} from 'components/FormElements';
+import {FormField} from 'components/FormElements';
 import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
-import UserSearchInput from 'components/UserSearchInput';
 import {ConnectFiveChallengeStatus, ConnectFiveMatchStatus} from 'enums';
 import {
   getConnectFiveActiveMatches,
@@ -40,7 +39,7 @@ import {
   upsertChallenge,
   upsertMatch,
 } from 'store/connectFive';
-import {colors} from 'styles';
+import {colors, radii, shadows} from 'styles';
 import {
   AppDispatch,
   ConnectFiveChallenge,
@@ -146,11 +145,6 @@ const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
   }
 
   return {badgeStyle: BadgeStyle.neutral, label: 'Finished'};
-};
-
-const getMatchHistoryBorderColor = (match: ConnectFiveMatch, selfId?: number | null): string | null => {
-  if (match.status === ConnectFiveMatchStatus.ACTIVE || !selfId || !match.winner) return null;
-  return match.winner === selfId ? colors.palette.green[500] : colors.palette.red[500];
 };
 
 const isMatchParticipant = (match: ConnectFiveMatch, userId?: number | null): boolean => {
@@ -547,22 +541,43 @@ const ConnectFiveHome: SFC = ({className}) => {
       <S.EloChartBody>
         <S.EloChartWrapper>
           <ResponsiveContainer height="100%" width="100%">
-            <AreaChart data={eloChartData} margin={{bottom: 0, left: 0, right: 0, top: 0}}>
-              <CartesianGrid stroke={colors.border} strokeDasharray="3 3" />
-              <XAxis dataKey="date" stroke={colors.secondary} tickFormatter={formatEloDateLabel} />
-              <YAxis stroke={colors.secondary} tickFormatter={formatEloValue} width={48} />
+            <AreaChart data={eloChartData} margin={{bottom: 0, left: 0, right: 8, top: 8}}>
+              <CartesianGrid stroke={colors.palette.gray[200]} vertical={false} />
+              <XAxis
+                axisLine={{stroke: colors.palette.gray[300]}}
+                dataKey="date"
+                minTickGap={24}
+                tick={{fill: colors.secondary, fontSize: 12}}
+                tickFormatter={formatEloDateLabel}
+                tickLine={false}
+                tickMargin={8}
+              />
+              <YAxis
+                axisLine={false}
+                tick={{fill: colors.secondary, fontSize: 12}}
+                tickFormatter={formatEloValue}
+                tickLine={false}
+                width={48}
+              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: colors.white,
-                  border: `1px solid ${colors.border}`,
-                  borderRadius: '8px',
+                  border: `1px solid ${colors.borderSubtle}`,
+                  borderRadius: radii.small,
+                  boxShadow: shadows.popover,
+                  fontSize: 13,
                 }}
+                cursor={{stroke: colors.palette.gray[400]}}
                 formatter={(value) => formatEloValue(Number(value))}
+                itemStyle={{color: colors.primary}}
                 labelFormatter={formatEloTooltipLabel}
+                labelStyle={{color: colors.secondary}}
               />
               <Area
+                activeDot={{fill: colors.palette.blue[500], r: 4, stroke: colors.white, strokeWidth: 2}}
                 dataKey="elo"
-                fill="rgba(59, 130, 246, 0.15)"
+                fill={colors.palette.blue[200]}
+                fillOpacity={0.35}
                 stroke={colors.palette.blue[500]}
                 strokeWidth={2}
                 type="monotone"
@@ -577,9 +592,7 @@ const ConnectFiveHome: SFC = ({className}) => {
   const renderYourMatches = () => {
     return (
       <>
-        <S.MatchList>
-          {paginatedActiveMatches.map((match) => renderMatchCard(match, colors.palette.blue[500]))}
-        </S.MatchList>
+        <S.MatchList>{paginatedActiveMatches.map(renderMatchCard)}</S.MatchList>
         <S.Pagination
           currentPage={activeMatchesPage}
           onPageChange={handleActiveMatchesPageChange}
@@ -593,13 +606,12 @@ const ConnectFiveHome: SFC = ({className}) => {
     challenge: ConnectFiveChallenge,
     opponent: UserReadSerializer | null,
     actions?: ReactNode,
-    borderColor?: string,
   ) => {
     const createdLabel = shortDate(challenge.created_date, true);
     const statusBadge = getChallengeStatusBadge(challenge.status);
 
     return (
-      <S.ChallengeCard $borderColor={borderColor} key={challenge.id}>
+      <S.ChallengeCard key={challenge.id}>
         <S.ChallengeHeader>
           <UserLabel
             avatar={opponent?.avatar ?? null}
@@ -608,7 +620,7 @@ const ConnectFiveHome: SFC = ({className}) => {
             id={opponent?.id ?? null}
             username={opponent?.username ?? 'Unknown player'}
           />
-          <Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</Badge>
+          <S.Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</S.Badge>
         </S.ChallengeHeader>
         <S.ChallengeInfo>
           <S.ChallengeInfoRow>
@@ -632,9 +644,7 @@ const ConnectFiveHome: SFC = ({className}) => {
   const renderCompletedMatches = () => {
     return (
       <>
-        <S.MatchList>
-          {visibleCompletedMatches.map((match) => renderMatchCard(match, getMatchHistoryBorderColor(match, self?.id)))}
-        </S.MatchList>
+        <S.MatchList>{visibleCompletedMatches.map(renderMatchCard)}</S.MatchList>
         {hasMoreCompletedMatches && (
           <S.LoadMoreRow>
             <Button color={ButtonColor.secondary} onClick={handleCompletedMatchesLoadMore} text="Load more" />
@@ -665,14 +675,13 @@ const ConnectFiveHome: SFC = ({className}) => {
             challenge,
             challenge.challenger,
             <Button onClick={() => handleAcceptChallenge(challenge.id)} text="Accept" />,
-            colors.palette.blue[500],
           ),
         )}
       </S.ChallengeList>
     );
   };
 
-  const renderMatchCard = (match: ConnectFiveMatch, borderColor?: string | null) => {
+  const renderMatchCard = (match: ConnectFiveMatch) => {
     const createdLabel = shortDate(match.created_date, true);
     const finishReason = getFinishReasonLabel(match);
     const isActive = match.status === ConnectFiveMatchStatus.ACTIVE;
@@ -681,7 +690,6 @@ const ConnectFiveHome: SFC = ({className}) => {
 
     return (
       <S.MatchCard
-        $borderColor={borderColor ?? undefined}
         aria-label={`Open match ${match.id}`}
         key={match.id}
         onClick={() => handleMatchCardClick(match.id)}
@@ -702,7 +710,7 @@ const ConnectFiveHome: SFC = ({className}) => {
         <S.MatchInfo>
           <S.MatchInfoRow>
             <S.MatchInfoLabel>Status</S.MatchInfoLabel>
-            <Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</Badge>
+            <S.Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</S.Badge>
           </S.MatchInfoRow>
           {finishReason && (
             <S.MatchInfoRow>
@@ -731,7 +739,6 @@ const ConnectFiveHome: SFC = ({className}) => {
 
     return (
       <S.MatchCard
-        $borderColor={colors.palette.blue[500]}
         aria-label={`Open match ${match.id}`}
         key={match.id}
         onClick={() => handleMatchCardClick(match.id)}
@@ -757,7 +764,7 @@ const ConnectFiveHome: SFC = ({className}) => {
         <S.MatchInfo>
           <S.MatchInfoRow>
             <S.MatchInfoLabel>Status</S.MatchInfoLabel>
-            <Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</Badge>
+            <S.Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</S.Badge>
           </S.MatchInfoRow>
           {finishReason && (
             <S.MatchInfoRow>
@@ -786,7 +793,6 @@ const ConnectFiveHome: SFC = ({className}) => {
             challenge,
             challenge.opponent,
             <Button onClick={() => handleCancelChallenge(challenge.id)} text="Cancel" />,
-            colors.palette.blue[500],
           ),
         )}
       </S.ChallengeList>
@@ -799,13 +805,12 @@ const ConnectFiveHome: SFC = ({className}) => {
         <S.ProfileHeader>
           <S.ProfileHeaderContent>
             <S.ProfileAvatarWrapper>
-              <Avatar size="120px" src={self?.avatar ?? null} />
+              <Avatar size="96px" src={self?.avatar ?? null} />
             </S.ProfileAvatarWrapper>
             <S.ProfileDetails>
               <S.ProfileUsername>{self?.username ?? 'Unknown player'}</S.ProfileUsername>
               <S.ProfileMeta>
                 <S.ProfileMetaItem>{rankLabel}</S.ProfileMetaItem>
-                <S.ProfileMetaSeparator>|</S.ProfileMetaSeparator>
                 <S.ProfileMetaItem>{`Record ${recordLabel}`}</S.ProfileMetaItem>
               </S.ProfileMeta>
             </S.ProfileDetails>
@@ -832,7 +837,7 @@ const ConnectFiveHome: SFC = ({className}) => {
               }) => (
                 <S.Form onSubmit={handleSubmit}>
                   <FormField>
-                    <UserSearchInput
+                    <S.UserSearchInput
                       errors={errors}
                       label="Search for recipient"
                       name="opponent"
@@ -843,10 +848,10 @@ const ConnectFiveHome: SFC = ({className}) => {
                   </FormField>
                   <S.FormRow>
                     <FormField>
-                      <Input errors={errors} label="Stake (TNB)" name="stakeAmount" touched={touched} type="number" />
+                      <S.Input errors={errors} label="Stake (TNB)" name="stakeAmount" touched={touched} type="number" />
                     </FormField>
                     <FormField>
-                      <Input
+                      <S.Input
                         errors={errors}
                         label="Max spend (TNB)"
                         name="maxSpendAmount"
@@ -856,7 +861,7 @@ const ConnectFiveHome: SFC = ({className}) => {
                     </FormField>
                   </S.FormRow>
                   <FormField>
-                    <Select
+                    <S.Select
                       errors={errors}
                       label="Total time per player"
                       name="timeLimitSeconds"
@@ -865,7 +870,7 @@ const ConnectFiveHome: SFC = ({className}) => {
                     />
                   </FormField>
                   <S.SubmitRow>
-                    <Button
+                    <S.SubmitButton
                       dirty={dirty}
                       isSubmitting={isSubmitting}
                       isValid={isValid}

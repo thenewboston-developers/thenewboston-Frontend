@@ -1,77 +1,80 @@
-import Icon from '@mdi/react';
-import styled, {css} from 'styled-components';
+import UIcon from '@mdi/react';
+import styled, {keyframes} from 'styled-components';
 
-import {colors, fonts} from 'styles';
+import {bottomNavItemStyle, navFocusVisible} from 'layouts/Authenticated/mixins';
+import {colors, fonts, radii, shadows} from 'styles';
 
-export const Menu = styled.div<{$isOpen: boolean}>`
-  background: ${colors.backgroundDark};
-  border-radius: 8px;
-  border: 1px solid ${colors.border};
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+const menuEnter = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+export const Menu = styled.div`
+  background: ${colors.nav.background};
+  border: 1px solid ${colors.nav.border};
+  border-radius: ${radii.large};
+  box-shadow: ${shadows.popover};
   display: flex;
   flex-direction: column;
   gap: 4px;
-  opacity: 0;
+  min-width: 200px;
   padding: 8px;
   position: fixed;
-  transform: translateY(10px);
-  transition: all 0.2s ease-in-out;
-  visibility: hidden;
   z-index: 9999;
 
-  ${({$isOpen}) =>
-    $isOpen &&
-    css`
-      opacity: 1;
-      transform: translateY(0);
-      visibility: visible;
-    `}
+  @media (prefers-reduced-motion: no-preference) {
+    animation: ${menuEnter} 0.15s ease;
+  }
 `;
 
-export const MenuIcon = styled(Icon)`
-  color: ${colors.palette.gray[400]};
+export const MenuIcon = styled(UIcon)`
   flex-shrink: 0;
 `;
 
-export const MenuItem = styled.div<{$isActive: boolean}>`
-  align-items: center;
-  color: ${colors.palette.gray[300]};
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 4px 8px;
-  position: relative;
-  text-decoration: none;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: ${colors.palette.blue[300]};
-
-    svg {
-      color: ${colors.palette.blue[300]};
-    }
-  }
+export const MenuItem = styled.button<{$isActive: boolean}>`
+  ${bottomNavItemStyle};
 `;
 
-export const MenuOption = styled.div`
+export const MenuOption = styled.button<{$isActive: boolean}>`
   align-items: center;
-  background: transparent;
-  border-radius: 6px;
+  background: ${({$isActive}) => ($isActive ? colors.nav.active : 'transparent')};
+  border: none;
+  border-radius: ${radii.medium};
+  color: ${({$isActive}) => ($isActive ? colors.nav.textActive : colors.nav.text)};
   cursor: pointer;
   display: flex;
+  flex-shrink: 0;
+  font-family: ${fonts.family.default};
+  font-size: 15px;
+  font-weight: ${({$isActive}) => ($isActive ? fonts.weight.semiBold : fonts.weight.medium)};
   gap: 12px;
-  padding: 12px 16px;
-  transition: background 0.2s;
+  height: 44px;
+  padding: 0 12px;
+  text-align: left;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+  width: 100%;
 
   &:hover {
-    background: ${colors.palette.gray[800]};
+    background: ${({$isActive}) => ($isActive ? colors.nav.active : colors.nav.hover)};
+    color: ${colors.nav.textActive};
+  }
+
+  ${navFocusVisible};
+
+  &:focus-visible {
+    outline-offset: -2px;
   }
 `;
 
-export const OptionLabel = styled.div`
-  color: ${colors.palette.gray[300]};
-  font-size: 14px;
-  font-weight: ${fonts.weight.regular};
+export const OptionLabel = styled.span`
   white-space: nowrap;
 `;

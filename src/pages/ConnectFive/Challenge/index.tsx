@@ -8,7 +8,7 @@ import {
   declineConnectFiveChallenge,
   getConnectFiveChallenge,
 } from 'api/connectFive';
-import Badge, {BadgeStyle} from 'components/Badge';
+import {BadgeStyle} from 'components/Badge';
 import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
 import EmptyText from 'components/EmptyText';
@@ -290,7 +290,9 @@ const ConnectFiveChallenge: SFC = ({className}) => {
           </MatchStyles.PanelHeader>
           <MatchStyles.InfoRow>
             <MatchStyles.InfoLabel>Status</MatchStyles.InfoLabel>
-            {statusBadge && <Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</Badge>}
+            {statusBadge && (
+              <MatchStyles.Badge badgeStyle={statusBadge.badgeStyle}>{statusBadge.label}</MatchStyles.Badge>
+            )}
           </MatchStyles.InfoRow>
           <MatchStyles.InfoRow>
             <MatchStyles.InfoLabel>Stake</MatchStyles.InfoLabel>

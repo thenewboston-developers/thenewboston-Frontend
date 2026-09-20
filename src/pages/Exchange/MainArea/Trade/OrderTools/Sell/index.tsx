@@ -5,7 +5,7 @@ import {Form, Formik, FormikHelpers} from 'formik';
 import {getWallets} from 'api/wallets';
 import AvailableTotal from 'components/AvailableTotal';
 import {ButtonType} from 'components/Button';
-import {FormField, LogoInput} from 'components/FormElements';
+import {FormField} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
 import {ExchangeOrderSide, ToastType} from 'enums';
 import {AppDispatch, AssetPair, SFC} from 'types';
@@ -101,7 +101,7 @@ const Sell: SFC<SellProps> = ({activeAssetPair, className}) => {
         {({dirty, errors, handleChange, isSubmitting, isValid, touched, values}) => (
           <Form>
             <FormField>
-              <LogoInput
+              <S.LogoInput
                 errors={errors}
                 label="Quantity"
                 logo={activeAssetPair!.primary_currency.logo}
@@ -114,7 +114,7 @@ const Sell: SFC<SellProps> = ({activeAssetPair, className}) => {
               />
             </FormField>
             <FormField>
-              <LogoInput
+              <S.LogoInput
                 errors={errors}
                 label="Ask Price"
                 logo={activeAssetPair!.secondary_currency.logo}

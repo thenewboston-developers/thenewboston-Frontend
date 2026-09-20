@@ -6,6 +6,7 @@ import rank2Image from 'assets/badges/rank2.png';
 import rank3Image from 'assets/badges/rank3.png';
 import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
+import {useIsMobile} from 'hooks';
 import {Currency, CurrencyBalance, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -16,10 +17,14 @@ interface BalancesSectionProps {
   refreshTrigger: number;
 }
 
+// Keeps the rows of the compact table short and leaves more of the fixed width to the username
+const MOBILE_AVATAR_SIZE = '32px';
+
 const BalancesSection: SFC<BalancesSectionProps> = ({className, currency, refreshTrigger}) => {
   const [balancesData, setBalancesData] = useState<PaginatedResponse<CurrencyBalance> | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     (async () => {
@@ -44,7 +49,13 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency, refres
   };
 
   const renderBalancesList = () => {
-    if (loading) return <Loader />;
+    if (loading) {
+      return (
+        <S.LoaderPanel>
+          <Loader />
+        </S.LoaderPanel>
+      );
+    }
 
     if (!balancesData || balancesData.results.length === 0) {
       return (
@@ -57,42 +68,50 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency, refres
 
     return (
       <>
-        <S.Table>
-          <S.TableHeader>
-            <S.TableRow>
-              <S.TableHead>Rank</S.TableHead>
-              <S.TableHead>User</S.TableHead>
-              <S.TableHead>Balance</S.TableHead>
-              <S.TableHead>Percentage</S.TableHead>
-            </S.TableRow>
-          </S.TableHeader>
-          <S.TableBody>
-            {balancesData.results.map((currencyBalance) => (
-              <S.TableRow key={currencyBalance.owner.id}>
-                <S.TableData>
-                  {currencyBalance.rank === 1 && <S.RankBadge alt="Rank 1" src={rank1Image} />}
-                  {currencyBalance.rank === 2 && <S.RankBadge alt="Rank 2" src={rank2Image} />}
-                  {currencyBalance.rank === 3 && <S.RankBadge alt="Rank 3" src={rank3Image} />}
-                  {currencyBalance.rank > 3 && <S.Rank>#{currencyBalance.rank}</S.Rank>}
-                </S.TableData>
-                <S.TableData>
-                  <UserLabel
-                    avatar={currencyBalance.owner.avatar}
-                    description=""
-                    id={currencyBalance.owner.id}
-                    username={currencyBalance.owner.username}
-                  />
-                </S.TableData>
-                <S.TableData>
-                  <S.Balance>{currencyBalance.balance.toLocaleString()}</S.Balance>
-                </S.TableData>
-                <S.TableData>
-                  <S.Percentage>{currencyBalance.percentage.toFixed(2)}%</S.Percentage>
-                </S.TableData>
+        <S.TableWrapper>
+          <S.Table>
+            <S.TableHeader>
+              <S.TableRow>
+                <S.TableHead>Rank</S.TableHead>
+                <S.TableHead>User</S.TableHead>
+                <S.TableHead>Balance</S.TableHead>
+                <S.TableHead>Percentage</S.TableHead>
               </S.TableRow>
-            ))}
-          </S.TableBody>
-        </S.Table>
+            </S.TableHeader>
+            <S.TableBody>
+              {balancesData.results.map((currencyBalance) => {
+                const percentage = `${currencyBalance.percentage.toFixed(2)}%`;
+
+                return (
+                  <S.TableRow key={currencyBalance.owner.id}>
+                    <S.TableData>
+                      {currencyBalance.rank === 1 && <S.RankBadge alt="Rank 1" src={rank1Image} />}
+                      {currencyBalance.rank === 2 && <S.RankBadge alt="Rank 2" src={rank2Image} />}
+                      {currencyBalance.rank === 3 && <S.RankBadge alt="Rank 3" src={rank3Image} />}
+                      {currencyBalance.rank > 3 && <S.Rank>#{currencyBalance.rank}</S.Rank>}
+                    </S.TableData>
+                    <S.TableData>
+                      <UserLabel
+                        avatar={currencyBalance.owner.avatar}
+                        avatarSize={isMobile ? MOBILE_AVATAR_SIZE : undefined}
+                        description=""
+                        id={currencyBalance.owner.id}
+                        username={currencyBalance.owner.username}
+                      />
+                    </S.TableData>
+                    <S.TableData>
+                      <S.Balance>{currencyBalance.balance.toLocaleString()}</S.Balance>
+                      <S.StackedPercentage>{percentage}</S.StackedPercentage>
+                    </S.TableData>
+                    <S.TableData>
+                      <S.Percentage>{percentage}</S.Percentage>
+                    </S.TableData>
+                  </S.TableRow>
+                );
+              })}
+            </S.TableBody>
+          </S.Table>
+        </S.TableWrapper>
         {balancesData.count > 20 && (
           <S.Pagination
             currentPage={currentPage}

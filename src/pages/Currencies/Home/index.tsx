@@ -1,13 +1,14 @@
 import {ChangeEvent, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
+import {mdiMagnify} from '@mdi/js';
 
-import EmptyText from 'components/EmptyText';
 import SectionHeading from 'components/SectionHeading';
 import {getCurrencies} from 'dispatchers/currencies';
 import {AppDispatch, Currency, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
 import CurrencyCard from './CurrencyCard';
+import CurrencyCardSkeleton from './CurrencyCardSkeleton';
 import * as S from './Styles';
 
 type CurrencyOrdering = '-created_date' | '-modified_date' | '-ticker' | 'created_date' | 'ticker';
@@ -21,6 +22,7 @@ const CURRENCY_SORT_OPTIONS: {label: string; value: CurrencyOrdering}[] = [
 ];
 const PAGE_SIZE = 20;
 const SEARCH_DEBOUNCE_DELAY_MS = 300;
+const SKELETON_CARD_COUNT = 6;
 
 const Home: SFC = ({className}) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -62,6 +64,12 @@ const Home: SFC = ({className}) => {
     })();
   }, [currentPage, debouncedSearchValue, dispatch, sortOrdering]);
 
+  const getSubHeading = () => {
+    if (!currenciesData) return undefined;
+    const {count} = currenciesData;
+    return `${count.toLocaleString()} ${count === 1 ? 'currency' : 'currencies'}`;
+  };
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -77,10 +85,10 @@ const Home: SFC = ({className}) => {
   };
 
   const renderContent = () => {
-    if (isLoading) return <S.Loader />;
+    if (isLoading) return renderSkeletons();
     if (!currenciesData || !currenciesData.results.length) {
-      if (debouncedSearchValue) return <EmptyText>No currencies matched your search.</EmptyText>;
-      return <EmptyText>No currencies to display.</EmptyText>;
+      if (debouncedSearchValue) return <S.EmptyText>No currencies matched your search.</S.EmptyText>;
+      return <S.EmptyText>No currencies to display.</S.EmptyText>;
     }
     return renderCurrencies();
   };
@@ -102,18 +110,31 @@ const Home: SFC = ({className}) => {
     );
   };
 
+  const renderSkeletons = () => {
+    const skeletonCards = Array.from({length: SKELETON_CARD_COUNT}, (_, index) => <CurrencyCardSkeleton key={index} />);
+    return (
+      <S.CardsContainer aria-busy="true" aria-label="Loading currencies">
+        {skeletonCards}
+      </S.CardsContainer>
+    );
+  };
+
   return (
-    <>
-      <S.Container className={className}>
-        <SectionHeading heading="Currencies" />
+    <S.Container className={className}>
+      <S.Content>
+        <SectionHeading heading="Currencies" renderLine={false} subHeading={getSubHeading()} />
         <S.FiltersContainer>
-          <S.SearchInput
-            onChange={handleSearchChange}
-            placeholder="Search by ticker, domain, owner, or description"
-            type="text"
-            value={searchValue}
-          />
-          <S.SortSelect onChange={handleSortChange} value={sortOrdering}>
+          <S.SearchContainer>
+            <S.SearchIcon icon={mdiMagnify} size={20} totalSize="unset" />
+            <S.SearchInput
+              aria-label="Search currencies"
+              onChange={handleSearchChange}
+              placeholder="Search by ticker, domain, owner, or description"
+              type="text"
+              value={searchValue}
+            />
+          </S.SearchContainer>
+          <S.SortSelect aria-label="Sort currencies" onChange={handleSortChange} value={sortOrdering}>
             {CURRENCY_SORT_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -122,8 +143,8 @@ const Home: SFC = ({className}) => {
           </S.SortSelect>
         </S.FiltersContainer>
         {renderContent()}
-      </S.Container>
-    </>
+      </S.Content>
+    </S.Container>
   );
 };
 

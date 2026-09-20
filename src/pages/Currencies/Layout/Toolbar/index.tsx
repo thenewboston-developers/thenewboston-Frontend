@@ -1,4 +1,3 @@
-import Button from 'components/Button';
 import ToolbarMenuLink from 'components/ToolbarMenuLink';
 import {useToggle} from 'hooks';
 import CurrencyModal from 'modals/CurrencyModal';
@@ -16,7 +15,7 @@ const Toolbar: SFC = ({className}) => {
           <ToolbarMenuLink text="Home" to="/currencies/home" />
           <ToolbarMenuLink text="Learn More" to="/currencies/learn-more" />
         </S.MenuItems>
-        <Button onClick={toggleCurrencyModal} text="Create Currency" />
+        <S.Button onClick={toggleCurrencyModal} text="Create Currency" />
       </S.Container>
       {currencyModalIsOpen ? <CurrencyModal close={toggleCurrencyModal} /> : null}
     </>

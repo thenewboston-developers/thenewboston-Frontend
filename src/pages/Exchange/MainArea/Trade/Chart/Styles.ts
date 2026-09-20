@@ -1,6 +1,8 @@
 import styled, {css, keyframes} from 'styled-components';
 
-import {breakpoints, colors} from 'styles';
+import {breakpoints, cardStyle, colors, eyebrowStyle, fonts, radii} from 'styles';
+
+import {negativeBadgeStyle, positiveBadgeStyle, segmentedTrackStyle, segmentStyle} from '../../mixins';
 
 const fadeIn = keyframes`
   from {
@@ -13,16 +15,15 @@ const fadeIn = keyframes`
   }
 `;
 
-export const ChangeArrow = styled.span<{$isPositive: boolean}>`
-  animation: ${({$isPositive}) =>
-    $isPositive
-      ? css`
-          ${fadeIn} 0.5s ease-out
-        `
-      : css`
-          ${fadeIn} 0.5s ease-out
-        `};
-  font-size: 12px;
+const fadeInMixin = css`
+  @media (prefers-reduced-motion: no-preference) {
+    animation: ${fadeIn} 0.5s ease-out;
+  }
+`;
+
+export const ChangeArrow = styled.span`
+  ${fadeInMixin};
+  font-size: 9px;
 `;
 
 export const ChartControls = styled.div`
@@ -39,16 +40,16 @@ export const ChartControls = styled.div`
 `;
 
 export const ChartHeader = styled.div`
-  animation: ${fadeIn} 0.5s ease-out;
+  ${fadeInMixin};
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   margin-bottom: 20px;
 `;
 
+// The axis and grid elements are drawn by d3 (see index.tsx), which sets their stroke and font through presentation
+// attributes that these rules take precedence over
 export const ChartWrapper = styled.div`
-  background: white;
-  border-radius: 16px;
   display: flex;
   min-height: 420px;
   overflow: hidden;
@@ -59,44 +60,92 @@ export const ChartWrapper = styled.div`
     display: block;
     max-width: 100%;
     overflow: visible;
+
+    .domain {
+      stroke: ${colors.borderSubtle};
+    }
+
+    .grid .domain {
+      stroke: none;
+    }
+
+    .tick line {
+      stroke: ${colors.borderSubtle};
+    }
+
+    .grid .tick line {
+      stroke: ${colors.palette.gray[300]};
+    }
+
+    .tick text {
+      fill: ${colors.secondary};
+      font-family: ${fonts.family.default};
+      font-variant-numeric: tabular-nums;
+    }
   }
 `;
 
 export const Container = styled.div`
-  background: ${colors.white};
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  ${cardStyle};
+  min-width: 0;
   padding: 24px;
   position: relative;
-  transition: all 0.3s ease;
   width: 100%;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 16px;
+  }
 `;
 
 export const CurrentPrice = styled.div`
   align-items: center;
-  color: ${colors.palette.darkGray[500]};
+  color: ${colors.primary};
   display: flex;
-  font-weight: 700;
   gap: 12px;
-  line-height: 1;
+  min-height: 32px;
+`;
+
+export const EmptyContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+`;
+
+export const LoadingContainer = styled.div`
+  align-items: center;
+  color: ${colors.secondary};
+  display: flex;
+  flex: 1;
+  font-size: 16px;
+  justify-content: center;
 `;
 
 export const PriceAmount = styled.span`
-  font-size: 42px;
-  font-weight: 700;
+  font-size: 32px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.01em;
+  line-height: 1;
+  overflow-wrap: anywhere;
+
+  @media (max-width: ${breakpoints.mini}) {
+    font-size: 28px;
+  }
 `;
 
 export const PriceChange = styled.div<{$isPositive: boolean}>`
+  ${({$isPositive}) => ($isPositive ? positiveBadgeStyle : negativeBadgeStyle)};
   align-items: center;
-  background: ${({$isPositive}) => ($isPositive ? 'rgba(22, 170, 22, 0.1)' : 'rgba(220, 13, 22, 0.1)')};
-  border-radius: 8px;
-  color: ${({$isPositive}) => ($isPositive ? colors.palette.green[500] : colors.palette.red[500])};
+  align-self: flex-start;
+  border-radius: ${radii.pill};
   display: inline-flex;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.semiBold};
   gap: 4px;
-  padding: 6px 12px;
-  transition: all 0.3s ease;
+  line-height: 1.5;
+  padding: 3px 10px;
 `;
 
 export const PriceLogo = styled.div`
@@ -113,6 +162,7 @@ export const PriceSection = styled.div`
   @media (min-width: ${breakpoints.tablet}) {
     align-items: flex-start;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
   }
 `;
@@ -120,75 +170,40 @@ export const PriceSection = styled.div`
 export const PriceWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  min-width: 0;
 `;
 
 export const StatItem = styled.div`
-  align-items: baseline;
   display: flex;
-  gap: 6px;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 `;
 
 export const StatLabel = styled.span`
-  color: ${colors.palette.gray[600]};
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: capitalize;
+  ${eyebrowStyle};
 `;
 
 export const StatValue = styled.span`
-  color: ${colors.palette.darkGray[500]};
-  font-size: 13px;
-  font-weight: 600;
+  color: ${colors.primary};
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.semiBold};
+  line-height: 1.4;
 `;
 
 export const StatsBar = styled.div`
   align-self: flex-start;
-  background: ${colors.palette.gray[100]};
-  border-radius: 8px;
-  display: inline-flex;
-  gap: 16px;
-  padding: 8px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
 `;
 
 export const TimeframeButton = styled.button<{$active: boolean}>`
-  background: ${({$active}) => ($active ? colors.white : 'transparent')};
-  border: none;
-  border-radius: 8px;
-  box-shadow: ${({$active}) => ($active ? '0 2px 8px rgba(0, 0, 0, 0.08)' : 'none')};
-  color: ${({$active}) => ($active ? colors.palette.darkGray[500] : colors.palette.gray[600])};
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: ${({$active}) => ($active ? '600' : '500')};
-  padding: 8px 16px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${({$active}) => ($active ? colors.white : 'rgba(255, 255, 255, 0.5)')};
-    color: ${colors.palette.darkGray[500]};
-  }
+  ${segmentStyle};
 `;
 
 export const TimeframeButtons = styled.div`
-  background: ${colors.palette.gray[100]};
-  border-radius: 12px;
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-`;
-
-export const EmptyContainer = styled.div`
-  align-items: center;
-  display: flex;
-  flex: 1;
-  justify-content: center;
-`;
-
-export const LoadingContainer = styled.div`
-  align-items: center;
-  color: ${colors.palette.gray[600]};
-  display: flex;
-  flex: 1;
-  font-size: 16px;
-  justify-content: center;
+  ${segmentedTrackStyle};
 `;

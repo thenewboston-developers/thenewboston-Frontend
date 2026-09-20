@@ -25,9 +25,16 @@ const AssetPairSelector: SFC<AssetPairSelectorProps> = ({activeAssetPair, classN
 
   return (
     <S.Container className={className}>
-      <S.Content onClick={toggleMenu}>
+      <S.Content
+        aria-haspopup="dialog"
+        aria-label={
+          activeAssetPair ? `Change asset pair (${activeAssetPair.primary_currency.ticker})` : 'Select asset pair'
+        }
+        onClick={toggleMenu}
+        type="button"
+      >
         <S.ImageContainer>
-          <S.Image src={activeAssetPair?.primary_currency.logo} />
+          <S.Image alt="" src={activeAssetPair?.primary_currency.logo} />
         </S.ImageContainer>
         <S.Ticker>{activeAssetPair?.primary_currency.ticker}</S.Ticker>
       </S.Content>

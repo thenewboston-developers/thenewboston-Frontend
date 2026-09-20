@@ -12,12 +12,12 @@ const DateDisplay: SFC<DateDisplayProps> = ({className, createdDate, modifiedDat
   return (
     <S.Container className={className}>
       <S.DateRow>
-        <S.DateLabel>Created:</S.DateLabel>
-        <S.DateValue>{shortDate(createdDate, false)}</S.DateValue>
+        <S.DateLabel>Created</S.DateLabel>
+        <S.DateValue>{shortDate(createdDate, false).trim()}</S.DateValue>
       </S.DateRow>
       <S.DateRow>
-        <S.DateLabel>Modified:</S.DateLabel>
-        <S.DateValue>{shortDate(modifiedDate, false)}</S.DateValue>
+        <S.DateLabel>Modified</S.DateLabel>
+        <S.DateValue>{shortDate(modifiedDate, false).trim()}</S.DateValue>
       </S.DateRow>
     </S.Container>
   );

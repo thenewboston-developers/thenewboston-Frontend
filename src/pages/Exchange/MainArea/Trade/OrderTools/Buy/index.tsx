@@ -6,7 +6,7 @@ import {getWallets} from 'api/wallets';
 import AvailableTotal from 'components/AvailableTotal';
 import {ButtonType} from 'components/Button';
 import {CalloutType} from 'components/Callout';
-import {FormField, LogoInput} from 'components/FormElements';
+import {FormField} from 'components/FormElements';
 import {createExchangeOrder} from 'dispatchers/exchangeOrders';
 import {ExchangeOrderSide, ToastType} from 'enums';
 import {AppDispatch, AssetPair, SFC} from 'types';
@@ -97,7 +97,7 @@ const Buy: SFC<BuyProps> = ({activeAssetPair, className}) => {
           <Form>
             {(errors as any)['is-more-than-100'] && <div>{(errors as any)['is-more-than-100']}</div>}
             <FormField>
-              <LogoInput
+              <S.LogoInput
                 errors={errors}
                 label="Quantity"
                 logo={activeAssetPair!.primary_currency.logo}
@@ -110,7 +110,7 @@ const Buy: SFC<BuyProps> = ({activeAssetPair, className}) => {
               />
             </FormField>
             <FormField>
-              <LogoInput
+              <S.LogoInput
                 errors={errors}
                 label="Bid Price"
                 logo={activeAssetPair!.secondary_currency.logo}

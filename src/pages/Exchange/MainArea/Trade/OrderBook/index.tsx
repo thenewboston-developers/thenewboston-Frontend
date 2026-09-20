@@ -68,7 +68,6 @@ const OrderBook: SFC<OrderBookProps> = ({activeAssetPair, className}) => {
             return (
               <S.OrderRow
                 key={order.id}
-                $type={type}
                 onMouseEnter={() => {
                   if (hoverTimeoutRef.current) {
                     clearTimeout(hoverTimeoutRef.current);

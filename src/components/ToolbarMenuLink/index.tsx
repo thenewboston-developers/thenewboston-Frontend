@@ -12,9 +12,16 @@ export interface ToolbarMenuLinkProps {
 
 const ToolbarMenuLink: SFC<ToolbarMenuLinkProps> = ({className, isMobileDevice = false, text, to}) => {
   const location = useLocation();
+  const isActive = location.pathname === to;
 
   return (
-    <S.Container $isActive={location.pathname === to} $isMobileDevice={isMobileDevice} className={className} to={to}>
+    <S.Container
+      $isActive={isActive}
+      $isMobileDevice={isMobileDevice}
+      aria-current={isActive ? 'page' : undefined}
+      className={className}
+      to={to}
+    >
       {text}
     </S.Container>
   );

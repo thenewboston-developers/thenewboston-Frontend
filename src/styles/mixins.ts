@@ -4,6 +4,58 @@ import breakpoints from 'styles/breakpoints';
 import colors from 'styles/colors';
 import {TOOLBAR_HEIGHT} from 'styles/constants';
 import fonts from 'styles/fonts';
+import radii from 'styles/radii';
+import shadows from 'styles/shadows';
+
+export const cardStyle = css`
+  background: ${colors.white};
+  border: 1px solid ${colors.borderSubtle};
+  border-radius: ${radii.large};
+  box-shadow: ${shadows.card};
+`;
+
+// Modern look for inputs, selects and other field-like controls (set the height and padding where it is used)
+export const controlStyle = css`
+  background-color: ${colors.white};
+  border: 1px solid ${colors.borderSubtle};
+  border-radius: ${radii.medium};
+  color: ${colors.primary};
+  font-family: ${fonts.family.default};
+  font-size: 14px;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &::placeholder {
+    color: ${colors.secondary};
+    opacity: 1;
+  }
+
+  &:hover {
+    border-color: ${colors.borderDarker};
+  }
+
+  /* The border shares the color of shadows.focusRing, so the border and the ring read as a single outline */
+  &:focus {
+    border-color: ${colors.palette.blue[500]};
+    box-shadow: ${shadows.focusRing};
+  }
+
+  &:disabled {
+    background-color: ${colors.palette.gray[50]};
+    cursor: not-allowed;
+  }
+`;
+
+// Tiny uppercase label used for table headers, stat captions and field captions
+export const eyebrowStyle = css`
+  color: ${colors.secondary};
+  font-size: 11px;
+  font-weight: ${fonts.weight.semiBold};
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+`;
 
 export const feedPagePadding = css`
   padding: 0 32px;
@@ -170,8 +222,8 @@ export const radioCardContainerPadding = css`
 
 export const toolbarStyle = css`
   align-items: center;
-  background: #fff;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  background: ${colors.white};
+  border-bottom: 1px solid ${colors.borderSubtle};
   display: flex;
   height: ${`${TOOLBAR_HEIGHT}px`};
   justify-content: space-between;

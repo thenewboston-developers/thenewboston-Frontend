@@ -7,22 +7,25 @@ import {GenericVoidFunction, SFC} from 'types';
 import * as S from './Styles';
 
 export interface PopupMenuOption {
+  activeIcon?: string;
   icon: string;
+  isActive?: boolean;
   label: ReactNode;
   onClick: GenericVoidFunction;
 }
 
 export interface PopupMenuProps {
   children: ReactNode;
+  isActive?: boolean;
   options: PopupMenuOption[];
 }
 
 const dropDown = document.getElementById('dropdown-root') as HTMLElement;
 
-const PopupMenu: SFC<PopupMenuProps> = ({children, className, options}) => {
+const PopupMenu: SFC<PopupMenuProps> = ({children, className, isActive = false, options}) => {
   const [isOpen, toggleIsOpen] = useToggle(false);
   const [menuPosition, setMenuPosition] = useState<CSSProperties | undefined>(undefined);
-  const buttonRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleOutsideClick = (e: any): void => {
     if (buttonRef.current?.contains(e.target)) return;
@@ -32,7 +35,7 @@ const PopupMenu: SFC<PopupMenuProps> = ({children, className, options}) => {
   useEventListener('mousedown', handleOutsideClick, document);
 
   const handleButtonClick = useCallback(
-    (e: MouseEvent<HTMLDivElement>): void => {
+    (e: MouseEvent<HTMLButtonElement>): void => {
       e.stopPropagation();
       if (!buttonRef.current) return;
 
@@ -55,10 +58,10 @@ const PopupMenu: SFC<PopupMenuProps> = ({children, className, options}) => {
   };
 
   const renderMenu = () => (
-    <S.Menu $isOpen={isOpen} style={menuPosition}>
-      {options.map(({icon, label, onClick: optionOnClick}, index) => (
-        <S.MenuOption key={index} onClick={handleOptionClick(optionOnClick)} role="button">
-          <S.MenuIcon path={icon} size="20px" />
+    <S.Menu style={menuPosition}>
+      {options.map(({activeIcon, icon, isActive: optionIsActive = false, label, onClick: optionOnClick}, index) => (
+        <S.MenuOption $isActive={optionIsActive} key={index} onClick={handleOptionClick(optionOnClick)} type="button">
+          <S.MenuIcon path={optionIsActive && activeIcon ? activeIcon : icon} size="20px" />
           <S.OptionLabel>{label}</S.OptionLabel>
         </S.MenuOption>
       ))}
@@ -67,7 +70,14 @@ const PopupMenu: SFC<PopupMenuProps> = ({children, className, options}) => {
 
   return (
     <>
-      <S.MenuItem $isActive={false} className={className} onClick={handleButtonClick} ref={buttonRef}>
+      <S.MenuItem
+        $isActive={isActive}
+        aria-expanded={isOpen}
+        className={className}
+        onClick={handleButtonClick}
+        ref={buttonRef}
+        type="button"
+      >
         {children}
       </S.MenuItem>
       {isOpen && createPortal(renderMenu(), dropDown)}

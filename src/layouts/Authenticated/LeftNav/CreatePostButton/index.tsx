@@ -4,17 +4,20 @@ import {useToggle} from 'hooks';
 import PostModal from 'modals/PostModal';
 import {SFC} from 'types';
 
+import useIsRail from '../useIsRail';
+
 import * as S from './Styles';
 
 const CreatePostButton: SFC = ({className}) => {
   const [postModalIsOpen, togglePostModal] = useToggle(false);
+  const isRail = useIsRail();
 
   return (
     <>
-      <S.Container className={className} onClick={togglePostModal}>
-        <S.Icon path={mdiPlus} size="26px" />
+      <S.Button className={className} onClick={togglePostModal} title={isRail ? 'Post' : undefined} type="button">
+        <S.Icon path={mdiPlus} size="20px" />
         <S.Text>Post</S.Text>
-      </S.Container>
+      </S.Button>
       {postModalIsOpen ? <PostModal close={togglePostModal} /> : null}
     </>
   );

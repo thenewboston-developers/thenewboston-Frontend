@@ -8,6 +8,7 @@ import {updateExchangeOrder} from 'dispatchers/exchangeOrders';
 import {ExchangeOrderSide, ExchangeOrderStatus} from 'enums';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {longDate} from 'utils/dates';
+import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
@@ -31,7 +32,11 @@ const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
       menuOptions.unshift({
         label: 'Cancel Order',
         onClick: async () => {
-          await dispatch(updateExchangeOrder(order.id, {status: ExchangeOrderStatus.CANCELLED}));
+          try {
+            await dispatch(updateExchangeOrder(order.id, {status: ExchangeOrderStatus.CANCELLED}));
+          } catch (error) {
+            displayErrorToast('Error canceling order');
+          }
         },
       });
     }
@@ -65,7 +70,7 @@ const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
           </S.TopLine>
         </S.MainInfo>
         <S.Actions>
-          <S.FillStatusBadgeWrapper>
+          <S.FillStatusBadgeWrapper $status={status}>
             <FillStatusBadge status={status} />
           </S.FillStatusBadgeWrapper>
           {renderDropdownMenu()}
@@ -75,7 +80,7 @@ const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
       <S.Metrics>
         <S.MetricItem>
           <S.MetricLabel>Price</S.MetricLabel>
-          <S.MetricValue className="price">
+          <S.MetricValue>
             {price.toLocaleString()}
             <S.CurrencyTicker>{secondaryCurrencyTicker}</S.CurrencyTicker>
           </S.MetricValue>

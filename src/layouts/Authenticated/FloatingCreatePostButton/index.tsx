@@ -11,7 +11,7 @@ const FloatingCreatePostButton: SFC = ({className}) => {
 
   return (
     <>
-      <S.Button className={className} onClick={togglePostModal}>
+      <S.Button aria-label="Create post" className={className} onClick={togglePostModal} type="button">
         <S.Icon path={mdiPlus} size="28px" />
       </S.Button>
       {postModalIsOpen ? <PostModal close={togglePostModal} /> : null}

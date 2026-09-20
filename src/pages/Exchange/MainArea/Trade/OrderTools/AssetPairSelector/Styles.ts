@@ -1,63 +1,63 @@
 import styled from 'styled-components';
 
-import {colors, fonts} from 'styles';
+import {cardStyle, colors, fonts, shadows} from 'styles';
 
 export const Container = styled.div`
-  background: ${colors.white};
-  border-radius: 14px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-  cursor: pointer;
-  padding: 12px 16px;
   position: relative;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: ${colors.palette.gray[50]};
-  }
 `;
 
-export const Content = styled.div`
+// A card that reads as a control: it opens the asset pair picker
+export const Content = styled.button`
+  ${cardStyle};
   align-items: center;
+  color: ${colors.primary};
+  cursor: pointer;
   display: flex;
-  height: 40px;
-  position: relative;
+  font-family: ${fonts.family.default};
+  gap: 12px;
+  min-height: 64px;
+  outline: none;
+  padding: 12px 16px;
+  text-align: left;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+  width: 100%;
+
+  /* The border shares the color of shadows.focusRing, so the border and the ring read as a single outline */
+  &:focus-visible {
+    border-color: ${colors.palette.blue[500]};
+    box-shadow: ${shadows.card}, ${shadows.focusRing};
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      border-color: ${colors.borderDarker};
+    }
+  }
 `;
 
 export const Image = styled.img`
   border-radius: 50%;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+  display: block;
   height: 32px;
+  object-fit: cover;
   width: 32px;
 `;
 
-export const ImageContainer = styled.div`
+export const ImageContainer = styled.span`
   align-items: center;
   display: flex;
-  pointer-events: none;
+  flex-shrink: 0;
 `;
 
-export const Select = styled.select`
-  appearance: none;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  height: 100%;
-  left: 0;
-  opacity: 0;
-  padding: 0 16px 0 56px;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 2;
-
-  &:focus {
-    outline: none;
-  }
-`;
-
-export const Ticker = styled.div`
-  font-size: 20px;
-  font-weight: ${fonts.weight.semiBold};
-  margin-left: 16px;
-  pointer-events: none;
+export const Ticker = styled.span`
+  font-size: 18px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;

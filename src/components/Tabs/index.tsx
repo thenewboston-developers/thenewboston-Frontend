@@ -11,7 +11,7 @@ export interface TabsProps {
 
 const Tabs: SFC<TabsProps> = ({children, className, stackOnMobile = false}) => {
   return (
-    <S.Container $stackOnMobile={stackOnMobile} className={className}>
+    <S.Container $stackOnMobile={stackOnMobile} className={className} role="tablist">
       {children}
     </S.Container>
   );

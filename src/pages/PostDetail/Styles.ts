@@ -1,26 +1,38 @@
 import styled from 'styled-components';
 
-import {colors, fonts, pagePadding, toolbarStyle} from 'styles';
+import {breakpoints, colors, fonts, pagePadding, radii, shadows, toolbarStyle} from 'styles';
+
+// 680px post column plus the 32px horizontal page padding on each side
+const CONTENT_MAX_WIDTH = '744px';
 
 export const BackButton = styled.button`
   align-items: center;
   background: none;
   border: none;
+  border-radius: ${radii.pill};
   color: ${colors.secondary};
   cursor: pointer;
   display: flex;
+  font-family: ${fonts.family.default};
   font-size: 14px;
   font-weight: ${fonts.weight.medium};
-  gap: 8px;
-  padding: 0;
-  transition: color 0.2s;
+  gap: 6px;
+  margin-left: -8px;
+  padding: 6px 12px 6px 8px;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 
-  &:hover {
-    color: ${colors.primary};
+  &:focus-visible {
+    box-shadow: ${shadows.focusRing};
+    outline: none;
   }
 
-  span {
-    font-family: ${fonts.family.default};
+  @media (hover: hover) {
+    &:hover {
+      background: ${colors.whiteHover};
+      color: ${colors.primary};
+    }
   }
 `;
 
@@ -33,8 +45,12 @@ export const Container = styled.div`
 export const Content = styled.div`
   ${pagePadding};
   margin: 0 auto;
-  max-width: 720px;
+  max-width: ${CONTENT_MAX_WIDTH};
   width: 100%;
+
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 0 0 24px;
+  }
 `;
 
 export const Header = styled.div`

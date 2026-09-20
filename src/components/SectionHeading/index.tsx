@@ -1,6 +1,5 @@
 import {ReactNode} from 'react';
 
-import Line from 'components/Line';
 import {SFC} from 'types';
 
 import * as S from './Styles';
@@ -24,11 +23,11 @@ const SectionHeading: SFC<SectionHeadingProps> = ({
       <S.Contents>
         <S.Left>
           <S.Heading>{heading}</S.Heading>
-          <S.SubHeading>{subHeading ? subHeading : null}</S.SubHeading>
+          {subHeading ? <S.SubHeading>{subHeading}</S.SubHeading> : null}
         </S.Left>
-        <S.Right>{rightContent ? rightContent : null}</S.Right>
+        {rightContent ? <S.Right>{rightContent}</S.Right> : null}
       </S.Contents>
-      {renderLine ? <Line /> : null}
+      {renderLine ? <S.Line /> : null}
     </S.Container>
   );
 };

@@ -1,25 +1,37 @@
 import styled from 'styled-components';
 
-import {colors} from 'styles';
+import {colors, fonts, radii, shadows} from 'styles';
 
-const HEIGHT = 34;
-const BORDER_RADIUS = HEIGHT / 2;
+const HEIGHT = 32;
 
 export const Container = styled.div<{$isActive?: boolean}>`
   align-items: center;
   background: ${({$isActive}) => ($isActive ? colors.white : 'transparent')};
-  border-radius: ${`${BORDER_RADIUS}px`};
-  box-shadow: ${({$isActive}) => ($isActive ? '0 2px 4px rgb(0 0 0 / 8%)' : 'none')};
-  color: ${({$isActive}) => ($isActive ? colors.black : colors.primary)};
+  border-radius: ${radii.small};
+  box-shadow: ${({$isActive}) => ($isActive ? shadows.card : 'none')};
+  color: ${({$isActive}) => ($isActive ? colors.primary : colors.secondary)};
+  cursor: pointer;
   display: flex;
+  flex-shrink: 0;
   font-size: 13px;
-  font-weight: ${({$isActive}) => ($isActive ? 600 : 400)};
-  gap: 10px;
+  font-weight: ${({$isActive}) => ($isActive ? fonts.weight.semiBold : fonts.weight.medium)};
+  gap: 8px;
   height: ${`${HEIGHT}px`};
-  padding: 8px 16px;
+  justify-content: center;
+  outline: none;
+  padding: 0 14px;
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    color 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+
+  &:focus-visible {
+    box-shadow: ${({$isActive}) => ($isActive ? `${shadows.card}, ${shadows.focusRing}` : shadows.focusRing)};
+  }
 
   &:hover {
-    color: ${({$isActive}) => ($isActive ? colors.black : '#4458b8')};
-    cursor: pointer;
+    color: ${colors.primary};
   }
 `;

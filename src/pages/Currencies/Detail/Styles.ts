@@ -1,26 +1,33 @@
 import styled from 'styled-components';
 
-import {breakpoints, colors, fonts, pagePadding, toolbarStyle} from 'styles';
+import {breakpoints, colors, fonts, pagePadding, radii, shadows, toolbarStyle} from 'styles';
 
 export const BackButton = styled.button`
   align-items: center;
   background: none;
   border: none;
+  border-radius: ${radii.pill};
   color: ${colors.secondary};
   cursor: pointer;
   display: flex;
+  font-family: ${fonts.family.default};
   font-size: 14px;
   font-weight: ${fonts.weight.medium};
-  gap: 8px;
-  padding: 0;
-  transition: color 0.2s;
+  gap: 6px;
+  margin-left: -8px;
+  outline: none;
+  padding: 6px 12px 6px 8px;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 
-  &:hover {
-    color: ${colors.primary};
+  &:focus-visible {
+    box-shadow: ${shadows.focusRing};
   }
 
-  span {
-    font-family: ${fonts.family.default};
+  &:hover {
+    background: ${colors.whiteHover};
+    color: ${colors.primary};
   }
 `;
 
@@ -31,7 +38,9 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
-  ${pagePadding};
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   margin: 0 auto;
   max-width: 1200px;
   width: 100%;
@@ -39,36 +48,41 @@ export const Content = styled.div`
 
 export const Header = styled.div`
   ${toolbarStyle};
+  flex-shrink: 0;
 `;
 
 export const LoaderWrapper = styled.div`
   align-items: center;
   display: flex;
-  height: 100vh;
+  flex: 1;
   justify-content: center;
+  min-height: 240px;
+  width: 100%;
 `;
 
 export const ScrollableContent = styled.div`
+  ${pagePadding};
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
 `;
 
 export const TabContent = styled.div`
-  margin-top: 24px;
+  margin-top: 16px;
 `;
 
 export const TabHeader = styled.div`
   align-items: center;
   display: flex;
+  gap: 16px;
   justify-content: space-between;
 
   @media (max-width: ${breakpoints.mobile}) {
     align-items: center;
     flex-direction: column;
-    gap: 16px;
   }
 `;
 
 export const TabSection = styled.div`
-  margin-top: 32px;
+  min-width: 0;
 `;

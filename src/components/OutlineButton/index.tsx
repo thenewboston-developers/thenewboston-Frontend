@@ -6,14 +6,14 @@ import {SFC} from 'types';
 import * as S from './Styles';
 
 export interface OutlineButtonProps {
+  children?: ReactNode;
   iconLeft?: string;
   iconSize?: string;
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   text?: string;
-  children?: ReactNode;
 }
 
-const OutlineButton: SFC<OutlineButtonProps> = ({className, iconLeft, iconSize = '18px', onClick, text, children}) => {
+const OutlineButton: SFC<OutlineButtonProps> = ({children, className, iconLeft, iconSize = '18px', onClick, text}) => {
   return (
     <S.Button className={className} onClick={onClick} type="button">
       {iconLeft && <Icon path={iconLeft} size={iconSize} />}

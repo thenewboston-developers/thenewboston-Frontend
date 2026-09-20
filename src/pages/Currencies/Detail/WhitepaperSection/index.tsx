@@ -16,20 +16,24 @@ const WhitepaperSection: SFC<WhitepaperSectionProps> = ({className, whitepaper})
   if (!whitepaper) {
     return (
       <S.Container className={className}>
-        <EmptyPage
-          bottomText="No whitepaper has been created yet"
-          graphic={LeavesEmptyState}
-          topText="No whitepaper available"
-        />
+        <S.EmptyPanel>
+          <EmptyPage
+            bottomText="No whitepaper has been created yet"
+            graphic={LeavesEmptyState}
+            topText="No whitepaper available"
+          />
+        </S.EmptyPanel>
       </S.Container>
     );
   }
 
   return (
     <S.Container className={className}>
-      <S.MarkdownContainer>
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{whitepaper.content}</ReactMarkdown>
-      </S.MarkdownContainer>
+      <S.Panel>
+        <S.MarkdownContainer>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{whitepaper.content}</ReactMarkdown>
+        </S.MarkdownContainer>
+      </S.Panel>
     </S.Container>
   );
 };

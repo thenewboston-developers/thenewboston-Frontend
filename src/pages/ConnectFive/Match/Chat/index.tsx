@@ -246,6 +246,7 @@ const ConnectFiveChat: SFC<ConnectFiveChatProps> = ({className, matchId}) => {
         </S.ChatMessages>
         <S.ChatInputRow>
           <S.ChatInput
+            aria-label="Chat message"
             maxLength={CHAT_MESSAGE_MAX_LENGTH}
             onChange={handleChatInputChange}
             onKeyDown={handleChatInputKeyDown}
