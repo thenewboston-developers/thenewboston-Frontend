@@ -1,7 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {MANAGER} from 'constants/store';
+import {setWallet, setWallets} from 'store/wallets';
 import {Manager} from 'types';
+import {isNewerWallet} from 'utils/wallets';
 
 const initialState: Manager = {
   activeCommentCurrency: null,
@@ -10,6 +12,20 @@ const initialState: Manager = {
 };
 
 const manager = createSlice({
+  extraReducers: (builder) => {
+    builder.addCase(setWallet, (state, {payload}) => {
+      if (state.activeWallet?.id === payload.id && isNewerWallet(payload, state.activeWallet)) {
+        state.activeWallet = payload;
+      }
+    });
+    builder.addCase(setWallets, (state, {payload}) => {
+      for (const wallet of payload) {
+        if (state.activeWallet?.id === wallet.id && isNewerWallet(wallet, state.activeWallet)) {
+          state.activeWallet = wallet;
+        }
+      }
+    });
+  },
   initialState,
   name: MANAGER,
   reducers: {
