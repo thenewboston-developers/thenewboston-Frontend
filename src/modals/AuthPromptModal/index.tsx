@@ -7,6 +7,7 @@ import {ModalBody, ModalFooter} from 'components/Modal';
 import {getAuthPrompt} from 'selectors/state';
 import {closeAuthPrompt} from 'store/authPrompt';
 import {AppDispatch, SFC} from 'types';
+import {captureAnalyticsEvent} from 'utils/analytics';
 
 import * as S from './Styles';
 
@@ -25,6 +26,12 @@ const AuthPromptModal: SFC = ({className}) => {
   }, [dispatch, location.pathname]);
 
   const handleClose = () => {
+    captureAnalyticsEvent('authentication_prompt_dismissed');
+    dispatch(closeAuthPrompt());
+  };
+
+  const handleNavigate = () => {
+    captureAnalyticsEvent('authentication_prompt_continued');
     dispatch(closeAuthPrompt());
   };
 
@@ -36,7 +43,7 @@ const AuthPromptModal: SFC = ({className}) => {
         <S.Message>Sign in or create an account to {intent}.</S.Message>
       </ModalBody>
       <ModalFooter>
-        <AuthButtons onNavigate={handleClose} />
+        <AuthButtons onNavigate={handleNavigate} />
       </ModalFooter>
     </S.Modal>
   );

@@ -10,16 +10,19 @@ import * as Sentry from '@sentry/react';
 import {PersistGate} from 'redux-persist/integration/react';
 
 import GoogleAnalyticsPageViewTracker from 'components/GoogleAnalyticsPageViewTracker';
+import PostHogTracker from 'components/PostHogTracker';
 import App from 'containers/App';
 import {persistor, store} from 'store';
 import {colors} from 'styles';
 import GlobalStyle from 'styles/components/GlobalStyle';
 import ToastifyStyle from 'styles/components/ToastifyStyle';
+import {registerApiAnalytics} from 'utils/apiAnalytics';
 import {registerExpiredSessionHandler} from 'utils/session';
 
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'styles/fonts.css';
 
+registerApiAnalytics();
 registerExpiredSessionHandler();
 
 const container = document.getElementById('root') as HTMLElement;
@@ -34,9 +37,10 @@ root.render(
     <PersistGate loading={null} persistor={persistor}>
       <GlobalStyle />
       <ToastifyStyle />
-      <SkeletonTheme highlightColor={colors.palette.gray[300]} baseColor={colors.whiteSmoke}>
+      <SkeletonTheme baseColor={colors.whiteSmoke} highlightColor={colors.palette.gray[300]}>
         <BrowserRouter>
           <GoogleAnalyticsPageViewTracker />
+          <PostHogTracker />
           <Sentry.ErrorBoundary fallback={<p>An error has occurred. Please refresh the page.</p>}>
             <App />
           </Sentry.ErrorBoundary>

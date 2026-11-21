@@ -1,0 +1,288 @@
+import {CaptureResult} from 'posthog-js';
+
+jest.mock('posthog-js', () => ({
+  __esModule: true,
+  default: {
+    capture: jest.fn(),
+    get_property: jest.fn(),
+    identify: jest.fn(),
+    init: jest.fn(),
+    reset: jest.fn(),
+  },
+}));
+
+type Analytics = typeof import('./analytics');
+interface MockPostHog {
+  capture: jest.Mock;
+  get_property: jest.Mock;
+  identify: jest.Mock;
+  init: jest.Mock;
+  reset: jest.Mock;
+}
+
+const originalEnvironment = process.env;
+const buildEvent = (properties: Record<string, any>, event = 'test_event'): CaptureResult => ({
+  event,
+  properties,
+  uuid: '00000000-0000-0000-0000-000000000001',
+});
+
+let analytics: Analytics;
+let posthog: MockPostHog;
+
+beforeEach(() => {
+  process.env = {
+    ...originalEnvironment,
+    NODE_ENV: 'production',
+    REACT_APP_POSTHOG_HOST: 'https://us.i.posthog.com',
+    REACT_APP_POSTHOG_KEY: 'phc_public-project-token',
+  };
+  jest.isolateModules(() => {
+    // Each test gets fresh initialization and identity state, as on a new page load.
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
+    analytics = require('./analytics');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
+    posthog = require('posthog-js').default;
+  });
+});
+
+afterEach(() => {
+  process.env = originalEnvironment;
+});
+
+describe('analytics initialization and identity', () => {
+  it('initializes once with the public project token and disables automatic pageviews', () => {
+    analytics.initializeAnalytics();
+    analytics.initializeAnalytics();
+
+    expect(posthog.init).toHaveBeenCalledTimes(1);
+    expect(posthog.init).toHaveBeenCalledWith(
+      'phc_public-project-token',
+      expect.objectContaining({api_host: 'https://us.i.posthog.com', capture_pageview: false}),
+    );
+  });
+
+  it.each(['REACT_APP_POSTHOG_HOST', 'REACT_APP_POSTHOG_KEY'])('does nothing when %s is missing', (variable) => {
+    delete process.env[variable];
+    analytics.initializeAnalytics();
+    analytics.captureAnalyticsEvent('post_create');
+    analytics.syncAnalyticsIdentity('42');
+
+    expect(posthog.init).not.toHaveBeenCalled();
+    expect(posthog.capture).not.toHaveBeenCalled();
+    expect(posthog.identify).not.toHaveBeenCalled();
+    expect(posthog.reset).not.toHaveBeenCalled();
+  });
+
+  it.each<'development' | 'test'>(['development', 'test'])('does not initialize in %s', (environment) => {
+    process.env = {...process.env, NODE_ENV: environment};
+    analytics.initializeAnalytics();
+
+    expect(posthog.init).not.toHaveBeenCalled();
+  });
+
+  it('allows initialization to retry after a blocked SDK without breaking the app', () => {
+    posthog.init.mockImplementationOnce(() => {
+      throw new Error('blocked');
+    });
+    expect(() => analytics.initializeAnalytics()).not.toThrow();
+    analytics.captureAnalyticsEvent('post_create');
+    expect(posthog.capture).not.toHaveBeenCalled();
+
+    analytics.initializeAnalytics();
+    analytics.captureAnalyticsEvent('post_create', {operation: 'post_create'});
+    expect(posthog.init).toHaveBeenCalledTimes(2);
+    expect(posthog.capture).toHaveBeenCalledWith('post_create', {operation: 'post_create'});
+  });
+
+  it('does not let capture failures interrupt user actions', () => {
+    analytics.initializeAnalytics();
+    posthog.capture.mockImplementation(() => {
+      throw new Error('unavailable');
+    });
+
+    expect(() => analytics.captureAnalyticsEvent('post_create')).not.toThrow();
+  });
+
+  it('links an anonymous visitor to a stable account ID only once', () => {
+    analytics.initializeAnalytics();
+    analytics.syncAnalyticsIdentity(null);
+    analytics.syncAnalyticsIdentity('42');
+    analytics.syncAnalyticsIdentity('42');
+
+    expect(posthog.identify).toHaveBeenCalledTimes(1);
+    expect(posthog.identify).toHaveBeenCalledWith('42');
+    expect(posthog.reset).not.toHaveBeenCalled();
+  });
+
+  it('resets a persisted identified visitor before signed-out browsing', () => {
+    posthog.get_property.mockReturnValueOnce('previous-account');
+    analytics.initializeAnalytics();
+    analytics.syncAnalyticsIdentity(null);
+    analytics.syncAnalyticsIdentity(null);
+
+    expect(posthog.get_property).toHaveBeenCalledWith('$user_id');
+    expect(posthog.reset).toHaveBeenCalledTimes(1);
+    expect(posthog.reset).toHaveBeenCalledWith(true);
+    expect(posthog.identify).not.toHaveBeenCalled();
+  });
+
+  it('resets the device identity when a member signs out', () => {
+    analytics.initializeAnalytics();
+    analytics.syncAnalyticsIdentity('42');
+    analytics.syncAnalyticsIdentity(null);
+    analytics.syncAnalyticsIdentity(null);
+
+    expect(posthog.reset).toHaveBeenCalledTimes(1);
+    expect(posthog.reset).toHaveBeenCalledWith(true);
+    expect(posthog.identify).toHaveBeenCalledTimes(1);
+  });
+
+  it('resets before switching accounts so the next member is not aliased to the previous member', () => {
+    analytics.initializeAnalytics();
+    analytics.syncAnalyticsIdentity('42');
+    analytics.syncAnalyticsIdentity('43');
+
+    expect(posthog.reset).toHaveBeenCalledTimes(1);
+    expect(posthog.identify).toHaveBeenNthCalledWith(2, '43');
+    expect(posthog.reset.mock.invocationCallOrder[0]).toBeLessThan(posthog.identify.mock.invocationCallOrder[1]);
+  });
+
+  it('resets a persisted previous account before identifying another account on page load', () => {
+    posthog.get_property.mockReturnValue('previous-account');
+    analytics.initializeAnalytics();
+    analytics.syncAnalyticsIdentity('42');
+
+    expect(posthog.reset).toHaveBeenCalledWith(true);
+    expect(posthog.identify).toHaveBeenCalledWith('42');
+    expect(posthog.reset.mock.invocationCallOrder[0]).toBeLessThan(posthog.identify.mock.invocationCallOrder[0]);
+  });
+
+  it('does not let an identity failure affect authentication and retries on the next synchronization', () => {
+    analytics.initializeAnalytics();
+    posthog.identify.mockImplementationOnce(() => {
+      throw new Error('unavailable');
+    });
+
+    expect(() => analytics.syncAnalyticsIdentity('42')).not.toThrow();
+    analytics.syncAnalyticsIdentity('42');
+    expect(posthog.identify).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('analytics data sanitization', () => {
+  it.each([
+    ['/', '/'],
+    ['/profile/123?token=private#private', '/profile/:id'],
+    ['/posts/123/', '/posts/:id'],
+    ['/connect-five/matches/456', '/connect-five/matches/:id'],
+    ['/exchange/trade/789', '/exchange/trade/:id'],
+    ['/unknown/private-value', '/other'],
+    ['http://[invalid', '/other'],
+  ])('normalizes %s without user identifiers', (path, expected) => {
+    expect(analytics.getAnalyticsPath(path)).toBe(expected);
+  });
+
+  it('removes secrets from same-origin and external URLs', () => {
+    expect(analytics.sanitizeAnalyticsUrl(`${window.location.origin}/profile/123?token=private#private`)).toBe(
+      `${window.location.origin}/profile/:id`,
+    );
+    expect(analytics.sanitizeAnalyticsUrl('https://user:password@example.test/private/path?q=secret#secret')).toBe(
+      'https://example.test',
+    );
+  });
+
+  it('preserves ingestion and identity fields while scrubbing captured URLs, text, and attributes', () => {
+    const event = buildEvent({
+      $current_url: `${window.location.origin}/posts/123?token=private-query#private`,
+      $device_id: 'anonymous-device',
+      $elements: [{attr__href: 'private-link', tag_name: 'button', text: 'private-text'}],
+      $pathname: '/posts/123',
+      $session_id: 'session-id',
+      distinct_id: 'account-id',
+      duration_ms: 30,
+      endpoint: '/posts/:id',
+      password: 'private-password',
+      token: 'phc_public-project-token',
+    });
+    const result = analytics.sanitizeAnalyticsEvent(event);
+
+    expect(result).toEqual({
+      ...event,
+      properties: {
+        $current_url: `${window.location.origin}/posts/:id`,
+        $device_id: 'anonymous-device',
+        $elements: [{tag_name: 'button'}],
+        $pathname: '/posts/:id',
+        $session_id: 'session-id',
+        distinct_id: 'account-id',
+        duration_ms: 30,
+        endpoint: '/posts/:id',
+        token: 'phc_public-project-token',
+      },
+    });
+    expect(event.properties.password).toBe('private-password');
+  });
+
+  it('scrubs person properties and nested credentials without removing the top-level ingestion token', () => {
+    const event = buildEvent({
+      token: 'phc_public-project-token',
+      nested: {token: 'private-token', password: 'private-password'},
+    });
+    event.$set = {email: 'private-email', token: 'private-token', account_type: 'member'};
+    event.$set_once = {
+      $initial_current_url: `${window.location.origin}/sign-in?password=private`,
+      username: 'private-user',
+    };
+
+    expect(analytics.sanitizeAnalyticsEvent(event)).toEqual({
+      ...event,
+      properties: {token: 'phc_public-project-token', nested: {}},
+      $set: {account_type: 'member'},
+      $set_once: {$initial_current_url: `${window.location.origin}/sign-in`},
+    });
+  });
+
+  it('drops exceptions and keeps null events dropped', () => {
+    expect(analytics.sanitizeAnalyticsEvent(buildEvent({message: 'private-error'}, '$exception'))).toBeNull();
+    expect(analytics.sanitizeAnalyticsEvent(null)).toBeNull();
+  });
+
+  it('preserves recorder data while sanitizing the snapshot envelope', () => {
+    const recorderData = [{data: 'compressed-payload', type: 3}];
+    const snapshot = buildEvent(
+      {
+        $current_url: `${window.location.origin}/posts/123?token=private`,
+        $snapshot_data: recorderData,
+        token: 'phc_public-project-token',
+      },
+      '$snapshot',
+    );
+    const sanitized = analytics.sanitizeAnalyticsEvent(snapshot);
+
+    expect(sanitized?.properties.$snapshot_data).toBe(recorderData);
+    expect(sanitized?.properties.token).toBe('phc_public-project-token');
+    expect(sanitized?.properties.$current_url).toBe(`${window.location.origin}/posts/:id`);
+  });
+
+  it('masks replay inputs, text, sensitive media, and arbitrary attribute values', () => {
+    const config = analytics.analyticsConfig;
+    const replay = config.session_recording!;
+    expect(replay.maskAllInputs).toBe(true);
+    expect(replay.maskTextSelector).toBe('*');
+    expect(replay.recordBody).toBe(false);
+    expect(replay.recordHeaders).toBe(false);
+    expect(config.enable_recording_console_log).toBe(false);
+    expect(config.capture_exceptions).toBe(false);
+    expect(replay.maskAttributeFn?.('data-private', 'private-value')).toBe('');
+    expect(
+      replay.maskAttributeFn?.('style', 'background-image: url(https://example.test/private); color: red;'),
+    ).not.toContain('private');
+    for (const tagName of ['img', 'canvas', 'video', 'audio', 'iframe']) {
+      expect(document.createElement(tagName).matches(replay.blockSelector!)).toBe(true);
+    }
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    expect(fileInput.matches(replay.blockSelector!)).toBe(true);
+  });
+});
