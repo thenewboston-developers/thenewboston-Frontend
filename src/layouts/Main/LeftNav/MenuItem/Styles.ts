@@ -2,7 +2,7 @@ import {Link as ULink} from 'react-router-dom';
 import UIcon from '@mdi/react';
 import styled, {css} from 'styled-components';
 
-import {navFocusVisible, visuallyHidden} from 'layouts/Authenticated/mixins';
+import {navFocusVisible, visuallyHidden} from 'layouts/Main/mixins';
 import {breakpoints, colors, fonts, radii} from 'styles';
 
 const ACTIVE_INDICATOR_HEIGHT = 20;

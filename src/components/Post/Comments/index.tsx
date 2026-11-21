@@ -9,7 +9,7 @@ import Loader from 'components/Loader';
 import MentionTextarea from 'components/MentionTextarea';
 import OutlineButton from 'components/OutlineButton';
 import {createComment} from 'dispatchers/comments';
-import {useToggle} from 'hooks';
+import {useIsAuthenticated, useRequireAuthentication, useToggle} from 'hooks';
 import CurrencySelectModal from 'modals/CurrencySelectModal';
 import {getComments, getManager} from 'selectors/state';
 import {AppDispatch, Comment as TComment, SFC, UserReadSerializer} from 'types';
@@ -30,7 +30,9 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   const [startIndex, setStartIndex] = useState<number>(0);
   const comments = useSelector(getComments);
   const dispatch = useDispatch<AppDispatch>();
+  const isAuthenticated = useIsAuthenticated();
   const manager = useSelector(getManager);
+  const requireAuthentication = useRequireAuthentication();
 
   const initialValues = {
     content: '',
@@ -136,42 +138,57 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     );
   };
 
+  const renderComposer = () => {
+    // Signed-out visitors can read the comments. The stand-in keeps the look of the field and asks them to sign in.
+    if (!isAuthenticated) {
+      return (
+        <S.GuestComposer onClick={() => requireAuthentication('comment on this post')} type="button">
+          Add a comment...
+        </S.GuestComposer>
+      );
+    }
+
+    return (
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validateOnMount={false}
+        validationSchema={validationSchema}
+      >
+        {({dirty, errors, isSubmitting, isValid, touched, values, setFieldValue}) => (
+          <Form>
+            <S.CommentForm>
+              <S.MentionTextareaWrapper>
+                <MentionTextarea
+                  dropdownYOffset={36}
+                  errors={errors}
+                  label=""
+                  name="content"
+                  onChange={(e) => setFieldValue('content', e.target.value)}
+                  onMentionedUsersChange={setMentionedUsers}
+                  placeholder="Add a comment..."
+                  touched={touched}
+                  value={values.content}
+                />
+              </S.MentionTextareaWrapper>
+              <S.ControlsWrapper>
+                <EmojiPicker field="content" setFieldValue={setFieldValue} value={values.content} />
+                {renderTipCurrencyControl(errors, touched)}
+                <S.SendButton aria-label="Post comment" disabled={!dirty || isSubmitting || !isValid} type="submit">
+                  {isSubmitting ? <Loader size={12} /> : <MdiIcon path={mdiSend} size="18px" />}
+                </S.SendButton>
+              </S.ControlsWrapper>
+            </S.CommentForm>
+          </Form>
+        )}
+      </Formik>
+    );
+  };
+
   return (
     <>
       <S.Container className={className}>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-          validateOnMount={false}
-          validationSchema={validationSchema}
-        >
-          {({dirty, errors, isSubmitting, isValid, touched, values, setFieldValue}) => (
-            <Form>
-              <S.CommentForm>
-                <S.MentionTextareaWrapper>
-                  <MentionTextarea
-                    dropdownYOffset={36}
-                    errors={errors}
-                    label=""
-                    name="content"
-                    onChange={(e) => setFieldValue('content', e.target.value)}
-                    onMentionedUsersChange={setMentionedUsers}
-                    placeholder="Add a comment..."
-                    touched={touched}
-                    value={values.content}
-                  />
-                </S.MentionTextareaWrapper>
-                <S.ControlsWrapper>
-                  <EmojiPicker field="content" setFieldValue={setFieldValue} value={values.content} />
-                  {renderTipCurrencyControl(errors, touched)}
-                  <S.SendButton aria-label="Post comment" disabled={!dirty || isSubmitting || !isValid} type="submit">
-                    {isSubmitting ? <Loader size={12} /> : <MdiIcon path={mdiSend} size="18px" />}
-                  </S.SendButton>
-                </S.ControlsWrapper>
-              </S.CommentForm>
-            </Form>
-          )}
-        </Formik>
+        {renderComposer()}
         {renderComments()}
         {commentList.length > commentDetails.length && (
           <S.Content>

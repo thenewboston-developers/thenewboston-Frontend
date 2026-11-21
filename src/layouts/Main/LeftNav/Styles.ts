@@ -2,7 +2,7 @@ import {Link as ULink} from 'react-router-dom';
 import styled from 'styled-components';
 
 import UAvatar from 'components/Avatar';
-import {navFocusVisible, visuallyHidden} from 'layouts/Authenticated/mixins';
+import {navFocusVisible, visuallyHidden} from 'layouts/Main/mixins';
 import {breakpoints, colors, fonts, hiddenScroll, radii} from 'styles';
 
 const RAIL_ITEM_SIZE = 44;

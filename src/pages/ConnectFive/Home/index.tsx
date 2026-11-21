@@ -15,6 +15,7 @@ import {
   getConnectFiveLeaderboard,
   getConnectFiveMatches,
 } from 'api/connectFive';
+import AuthButtons from 'components/AuthButtons';
 import Avatar from 'components/Avatar';
 import {BadgeStyle} from 'components/Badge';
 import Button, {ButtonColor, ButtonType} from 'components/Button';
@@ -23,6 +24,7 @@ import {FormField} from 'components/FormElements';
 import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
 import {ConnectFiveChallengeStatus, ConnectFiveMatchStatus} from 'enums';
+import {useIsAuthenticated} from 'hooks';
 import {
   getConnectFiveActiveMatches,
   getConnectFiveCompletedMatches,
@@ -169,6 +171,7 @@ const ConnectFiveHome: SFC = ({className}) => {
   const completedMatches = useSelector(getConnectFiveCompletedMatches);
   const dispatch = useDispatch<AppDispatch>();
   const incomingChallenges = useSelector(getConnectFiveIncomingChallenges);
+  const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const outgoingChallenges = useSelector(getConnectFiveOutgoingChallenges);
   const self = useSelector(getSelf);
@@ -349,6 +352,9 @@ const ConnectFiveHome: SFC = ({className}) => {
   }, []);
 
   const loadChallenges = useCallback(async () => {
+    // Challenges are between two members, a signed-out visitor has none
+    if (!isAuthenticated) return;
+
     const incomingResponse = await getConnectFiveChallenges({
       mine: 'received',
       status: ConnectFiveChallengeStatus.PENDING,
@@ -360,9 +366,15 @@ const ConnectFiveHome: SFC = ({className}) => {
 
     dispatch(setIncomingChallenges(incomingResponse.results));
     dispatch(setOutgoingChallenges(outgoingResponse.results));
-  }, [dispatch]);
+  }, [dispatch, isAuthenticated]);
 
   const loadEloSnapshots = useCallback(async () => {
+    // The ELO history is a member's own, a signed-out visitor has none
+    if (!isAuthenticated) {
+      setIsEloLoading(false);
+      return;
+    }
+
     try {
       setEloError(null);
       setIsEloLoading(true);
@@ -374,7 +386,7 @@ const ConnectFiveHome: SFC = ({className}) => {
     } finally {
       setIsEloLoading(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   const loadLeaderboardEntry = useCallback(async () => {
     if (!self?.id) {
@@ -429,11 +441,12 @@ const ConnectFiveHome: SFC = ({className}) => {
     setIsMatchesLoading(true);
 
     try {
+      // A signed-out visitor has no matches of their own, they only get the matches that anyone can watch
       const [selfMatchesResponse, publicMatchesResponse] = await Promise.all([
-        getConnectFiveMatches({mine: 'self'}),
+        isAuthenticated ? getConnectFiveMatches({mine: 'self'}) : null,
         getConnectFiveMatches({mine: 'exclude', status: ConnectFiveMatchStatus.ACTIVE}),
       ]);
-      const selfMatches = selfMatchesResponse.results;
+      const selfMatches = selfMatchesResponse?.results ?? [];
       const filteredPublicMatches = self?.id
         ? publicMatchesResponse.results.filter((match) => !isMatchParticipant(match, self.id))
         : publicMatchesResponse.results;
@@ -444,7 +457,7 @@ const ConnectFiveHome: SFC = ({className}) => {
     } finally {
       setIsMatchesLoading(false);
     }
-  }, [dispatch, self?.id]);
+  }, [dispatch, isAuthenticated, self?.id]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -799,9 +812,23 @@ const ConnectFiveHome: SFC = ({className}) => {
     );
   };
 
-  return (
-    <S.Container className={className}>
-      <S.Content>
+  // Signed-out visitors can watch matches, playing one needs an account
+  const renderGuestIntro = () => {
+    return (
+      <S.Section>
+        <S.SectionTitle>Play Connect 5</S.SectionTitle>
+        <S.GuestText>
+          Challenge other members to a match, put TNB on the line and climb the leaderboard. Anyone can watch the
+          matches that are being played.
+        </S.GuestText>
+        <AuthButtons />
+      </S.Section>
+    );
+  };
+
+  const renderMemberOverview = () => {
+    return (
+      <>
         <S.ProfileHeader>
           <S.ProfileHeaderContent>
             <S.ProfileAvatarWrapper>
@@ -883,6 +910,14 @@ const ConnectFiveHome: SFC = ({className}) => {
             </Formik>
           </S.Section>
         </S.TopRow>
+      </>
+    );
+  };
+
+  return (
+    <S.Container className={className}>
+      <S.Content>
+        {isAuthenticated ? renderMemberOverview() : renderGuestIntro()}
 
         {incomingChallenges.length > 0 && (
           <S.MatchesSection>
@@ -909,6 +944,13 @@ const ConnectFiveHome: SFC = ({className}) => {
           <S.MatchesSection>
             <S.MatchesSectionTitle>Public matches</S.MatchesSectionTitle>
             {renderPublicMatches()}
+          </S.MatchesSection>
+        )}
+
+        {!isAuthenticated && !isMatchesLoading && !publicMatchesSorted.length && (
+          <S.MatchesSection>
+            <S.MatchesSectionTitle>Public matches</S.MatchesSectionTitle>
+            <EmptyText>No matches are being played right now.</EmptyText>
           </S.MatchesSection>
         )}
 

@@ -1,7 +1,7 @@
 import UIcon from '@mdi/react';
 import styled from 'styled-components';
 
-import {bottomNavTextStyle} from 'layouts/Authenticated/mixins';
+import {bottomNavTextStyle} from 'layouts/Main/mixins';
 import {colors} from 'styles';
 
 export const Container = styled.nav`

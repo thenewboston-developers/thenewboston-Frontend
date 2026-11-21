@@ -6,7 +6,7 @@ import {mdiCommentTextOutline, mdiDotsVertical, mdiHeart, mdiHeartOutline} from 
 import ContentWithMentions from 'components/ContentWithMentions';
 import {deletePost, likePost, unlikePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
-import {useToggle} from 'hooks';
+import {useRequireAuthentication, useToggle} from 'hooks';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
 import PostLikesModal from 'modals/PostLikesModal';
 import PostModal from 'modals/PostModal';
@@ -77,6 +77,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
   const comments = useSelector(getComments);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const requireAuthentication = useRequireAuthentication();
   const self = useSelector(getSelf);
 
   const {
@@ -128,6 +129,8 @@ const Post: SFC<PostProps> = ({className, post}) => {
   };
 
   const handleLikeClick = async () => {
+    if (!requireAuthentication('like this post')) return;
+
     try {
       if (is_liked) {
         await dispatch(unlikePost(id));

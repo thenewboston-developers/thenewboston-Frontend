@@ -1,5 +1,6 @@
 import {Navigate, Route} from 'react-router-dom';
 
+import RequireAuthentication from 'components/RequireAuthentication';
 import SentryRoutes from 'components/SentryRoutes';
 import {SFC} from 'types';
 
@@ -13,7 +14,14 @@ const ConnectFive: SFC = () => {
   return (
     <SentryRoutes>
       <Route element={<Layout />}>
-        <Route element={<Challenge />} path="/challenges/:challengeId" />
+        <Route
+          element={
+            <RequireAuthentication>
+              <Challenge />
+            </RequireAuthentication>
+          }
+          path="/challenges/:challengeId"
+        />
         <Route element={<Home />} path="/home" />
         <Route element={<Leaderboard />} path="/leaderboard" />
         <Route element={<Match />} path="/matches/:matchId" />

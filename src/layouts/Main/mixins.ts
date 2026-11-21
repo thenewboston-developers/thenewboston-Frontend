@@ -1,8 +1,9 @@
 import {css} from 'styled-components';
 
-import {colors, fonts, radii} from 'styles';
+import {breakpoints, colors, fonts, radii} from 'styles';
 
 const BOTTOM_NAV_INDICATOR_WIDTH = 24;
+const NAV_CALL_TO_ACTION_HEIGHT = 44;
 
 // shadows.focusRing is tuned for light surfaces, so the dark navigation uses a translucent outline instead
 const NAV_FOCUS_OUTLINE_COLOR = `color-mix(in srgb, ${colors.nav.textActive} 55%, transparent)`;
@@ -11,6 +12,54 @@ export const navFocusVisible = css`
   &:focus-visible {
     outline: 2px solid ${NAV_FOCUS_OUTLINE_COLOR};
     outline-offset: 2px;
+  }
+`;
+
+// The accent call to action of the left navigation ("Post" for members, "Create account" for visitors)
+export const navCallToActionStyle = css`
+  align-items: center;
+  background: ${colors.accent};
+  border: none;
+  border-radius: ${radii.medium};
+  color: ${colors.white};
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  font-family: ${fonts.family.default};
+  font-size: 15px;
+  font-weight: ${fonts.weight.semiBold};
+  gap: 8px;
+  height: ${NAV_CALL_TO_ACTION_HEIGHT}px;
+  justify-content: center;
+  margin-top: 16px;
+  padding: 0 16px;
+  position: relative;
+  transition: background 0.15s ease;
+  width: 100%;
+
+  /* Touch devices keep :hover applied after a tap, so the hover background is limited to real pointers */
+  @media (hover: hover) {
+    &:hover {
+      background: ${colors.accentHover};
+    }
+  }
+
+  ${navFocusVisible};
+
+  @media (max-width: ${breakpoints.tablet}) {
+    gap: 0;
+    padding: 0;
+    width: ${NAV_CALL_TO_ACTION_HEIGHT}px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background 0.15s ease,
+      transform 0.15s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
   }
 `;
 

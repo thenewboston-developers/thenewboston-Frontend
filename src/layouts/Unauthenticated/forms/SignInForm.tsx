@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
 import {useDispatch} from 'react-redux';
-import {useNavigate} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
 import {ButtonColor, ButtonType} from 'components/Button';
@@ -15,7 +15,7 @@ import * as S from './Styles';
 
 const SignInForm: SFC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
+  const location = useLocation();
 
   const initialValues = {
     password: '',
@@ -26,8 +26,8 @@ const SignInForm: SFC = () => {
 
   const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
+      // The layout sends the visitor on to their destination as soon as they are authenticated
       await dispatch(login(values));
-      navigate('/feed');
     } catch (error) {
       handleFormikAPIError(error, helpers, 'Error logging in');
     }
@@ -69,7 +69,8 @@ const SignInForm: SFC = () => {
         </Formik>
       </S.Panel>
       <S.QuestionText>
-        New user? <S.Link to={PATH_AUTHENTICATION.CREATE_ACCOUNT}>Create an Account</S.Link>
+        New user?{' '}
+        <S.Link to={{pathname: PATH_AUTHENTICATION.CREATE_ACCOUNT, search: location.search}}>Create an Account</S.Link>
       </S.QuestionText>
     </>
   );

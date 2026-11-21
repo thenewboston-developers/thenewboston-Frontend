@@ -26,6 +26,13 @@ export const Container = styled.div`
   min-width: 0;
 `;
 
+export const GuestText = styled.p`
+  color: ${colors.secondary};
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 16px;
+`;
+
 // The panel has nothing to show until the asset pair is loaded
 export const Panel = styled.div`
   ${cardStyle};

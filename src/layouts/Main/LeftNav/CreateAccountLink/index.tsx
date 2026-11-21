@@ -1,0 +1,31 @@
+import {useLocation} from 'react-router-dom';
+import {mdiAccountPlus} from '@mdi/js';
+
+import {PATH_AUTHENTICATION} from 'constants/paths';
+import {SFC} from 'types';
+import {getAuthenticationPath, getLocationPath} from 'utils/authentication';
+
+import useIsRail from '../useIsRail';
+
+import * as S from './Styles';
+
+const TEXT = 'Create account';
+
+// Takes the place of the "Post" button for signed-out visitors
+const CreateAccountLink: SFC = ({className}) => {
+  const isRail = useIsRail();
+  const location = useLocation();
+
+  return (
+    <S.Link
+      className={className}
+      title={isRail ? TEXT : undefined}
+      to={getAuthenticationPath(PATH_AUTHENTICATION.CREATE_ACCOUNT, getLocationPath(location))}
+    >
+      <S.Icon path={mdiAccountPlus} size="20px" />
+      <S.Text>{TEXT}</S.Text>
+    </S.Link>
+  );
+};
+
+export default CreateAccountLink;

@@ -230,6 +230,14 @@ export const FormRow = styled.div`
 `;
 
 // The shared Input hands its className to the field itself
+export const GuestText = styled.p`
+  color: ${colors.secondary};
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 16px;
+  max-width: 640px;
+`;
+
 export const Input = styled(UInput)`
   ${fieldMixin};
   font-variant-numeric: tabular-nums;

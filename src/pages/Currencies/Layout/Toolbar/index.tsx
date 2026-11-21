@@ -1,5 +1,5 @@
 import ToolbarMenuLink from 'components/ToolbarMenuLink';
-import {useToggle} from 'hooks';
+import {useRequireAuthentication, useToggle} from 'hooks';
 import CurrencyModal from 'modals/CurrencyModal';
 import {SFC} from 'types';
 
@@ -7,6 +7,12 @@ import * as S from './Styles';
 
 const Toolbar: SFC = ({className}) => {
   const [currencyModalIsOpen, toggleCurrencyModal] = useToggle(false);
+  const requireAuthentication = useRequireAuthentication();
+
+  const handleCreateCurrencyClick = () => {
+    if (!requireAuthentication('create your own currency')) return;
+    toggleCurrencyModal();
+  };
 
   return (
     <>
@@ -15,7 +21,7 @@ const Toolbar: SFC = ({className}) => {
           <ToolbarMenuLink text="Home" to="/currencies/home" />
           <ToolbarMenuLink text="Learn More" to="/currencies/learn-more" />
         </S.MenuItems>
-        <S.Button onClick={toggleCurrencyModal} text="Create Currency" />
+        <S.Button onClick={handleCreateCurrencyClick} text="Create Currency" />
       </S.Container>
       {currencyModalIsOpen ? <CurrencyModal close={toggleCurrencyModal} /> : null}
     </>

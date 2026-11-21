@@ -8,17 +8,20 @@ import EmptyText from 'components/EmptyText';
 import Post from 'components/Post';
 import PostSkeleton from 'components/Post/PostSkeleton';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
+import {useIsAuthenticated} from 'hooks';
 import {getPosts, hasMorePosts, isLoadingPosts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {isCancellationError} from 'utils/errors';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
+import Welcome from './Welcome';
 
 const Feed: SFC = ({className}) => {
   const abortControllerRef = useRef<AbortController | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const hasMore = useSelector(hasMorePosts);
+  const isAuthenticated = useIsAuthenticated();
   const isLoading = useSelector(isLoadingPosts);
   const posts = useSelector(getPosts);
 
@@ -61,6 +64,7 @@ const Feed: SFC = ({className}) => {
       return (
         <S.PostContainer>
           <S.PostsWrapper>
+            {renderWelcome()}
             <PostSkeleton dataLength={3} />
           </S.PostsWrapper>
         </S.PostContainer>
@@ -90,6 +94,7 @@ const Feed: SFC = ({className}) => {
             scrollableTarget="main-scrollable-area"
           >
             <S.PostsWrapper>
+              {renderWelcome()}
               {postList.map((post) => (
                 <Post key={post.id} post={post} />
               ))}
@@ -101,11 +106,20 @@ const Feed: SFC = ({className}) => {
 
     return (
       <EmptyPage
-        bottomText="Try following some users to see their posts here!"
+        bottomText={
+          isAuthenticated
+            ? 'Try following some users to see their posts here!'
+            : 'Posts from the community will show up here.'
+        }
         graphic={LeavesEmptyState}
         topText="Nothing here!"
       />
     );
+  };
+
+  const renderWelcome = () => {
+    if (isAuthenticated) return null;
+    return <Welcome />;
   };
 
   return <S.Container className={className}>{renderContent()}</S.Container>;

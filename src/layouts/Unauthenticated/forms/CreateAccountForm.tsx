@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
 import {useDispatch} from 'react-redux';
-import {useNavigate} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 
 import {ButtonColor, ButtonType} from 'components/Button';
@@ -21,7 +21,7 @@ const CreateAccountForm: SFC = () => {
   const [privacyPolicyModalIsOpen, togglePrivacyPolicyModal] = useToggle(false);
   const [termsModalIsOpen, toggleTermsModal] = useToggle(false);
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
+  const location = useLocation();
 
   const initialValues = {
     agreeToTerms: false,
@@ -43,8 +43,8 @@ const CreateAccountForm: SFC = () => {
       if (INVITE_SYSTEM_ENABLED) {
         requestData.invitation_code = values.invitationCode;
       }
-      const user = await dispatch(createUser(requestData));
-      navigate(`/profile/${user.id}`);
+      // The layout sends the visitor on to their destination as soon as they are authenticated
+      await dispatch(createUser(requestData));
     } catch (error: any) {
       handleFormikAPIError(error, helpers, 'Error creating account');
     }
@@ -162,7 +162,8 @@ const CreateAccountForm: SFC = () => {
         </Formik>
       </S.Panel>
       <S.QuestionText>
-        Already have an account? <S.Link to={PATH_AUTHENTICATION.SIGN_IN}>Sign In</S.Link>
+        Already have an account?{' '}
+        <S.Link to={{pathname: PATH_AUTHENTICATION.SIGN_IN, search: location.search}}>Sign In</S.Link>
       </S.QuestionText>
       {termsModalIsOpen && <TermsModal close={toggleTermsModal} />}
       {privacyPolicyModalIsOpen && <PrivacyPolicyModal close={togglePrivacyPolicyModal} />}
