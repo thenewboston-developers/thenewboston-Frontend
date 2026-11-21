@@ -2,7 +2,7 @@ import {Link as ULink} from 'react-router-dom';
 import UIcon from '@mdi/react';
 import styled from 'styled-components';
 
-import {bottomNavItemStyle, bottomNavTextStyle} from 'layouts/Authenticated/mixins';
+import {bottomNavItemStyle, bottomNavTextStyle} from 'layouts/Main/mixins';
 
 export const Icon = styled(UIcon)`
   flex-shrink: 0;

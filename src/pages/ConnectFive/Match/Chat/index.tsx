@@ -5,6 +5,7 @@ import {createConnectFiveChatMessage, getConnectFiveChatMessages} from 'api/conn
 import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
 import {SocketDataType} from 'enums';
+import {useIsAuthenticated, useRequireAuthentication} from 'hooks';
 import {ConnectFiveChatMessage, SFC} from 'types';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast} from 'utils/toasts';
@@ -31,7 +32,9 @@ const ConnectFiveChat: SFC<ConnectFiveChatProps> = ({className, matchId}) => {
   const [nextMessagesUrl, setNextMessagesUrl] = useState<string | null>(null);
 
   const chatListRef = useRef<HTMLDivElement | null>(null);
+  const isAuthenticated = useIsAuthenticated();
   const pendingScrollAdjustRef = useRef<{previousScrollHeight: number; previousScrollTop: number} | null>(null);
+  const requireAuthentication = useRequireAuthentication();
 
   useEffect(() => {
     let isMounted = true;
@@ -230,10 +233,46 @@ const ConnectFiveChat: SFC<ConnectFiveChatProps> = ({className, matchId}) => {
     ));
   };
 
-  const renderChatPanel = () => {
+  const renderChatInputRow = () => {
+    // Anyone can read the chat, signed-out visitors are asked to sign in before they can say something
+    if (!isAuthenticated) {
+      return (
+        <S.ChatInputRow>
+          <S.GuestButton
+            color={ButtonColor.secondary}
+            onClick={() => requireAuthentication('chat with the players and spectators')}
+            text="Sign in to chat"
+          />
+        </S.ChatInputRow>
+      );
+    }
+
     const trimmedMessage = chatInput.trim();
     const sendDisabled = !trimmedMessage || isSendingMessage;
 
+    return (
+      <S.ChatInputRow>
+        <S.ChatInput
+          aria-label="Chat message"
+          maxLength={CHAT_MESSAGE_MAX_LENGTH}
+          onChange={handleChatInputChange}
+          onKeyDown={handleChatInputKeyDown}
+          placeholder="Say something..."
+          type="text"
+          value={chatInput}
+        />
+        <Button
+          color={ButtonColor.primary}
+          disabled={sendDisabled}
+          isSubmitting={isSendingMessage}
+          onClick={handleSendMessage}
+          text="Send"
+        />
+      </S.ChatInputRow>
+    );
+  };
+
+  const renderChatPanel = () => {
     return (
       <S.ChatPanel className={className}>
         <MatchStyles.PanelHeader>
@@ -244,24 +283,7 @@ const ConnectFiveChat: SFC<ConnectFiveChatProps> = ({className, matchId}) => {
           {isLoadingOlderMessages ? <S.ChatStatus>Loading older messages...</S.ChatStatus> : null}
           {renderChatMessages()}
         </S.ChatMessages>
-        <S.ChatInputRow>
-          <S.ChatInput
-            aria-label="Chat message"
-            maxLength={CHAT_MESSAGE_MAX_LENGTH}
-            onChange={handleChatInputChange}
-            onKeyDown={handleChatInputKeyDown}
-            placeholder="Say something..."
-            type="text"
-            value={chatInput}
-          />
-          <Button
-            color={ButtonColor.primary}
-            disabled={sendDisabled}
-            isSubmitting={isSendingMessage}
-            onClick={handleSendMessage}
-            text="Send"
-          />
-        </S.ChatInputRow>
+        {renderChatInputRow()}
       </S.ChatPanel>
     );
   };

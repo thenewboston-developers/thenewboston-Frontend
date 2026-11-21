@@ -1,5 +1,6 @@
 export const ASSET_PAIRS = 'assetPairs';
 export const AUTHENTICATION = 'authentication';
+export const AUTH_PROMPT = 'authPrompt';
 export const COMMENTS = 'comments';
 export const CONNECT_FIVE = 'connectFive';
 export const CURRENCIES = 'currencies';

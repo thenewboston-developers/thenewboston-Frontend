@@ -1,6 +1,7 @@
 import {RootState} from 'types';
 
 export const getAssetPairs = (state: RootState) => state.assetPairs;
+export const getAuthPrompt = (state: RootState) => state.authPrompt;
 export const getAuthentication = (state: RootState) => state.authentication;
 export const getComments = (state: RootState) => state.comments;
 export const getConnectFiveActiveMatches = (state: RootState) => state.connectFive.activeMatches;

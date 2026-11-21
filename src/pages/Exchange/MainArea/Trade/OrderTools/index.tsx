@@ -2,6 +2,8 @@ import {useState} from 'react';
 import {mdiCartArrowDown, mdiCartArrowUp} from '@mdi/js';
 import Icon from '@mdi/react';
 
+import AuthButtons from 'components/AuthButtons';
+import {useIsAuthenticated} from 'hooks';
 import {AssetPair, SFC} from 'types';
 
 import AssetPairSelector from './AssetPairSelector';
@@ -20,9 +22,24 @@ interface OrderToolsProps {
 
 const OrderTools: SFC<OrderToolsProps> = ({activeAssetPair, className}) => {
   const [activeTab, setActiveTab] = useState(TradeTab.BUY);
+  const isAuthenticated = useIsAuthenticated();
 
   const renderTabContent = () => {
     if (!activeAssetPair) return null;
+
+    // The order forms work with a member's wallets, signed-out visitors can still follow the chart and the order book
+    if (!isAuthenticated) {
+      const {ticker} = activeAssetPair.primary_currency;
+
+      return (
+        <S.TabContent>
+          <S.GuestText>
+            Sign in or create an account to {activeTab === TradeTab.BUY ? 'buy' : 'sell'} {ticker}.
+          </S.GuestText>
+          <AuthButtons />
+        </S.TabContent>
+      );
+    }
 
     const tabContent = {
       [TradeTab.BUY]: <Buy activeAssetPair={activeAssetPair} />,

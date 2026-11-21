@@ -16,6 +16,7 @@ import storage from 'redux-persist/lib/storage';
 import {LOGOUT_USER} from 'store/actions';
 import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
+import authPromptReducer from 'store/authPrompt';
 import commentsReducer from 'store/comments';
 import connectFiveReducer from 'store/connectFive';
 import currenciesReducer from 'store/currencies';
@@ -41,6 +42,7 @@ import wiresReducer from 'store/wires';
 
 const rootReducer = combineReducers({
   assetPairs: assetPairsReducer,
+  authPrompt: authPromptReducer,
   authentication: authenticationReducer,
   comments: commentsReducer,
   connectFive: connectFiveReducer,
@@ -75,7 +77,7 @@ const persistConfig = {
   migrate: createMigrate(migrations, {debug: false}),
   storage,
   version: 2,
-  blacklist: ['frontendDeployments'],
+  blacklist: ['authPrompt', 'frontendDeployments'],
 };
 
 const persistedReducer = persistReducer(persistConfig, appReducer);

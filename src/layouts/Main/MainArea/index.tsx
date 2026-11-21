@@ -1,6 +1,7 @@
 import {Navigate, Route} from 'react-router-dom';
 
 import Logout from 'components/Logout';
+import RequireAuthentication from 'components/RequireAuthentication';
 import SentryRoutes from 'components/SentryRoutes';
 import {
   PATH_AUTHENTICATION,
@@ -8,7 +9,8 @@ import {
   PATH_CURRENCIES,
   PATH_DEFAULT,
   PATH_EXCHANGE,
-  PATH_FEED,
+  PATH_HOME,
+  PATH_LEGACY_FEED,
   PATH_NOTIFICATIONS,
   PATH_POST_DETAIL,
   PATH_PROFILE,
@@ -34,8 +36,16 @@ const MainArea: SFC = ({className}) => {
         <Route path={PATH_CONNECT_FIVE} element={<ConnectFive />} />
         <Route path={PATH_CURRENCIES} element={<Currencies />} />
         <Route path={PATH_EXCHANGE} element={<Exchange />} />
-        <Route path={PATH_FEED} element={<Feed />} />
-        <Route path={PATH_NOTIFICATIONS} element={<Notifications />} />
+        <Route path={PATH_HOME} element={<Feed />} />
+        <Route path={PATH_LEGACY_FEED} element={<Navigate to={PATH_HOME} replace />} />
+        <Route
+          path={PATH_NOTIFICATIONS}
+          element={
+            <RequireAuthentication>
+              <Notifications />
+            </RequireAuthentication>
+          }
+        />
         <Route path={PATH_POST_DETAIL} element={<PostDetail />} />
         <Route path={PATH_PROFILE} element={<Profile />} />
         <Route path={PATH_AUTHENTICATION.LOGOUT} element={<Logout />} />

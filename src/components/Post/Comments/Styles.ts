@@ -57,6 +57,38 @@ export const Divider = styled.div`
   margin: 0 16px;
 `;
 
+// Stands in for the composer for signed-out visitors, so it keeps the look of the comment field
+export const GuestComposer = styled.button`
+  background: ${colors.palette.gray[50]};
+  border: 1px solid ${colors.borderSubtle};
+  border-radius: ${radii.medium};
+  color: ${colors.secondary};
+  cursor: pointer;
+  display: block;
+  font-family: ${fonts.family.default};
+  font-size: 14px;
+  height: ${CONTROL_HEIGHT};
+  line-height: 20px;
+  padding: 9px 14px;
+  text-align: left;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+  width: 100%;
+
+  &:focus-visible {
+    box-shadow: ${shadows.focusRing};
+    outline: none;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      background: ${colors.white};
+      border-color: ${colors.borderDarker};
+    }
+  }
+`;
+
 // The radius follows the inner curve of PriceAmountInputContainer (its radius minus its border). That container clips
 // its overflow, so the focus ring is inset and needs the matching corners to not be cut off.
 export const IconContainer = styled.button`

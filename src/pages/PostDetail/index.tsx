@@ -6,7 +6,9 @@ import {mdiArrowLeft} from '@mdi/js';
 import Icon from 'components/Icon';
 import Post from 'components/Post';
 import PostSkeleton from 'components/Post/PostSkeleton';
+import {PATH_HOME, PATH_NOTIFICATIONS} from 'constants/paths';
 import {getPost} from 'dispatchers/posts';
+import {useIsAuthenticated} from 'hooks';
 import {getPosts} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -16,6 +18,7 @@ import * as S from './Styles';
 const PostDetail: SFC = ({className}) => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
+  const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const {postId} = useParams<{postId: string}>();
   const postIdNumber = postId ? parseInt(postId, 10) : null;
@@ -40,8 +43,9 @@ const PostDetail: SFC = ({className}) => {
     })();
   }, [dispatch, postIdNumber]);
 
+  // Members usually arrive from their notifications, signed-out visitors have none to go back to
   const handleBackClick = () => {
-    navigate('/notifications');
+    navigate(isAuthenticated ? PATH_NOTIFICATIONS : PATH_HOME);
   };
 
   return (
@@ -49,7 +53,7 @@ const PostDetail: SFC = ({className}) => {
       <S.Header>
         <S.BackButton onClick={handleBackClick} type="button">
           <Icon icon={mdiArrowLeft} size={20} />
-          <span>Back to Notifications</span>
+          <span>{isAuthenticated ? 'Back to Notifications' : 'Back to Home'}</span>
         </S.BackButton>
       </S.Header>
       <S.ScrollableContent>

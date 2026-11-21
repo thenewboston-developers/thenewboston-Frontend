@@ -9,7 +9,7 @@ import {ButtonColor} from 'components/Button';
 import SocialLinks from 'components/SocialLinks';
 import {createFollower, deleteFollower} from 'dispatchers/followers';
 import {getUserStats} from 'dispatchers/userStats';
-import {useToggle, useUser} from 'hooks';
+import {useRequireAuthentication, useToggle, useUser} from 'hooks';
 import FullScreenImageModal from 'modals/FullScreenImageModal';
 import ProfileEditModal from 'modals/ProfileEditModal';
 import SendModal from 'modals/SendModal';
@@ -27,6 +27,7 @@ const UserDetails: SFC = ({className}) => {
   const [sendModalIsOpen, toggleSendModal] = useToggle(false);
   const {id} = useParams();
   const dispatch = useDispatch<AppDispatch>();
+  const requireAuthentication = useRequireAuthentication();
   const self = useSelector(getSelf);
   const user = useUser(id);
   const userStats = useSelector(getUserStatsState);
@@ -64,6 +65,7 @@ const UserDetails: SFC = ({className}) => {
 
   const handleFollowButtonClick = async () => {
     if (!userId || self.id === userId) return null;
+    if (!requireAuthentication(`follow ${user?.username || 'this member'}`)) return null;
 
     if (selfFollowing) {
       try {
@@ -82,6 +84,11 @@ const UserDetails: SFC = ({className}) => {
         displayErrorToast('Error following user');
       }
     }
+  };
+
+  const handleSendButtonClick = () => {
+    if (!requireAuthentication(`send coins to ${user?.username || 'this member'}`)) return;
+    toggleSendModal();
   };
 
   const renderAvatar = () => {
@@ -116,7 +123,7 @@ const UserDetails: SFC = ({className}) => {
 
   const renderSendButton = () => {
     if (self.id === userId) return null;
-    return <S.Button color={ButtonColor.secondary} onClick={toggleSendModal} text="Send" />;
+    return <S.Button color={ButtonColor.secondary} onClick={handleSendButtonClick} text="Send" />;
   };
 
   const renderSocialLinks = () => {

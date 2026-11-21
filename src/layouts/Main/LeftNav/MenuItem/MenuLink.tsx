@@ -1,7 +1,7 @@
 import {ReactNode} from 'react';
 import {useLocation} from 'react-router-dom';
 
-import {isPathActive} from 'layouts/Authenticated/utils';
+import {isPathActive} from 'layouts/Main/utils';
 import {SFC} from 'types';
 
 import useIsRail from '../useIsRail';

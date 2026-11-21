@@ -1,7 +1,7 @@
 import UIcon from '@mdi/react';
 import styled, {keyframes} from 'styled-components';
 
-import {bottomNavItemStyle, navFocusVisible} from 'layouts/Authenticated/mixins';
+import {bottomNavItemStyle, navFocusVisible} from 'layouts/Main/mixins';
 import {colors, fonts, radii, shadows} from 'styles';
 
 const menuEnter = keyframes`

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import UAvatar from 'components/Avatar';
+import UButton from 'components/Button';
 import {breakpoints, colors, controlStyle, fonts} from 'styles';
 
 import {panelStyle} from '../../mixins';
@@ -101,4 +102,8 @@ export const ChatStatus = styled.div`
   line-height: 1.5;
   padding: 4px 0;
   text-align: center;
+`;
+
+export const GuestButton = styled(UButton)`
+  flex: 1;
 `;

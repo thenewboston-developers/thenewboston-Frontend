@@ -1,5 +1,6 @@
 import {Navigate, Route} from 'react-router-dom';
 
+import RequireAuthentication from 'components/RequireAuthentication';
 import SentryRoutes from 'components/SentryRoutes';
 import {SFC} from 'types';
 
@@ -14,7 +15,14 @@ const Wallets: SFC = ({className}) => {
       <SentryRoutes>
         <Route element={<Layout />}>
           <Route path="*" element={<Navigate to="/wallets/home" replace />} />
-          <Route path="/home" element={<Home />} />
+          <Route
+            path="/home"
+            element={
+              <RequireAuthentication>
+                <Home />
+              </RequireAuthentication>
+            }
+          />
           <Route path="/learn-more" element={<LearnMore />} />
         </Route>
       </SentryRoutes>

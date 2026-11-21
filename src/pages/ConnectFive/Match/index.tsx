@@ -759,7 +759,8 @@ const ConnectFiveMatch: SFC = ({className}) => {
 
   useEffect(() => {
     const loadData = async () => {
-      if (!challengeId) return;
+      // Only the players use the challenge (their stake and the rematch), and signed-out spectators cannot read it
+      if (!challengeId || !isParticipant) return;
 
       try {
         await loadChallenge(challengeId);
@@ -769,7 +770,7 @@ const ConnectFiveMatch: SFC = ({className}) => {
     };
 
     loadData();
-  }, [challengeId, loadChallenge]);
+  }, [challengeId, isParticipant, loadChallenge]);
 
   useEffect(() => {
     if (!matchStatus || matchStatus === ConnectFiveMatchStatus.ACTIVE) {

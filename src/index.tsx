@@ -15,9 +15,12 @@ import {persistor, store} from 'store';
 import {colors} from 'styles';
 import GlobalStyle from 'styles/components/GlobalStyle';
 import ToastifyStyle from 'styles/components/ToastifyStyle';
+import {registerExpiredSessionHandler} from 'utils/session';
 
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'styles/fonts.css';
+
+registerExpiredSessionHandler();
 
 const container = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(container, {
