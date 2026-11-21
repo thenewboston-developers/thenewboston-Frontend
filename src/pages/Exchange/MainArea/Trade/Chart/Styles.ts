@@ -9,6 +9,7 @@ const fadeIn = keyframes`
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -45,6 +46,13 @@ export const ChartHeader = styled.div`
   flex-direction: column;
   gap: 20px;
   margin-bottom: 20px;
+`;
+
+export const ChartTitle = styled.h2`
+  color: ${colors.primary};
+  font-size: 16px;
+  font-weight: ${fonts.weight.semiBold};
+  margin: 0;
 `;
 
 // The axis and grid elements are drawn by d3 (see index.tsx), which sets their stroke and font through presentation
@@ -87,6 +95,7 @@ export const ChartWrapper = styled.div`
 
 export const Container = styled.div`
   ${cardStyle};
+  border-top: 3px solid ${colors.palette.blue[500]};
   min-width: 0;
   padding: 24px;
   position: relative;
@@ -140,12 +149,19 @@ export const PriceChange = styled.div<{$isPositive: boolean}>`
   align-self: flex-start;
   border-radius: ${radii.pill};
   display: inline-flex;
-  font-size: 12px;
+  font-size: 13px;
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.semiBold};
   gap: 4px;
   line-height: 1.5;
   padding: 3px 10px;
+`;
+
+export const PriceLabel = styled.span`
+  color: ${colors.secondary};
+  font-size: 13px;
+  font-weight: ${fonts.weight.medium};
+  line-height: 1.5;
 `;
 
 export const PriceLogo = styled.div`
@@ -175,14 +191,20 @@ export const PriceWrapper = styled.div`
 `;
 
 export const StatItem = styled.div`
+  background: ${colors.palette.gray[50]};
+  border: 1px solid ${colors.borderSubtle};
+  border-radius: ${radii.medium};
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
   min-width: 0;
+  padding: 12px;
 `;
 
 export const StatLabel = styled.span`
   ${eyebrowStyle};
+  font-size: 12px;
 `;
 
 export const StatValue = styled.span`
@@ -191,17 +213,21 @@ export const StatValue = styled.span`
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.semiBold};
   line-height: 1.4;
+  overflow-wrap: anywhere;
 `;
 
 export const StatsBar = styled.div`
   align-self: flex-start;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 24px;
+  gap: 8px;
+  width: 100%;
 `;
 
 export const TimeframeButton = styled.button<{$active: boolean}>`
   ${segmentStyle};
+  color: ${({$active}) => ($active ? colors.palette.blue[900] : colors.secondary)};
+  font-size: 14px;
 `;
 
 export const TimeframeButtons = styled.div`

@@ -3,7 +3,7 @@ import UMdiIcon from '@mdi/react';
 import styled, {css} from 'styled-components';
 
 import UPagination from 'components/Pagination';
-import {breakpoints, colors, fonts, pagePadding, radii, shadows} from 'styles';
+import {breakpoints, cardStyle, colors, fonts, pagePadding, radii, shadows} from 'styles';
 
 import {
   contentWidthStyle,
@@ -95,6 +95,12 @@ export const ChangeIcon = styled(UMdiIcon)`
   margin: 0 -2px 0 -4px;
 `;
 
+export const CoinDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
 // The padding leaves room for the focus ring, the negative margin keeps the logo aligned with the column header
 export const CoinLink = styled(ULink)`
   align-items: center;
@@ -164,6 +170,7 @@ export const LoaderPanel = styled.div`
 
 export const Logo = styled.img`
   border-radius: 50%;
+  box-shadow: 0 0 0 4px ${colors.palette.gray[100]};
   flex-shrink: 0;
   height: 32px;
   object-fit: cover;
@@ -172,6 +179,83 @@ export const Logo = styled.img`
   @media (max-width: ${breakpoints.mini}) {
     height: 28px;
     width: 28px;
+  }
+`;
+
+export const MarketLabel = styled.div`
+  align-items: center;
+  background: ${colors.palette.blue[50]};
+  border-radius: ${radii.pill};
+  color: ${colors.palette.blue[800]};
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: ${fonts.weight.semiBold};
+  gap: 6px;
+  padding: 8px 12px;
+  white-space: nowrap;
+
+  @media (max-width: ${breakpoints.mini}) {
+    display: none;
+  }
+`;
+
+export const Overview = styled.div`
+  ${cardStyle};
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 32px;
+  padding: 24px 0;
+
+  @media (max-width: ${breakpoints.mini}) {
+    gap: 16px;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 20px;
+  }
+`;
+
+export const OverviewItem = styled.div`
+  padding: 0 24px;
+
+  & + & {
+    border-left: 1px solid ${colors.borderSubtle};
+  }
+
+  @media (max-width: ${breakpoints.mini}) {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    padding: 0;
+
+    & + & {
+      border-left: 0;
+      border-top: 1px solid ${colors.borderSubtle};
+      padding-top: 16px;
+    }
+  }
+`;
+
+export const OverviewLabel = styled.div`
+  color: ${colors.secondary};
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 6px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    margin-bottom: 0;
+  }
+`;
+
+export const OverviewValue = styled.div`
+  color: ${colors.palette.blue[900]};
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.03em;
+
+  @media (max-width: ${breakpoints.mini}) {
+    font-size: 18px;
+    text-align: right;
   }
 `;
 
@@ -190,6 +274,32 @@ export const PercentageChange = styled.div<{$direction: 'down' | 'flat' | 'up'}>
   font-weight: ${fonts.weight.medium};
   justify-content: flex-end;
   position: relative;
+`;
+
+export const QuoteCurrency = styled.span`
+  color: ${colors.secondary};
+  font-size: 12px;
+  font-weight: ${fonts.weight.regular};
+`;
+
+export const SectionDescription = styled.p`
+  color: ${colors.secondary};
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 6px 0 0;
+`;
+
+export const SectionHeader = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+`;
+
+export const SectionTitle = styled.h2`
+  font-size: 22px;
+  letter-spacing: -0.03em;
 `;
 
 // The button inherits the eyebrow typography of its header cell. The negative margin keeps the label aligned with the
@@ -243,6 +353,12 @@ export const TableBody = styled.tbody`
 
   tr {
     cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    tr:hover td {
+      background: ${colors.palette.blue[50]};
+    }
   }
 `;
 

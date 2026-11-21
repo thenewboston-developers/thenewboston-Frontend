@@ -1,10 +1,10 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {useDispatch, useSelector} from 'react-redux';
+import {mdiClipboardTextOutline} from '@mdi/js';
+import MdiIcon from '@mdi/react';
 import orderBy from 'lodash/orderBy';
 
-import LeavesEmptyState from 'assets/leaves-empty-state.png';
-import EmptyPage from 'components/EmptyPage';
 import EmptyText from 'components/EmptyText';
 import Skeleton from 'components/Skeleton';
 import {
@@ -17,6 +17,8 @@ import {getExchangeOrders, hasMoreExchangeOrders, isLoadingExchangeOrders} from 
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
+import PageHeader from '../PageHeader';
+
 import Order from './Order';
 import * as S from './Styles';
 
@@ -26,7 +28,29 @@ const Orders: SFC = ({className}) => {
   const dispatch = useDispatch<AppDispatch>();
   const hasMore = useSelector(hasMoreExchangeOrders);
   const isLoading = useSelector(isLoadingExchangeOrders);
+  const fetchMoreOrders = useCallback(async () => {
+    if (!isLoading && hasMore) {
+      try {
+        await dispatch(_getExchangeOrders());
+      } catch (error) {
+        displayErrorToast('Error fetching more orders');
+      }
+    }
+  }, [dispatch, isLoading, hasMore]);
+
+  const handleViewTrades = useCallback(
+    (order: ExchangeOrder) => {
+      setSelectedOrder(order);
+      toggleTradesModal();
+    },
+    [toggleTradesModal],
+  );
+
   const orders = useSelector(getExchangeOrders);
+
+  const ordersList = useMemo(() => {
+    return orderBy(Object.values(orders), ['created_date'], ['desc']);
+  }, [orders]);
 
   useEffect(() => {
     (async () => {
@@ -39,36 +63,14 @@ const Orders: SFC = ({className}) => {
     })();
   }, [dispatch]);
 
-  const ordersList = useMemo(() => {
-    return orderBy(Object.values(orders), ['created_date'], ['desc']);
-  }, [orders]);
-
-  const fetchMoreOrders = useCallback(async () => {
-    if (!isLoading && hasMore) {
-      try {
-        await dispatch(_getExchangeOrders());
-      } catch (error) {
-        displayErrorToast('Error fetching more orders');
-      }
-    }
-  }, [dispatch, isLoading, hasMore]);
-
-  const getOrderSkeleton = (n: number) => {
-    const skeletons = Array.from({length: n}, (_, i) => (
+  const getOrderSkeleton = (count: number) => {
+    const skeletons = Array.from({length: count}, (_, i) => (
       <S.OrderSkeletonContainer key={i}>
-        <Skeleton height="132px" width="100%" />
+        <Skeleton height="196px" width="100%" />
       </S.OrderSkeletonContainer>
     ));
     return <S.SkeletonContainer>{skeletons}</S.SkeletonContainer>;
   };
-
-  const handleViewTrades = useCallback(
-    (order: ExchangeOrder) => {
-      setSelectedOrder(order);
-      toggleTradesModal();
-    },
-    [toggleTradesModal],
-  );
 
   const renderOrders = () => {
     if (isLoading && !ordersList.length) {
@@ -100,14 +102,38 @@ const Orders: SFC = ({className}) => {
     }
 
     return (
-      <EmptyPage bottomText="Place an order to see it here" graphic={LeavesEmptyState} topText="No orders to display" />
+      <S.EmptyState>
+        <S.EmptyIcon aria-hidden="true">
+          <MdiIcon path={mdiClipboardTextOutline} size="32px" />
+        </S.EmptyIcon>
+        <S.EmptyTitle>Your next trade starts here</S.EmptyTitle>
+        <S.EmptyDescription>
+          Once you place an order, you can track its progress, review trades, and manage it from this page.
+        </S.EmptyDescription>
+        <S.BrowseLink to="/exchange/home">Explore markets</S.BrowseLink>
+      </S.EmptyState>
     );
   };
 
   return (
     <>
       <S.Container className={className} id="orders-content">
-        <S.Content>{renderOrders()}</S.Content>
+        <S.Content>
+          <PageHeader
+            description="Follow your orders from placement to fill. Review your trades and manage open orders in one place."
+            eyebrow="Your activity"
+            title="Every order. One clear view."
+          >
+            <S.BrowseLink to="/exchange/home">Browse markets</S.BrowseLink>
+          </PageHeader>
+          {!!ordersList.length && (
+            <S.HistoryHeader>
+              <S.HistoryTitle>Order history</S.HistoryTitle>
+              <S.HistoryLabel>All statuses · Newest first</S.HistoryLabel>
+            </S.HistoryHeader>
+          )}
+          {renderOrders()}
+        </S.Content>
       </S.Container>
       {tradesModalIsOpen ? <TradesModal close={toggleTradesModal} order={selectedOrder} /> : null}
     </>

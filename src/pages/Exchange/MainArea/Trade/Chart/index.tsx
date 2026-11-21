@@ -28,9 +28,48 @@ const Chart: SFC<ChartProps> = ({activeAssetPair, className}) => {
   const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '3M' | '1Y' | 'ALL'>('ALL');
   const containerRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
-  const svgRef = useRef<SVGSVGElement>(null);
   const tradePriceChartDataState = useSelector(getTradePriceChartData);
   const {candlesticks} = tradePriceChartDataState;
+
+  const displayData = useMemo(() => {
+    return candlesticks.map((candlestick) => ({
+      ...candlestick,
+      display_date: chartDisplayDate(candlestick.end),
+    }));
+  }, [candlesticks]);
+
+  const firstTradePrice = useMemo(() => {
+    const firstCandlestick = candlesticks[0];
+    return firstCandlestick?.close || 0;
+  }, [candlesticks]);
+
+  const lastTradePrice = useMemo(() => {
+    const lastCandlestick = candlesticks[candlesticks.length - 1];
+    return lastCandlestick?.close || 0;
+  }, [candlesticks]);
+
+  const priceChange = useMemo(() => {
+    if (!firstTradePrice || !lastTradePrice) return 0;
+    return ((lastTradePrice - firstTradePrice) / firstTradePrice) * 100;
+  }, [firstTradePrice, lastTradePrice]);
+
+  const isPositive = priceChange >= 0;
+
+  const priceStats = useMemo(() => {
+    if (!candlesticks.length) return {avg: 0, max: 0, min: 0};
+
+    const highs = candlesticks.map((c) => c.high);
+    const lows = candlesticks.map((c) => c.low);
+    const allPrices = candlesticks.flatMap((c) => [c.open, c.high, c.low, c.close]);
+
+    const min = Math.min(...lows);
+    const max = Math.max(...highs);
+    const avg = allPrices.reduce((a, b) => a + b, 0) / allPrices.length;
+
+    return {avg, max, min};
+  }, [candlesticks]);
+
+  const svgRef = useRef<SVGSVGElement>(null);
 
   // Fetch chart data when activeAssetPair or timeframe changes
   useEffect(() => {
@@ -65,64 +104,6 @@ const Chart: SFC<ChartProps> = ({activeAssetPair, className}) => {
       dispatch(clearTradePriceChartData());
     };
   }, [dispatch]);
-
-  const displayData = useMemo(() => {
-    return candlesticks.map((candlestick) => ({
-      ...candlestick,
-      display_date: chartDisplayDate(candlestick.end),
-    }));
-  }, [candlesticks]);
-
-  const lastTradePrice = useMemo(() => {
-    const lastCandlestick = candlesticks[candlesticks.length - 1];
-    return lastCandlestick?.close || 0;
-  }, [candlesticks]);
-
-  const firstTradePrice = useMemo(() => {
-    const firstCandlestick = candlesticks[0];
-    return firstCandlestick?.close || 0;
-  }, [candlesticks]);
-
-  const priceChange = useMemo(() => {
-    if (!firstTradePrice || !lastTradePrice) return 0;
-    return ((lastTradePrice - firstTradePrice) / firstTradePrice) * 100;
-  }, [firstTradePrice, lastTradePrice]);
-
-  const priceStats = useMemo(() => {
-    if (!candlesticks.length) return {avg: 0, max: 0, min: 0};
-
-    const highs = candlesticks.map((c) => c.high);
-    const lows = candlesticks.map((c) => c.low);
-    const allPrices = candlesticks.flatMap((c) => [c.open, c.high, c.low, c.close]);
-
-    const min = Math.min(...lows);
-    const max = Math.max(...highs);
-    const avg = allPrices.reduce((a, b) => a + b, 0) / allPrices.length;
-
-    return {avg, max, min};
-  }, [candlesticks]);
-
-  const isPositive = priceChange >= 0;
-
-  const renderChartContent = () => {
-    if (isLoading && candlesticks.length === 0) {
-      return (
-        <S.LoadingContainer>
-          <Loader size={24} />
-        </S.LoadingContainer>
-      );
-    }
-
-    if (candlesticks.length === 0) {
-      return (
-        <S.EmptyContainer>
-          <EmptyText>No chart data available for this timeframe</EmptyText>
-        </S.EmptyContainer>
-      );
-    }
-
-    return <svg ref={svgRef}></svg>;
-  };
 
   useEffect(() => {
     if (!svgRef.current || !containerRef.current || displayData.length === 0) return;
@@ -415,45 +396,76 @@ const Chart: SFC<ChartProps> = ({activeAssetPair, className}) => {
     };
   }, [displayData, isPositive, timeframe]);
 
+  const renderChartContent = () => {
+    if (isLoading && candlesticks.length === 0) {
+      return (
+        <S.LoadingContainer>
+          <Loader size={24} />
+        </S.LoadingContainer>
+      );
+    }
+
+    if (candlesticks.length === 0) {
+      return (
+        <S.EmptyContainer>
+          <EmptyText>No chart data available for this timeframe</EmptyText>
+        </S.EmptyContainer>
+      );
+    }
+
+    return <svg ref={svgRef}></svg>;
+  };
+
   return (
     <S.Container className={className}>
       <S.ChartHeader>
         <S.PriceSection>
           <S.PriceWrapper>
+            <S.PriceLabel>
+              Last traded price{activeAssetPair ? ` · ${activeAssetPair.secondary_currency.ticker}` : ''}
+            </S.PriceLabel>
             <S.CurrentPrice>
               {activeAssetPair && (
                 <>
                   <S.PriceLogo>
                     <CurrencyLogo logo={activeAssetPair.secondary_currency.logo} width="32px" />
                   </S.PriceLogo>
-                  <S.PriceAmount>{lastTradePrice}</S.PriceAmount>
+                  <S.PriceAmount>{candlesticks.length ? lastTradePrice.toLocaleString() : '—'}</S.PriceAmount>
                 </>
               )}
             </S.CurrentPrice>
 
-            <S.PriceChange $isPositive={isPositive}>
-              <S.ChangeArrow>{isPositive ? '▲' : '▼'}</S.ChangeArrow>
-              {Math.abs(priceChange).toFixed(2)}%
-            </S.PriceChange>
+            {!!candlesticks.length && (
+              <S.PriceChange $isPositive={isPositive}>
+                <S.ChangeArrow aria-hidden>{isPositive ? '▲' : '▼'}</S.ChangeArrow>
+                {priceChange >= 0 ? '+' : '−'}
+                {Math.abs(priceChange).toFixed(2)}% this period
+              </S.PriceChange>
+            )}
           </S.PriceWrapper>
 
           <S.StatsBar>
             <S.StatItem>
               <S.StatLabel>High</S.StatLabel>
-              <S.StatValue>{priceStats.max}</S.StatValue>
+              <S.StatValue>{candlesticks.length ? priceStats.max.toLocaleString() : '—'}</S.StatValue>
             </S.StatItem>
             <S.StatItem>
               <S.StatLabel>Low</S.StatLabel>
-              <S.StatValue>{priceStats.min}</S.StatValue>
+              <S.StatValue>{candlesticks.length ? priceStats.min.toLocaleString() : '—'}</S.StatValue>
             </S.StatItem>
             <S.StatItem>
-              <S.StatLabel>Avg</S.StatLabel>
-              <S.StatValue>{priceStats.avg.toFixed(2)}</S.StatValue>
+              <S.StatLabel>Average</S.StatLabel>
+              <S.StatValue>
+                {candlesticks.length
+                  ? priceStats.avg.toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2})
+                  : '—'}
+              </S.StatValue>
             </S.StatItem>
           </S.StatsBar>
         </S.PriceSection>
 
         <S.ChartControls>
+          <S.ChartTitle>Price history</S.ChartTitle>
           <S.TimeframeButtons aria-label="Chart time range" role="group">
             {(['ALL', '1Y', '3M', '1M', '1W', '1D'] as const).map((tf) => (
               <S.TimeframeButton

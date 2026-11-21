@@ -1,8 +1,9 @@
+import {Link as ULink} from 'react-router-dom';
 import styled, {css} from 'styled-components';
 
 import UTab from 'components/Tab';
 import UTabs from 'components/Tabs';
-import {cardStyle, colors} from 'styles';
+import {breakpoints, cardStyle, colors, fonts, shadows} from 'styles';
 
 import {NEGATIVE_TEXT_COLOR, POSITIVE_TEXT_COLOR} from '../../mixins';
 
@@ -33,15 +34,54 @@ export const GuestText = styled.p`
   margin: 0 0 16px;
 `;
 
-// The panel has nothing to show until the asset pair is loaded
+export const GuideLink = styled(ULink)`
+  color: ${colors.palette.blue[600]};
+  font-weight: ${fonts.weight.semiBold};
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:focus-visible {
+    border-radius: 2px;
+    box-shadow: ${shadows.focusRing};
+    outline: none;
+  }
+`;
+
+export const HelpText = styled.p`
+  color: ${colors.secondary};
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0;
+  padding: 0 8px;
+`;
+
 export const Panel = styled.div`
   ${cardStyle};
   color: ${colors.primary};
-  padding: 20px;
+  padding: 24px;
 
-  &:empty {
-    display: none;
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 20px;
   }
+`;
+
+export const PanelDescription = styled.p`
+  color: ${colors.secondary};
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 6px 0 0;
+`;
+
+export const PanelHeader = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const PanelTitle = styled.h2`
+  color: ${colors.primary};
+  font-size: 18px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.02em;
+  margin: 0;
 `;
 
 export const SellTab = styled(UTab)`

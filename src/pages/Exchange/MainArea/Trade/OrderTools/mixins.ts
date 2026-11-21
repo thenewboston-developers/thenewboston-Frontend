@@ -15,7 +15,7 @@ import {
 } from 'components/FormElements/LogoInput/Styles';
 import {colors, controlStyle, fonts, radii, shadows} from 'styles';
 
-const CONTROL_HEIGHT = 44;
+const CONTROL_HEIGHT = 48;
 // LogoInput renders its currency logo 28px wide
 const LOGO_OFFSET = (CONTROL_HEIGHT - 28) / 2;
 
@@ -48,7 +48,7 @@ export const orderFormStyle = css`
   ${AvailableRow},
   ${TotalRow} {
     align-items: baseline;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: ${fonts.weight.regular};
     line-height: 1.5;
     padding: 0;
@@ -63,10 +63,14 @@ export const orderFormStyle = css`
   }
 
   ${AvailableTotalContainer} {
+    background: ${colors.palette.gray[50]};
+    border: 1px solid ${colors.borderSubtle};
+    border-radius: ${radii.medium};
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin: 4px 0 20px;
+    padding: 12px;
   }
 
   ${AvailableTotalText} {
@@ -93,7 +97,7 @@ export const orderFormStyle = css`
 
   ${LogoInputLabel} {
     color: ${colors.secondary};
-    font-size: 13px;
+    font-size: 14px;
     font-weight: ${fonts.weight.medium};
     margin-bottom: 6px;
   }
@@ -101,7 +105,7 @@ export const orderFormStyle = css`
 
 // For styled(UButton): the shared (black, pill shaped) Button stretched to the width and the height of the fields
 export const submitButtonStyle = css`
-  border-radius: ${radii.pill};
+  border-radius: ${radii.medium};
   height: ${`${CONTROL_HEIGHT}px`};
   width: 100%;
 

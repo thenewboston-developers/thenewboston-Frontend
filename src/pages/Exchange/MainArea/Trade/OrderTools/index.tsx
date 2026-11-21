@@ -70,9 +70,17 @@ const OrderTools: SFC<OrderToolsProps> = ({activeAssetPair, className}) => {
     <S.Container className={className}>
       <AssetPairSelector activeAssetPair={activeAssetPair} />
       <S.Panel>
+        <S.PanelHeader>
+          <S.PanelTitle>Place an order</S.PanelTitle>
+          <S.PanelDescription>Choose a side and set your price.</S.PanelDescription>
+        </S.PanelHeader>
         {renderTabs()}
         {renderTabContent()}
       </S.Panel>
+      <S.HelpText>
+        Orders fill when a matching trade is available.{' '}
+        <S.GuideLink to="/exchange/learn-more">How trading works</S.GuideLink>
+      </S.HelpText>
     </S.Container>
   );
 };

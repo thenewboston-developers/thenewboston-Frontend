@@ -1,6 +1,14 @@
 import {MouseEvent, useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {mdiArrowDown, mdiArrowUp, mdiMenuDown, mdiMenuUp} from '@mdi/js';
+import {Link, useNavigate} from 'react-router-dom';
+import {
+  mdiArrowDown,
+  mdiArrowUp,
+  mdiBookOpenPageVariantOutline,
+  mdiMenuDown,
+  mdiMenuUp,
+  mdiSwapHorizontal,
+} from '@mdi/js';
+import MdiIcon from '@mdi/react';
 import {Area, AreaChart, ResponsiveContainer} from 'recharts';
 
 import {getTradeHistoryItems} from 'api/tradeHistoryItems';
@@ -8,6 +16,8 @@ import Loader from 'components/Loader';
 import {colors} from 'styles';
 import {SFC, TradeHistoryItem} from 'types';
 import {displayErrorToast} from 'utils/toasts';
+
+import PageHeader from '../PageHeader';
 
 import * as S from './Styles';
 
@@ -34,6 +44,7 @@ const Home: SFC = ({className}) => {
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [sortState, setSortState] = useState<SortState>({field: 'market_cap', direction: 'desc'});
+  const [totalMarkets, setTotalMarkets] = useState<number | null>(null);
   const [totalPages, setTotalPages] = useState(1);
   const [tradeHistoryItems, setTradeHistoryItems] = useState<TradeHistoryItem[]>([]);
   const navigate = useNavigate();
@@ -42,9 +53,11 @@ const Home: SFC = ({className}) => {
     (async () => {
       try {
         setLoading(true);
+        setError('');
         const ordering = sortState.direction === 'desc' ? `-${sortState.field}` : sortState.field;
         const response = await getTradeHistoryItems(ordering, currentPage, PAGE_SIZE);
         setTradeHistoryItems(response.results);
+        setTotalMarkets(response.count);
         setTotalPages(Math.ceil(response.count / PAGE_SIZE));
       } catch (err) {
         displayErrorToast('Error fetching trade history');
@@ -105,6 +118,77 @@ const Home: SFC = ({className}) => {
     });
   };
 
+  const renderMarkets = () => {
+    if (loading) {
+      return (
+        <S.LoaderPanel aria-label="Loading markets" role="status">
+          <Loader />
+        </S.LoaderPanel>
+      );
+    }
+
+    if (error) {
+      return <S.ErrorMessage role="alert">{error}</S.ErrorMessage>;
+    }
+
+    if (!tradeHistoryItems.length) {
+      return (
+        <S.EmptyState>
+          <S.EmptyText>No markets to display</S.EmptyText>
+          <S.EmptySubtext>There is no trading activity to show yet.</S.EmptySubtext>
+        </S.EmptyState>
+      );
+    }
+
+    return (
+      <>
+        <S.TableWrapper>
+          <S.Table aria-label="Markets">
+            <S.TableHeader>
+              <S.TableRow>
+                {renderSortableHeaderCell('asset_pair__primary_currency__ticker', 'Coin', 'left')}
+                {renderSortableHeaderCell('price', 'Price (TNB)')}
+                {renderSortableHeaderCell('change_1h', '1h')}
+                {renderSortableHeaderCell('change_24h', '24h')}
+                {renderSortableHeaderCell('change_7d', '7d')}
+                {renderSortableHeaderCell('volume_24h', '24h Volume')}
+                {renderSortableHeaderCell('market_cap', 'Market Cap (TNB)')}
+                <S.HeaderCell $align="right" scope="col">
+                  Last 7 Days
+                </S.HeaderCell>
+              </S.TableRow>
+            </S.TableHeader>
+            <S.TableBody>
+              {tradeHistoryItems.map((item) => (
+                <S.TableRow key={item.asset_pair.id} onClick={() => handleCoinClick(item.asset_pair.id)}>
+                  <S.DataCell>
+                    <S.CoinLink onClick={handleCoinLinkClick} to={`/exchange/trade/${item.asset_pair.id}`}>
+                      <S.Logo alt="" src={item.asset_pair.primary_currency.logo} />
+                      <S.CoinDetails>
+                        <S.Ticker>{item.asset_pair.primary_currency.ticker}</S.Ticker>
+                        <S.QuoteCurrency>{item.asset_pair.secondary_currency.ticker} pair</S.QuoteCurrency>
+                      </S.CoinDetails>
+                    </S.CoinLink>
+                  </S.DataCell>
+                  <S.DataCell $align="right">{formatWholeNumber(item.price)}</S.DataCell>
+                  <S.DataCell $align="right">{renderPercentageChange(item.change_1h)}</S.DataCell>
+                  <S.DataCell $align="right">{renderPercentageChange(item.change_24h)}</S.DataCell>
+                  <S.DataCell $align="right">{renderPercentageChange(item.change_7d)}</S.DataCell>
+                  <S.DataCell $align="right">{formatWholeNumber(item.volume_24h)}</S.DataCell>
+                  <S.DataCell $align="right">{formatWholeNumber(item.market_cap)}</S.DataCell>
+                  <S.DataCell $align="right">
+                    <S.SparklineContainer>{renderSparkline(item.sparkline)}</S.SparklineContainer>
+                  </S.DataCell>
+                </S.TableRow>
+              ))}
+            </S.TableBody>
+          </S.Table>
+        </S.TableWrapper>
+        <S.Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+      </>
+    );
+  };
+
   const renderPercentageChange = (value: number) => {
     const direction = getChangeDirection(value);
 
@@ -160,84 +244,44 @@ const Home: SFC = ({className}) => {
     );
   };
 
-  if (loading) {
-    return (
-      <S.Container className={className}>
-        <S.Content>
-          <S.LoaderPanel>
-            <Loader />
-          </S.LoaderPanel>
-        </S.Content>
-      </S.Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <S.Container className={className}>
-        <S.Content>
-          <S.ErrorMessage>{error}</S.ErrorMessage>
-        </S.Content>
-      </S.Container>
-    );
-  }
-
-  if (!tradeHistoryItems.length) {
-    return (
-      <S.Container className={className}>
-        <S.Content>
-          <S.EmptyState>
-            <S.EmptyText>No markets to display</S.EmptyText>
-            <S.EmptySubtext>There is no trading activity to show yet.</S.EmptySubtext>
-          </S.EmptyState>
-        </S.Content>
-      </S.Container>
-    );
-  }
-
   return (
     <S.Container className={className}>
       <S.Content>
-        <S.TableWrapper>
-          <S.Table aria-label="Markets">
-            <S.TableHeader>
-              <S.TableRow>
-                {renderSortableHeaderCell('asset_pair__primary_currency__ticker', 'Coin', 'left')}
-                {renderSortableHeaderCell('price', 'Price (TNB)')}
-                {renderSortableHeaderCell('change_1h', '1h')}
-                {renderSortableHeaderCell('change_24h', '24h')}
-                {renderSortableHeaderCell('change_7d', '7d')}
-                {renderSortableHeaderCell('volume_24h', '24h Volume')}
-                {renderSortableHeaderCell('market_cap', 'Market Cap (TNB)')}
-                <S.HeaderCell $align="right" scope="col">
-                  Last 7 Days
-                </S.HeaderCell>
-              </S.TableRow>
-            </S.TableHeader>
-            <S.TableBody>
-              {tradeHistoryItems.map((item, index) => (
-                <S.TableRow key={index} onClick={() => handleCoinClick(item.asset_pair.id)}>
-                  <S.DataCell>
-                    <S.CoinLink onClick={handleCoinLinkClick} to={`/exchange/trade/${item.asset_pair.id}`}>
-                      <S.Logo alt="" src={item.asset_pair.primary_currency.logo} />
-                      <S.Ticker>{item.asset_pair.primary_currency.ticker}</S.Ticker>
-                    </S.CoinLink>
-                  </S.DataCell>
-                  <S.DataCell $align="right">{formatWholeNumber(item.price)}</S.DataCell>
-                  <S.DataCell $align="right">{renderPercentageChange(item.change_1h)}</S.DataCell>
-                  <S.DataCell $align="right">{renderPercentageChange(item.change_24h)}</S.DataCell>
-                  <S.DataCell $align="right">{renderPercentageChange(item.change_7d)}</S.DataCell>
-                  <S.DataCell $align="right">{formatWholeNumber(item.volume_24h)}</S.DataCell>
-                  <S.DataCell $align="right">{formatWholeNumber(item.market_cap)}</S.DataCell>
-                  <S.DataCell $align="right">
-                    <S.SparklineContainer>{renderSparkline(item.sparkline)}</S.SparklineContainer>
-                  </S.DataCell>
-                </S.TableRow>
-              ))}
-            </S.TableBody>
-          </S.Table>
-        </S.TableWrapper>
-        <S.Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+        <PageHeader
+          description="Discover community currencies, explore market activity, and find your next trading pair."
+          eyebrow="The community exchange"
+          title="A market for every idea."
+        >
+          <Link to="/exchange/learn-more">
+            <MdiIcon aria-hidden="true" path={mdiBookOpenPageVariantOutline} size="20px" />
+            How trading works
+          </Link>
+        </PageHeader>
+        <S.Overview aria-label="Exchange overview">
+          <S.OverviewItem>
+            <S.OverviewLabel>Markets to explore</S.OverviewLabel>
+            <S.OverviewValue>{totalMarkets === null ? '—' : totalMarkets.toLocaleString()}</S.OverviewValue>
+          </S.OverviewItem>
+          <S.OverviewItem>
+            <S.OverviewLabel>Find your market</S.OverviewLabel>
+            <S.OverviewValue>Currency pairs</S.OverviewValue>
+          </S.OverviewItem>
+          <S.OverviewItem>
+            <S.OverviewLabel>Your price. Your trade.</S.OverviewLabel>
+            <S.OverviewValue>Limit orders</S.OverviewValue>
+          </S.OverviewItem>
+        </S.Overview>
+        <S.SectionHeader>
+          <div>
+            <S.SectionTitle>Explore the markets</S.SectionTitle>
+            <S.SectionDescription>Select a currency to open its trading desk.</S.SectionDescription>
+          </div>
+          <S.MarketLabel>
+            <MdiIcon aria-hidden="true" path={mdiSwapHorizontal} size="18px" />
+            Currency pairs
+          </S.MarketLabel>
+        </S.SectionHeader>
+        {renderMarkets()}
       </S.Content>
     </S.Container>
   );
