@@ -9,6 +9,7 @@ import {
   PATH_CURRENCIES,
   PATH_DEFAULT,
   PATH_EXCHANGE,
+  PATH_GAMES,
   PATH_HOME,
   PATH_LEGACY_FEED,
   PATH_NOTIFICATIONS,
@@ -20,6 +21,7 @@ import ConnectFive from 'pages/ConnectFive';
 import Currencies from 'pages/Currencies';
 import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
+import Games from 'pages/Games';
 import Notifications from 'pages/Notifications';
 import PostDetail from 'pages/PostDetail';
 import Profile from 'pages/Profile';
@@ -36,6 +38,7 @@ const MainArea: SFC = ({className}) => {
         <Route path={PATH_CONNECT_FIVE} element={<ConnectFive />} />
         <Route path={PATH_CURRENCIES} element={<Currencies />} />
         <Route path={PATH_EXCHANGE} element={<Exchange />} />
+        <Route element={<Games />} path={PATH_GAMES} />
         <Route path={PATH_HOME} element={<Feed />} />
         <Route path={PATH_LEGACY_FEED} element={<Navigate to={PATH_HOME} replace />} />
         <Route

@@ -1,3 +1,4 @@
+import {Link} from 'react-router-dom';
 import UIcon from '@mdi/react';
 import styled, {css} from 'styled-components';
 
@@ -193,6 +194,36 @@ export const EloSection = styled.section`
   flex-direction: column;
 `;
 
+export const EmptyState = styled.div`
+  ${cardStyle};
+  align-items: center;
+  background: linear-gradient(135deg, ${colors.white}, ${colors.palette.blue[50]});
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+  min-height: 190px;
+  padding: 32px 24px;
+  text-align: center;
+`;
+
+export const EmptyStateDescription = styled.p`
+  color: ${colors.secondary};
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 460px;
+`;
+
+export const EmptyStateTitle = styled.h3`
+  color: ${colors.primary};
+  font-size: 22px;
+  font-weight: ${fonts.weight.semiBold};
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin: 0;
+`;
+
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -229,15 +260,239 @@ export const FormRow = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 `;
 
-// The shared Input hands its className to the field itself
 export const GuestText = styled.p`
   color: ${colors.secondary};
-  font-size: 15px;
-  line-height: 1.5;
-  margin: 0 0 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0 0 24px;
   max-width: 640px;
 `;
 
+export const GuideDescription = styled.p`
+  color: ${colors.secondary};
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+`;
+
+export const GuideGrid = styled.div`
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  @media (max-width: ${breakpoints.tablet}) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+`;
+
+export const GuideItem = styled.div`
+  border-top: 2px solid ${colors.borderSubtle};
+  min-width: 0;
+  padding-top: 20px;
+`;
+
+export const GuideTitle = styled.h3`
+  color: ${colors.primary};
+  font-size: 17px;
+  font-weight: ${fonts.weight.semiBold};
+  line-height: 1.4;
+  margin: 0 0 8px;
+`;
+
+export const Hero = styled.section`
+  background: ${colors.palette.blue[900]};
+  border: 1px solid ${colors.palette.blue[900]};
+  border-radius: 24px;
+  color: ${colors.white};
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  isolation: isolate;
+  overflow: hidden;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+`;
+
+export const HeroActions = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+
+  button {
+    min-height: 44px;
+
+    &:focus-visible {
+      outline: 2px solid ${colors.white};
+      outline-offset: 4px;
+    }
+
+    &:first-child {
+      background: ${colors.white};
+      color: ${colors.palette.blue[900]};
+
+      &:hover {
+        background: ${colors.palette.blue[100]};
+      }
+    }
+  }
+`;
+
+export const HeroContent = styled.div`
+  align-self: center;
+  padding: 44px 0 44px 40px;
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 32px;
+  }
+
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 28px 24px;
+  }
+`;
+
+export const HeroDescription = styled.p`
+  color: ${colors.palette.blue[100]};
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 20px 0;
+  max-width: 420px;
+`;
+
+export const HeroEyebrow = styled.p`
+  color: ${colors.palette.blue[200]};
+  font-size: 12px;
+  font-weight: ${fonts.weight.semiBold};
+  letter-spacing: 0.16em;
+  line-height: 1.5;
+  margin: 0 0 16px;
+  text-transform: uppercase;
+`;
+
+export const HeroImage = styled.img`
+  display: block;
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  width: 100%;
+`;
+
+export const HeroLink = styled(Link)`
+  align-items: center;
+  border: 1px solid ${colors.palette.blue[300]};
+  border-radius: ${radii.pill};
+  color: ${colors.white};
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: ${fonts.weight.semiBold};
+  justify-content: center;
+  line-height: 1.4;
+  min-height: 44px;
+  padding: 10px 18px;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: 2px solid ${colors.white};
+    outline-offset: 4px;
+  }
+
+  &:hover {
+    background: ${colors.palette.blue[800]};
+  }
+`;
+
+export const HeroMeta = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
+
+export const HeroMetaItem = styled.li`
+  background: rgb(255 255 255 / 8%);
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: ${radii.pill};
+  color: ${colors.palette.blue[100]};
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 5px 10px;
+`;
+
+export const HeroPrimaryLink = styled.a`
+  align-items: center;
+  background: ${colors.white};
+  border: 1px solid ${colors.white};
+  border-radius: ${radii.pill};
+  color: ${colors.palette.blue[900]};
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: ${fonts.weight.semiBold};
+  justify-content: center;
+  line-height: 1.4;
+  min-height: 44px;
+  padding: 10px 18px;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: 2px solid ${colors.white};
+    outline-offset: 4px;
+  }
+
+  &:hover {
+    background: ${colors.palette.blue[100]};
+  }
+`;
+
+export const HeroTagline = styled.p`
+  color: ${colors.white};
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: ${fonts.weight.medium};
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  margin: 12px 0 0;
+`;
+
+export const HeroTitle = styled.h1`
+  color: ${colors.white};
+  font-size: clamp(36px, 4.4vw, 60px);
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.055em;
+  line-height: 1.05;
+  margin: 0;
+`;
+
+export const HeroVisual = styled.div`
+  min-height: 380px;
+  min-width: 0;
+  position: relative;
+
+  &::after {
+    background: linear-gradient(90deg, ${colors.palette.blue[900]}, transparent 35%);
+    content: '';
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    height: 240px;
+    min-height: 0;
+
+    &::after {
+      background: linear-gradient(180deg, ${colors.palette.blue[900]}, transparent 50%);
+    }
+  }
+`;
+
+// The shared Input hands its className to the field itself
 export const Input = styled(UInput)`
   ${fieldMixin};
   font-variant-numeric: tabular-nums;
@@ -373,7 +628,9 @@ export const ProfileDetails = styled.div`
 `;
 
 export const ProfileHeader = styled.div`
+  ${cardStyle};
   min-width: 0;
+  padding: 24px;
 `;
 
 export const ProfileHeaderContent = styled.div`
@@ -409,7 +666,7 @@ export const ProfileMetaItem = styled.span`
   white-space: nowrap;
 `;
 
-export const ProfileUsername = styled.h1`
+export const ProfileUsername = styled.h2`
   color: ${colors.primary};
   font-size: 28px;
   font-weight: ${fonts.weight.bold};
@@ -466,9 +723,23 @@ export const Section = styled.section`
   ${sectionMixin};
 `;
 
+export const SectionDescription = styled.p`
+  color: ${colors.secondary};
+  font-size: 16px;
+  line-height: 1.6;
+  margin: -4px 0 24px;
+`;
+
 export const SectionTitle = styled.h2`
   ${sectionTitleStyle};
   margin-bottom: 16px;
+  scroll-margin-top: 24px;
+
+  &:focus-visible {
+    border-radius: ${radii.small};
+    outline: 2px solid ${colors.palette.blue[500]};
+    outline-offset: 4px;
+  }
 `;
 
 // The shared Select hands its className to both its wrapper and the select element, so the rules are scoped to the
@@ -572,4 +843,11 @@ export const UserSearchInput = styled(UUserSearchInput)`
   ${UserSearchNoResultsMessage} {
     color: ${colors.secondary};
   }
+`;
+
+export const WatchDescription = styled.p`
+  color: ${colors.secondary};
+  font-size: 16px;
+  line-height: 1.6;
+  margin: -8px 0 4px;
 `;
