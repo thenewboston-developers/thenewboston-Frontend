@@ -20,7 +20,7 @@ import {
 } from '@mdi/js';
 
 import logo from 'assets/logo192.png';
-import {PATH_AUTHENTICATION, PATH_HOME} from 'constants/paths';
+import {PATH_AUTHENTICATION, PATH_GAMES, PATH_HOME} from 'constants/paths';
 import {useIsAuthenticated} from 'hooks';
 import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
@@ -85,9 +85,9 @@ const LeftNav: SFC = ({className}) => {
         <MenuLink
           activeIcon={mdiGamepadVariant}
           icon={mdiGamepadVariantOutline}
-          rootPath="/connect-five"
-          text="Connect 5"
-          to="/connect-five"
+          rootPath={PATH_GAMES}
+          text="Games"
+          to={PATH_GAMES}
         />
         {isAuthenticated && (
           <MenuLink

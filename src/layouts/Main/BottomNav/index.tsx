@@ -20,7 +20,7 @@ import {
   mdiWalletBifoldOutline,
 } from '@mdi/js';
 
-import {PATH_AUTHENTICATION, PATH_HOME} from 'constants/paths';
+import {PATH_AUTHENTICATION, PATH_GAMES, PATH_HOME} from 'constants/paths';
 import {useIsAuthenticated} from 'hooks';
 import {isPathActive} from 'layouts/Main/utils';
 import {getSelf} from 'selectors/state';
@@ -49,9 +49,9 @@ const BottomNav: SFC = ({className}) => {
     {
       activeIcon: mdiGamepadVariant,
       icon: mdiGamepadVariantOutline,
-      isActive: isPathActive(location.pathname, '/connect-five'),
-      label: 'Connect 5',
-      onClick: () => navigate('/connect-five'),
+      isActive: isPathActive(location.pathname, PATH_GAMES),
+      label: 'Games',
+      onClick: () => navigate(PATH_GAMES),
     },
     {
       activeIcon: mdiWalletBifold,
@@ -91,9 +91,9 @@ const BottomNav: SFC = ({className}) => {
         <MenuItem
           activeIcon={mdiGamepadVariant}
           icon={mdiGamepadVariantOutline}
-          rootPath="/connect-five"
-          text="Connect 5"
-          to="/connect-five"
+          rootPath={PATH_GAMES}
+          text="Games"
+          to={PATH_GAMES}
         />
         <MenuItem
           icon={mdiLogin}

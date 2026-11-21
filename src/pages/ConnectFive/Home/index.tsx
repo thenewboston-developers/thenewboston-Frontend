@@ -15,6 +15,7 @@ import {
   getConnectFiveLeaderboard,
   getConnectFiveMatches,
 } from 'api/connectFive';
+import connectFiveCover from 'assets/connect-five-cover.webp';
 import AuthButtons from 'components/AuthButtons';
 import Avatar from 'components/Avatar';
 import {BadgeStyle} from 'components/Badge';
@@ -162,6 +163,7 @@ const ConnectFiveHome: SFC = ({className}) => {
   const [isEloLoading, setIsEloLoading] = useState(true);
   const [isLeaderboardLoading, setIsLeaderboardLoading] = useState(true);
   const [isMatchesLoading, setIsMatchesLoading] = useState(true);
+  const [matchesError, setMatchesError] = useState<string | null>(null);
   const [publicMatches, setPublicMatches] = useState<ConnectFiveMatch[]>([]);
   const [publicMatchesPage, setPublicMatchesPage] = useState(1);
   const [selfLeaderboardEntry, setSelfLeaderboardEntry] = useState<ConnectFiveLeaderboardEntry | null>(null);
@@ -439,6 +441,7 @@ const ConnectFiveHome: SFC = ({className}) => {
 
   const loadMatches = useCallback(async () => {
     setIsMatchesLoading(true);
+    setMatchesError(null);
 
     try {
       // A signed-out visitor has no matches of their own, they only get the matches that anyone can watch
@@ -454,6 +457,8 @@ const ConnectFiveHome: SFC = ({className}) => {
       dispatch(setActiveMatches(selfMatches.filter((match) => match.status === ConnectFiveMatchStatus.ACTIVE)));
       dispatch(setCompletedMatches(selfMatches.filter((match) => match.status !== ConnectFiveMatchStatus.ACTIVE)));
       setPublicMatches(filteredPublicMatches);
+    } catch (error) {
+      setMatchesError('We could not load matches right now. Please try again.');
     } finally {
       setIsMatchesLoading(false);
     }
@@ -816,12 +821,24 @@ const ConnectFiveHome: SFC = ({className}) => {
   const renderGuestIntro = () => {
     return (
       <S.Section>
-        <S.SectionTitle>Play Connect 5</S.SectionTitle>
-        <S.GuestText>
-          Challenge other members to a match, put TNB on the line and climb the leaderboard. Anyone can watch the
-          matches that are being played.
-        </S.GuestText>
-        <AuthButtons />
+        <S.SectionTitle>A little strategy. A great rivalry.</S.SectionTitle>
+        <S.GuestText>Easy to learn, with plenty of room for your next clever move.</S.GuestText>
+        <S.GuideGrid>
+          <S.GuideItem>
+            <S.GuideTitle>Find your opponent</S.GuideTitle>
+            <S.GuideDescription>
+              Challenge another member and choose the stakes and time limit together.
+            </S.GuideDescription>
+          </S.GuideItem>
+          <S.GuideItem>
+            <S.GuideTitle>Connect your five</S.GuideTitle>
+            <S.GuideDescription>Build your line, block theirs, and make every move count.</S.GuideDescription>
+          </S.GuideItem>
+          <S.GuideItem>
+            <S.GuideTitle>Make your mark</S.GuideTitle>
+            <S.GuideDescription>Finish matches, build your record, and climb the ELO leaderboard.</S.GuideDescription>
+          </S.GuideItem>
+        </S.GuideGrid>
       </S.Section>
     );
   };
@@ -846,10 +863,14 @@ const ConnectFiveHome: SFC = ({className}) => {
         <S.TopRow>
           <S.EloSection>
             <S.SectionTitle>Your ELO</S.SectionTitle>
+            <S.SectionDescription>Every match is a chance to raise your game.</S.SectionDescription>
             {renderEloChart()}
           </S.EloSection>
           <S.Section>
-            <S.SectionTitle>Send a challenge</S.SectionTitle>
+            <S.SectionTitle id="challenge-player" tabIndex={-1}>
+              Start a rivalry
+            </S.SectionTitle>
+            <S.SectionDescription>Pick an opponent, set your terms, and make the first move.</S.SectionDescription>
             <Formik initialValues={initialValues} onSubmit={handleChallengeSubmit} validationSchema={validationSchema}>
               {({
                 dirty,
@@ -914,9 +935,71 @@ const ConnectFiveHome: SFC = ({className}) => {
     );
   };
 
+  const renderWatchMatches = () => {
+    if (isMatchesLoading) {
+      return (
+        <S.EmptyState role="status">
+          <Loader />
+          <S.EmptyStateDescription>Finding live matches...</S.EmptyStateDescription>
+        </S.EmptyState>
+      );
+    }
+
+    if (matchesError) {
+      return (
+        <S.EmptyState>
+          <S.EmptyStateDescription role="alert">{matchesError}</S.EmptyStateDescription>
+          <Button color={ButtonColor.secondary} onClick={loadMatches} text="Try again" />
+        </S.EmptyState>
+      );
+    }
+
+    if (publicMatchesSorted.length) {
+      return renderPublicMatches();
+    }
+
+    return (
+      <S.EmptyState>
+        <S.EmptyStateTitle>The board is waiting.</S.EmptyStateTitle>
+        <S.EmptyStateDescription>
+          No public matches are live right now.{' '}
+          {isAuthenticated
+            ? 'Challenge a player to get things started.'
+            : 'Check back soon to watch the next rivalry unfold.'}
+        </S.EmptyStateDescription>
+      </S.EmptyState>
+    );
+  };
+
   return (
     <S.Container className={className}>
       <S.Content>
+        <S.Hero>
+          <S.HeroContent>
+            <S.HeroEyebrow>The strategy lobby</S.HeroEyebrow>
+            <S.HeroTitle>Connect Five</S.HeroTitle>
+            <S.HeroTagline>Five in a row. A move ahead.</S.HeroTagline>
+            <S.HeroDescription>
+              A friendly rivalry. A brilliant next move. Challenge the community and find your winning line.
+            </S.HeroDescription>
+            <S.HeroMeta aria-label="Game features">
+              <S.HeroMetaItem>2 players</S.HeroMetaItem>
+              <S.HeroMetaItem>Live strategy</S.HeroMetaItem>
+              <S.HeroMetaItem>Ranked matches</S.HeroMetaItem>
+            </S.HeroMeta>
+            <S.HeroActions>
+              {isAuthenticated ? (
+                <S.HeroPrimaryLink href="#challenge-player">Challenge a player</S.HeroPrimaryLink>
+              ) : (
+                <AuthButtons />
+              )}
+              <S.HeroLink to="/connect-five/leaderboard">Leaderboard</S.HeroLink>
+            </S.HeroActions>
+          </S.HeroContent>
+          <S.HeroVisual>
+            <S.HeroImage alt="" src={connectFiveCover} />
+          </S.HeroVisual>
+        </S.Hero>
         {isAuthenticated ? renderMemberOverview() : renderGuestIntro()}
 
         {incomingChallenges.length > 0 && (
@@ -940,19 +1023,11 @@ const ConnectFiveHome: SFC = ({className}) => {
           </S.MatchesSection>
         )}
 
-        {publicMatchesSorted.length > 0 && (
-          <S.MatchesSection>
-            <S.MatchesSectionTitle>Public matches</S.MatchesSectionTitle>
-            {renderPublicMatches()}
-          </S.MatchesSection>
-        )}
-
-        {!isAuthenticated && !isMatchesLoading && !publicMatchesSorted.length && (
-          <S.MatchesSection>
-            <S.MatchesSectionTitle>Public matches</S.MatchesSectionTitle>
-            <EmptyText>No matches are being played right now.</EmptyText>
-          </S.MatchesSection>
-        )}
+        <S.MatchesSection aria-labelledby="watch-live-heading">
+          <S.MatchesSectionTitle id="watch-live-heading">Watch live</S.MatchesSectionTitle>
+          <S.WatchDescription>Take a seat and see how the next winning line unfolds.</S.WatchDescription>
+          {renderWatchMatches()}
+        </S.MatchesSection>
 
         {completedMatchesSorted.length > 0 && (
           <S.MatchesSection>
