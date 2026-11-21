@@ -1,157 +1,217 @@
+import {Link} from 'react-router-dom';
+import {mdiBookOpenPageVariantOutline, mdiCheckCircleOutline, mdiSwapHorizontal, mdiWalletOutline} from '@mdi/js';
+import MdiIcon from '@mdi/react';
+
 import {SFC} from 'types';
 
+import PageHeader from '../PageHeader';
+
 import * as S from './Styles';
+
+const GUIDE_SECTIONS = [
+  {id: 'limit-orders', label: 'Limit orders'},
+  {id: 'placing-an-order', label: 'Placing an order'},
+  {id: 'order-matching', label: 'Order matching'},
+  {id: 'trade-fills', label: 'Trades & partial fills'},
+  {id: 'cancelling-orders', label: 'Cancelling orders'},
+];
 
 const LearnMore: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Content>
-        <S.Title>Exchange Guide: Orders, Matching, and Fills</S.Title>
+        <PageHeader
+          description="From your first limit order to your final fill. Learn how prices, matching, and reserved funds work on the exchange."
+          eyebrow="The exchange, explained"
+          title="A little knowledge. More confidence."
+        >
+          <Link to="/exchange/home">Explore markets</Link>
+        </PageHeader>
 
-        <S.Introduction>
-          Welcome to our exchange! This guide explains how placing orders, the matching process, and trade execution
-          work.
-        </S.Introduction>
+        <S.Highlights aria-label="Trading essentials">
+          <S.Highlight>
+            <S.HighlightIcon aria-hidden="true">
+              <MdiIcon path={mdiSwapHorizontal} size="24px" />
+            </S.HighlightIcon>
+            <div>
+              <S.HighlightTitle>You set the limit</S.HighlightTitle>
+              <S.HighlightDescription>Choose your price and quantity.</S.HighlightDescription>
+            </div>
+          </S.Highlight>
+          <S.Highlight>
+            <S.HighlightIcon aria-hidden="true">
+              <MdiIcon path={mdiWalletOutline} size="24px" />
+            </S.HighlightIcon>
+            <div>
+              <S.HighlightTitle>Funds stay reserved</S.HighlightTitle>
+              <S.HighlightDescription>Until your order fills or you cancel.</S.HighlightDescription>
+            </div>
+          </S.Highlight>
+          <S.Highlight>
+            <S.HighlightIcon aria-hidden="true">
+              <MdiIcon path={mdiCheckCircleOutline} size="24px" />
+            </S.HighlightIcon>
+            <div>
+              <S.HighlightTitle>Matching is automatic</S.HighlightTitle>
+              <S.HighlightDescription>Compatible orders become trades.</S.HighlightDescription>
+            </div>
+          </S.Highlight>
+        </S.Highlights>
 
-        <S.Section>
-          <S.SectionTitle>Types of Orders</S.SectionTitle>
-          <S.Paragraph>
-            When trading on our platform, you'll use <S.Bold>limit orders</S.Bold>. Limit orders let you specify exactly
-            the price at which you want to buy or sell an asset.
-          </S.Paragraph>
-          <S.List>
-            <S.ListItem>
-              <S.Bold>Buy Limit Order:</S.Bold> Specify the highest price you're willing to pay for an asset.
-            </S.ListItem>
-            <S.ListItem>
-              <S.Bold>Sell Limit Order:</S.Bold> Specify the lowest price you're willing to accept when selling an
-              asset.
-            </S.ListItem>
-          </S.List>
-        </S.Section>
+        <S.GuideLayout>
+          <S.ContentsNavigation aria-label="Exchange guide sections">
+            <S.ContentsTitle>
+              <MdiIcon aria-hidden="true" path={mdiBookOpenPageVariantOutline} size="20px" />
+              In this guide
+            </S.ContentsTitle>
+            <S.ContentsLinks>
+              {GUIDE_SECTIONS.map(({id, label}) => (
+                <S.ContentsLink href={`#${id}`} key={id}>
+                  {label}
+                </S.ContentsLink>
+              ))}
+            </S.ContentsLinks>
+            <S.ContentsNote>New to trading? Start with limit orders and work your way down.</S.ContentsNote>
+          </S.ContentsNavigation>
 
-        <S.Section>
-          <S.SectionTitle>Placing an Order</S.SectionTitle>
+          <S.Sections>
+            <S.Section aria-labelledby="limit-orders-heading" id="limit-orders">
+              <S.SectionLabel>The basics</S.SectionLabel>
+              <S.SectionTitle id="limit-orders-heading">Your price. Your limit.</S.SectionTitle>
+              <S.Paragraph>
+                The exchange uses <S.Bold>limit orders</S.Bold>. You choose how many coins to buy or sell and the price
+                you are willing to accept.
+              </S.Paragraph>
+              <S.ExampleGrid>
+                <S.ExampleCard>
+                  <S.ExampleLabel $side="buy">Buy limit</S.ExampleLabel>
+                  <S.SubSectionTitle>The most you will pay</S.SubSectionTitle>
+                  <S.Paragraph>A buy order sets the highest price you are willing to pay for each coin.</S.Paragraph>
+                </S.ExampleCard>
+                <S.ExampleCard>
+                  <S.ExampleLabel $side="sell">Sell limit</S.ExampleLabel>
+                  <S.SubSectionTitle>The least you will accept</S.SubSectionTitle>
+                  <S.Paragraph>A sell order sets the lowest price you are willing to accept for each coin.</S.Paragraph>
+                </S.ExampleCard>
+              </S.ExampleGrid>
+            </S.Section>
 
-          <S.SubSection>
-            <S.SubSectionTitle>Buy Order Example:</S.SubSectionTitle>
-            <S.List>
-              <S.ListItem>
-                You place a Buy Limit Order for <S.Bold>100 ABC coins at 10 TNB each</S.Bold>.
-              </S.ListItem>
-              <S.ListItem>
-                This order means you're willing to buy 100 ABC coins but <S.Bold>no more expensive</S.Bold> than 10 TNB
-                each.
-              </S.ListItem>
-              <S.ListItem>
-                Your funds (TNB) are immediately <S.Bold>reserved</S.Bold>, meaning temporarily locked and unavailable
-                for other use, ensuring they remain available if the order is matched.
-              </S.ListItem>
-            </S.List>
-          </S.SubSection>
+            <S.Section aria-labelledby="placing-an-order-heading" id="placing-an-order">
+              <S.SectionLabel>Make your move</S.SectionLabel>
+              <S.SectionTitle id="placing-an-order-heading">Placing an order</S.SectionTitle>
+              <S.Paragraph>
+                Choose a market, enter your price and quantity, then place your buy or sell order.
+              </S.Paragraph>
+              <S.ExampleGrid>
+                <S.ExampleCard>
+                  <S.ExampleLabel $side="buy">Buy example</S.ExampleLabel>
+                  <S.ExampleAmount>100 ABC</S.ExampleAmount>
+                  <S.ExamplePrice>at a limit of 10 TNB per coin</S.ExamplePrice>
+                  <S.Paragraph>
+                    You are willing to buy 100 ABC coins for <S.Bold>no more than 10 TNB each</S.Bold>. Your TNB is
+                    reserved so it is available when the order matches.
+                  </S.Paragraph>
+                </S.ExampleCard>
+                <S.ExampleCard>
+                  <S.ExampleLabel $side="sell">Sell example</S.ExampleLabel>
+                  <S.ExampleAmount>50 XYZ</S.ExampleAmount>
+                  <S.ExamplePrice>at a limit of 20 TNB per coin</S.ExamplePrice>
+                  <S.Paragraph>
+                    You are offering 50 XYZ coins for <S.Bold>no less than 20 TNB each</S.Bold>. Those coins are
+                    reserved from your wallet until the order fills or you cancel.
+                  </S.Paragraph>
+                </S.ExampleCard>
+              </S.ExampleGrid>
+              <S.Callout>
+                <MdiIcon aria-hidden="true" path={mdiWalletOutline} size="24px" />
+                <S.CalloutText>
+                  <S.Bold>Reserved means temporarily locked.</S.Bold> Funds or coins committed to an open order are
+                  unavailable for other use.
+                </S.CalloutText>
+              </S.Callout>
+            </S.Section>
 
-          <S.SubSection>
-            <S.SubSectionTitle>Sell Order Example:</S.SubSectionTitle>
-            <S.List>
-              <S.ListItem>
-                You place a Sell Limit Order for <S.Bold>50 XYZ coins at 20 TNB each</S.Bold>.
-              </S.ListItem>
-              <S.ListItem>
-                This means you are offering to sell 50 XYZ coins but <S.Bold>no cheaper</S.Bold> than 20 TNB each.
-              </S.ListItem>
-              <S.ListItem>
-                The coins you're selling (XYZ) are immediately <S.Bold>reserved</S.Bold> from your wallet, meaning
-                temporarily locked and unavailable for other use until the order is filled or canceled.
-              </S.ListItem>
-            </S.List>
-          </S.SubSection>
-        </S.Section>
-
-        <S.Section>
-          <S.SectionTitle>How Order Matching Works</S.SectionTitle>
-          <S.Paragraph>
-            Orders are matched automatically and immediately whenever a compatible order already exists in the order
-            book.
-          </S.Paragraph>
-
-          <S.SubSection>
-            <S.SubSectionTitle>Matching Criteria:</S.SubSectionTitle>
-            <S.List>
-              <S.ListItem>
-                <S.Bold>Buy Orders</S.Bold> match against existing Sell Orders at the same or lower price.
-              </S.ListItem>
-              <S.ListItem>
-                <S.Bold>Sell Orders</S.Bold> match against existing Buy Orders at the same or higher price.
-              </S.ListItem>
-              <S.ListItem>
-                Orders are matched on a <S.Bold>first-come-first-served</S.Bold> (FIFO) basis when prices are identical.
-              </S.ListItem>
-            </S.List>
-          </S.SubSection>
-
-          <S.SubSection>
-            <S.SubSectionTitle>Example Scenario:</S.SubSectionTitle>
-            <S.List>
-              <S.ListItem>Suppose you placed a Buy Order for 100 ABC coins at 12 TNB each.</S.ListItem>
-              <S.ListItem>There's an existing Sell Order on the book for 100 ABC coins at 10 TNB each.</S.ListItem>
-              <S.ListItem>
-                Your order matches immediately because your Buy Order price (12 TNB) is equal to or higher than the Sell
-                Order price (10 TNB).
-              </S.ListItem>
-            </S.List>
-          </S.SubSection>
-        </S.Section>
-
-        <S.Section>
-          <S.SectionTitle>How Trades (Fills) Occur</S.SectionTitle>
-          <S.Paragraph>When a matching order is found, a trade (or "fill") happens:</S.Paragraph>
-          <S.List>
-            <S.ListItem>
-              The trade executes at the <S.Bold>lowest price</S.Bold> among the two matched orders.
-            </S.ListItem>
-            <S.ListItem>
-              Continuing the example above:
-              <S.NestedList>
-                <S.ListItem>The trade would execute at 10 TNB (the lower of the two prices).</S.ListItem>
-                <S.ListItem>You receive 100 ABC coins, and the seller receives the equivalent funds in TNB.</S.ListItem>
+            <S.Section aria-labelledby="order-matching-heading" id="order-matching">
+              <S.SectionLabel>Behind the scenes</S.SectionLabel>
+              <S.SectionTitle id="order-matching-heading">When orders meet</S.SectionTitle>
+              <S.Paragraph>
+                Matching happens automatically whenever a compatible order exists in the order book.
+              </S.Paragraph>
+              <S.List>
                 <S.ListItem>
-                  Any difference between your original order price (12 TNB) and the trade execution price (10 TNB) is
-                  immediately refunded to your wallet.
+                  <S.Bold>Buy orders</S.Bold> match sell orders at the same or a lower price.
                 </S.ListItem>
-              </S.NestedList>
-            </S.ListItem>
-          </S.List>
+                <S.ListItem>
+                  <S.Bold>Sell orders</S.Bold> match buy orders at the same or a higher price.
+                </S.ListItem>
+                <S.ListItem>
+                  At the same price, orders match <S.Bold>first come, first served</S.Bold> (FIFO).
+                </S.ListItem>
+              </S.List>
+              <S.MatchExample aria-label="Example of compatible orders">
+                <S.MatchDetail>
+                  <S.MatchLabel>Your buy limit</S.MatchLabel>
+                  <S.MatchValue>12 TNB</S.MatchValue>
+                  <S.MatchCaption>100 ABC coins</S.MatchCaption>
+                </S.MatchDetail>
+                <S.MatchIcon aria-hidden="true">
+                  <MdiIcon path={mdiSwapHorizontal} size="28px" />
+                </S.MatchIcon>
+                <S.MatchDetail>
+                  <S.MatchLabel>Existing sell order</S.MatchLabel>
+                  <S.MatchValue>10 TNB</S.MatchValue>
+                  <S.MatchCaption>100 ABC coins</S.MatchCaption>
+                </S.MatchDetail>
+              </S.MatchExample>
+              <S.Paragraph>
+                These orders match immediately: the buyer is willing to pay at least the seller's asking price.
+              </S.Paragraph>
+            </S.Section>
 
-          <S.SubSection>
-            <S.SubSectionTitle>Partial Fills:</S.SubSectionTitle>
-            <S.List>
-              <S.ListItem>
-                Sometimes, your order may only be partially filled. For instance, if you wanted 100 ABC coins, but only
-                50 coins were available at your limit price or better:
-                <S.NestedList>
-                  <S.ListItem>You immediately get the 50 coins.</S.ListItem>
-                  <S.ListItem>
-                    Your order stays active in the order book with the remaining 50 coins until filled or canceled.
-                  </S.ListItem>
-                  <S.ListItem>
-                    Funds for the unfilled portion remain reserved (locked) until the order is filled or canceled.
-                  </S.ListItem>
-                </S.NestedList>
-              </S.ListItem>
-            </S.List>
-          </S.SubSection>
-        </S.Section>
+            <S.Section aria-labelledby="trade-fills-heading" id="trade-fills">
+              <S.SectionLabel>From order to trade</S.SectionLabel>
+              <S.SectionTitle id="trade-fills-heading">Understanding your fills</S.SectionTitle>
+              <S.Paragraph>
+                A matched trade is called a <S.Bold>fill</S.Bold>. On this exchange, the trade executes at the lower
+                price of the two matched orders.
+              </S.Paragraph>
+              <S.List>
+                <S.ListItem>
+                  In the example above, the trade executes at <S.Bold>10 TNB per coin</S.Bold>.
+                </S.ListItem>
+                <S.ListItem>The buyer receives 100 ABC coins, and the seller receives the funds in TNB.</S.ListItem>
+                <S.ListItem>
+                  The difference between the buyer's 12 TNB limit and the 10 TNB execution price is refunded to the
+                  buyer's wallet.
+                </S.ListItem>
+              </S.List>
+              <S.SubSection>
+                <S.SubSectionTitle>What if only part of my order matches?</S.SubSectionTitle>
+                <S.Paragraph>
+                  If you want 100 ABC coins but only 50 are available at your limit price or better, you receive those
+                  50 coins immediately. The remaining 50 stay in the order book until filled or cancelled.
+                </S.Paragraph>
+                <S.Callout>
+                  <MdiIcon aria-hidden="true" path={mdiWalletOutline} size="24px" />
+                  <S.CalloutText>Funds for the unfilled portion stay reserved while the order is open.</S.CalloutText>
+                </S.Callout>
+              </S.SubSection>
+            </S.Section>
 
-        <S.Section>
-          <S.SectionTitle>Cancelling Orders</S.SectionTitle>
-          <S.List>
-            <S.ListItem>You can cancel any open or partially filled order.</S.ListItem>
-            <S.ListItem>
-              Upon cancellation, reserved (locked) funds or coins for the unfilled portion are immediately returned to
-              your wallet.
-            </S.ListItem>
-          </S.List>
-        </S.Section>
+            <S.Section aria-labelledby="cancelling-orders-heading" id="cancelling-orders">
+              <S.SectionLabel>Stay in control</S.SectionLabel>
+              <S.SectionTitle id="cancelling-orders-heading">Changed your mind?</S.SectionTitle>
+              <S.Paragraph>
+                You can cancel any open or partially filled order from the <S.Bold>Orders</S.Bold> page. Reserved funds
+                or coins for the unfilled portion are returned to your wallet immediately.
+              </S.Paragraph>
+              <S.Footer>
+                <S.FooterText>Ready to take a look around?</S.FooterText>
+                <S.MarketLink to="/exchange/home">Browse markets</S.MarketLink>
+              </S.Footer>
+            </S.Section>
+          </S.Sections>
+        </S.GuideLayout>
       </S.Content>
     </S.Container>
   );

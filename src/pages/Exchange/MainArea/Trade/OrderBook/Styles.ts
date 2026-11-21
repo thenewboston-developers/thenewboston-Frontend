@@ -24,7 +24,7 @@ const columnsMixin = css`
 `;
 
 const valueMixin = css`
-  font-size: 13px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
   min-width: 0;
   overflow: hidden;
@@ -41,19 +41,11 @@ export const Box = styled.div`
   @media (max-width: ${breakpoints.mobile}) {
     padding: 16px;
   }
-
-  h2 {
-    color: ${colors.primary};
-    font-size: 17px;
-    font-weight: ${fonts.weight.semiBold};
-    letter-spacing: -0.01em;
-    line-height: 1.3;
-    margin: 0 0 16px;
-  }
 `;
 
 export const ColumnHeader = styled.span`
   ${eyebrowStyle};
+  font-size: 12px;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -65,14 +57,28 @@ export const ColumnHeaders = styled.div`
   align-items: center;
   background: ${colors.palette.gray[50]};
   border-radius: ${radii.small};
-  height: 32px;
+  height: 40px;
   margin-bottom: 4px;
 `;
 
 export const Container = styled.div`
   ${contentWidthStyle};
   margin-bottom: 24px;
-  margin-top: 16px;
+  margin-top: 24px;
+`;
+
+export const Description = styled.p`
+  color: ${colors.secondary};
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 6px 0 0;
+`;
+
+export const EmptySide = styled.div`
+  color: ${colors.secondary};
+  font-size: 14px;
+  padding: 32px 12px;
+  text-align: center;
 `;
 
 export const EmptyState = styled.div`
@@ -81,6 +87,19 @@ export const EmptyState = styled.div`
   line-height: 1.5;
   padding: 40px 20px;
   text-align: center;
+`;
+
+export const Header = styled.div`
+  margin-bottom: 24px;
+`;
+
+export const Heading = styled.h2`
+  color: ${colors.primary};
+  font-size: 20px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin: 0;
 `;
 
 export const OrderBookContainer = styled.div`
@@ -95,10 +114,14 @@ export const OrderBookContainer = styled.div`
 `;
 
 export const OrderCount = styled.span`
+  background: ${colors.white};
+  border: 1px solid ${colors.borderSubtle};
+  border-radius: ${radii.pill};
   color: ${colors.secondary};
-  font-size: 11px;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.semiBold};
+  padding: 2px 8px;
 `;
 
 export const OrderList = styled.div`
@@ -125,7 +148,7 @@ export const OrderRow = styled.div`
   align-items: center;
   border-radius: ${radii.small};
   cursor: default;
-  height: 34px;
+  height: 40px;
   position: relative;
   transition: background 0.15s ease;
 
@@ -136,8 +159,16 @@ export const OrderRow = styled.div`
   }
 `;
 
-export const OrderSection = styled.div`
+export const OrderSection = styled.div<{$type: 'buy' | 'sell'}>`
+  border: 1px solid ${colors.borderSubtle};
+  border-radius: ${radii.medium};
+  border-top: 3px solid ${({$type}) => ($type === 'buy' ? colors.palette.green[800] : colors.palette.red[600])};
   min-width: 0;
+  padding: 16px 12px 12px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 12px 8px 8px;
+  }
 `;
 
 export const OrderTotal = styled.span`
@@ -149,8 +180,8 @@ export const OrderTotal = styled.span`
 export const SectionHeader = styled.div`
   align-items: baseline;
   display: flex;
-  gap: 6px;
-  margin-bottom: 8px;
+  gap: 8px;
+  margin-bottom: 16px;
   padding: 0 12px;
 
   @media (max-width: ${breakpoints.mobile}) {
@@ -158,15 +189,12 @@ export const SectionHeader = styled.div`
   }
 `;
 
-// eyebrowStyle with the color of the side in place of colors.secondary
 export const SectionTitle = styled.h3<{$type: 'buy' | 'sell'}>`
   color: ${({$type}) => ($type === 'buy' ? POSITIVE_TEXT_COLOR : NEGATIVE_TEXT_COLOR)};
-  font-size: 11px;
+  font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
-  letter-spacing: 0.06em;
   line-height: 1.5;
   margin: 0;
-  text-transform: uppercase;
 `;
 
 export const Spread = styled.div`

@@ -1,6 +1,6 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
@@ -11,6 +11,8 @@ import {getAssetPairs} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
+import PageHeader from '../PageHeader';
+
 import Chart from './Chart';
 import OrderBook from './OrderBook';
 import OrderTools from './OrderTools';
@@ -19,13 +21,12 @@ import * as S from './Styles';
 const Trade: SFC = ({className}) => {
   const {assetPairId} = useParams<{assetPairId: string}>();
   const assetPairs = useSelector(getAssetPairs);
-  const dispatch = useDispatch<AppDispatch>();
-
-  const assetPairList = useMemo(() => Object.values(assetPairs), [assetPairs]);
   const activeAssetPair = useMemo(() => {
     if (!assetPairId || !assetPairs[assetPairId]) return null;
     return assetPairs[assetPairId];
   }, [assetPairId, assetPairs]);
+  const assetPairList = useMemo(() => Object.values(assetPairs), [assetPairs]);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     (async () => {
@@ -73,6 +74,17 @@ const Trade: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
+      <PageHeader
+        description="Follow the market, explore the order book, and trade at your price."
+        eyebrow="Your trading workspace"
+        title={
+          activeAssetPair
+            ? `${activeAssetPair.primary_currency.ticker} / ${activeAssetPair.secondary_currency.ticker}`
+            : 'Trade currencies'
+        }
+      >
+        <Link to="/exchange/home">Explore markets</Link>
+      </PageHeader>
       {renderPageContent()}
       <OrderBookWebSocket assetPair={activeAssetPair} />
       <TradeWebSocket assetPair={activeAssetPair} />

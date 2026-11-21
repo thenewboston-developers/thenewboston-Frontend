@@ -22,6 +22,14 @@ const OrderBook: SFC<OrderBookProps> = ({activeAssetPair, className}) => {
   const isLoading = useSelector(isLoadingOrderBook);
   const sellOrders = useSelector(getOrderBookSellOrders);
 
+  const spread = (() => {
+    if (!activeAssetPair || buyOrders.length === 0 || sellOrders.length === 0) return 0;
+
+    const highestBuy = buyOrders[0]?.price || 0;
+    const lowestSell = sellOrders[0]?.price || 0;
+    return lowestSell > 0 && highestBuy > 0 ? lowestSell - highestBuy : 0;
+  })();
+
   useEffect(() => {
     if (!activeAssetPair) return;
 
@@ -34,70 +42,6 @@ const OrderBook: SFC<OrderBookProps> = ({activeAssetPair, className}) => {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeAssetPair?.id, dispatch]);
-
-  const spread = (() => {
-    if (!activeAssetPair || buyOrders.length === 0 || sellOrders.length === 0) return 0;
-
-    const highestBuy = buyOrders[0]?.price || 0;
-    const lowestSell = sellOrders[0]?.price || 0;
-    return lowestSell > 0 && highestBuy > 0 ? lowestSell - highestBuy : 0;
-  })();
-
-  const renderOrderSection = (sectionOrders: ExchangeOrder[], type: 'buy' | 'sell') => {
-    if (!activeAssetPair) return null;
-
-    return (
-      <S.OrderSection>
-        <S.SectionHeader>
-          <S.SectionTitle $type={type}>{type === 'buy' ? 'Buy Orders' : 'Sell Orders'}</S.SectionTitle>
-          <S.OrderCount>({sectionOrders.length})</S.OrderCount>
-        </S.SectionHeader>
-
-        <S.ColumnHeaders>
-          <S.ColumnHeader>Amount ({activeAssetPair.primary_currency.ticker})</S.ColumnHeader>
-          <S.ColumnHeader>Price ({activeAssetPair.secondary_currency.ticker})</S.ColumnHeader>
-          <S.ColumnHeader>Total ({activeAssetPair.secondary_currency.ticker})</S.ColumnHeader>
-        </S.ColumnHeaders>
-
-        <S.OrderList>
-          {sectionOrders.map((order) => {
-            const remaining = order.quantity - order.filled_quantity;
-            const total = remaining * order.price;
-            const [date, time] = longDate(order.created_date).split('at');
-
-            return (
-              <S.OrderRow
-                key={order.id}
-                onMouseEnter={() => {
-                  if (hoverTimeoutRef.current) {
-                    clearTimeout(hoverTimeoutRef.current);
-                  }
-                  hoverTimeoutRef.current = setTimeout(() => {
-                    setHoveredOrder(order);
-                  }, 500);
-                }}
-                onMouseLeave={() => {
-                  if (hoverTimeoutRef.current) {
-                    clearTimeout(hoverTimeoutRef.current);
-                    hoverTimeoutRef.current = null;
-                  }
-                  setHoveredOrder(null);
-                }}
-              >
-                <S.OrderQuantity>{remaining.toLocaleString()}</S.OrderQuantity>
-                <S.OrderPrice $type={type}>{order.price.toLocaleString()}</S.OrderPrice>
-                <S.OrderTotal>{total.toLocaleString(undefined, {maximumFractionDigits: 2})}</S.OrderTotal>
-
-                {hoveredOrder?.id === order.id && (
-                  <Tooltip order={order} activeAssetPair={activeAssetPair} date={date} time={time} type={type} />
-                )}
-              </S.OrderRow>
-            );
-          })}
-        </S.OrderList>
-      </S.OrderSection>
-    );
-  };
 
   const renderContent = () => {
     if (!activeAssetPair) return null;
@@ -129,10 +73,70 @@ const OrderBook: SFC<OrderBookProps> = ({activeAssetPair, className}) => {
     );
   };
 
+  const renderOrderSection = (sectionOrders: ExchangeOrder[], type: 'buy' | 'sell') => {
+    if (!activeAssetPair) return null;
+
+    return (
+      <S.OrderSection $type={type}>
+        <S.SectionHeader>
+          <S.SectionTitle $type={type}>{type === 'buy' ? 'Buy Orders' : 'Sell Orders'}</S.SectionTitle>
+          <S.OrderCount>{sectionOrders.length}</S.OrderCount>
+        </S.SectionHeader>
+
+        <S.ColumnHeaders>
+          <S.ColumnHeader>Amount ({activeAssetPair.primary_currency.ticker})</S.ColumnHeader>
+          <S.ColumnHeader>Price ({activeAssetPair.secondary_currency.ticker})</S.ColumnHeader>
+          <S.ColumnHeader>Total ({activeAssetPair.secondary_currency.ticker})</S.ColumnHeader>
+        </S.ColumnHeaders>
+
+        <S.OrderList>
+          {!sectionOrders.length && <S.EmptySide>No {type} orders yet.</S.EmptySide>}
+          {sectionOrders.map((order) => {
+            const remaining = order.quantity - order.filled_quantity;
+            const total = remaining * order.price;
+            const [date, time] = longDate(order.created_date).split('at');
+
+            return (
+              <S.OrderRow
+                key={order.id}
+                onMouseEnter={() => {
+                  if (hoverTimeoutRef.current) {
+                    clearTimeout(hoverTimeoutRef.current);
+                  }
+                  hoverTimeoutRef.current = setTimeout(() => {
+                    setHoveredOrder(order);
+                  }, 500);
+                }}
+                onMouseLeave={() => {
+                  if (hoverTimeoutRef.current) {
+                    clearTimeout(hoverTimeoutRef.current);
+                    hoverTimeoutRef.current = null;
+                  }
+                  setHoveredOrder(null);
+                }}
+              >
+                <S.OrderQuantity>{remaining.toLocaleString()}</S.OrderQuantity>
+                <S.OrderPrice $type={type}>{order.price.toLocaleString()}</S.OrderPrice>
+                <S.OrderTotal>{total.toLocaleString(undefined, {maximumFractionDigits: 2})}</S.OrderTotal>
+
+                {hoveredOrder?.id === order.id && (
+                  <Tooltip activeAssetPair={activeAssetPair} date={date} order={order} time={time} type={type} />
+                )}
+              </S.OrderRow>
+            );
+          })}
+        </S.OrderList>
+      </S.OrderSection>
+    );
+  };
+
   return (
     <S.Container className={className}>
       <S.Box>
-        <h2>Order Book</h2>
+        <S.Header>
+          <S.Heading>Order book</S.Heading>
+          <S.Description>Open buy and sell orders for this market.</S.Description>
+        </S.Header>
         {renderContent()}
       </S.Box>
     </S.Container>

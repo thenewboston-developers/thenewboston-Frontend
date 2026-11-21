@@ -9,13 +9,13 @@ const Toolbar: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
-      <S.Left />
-      <S.MenuItems>
+      <S.Brand>Exchange</S.Brand>
+      <S.MenuItems aria-label="Exchange navigation">
         <ToolbarMenuLink text="Home" to="/exchange/home" />
         {isAuthenticated && <ToolbarMenuLink text="Orders" to="/exchange/orders" />}
         <ToolbarMenuLink text="Learn More" to="/exchange/learn-more" />
       </S.MenuItems>
-      <S.Right />
+      <S.Caption>Community markets</S.Caption>
     </S.Container>
   );
 };

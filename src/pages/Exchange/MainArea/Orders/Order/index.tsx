@@ -18,7 +18,12 @@ export interface OrderProps {
 }
 
 const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
+  const {asset_pair, created_date, filled_quantity, price, quantity, side, status} = order;
   const dispatch = useDispatch<AppDispatch>();
+  const fillPercentage = quantity > 0 ? (filled_quantity / quantity) * 100 : 0;
+  const primaryCurrencyTicker = asset_pair.primary_currency.ticker;
+  const secondaryCurrencyTicker = asset_pair.secondary_currency.ticker;
+  const totalValue = quantity * price;
 
   const renderDropdownMenu = useCallback(() => {
     const menuOptions = [
@@ -48,25 +53,21 @@ const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
     );
   }, [dispatch, order, onViewTrades]);
 
-  const {asset_pair, created_date, filled_quantity, price, quantity, side, status} = order;
-
-  const primaryCurrencyTicker = asset_pair.primary_currency.ticker;
-  const secondaryCurrencyTicker = asset_pair.secondary_currency.ticker;
-  const [date, time] = longDate(created_date).split('at');
-  const fillPercentage = quantity > 0 ? (filled_quantity / quantity) * 100 : 0;
-  const totalValue = quantity * price;
-
   return (
     <S.Container className={className}>
       <S.Header>
         <S.MainInfo>
+          <S.AssetPairLink to={`/exchange/trade/${asset_pair.id}`}>
+            <S.AssetLogo alt="" src={asset_pair.primary_currency.logo} />
+            <span>
+              {primaryCurrencyTicker} / {secondaryCurrencyTicker}
+            </span>
+          </S.AssetPairLink>
           <S.TopLine>
             <S.TypeBadge $orderType={side === ExchangeOrderSide.BUY ? 'BUY' : 'SELL'}>
               {side === ExchangeOrderSide.BUY ? 'BUY' : 'SELL'}
             </S.TypeBadge>
-            <S.DateTime>
-              {date.trim()} • {time.trim()}
-            </S.DateTime>
+            <S.DateTime dateTime={new Date(created_date).toISOString()}>{longDate(created_date)}</S.DateTime>
           </S.TopLine>
         </S.MainInfo>
         <S.Actions>
@@ -117,7 +118,13 @@ const Order: SFC<OrderProps> = ({className, order, onViewTrades}) => {
             <S.ProgressLabel>Fill Progress</S.ProgressLabel>
             <S.ProgressValue>{fillPercentage.toFixed(1)}%</S.ProgressValue>
           </S.ProgressHeader>
-          <S.ProgressBar>
+          <S.ProgressBar
+            aria-label="Order fill progress"
+            aria-valuemax={100}
+            aria-valuemin={0}
+            aria-valuenow={Number(fillPercentage.toFixed(1))}
+            role="progressbar"
+          >
             <S.ProgressFill $percentage={fillPercentage} $orderType={side === ExchangeOrderSide.BUY ? 'BUY' : 'SELL'} />
           </S.ProgressBar>
         </S.FillProgress>

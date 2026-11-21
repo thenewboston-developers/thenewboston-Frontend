@@ -4,7 +4,7 @@ import {breakpoints, pagePadding} from 'styles';
 
 import {contentWidthStyle} from '../mixins';
 
-const ORDER_TOOLS_WIDTH = 300;
+const ORDER_TOOLS_WIDTH = 320;
 
 export const Container = styled.div`
   ${pagePadding};
@@ -12,6 +12,10 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100%;
+
+  > header {
+    ${contentWidthStyle};
+  }
 `;
 
 // minmax(0, 1fr) lets the chart column shrink below the width of the rendered svg when the window gets narrower
@@ -19,7 +23,7 @@ export const Grid = styled.div`
   ${contentWidthStyle};
   align-items: start;
   display: grid;
-  gap: 16px;
+  gap: 24px;
   grid-template-columns: ${`${ORDER_TOOLS_WIDTH}px`} minmax(0, 1fr);
 
   @media (max-width: ${breakpoints.tablet}) {

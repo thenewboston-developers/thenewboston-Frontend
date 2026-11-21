@@ -1,5 +1,7 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {mdiChevronDown} from '@mdi/js';
+import Icon from '@mdi/react';
 
 import AssetPairSelectModal from 'modals/AssetPairSelectModal';
 import {AssetPair, SFC} from 'types';
@@ -11,8 +13,8 @@ interface AssetPairSelectorProps {
 }
 
 const AssetPairSelector: SFC<AssetPairSelectorProps> = ({activeAssetPair, className}) => {
-  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (newAssetPairId: string) => {
     setIsMenuOpen(false);
@@ -26,6 +28,7 @@ const AssetPairSelector: SFC<AssetPairSelectorProps> = ({activeAssetPair, classN
   return (
     <S.Container className={className}>
       <S.Content
+        aria-expanded={isMenuOpen}
         aria-haspopup="dialog"
         aria-label={
           activeAssetPair ? `Change asset pair (${activeAssetPair.primary_currency.ticker})` : 'Select asset pair'
@@ -36,7 +39,17 @@ const AssetPairSelector: SFC<AssetPairSelectorProps> = ({activeAssetPair, classN
         <S.ImageContainer>
           <S.Image alt="" src={activeAssetPair?.primary_currency.logo} />
         </S.ImageContainer>
-        <S.Ticker>{activeAssetPair?.primary_currency.ticker}</S.Ticker>
+        <S.PairDetails>
+          <S.Label>Trading pair</S.Label>
+          <S.Ticker>
+            {activeAssetPair
+              ? `${activeAssetPair.primary_currency.ticker} / ${activeAssetPair.secondary_currency.ticker}`
+              : 'Select a market'}
+          </S.Ticker>
+        </S.PairDetails>
+        <S.Chevron>
+          <Icon aria-hidden path={mdiChevronDown} size="20px" />
+        </S.Chevron>
       </S.Content>
       {isMenuOpen ? (
         <AssetPairSelectModal activeAssetPair={activeAssetPair} close={toggleMenu} handleChange={handleChange} />
