@@ -4,6 +4,18 @@ import {useDispatch} from 'react-redux';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import {openAuthPrompt} from 'store/authPrompt';
 import {AppDispatch} from 'types';
+import {captureAnalyticsEvent} from 'utils/analytics';
+
+// Keep analytics labels static: some UI intents contain another member's username.
+const getAuthenticationAction = (intent: string): string => {
+  if (intent === 'chat with the players and spectators') return 'game_chat';
+  if (intent === 'comment on this post') return 'comment_create';
+  if (intent === 'create your own currency') return 'currency_create';
+  if (intent === 'like this post') return 'post_like';
+  if (intent.startsWith('follow ')) return 'member_follow';
+  if (intent.startsWith('send coins to ')) return 'coins_send';
+  return 'member_action';
+};
 
 /**
  * Guards the actions that only a signed-in member can take (liking, commenting, following, trading, etc).
@@ -22,6 +34,7 @@ const useRequireAuthentication = (): ((intent: string) => boolean) => {
   return useCallback(
     (intent: string): boolean => {
       if (isAuthenticated) return true;
+      captureAnalyticsEvent('authentication_required', {action: getAuthenticationAction(intent)});
       dispatch(openAuthPrompt(intent));
       return false;
     },

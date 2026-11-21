@@ -13,6 +13,8 @@ jobs:
       # These should be added as repo Secrets in GitHub:
       REACT_APP_API_URL: ${{ secrets.PROD_API_URL }}
       REACT_APP_WS_URL: ${{ secrets.PROD_WS_URL }}
+      REACT_APP_POSTHOG_HOST: ${{ secrets.PROD_POSTHOG_HOST }}
+      REACT_APP_POSTHOG_KEY: ${{ secrets.PROD_POSTHOG_KEY }}
 
     steps:
       # 1. Checkout your code
@@ -27,7 +29,11 @@ jobs:
       # 3. Install deps & build production bundle
       - name: Install dependencies & build
         run: |
+          test -n "$REACT_APP_POSTHOG_HOST" || { echo "Missing PROD_POSTHOG_HOST"; exit 1; }
+          test -n "$REACT_APP_POSTHOG_KEY" || { echo "Missing PROD_POSTHOG_KEY"; exit 1; }
           npm ci --legacy-peer-deps
+          npm run typecheck
+          CI=true npm test -- --watchAll=false --runInBand
           npm run build
         # REACT_APP_* vars are injected above, so the build picks up your prod URLs
 

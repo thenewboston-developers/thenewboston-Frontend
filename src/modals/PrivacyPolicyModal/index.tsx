@@ -11,7 +11,7 @@ const PrivacyPolicyModal: SFC<PrivacyPolicyModalProps> = ({className, close}) =>
     <S.Modal className={className} close={close} header="Privacy Policy">
       <S.ScrollableContent>
         <S.Title>Privacy Policy</S.Title>
-        <S.LastUpdated>Last Updated: January 2025</S.LastUpdated>
+        <S.LastUpdated>Last Updated: November 2026</S.LastUpdated>
 
         <S.Section>
           <S.SectionTitle>1. Introduction</S.SectionTitle>
@@ -39,6 +39,11 @@ const PrivacyPolicyModal: SFC<PrivacyPolicyModalProps> = ({className, close}) =>
             <S.ListItem>
               <S.Bold>Technical Data:</S.Bold> IP address, browser type, and other standard web log information
             </S.ListItem>
+            <S.ListItem>
+              <S.Bold>Product Analytics:</S.Bold> Page visits, interactions, device and browser information,
+              performance, and whether actions succeed or fail. We use a pseudonymous visitor identifier and, when you
+              sign in, your account ID to understand journeys across visits.
+            </S.ListItem>
           </S.List>
         </S.Section>
 
@@ -51,6 +56,9 @@ const PrivacyPolicyModal: SFC<PrivacyPolicyModalProps> = ({className, close}) =>
             <S.ListItem>Enable transactions between users</S.ListItem>
             <S.ListItem>Display your profile and activities to other users</S.ListItem>
             <S.ListItem>Communicate with you about the platform</S.ListItem>
+            <S.ListItem>
+              Understand usage, identify confusing or broken interactions, and improve the platform
+            </S.ListItem>
           </S.List>
         </S.Section>
 
@@ -63,6 +71,13 @@ const PrivacyPolicyModal: SFC<PrivacyPolicyModalProps> = ({className, close}) =>
           <S.Paragraph>
             <S.Bold>Private Information:</S.Bold> We do not sell, trade, or rent your personal information to third
             parties. However, we reserve the right to disclose information if required by law.
+          </S.Paragraph>
+          <S.Paragraph>
+            <S.Bold>Analytics Providers:</S.Bold> We use PostHog to process product analytics and masked session replays
+            on our behalf. Replays help us understand navigation and interaction problems. Our PostHog integration masks
+            input values and page text and blocks images and other media. It does not intentionally send passwords,
+            authentication tokens, wallet signing keys, account numbers, balances, message contents, or request and
+            response bodies to PostHog.
           </S.Paragraph>
         </S.Section>
 

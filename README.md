@@ -7,6 +7,18 @@ REACT_APP_API_URL=http://127.0.0.1:8000
 REACT_APP_WS_URL=ws://127.0.0.1:8000
 ```
 
+## Product analytics
+
+PostHog runs in production builds when `REACT_APP_POSTHOG_KEY` and `REACT_APP_POSTHOG_HOST` are configured. Use the public project token and ingestion host from the **thenewboston** project (project ID `756373`, US Cloud). No personal API key belongs in the browser. Development and test builds do not send analytics; missing configuration leaves local builds usable.
+
+Production builds receive these values from GitHub Actions secrets `PROD_POSTHOG_KEY` and `PROD_POSTHOG_HOST`. The deployment checks they are present before building. For a local production smoke test, put the values in the ignored `.env.production.local` file, run `npm run build`, and serve `build/` with an SPA fallback.
+
+The integration records route-based pageviews, clicks, rage/dead clicks, page leaves, web vitals, authentication prompts, and allowlisted API operation outcomes. `api_operation_started`, `api_operation_succeeded`, `api_operation_failed`, and `api_operation_cancelled` include a static operation/endpoint, HTTP method/status, and duration. Search text, request/response bodies, headers, tokens, balances, amounts, and recipient IDs are excluded. Use the `operation` property to build signup, sign-in, posting, transfer, and game-action funnels; filter failures by status and route, then open linked session replays.
+
+Signed-in visitors are identified only by their numeric account ID. Logout and account switches reset analytics identity. URLs omit query strings, hashes, and dynamic IDs. Autocapture masks element text/attributes and does not capture input values or clipboard contents. Replays mask all text and inputs, block images/media/file uploads, and exclude console logs, network details, and JSON-LD. Browser Do Not Track is respected. Detailed exception reporting remains in Sentry.
+
+Session replay is enabled for a 10% sample with 30-day retention in the PostHog project settings; analytics events are not sampled. Project settings mask all text and inputs, block media, disable console/network capture, and anonymize IPs. Keep these safeguards when adjusting replay sampling. The SDK also masks attributes and strips replay URLs. The project token is public ingestion configuration; keep administrative credentials out of source control and frontend environment variables. A reverse proxy can be added at the hosting layer later if ad blockers cause gaps ([PostHog proxy documentation](https://posthog.com/docs/advanced/proxy)).
+
 ## Available Scripts
 
 In the project directory, you can run:
