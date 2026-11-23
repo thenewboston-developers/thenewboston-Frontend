@@ -9,10 +9,29 @@ export interface TipAmount {
   total_amount: number;
 }
 
+export interface PostImage {
+  id: number;
+  image: string;
+}
+
+// An image in the post form: one the post already has (id) or a file that is uploaded when the form is submitted
+export interface PostImageDraft {
+  file?: File;
+  id?: number;
+  key: string;
+  url: string;
+}
+
+export interface PostImageUploadProgress {
+  current: number;
+  total: number;
+}
+
 export interface Post extends CreatedModified {
   content: string;
   id: number;
   image: string | null;
+  images: PostImage[];
   is_liked: boolean;
   like_count: number;
   mentioned_users: UserReadSerializer[];

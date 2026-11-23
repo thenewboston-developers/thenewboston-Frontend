@@ -1,19 +1,21 @@
-import {ChangeEvent, useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {Form, Formik} from 'formik';
 
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiPicker from 'components/EmojiPicker';
-import {FileInput, FormField} from 'components/FormElements';
-import ImagePreview from 'components/ImagePreview';
+import {FormField} from 'components/FormElements';
 import MentionTextarea from 'components/MentionTextarea';
 import {ModalBody, ModalFooter} from 'components/Modal';
+import PostImagesInput from 'components/PostImagesInput';
 import {createPost, updatePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
+import {usePostImages} from 'hooks';
 import {AppDispatch, Post, SFC, UserReadSerializer} from 'types';
 import {handleFormikAPIError} from 'utils/forms';
-import {displayToast} from 'utils/toasts';
+import {getPostImagesErrorMessage} from 'utils/postImages';
+import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
 import * as S from './Styles';
@@ -25,69 +27,54 @@ export interface PostModalProps {
 
 const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
   const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>(post?.mentioned_users || []);
-  const [preview, setPreview] = useState<string | null>(null);
+  const {addImages, hasImageChanges, images, removeImage, uploadImages, uploadProgress} = usePostImages(post?.images);
   const dispatch = useDispatch<AppDispatch>();
 
   const initialValues = useMemo(
     () => ({
       content: post?.content || '',
-      image: post?.image || '',
     }),
-    [post?.content, post?.image],
+    [post?.content],
   );
 
   type FormValues = typeof initialValues;
 
   useEffect(() => {
-    if (!initialValues.image) return;
-    setPreview(initialValues.image);
-  }, [initialValues]);
-
-  useEffect(() => {
     setMentionedUsers(post?.mentioned_users || []);
   }, [post]);
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
-    try {
-      const requestData = new FormData();
-      requestData.append('content', values.content);
+    const verb = post ? 'updating' : 'creating';
 
-      mentionedUsers.forEach((user) => {
-        requestData.append('mentioned_user_ids', user.id.toString());
-      });
+    try {
+      const imageIds = await uploadImages();
+      if (!imageIds) return;
+
+      const requestData = {
+        content: values.content,
+        // An edit that leaves the images alone does not list them, so it cannot undo a change made to them elsewhere
+        ...(post && !hasImageChanges ? {} : {image_ids: imageIds}),
+        // Without the list the API derives the mentions from the content
+        ...(mentionedUsers.length ? {mentioned_user_ids: mentionedUsers.map((user) => user.id)} : {}),
+      };
 
       if (post) {
-        // For updates, only append image if it's a new file
-        if (!values.image && initialValues.image) {
-          requestData.append('clear_image', 'true');
-        } else if (values.image && values.image !== initialValues.image) {
-          requestData.append('image', values.image);
-        }
-
         await dispatch(updatePost(post.id, requestData));
         displayToast('Post updated!', ToastType.SUCCESS);
       } else {
-        // For new posts, only append image if it's present
-        if (values.image) {
-          requestData.append('image', values.image);
-        }
         await dispatch(createPost(requestData));
         displayToast('Post created!', ToastType.SUCCESS);
       }
 
       close();
     } catch (error) {
-      const verb = post ? 'updating' : 'creating';
+      const imagesErrorMessage = getPostImagesErrorMessage(error);
+
+      if (imagesErrorMessage) {
+        displayErrorToast(imagesErrorMessage);
+        return;
+      }
+
       handleFormikAPIError(error, helpers, `Error ${verb} post`);
     }
   };
@@ -125,24 +112,19 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
                 </S.TextareaContainer>
               </FormField>
 
-              {!values.image && (
-                <FormField>
-                  <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />
-                </FormField>
-              )}
-              <ImagePreview
-                onClear={async () => {
-                  await setFieldValue('image', '');
-                  setPreview(null);
-                }}
-                src={preview}
+              <PostImagesInput
+                disabled={isSubmitting}
+                images={images}
+                onAdd={addImages}
+                onRemove={removeImage}
+                uploadProgress={uploadProgress}
               />
             </ModalBody>
 
             <ModalFooter>
               <Button color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
-                dirty={dirty}
+                dirty={dirty || hasImageChanges}
                 disabled={isSubmitting}
                 isSubmitting={isSubmitting}
                 isValid={isValid}

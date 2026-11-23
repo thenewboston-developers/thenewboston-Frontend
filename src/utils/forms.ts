@@ -4,7 +4,7 @@ interface FormikHelpers {
   setFieldError: (field: string, message: string) => void;
 }
 
-const extractErrorMessage = (errorValue: any): string | null => {
+export const extractErrorMessage = (errorValue: any): string | null => {
   if (typeof errorValue === 'string') return errorValue;
 
   if (Array.isArray(errorValue) && errorValue.length > 0) {

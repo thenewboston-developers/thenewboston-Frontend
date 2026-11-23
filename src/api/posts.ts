@@ -1,13 +1,21 @@
 import axios from 'axios';
 
-import {GetPostsParams, PaginatedResponse, PostLike, PostReadSerializer, TipAmount} from 'types';
-import {authorizationFormHeaders, authorizationHeaders} from 'utils/authentication';
+import {
+  CreatePostRequest,
+  GetPostsParams,
+  PaginatedResponse,
+  PostLike,
+  PostReadSerializer,
+  TipAmount,
+  UpdatePostRequest,
+} from 'types';
+import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/posts`;
 
-export const createPost = async (data: FormData): Promise<PostReadSerializer> => {
+export const createPost = async (data: CreatePostRequest): Promise<PostReadSerializer> => {
   try {
-    const response = await axios.post<PostReadSerializer>(BASE_URL, data, authorizationFormHeaders());
+    const response = await axios.post<PostReadSerializer>(BASE_URL, data, authorizationHeaders());
     return response.data;
   } catch (error) {
     throw error;
@@ -98,9 +106,9 @@ export const unlikePost = async (postId: number): Promise<void> => {
   }
 };
 
-export const updatePost = async (id: number, data: FormData): Promise<PostReadSerializer> => {
+export const updatePost = async (id: number, data: UpdatePostRequest): Promise<PostReadSerializer> => {
   try {
-    const response = await axios.patch<PostReadSerializer>(`${BASE_URL}/${id}`, data, authorizationFormHeaders());
+    const response = await axios.patch<PostReadSerializer>(`${BASE_URL}/${id}`, data, authorizationHeaders());
     return response.data;
   } catch (error) {
     throw error;

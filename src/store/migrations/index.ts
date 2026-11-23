@@ -16,6 +16,21 @@ const migrations: MigrationManifest = {
       },
     };
   },
+  3: (state) => {
+    if (!state) return state;
+
+    // Posts cached before a post could have several images have no `images` list. Every page fetches its posts
+    // again, so the cache is emptied instead of being converted.
+    return {
+      ...state,
+      posts: {
+        hasMore: false,
+        isLoading: false,
+        next: null,
+        posts: [],
+      },
+    };
+  },
 };
 
 export default migrations;
