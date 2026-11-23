@@ -108,6 +108,18 @@ afterEach(() => {
 });
 
 describe('backgammon match interaction', () => {
+  it('keeps the actual winning computer roll visible in the result', async () => {
+    match.status = 'finished';
+    match.phase = 'finished';
+    match.winner = 'black';
+    match.black = null;
+    match.dice = [];
+    match.last_turn = {version: 4, side: 'black', dice: [4, 2], moves: []};
+    await renderMatch();
+    expect(container.textContent).toContain('Computer’s last roll');
+    expect(container.querySelector('[aria-label="Die 4"]')).toBeInTheDocument();
+    expect(container.querySelector('[aria-label="Die 2"]')).toBeInTheDocument();
+  });
   it('stops polling after a terminal match result', async () => {
     jest.useFakeTimers();
     match.status = 'finished';

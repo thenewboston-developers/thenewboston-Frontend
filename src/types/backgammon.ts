@@ -63,6 +63,12 @@ export interface BackgammonMatch {
   result_points: number;
   result_reason: string;
   legal_turns: BackgammonMove[][];
+  last_turn?: {
+    version: number;
+    side: BackgammonSide;
+    dice: number[];
+    moves: BackgammonMove[];
+  } | null;
   can_double: boolean;
   created_date: string;
   finished_at: string | null;
