@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import {breakpoints, colors, fonts, pagePadding, radii, shadows, toolbarStyle} from 'styles';
+import {analyticsScrollRoot} from 'utils/analyticsAttributes';
 
 // 680px post column plus the 32px horizontal page padding on each side
 const CONTENT_MAX_WIDTH = '744px';
@@ -57,7 +58,7 @@ export const Header = styled.div`
   ${toolbarStyle};
 `;
 
-export const ScrollableContent = styled.div`
+export const ScrollableContent = styled.div.attrs(analyticsScrollRoot)`
   flex: 1;
   overflow-y: auto;
 `;

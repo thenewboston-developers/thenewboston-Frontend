@@ -1,11 +1,12 @@
 import connectFiveCover from 'assets/connect-five-cover.webp';
 import {SFC} from 'types';
+import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
 
 import * as S from './Styles';
 
 const Games: SFC = ({className}) => {
   return (
-    <S.Container className={className}>
+    <S.Container {...analyticsArea('games')} className={className}>
       <S.Content>
         <S.Header>
           <S.Eyebrow>PLAY ON THENEWBOSTON</S.Eyebrow>
@@ -17,7 +18,11 @@ const Games: SFC = ({className}) => {
             <S.SectionTitle id="featured-game-heading">In the spotlight</S.SectionTitle>
             <S.GameCount>1 game</S.GameCount>
           </S.SectionHeader>
-          <S.GameCard aria-label="Connect Five — open game lobby" to="/connect-five/home">
+          <S.GameCard
+            {...analyticsTarget('connect_five')}
+            aria-label="Connect Five — open game lobby"
+            to="/connect-five/home"
+          >
             <S.Artwork>
               <S.Cover
                 alt="Black and ivory stones on a Connect Five board, with five stones connected in a glowing line"

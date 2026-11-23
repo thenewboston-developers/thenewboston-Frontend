@@ -25,6 +25,7 @@ import {useIsAuthenticated} from 'hooks';
 import {isPathActive} from 'layouts/Main/utils';
 import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
+import {analyticsArea} from 'utils/analyticsAttributes';
 import {getAuthenticationPath, getLocationPath} from 'utils/authentication';
 
 import BadgeCount from './BadgeCount';
@@ -72,7 +73,7 @@ const BottomNav: SFC = ({className}) => {
   // Signed-out visitors get every public section plus a way to sign in, the rest belongs to a member
   if (!isAuthenticated) {
     return (
-      <S.Container aria-label="Main" className={className}>
+      <S.Container {...analyticsArea('navigation')} aria-label="Main" className={className}>
         <MenuItem activeIcon={mdiHome} icon={mdiHomeOutline} rootPath={PATH_HOME} text="Home" to={PATH_HOME} />
         <MenuItem
           activeIcon={mdiSwapHorizontalCircle}
@@ -106,7 +107,7 @@ const BottomNav: SFC = ({className}) => {
   }
 
   return (
-    <S.Container aria-label="Main" className={className}>
+    <S.Container {...analyticsArea('navigation')} aria-label="Main" className={className}>
       <MenuItem activeIcon={mdiHome} icon={mdiHomeOutline} rootPath={PATH_HOME} text="Home" to={PATH_HOME} />
       <MenuItem
         activeIcon={mdiSwapHorizontalCircle}

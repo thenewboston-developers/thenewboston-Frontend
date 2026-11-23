@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import {analyticsScrollRoot} from 'utils/analyticsAttributes';
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -7,7 +9,7 @@ export const Container = styled.div`
   overflow: hidden;
 `;
 
-export const OutletContainer = styled.div`
+export const OutletContainer = styled.div.attrs(analyticsScrollRoot)`
   height: 100%;
   overflow-y: auto;
 `;

@@ -24,6 +24,7 @@ import {PATH_AUTHENTICATION, PATH_GAMES, PATH_HOME} from 'constants/paths';
 import {useIsAuthenticated} from 'hooks';
 import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
+import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
 import {getAuthenticationPath, getLocationPath} from 'utils/authentication';
 
 import MenuLink from './MenuItem/MenuLink';
@@ -60,7 +61,7 @@ const LeftNav: SFC = ({className}) => {
 
     return (
       <S.Bottom>
-        <S.UserCard title={isRail ? username : undefined} to={profilePath}>
+        <S.UserCard {...analyticsTarget('user_card')} title={isRail ? username : undefined} to={profilePath}>
           <S.Avatar size="32px" src={self.avatar} />
           <S.UserDetails>
             <S.Username>{username}</S.Username>
@@ -137,9 +138,9 @@ const LeftNav: SFC = ({className}) => {
   };
 
   return (
-    <S.Container className={className}>
+    <S.Container {...analyticsArea('navigation')} className={className}>
       <S.Top>
-        <S.Brand title={isRail ? BRAND_NAME : undefined} to={PATH_HOME}>
+        <S.Brand {...analyticsTarget('brand')} title={isRail ? BRAND_NAME : undefined} to={PATH_HOME}>
           <S.BrandLogo alt="" src={logo} />
           <S.BrandName>{BRAND_NAME}</S.BrandName>
         </S.Brand>

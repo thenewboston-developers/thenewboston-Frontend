@@ -26,8 +26,14 @@ const AuthButtons: SFC<AuthButtonsProps> = ({className, onNavigate}) => {
 
   return (
     <S.Container className={className}>
-      <Button color={ButtonColor.secondary} onClick={() => handleClick(PATH_AUTHENTICATION.SIGN_IN)} text="Sign In" />
       <Button
+        analyticsName="sign_in"
+        color={ButtonColor.secondary}
+        onClick={() => handleClick(PATH_AUTHENTICATION.SIGN_IN)}
+        text="Sign In"
+      />
+      <Button
+        analyticsName="create_account"
         color={ButtonColor.danger}
         onClick={() => handleClick(PATH_AUTHENTICATION.CREATE_ACCOUNT)}
         text="Create Account"
