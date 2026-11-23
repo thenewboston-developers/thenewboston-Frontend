@@ -17,6 +17,7 @@ import {LOGOUT_USER} from 'store/actions';
 import assetPairsReducer from 'store/assetPairs';
 import authenticationReducer from 'store/authentication';
 import authPromptReducer from 'store/authPrompt';
+import backgammonReducer from 'store/backgammon';
 import commentsReducer from 'store/comments';
 import connectFiveReducer from 'store/connectFive';
 import currenciesReducer from 'store/currencies';
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
   assetPairs: assetPairsReducer,
   authPrompt: authPromptReducer,
   authentication: authenticationReducer,
+  backgammon: backgammonReducer,
   comments: commentsReducer,
   connectFive: connectFiveReducer,
   currencies: currenciesReducer,
@@ -77,7 +79,7 @@ const persistConfig = {
   migrate: createMigrate(migrations, {debug: false}),
   storage,
   version: 2,
-  blacklist: ['authPrompt', 'frontendDeployments'],
+  blacklist: ['authPrompt', 'backgammon', 'frontendDeployments'],
 };
 
 const persistedReducer = persistReducer(persistConfig, appReducer);

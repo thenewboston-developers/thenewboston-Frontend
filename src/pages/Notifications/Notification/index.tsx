@@ -39,6 +39,10 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     }
 
     const notificationType = notification.payload.notification_type;
+    if (notification.payload.notification_type === NotificationType.BACKGAMMON_CHALLENGE) {
+      navigate(`/backgammon/matches/${notification.payload.match_id}`);
+      return;
+    }
     if (
       notificationType === NotificationType.COMMENT_MENTION ||
       notificationType === NotificationType.CONNECT_FIVE_CHALLENGE ||
@@ -58,8 +62,40 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     }
   };
 
+  const renderBackgammonChallengeNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.BACKGAMMON_CHALLENGE) return null;
+
+    const {challenger, match_id, stake_amount, target_score, time_limit_seconds} = notification.payload;
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/backgammon/matches/${match_id}`}>
+          <S.AvatarContainer>
+            <Avatar size="45px" src={challenger.avatar} />
+            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
+          </S.AvatarContainer>
+        </Link>
+        <S.TextContainer>
+          <S.MainText>
+            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
+              {challenger.username}
+            </S.Link>{' '}
+            challenged you to Backgammon
+          </S.MainText>
+          <S.PostPreviewText>
+            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} · First to{' '}
+            {target_score} {target_score === 1 ? 'point' : 'points'} · {time_limit_seconds / 60} min per player
+          </S.PostPreviewText>
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
+  };
+
   const renderContent = () => {
     const notificationTypes: {[key in NotificationType]: () => ReactNode} = {
+      [NotificationType.BACKGAMMON_CHALLENGE]: renderBackgammonChallengeNotification,
       [NotificationType.COMMENT_MENTION]: renderCommentMentionNotification,
       [NotificationType.CONNECT_FIVE_CHALLENGE]: renderConnectFiveChallengeNotification,
       [NotificationType.EXCHANGE_ORDER_FILLED]: renderExchangeOrderFilledNotification,

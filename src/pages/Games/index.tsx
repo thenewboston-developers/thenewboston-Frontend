@@ -1,4 +1,6 @@
 import connectFiveCover from 'assets/connect-five-cover.webp';
+import BackgammonBoard from 'pages/Backgammon/Board';
+import {INITIAL_BOARD} from 'pages/Backgammon/utils';
 import {SFC} from 'types';
 import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
 
@@ -16,8 +18,39 @@ const Games: SFC = ({className}) => {
         <section aria-labelledby="featured-game-heading">
           <S.SectionHeader>
             <S.SectionTitle id="featured-game-heading">In the spotlight</S.SectionTitle>
-            <S.GameCount>1 game</S.GameCount>
+            <S.GameCount>2 games</S.GameCount>
           </S.SectionHeader>
+          <S.GameCard aria-label="Backgammon — open game lobby" to="/backgammon/home">
+            <S.BackgammonArtwork>
+              <BackgammonBoard board={INITIAL_BOARD} decorative />
+              <S.FeaturedBadge>NEW GAME</S.FeaturedBadge>
+            </S.BackgammonArtwork>
+            <S.GameDetails>
+              <S.Category>CLASSIC STRATEGY · COMPUTER & MULTIPLAYER</S.Category>
+              <S.GameTitle>Backgammon</S.GameTitle>
+              <S.Tagline>
+                A little luck.
+                <br />A lot of strategy.
+              </S.Tagline>
+              <S.Description>
+                Race your checkers home and find the right moment to double. Play the computer for free or challenge a
+                member for TNB.
+              </S.Description>
+              <S.Facts>
+                <S.Fact>
+                  <S.FactValue>Free practice</S.FactValue>
+                  <S.FactLabel>Three computer levels</S.FactLabel>
+                </S.Fact>
+                <S.Fact>
+                  <S.FactValue>Optional TNB stakes</S.FactValue>
+                  <S.FactLabel>A fixed prize for the match</S.FactLabel>
+                </S.Fact>
+              </S.Facts>
+              <S.PlayLabel>Open lobby</S.PlayLabel>
+              <S.BrowserNote>Play in your browser · No download needed</S.BrowserNote>
+            </S.GameDetails>
+          </S.GameCard>
+          <S.CardSpacer />
           <S.GameCard
             {...analyticsTarget('connect_five')}
             aria-label="Connect Five — open game lobby"
@@ -59,14 +92,14 @@ const Games: SFC = ({className}) => {
             </S.GameDetails>
           </S.GameCard>
         </section>
-        <S.About aria-label="The Connect Five experience">
+        <S.About aria-label="The games experience">
           <S.AboutItem>
             <S.AboutTitle>Find your rival</S.AboutTitle>
             <S.AboutText>Challenge a member and make every move count.</S.AboutText>
           </S.AboutItem>
           <S.AboutItem>
-            <S.AboutTitle>Make your mark</S.AboutTitle>
-            <S.AboutText>Build your rating and climb the leaderboard.</S.AboutText>
+            <S.AboutTitle>Find your rhythm</S.AboutTitle>
+            <S.AboutText>Practice your backgammon or climb the Connect Five leaderboard.</S.AboutText>
           </S.AboutItem>
           <S.AboutItem>
             <S.AboutTitle>Take a front-row seat</S.AboutTitle>
