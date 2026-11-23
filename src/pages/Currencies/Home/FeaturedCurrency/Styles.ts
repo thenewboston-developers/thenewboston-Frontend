@@ -46,41 +46,45 @@ export const Actions = styled.div`
   }
 `;
 
-export const Artwork = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  min-width: 0;
-  overflow: hidden;
-  position: relative;
+export const Artwork = styled.picture`
+  display: block;
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
 
   &::after {
-    background: linear-gradient(90deg, ${FOREST}, transparent 18%);
+    background: linear-gradient(90deg, rgb(7 29 21 / 78%), rgb(7 29 21 / 24%) 48%, rgb(7 29 21 / 0%) 70%);
     content: '';
     inset: 0;
     pointer-events: none;
     position: absolute;
   }
 
+  @media (max-width: ${breakpoints.tablet}) {
+    &::after {
+      background: linear-gradient(90deg, rgb(7 29 21 / 92%), rgb(7 29 21 / 65%) 50%, rgb(7 29 21 / 0%) 76%);
+    }
+  }
+
   @media (max-width: ${breakpoints.mobile}) {
-    margin-top: -16px;
+    aspect-ratio: 1.1;
+    position: relative;
 
     &::after {
-      background: linear-gradient(180deg, ${FOREST}, transparent 18%);
+      background: linear-gradient(180deg, ${FOREST}, rgb(7 29 21 / 70%) 8%, rgb(7 29 21 / 0%) 30%);
     }
   }
 `;
 
 export const BonsaiImage = styled.img`
   display: block;
-  height: auto;
-  mask-image: linear-gradient(180deg, transparent, #000 10%, #000 88%, transparent);
-  max-width: 500px;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
+  object-position: 80% center;
   width: 100%;
 
   @media (max-width: ${breakpoints.mobile}) {
-    max-width: 420px;
+    object-position: center;
   }
 `;
 
@@ -88,14 +92,10 @@ export const Container = styled.section`
   background: ${FOREST};
   border: 1px solid ${FOREST};
   border-radius: 24px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  isolation: isolate;
   margin-bottom: 36px;
   overflow: hidden;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    grid-template-columns: minmax(0, 1fr);
-  }
+  position: relative;
 
   @media (max-width: ${breakpoints.mini}) {
     border-radius: ${radii.large};
@@ -104,22 +104,23 @@ export const Container = styled.section`
 `;
 
 export const Copy = styled.div`
-  align-self: center;
   min-width: 0;
-  padding: 44px 0 44px 40px;
+  padding: 44px 24px 44px 40px;
   position: relative;
+  width: 54%;
   z-index: 1;
 
   @media (max-width: ${breakpoints.tablet}) {
-    padding: 32px 0 32px 28px;
+    padding: 32px 20px 32px 28px;
   }
 
   @media (max-width: ${breakpoints.mobile}) {
-    padding: 32px 32px 16px;
+    padding: 32px 32px 0;
+    width: 100%;
   }
 
   @media (max-width: ${breakpoints.mini}) {
-    padding: 28px 24px 16px;
+    padding: 28px 24px 0;
   }
 `;
 
