@@ -14,8 +14,12 @@ import {BackgammonAction, BackgammonMatch, BackgammonMove, BackgammonSide, Backg
 import {isCancellationError} from 'utils/errors';
 
 import Board from './Board';
+import Dice from './Dice';
 import Rules from './Rules';
+import SoundToggle from './SoundToggle';
 import * as S from './Styles';
+import useGameSounds from './useGameSounds';
+import usePresentation from './usePresentation';
 import {
   formatClock,
   getErrorMessage,
@@ -27,14 +31,6 @@ import {
   previewBoard,
 } from './utils';
 
-const PIPS: Record<number, number[]> = {
-  1: [4],
-  2: [0, 8],
-  3: [0, 4, 8],
-  4: [0, 2, 6, 8],
-  5: [0, 2, 4, 6, 8],
-  6: [0, 2, 3, 5, 6, 8],
-};
 const RESULT_LABELS: Record<string, string> = {
   single: 'Single game',
   gammon: 'Gammon',
@@ -42,27 +38,6 @@ const RESULT_LABELS: Record<string, string> = {
   double_declined: 'Double declined',
   resignation: 'Resignation',
   timeout: 'Time expired',
-};
-
-const Dice = ({dice, moves}: {dice: number[]; moves: BackgammonMove[]}) => {
-  const available = dice.length === 2 && dice[0] === dice[1] ? Array(4).fill(dice[0]) : [...dice];
-  const used = moves.map((move) => move.die);
-  return (
-    <S.Dice aria-label="Dice">
-      {available.map((die, index) => {
-        const usedIndex = used.indexOf(die);
-        const isUsed = usedIndex !== -1;
-        if (isUsed) used.splice(usedIndex, 1);
-        return (
-          <S.Die $used={isUsed} aria-label={`Die ${die}${isUsed ? ', used' : ''}`} key={index} role="img">
-            {Array.from({length: 9}, (_, dot) => (
-              <S.Dot $visible={PIPS[die]?.includes(dot) ?? false} key={dot} />
-            ))}
-          </S.Die>
-        );
-      })}
-    </S.Dice>
-  );
 };
 
 const Match = () => {
@@ -89,6 +64,22 @@ const Match = () => {
   const navigate = useNavigate();
   const self = useSelector(getSelf);
   const status = match?.status;
+  const {playSound, soundEnabled, toggleSound, unlockSound} = useGameSounds();
+
+  const side = match ? getPlayerSide(match, self.id) : null;
+  const isParticipant = isAuthenticated && !!side;
+  const modeLabel = match?.mode === 'computer' ? `${match.difficulty} computer` : 'Head to head';
+  const canAct = isParticipant && !busyAction && !loadError && !isLoading;
+  const isMyTurn = !!side && match?.active_side === side;
+  const moves = match && draft.id === id && draft.version === match.version ? draft.moves : [];
+  const legalTurns = match?.legal_turns ?? [];
+  const availableMoves = nextMoves(legalTurns, moves);
+  const canMove = canAct && isMyTurn && match?.phase === 'moving' && match?.status === 'active';
+  const isComplete =
+    legalTurns.length > 0 && matchingTurns(legalTurns, moves).some((turn) => turn.length === moves.length);
+  const board = match ? previewBoard(match.board, match.active_side, moves) : null;
+
+  const presentation = usePresentation(match, board, playSound);
 
   const receiveMatch = useCallback(
     (data: BackgammonMatch) => {
@@ -145,19 +136,6 @@ const Match = () => {
       dispatch(getAllUserWallets()).catch(() => undefined);
     }
   }, [dispatch, id, isAuthenticated, status]);
-
-  const side = match ? getPlayerSide(match, self.id) : null;
-  const isParticipant = isAuthenticated && !!side;
-  const modeLabel = match?.mode === 'computer' ? `${match.difficulty} computer` : 'Head to head';
-  const canAct = isParticipant && !busyAction && !loadError && !isLoading;
-  const isMyTurn = !!side && match?.active_side === side;
-  const moves = match && draft.id === id && draft.version === match.version ? draft.moves : [];
-  const legalTurns = match?.legal_turns ?? [];
-  const availableMoves = nextMoves(legalTurns, moves);
-  const canMove = canAct && isMyTurn && match?.phase === 'moving' && match?.status === 'active';
-  const isComplete =
-    legalTurns.length > 0 && matchingTurns(legalTurns, moves).some((turn) => turn.length === moves.length);
-  const board = match ? previewBoard(match.board, match.active_side, moves) : null;
 
   const handleAction = async (action: BackgammonAction, data: {accept?: boolean; moves?: BackgammonMove[]} = {}) => {
     if (!match || actionLock.current) return;
@@ -279,6 +257,12 @@ const Match = () => {
     return (
       <S.Result role="status">
         <S.TitleSmall>{title}</S.TitleSmall>
+        <Dice
+          animate={presentation.animateDice}
+          dice={presentation.dice}
+          label={presentation.diceLabel}
+          rollKey={presentation.rollKey}
+        />
         <S.Detail>
           {RESULT_LABELS[match.result_reason] ?? 'Game complete'} · {match.scores.white}–{match.scores.black}
           {!finished ? ` · ${match.result_points} point${match.result_points === 1 ? '' : 's'}` : ''}
@@ -353,7 +337,14 @@ const Match = () => {
             <strong>{title}</strong>
             <S.Small>{description}</S.Small>
           </div>
-          {match.dice.length > 0 && <Dice dice={match.dice} moves={moves} />}
+          <Dice
+            animate={presentation.animateDice}
+            dice={presentation.dice}
+            label={presentation.diceLabel}
+            moves={match.phase === 'moving' ? moves : []}
+            rolling={busyAction === 'roll'}
+            rollKey={presentation.rollKey}
+          />
         </S.Status>
         <S.Actions>
           {canAct && isMyTurn && match.phase === 'awaiting_roll' && (
@@ -452,12 +443,15 @@ const Match = () => {
     );
 
   return (
-    <S.Container>
+    <S.Container onKeyDownCapture={unlockSound} onPointerDownCapture={unlockSound}>
       <S.Navigation>
         <S.TextLink to="/backgammon/home">← Backgammon club</S.TextLink>
-        <S.Badge>
-          {isParticipant ? modeLabel : 'Spectating'} · {match.stake_amount ? 'TNB match' : 'Free play'}
-        </S.Badge>
+        <S.Actions>
+          <SoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+          <S.Badge>
+            {isParticipant ? modeLabel : 'Spectating'} · {match.stake_amount ? 'TNB match' : 'Free play'}
+          </S.Badge>
+        </S.Actions>
       </S.Navigation>
       <S.MatchTitle>
         {getPlayerName(match, 'white')} vs. {getPlayerName(match, 'black')}
@@ -496,6 +490,7 @@ const Match = () => {
             <S.BoardFrame>
               <Board
                 board={board}
+                key={`${match.id}-${match.game_number}`}
                 nextMoves={canMove ? availableMoves : []}
                 onSelect={canMove ? handleSelect : undefined}
                 perspective={side ?? 'white'}

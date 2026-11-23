@@ -78,32 +78,6 @@ export const Detail = styled.p`
   margin: 0;
 `;
 
-export const Dice = styled.div`
-  display: flex;
-  gap: 8px;
-`;
-
-export const Die = styled.div<{$used?: boolean}>`
-  align-items: center;
-  background: #fffdf6;
-  border: 1px solid #ddd6bf;
-  border-radius: 10px;
-  box-shadow: 0 2px 0 #d6d0bd;
-  display: grid;
-  gap: 3px;
-  grid-template-columns: repeat(3, 1fr);
-  height: 42px;
-  opacity: ${({$used}) => ($used ? 0.35 : 1)};
-  padding: 8px;
-  width: 42px;
-`;
-
-export const Dot = styled.span<{$visible: boolean}>`
-  aspect-ratio: 1;
-  background: ${({$visible}) => ($visible ? '#244d3c' : 'transparent')};
-  border-radius: 50%;
-`;
-
 export const Empty = styled.div`
   background: #f7f8f5;
   border: 1px dashed #d1d9cd;

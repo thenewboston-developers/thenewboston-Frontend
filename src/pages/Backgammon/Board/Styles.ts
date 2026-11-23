@@ -24,3 +24,14 @@ export const Canvas = styled.svg`
     user-select: none;
   }
 `;
+
+export const CheckerPiece = styled.g<{$animate: boolean}>`
+  pointer-events: none;
+  transform-box: view-box;
+  transform-origin: 0 0;
+  transition: ${({$animate}) => ($animate ? 'transform 420ms cubic-bezier(0.22, 0.7, 0.25, 1)' : 'none')};
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+`;
