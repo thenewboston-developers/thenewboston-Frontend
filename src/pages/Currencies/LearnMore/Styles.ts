@@ -14,19 +14,21 @@ export const Answer = styled.p`
   padding: 0 20px 20px;
 `;
 
-// Same surface as components/PageHeader, so the page opens and closes on a matching note
+// The surface and the artwork come from BannerArt, in the black and gold of the page header, so the page opens and
+// closes on a matching note
 export const CallToAction = styled.div`
   align-items: center;
-  background:
-    radial-gradient(ellipse at top right, ${colors.palette.blue[500]}, transparent 65%), ${colors.palette.blue[900]};
-  border: 1px solid ${colors.palette.blue[800]};
+  background: ${colors.nav.background};
   border-radius: ${radii.large};
   color: ${colors.white};
   display: flex;
   gap: 24px;
+  isolation: isolate;
   justify-content: space-between;
   margin-top: ${`${SECTION_SPACING}px`};
+  overflow: hidden;
   padding: 32px;
+  position: relative;
 
   @media (max-width: ${breakpoints.mobile}) {
     align-items: flex-start;
@@ -41,7 +43,7 @@ export const CallToActionButton = styled.button`
   background: ${colors.white};
   border: 1px solid ${colors.white};
   border-radius: ${radii.medium};
-  color: ${colors.palette.blue[900]};
+  color: ${colors.primary};
   cursor: pointer;
   flex-shrink: 0;
   font-family: ${fonts.family.default};
@@ -49,6 +51,7 @@ export const CallToActionButton = styled.button`
   font-weight: ${fonts.weight.semiBold};
   min-height: 44px;
   padding: 10px 20px;
+  position: relative;
   transition:
     background 0.15s ease,
     border-color 0.15s ease;
@@ -59,17 +62,18 @@ export const CallToActionButton = styled.button`
   }
 
   &:hover {
-    background: ${colors.palette.blue[100]};
-    border-color: ${colors.palette.blue[100]};
+    background: rgb(255 255 255 / 86%);
+    border-color: transparent;
   }
 `;
 
 export const CallToActionCopy = styled.div`
   min-width: 0;
+  position: relative;
 `;
 
 export const CallToActionDescription = styled.p`
-  color: ${colors.palette.blue[100]};
+  color: rgb(255 255 255 / 84%);
   font-size: 16px;
   line-height: 1.6;
   margin: 8px 0 0;

@@ -12,6 +12,7 @@ import {
   getExchangeOrders as _getExchangeOrders,
   resetExchangeOrders as _resetExchangeOrders,
 } from 'dispatchers/exchangeOrders';
+import {BannerArtVariant} from 'enums';
 import {useToggle} from 'hooks';
 import TradesModal from 'modals/TradesModal';
 import {getExchangeOrders, hasMoreExchangeOrders, isLoadingExchangeOrders} from 'selectors/state';
@@ -119,6 +120,7 @@ const Orders: SFC = ({className}) => {
       <S.Container className={className} id="orders-content">
         <S.Content>
           <PageHeader
+            art={BannerArtVariant.ledger}
             description="Follow your orders from placement to fill. Review your trades and manage open orders in one place."
             eyebrow="Your activity"
             title="Every order. One clear view."

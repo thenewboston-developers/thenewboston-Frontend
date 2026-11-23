@@ -3,6 +3,7 @@ import {mdiBookOpenPageVariantOutline, mdiCheckCircleOutline, mdiSwapHorizontal,
 import MdiIcon from '@mdi/react';
 
 import PageHeader from 'components/PageHeader';
+import {BannerArtVariant} from 'enums';
 import {SFC} from 'types';
 
 import * as S from './Styles';
@@ -20,6 +21,7 @@ const LearnMore: SFC = ({className}) => {
     <S.Container className={className}>
       <S.Content>
         <PageHeader
+          art={BannerArtVariant.ripples}
           description="From your first limit order to your final fill. Learn how prices, matching, and reserved funds work on the exchange."
           eyebrow="The exchange, explained"
           title="A little knowledge. More confidence."

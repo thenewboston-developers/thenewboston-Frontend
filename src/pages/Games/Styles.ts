@@ -1,7 +1,11 @@
 import {Link} from 'react-router-dom';
+import UIcon from '@mdi/react';
 import styled from 'styled-components';
 
 import {breakpoints, colors, fonts, pagePadding, shadows} from 'styles';
+
+// The violet of the glowing line on the cover
+const ACCENT_COLOR = '#6156b9';
 
 export const About = styled.section`
   display: grid;
@@ -84,6 +88,7 @@ export const Cover = styled.img`
   height: 100%;
   object-fit: cover;
   position: absolute;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   width: 100%;
 `;
 
@@ -143,6 +148,8 @@ export const FeaturedBadge = styled.span`
   top: 24px;
 `;
 
+// The whole card is one link. Rather than underlining every line of text inside it, hovering lifts the card, eases the
+// cover closer and wakes up the "Open lobby" pill (see PlayIcon and PlayLabel)
 export const GameCard = styled(Link)`
   background: ${colors.white};
   border: 1px solid ${colors.borderSubtle};
@@ -153,19 +160,41 @@ export const GameCard = styled(Link)`
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   overflow: hidden;
   text-decoration: none;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
 
   @media (max-width: 1080px) {
     grid-template-columns: minmax(0, 1fr);
   }
 
   &:focus-visible {
-    outline: 3px solid #6156b9;
+    outline: 3px solid ${ACCENT_COLOR};
     outline-offset: 5px;
   }
 
   &:hover {
-    border-color: #a29bc6;
-    box-shadow: ${shadows.cardHover};
+    text-decoration: none;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      border-color: #a29bc6;
+      box-shadow:
+        0 4px 8px rgb(36 32 57 / 6%),
+        0 24px 48px -12px rgb(36 32 57 / 28%);
+    }
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    &:hover {
+      transform: translateY(-4px);
+
+      ${Cover} {
+        transform: scale(1.04);
+      }
+    }
   }
 `;
 
@@ -201,16 +230,43 @@ export const Intro = styled.p`
   margin: 14px 0 0;
 `;
 
+export const PlayIcon = styled(UIcon)`
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    ${GameCard}:hover & {
+      transform: translateX(4px);
+    }
+  }
+`;
+
 export const PlayLabel = styled.span`
+  align-items: center;
   background: #242039;
   border-radius: 999px;
   color: ${colors.white};
   display: inline-flex;
   font-size: 15px;
   font-weight: ${fonts.weight.semiBold};
+  gap: 8px;
   justify-content: center;
   min-width: 150px;
   padding: 14px 24px;
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+
+  ${GameCard}:focus-visible & {
+    background: ${ACCENT_COLOR};
+  }
+
+  @media (hover: hover) {
+    ${GameCard}:hover & {
+      background: ${ACCENT_COLOR};
+      box-shadow: 0 8px 20px -6px rgb(97 86 185 / 60%);
+    }
+  }
 `;
 
 export const SectionHeader = styled.div`

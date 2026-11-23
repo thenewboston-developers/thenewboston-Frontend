@@ -1,3 +1,5 @@
+import {mdiArrowRight} from '@mdi/js';
+
 import connectFiveCover from 'assets/connect-five-cover.webp';
 import {SFC} from 'types';
 import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
@@ -54,7 +56,10 @@ const Games: SFC = ({className}) => {
                   <S.FactLabel>The winning move</S.FactLabel>
                 </S.Fact>
               </S.Facts>
-              <S.PlayLabel>Open lobby</S.PlayLabel>
+              <S.PlayLabel>
+                Open lobby
+                <S.PlayIcon aria-hidden="true" path={mdiArrowRight} size="18px" />
+              </S.PlayLabel>
               <S.BrowserNote>Play in your browser · No download needed</S.BrowserNote>
             </S.GameDetails>
           </S.GameCard>
