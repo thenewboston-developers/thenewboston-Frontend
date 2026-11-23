@@ -37,7 +37,10 @@ describe('uploadPostImages', () => {
     const imageIds = await uploadPostImages([first, existing, second], uploadedImageIds, onProgress);
 
     expect(imageIds).toEqual([11, 5, 12]);
-    expect(upload.mock.calls).toEqual([[first.file], [second.file]]);
+    expect(upload.mock.calls).toEqual([
+      [first.file, undefined],
+      [second.file, undefined],
+    ]);
     expect(onProgress.mock.calls).toEqual([[{current: 1, total: 2}], [{current: 2, total: 2}]]);
     expect(Array.from(uploadedImageIds)).toEqual([
       ['first', 11],
@@ -80,6 +83,26 @@ describe('uploadPostImages', () => {
     });
 
     await expect(uploadPostImages(drafts, new Map(), jest.fn())).rejects.toThrow('Image 2: Upload a valid image.');
+  });
+
+  it('stops uploading when it is aborted and reports that as a cancellation', async () => {
+    const abortController = new AbortController();
+    const cancellation = Object.assign(new Error('canceled'), {code: 'ERR_CANCELED'});
+    const drafts = [makeFileDraft('first'), makeFileDraft('second'), makeFileDraft('third')];
+    const uploadedImageIds = new Map<string, number>();
+
+    upload.mockResolvedValueOnce({id: 1, image: 'https://example.test/media/images/1.png'});
+    upload.mockImplementationOnce(async () => {
+      abortController.abort();
+      throw cancellation;
+    });
+
+    await expect(uploadPostImages(drafts, uploadedImageIds, jest.fn(), abortController.signal)).rejects.toBe(
+      cancellation,
+    );
+    expect(upload).toHaveBeenCalledTimes(2);
+    expect(upload.mock.calls[1]).toEqual([drafts[1].file, abortController.signal]);
+    expect(Array.from(uploadedImageIds)).toEqual([['first', 1]]);
   });
 
   it('reports the reason the API gives for refusing uploads', async () => {

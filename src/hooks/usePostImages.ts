@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 
 import {MAX_POST_IMAGES} from 'constants/general';
 import {PostImage, PostImageDraft, PostImageUploadProgress} from 'types';
+import {isCancellationError} from 'utils/errors';
 import {createPostImageDraft, getPostImageDraft, releasePostImageDraft, uploadPostImages} from 'utils/postImages';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -14,6 +15,7 @@ const getKeys = (images: PostImageDraft[]): string => images.map(({key}) => key)
 const usePostImages = (initialImages: PostImage[] = []) => {
   const [images, setImages] = useState<PostImageDraft[]>(() => initialImages.map(getPostImageDraft));
   const [uploadProgress, setUploadProgress] = useState<PostImageUploadProgress | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const imagesRef = useRef(images);
   const initialKeysRef = useRef(getKeys(images));
   const uploadedImageIdsRef = useRef(new Map<string, number>());
@@ -23,7 +25,11 @@ const usePostImages = (initialImages: PostImage[] = []) => {
   }, [images]);
 
   useEffect(() => {
-    return () => imagesRef.current.forEach(releasePostImageDraft);
+    return () => {
+      // Closing the form while its images are uploading cancels the submission
+      abortControllerRef.current?.abort();
+      imagesRef.current.forEach(releasePostImageDraft);
+    };
   }, []);
 
   const addImages = (files: File[]) => {
@@ -43,14 +49,23 @@ const usePostImages = (initialImages: PostImage[] = []) => {
   };
 
   /**
-   * Returns the ids of the images in their current order, or null when an upload failed. The failure has been shown
-   * to the user by then.
+   * Returns the ids of the images in their current order, or null when the form must not be submitted: an upload
+   * failed, which has been shown to the user by then, or the form was closed in the meantime.
    */
   const uploadImages = async (): Promise<number[] | null> => {
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     try {
-      return await uploadPostImages(images, uploadedImageIdsRef.current, setUploadProgress);
+      const imageIds = await uploadPostImages(
+        images,
+        uploadedImageIdsRef.current,
+        setUploadProgress,
+        abortController.signal,
+      );
+      return abortController.signal.aborted ? null : imageIds;
     } catch (error: any) {
-      displayErrorToast(error.message);
+      if (!isCancellationError(error)) displayErrorToast(error.message);
       return null;
     } finally {
       setUploadProgress(null);

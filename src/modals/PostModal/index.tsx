@@ -52,7 +52,8 @@ const PostModal: SFC<PostModalProps> = ({className, close, post}) => {
 
       const requestData = {
         content: values.content,
-        image_ids: imageIds,
+        // An edit that leaves the images alone does not list them, so it cannot undo a change made to them elsewhere
+        ...(post && !hasImageChanges ? {} : {image_ids: imageIds}),
         // Without the list the API derives the mentions from the content
         ...(mentionedUsers.length ? {mentioned_user_ids: mentionedUsers.map((user) => user.id)} : {}),
       };
