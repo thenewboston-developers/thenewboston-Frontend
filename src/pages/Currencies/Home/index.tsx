@@ -11,6 +11,7 @@ import {displayErrorToast} from 'utils/toasts';
 
 import CurrencyCard from './CurrencyCard';
 import CurrencyCardSkeleton from './CurrencyCardSkeleton';
+import FeaturedCurrency from './FeaturedCurrency';
 import * as S from './Styles';
 
 type CurrencyOrdering = '-created_date' | '-modified_date' | '-ticker' | 'created_date' | 'ticker';
@@ -139,6 +140,7 @@ const Home: SFC = ({className}) => {
             How currencies work
           </Link>
         </PageHeader>
+        <FeaturedCurrency />
         <S.SectionHeader>
           <S.SectionHeading>
             <S.SectionTitle>Explore currencies</S.SectionTitle>
