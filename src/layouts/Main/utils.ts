@@ -6,6 +6,6 @@ import {PATH_GAMES} from 'constants/paths';
  * but not on "/profile/12".
  */
 export const isPathActive = (pathname: string, rootPath: string): boolean => {
-  const sectionPaths = rootPath === PATH_GAMES ? [PATH_GAMES, '/connect-five'] : [rootPath];
+  const sectionPaths = rootPath === PATH_GAMES ? [PATH_GAMES, '/connect-five', '/backgammon'] : [rootPath];
   return sectionPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 };

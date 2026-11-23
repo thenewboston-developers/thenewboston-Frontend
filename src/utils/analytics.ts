@@ -12,7 +12,7 @@ let initialized = false;
 let identifiedUserId: string | null = null;
 
 // The router replaces these paths with a real page straight away, and that page records its own pageview
-const redirectRoutes = ['/connect-five', '/currencies', '/exchange', '/feed', '/wallets'];
+const redirectRoutes = ['/backgammon', '/connect-five', '/currencies', '/exchange', '/feed', '/wallets'];
 
 const routes = [
   '/',
@@ -21,6 +21,8 @@ const routes = [
   '/sign-in',
   '/logout',
   '/notifications',
+  '/backgammon/home',
+  '/backgammon/matches/:id',
   '/connect-five/home',
   '/connect-five/leaderboard',
   '/connect-five/challenges/:id',

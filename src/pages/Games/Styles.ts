@@ -57,6 +57,24 @@ export const BrowserNote = styled.p`
   margin: 12px 0 0;
 `;
 
+export const BackgammonArtwork = styled.div`
+  align-items: center;
+  background: linear-gradient(135deg, #e5ecdc, #c8d5be);
+  display: flex;
+  padding: 44px 24px;
+  position: relative;
+
+  svg {
+    box-shadow: 0 15px 25px #183c3229;
+    border-radius: 20px;
+    transform: rotate(-5deg);
+  }
+`;
+
+export const CardSpacer = styled.div`
+  height: 24px;
+`;
+
 export const Category = styled.p`
   color: #555087;
   font-size: 12px;

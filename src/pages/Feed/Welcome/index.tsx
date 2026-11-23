@@ -11,7 +11,7 @@ const Welcome: SFC = ({className}) => {
       <S.Heading>Welcome to thenewboston</S.Heading>
       <S.Text>
         A social network with its own economy. Share posts, send coins to other members, create your own currency, trade
-        on the exchange, and play Connect 5.
+        on the exchange, and play Connect 5 or backgammon.
       </S.Text>
       <AuthButtons />
     </S.Container>
