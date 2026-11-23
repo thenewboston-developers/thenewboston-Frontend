@@ -5,26 +5,31 @@ import {mdiWeb} from '@mdi/js';
 import {getAssetPairs} from 'api/assetPairs';
 import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
-import DateDisplay from 'components/DateDisplay';
+import Linkify from 'components/Linkify';
 import SocialLinks from 'components/SocialLinks';
 import UserLabel from 'components/UserLabel';
 import {DEFAULT_CURRENCY_TICKER} from 'constants/general';
 import {Currency, SFC} from 'types';
+import {longDate, shortDate} from 'utils/dates';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
 
 interface CurrencyInfoSectionProps {
   currency: Currency;
+  holderCount: number | null;
   isInternalCurrency: boolean;
   isOwner: boolean;
   onMintClick: () => void;
   totalAmountMinted: number | null;
 }
 
+const EMPTY_STAT_VALUE = '—';
+
 const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({
   className,
   currency,
+  holderCount,
   isInternalCurrency,
   isOwner,
   onMintClick,
@@ -58,6 +63,14 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({
     })();
   }, [currency.ticker]);
 
+  const formatCount = (value: number | null) => {
+    return value === null ? EMPTY_STAT_VALUE : value.toLocaleString();
+  };
+
+  const formatCreatedDate = () => {
+    return new Date(currency.created_date).toLocaleDateString(undefined, {dateStyle: 'medium'});
+  };
+
   const handleTradeClick = () => {
     if (assetPairId) {
       navigate(`/exchange/trade/${assetPairId}`);
@@ -72,7 +85,13 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({
 
     return (
       <S.ActionButtonContainer>
-        {showMintButton && <Button onClick={onMintClick} text="Mint" />}
+        {showMintButton && (
+          <Button
+            color={showTradeButton ? ButtonColor.secondary : ButtonColor.primary}
+            onClick={onMintClick}
+            text="Mint"
+          />
+        )}
         {showTradeButton && (
           <Button color={ButtonColor.primary} disabled={isLoadingAssetPair} onClick={handleTradeClick} text="Trade" />
         )}
@@ -80,7 +99,7 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({
     );
   };
 
-  const renderDomain = () => {
+  const renderOrigin = () => {
     if (!currency.domain) return <S.InternalChip>Internal</S.InternalChip>;
 
     return (
@@ -91,44 +110,55 @@ const CurrencyInfoSection: SFC<CurrencyInfoSectionProps> = ({
     );
   };
 
-  const renderTotalMinted = () => {
-    if (totalAmountMinted === null) return null;
-
+  const renderStat = (label: string, value: string, title?: string) => {
     return (
       <S.StatTile>
-        <S.StatLabel>Total Minted</S.StatLabel>
-        <S.StatValue>{totalAmountMinted.toLocaleString()}</S.StatValue>
+        <S.StatLabel>{label}</S.StatLabel>
+        <S.StatValue title={title}>{value}</S.StatValue>
       </S.StatTile>
     );
   };
 
+  // External currencies are minted on their own network, so their total here would always read as zero
+  const renderSupplyStat = () => {
+    if (currency.domain) return renderStat('Issued By', currency.domain, currency.domain);
+    return renderStat('Total Minted', formatCount(totalAmountMinted));
+  };
+
   return (
     <S.CurrencyPanel className={className}>
-      <S.Banner />
-      <S.Body>
-        <S.TopRow>
-          <S.CurrencyLogo logo={currency.logo} width="88px" />
-          {renderActionButtons()}
-        </S.TopRow>
-        <S.HeaderRow>
-          <S.Identity>
+      <S.Summary>
+        <S.CurrencyLogo logo={currency.logo} width="100%" />
+        <S.Identity>
+          <S.TitleRow>
             <S.CurrencyName>{currency.ticker}</S.CurrencyName>
-            {renderDomain()}
-          </S.Identity>
-          {renderTotalMinted()}
-        </S.HeaderRow>
-        {currency.description && <S.CurrencyDescription>{currency.description}</S.CurrencyDescription>}
-        <S.MetadataRow>
-          <UserLabel
-            avatar={currency.owner.avatar}
-            description="Owner"
-            id={currency.owner.id}
-            username={currency.owner.username}
-          />
-          <DateDisplay createdDate={currency.created_date} modifiedDate={currency.modified_date} />
-        </S.MetadataRow>
-        <SocialLinks entity={currency} />
-      </S.Body>
+            {renderOrigin()}
+          </S.TitleRow>
+          <S.OwnerRow>
+            <S.OwnerPrefix>Created by</S.OwnerPrefix>
+            <UserLabel
+              avatar={currency.owner.avatar}
+              avatarSize="24px"
+              description=""
+              id={currency.owner.id}
+              username={currency.owner.username}
+            />
+          </S.OwnerRow>
+        </S.Identity>
+        {renderActionButtons()}
+      </S.Summary>
+      {currency.description && (
+        <S.CurrencyDescription>
+          <Linkify>{currency.description}</Linkify>
+        </S.CurrencyDescription>
+      )}
+      <SocialLinks entity={currency} />
+      <S.Stats>
+        {renderSupplyStat()}
+        {renderStat('Holders', formatCount(holderCount))}
+        {renderStat('Created', formatCreatedDate(), longDate(currency.created_date))}
+        {renderStat('Last Updated', shortDate(currency.modified_date, false).trim(), longDate(currency.modified_date))}
+      </S.Stats>
     </S.CurrencyPanel>
   );
 };

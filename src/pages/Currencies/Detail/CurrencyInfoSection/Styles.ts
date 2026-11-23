@@ -1,56 +1,45 @@
 import styled from 'styled-components';
 
 import UCurrencyLogo from 'components/CurrencyLogo';
+import {Img} from 'components/CurrencyLogo/Styles';
 import UIcon from 'components/Icon';
-import {breakpoints, cardStyle, colors, fonts, radii, shadows} from 'styles';
+import {Container as UserLabelContainer} from 'components/UserLabel/Styles';
+import {breakpoints, cardStyle, colors, eyebrowStyle, fonts, radii} from 'styles';
 
-const BANNER_HEIGHT = 96;
-const LOGO_RING_WIDTH = 4;
+const LOGO_MOBILE_WIDTH = 64;
 const LOGO_WIDTH = 88;
-const LOGO_OVERLAP = (LOGO_WIDTH + LOGO_RING_WIDTH * 2) / 2;
 
+// On phones the buttons move below the logo and the identity, where they share the full width of the panel
 export const ActionButtonContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-shrink: 0;
   gap: 8px;
-  justify-content: flex-end;
-  margin-top: 12px;
-`;
 
-export const Banner = styled.div`
-  background:
-    radial-gradient(circle at 88% -40%, ${colors.palette.blue[100]} 0%, transparent 60%),
-    linear-gradient(135deg, ${colors.palette.blue[50]} 0%, ${colors.palette.gray[100]} 100%);
-  border-bottom: 1px solid ${colors.borderSubtle};
-  height: ${`${BANNER_HEIGHT}px`};
-`;
+  @media (max-width: ${breakpoints.mini}) {
+    flex-basis: 100%;
 
-export const Body = styled.div`
-  padding: 0 24px 24px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 0 16px 16px;
+    > * {
+      flex: 1;
+    }
   }
 `;
 
 export const CurrencyDescription = styled.p`
-  color: ${colors.secondary};
+  color: ${colors.palette.gray[800]};
   font-size: 15px;
-  line-height: 1.6;
-  margin: 16px 0 0;
-  max-width: 70ch;
+  line-height: 1.7;
+  margin: 24px 0 0;
+  max-width: 76ch;
   overflow-wrap: anywhere;
+  white-space: pre-line;
 `;
 
-// Identity aligns its children to flex-start, which sizes them to fit their content on the cross axis. min-width has no
-// effect on that axis, so max-width is what keeps a long domain inside of the panel and lets the text truncate
 export const CurrencyDomain = styled.div`
   align-items: center;
   color: ${colors.secondary};
   display: flex;
   font-size: 14px;
   gap: 6px;
-  max-width: 100%;
   min-width: 0;
 `;
 
@@ -62,125 +51,141 @@ export const CurrencyDomainText = styled.span`
 `;
 
 export const CurrencyLogo = styled(UCurrencyLogo)`
-  background: ${colors.white};
-  border: ${`${LOGO_RING_WIDTH}px`} solid ${colors.white};
-  border-radius: 50%;
-  box-shadow: ${shadows.card};
-  margin-top: ${`-${LOGO_OVERLAP}px`};
-  position: relative;
+  width: ${`${LOGO_WIDTH}px`};
+
+  ${Img} {
+    background: ${colors.white};
+    box-shadow: 0 0 0 5px ${colors.palette.gray[100]};
+  }
+
+  @media (max-width: ${breakpoints.mini}) {
+    width: ${`${LOGO_MOBILE_WIDTH}px`};
+  }
 `;
 
 export const CurrencyName = styled.h1`
   color: ${colors.primary};
-  font-size: 28px;
+  font-size: 32px;
   font-weight: ${fonts.weight.bold};
-  letter-spacing: -0.01em;
+  letter-spacing: -0.03em;
   line-height: 1.2;
   margin: 0;
   overflow-wrap: anywhere;
+
+  @media (max-width: ${breakpoints.mini}) {
+    font-size: 26px;
+  }
 `;
 
 export const CurrencyPanel = styled.div`
   ${cardStyle};
-  overflow: hidden;
+  padding: 32px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 24px 20px;
+  }
 `;
 
 export const DomainIcon = styled(UIcon)`
   flex-shrink: 0;
 `;
 
-export const HeaderRow = styled.div`
-  align-items: flex-start;
-  display: flex;
-  gap: 24px;
-  justify-content: space-between;
-  margin-top: 12px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    flex-direction: column;
-    gap: 16px;
-  }
-`;
-
 export const Identity = styled.div`
-  align-items: flex-start;
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 100%;
-  }
 `;
 
 export const InternalChip = styled.span`
   background: ${colors.palette.blue[50]};
   border-radius: ${radii.pill};
   color: ${colors.palette.blue[600]};
-  font-size: 11px;
+  flex-shrink: 0;
+  font-size: 12px;
   font-weight: ${fonts.weight.semiBold};
   line-height: 1.5;
-  padding: 2px 8px;
+  padding: 3px 10px;
 `;
 
-export const MetadataRow = styled.div`
+export const OwnerPrefix = styled.span`
+  color: ${colors.secondary};
+  flex-shrink: 0;
+  font-size: 14px;
+`;
+
+export const OwnerRow = styled.div`
   align-items: center;
-  border-top: 1px solid ${colors.borderSubtle};
   display: flex;
-  gap: 24px;
-  justify-content: space-between;
-  margin-top: 20px;
-  padding-top: 16px;
+  gap: 8px;
+  min-width: 0;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 16px;
-
-    /* The stacked children are sized to fit their content, the limit lets a long owner username truncate */
-    > * {
-      max-width: 100%;
-    }
+  ${UserLabelContainer} {
+    gap: 8px;
   }
 `;
 
 export const StatLabel = styled.span`
-  color: ${colors.secondary};
-  font-size: 11px;
-  font-weight: ${fonts.weight.semiBold};
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  ${eyebrowStyle};
+`;
+
+export const Stats = styled.div`
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 28px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 `;
 
 export const StatTile = styled.div`
   background: ${colors.palette.gray[50]};
-  border: 1px solid ${colors.borderSubtle};
   border-radius: ${radii.medium};
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
-  gap: 4px;
-  min-width: 180px;
-  padding: 12px 16px;
+  gap: 6px;
+  min-width: 0;
+  padding: 16px 18px;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 100%;
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 14px;
   }
 `;
 
 export const StatValue = styled.span`
-  color: ${colors.primary};
-  font-size: 24px;
+  color: ${colors.palette.blue[900]};
+  font-size: 22px;
   font-variant-numeric: tabular-nums;
-  font-weight: ${fonts.weight.semiBold};
-  letter-spacing: -0.01em;
-  line-height: 1.2;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @media (max-width: ${breakpoints.mini}) {
+    font-size: 17px;
+  }
 `;
 
-export const TopRow = styled.div`
-  align-items: flex-start;
+export const Summary = styled.div`
+  align-items: center;
   display: flex;
-  gap: 16px;
-  justify-content: space-between;
+  gap: 24px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+`;
+
+export const TitleRow = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  min-width: 0;
 `;

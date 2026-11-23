@@ -52,12 +52,16 @@ const MintHistoryChart: SFC<MintHistoryChartProps> = ({className, currency, refr
     return value.toLocaleString();
   };
 
+  // Whole values drop their decimal, so the axis reads 30K instead of 30.0K
   const formatYAxis = (value: number) => {
+    if (value >= 1000000000) {
+      return `${parseFloat((value / 1000000000).toFixed(1))}B`;
+    }
     if (value >= 1000000) {
-      return `${(value / 1000000).toFixed(1)}M`;
+      return `${parseFloat((value / 1000000).toFixed(1))}M`;
     }
     if (value >= 1000) {
-      return `${(value / 1000).toFixed(1)}K`;
+      return `${parseFloat((value / 1000).toFixed(1))}K`;
     }
     return value.toString();
   };
@@ -78,7 +82,10 @@ const MintHistoryChart: SFC<MintHistoryChartProps> = ({className, currency, refr
 
   return (
     <S.Container className={className}>
-      <S.ChartTitle>Minting History</S.ChartTitle>
+      <S.ChartHeader>
+        <S.ChartTitle>Minting History</S.ChartTitle>
+        <S.ChartCaption>Total supply after each mint</S.ChartCaption>
+      </S.ChartHeader>
       <S.ChartWrapper>
         <ResponsiveContainer height={300} width="100%">
           <BarChart data={chartData}>
@@ -112,8 +119,8 @@ const MintHistoryChart: SFC<MintHistoryChartProps> = ({className, currency, refr
               dataKey="total"
               fill={colors.palette.blue[500]}
               maxBarSize={64}
-              name="Cumulative Total"
-              radius={[4, 4, 0, 0]}
+              name="Total Supply"
+              radius={[6, 6, 0, 0]}
             />
           </BarChart>
         </ResponsiveContainer>

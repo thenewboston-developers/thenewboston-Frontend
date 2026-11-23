@@ -13,11 +13,10 @@ import {Area, AreaChart, ResponsiveContainer} from 'recharts';
 
 import {getTradeHistoryItems} from 'api/tradeHistoryItems';
 import Loader from 'components/Loader';
+import PageHeader from 'components/PageHeader';
 import {colors} from 'styles';
 import {SFC, TradeHistoryItem} from 'types';
 import {displayErrorToast} from 'utils/toasts';
-
-import PageHeader from '../PageHeader';
 
 import * as S from './Styles';
 

@@ -1,18 +1,23 @@
 import {KeyboardEvent, MouseEvent} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {mdiArrowTopRight, mdiWeb} from '@mdi/js';
+import MdiIcon from '@mdi/react';
 
-import DateDisplay from 'components/DateDisplay';
 import UserLabel from 'components/UserLabel';
 import {Currency, SFC} from 'types';
+import {longDate, shortDate} from 'utils/dates';
 
 import * as S from './Styles';
 
 export interface CurrencyCardProps {
   currency: Currency;
+  dateField?: 'created' | 'modified';
 }
 
-const CurrencyCard: SFC<CurrencyCardProps> = ({className, currency}) => {
+const CurrencyCard: SFC<CurrencyCardProps> = ({className, currency, dateField = 'modified'}) => {
   const currencyPath = `/currencies/${currency.id}`;
+  const date = dateField === 'created' ? currency.created_date : currency.modified_date;
+  const dateLabel = dateField === 'created' ? 'Created' : 'Updated';
   const navigate = useNavigate();
 
   const handleCardClick = (event: MouseEvent<HTMLDivElement>) => {
@@ -30,6 +35,17 @@ const CurrencyCard: SFC<CurrencyCardProps> = ({className, currency}) => {
     navigate(currencyPath);
   };
 
+  const renderOrigin = () => {
+    if (!currency.domain) return <S.InternalChip>Internal</S.InternalChip>;
+
+    return (
+      <S.Domain title={currency.domain}>
+        <MdiIcon aria-hidden="true" path={mdiWeb} size="14px" />
+        <S.DomainText>{currency.domain}</S.DomainText>
+      </S.Domain>
+    );
+  };
+
   return (
     <S.Container
       aria-label={`${currency.ticker} currency details`}
@@ -39,30 +55,30 @@ const CurrencyCard: SFC<CurrencyCardProps> = ({className, currency}) => {
       role="link"
       tabIndex={0}
     >
-      <S.Body>
-        <S.Header>
-          <S.CurrencyLogo logo={currency.logo} width="56px" />
-          <S.HeaderText>
-            <S.Ticker>{currency.ticker}</S.Ticker>
-            {currency.domain ? (
-              <S.Domain title={currency.domain}>{currency.domain}</S.Domain>
-            ) : (
-              <S.InternalChip>Internal</S.InternalChip>
-            )}
-          </S.HeaderText>
-        </S.Header>
-        {currency.description && <S.Description>{currency.description}</S.Description>}
-      </S.Body>
+      <S.Header>
+        <S.CurrencyLogo logo={currency.logo} width="56px" />
+        <S.HeaderText>
+          <S.Ticker>{currency.ticker}</S.Ticker>
+          {renderOrigin()}
+        </S.HeaderText>
+        <S.OpenIcon aria-hidden="true">
+          <MdiIcon path={mdiArrowTopRight} size="18px" />
+        </S.OpenIcon>
+      </S.Header>
+      {currency.description && <S.Description>{currency.description}</S.Description>}
       <S.Footer>
         <S.Owner>
           <UserLabel
             avatar={currency.owner.avatar}
-            description="Owner"
+            avatarSize="28px"
+            description=""
             id={currency.owner.id}
             username={currency.owner.username}
           />
         </S.Owner>
-        <DateDisplay createdDate={currency.created_date} modifiedDate={currency.modified_date} />
+        <S.Activity title={longDate(date)}>
+          {dateLabel} {shortDate(date, false).trim()}
+        </S.Activity>
       </S.Footer>
     </S.Container>
   );

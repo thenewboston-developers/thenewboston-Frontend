@@ -75,7 +75,7 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency, refres
                 <S.TableHead>Rank</S.TableHead>
                 <S.TableHead>User</S.TableHead>
                 <S.TableHead>Balance</S.TableHead>
-                <S.TableHead>Percentage</S.TableHead>
+                <S.TableHead>Share</S.TableHead>
               </S.TableRow>
             </S.TableHeader>
             <S.TableBody>
@@ -104,7 +104,14 @@ const BalancesSection: SFC<BalancesSectionProps> = ({className, currency, refres
                       <S.StackedPercentage>{percentage}</S.StackedPercentage>
                     </S.TableData>
                     <S.TableData>
-                      <S.Percentage>{percentage}</S.Percentage>
+                      <S.Share>
+                        {currencyBalance.percentage > 0 && (
+                          <S.ShareTrack aria-hidden="true">
+                            <S.ShareFill style={{width: `${Math.min(currencyBalance.percentage, 100)}%`}} />
+                          </S.ShareTrack>
+                        )}
+                        <S.Percentage>{percentage}</S.Percentage>
+                      </S.Share>
                     </S.TableData>
                   </S.TableRow>
                 );

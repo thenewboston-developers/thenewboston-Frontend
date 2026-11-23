@@ -2,9 +2,8 @@ import {Link} from 'react-router-dom';
 import {mdiBookOpenPageVariantOutline, mdiCheckCircleOutline, mdiSwapHorizontal, mdiWalletOutline} from '@mdi/js';
 import MdiIcon from '@mdi/react';
 
+import PageHeader from 'components/PageHeader';
 import {SFC} from 'types';
-
-import PageHeader from '../PageHeader';
 
 import * as S from './Styles';
 
