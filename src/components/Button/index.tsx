@@ -2,11 +2,14 @@ import React, {useMemo} from 'react';
 
 import Loader from 'components/Loader';
 import {SFC} from 'types';
+import {analyticsTarget} from 'utils/analyticsAttributes';
 
 import * as S from './Styles';
 import {ButtonColor, ButtonType, IconColor} from './types';
 
 export interface ButtonProps {
+  // Names the button in click analytics, which cannot see its text
+  analyticsName?: string;
   color?: ButtonColor;
   dirty?: boolean;
   disabled?: boolean;
@@ -21,6 +24,7 @@ export interface ButtonProps {
 }
 
 const Button: SFC<ButtonProps> = ({
+  analyticsName,
   className,
   color = ButtonColor.primary,
   dirty = true,
@@ -53,6 +57,7 @@ const Button: SFC<ButtonProps> = ({
 
   return (
     <S.Button
+      {...(analyticsName ? analyticsTarget(analyticsName) : {})}
       $color={color}
       $hasIcon={!!iconLeft || !!iconRight}
       className={className}

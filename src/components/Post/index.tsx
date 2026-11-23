@@ -12,6 +12,7 @@ import PostLikesModal from 'modals/PostLikesModal';
 import PostModal from 'modals/PostModal';
 import {getComments, getSelf} from 'selectors/state';
 import {AppDispatch, Post as TPost, SFC} from 'types';
+import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
 import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 
@@ -194,7 +195,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
 
   return (
     <>
-      <S.Container className={className}>
+      <S.Container {...analyticsArea('post')} className={className}>
         <S.Top>
           <S.UserLabel
             avatar={owner.avatar}
@@ -222,7 +223,12 @@ const Post: SFC<PostProps> = ({className, post}) => {
               mentionedUsers={mentioned_users || []}
             />
             {isLongContent && (
-              <S.TextLink aria-expanded={showFullContent} onClick={toggleShowFullContent} type="button">
+              <S.TextLink
+                {...analyticsTarget('see_more')}
+                aria-expanded={showFullContent}
+                onClick={toggleShowFullContent}
+                type="button"
+              >
                 {showFullContent ? 'See less' : 'See more'}
               </S.TextLink>
             )}
@@ -240,6 +246,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
         ) : null}
         {image ? (
           <S.Image
+            {...analyticsTarget('image')}
             alt="image"
             aria-label="View image full screen"
             onClick={handlePostImageClick}
@@ -253,6 +260,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
           <S.ActionsLeft>
             <S.LikeWrapper>
               <S.LikeButton
+                {...analyticsTarget('like')}
                 $animate={animateLike}
                 $isLiked={is_liked}
                 aria-label="Like"
@@ -267,11 +275,16 @@ const Post: SFC<PostProps> = ({className, post}) => {
                   totalSize="unset"
                 />
               </S.LikeButton>
-              <S.LikeCount onClick={toggleLikesModal} type="button">
+              <S.LikeCount {...analyticsTarget('like_count')} onClick={toggleLikesModal} type="button">
                 {like_count.toLocaleString()} {like_count === 1 ? 'like' : 'likes'}
               </S.LikeCount>
             </S.LikeWrapper>
-            <S.CommentToggle aria-expanded={isOpenCommentBox} onClick={handleCommentToggleClick} type="button">
+            <S.CommentToggle
+              {...analyticsTarget('comments')}
+              aria-expanded={isOpenCommentBox}
+              onClick={handleCommentToggleClick}
+              type="button"
+            >
               <S.ActionIcon icon={mdiCommentTextOutline} size={18} totalSize="unset" />
               {isOpenCommentBox ? 'Hide Comments' : 'Comment'}
             </S.CommentToggle>

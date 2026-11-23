@@ -1,4 +1,5 @@
 import {SFC} from 'types';
+import {analyticsTarget} from 'utils/analyticsAttributes';
 
 import useIsRail from '../useIsRail';
 
@@ -15,6 +16,7 @@ const MenuButton: SFC<MenuButtonProps> = ({className, icon, onClick, text}) => {
 
   return (
     <S.MenuButton
+      {...analyticsTarget(text)}
       $isActive={false}
       className={className}
       onClick={onClick}

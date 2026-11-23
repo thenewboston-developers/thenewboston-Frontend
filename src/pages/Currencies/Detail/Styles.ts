@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import {breakpoints, colors, fonts, pagePadding, radii, shadows, toolbarStyle} from 'styles';
+import {analyticsScrollRoot} from 'utils/analyticsAttributes';
 
 export const BackButton = styled.button`
   align-items: center;
@@ -60,7 +61,7 @@ export const LoaderWrapper = styled.div`
   width: 100%;
 `;
 
-export const ScrollableContent = styled.div`
+export const ScrollableContent = styled.div.attrs(analyticsScrollRoot)`
   ${pagePadding};
   flex: 1;
   min-height: 0;

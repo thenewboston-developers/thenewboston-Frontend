@@ -3,7 +3,13 @@ import {createRoot, Root} from 'react-dom/client';
 import {useSelector} from 'react-redux';
 import {useLocation} from 'react-router-dom';
 
-import {captureAnalyticsEvent, getAnalyticsPath, initializeAnalytics, syncAnalyticsIdentity} from 'utils/analytics';
+import {
+  captureAnalyticsEvent,
+  getAnalyticsPath,
+  initializeAnalytics,
+  isAnalyticsRedirectPath,
+  syncAnalyticsIdentity,
+} from 'utils/analytics';
 
 import PostHogTracker from './index';
 
@@ -13,6 +19,7 @@ jest.mock('utils/analytics', () => ({
   captureAnalyticsEvent: jest.fn(),
   getAnalyticsPath: jest.fn(),
   initializeAnalytics: jest.fn(),
+  isAnalyticsRedirectPath: jest.fn(),
   syncAnalyticsIdentity: jest.fn(),
 }));
 
@@ -20,7 +27,7 @@ jest.mock('utils/analytics', () => ({
 
 interface TrackerState {
   authentication: {accessToken: string | null};
-  self: {id: number | null};
+  self: {id: number | null; is_staff?: boolean};
 }
 
 let container: HTMLDivElement;
@@ -51,6 +58,7 @@ beforeEach(() => {
   (useLocation as jest.Mock).mockImplementation(() => location);
   (useSelector as unknown as jest.Mock).mockImplementation((selector) => selector(state));
   (getAnalyticsPath as jest.Mock).mockImplementation((path: string) => path.replace(/\/\d+(?=\/|$)/g, '/:id'));
+  (isAnalyticsRedirectPath as jest.Mock).mockImplementation((path: string) => path === '/exchange');
 });
 
 afterEach(() => {
@@ -64,7 +72,7 @@ describe('PostHogTracker', () => {
     renderTracker();
 
     expect(initializeAnalytics).toHaveBeenCalledTimes(1);
-    expect(syncAnalyticsIdentity).toHaveBeenCalledWith('42');
+    expect(syncAnalyticsIdentity).toHaveBeenCalledWith('42', false);
     expect(captureAnalyticsEvent).toHaveBeenCalledWith('$pageview', {
       $current_url: `${window.location.origin}/`,
       $pathname: '/',
@@ -101,6 +109,21 @@ describe('PostHogTracker', () => {
     expect(captureAnalyticsEvent).toHaveBeenCalledTimes(3);
   });
 
+  it('skips a path that only redirects and counts the page it leads to', () => {
+    location = {hash: '', pathname: '/exchange', search: ''};
+    renderTracker();
+    expect(captureAnalyticsEvent).not.toHaveBeenCalled();
+
+    location = {hash: '', pathname: '/exchange/home', search: ''};
+    renderTracker();
+    expect(captureAnalyticsEvent).toHaveBeenCalledTimes(1);
+    expect(captureAnalyticsEvent).toHaveBeenLastCalledWith('$pageview', {
+      $current_url: `${window.location.origin}/exchange/home`,
+      $pathname: '/exchange/home',
+      page_path: '/exchange/home',
+    });
+  });
+
   it('does not double-count the initial pageview when React replays effects in StrictMode', () => {
     renderTracker(true);
 
@@ -114,7 +137,19 @@ describe('PostHogTracker', () => {
     state = incompleteState;
     renderTracker();
 
-    expect(syncAnalyticsIdentity).toHaveBeenCalledWith(null);
+    expect(syncAnalyticsIdentity).toHaveBeenCalledWith(null, false);
+  });
+
+  it('marks a signed-in staff member, and nobody else, as internal', () => {
+    state = {authentication: {accessToken: null}, self: {id: 42, is_staff: true}};
+    renderTracker();
+    state = {authentication: {accessToken: 'private-token'}, self: {id: 42, is_staff: true}};
+    renderTracker();
+
+    expect((syncAnalyticsIdentity as jest.Mock).mock.calls).toEqual([
+      [null, false],
+      ['42', true],
+    ]);
   });
 
   it('synchronizes sign-in, account changes, and sign-out without duplicate pageviews', () => {
@@ -126,7 +161,12 @@ describe('PostHogTracker', () => {
     state = {authentication: {accessToken: null}, self: {id: null}};
     renderTracker();
 
-    expect((syncAnalyticsIdentity as jest.Mock).mock.calls).toEqual([[null], ['42'], ['43'], [null]]);
+    expect((syncAnalyticsIdentity as jest.Mock).mock.calls).toEqual([
+      [null, false],
+      ['42', false],
+      ['43', false],
+      [null, false],
+    ]);
     expect(captureAnalyticsEvent).toHaveBeenCalledTimes(1);
   });
 });

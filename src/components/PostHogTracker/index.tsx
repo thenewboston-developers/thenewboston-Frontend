@@ -3,7 +3,13 @@ import {useSelector} from 'react-redux';
 import {useLocation} from 'react-router-dom';
 
 import {getAuthentication, getSelf} from 'selectors/state';
-import {captureAnalyticsEvent, getAnalyticsPath, initializeAnalytics, syncAnalyticsIdentity} from 'utils/analytics';
+import {
+  captureAnalyticsEvent,
+  getAnalyticsPath,
+  initializeAnalytics,
+  isAnalyticsRedirectPath,
+  syncAnalyticsIdentity,
+} from 'utils/analytics';
 
 const PostHogTracker = () => {
   const authentication = useSelector(getAuthentication);
@@ -11,15 +17,18 @@ const PostHogTracker = () => {
   const location = useLocation();
   const self = useSelector(getSelf);
   const userId = authentication.accessToken && self.id ? String(self.id) : null;
+  const isStaff = !!userId && !!self.is_staff;
 
   useEffect(() => {
     initializeAnalytics();
-    syncAnalyticsIdentity(userId);
-  }, [userId]);
+    syncAnalyticsIdentity(userId, isStaff);
+  }, [isStaff, userId]);
 
   useEffect(() => {
     if (lastPathname.current === location.pathname) return;
     lastPathname.current = location.pathname;
+    // Counting a path that only redirects would record a phantom page between every two real ones
+    if (isAnalyticsRedirectPath(location.pathname)) return;
     const path = getAnalyticsPath(location.pathname);
     captureAnalyticsEvent('$pageview', {
       $current_url: `${window.location.origin}${path}`,

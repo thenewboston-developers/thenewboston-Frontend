@@ -4,6 +4,7 @@ import UButton from 'components/Button';
 import USectionHeading from 'components/SectionHeading';
 import {Contents} from 'components/SectionHeading/Styles';
 import {colors, fonts, hiddenScroll, pagePadding} from 'styles';
+import {analyticsScrollRoot} from 'utils/analyticsAttributes';
 
 export const Container = styled.div`
   display: flex;
@@ -12,7 +13,7 @@ export const Container = styled.div`
   width: 100%;
 `;
 
-export const Content = styled.div`
+export const Content = styled.div.attrs(analyticsScrollRoot)`
   ${pagePadding};
   ${hiddenScroll};
   height: 100%;

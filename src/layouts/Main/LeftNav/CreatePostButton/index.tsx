@@ -3,6 +3,7 @@ import {mdiPlus} from '@mdi/js';
 import {useToggle} from 'hooks';
 import PostModal from 'modals/PostModal';
 import {SFC} from 'types';
+import {analyticsTarget} from 'utils/analyticsAttributes';
 
 import useIsRail from '../useIsRail';
 
@@ -14,7 +15,13 @@ const CreatePostButton: SFC = ({className}) => {
 
   return (
     <>
-      <S.Button className={className} onClick={togglePostModal} title={isRail ? 'Post' : undefined} type="button">
+      <S.Button
+        {...analyticsTarget('create_post')}
+        className={className}
+        onClick={togglePostModal}
+        title={isRail ? 'Post' : undefined}
+        type="button"
+      >
         <S.Icon path={mdiPlus} size="20px" />
         <S.Text>Post</S.Text>
       </S.Button>

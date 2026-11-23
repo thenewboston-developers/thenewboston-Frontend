@@ -3,6 +3,7 @@ import {useLocation} from 'react-router-dom';
 
 import {isPathActive} from 'layouts/Main/utils';
 import {SFC} from 'types';
+import {analyticsTarget} from 'utils/analyticsAttributes';
 
 import useIsRail from '../useIsRail';
 
@@ -25,6 +26,7 @@ const MenuLink: SFC<MenuLinkProps> = ({activeIcon, children, className, icon, ro
 
   return (
     <S.MenuLink
+      {...analyticsTarget(text)}
       $isActive={isActive}
       aria-current={isActive ? 'page' : undefined}
       className={className}

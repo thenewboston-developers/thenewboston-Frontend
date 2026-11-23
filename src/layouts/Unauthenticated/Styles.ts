@@ -2,6 +2,7 @@ import {Link as ULink} from 'react-router-dom';
 import styled from 'styled-components';
 
 import {colors, fonts, radii} from 'styles';
+import {analyticsScrollRoot} from 'utils/analyticsAttributes';
 
 export const Brand = styled(ULink)`
   align-items: center;
@@ -34,7 +35,7 @@ export const BrandName = styled.span`
 `;
 
 /* The page itself does not scroll, so the container does to keep the whole form reachable on short screens */
-export const Container = styled.div`
+export const Container = styled.div.attrs(analyticsScrollRoot)`
   background: ${colors.backgroundDark};
   display: flex;
   height: 100vh;

@@ -53,6 +53,7 @@ import {
   SFC,
   UserReadSerializer,
 } from 'types';
+import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
 import {shortDate} from 'utils/dates';
 import {handleFormikAPIError} from 'utils/forms';
 import {displayErrorToast} from 'utils/toasts';
@@ -972,7 +973,7 @@ const ConnectFiveHome: SFC = ({className}) => {
   };
 
   return (
-    <S.Container className={className}>
+    <S.Container {...analyticsArea('connect_five_lobby')} className={className}>
       <S.Content>
         <S.Hero>
           <S.HeroContent>
@@ -989,11 +990,15 @@ const ConnectFiveHome: SFC = ({className}) => {
             </S.HeroMeta>
             <S.HeroActions>
               {isAuthenticated ? (
-                <S.HeroPrimaryLink href="#challenge-player">Challenge a player</S.HeroPrimaryLink>
+                <S.HeroPrimaryLink {...analyticsTarget('challenge_a_player')} href="#challenge-player">
+                  Challenge a player
+                </S.HeroPrimaryLink>
               ) : (
                 <AuthButtons />
               )}
-              <S.HeroLink to="/connect-five/leaderboard">Leaderboard</S.HeroLink>
+              <S.HeroLink {...analyticsTarget('leaderboard')} to="/connect-five/leaderboard">
+                Leaderboard
+              </S.HeroLink>
             </S.HeroActions>
           </S.HeroContent>
           <S.HeroVisual>

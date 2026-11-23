@@ -3,6 +3,7 @@ import {createPortal} from 'react-dom';
 
 import {useEventListener, useToggle} from 'hooks';
 import {GenericVoidFunction, SFC} from 'types';
+import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
 
 import * as S from './Styles';
 
@@ -58,9 +59,15 @@ const PopupMenu: SFC<PopupMenuProps> = ({children, className, isActive = false, 
   };
 
   const renderMenu = () => (
-    <S.Menu style={menuPosition}>
+    <S.Menu {...analyticsArea('navigation')} style={menuPosition}>
       {options.map(({activeIcon, icon, isActive: optionIsActive = false, label, onClick: optionOnClick}, index) => (
-        <S.MenuOption $isActive={optionIsActive} key={index} onClick={handleOptionClick(optionOnClick)} type="button">
+        <S.MenuOption
+          {...(typeof label === 'string' ? analyticsTarget(label) : {})}
+          $isActive={optionIsActive}
+          key={index}
+          onClick={handleOptionClick(optionOnClick)}
+          type="button"
+        >
           <S.MenuIcon path={optionIsActive && activeIcon ? activeIcon : icon} size="20px" />
           <S.OptionLabel>{label}</S.OptionLabel>
         </S.MenuOption>
@@ -71,6 +78,7 @@ const PopupMenu: SFC<PopupMenuProps> = ({children, className, isActive = false, 
   return (
     <>
       <S.MenuItem
+        {...analyticsTarget('more')}
         $isActive={isActive}
         aria-expanded={isOpen}
         className={className}

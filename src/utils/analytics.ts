@@ -1,13 +1,21 @@
 import posthog, {CaptureResult, PostHogConfig} from 'posthog-js';
 
+import {ANALYTICS_SCROLL_ROOT_SELECTOR} from 'utils/analyticsAttributes';
+
 type AnalyticsProperties = Record<string, string | number | boolean | null>;
+
+// PostHog reports this instead of a URL or domain when a visit has no referring site
+const DIRECT_REFERRER = '$direct';
+const INTERNAL_TRAFFIC_STORAGE_KEY = 'analytics_internal_traffic';
 
 let initialized = false;
 let identifiedUserId: string | null = null;
 
+// The router replaces these paths with a real page straight away, and that page records its own pageview
+const redirectRoutes = ['/connect-five', '/currencies', '/exchange', '/feed', '/wallets'];
+
 const routes = [
   '/',
-  '/feed',
   '/games',
   '/create-account',
   '/sign-in',
@@ -35,14 +43,24 @@ const routes = [
   '/wallets/learn-more',
 ];
 
-export const getAnalyticsPath = (value: string): string => {
+const getPath = (value: string): string | null => {
   try {
     const {pathname} = new URL(value, window.location.origin);
-    const path = pathname.replace(/\/$/, '') || '/';
-    return routes.find((route) => new RegExp(`^${route.replace(/:id/g, '[^/]+')}$`).test(path)) || '/other';
+    return pathname.replace(/\/$/, '') || '/';
   } catch {
-    return '/other';
+    return null;
   }
+};
+
+export const getAnalyticsPath = (value: string): string => {
+  const path = getPath(value);
+  if (path === null) return '/other';
+  return routes.find((route) => new RegExp(`^${route.replace(/:id/g, '[^/]+')}$`).test(path)) || '/other';
+};
+
+export const isAnalyticsRedirectPath = (value: string): boolean => {
+  const path = getPath(value);
+  return path !== null && redirectRoutes.includes(path);
 };
 
 export const sanitizeAnalyticsUrl = (value: string): string => {
@@ -60,6 +78,7 @@ const sanitizeProperties = (properties: Record<string, any>): Record<string, any
       if (/token|password|email|username|search|query|utm_|gclid|fbclid|msclkid|text|title|href|^attr__/i.test(key)) {
         return [];
       }
+      if (value === DIRECT_REFERRER) return [[key, value]];
       if (typeof value === 'string' && /url|referrer/i.test(key)) return [[key, sanitizeAnalyticsUrl(value)]];
       if (typeof value === 'string' && /pathname|path$/i.test(key)) return [[key, getAnalyticsPath(value)]];
       if (Array.isArray(value))
@@ -114,7 +133,10 @@ export const analyticsConfig: Partial<PostHogConfig> = {
   rageclick: true,
   respect_dnt: true,
   save_campaign_params: false,
-  save_referrer: false,
+  // Reports where a visit came from. The sanitizer reduces the referring page to its origin before it is sent.
+  save_referrer: true,
+  // The window never scrolls. A page scrolls in its own marked container, or else in the main area.
+  scroll_root_selector: [ANALYTICS_SCROLL_ROOT_SELECTOR, '#main-scrollable-area', 'html'],
   session_recording: {
     blockSelector:
       'img, svg image, canvas, video, audio, iframe, object, embed, input[type="file"], [data-private], .ph-no-capture',
@@ -155,7 +177,18 @@ export const initializeAnalytics = (): void => {
   }
 };
 
-export const syncAnalyticsIdentity = (userId: string | null): void => {
+// A browser that a staff member has signed in on stays internal after they sign out, so that their signed-out
+// browsing is labelled too.
+const isInternalBrowser = (isStaff: boolean): boolean => {
+  try {
+    if (isStaff) window.localStorage.setItem(INTERNAL_TRAFFIC_STORAGE_KEY, 'true');
+    return window.localStorage.getItem(INTERNAL_TRAFFIC_STORAGE_KEY) === 'true';
+  } catch {
+    return isStaff;
+  }
+};
+
+export const syncAnalyticsIdentity = (userId: string | null, isStaff = false): void => {
   if (!initialized) return;
   try {
     const previousUserId = identifiedUserId || posthog.get_property('$user_id');
@@ -164,6 +197,8 @@ export const syncAnalyticsIdentity = (userId: string | null): void => {
       if (userId) posthog.identify(userId);
       identifiedUserId = userId;
     }
+    // Lets reports leave staff activity out. Resetting the identity clears the label, so it is applied every time.
+    if (isInternalBrowser(isStaff)) posthog.register({internal_traffic: true});
   } catch {
     // Identity tracking must not affect authentication.
   }

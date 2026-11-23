@@ -7,6 +7,7 @@ jest.mock('posthog-js', () => ({
     get_property: jest.fn(),
     identify: jest.fn(),
     init: jest.fn(),
+    register: jest.fn(),
     reset: jest.fn(),
   },
 }));
@@ -17,6 +18,7 @@ interface MockPostHog {
   get_property: jest.Mock;
   identify: jest.Mock;
   init: jest.Mock;
+  register: jest.Mock;
   reset: jest.Mock;
 }
 
@@ -31,6 +33,7 @@ let analytics: Analytics;
 let posthog: MockPostHog;
 
 beforeEach(() => {
+  window.localStorage.clear();
   process.env = {
     ...originalEnvironment,
     NODE_ENV: 'production',
@@ -158,6 +161,26 @@ describe('analytics initialization and identity', () => {
     expect(posthog.reset.mock.invocationCallOrder[0]).toBeLessThan(posthog.identify.mock.invocationCallOrder[0]);
   });
 
+  it('labels staff activity as internal, including signed-out browsing afterwards in the same browser', () => {
+    analytics.initializeAnalytics();
+    analytics.syncAnalyticsIdentity('42', true);
+    expect(posthog.register).toHaveBeenLastCalledWith({internal_traffic: true});
+    expect(posthog.identify.mock.invocationCallOrder[0]).toBeLessThan(posthog.register.mock.invocationCallOrder[0]);
+
+    analytics.syncAnalyticsIdentity(null);
+    expect(posthog.register).toHaveBeenCalledTimes(2);
+    expect(posthog.reset.mock.invocationCallOrder[0]).toBeLessThan(posthog.register.mock.invocationCallOrder[1]);
+  });
+
+  it('does not label members or anonymous visitors as internal', () => {
+    analytics.initializeAnalytics();
+    analytics.syncAnalyticsIdentity(null);
+    analytics.syncAnalyticsIdentity('42');
+    analytics.syncAnalyticsIdentity('42', false);
+
+    expect(posthog.register).not.toHaveBeenCalled();
+  });
+
   it('does not let an identity failure affect authentication and retries on the next synchronization', () => {
     analytics.initializeAnalytics();
     posthog.identify.mockImplementationOnce(() => {
@@ -178,9 +201,24 @@ describe('analytics data sanitization', () => {
     ['/connect-five/matches/456', '/connect-five/matches/:id'],
     ['/exchange/trade/789', '/exchange/trade/:id'],
     ['/unknown/private-value', '/other'],
+    ['/feed', '/other'],
     ['http://[invalid', '/other'],
   ])('normalizes %s without user identifiers', (path, expected) => {
     expect(analytics.getAnalyticsPath(path)).toBe(expected);
+  });
+
+  it.each([
+    ['/exchange', true],
+    ['/currencies/', true],
+    ['/connect-five?token=private', true],
+    ['/wallets', true],
+    ['/feed', true],
+    ['/exchange/home', false],
+    ['/', false],
+    ['/unknown', false],
+    ['http://[invalid', false],
+  ])('recognizes whether %s only redirects to a real page', (path, expected) => {
+    expect(analytics.isAnalyticsRedirectPath(path)).toBe(expected);
   });
 
   it('removes secrets from same-origin and external URLs', () => {
@@ -222,6 +260,42 @@ describe('analytics data sanitization', () => {
       },
     });
     expect(event.properties.password).toBe('private-password');
+  });
+
+  it('reports the referring site without its path and keeps direct visits recognizable', () => {
+    const event = buildEvent({
+      $referrer: 'https://www.example.test/watch?v=private#private',
+      $referring_domain: 'www.example.test',
+      $session_entry_referrer: '$direct',
+      $session_entry_referring_domain: '$direct',
+    });
+    event.$set_once = {$initial_referrer: '$direct', $initial_referring_domain: '$direct'};
+
+    expect(analytics.sanitizeAnalyticsEvent(event)).toEqual({
+      ...event,
+      properties: {
+        $referrer: 'https://www.example.test',
+        $referring_domain: 'www.example.test',
+        $session_entry_referrer: '$direct',
+        $session_entry_referring_domain: '$direct',
+      },
+    });
+    expect(analytics.analyticsConfig.save_referrer).toBe(true);
+    expect(analytics.analyticsConfig.save_campaign_params).toBe(false);
+  });
+
+  it('keeps click names on autocaptured events', () => {
+    const event = buildEvent({click_area: 'navigation', click_target: 'games'}, '$autocapture');
+
+    expect(analytics.sanitizeAnalyticsEvent(event)).toEqual(event);
+  });
+
+  it('measures scroll depth in the container a page scrolls in, then the main area, then the document', () => {
+    expect(analytics.analyticsConfig.scroll_root_selector).toEqual([
+      '.analytics-scroll-root',
+      '#main-scrollable-area',
+      'html',
+    ]);
   });
 
   it('scrubs person properties and nested credentials without removing the top-level ingestion token', () => {
