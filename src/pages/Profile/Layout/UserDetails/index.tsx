@@ -183,7 +183,7 @@ const UserDetails: SFC = ({className}) => {
         </S.Wrapper>
       </S.Container>
       {profileEditModalIsOpen ? <ProfileEditModal close={toggleProfileEditModal} /> : null}
-      {profileAvatarModalIsOpen ? <FullScreenImageModal close={handleClose} imageSrc={userAvatar} /> : null}
+      {profileAvatarModalIsOpen ? <FullScreenImageModal close={handleClose} images={[userAvatar]} /> : null}
       {sendModalIsOpen && user ? (
         <SendModal
           close={toggleSendModal}

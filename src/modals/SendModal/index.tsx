@@ -1,20 +1,22 @@
-import {ChangeEvent, useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Form, Formik} from 'formik';
 
 import Button from 'components/Button';
 import {ButtonColor, ButtonType} from 'components/Button/types';
 import EmojiPicker from 'components/EmojiPicker';
-import {FileInput, FormField} from 'components/FormElements';
-import ImagePreview from 'components/ImagePreview';
+import {FormField} from 'components/FormElements';
 import Loader from 'components/Loader';
+import PostImagesInput from 'components/PostImagesInput';
 import UserLabel from 'components/UserLabel';
 import {createPost} from 'dispatchers/posts';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {ToastType} from 'enums';
+import {usePostImages} from 'hooks';
 import {getManager, getSelf, getWallets, isLoadingWallets} from 'selectors/state';
 import {AppDispatch, SFC, UserReadSerializer} from 'types';
 import {handleFormikAPIError} from 'utils/forms';
+import {getPostImagesErrorMessage} from 'utils/postImages';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
@@ -27,7 +29,7 @@ export interface SendModalProps {
 }
 
 const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}) => {
-  const [preview, setPreview] = useState<string | null>(null);
+  const {addImages, images, removeImage, uploadImages, uploadProgress} = usePostImages();
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector(isLoadingWallets);
   const manager = useSelector(getManager);
@@ -58,7 +60,6 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
   const initialValues = useMemo(
     () => ({
       content: '',
-      image: '',
       price_amount: '',
       wallet_id: manager.activeWallet?.id || (walletOptions.length > 0 ? walletOptions[0].value : ''),
     }),
@@ -66,16 +67,6 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
   );
 
   type FormValues = typeof initialValues;
-
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
     try {
@@ -85,22 +76,30 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
         return;
       }
 
-      const requestData = new FormData();
-      requestData.append('content', values.content);
-      requestData.append('recipient', recipient.id.toString());
-      requestData.append('price_amount', values.price_amount);
-      requestData.append('price_currency', selectedWallet.currency.id.toString());
+      const imageIds = await uploadImages();
+      if (!imageIds) return;
 
-      if (values.image) {
-        requestData.append('image', values.image);
-      }
-
-      await dispatch(createPost(requestData));
+      await dispatch(
+        createPost({
+          content: values.content,
+          image_ids: imageIds,
+          price_amount: values.price_amount,
+          price_currency: selectedWallet.currency.id,
+          recipient: recipient.id,
+        }),
+      );
       displayToast('Coins sent successfully!', ToastType.SUCCESS);
 
       if (onSuccess) onSuccess();
       close();
     } catch (error: any) {
+      const imagesErrorMessage = getPostImagesErrorMessage(error);
+
+      if (imagesErrorMessage) {
+        displayErrorToast(imagesErrorMessage);
+        return;
+      }
+
       const errorMessage = error?.response?.data?.error ?? 'Error sending coins';
       handleFormikAPIError(error, helpers, errorMessage);
     }
@@ -191,17 +190,12 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
                 </S.TextareaContainer>
               </FormField>
 
-              {!values.image && (
-                <FormField>
-                  <FileInput errors={errors} name="image" onChange={handleFileChange} touched={touched} />
-                </FormField>
-              )}
-              <ImagePreview
-                onClear={async () => {
-                  await setFieldValue('image', '');
-                  setPreview(null);
-                }}
-                src={preview}
+              <PostImagesInput
+                disabled={isSubmitting}
+                images={images}
+                onAdd={addImages}
+                onRemove={removeImage}
+                uploadProgress={uploadProgress}
               />
             </S.ModalBody>
 

@@ -146,33 +146,6 @@ export const DropdownMenu = styled(UDropdownMenu)`
   margin-right: -8px;
 `;
 
-export const Image = styled.img`
-  border-radius: 12px;
-  cursor: pointer;
-  margin-top: 16px;
-  max-height: 600px;
-  max-width: 100%;
-  object-fit: cover;
-
-  &:focus-visible {
-    box-shadow: ${shadows.focusRing};
-    outline: none;
-  }
-
-  @media (max-width: ${breakpoints.mini}) {
-    border-radius: 0;
-    width: 100%;
-
-    /* The image is full bleed here, so an outer ring would be cut off at the screen edges. An outline is used for the
-       inner ring because an inset box-shadow is painted underneath the image itself. */
-    &:focus-visible {
-      box-shadow: none;
-      outline: 2px solid ${colors.palette.blue[500]};
-      outline-offset: -2px;
-    }
-  }
-`;
-
 export const LikeButton = styled.button<{$animate: boolean; $isLiked: boolean}>`
   ${ghostPillStyle};
   color: ${({$isLiked}) => ($isLiked ? colors.accent : colors.secondary)};

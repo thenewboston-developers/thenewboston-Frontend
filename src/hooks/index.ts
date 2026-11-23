@@ -2,6 +2,7 @@ import useDeploymentPolling from 'hooks/useDeploymentPolling';
 import useEventListener from 'hooks/useEventListener';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useIsMobile from 'hooks/useIsMobile';
+import usePostImages from 'hooks/usePostImages';
 import useRequireAuthentication from 'hooks/useRequireAuthentication';
 import useResizeObserver from 'hooks/useResizeObserver';
 import useToggle from 'hooks/useToggle';
@@ -13,6 +14,7 @@ export {
   useEventListener,
   useIsAuthenticated,
   useIsMobile,
+  usePostImages,
   useRequireAuthentication,
   useResizeObserver,
   useToggle,

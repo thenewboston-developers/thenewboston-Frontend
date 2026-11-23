@@ -2,6 +2,7 @@ import styled, {keyframes} from 'styled-components';
 
 import UPost from 'components/Post';
 import {CommentForm, ControlsWrapper} from 'components/Post/Comments/Styles';
+import {Container as PostImages} from 'components/Post/PostImages/Styles';
 import {breakpoints, colors} from 'styles';
 
 const addOverlay = keyframes`
@@ -159,7 +160,7 @@ export const Post = styled(UPost)`
   box-shadow: none;
   padding: 0;
 
-  img[alt='image'] {
+  ${PostImages} {
     display: none;
   }
 

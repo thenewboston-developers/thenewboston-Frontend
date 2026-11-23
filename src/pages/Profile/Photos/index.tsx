@@ -2,8 +2,10 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
+import {mdiImageMultiple} from '@mdi/js';
 
 import EmptyText from 'components/EmptyText';
+import Icon from 'components/Icon';
 import Loader from 'components/Loader';
 import {getPosts as _getPosts, resetPosts as _resetPosts} from 'dispatchers/posts';
 import PhotoLightboxModal from 'modals/PhotoLightboxModal';
@@ -22,7 +24,7 @@ const Photos: SFC = ({className}) => {
   const {id} = useParams();
   const isLoading = useSelector(isLoadingPosts);
   const posts = useSelector(getPosts);
-  const photoPosts = useMemo(() => posts.filter((post) => post.image), [posts]);
+  const photoPosts = useMemo(() => posts.filter((post) => post.images.length), [posts]);
   const userId = id ? parseInt(id, 10) : null;
   const pageSize = 40;
 
@@ -108,12 +110,22 @@ const Photos: SFC = ({className}) => {
         <S.Grid>
           {photoPosts.map((post) => (
             <S.PhotoButton
-              aria-label={`Open photo from ${post.owner.username}`}
+              aria-label={
+                post.images.length > 1
+                  ? `Open ${post.images.length} photos from ${post.owner.username}`
+                  : `Open photo from ${post.owner.username}`
+              }
               key={post.id}
               onClick={() => handlePhotoClick(post)}
               type="button"
             >
-              <S.PhotoImage alt={`Post photo by ${post.owner.username}`} src={post.image ?? ''} />
+              <S.PhotoImage alt={`Post photo by ${post.owner.username}`} src={post.images[0].image} />
+              {post.images.length > 1 && (
+                <S.PhotoCount>
+                  <Icon icon={mdiImageMultiple} size={14} totalSize="unset" />
+                  {post.images.length}
+                </S.PhotoCount>
+              )}
             </S.PhotoButton>
           ))}
         </S.Grid>

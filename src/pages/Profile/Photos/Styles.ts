@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {breakpoints, colors} from 'styles';
+import {breakpoints, colors, fonts, radii} from 'styles';
 
 export const Container = styled.div`
   margin: 0 auto;
@@ -54,6 +54,22 @@ export const PhotoButton = styled.button`
   &:hover img {
     transform: scale(1.03);
   }
+`;
+
+export const PhotoCount = styled.span`
+  align-items: center;
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: ${radii.pill};
+  color: ${colors.white};
+  display: flex;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.semiBold};
+  gap: 4px;
+  padding: 4px 8px;
+  position: absolute;
+  right: 8px;
+  top: 8px;
 `;
 
 export const PhotoImage = styled.img`

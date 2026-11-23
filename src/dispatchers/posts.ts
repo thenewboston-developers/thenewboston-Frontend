@@ -20,11 +20,11 @@ import {
   updatePostLikeStatus,
   updatePostTipAmounts,
 } from 'store/posts';
-import {AppDispatch, GetPostsParams} from 'types';
+import {AppDispatch, CreatePostRequest, GetPostsParams, UpdatePostRequest} from 'types';
 import {isCancellationError} from 'utils/errors';
 import {getNextUrlFromState} from 'utils/urls';
 
-export const createPost = (data: FormData) => async (dispatch: AppDispatch) => {
+export const createPost = (data: CreatePostRequest) => async (dispatch: AppDispatch) => {
   const responseData = await _createPost(data);
   delete responseData.comments;
   dispatch(setPost(responseData));
@@ -75,7 +75,7 @@ export const getPosts = (params?: GetPostsParams, abortSignal?: AbortSignal) => 
   }
 };
 
-export const updatePost = (id: number, data: FormData) => async (dispatch: AppDispatch) => {
+export const updatePost = (id: number, data: UpdatePostRequest) => async (dispatch: AppDispatch) => {
   const responseData = await _updatePost(id, data);
 
   const comments = responseData.comments || [];

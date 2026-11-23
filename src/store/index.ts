@@ -78,7 +78,7 @@ const persistConfig = {
   key: 'thenewboston',
   migrate: createMigrate(migrations, {debug: false}),
   storage,
-  version: 2,
+  version: 3,
   blacklist: ['authPrompt', 'backgammon', 'frontendDeployments'],
 };
 

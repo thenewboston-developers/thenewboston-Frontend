@@ -6,7 +6,7 @@ import {CreateFollowerRequest, FollowerReadSerializer, GetFollowersParams} from 
 import {CreateInvitationRequest} from 'types/api/invitations';
 import {GetMintChartDataParams, MintChartDataResponse, MintDataPoint} from 'types/api/mintChartData';
 import {CreateMintRequest, GetMintsParams} from 'types/api/mints';
-import {GetPostsParams, PostReadSerializer} from 'types/api/posts';
+import {CreatePostRequest, GetPostsParams, PostReadSerializer, UpdatePostRequest} from 'types/api/posts';
 import {TotalAmountMintedResponse} from 'types/api/totalAmountMinted';
 import {CurrencyTinySerializer, TradeHistoryItem, TradeHistoryItemsResponse} from 'types/api/tradeHistory';
 import {
@@ -56,7 +56,7 @@ import {Mint, Mints} from 'types/mints';
 import {Notification, NotificationPaginatedResponse, Notifications, NotificationsState} from 'types/notifications';
 import {OrderBookState} from 'types/orderBook';
 import {PaginatedResponse} from 'types/pagination';
-import {Post, PostLike, Posts, TipAmount} from 'types/posts';
+import {Post, PostImage, PostImageDraft, PostImageUploadProgress, PostLike, Posts, TipAmount} from 'types/posts';
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
 import {Trade, Trades} from 'types/trades';
@@ -97,6 +97,7 @@ export {
   CreateFollowerRequest,
   CreateInvitationRequest,
   CreateMintRequest,
+  CreatePostRequest,
   CreateUserRequest,
   CreateUserResponse,
   CreateWalletRequest,
@@ -143,6 +144,9 @@ export {
   OrderBookState,
   PaginatedResponse,
   Post,
+  PostImage,
+  PostImageDraft,
+  PostImageUploadProgress,
   PostLike,
   PostReadSerializer,
   Posts,
@@ -159,6 +163,7 @@ export {
   Trades,
   Transfer,
   TransfersResponse,
+  UpdatePostRequest,
   UserReadSerializer,
   Users,
   UserStats,

@@ -12,7 +12,9 @@ const FullScreenImage: SFC<FullScreenImageProps> = ({className, onClick, src}) =
 
   return (
     <S.Container className={className} onClick={onClick}>
-      <S.Img alt="Full screen preview" onClick={(e) => e.stopPropagation()} src={src} />
+      {/* Keyed by its source so that changing the image replaces the element instead of showing the previous image
+          until the next one has loaded */}
+      <S.Img alt="Full screen preview" key={src} onClick={(e) => e.stopPropagation()} src={src} />
     </S.Container>
   );
 };

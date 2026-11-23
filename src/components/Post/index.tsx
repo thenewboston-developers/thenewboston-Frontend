@@ -1,4 +1,4 @@
-import {KeyboardEvent, useState} from 'react';
+import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {mdiCommentTextOutline, mdiDotsVertical, mdiHeart, mdiHeartOutline} from '@mdi/js';
@@ -7,7 +7,6 @@ import ContentWithMentions from 'components/ContentWithMentions';
 import {deletePost, likePost, unlikePost} from 'dispatchers/posts';
 import {ToastType} from 'enums';
 import {useRequireAuthentication, useToggle} from 'hooks';
-import FullScreenImageModal from 'modals/FullScreenImageModal';
 import PostLikesModal from 'modals/PostLikesModal';
 import PostModal from 'modals/PostModal';
 import {getComments, getSelf} from 'selectors/state';
@@ -17,6 +16,7 @@ import {shortDate} from 'utils/dates';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 
 import Comments from './Comments';
+import PostImages from './PostImages';
 import * as S from './Styles';
 import TransferInfo from './TransferInfo';
 
@@ -70,7 +70,6 @@ const extractYouTubeVideoId = (text: string): string | null => {
 
 const Post: SFC<PostProps> = ({className, post}) => {
   const [animateLike, setAnimateLike] = useState(false);
-  const [imageModalIsOpen, toggleImageModal] = useToggle(false);
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [likesModalIsOpen, toggleLikesModal] = useToggle(false);
   const [postModalIsOpen, togglePostModal] = useToggle(false);
@@ -85,7 +84,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
     content,
     created_date,
     id,
-    image,
+    images,
     is_liked,
     like_count,
     mentioned_users,
@@ -144,17 +143,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
     } catch (error) {
       displayErrorToast('Error updating like status');
     }
-  };
-
-  const handlePostImageClick = () => {
-    toggleImageModal();
-  };
-
-  const handlePostImageKeyDown = (e: KeyboardEvent<HTMLImageElement>) => {
-    if (e.repeat) return;
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    e.preventDefault();
-    toggleImageModal();
   };
 
   const toggleShowFullContent = () => {
@@ -244,18 +232,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
             />
           </S.VideoWrapper>
         ) : null}
-        {image ? (
-          <S.Image
-            {...analyticsTarget('image')}
-            alt="image"
-            aria-label="View image full screen"
-            onClick={handlePostImageClick}
-            onKeyDown={handlePostImageKeyDown}
-            role="button"
-            src={image}
-            tabIndex={0}
-          />
-        ) : null}
+        <PostImages images={images} />
         <S.ActionsContainer>
           <S.ActionsLeft>
             <S.LikeWrapper>
@@ -295,7 +272,6 @@ const Post: SFC<PostProps> = ({className, post}) => {
         </S.ActionsContainer>
         {isOpenCommentBox && <Comments postId={post.id} />}
       </S.Container>
-      {imageModalIsOpen && image ? <FullScreenImageModal close={toggleImageModal} imageSrc={image} /> : null}
       {likesModalIsOpen ? <PostLikesModal close={toggleLikesModal} postId={post.id} /> : null}
       {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}
     </>
