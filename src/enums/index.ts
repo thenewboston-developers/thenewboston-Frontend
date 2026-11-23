@@ -1,3 +1,4 @@
+import {BannerArtVariant} from 'enums/bannerArt';
 import {
   ConnectFiveChallengeStatus,
   ConnectFiveMatchStatus,
@@ -14,6 +15,7 @@ import {ToastType} from 'enums/toast';
 import {WireType} from 'enums/wires';
 
 export {
+  BannerArtVariant,
   ConnectFiveChallengeStatus,
   ConnectFiveMatchStatus,
   ConnectFiveMoveType,

@@ -19,12 +19,13 @@ import connectFiveCover from 'assets/connect-five-cover.webp';
 import AuthButtons from 'components/AuthButtons';
 import Avatar from 'components/Avatar';
 import {BadgeStyle} from 'components/Badge';
+import BannerArt from 'components/BannerArt';
 import Button, {ButtonColor, ButtonType} from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import {FormField} from 'components/FormElements';
 import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
-import {ConnectFiveChallengeStatus, ConnectFiveMatchStatus} from 'enums';
+import {BannerArtVariant, ConnectFiveChallengeStatus, ConnectFiveMatchStatus} from 'enums';
 import {useIsAuthenticated} from 'hooks';
 import {
   getConnectFiveActiveMatches,
@@ -976,6 +977,7 @@ const ConnectFiveHome: SFC = ({className}) => {
     <S.Container {...analyticsArea('connect_five_lobby')} className={className}>
       <S.Content>
         <S.Hero>
+          <BannerArt variant={BannerArtVariant.board} />
           <S.HeroContent>
             <S.HeroEyebrow>The strategy lobby</S.HeroEyebrow>
             <S.HeroTitle>Connect Five</S.HeroTitle>

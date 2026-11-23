@@ -14,6 +14,7 @@ import {Area, AreaChart, ResponsiveContainer} from 'recharts';
 import {getTradeHistoryItems} from 'api/tradeHistoryItems';
 import Loader from 'components/Loader';
 import PageHeader from 'components/PageHeader';
+import {BannerArtVariant} from 'enums';
 import {colors} from 'styles';
 import {SFC, TradeHistoryItem} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -247,6 +248,7 @@ const Home: SFC = ({className}) => {
     <S.Container className={className}>
       <S.Content>
         <PageHeader
+          art={BannerArtVariant.chart}
           description="Discover community currencies, explore market activity, and find your next trading pair."
           eyebrow="The community exchange"
           title="A market for every idea."

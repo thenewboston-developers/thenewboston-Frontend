@@ -8,6 +8,7 @@ import PageHeader from 'components/PageHeader';
 import OrderBookWebSocket from 'containers/OrderBookWebSocket';
 import TradeWebSocket from 'containers/TradeWebSocket';
 import {getAssetPair as _getAssetPair, getAssetPairs as _getAssetPairs} from 'dispatchers/assetPairs';
+import {BannerArtVariant} from 'enums';
 import {getAssetPairs} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -74,6 +75,7 @@ const Trade: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <PageHeader
+        art={BannerArtVariant.depth}
         description="Follow the market, explore the order book, and trade at your price."
         eyebrow="Your trading workspace"
         title={

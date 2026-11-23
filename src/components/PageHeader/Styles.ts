@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 
+import {BANNER_ART_ACCENTS} from 'components/BannerArt';
+import {BannerArtVariant} from 'enums';
 import {breakpoints, colors, fonts, radii} from 'styles';
+
+const BUTTON_HOVER_BACKGROUND = 'rgb(255 255 255 / 86%)';
+const COPY_COLOR = 'rgb(255 255 255 / 84%)';
 
 export const Actions = styled.div`
   display: flex;
@@ -14,7 +19,7 @@ export const Actions = styled.div`
     background: ${colors.white};
     border: 1px solid ${colors.white};
     border-radius: ${radii.medium};
-    color: ${colors.palette.blue[900]};
+    color: ${colors.primary};
     display: inline-flex;
     font-size: 14px;
     font-weight: ${fonts.weight.semiBold};
@@ -23,6 +28,9 @@ export const Actions = styled.div`
     min-height: 44px;
     padding: 10px 18px;
     text-decoration: none;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease;
 
     &:focus-visible {
       outline: 2px solid ${colors.white};
@@ -30,40 +38,28 @@ export const Actions = styled.div`
     }
 
     &:hover {
-      background: ${colors.palette.blue[100]};
-      border-color: ${colors.palette.blue[100]};
+      background: ${BUTTON_HOVER_BACKGROUND};
+      border-color: transparent;
       text-decoration: none;
     }
   }
 `;
 
+// The surface and the artwork come from BannerArt, which fills the header behind the copy and the actions
 export const Container = styled.header`
   align-items: center;
-  background:
-    radial-gradient(ellipse at top right, ${colors.palette.blue[500]}, transparent 65%), ${colors.palette.blue[900]};
-  border: 1px solid ${colors.palette.blue[800]};
+  background: ${colors.nav.background};
   border-radius: ${radii.large};
   color: ${colors.white};
   display: flex;
   flex-shrink: 0;
   gap: 28px;
+  isolation: isolate;
   justify-content: space-between;
   margin-bottom: 24px;
   overflow: hidden;
   padding: 32px;
   position: relative;
-
-  &::before {
-    border: 1px solid rgb(255 255 255 / 8%);
-    border-radius: 50%;
-    content: '';
-    height: 340px;
-    pointer-events: none;
-    position: absolute;
-    right: -100px;
-    top: -200px;
-    width: 340px;
-  }
 
   @media (max-width: ${breakpoints.tablet}) {
     align-items: flex-start;
@@ -82,15 +78,15 @@ export const Copy = styled.div`
 `;
 
 export const Description = styled.p`
-  color: ${colors.palette.blue[100]};
+  color: ${COPY_COLOR};
   font-size: 16px;
   line-height: 1.65;
   margin: 12px 0 0;
   max-width: 640px;
 `;
 
-export const Eyebrow = styled.div`
-  color: ${colors.palette.blue[100]};
+export const Eyebrow = styled.div<{$art: BannerArtVariant}>`
+  color: ${({$art}) => BANNER_ART_ACCENTS[$art]};
   font-size: 12px;
   font-weight: ${fonts.weight.semiBold};
   letter-spacing: 0.12em;

@@ -4,6 +4,7 @@ import styled, {css} from 'styled-components';
 
 import {Img as AvatarImg} from 'components/Avatar/Styles';
 import UBadge from 'components/Badge';
+import {BANNER_ART_ACCENTS} from 'components/BannerArt';
 import UButton from 'components/Button';
 import {Input as UInput, Select as USelect} from 'components/FormElements';
 import {Container as FormFieldContainer} from 'components/FormElements/FormField/Styles';
@@ -24,6 +25,7 @@ import {
   Label as UserSearchLabel,
   NoResultsMessage as UserSearchNoResultsMessage,
 } from 'components/UserSearchInput/Styles';
+import {BannerArtVariant} from 'enums';
 import {breakpoints, cardStyle, colors, controlStyle, fonts, pagePadding, radii, shadows} from 'styles';
 
 import {
@@ -44,8 +46,11 @@ interface FieldErrorProps {
 const CHEVRON_COLOR = encodeURIComponent(colors.secondary);
 const CHEVRON_ICON = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='${CHEVRON_COLOR}' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E")`;
 const CONTROL_HEIGHT = 44;
+// The deep indigo behind the board on the cover, which the hero picks up so the two blend into each other
+const COVER_COLOR = '#0d0c38';
 // Translucent colors.palette.red[500], the error counterpart of shadows.focusRing
 const ERROR_FOCUS_RING = '0 0 0 2px rgb(220 13 22 / 75%)';
+const HERO_BUTTON_HOVER_BACKGROUND = 'rgb(255 255 255 / 86%)';
 
 const cardListMixin = css`
   display: grid;
@@ -299,15 +304,16 @@ export const GuideTitle = styled.h3`
   margin: 0 0 8px;
 `;
 
+// The surface and the board lines come from BannerArt, which fills the hero behind the copy and the cover
 export const Hero = styled.section`
-  background: ${colors.palette.blue[900]};
-  border: 1px solid ${colors.palette.blue[900]};
+  background: ${COVER_COLOR};
   border-radius: 24px;
   color: ${colors.white};
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
   isolation: isolate;
   overflow: hidden;
+  position: relative;
 
   @media (max-width: ${breakpoints.tablet}) {
     grid-template-columns: minmax(0, 1fr);
@@ -331,10 +337,10 @@ export const HeroActions = styled.div`
 
     &:first-child {
       background: ${colors.white};
-      color: ${colors.palette.blue[900]};
+      color: ${COVER_COLOR};
 
       &:hover {
-        background: ${colors.palette.blue[100]};
+        background: ${HERO_BUTTON_HOVER_BACKGROUND};
       }
     }
   }
@@ -356,7 +362,7 @@ export const HeroContent = styled.div`
 `;
 
 export const HeroDescription = styled.p`
-  color: ${colors.palette.blue[100]};
+  color: rgb(255 255 255 / 84%);
   font-size: 16px;
   line-height: 1.7;
   margin: 20px 0;
@@ -364,7 +370,7 @@ export const HeroDescription = styled.p`
 `;
 
 export const HeroEyebrow = styled.p`
-  color: ${colors.palette.blue[200]};
+  color: ${BANNER_ART_ACCENTS[BannerArtVariant.board]};
   font-size: 12px;
   font-weight: ${fonts.weight.semiBold};
   letter-spacing: 0.16em;
@@ -385,7 +391,7 @@ export const HeroImage = styled.img`
 
 export const HeroLink = styled(Link)`
   align-items: center;
-  border: 1px solid ${colors.palette.blue[300]};
+  border: 1px solid rgb(255 255 255 / 45%);
   border-radius: ${radii.pill};
   color: ${colors.white};
   display: inline-flex;
@@ -403,7 +409,8 @@ export const HeroLink = styled(Link)`
   }
 
   &:hover {
-    background: ${colors.palette.blue[800]};
+    background: rgb(255 255 255 / 14%);
+    text-decoration: none;
   }
 `;
 
@@ -420,7 +427,7 @@ export const HeroMetaItem = styled.li`
   background: rgb(255 255 255 / 8%);
   border: 1px solid rgb(255 255 255 / 16%);
   border-radius: ${radii.pill};
-  color: ${colors.palette.blue[100]};
+  color: rgb(255 255 255 / 88%);
   font-size: 13px;
   line-height: 1.5;
   padding: 5px 10px;
@@ -431,7 +438,7 @@ export const HeroPrimaryLink = styled.a`
   background: ${colors.white};
   border: 1px solid ${colors.white};
   border-radius: ${radii.pill};
-  color: ${colors.palette.blue[900]};
+  color: ${COVER_COLOR};
   display: inline-flex;
   font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
@@ -447,7 +454,8 @@ export const HeroPrimaryLink = styled.a`
   }
 
   &:hover {
-    background: ${colors.palette.blue[100]};
+    background: ${HERO_BUTTON_HOVER_BACKGROUND};
+    text-decoration: none;
   }
 `;
 
@@ -469,26 +477,17 @@ export const HeroTitle = styled.h1`
   margin: 0;
 `;
 
+// The cover fades out toward the copy, so the hero shows through instead of meeting the cover on a hard edge
 export const HeroVisual = styled.div`
+  mask-image: linear-gradient(90deg, transparent, #000000 35%);
   min-height: 380px;
   min-width: 0;
   position: relative;
 
-  &::after {
-    background: linear-gradient(90deg, ${colors.palette.blue[900]}, transparent 35%);
-    content: '';
-    inset: 0;
-    pointer-events: none;
-    position: absolute;
-  }
-
   @media (max-width: ${breakpoints.tablet}) {
     height: 240px;
+    mask-image: linear-gradient(180deg, transparent, #000000 50%);
     min-height: 0;
-
-    &::after {
-      background: linear-gradient(180deg, ${colors.palette.blue[900]}, transparent 50%);
-    }
   }
 `;
 

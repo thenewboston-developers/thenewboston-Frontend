@@ -2,8 +2,10 @@ import {Link} from 'react-router-dom';
 import {mdiChevronDown, mdiCircleMultipleOutline, mdiSendOutline, mdiSwapHorizontal} from '@mdi/js';
 import MdiIcon from '@mdi/react';
 
+import BannerArt from 'components/BannerArt';
 import PageHeader from 'components/PageHeader';
 import {MAX_MINT_AMOUNT} from 'constants/general';
+import {BannerArtVariant} from 'enums';
 import {useRequireAuthentication, useToggle} from 'hooks';
 import CurrencyModal from 'modals/CurrencyModal';
 import {SFC} from 'types';
@@ -155,6 +157,7 @@ const LearnMore: SFC = ({className}) => {
       <S.Container className={className}>
         <S.Content>
           <PageHeader
+            art={BannerArtVariant.engraving}
             description="Launch a coin for your community, your project, or your next big idea. Mint it, share it with friends, and trade it on the exchange."
             eyebrow="Currencies, explained"
             title="Create your own currency."
@@ -197,6 +200,7 @@ const LearnMore: SFC = ({className}) => {
           </S.Faq>
 
           <S.CallToAction>
+            <BannerArt variant={BannerArtVariant.ribbon} />
             <S.CallToActionCopy>
               <S.CallToActionTitle>Ready to launch your currency?</S.CallToActionTitle>
               <S.CallToActionDescription>All it takes is a ticker, a logo, and a minute.</S.CallToActionDescription>

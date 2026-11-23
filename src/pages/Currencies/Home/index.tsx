@@ -6,6 +6,7 @@ import MdiIcon from '@mdi/react';
 
 import PageHeader from 'components/PageHeader';
 import {getCurrencies} from 'dispatchers/currencies';
+import {BannerArtVariant} from 'enums';
 import {AppDispatch, Currency, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -131,6 +132,7 @@ const Home: SFC = ({className}) => {
     <S.Container className={className}>
       <S.Content>
         <PageHeader
+          art={BannerArtVariant.coins}
           description="Explore the coins created by members of the community, or launch one of your own in minutes."
           eyebrow="Community currencies"
           title="A currency for every community."
