@@ -88,23 +88,35 @@ const Home = () => {
     const controller = new AbortController();
     let timer: ReturnType<typeof setTimeout>;
     let mounted = true;
+    const loadUnfinishedMatches = async () => {
+      const matches = new Map<number, BackgammonMatch>();
+      let page = 1;
+      while (mounted) {
+        // Invitations received from other members can exceed a single page. Keep requests sequential and
+        // constrained to this endpoint rather than following an arbitrary URL with authentication headers.
+        // eslint-disable-next-line no-await-in-loop
+        const response = await getBackgammonMatches(
+          {mine: 'true', page, page_size: 50, status: 'pending,active,between_games'},
+          controller.signal,
+        );
+        response.results.forEach((match) => matches.set(match.id, match));
+        if (!response.next) break;
+        page += 1;
+      }
+      return Array.from(matches.values());
+    };
     const load = async () => {
       try {
-        const [publicPage, minePage, historyPage] = await Promise.all([
+        const [publicPage, unfinishedMatches, historyPage] = await Promise.all([
           getBackgammonMatches({mine: 'exclude', page_size: 10, status: 'active,between_games'}, controller.signal),
-          isAuthenticated
-            ? getBackgammonMatches(
-                {mine: 'true', page_size: 100, status: 'pending,active,between_games'},
-                controller.signal,
-              )
-            : null,
+          isAuthenticated ? loadUnfinishedMatches() : [],
           isAuthenticated
             ? getBackgammonMatches({mine: 'true', page_size: 10, status: 'finished'}, controller.signal)
             : null,
         ]);
         if (!mounted) return;
         setPublicMatches(publicPage.results);
-        setMine(minePage?.results ?? []);
+        setMine(unfinishedMatches);
         setHistory(historyPage?.results ?? []);
         setError('');
       } catch (loadError) {

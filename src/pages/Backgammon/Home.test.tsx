@@ -57,6 +57,42 @@ afterEach(() => {
 });
 
 describe('creating backgammon matches', () => {
+  it('loads unfinished matches beyond the first page while keeping finished history separate', async () => {
+    const pending = Array.from({length: 50}, (_, index) => ({
+      id: index + 1,
+      white: {id: 12, username: `Challenger ${index + 1}`},
+      black: {id: 11, username: 'Alice'},
+      status: 'pending',
+      stake_amount: 0,
+      target_score: 3,
+      scores: {white: 0, black: 0},
+      winner: null,
+    }));
+    const active = {...pending[0], id: 51, status: 'active', white: {id: 13, username: 'Older active opponent'}};
+    (getBackgammonMatches as jest.Mock).mockImplementation((params) => {
+      if (params.mine === 'true' && params.status === 'pending,active,between_games') {
+        return Promise.resolve({
+          results: params.page === 1 ? pending : [active],
+          count: 51,
+          next: params.page === 1 ? '/api/backgammon/matches?page=2' : null,
+          previous: null,
+        });
+      }
+      return Promise.resolve({results: [], count: 0, next: null, previous: null});
+    });
+    await renderHome();
+    expect(container.querySelector('a[href="/backgammon/matches/51"]')).toHaveTextContent('Older active opponent');
+    expect(getBackgammonMatches).toHaveBeenCalledWith(
+      {mine: 'true', page: 2, page_size: 50, status: 'pending,active,between_games'},
+      expect.any(AbortSignal),
+    );
+    expect(getBackgammonMatches).toHaveBeenCalledWith(
+      {mine: 'true', page_size: 10, status: 'finished'},
+      expect.any(AbortSignal),
+    );
+    expect(getBackgammonMatches).toHaveBeenCalledTimes(4);
+  });
+
   it('reuses the same request ID after an ambiguous network failure', async () => {
     (createBackgammonMatch as jest.Mock).mockRejectedValue(new Error('Connection lost'));
     await renderHome();
