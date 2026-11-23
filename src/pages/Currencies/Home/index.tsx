@@ -1,8 +1,10 @@
 import {ChangeEvent, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {mdiMagnify} from '@mdi/js';
+import {Link} from 'react-router-dom';
+import {mdiBookOpenPageVariantOutline, mdiMagnify} from '@mdi/js';
+import MdiIcon from '@mdi/react';
 
-import SectionHeading from 'components/SectionHeading';
+import PageHeader from 'components/PageHeader';
 import {getCurrencies} from 'dispatchers/currencies';
 import {AppDispatch, Currency, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
@@ -13,6 +15,7 @@ import * as S from './Styles';
 
 type CurrencyOrdering = '-created_date' | '-modified_date' | '-ticker' | 'created_date' | 'ticker';
 
+const CREATED_DATE_ORDERINGS: CurrencyOrdering[] = ['-created_date', 'created_date'];
 const CURRENCY_SORT_OPTIONS: {label: string; value: CurrencyOrdering}[] = [
   {label: 'Recently Updated', value: '-modified_date'},
   {label: 'Newest First', value: '-created_date'},
@@ -64,10 +67,12 @@ const Home: SFC = ({className}) => {
     })();
   }, [currentPage, debouncedSearchValue, dispatch, sortOrdering]);
 
-  const getSubHeading = () => {
-    if (!currenciesData) return undefined;
+  const getSectionDescription = () => {
+    if (!currenciesData) return 'Select a currency to see its supply, holders, and whitepaper.';
     const {count} = currenciesData;
-    return `${count.toLocaleString()} ${count === 1 ? 'currency' : 'currencies'}`;
+    const currencyNoun = count === 1 ? 'currency' : 'currencies';
+    if (debouncedSearchValue) return `${count.toLocaleString()} ${currencyNoun} matching your search`;
+    return `${count.toLocaleString()} ${currencyNoun} created by the community`;
   };
 
   const handlePageChange = (page: number) => {
@@ -95,8 +100,10 @@ const Home: SFC = ({className}) => {
 
   const renderCurrencies = () => {
     if (!currenciesData) return null;
+    // The date on the cards follows the sort order, so the value that explains the order is the one on display
+    const dateField = CREATED_DATE_ORDERINGS.includes(sortOrdering) ? 'created' : 'modified';
     const currencyCards = currenciesData.results.map((currency) => (
-      <CurrencyCard currency={currency} key={currency.id} />
+      <CurrencyCard currency={currency} dateField={dateField} key={currency.id} />
     ));
     return (
       <>
@@ -122,26 +129,41 @@ const Home: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Content>
-        <SectionHeading heading="Currencies" renderLine={false} subHeading={getSubHeading()} />
-        <S.FiltersContainer>
-          <S.SearchContainer>
-            <S.SearchIcon icon={mdiMagnify} size={20} totalSize="unset" />
-            <S.SearchInput
-              aria-label="Search currencies"
-              onChange={handleSearchChange}
-              placeholder="Search by ticker, domain, owner, or description"
-              type="text"
-              value={searchValue}
-            />
-          </S.SearchContainer>
-          <S.SortSelect aria-label="Sort currencies" onChange={handleSortChange} value={sortOrdering}>
-            {CURRENCY_SORT_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </S.SortSelect>
-        </S.FiltersContainer>
+        <PageHeader
+          description="Explore the coins created by members of the community, or launch one of your own in minutes."
+          eyebrow="Community currencies"
+          title="A currency for every community."
+        >
+          <Link to="/currencies/learn-more">
+            <MdiIcon aria-hidden="true" path={mdiBookOpenPageVariantOutline} size="20px" />
+            How currencies work
+          </Link>
+        </PageHeader>
+        <S.SectionHeader>
+          <S.SectionHeading>
+            <S.SectionTitle>Explore currencies</S.SectionTitle>
+            <S.SectionDescription>{getSectionDescription()}</S.SectionDescription>
+          </S.SectionHeading>
+          <S.FiltersContainer>
+            <S.SearchContainer>
+              <S.SearchIcon icon={mdiMagnify} size={20} totalSize="unset" />
+              <S.SearchInput
+                aria-label="Search currencies"
+                onChange={handleSearchChange}
+                placeholder="Search by ticker, owner, or keyword"
+                type="text"
+                value={searchValue}
+              />
+            </S.SearchContainer>
+            <S.SortSelect aria-label="Sort currencies" onChange={handleSortChange} value={sortOrdering}>
+              {CURRENCY_SORT_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </S.SortSelect>
+          </S.FiltersContainer>
+        </S.SectionHeader>
         {renderContent()}
       </S.Content>
     </S.Container>

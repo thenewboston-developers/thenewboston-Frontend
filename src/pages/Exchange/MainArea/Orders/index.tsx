@@ -6,6 +6,7 @@ import MdiIcon from '@mdi/react';
 import orderBy from 'lodash/orderBy';
 
 import EmptyText from 'components/EmptyText';
+import PageHeader from 'components/PageHeader';
 import Skeleton from 'components/Skeleton';
 import {
   getExchangeOrders as _getExchangeOrders,
@@ -16,8 +17,6 @@ import TradesModal from 'modals/TradesModal';
 import {getExchangeOrders, hasMoreExchangeOrders, isLoadingExchangeOrders} from 'selectors/state';
 import {AppDispatch, ExchangeOrder, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
-
-import PageHeader from '../PageHeader';
 
 import Order from './Order';
 import * as S from './Styles';

@@ -4,14 +4,13 @@ import {Link, useParams} from 'react-router-dom';
 
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
 import EmptyPage from 'components/EmptyPage';
+import PageHeader from 'components/PageHeader';
 import OrderBookWebSocket from 'containers/OrderBookWebSocket';
 import TradeWebSocket from 'containers/TradeWebSocket';
 import {getAssetPair as _getAssetPair, getAssetPairs as _getAssetPairs} from 'dispatchers/assetPairs';
 import {getAssetPairs} from 'selectors/state';
 import {AppDispatch, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
-
-import PageHeader from '../PageHeader';
 
 import Chart from './Chart';
 import OrderBook from './OrderBook';

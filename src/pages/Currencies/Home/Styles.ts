@@ -35,10 +35,11 @@ const controlMixin = css`
 
 export const CardsContainer = styled.div`
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
 
   @media (max-width: ${breakpoints.mini}) {
+    gap: 16px;
     grid-template-columns: minmax(0, 1fr);
   }
 `;
@@ -62,12 +63,14 @@ export const EmptyText = styled(UEmptyText)`
 export const FiltersContainer = styled.div`
   align-items: center;
   display: flex;
+  flex-shrink: 0;
   gap: 12px;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  margin-top: 8px;
 
   @media (max-width: ${breakpoints.tablet}) {
+    flex-shrink: 1;
+  }
+
+  @media (max-width: ${breakpoints.mini}) {
     align-items: stretch;
     flex-direction: column;
   }
@@ -78,14 +81,17 @@ export const Pagination = styled(UPagination)`
 `;
 
 export const SearchContainer = styled.div`
-  flex: 1;
-  max-width: 480px;
   min-width: 0;
   position: relative;
+  width: 320px;
 
   @media (max-width: ${breakpoints.tablet}) {
+    flex: 1;
+    width: auto;
+  }
+
+  @media (max-width: ${breakpoints.mini}) {
     flex: none;
-    max-width: none;
   }
 `;
 
@@ -111,6 +117,38 @@ export const SearchInput = styled.input`
   }
 `;
 
+export const SectionDescription = styled.p`
+  color: ${colors.secondary};
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+  margin: 6px 0 0;
+`;
+
+export const SectionHeader = styled.div`
+  align-items: flex-end;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+  }
+`;
+
+export const SectionHeading = styled.div`
+  min-width: 0;
+`;
+
+export const SectionTitle = styled.h2`
+  color: ${colors.primary};
+  font-size: 22px;
+  letter-spacing: -0.03em;
+`;
+
 export const SortSelect = styled.select`
   ${controlMixin};
   appearance: none;
@@ -120,9 +158,9 @@ export const SortSelect = styled.select`
   cursor: pointer;
   flex-shrink: 0;
   padding: 0 40px 0 14px;
-  width: 220px;
+  width: 200px;
 
-  @media (max-width: ${breakpoints.tablet}) {
+  @media (max-width: ${breakpoints.mini}) {
     width: 100%;
   }
 `;

@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 import {mdiArrowLeft, mdiDotsVertical} from '@mdi/js';
 
+import {getCurrencyBalances} from 'api/currencyBalances';
 import {getTotalAmountMinted} from 'api/totalAmountMinted';
 import {deleteWhitepaper, getWhitepaper} from 'api/whitepapers';
 import LeavesEmptyState from 'assets/leaves-empty-state.png';
@@ -40,6 +41,7 @@ const Detail: SFC = ({className}) => {
   const [dataRefreshTrigger, setDataRefreshTrigger] = useState(0);
   const [deleteCurrencyConfirmationOpen, setDeleteCurrencyConfirmationOpen] = useState(false);
   const [deleteWhitepaperConfirmationOpen, setDeleteWhitepaperConfirmationOpen] = useState(false);
+  const [holderCount, setHolderCount] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadingMints, setLoadingMints] = useState(false);
   const [mintModalIsOpen, toggleMintModal] = useToggle(false);
@@ -50,6 +52,7 @@ const Detail: SFC = ({className}) => {
   const {id} = useParams<{id: string}>();
   const currencies = useSelector(getCurrencies);
   const currency = id ? currencies[parseInt(id)] : null;
+  const currencyId = currency?.id;
   const dispatch = useDispatch<AppDispatch>();
   const isDeleting = useRef(false);
   const navigate = useNavigate();
@@ -94,6 +97,21 @@ const Detail: SFC = ({className}) => {
       }
     })();
   }, [currency, currentPage, dispatch]);
+
+  // The number of holders is a detail of the summary, so a failed request leaves its tile empty instead of raising an
+  // error. Only wallets with a balance are counted, which makes the total of the list the number of holders
+  useEffect(() => {
+    if (!currencyId) return;
+
+    (async () => {
+      try {
+        const data = await getCurrencyBalances({currency: currencyId, page_size: 1});
+        setHolderCount(data.count);
+      } catch (error) {
+        setHolderCount(null);
+      }
+    })();
+  }, [currencyId, dataRefreshTrigger]);
 
   const isInternalCurrency = currency?.domain === null;
   const isOwner = currency?.owner.id === self.id;
@@ -238,6 +256,7 @@ const Detail: SFC = ({className}) => {
           <S.Content>
             <CurrencyInfoSection
               currency={currency}
+              holderCount={holderCount}
               isInternalCurrency={isInternalCurrency}
               isOwner={isOwner}
               onMintClick={toggleMintModal}
