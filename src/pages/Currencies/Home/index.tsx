@@ -4,9 +4,7 @@ import {Link} from 'react-router-dom';
 import {mdiBookOpenPageVariantOutline, mdiMagnify} from '@mdi/js';
 import MdiIcon from '@mdi/react';
 
-import PageHeader from 'components/PageHeader';
 import {getCurrencies} from 'dispatchers/currencies';
-import {BannerArtVariant} from 'enums';
 import {AppDispatch, Currency, PaginatedResponse, SFC} from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
@@ -131,17 +129,18 @@ const Home: SFC = ({className}) => {
   return (
     <S.Container className={className}>
       <S.Content>
-        <PageHeader
-          art={BannerArtVariant.coins}
-          description="Explore the coins created by members of the community, or launch one of your own in minutes."
-          eyebrow="Community currencies"
-          title="A currency for every community."
-        >
+        <S.Introduction>
+          <div>
+            <S.PageTitle>Community currencies</S.PageTitle>
+            <S.IntroductionDescription>
+              Discover community coins and what you can do with them.
+            </S.IntroductionDescription>
+          </div>
           <Link to="/currencies/learn-more">
             <MdiIcon aria-hidden="true" path={mdiBookOpenPageVariantOutline} size="20px" />
             How currencies work
           </Link>
-        </PageHeader>
+        </S.Introduction>
         <FeaturedCurrency />
         <S.SectionHeader>
           <S.SectionHeading>

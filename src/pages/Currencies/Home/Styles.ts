@@ -76,6 +76,57 @@ export const FiltersContainer = styled.div`
   }
 `;
 
+export const Introduction = styled.header`
+  align-items: center;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  margin-bottom: 24px;
+
+  a {
+    align-items: center;
+    border-radius: ${radii.small};
+    color: ${colors.secondary};
+    display: inline-flex;
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: ${fonts.weight.semiBold};
+    gap: 8px;
+    min-height: 44px;
+
+    &:focus-visible {
+      outline: 2px solid ${colors.palette.blue[500]};
+      outline-offset: 4px;
+    }
+
+    &:hover {
+      color: ${colors.primary};
+    }
+  }
+
+  @media (max-width: ${breakpoints.mini}) {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+`;
+
+export const IntroductionDescription = styled.p`
+  color: ${colors.secondary};
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 6px 0 0;
+`;
+
+export const PageTitle = styled.h1`
+  color: ${colors.primary};
+  font-size: 28px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.04em;
+  line-height: 1.25;
+`;
+
 export const Pagination = styled(UPagination)`
   margin-top: 32px;
 `;
