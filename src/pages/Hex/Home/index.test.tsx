@@ -6,11 +6,11 @@ import {MemoryRouter} from 'react-router-dom';
 import {createHexMatch, getHexMatches} from 'api/hex';
 import {useIsAuthenticated} from 'hooks';
 
-import Home from './Home';
+import Home from '.';
 
 jest.mock('axios', () => ({isAxiosError: jest.fn(() => false)}));
 jest.mock('api/hex', () => ({createHexMatch: jest.fn(), getHexMatches: jest.fn()}));
-jest.mock('components/GameEarningsLeaderboard', () => () => <div>Top earners</div>);
+jest.mock('../Leaderboard', () => () => <div>Top connectors</div>);
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock(
   'components/UserSearchInput',
@@ -46,6 +46,12 @@ const renderHome = async () => {
         <Home />
       </MemoryRouter>,
     );
+  });
+};
+
+const choose = async (selector: string) => {
+  await act(async () => {
+    (container.querySelector(selector) as HTMLInputElement).click();
   });
 };
 
@@ -155,7 +161,7 @@ describe('creating hex matches', () => {
     (createHexMatch as jest.Mock).mockRejectedValue(new Error('Connection lost'));
     await renderHome();
     await submit();
-    (container.querySelector('#computer-size') as HTMLSelectElement).value = '7';
+    await choose('#computer-size-7');
     await submit();
     expect((createHexMatch as jest.Mock).mock.calls.map(([data]) => data.request_id)).toEqual([firstId, secondId]);
     expect((createHexMatch as jest.Mock).mock.calls[1][0].board_size).toBe(7);
@@ -210,11 +216,17 @@ it('offers every board size and shows it on each match in the lobby', async () =
     }),
   );
   await renderHome();
-  const sizes = Array.from(container.querySelectorAll('#human-size option')).map((option) => option.textContent);
-  expect(sizes).toEqual(['7 × 7 · Quick game', '9 × 9 · Short game', '11 × 11 · Classic', '13 × 13 · Long game']);
-  expect((container.querySelector('#human-size') as HTMLSelectElement).value).toBe('11');
+  const sizes = Array.from(container.querySelectorAll<HTMLInputElement>('#hex-challenge input[name="board_size"]'));
+  expect(sizes.map((input) => input.value)).toEqual(['7', '9', '11', '13']);
+  expect(sizes.map((input) => input.closest('label')!.textContent)).toEqual([
+    '7 × 7Quick game',
+    '9 × 9Short game',
+    '11 × 11Classic',
+    '13 × 13Long game',
+  ]);
+  expect(sizes.filter((input) => input.checked).map((input) => input.value)).toEqual(['11']);
   expect(container.querySelector('a[href="/hex/matches/7"]')).toHaveTextContent('Alice vs. Bob');
-  expect(container.querySelector('a[href="/hex/matches/7"]')).toHaveTextContent('active · 13 × 13 · 25 TNB each');
+  expect(container.querySelector('a[href="/hex/matches/7"]')).toHaveTextContent('In play · 13 × 13 · 25 TNB each');
 });
 
 describe('challenging a player to Hex', () => {
@@ -239,8 +251,8 @@ describe('challenging a player to Hex', () => {
         Array.from(container.querySelectorAll('button')).find((b) => b.textContent === 'Pick Bob') as HTMLButtonElement
       ).click(),
     );
-    (container.querySelector('#human-size') as HTMLSelectElement).value = '9';
-    (container.querySelector('#human-time') as HTMLSelectElement).value = '300';
+    await choose('#human-size-9');
+    await choose('#human-time-300');
     setStake('25');
     expect(container).toHaveTextContent('25 TNB locks when you send the challenge');
     await submitChallenge();
@@ -297,8 +309,9 @@ it.each([false, true])('starts the default game directly from the hero (authenti
   );
   (createHexMatch as jest.Mock).mockResolvedValue({id: 42, version: 1, guest_mode: !authenticated});
   await renderHome();
-  (container.querySelector('#computer-time') as HTMLSelectElement).value = '300';
-  (container.querySelector('#computer-difficulty') as HTMLSelectElement).value = 'hard';
+  await choose('#computer-time-300');
+  await choose('#computer-difficulty-hard');
+  await choose('#computer-size-13');
   const heroButton = container.querySelector('[aria-label="Hex overview"] button') as HTMLButtonElement;
   await act(async () => heroButton.click());
   expect(createHexMatch).toHaveBeenCalledWith({
@@ -311,4 +324,72 @@ it.each([false, true])('starts the default game directly from the hero (authenti
     time_limit_seconds: 900,
   });
   expect(mockNavigate).toHaveBeenCalledWith('/hex/matches/42');
+});
+
+it('sends the difficulty, board and clock picked on the themed controls', async () => {
+  (createHexMatch as jest.Mock).mockResolvedValue({id: 5, version: 1});
+  await renderHome();
+  const checked = (name: string) =>
+    container.querySelector<HTMLInputElement>(`#hex-computer input[name="${name}"]:checked`)!.value;
+  expect([checked('difficulty'), checked('board_size'), checked('time_limit_seconds')]).toEqual([
+    'normal',
+    '11',
+    '900',
+  ]);
+  await choose('#computer-difficulty-hard');
+  await choose('#computer-size-7');
+  await choose('#computer-time-1800');
+  await submit();
+  expect(createHexMatch).toHaveBeenCalledWith(
+    expect.objectContaining({board_size: 7, difficulty: 'hard', mode: 'computer', time_limit_seconds: 1800}),
+  );
+});
+
+it('names each match by its state and the action it needs', async () => {
+  const match = {red: {id: 11, username: 'Alice'}, blue: {id: 12, username: 'Bob'}, stake_amount: 0, board_size: 9};
+  (getHexMatches as jest.Mock).mockImplementation((params) =>
+    Promise.resolve({
+      results:
+        params.status === 'pending,active'
+          ? [
+              {...match, id: 1, red: {id: 12, username: 'Bob'}, blue: {id: 11, username: 'Alice'}, status: 'pending'},
+              {...match, id: 2, status: 'pending'},
+              {...match, id: 3, status: 'active'},
+            ]
+          : [{...match, id: 4, status: 'finished', winner: 'red'}],
+      count: 3,
+      next: null,
+      previous: null,
+    }),
+  );
+  await renderHome();
+  expect(container.querySelector('a[href="/hex/matches/1"]')).toHaveTextContent('Bob vs. Alice');
+  expect(container.querySelector('a[href="/hex/matches/1"]')).toHaveTextContent('Review challenge');
+  expect(container.querySelector('a[href="/hex/matches/2"]')).toHaveTextContent('Pending · 9 × 9 · Free play');
+  expect(container.querySelector('a[href="/hex/matches/2"]')).toHaveTextContent('Awaiting reply');
+  expect(container.querySelector('a[href="/hex/matches/3"]')).toHaveTextContent('Open board');
+  expect(container.querySelector('a[href="/hex/matches/4"]')).toHaveTextContent(
+    'Finished · 9 × 9 · Free play · Alice won',
+  );
+  expect(container.querySelector('a[href="/hex/matches/4"]')).toHaveTextContent('View result');
+  expect(Array.from(container.querySelectorAll('h2')).map((heading) => heading.textContent)).toEqual(
+    expect.arrayContaining(['Challenges', 'Your active matches', 'Your recent matches']),
+  );
+});
+
+it('shows signed-out visitors which edges each side joins beside the sign-in buttons', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  await renderHome();
+  expect(container.querySelector('#hex-challenge')).toHaveTextContent('Sign in to play');
+  expect(container.querySelector('#hex-challenge')).toHaveTextContent('Red joins top and bottom');
+  expect(container.querySelector('#hex-challenge')).toHaveTextContent('Blue joins left and right');
+  const pictures = Array.from(container.querySelectorAll('#hex-challenge svg'));
+  expect(pictures.length).toBeGreaterThan(1);
+  expect(pictures.every((picture) => picture.closest('[aria-hidden="true"]'))).toBe(true);
+});
+
+it('tells a signed-in player with no matches that the board is clear', async () => {
+  await renderHome();
+  expect(container).toHaveTextContent('The board is clear');
+  expect(container).toHaveTextContent('Top connectors');
 });
