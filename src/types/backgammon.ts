@@ -1,3 +1,5 @@
+import {ComputerReward} from 'types/gameFund';
+
 export type BackgammonSide = 'white' | 'black';
 export type BackgammonDifficulty = 'easy' | 'normal' | 'hard';
 export type BackgammonMode = 'computer' | 'human';
@@ -29,6 +31,7 @@ export interface BackgammonPlayer {
 }
 
 export interface BackgammonMatch {
+  computer_reward?: ComputerReward | null;
   id: number;
   mode: BackgammonMode;
   difficulty: BackgammonDifficulty;

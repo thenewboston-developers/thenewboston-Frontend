@@ -1,5 +1,6 @@
 import {UserReadSerializer} from 'types/api/users';
 import {CreatedModified} from 'types/createdModified';
+import {ComputerReward} from 'types/gameFund';
 import {PaginatedResponse} from 'types/pagination';
 
 export interface ConnectFiveMatchPlayer {
@@ -8,7 +9,7 @@ export interface ConnectFiveMatchPlayer {
   inventory_v2: number;
   remaining_spend: number;
   spent_total: number;
-  user: UserReadSerializer;
+  user: UserReadSerializer | null;
 }
 
 export interface ConnectFiveChatMessage extends CreatedModified {
@@ -23,10 +24,27 @@ export interface ConnectFiveEloSnapshot {
   elo: number;
 }
 
+export type ConnectFiveDifficulty = 'easy' | 'normal' | 'hard';
+
+export interface CreateConnectFiveComputerMatch {
+  request_id: string;
+  difficulty: ConnectFiveDifficulty;
+  time_limit_seconds: number;
+  rematch_of?: number;
+}
+
 export interface ConnectFiveMatch extends CreatedModified {
+  computer_reward?: ComputerReward | null;
+  active_side: 'a' | 'b' | null;
+  computer_name: string | null;
+  difficulty: ConnectFiveDifficulty;
+  mode: 'computer' | 'human';
+  server_time: string;
+  version: number;
+  winner_side: 'a' | 'b' | null;
   active_player: UserReadSerializer | null;
   board_state: number[][];
-  challenge: number;
+  challenge: number | null;
   clock_a_remaining_ms: number;
   clock_b_remaining_ms: number;
   finished_at: string | null;
@@ -35,7 +53,7 @@ export interface ConnectFiveMatch extends CreatedModified {
   player_a: UserReadSerializer;
   player_a_elo_after: number | null;
   player_a_elo_before: number | null;
-  player_b: UserReadSerializer;
+  player_b: UserReadSerializer | null;
   player_b_elo_after: number | null;
   player_b_elo_before: number | null;
   players: ConnectFiveMatchPlayer[];

@@ -5,6 +5,7 @@ import {SFC} from 'types';
 import * as S from './Styles';
 
 interface BoardProps {
+  directSelection?: boolean;
   bombBlastKeys: Set<string>;
   bombBlastPieces: Record<string, 'black' | 'white'>;
   bombBlastSequence: number;
@@ -67,6 +68,7 @@ const Board: SFC<BoardProps> = ({
   bombBlastSequence,
   boardState,
   className,
+  directSelection = false,
   isSpectator,
   lastMoveKeys,
   lastMoveSequence,
@@ -90,17 +92,22 @@ const Board: SFC<BoardProps> = ({
           const isWinningCell = winningKeys.has(cellKey);
           const bombPieceVariant = bombBlastPieces[cellKey];
           const pieceVariant = value === 1 ? 'black' : 'white';
-          const shouldEnableClick = !isSpectator && previewState.isValid && isPreview;
+          let cellLabel = 'empty';
+          if (value === 1) cellLabel = 'black';
+          if (value === 2) cellLabel = 'white';
+          const shouldEnableClick = !isSpectator && (directSelection || (previewState.isValid && isPreview));
 
           return (
             <S.Cell
               $isPreview={isPreview}
               $isPreviewInvalid={isInvalid}
+              aria-label={`Row ${y + 1}, column ${x + 1}: ${cellLabel}`}
               key={cellKey}
               onClick={() => {
                 if (!shouldEnableClick) return;
                 onCellClick(x, y);
               }}
+              onFocus={() => onCellHover(x, y)}
               onMouseEnter={() => onCellHover(x, y)}
               onMouseLeave={onCellLeave}
               type="button"

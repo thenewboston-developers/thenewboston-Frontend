@@ -140,7 +140,7 @@ const MatchSidebar: SFC<MatchSidebarProps> = ({
           <MatchStyles.InfoRow>
             <MatchStyles.InfoLabel>Winner</MatchStyles.InfoLabel>
             <MatchStyles.InfoValue>
-              {match.winner === match.player_a.id ? match.player_a.username : match.player_b.username}
+              {match.winner === match.player_a.id ? match.player_a.username : (match.player_b?.username ?? 'Computer')}
             </MatchStyles.InfoValue>
           </MatchStyles.InfoRow>
         )}
@@ -241,13 +241,13 @@ const MatchSidebar: SFC<MatchSidebarProps> = ({
             const spentLabel = `${spendProgress.spent.toLocaleString()}/${match.max_spend_amount.toLocaleString()} spent`;
 
             return (
-              <S.SpendRow key={player.id}>
+              <S.SpendRow key={player?.id ?? 'computer'}>
                 <S.SpendRowHeader>
-                  <S.SpendRowName>{player.username}</S.SpendRowName>
+                  <S.SpendRowName>{player?.username ?? 'Computer'}</S.SpendRowName>
                   <S.SpendRowValue>{spentLabel}</S.SpendRowValue>
                 </S.SpendRowHeader>
                 <S.SpendProgressBar
-                  aria-label={`${player.username} spend progress`}
+                  aria-label={`${player?.username ?? 'Computer'} spend progress`}
                   aria-valuemax={100}
                   aria-valuemin={0}
                   aria-valuenow={Math.round(spendProgress.percentage)}

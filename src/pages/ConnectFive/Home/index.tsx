@@ -1,4 +1,4 @@
-import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
+import {ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {mdiArrowRight} from '@mdi/js';
@@ -55,11 +55,13 @@ import {
   UserReadSerializer,
 } from 'types';
 import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
+import {getConnectFiveWinnerName} from 'utils/connectFive';
 import {shortDate} from 'utils/dates';
 import {handleFormikAPIError} from 'utils/forms';
 import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
+import ComputerSetup from './ComputerSetup';
 import * as S from './Styles';
 
 const timeLimitOptions: SelectOption[] = [
@@ -126,7 +128,7 @@ const getFinishReasonLabel = (match: ConnectFiveMatch): string | null => {
 const getOpponent = (match: ConnectFiveMatch, selfId?: number | null): UserReadSerializer | null => {
   if (selfId) {
     if (match.player_a.id === selfId) return match.player_b;
-    if (match.player_b.id === selfId) return match.player_a;
+    if (match.player_b?.id === selfId) return match.player_a;
   }
 
   return match.player_b ?? match.player_a;
@@ -141,6 +143,9 @@ const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
     return {badgeStyle: BadgeStyle.warning, label: 'Cancelled'};
   }
 
+  if (match.mode === 'computer' && match.winner_side === 'b' && selfId)
+    return {badgeStyle: BadgeStyle.danger, label: 'You lost'};
+
   if (match.winner && selfId) {
     if (match.winner === selfId) {
       return {badgeStyle: BadgeStyle.success, label: 'You won!'};
@@ -154,7 +159,7 @@ const getStatusBadge = (match: ConnectFiveMatch, selfId?: number | null) => {
 
 const isMatchParticipant = (match: ConnectFiveMatch, userId?: number | null): boolean => {
   if (!userId) return false;
-  return match.player_a.id === userId || match.player_b.id === userId;
+  return match.player_a.id === userId || match.player_b?.id === userId;
 };
 
 const ConnectFiveHome: SFC = ({className}) => {
@@ -174,23 +179,43 @@ const ConnectFiveHome: SFC = ({className}) => {
   const activeMatches = useSelector(getConnectFiveActiveMatches);
   const completedMatches = useSelector(getConnectFiveCompletedMatches);
   const dispatch = useDispatch<AppDispatch>();
-  const incomingChallenges = useSelector(getConnectFiveIncomingChallenges);
+  const incomingChallengesStore = useSelector(getConnectFiveIncomingChallenges);
   const isAuthenticated = useIsAuthenticated();
+  const live = useRef(true);
+  const matchesRequest = useRef(0);
   const navigate = useNavigate();
-  const outgoingChallenges = useSelector(getConnectFiveOutgoingChallenges);
+  const outgoingChallengesStore = useSelector(getConnectFiveOutgoingChallenges);
   const self = useSelector(getSelf);
+  const sessionScope = useRef({key: '', generation: 0});
+  const sessionKey = `${isAuthenticated}:${self.id}`;
+  if (sessionScope.current.key !== sessionKey)
+    sessionScope.current = {key: sessionKey, generation: sessionScope.current.generation + 1};
+  const incomingChallenges = isAuthenticated
+    ? incomingChallengesStore.filter((challenge) => challenge.opponent.id === self.id)
+    : [];
+  const outgoingChallenges = isAuthenticated
+    ? outgoingChallengesStore.filter((challenge) => challenge.challenger.id === self.id)
+    : [];
 
   const activeMatchesSorted = useMemo(() => {
-    return orderBy(activeMatches, ['created_date'], ['desc']);
-  }, [activeMatches]);
+    return orderBy(
+      activeMatches.filter((match) => isAuthenticated && isMatchParticipant(match, self.id)),
+      ['created_date'],
+      ['desc'],
+    );
+  }, [activeMatches, isAuthenticated, self.id]);
 
   const activeMatchesTotalPages = useMemo(() => {
     return Math.ceil(activeMatchesSorted.length / MATCHES_PER_PAGE);
   }, [activeMatchesSorted.length]);
 
   const completedMatchesSorted = useMemo(() => {
-    return orderBy(completedMatches, ['created_date'], ['desc']);
-  }, [completedMatches]);
+    return orderBy(
+      completedMatches.filter((match) => isAuthenticated && isMatchParticipant(match, self.id)),
+      ['created_date'],
+      ['desc'],
+    );
+  }, [completedMatches, isAuthenticated, self.id]);
 
   const completedMatchesTotalPages = useMemo(() => {
     return Math.ceil(completedMatchesSorted.length / MATCHES_PER_PAGE);
@@ -202,9 +227,9 @@ const ConnectFiveHome: SFC = ({className}) => {
       return {losses: 0, wins: 0};
     }
 
-    return completedMatches.reduce(
+    return completedMatchesSorted.reduce(
       (record, match) => {
-        if (!match.winner) return record;
+        if (match.mode === 'computer' || !match.winner) return record;
         if (match.winner === self.id) {
           record.wins += 1;
           return record;
@@ -215,7 +240,7 @@ const ConnectFiveHome: SFC = ({className}) => {
       },
       {losses: 0, wins: 0},
     );
-  }, [completedMatches, self?.id]);
+  }, [completedMatchesSorted, self?.id]);
 
   const eloChartData = useMemo(() => {
     return orderBy(eloSnapshots, ['date'], ['asc']);
@@ -357,8 +382,9 @@ const ConnectFiveHome: SFC = ({className}) => {
 
   const loadChallenges = useCallback(async () => {
     // Challenges are between two members, a signed-out visitor has none
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !self.id) return;
 
+    const {generation} = sessionScope.current;
     const incomingResponse = await getConnectFiveChallenges({
       mine: 'received',
       status: ConnectFiveChallengeStatus.PENDING,
@@ -368,9 +394,10 @@ const ConnectFiveHome: SFC = ({className}) => {
       status: ConnectFiveChallengeStatus.PENDING,
     });
 
+    if (!live.current || generation !== sessionScope.current.generation) return;
     dispatch(setIncomingChallenges(incomingResponse.results));
     dispatch(setOutgoingChallenges(outgoingResponse.results));
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch, isAuthenticated, self.id]);
 
   const loadEloSnapshots = useCallback(async () => {
     // The ELO history is a member's own, a signed-out visitor has none
@@ -442,6 +469,11 @@ const ConnectFiveHome: SFC = ({className}) => {
   }, [self?.id]);
 
   const loadMatches = useCallback(async () => {
+    const {generation} = sessionScope.current;
+    matchesRequest.current += 1;
+    const requestNumber = matchesRequest.current;
+    const isCurrent = () =>
+      live.current && generation === sessionScope.current.generation && requestNumber === matchesRequest.current;
     setIsMatchesLoading(true);
     setMatchesError(null);
 
@@ -451,6 +483,7 @@ const ConnectFiveHome: SFC = ({className}) => {
         isAuthenticated ? getConnectFiveMatches({mine: 'self'}) : null,
         getConnectFiveMatches({mine: 'exclude', status: ConnectFiveMatchStatus.ACTIVE}),
       ]);
+      if (!isCurrent()) return;
       const selfMatches = selfMatchesResponse?.results ?? [];
       const filteredPublicMatches = self?.id
         ? publicMatchesResponse.results.filter((match) => !isMatchParticipant(match, self.id))
@@ -460,11 +493,18 @@ const ConnectFiveHome: SFC = ({className}) => {
       dispatch(setCompletedMatches(selfMatches.filter((match) => match.status !== ConnectFiveMatchStatus.ACTIVE)));
       setPublicMatches(filteredPublicMatches);
     } catch (error) {
-      setMatchesError('We could not load matches right now. Please try again.');
+      if (isCurrent()) setMatchesError('We could not load matches right now. Please try again.');
     } finally {
-      setIsMatchesLoading(false);
+      if (isCurrent()) setIsMatchesLoading(false);
     }
   }, [dispatch, isAuthenticated, self?.id]);
+
+  useEffect(() => {
+    live.current = true;
+    return () => {
+      live.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -720,9 +760,9 @@ const ConnectFiveHome: SFC = ({className}) => {
             <UserLabel
               avatar={opponent?.avatar ?? null}
               clickable={false}
-              description={createdLabel}
+              description={match.mode === 'computer' ? `${match.difficulty} computer · ${createdLabel}` : createdLabel}
               id={opponent?.id ?? null}
-              username={opponent?.username ?? 'Unknown player'}
+              username={opponent?.username ?? (match.mode === 'computer' ? 'Computer' : 'Unknown player')}
             />
           </S.MatchHeaderMain>
           <S.MatchIcon path={mdiArrowRight} size="20px" />
@@ -738,12 +778,10 @@ const ConnectFiveHome: SFC = ({className}) => {
               <S.MatchInfoValue>{finishReason}</S.MatchInfoValue>
             </S.MatchInfoRow>
           )}
-          {!isActive && match.winner && (
+          {!isActive && getConnectFiveWinnerName(match) && (
             <S.MatchInfoRow>
               <S.MatchInfoLabel>Winner</S.MatchInfoLabel>
-              <S.MatchInfoValue>
-                {match.winner === match.player_a.id ? match.player_a.username : match.player_b.username}
-              </S.MatchInfoValue>
+              <S.MatchInfoValue>{getConnectFiveWinnerName(match)}</S.MatchInfoValue>
             </S.MatchInfoRow>
           )}
         </S.MatchInfo>
@@ -773,8 +811,8 @@ const ConnectFiveHome: SFC = ({className}) => {
               </S.PublicMatchPlayer>
               <S.PublicMatchVersus>vs</S.PublicMatchVersus>
               <S.PublicMatchPlayer>
-                <Avatar size="36px" src={match.player_b.avatar} />
-                <S.PublicMatchPlayerName>{match.player_b.username}</S.PublicMatchPlayerName>
+                <Avatar size="36px" src={match.player_b?.avatar ?? null} />
+                <S.PublicMatchPlayerName>{match.player_b?.username ?? 'Computer'}</S.PublicMatchPlayerName>
               </S.PublicMatchPlayer>
             </S.PublicMatchPlayers>
             <S.PublicMatchMeta>{createdLabel}</S.PublicMatchMeta>
@@ -792,12 +830,10 @@ const ConnectFiveHome: SFC = ({className}) => {
               <S.MatchInfoValue>{finishReason}</S.MatchInfoValue>
             </S.MatchInfoRow>
           )}
-          {!isActive && match.winner && (
+          {!isActive && getConnectFiveWinnerName(match) && (
             <S.MatchInfoRow>
               <S.MatchInfoLabel>Winner</S.MatchInfoLabel>
-              <S.MatchInfoValue>
-                {match.winner === match.player_a.id ? match.player_a.username : match.player_b.username}
-              </S.MatchInfoValue>
+              <S.MatchInfoValue>{getConnectFiveWinnerName(match)}</S.MatchInfoValue>
             </S.MatchInfoRow>
           )}
         </S.MatchInfo>
@@ -862,10 +898,11 @@ const ConnectFiveHome: SFC = ({className}) => {
             </S.ProfileDetails>
           </S.ProfileHeaderContent>
         </S.ProfileHeader>
+        <ComputerSetup key={self.id} />
         <S.TopRow>
           <S.EloSection>
             <S.SectionTitle>Your ELO</S.SectionTitle>
-            <S.SectionDescription>Every match is a chance to raise your game.</S.SectionDescription>
+            <S.SectionDescription>Ranked multiplayer matches build your ELO history.</S.SectionDescription>
             {renderEloChart()}
           </S.EloSection>
           <S.Section>
@@ -983,10 +1020,10 @@ const ConnectFiveHome: SFC = ({className}) => {
             <S.HeroTitle>Connect Five</S.HeroTitle>
             <S.HeroTagline>Five in a row. A move ahead.</S.HeroTagline>
             <S.HeroDescription>
-              A friendly rivalry. A brilliant next move. Challenge the community and find your winning line.
+              Practice against the computer or challenge the community. Find your winning line.
             </S.HeroDescription>
             <S.HeroMeta aria-label="Game features">
-              <S.HeroMetaItem>2 players</S.HeroMetaItem>
+              <S.HeroMetaItem>Computer & multiplayer</S.HeroMetaItem>
               <S.HeroMetaItem>Live strategy</S.HeroMetaItem>
               <S.HeroMetaItem>Ranked matches</S.HeroMetaItem>
             </S.HeroMeta>

@@ -1,3 +1,5 @@
+import {ComputerReward} from 'types/gameFund';
+
 export type BattleshipSide = 'host' | 'guest';
 export type BattleshipDifficulty = 'easy' | 'normal' | 'hard';
 export type BattleshipMode = 'computer' | 'human';
@@ -26,6 +28,7 @@ export interface BattleshipPlayer {
 }
 
 export interface BattleshipMatch {
+  computer_reward?: ComputerReward | null;
   id: number;
   mode: BattleshipMode;
   difficulty: BattleshipDifficulty;

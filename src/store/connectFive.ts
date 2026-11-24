@@ -3,6 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {CONNECT_FIVE} from 'constants/store';
 import {ConnectFiveChallengeStatus, ConnectFiveMatchStatus} from 'enums';
 import {ConnectFiveChallenge, ConnectFiveMatch, ConnectFiveState} from 'types';
+import {isOlderConnectFiveMatch} from 'utils/connectFive';
 
 const initialState: ConnectFiveState = {
   activeMatches: [],
@@ -52,15 +53,23 @@ const connectFive = createSlice({
       state.outgoingChallenges = state.outgoingChallenges.filter((challenge) => challenge.id !== challengeId);
     },
     setActiveMatches: (state: ConnectFiveState, {payload}: PayloadAction<ConnectFiveMatch[]>) => {
-      state.activeMatches = payload;
+      state.activeMatches = payload
+        .map((match) =>
+          isOlderConnectFiveMatch(state.matchesById[match.id], match) ? state.matchesById[match.id] : match,
+        )
+        .filter((match) => match.status === ConnectFiveMatchStatus.ACTIVE);
       payload.forEach((match) => {
-        state.matchesById[match.id] = match;
+        if (!isOlderConnectFiveMatch(state.matchesById[match.id], match)) state.matchesById[match.id] = match;
       });
     },
     setCompletedMatches: (state: ConnectFiveState, {payload}: PayloadAction<ConnectFiveMatch[]>) => {
-      state.completedMatches = payload;
+      state.completedMatches = payload
+        .map((match) =>
+          isOlderConnectFiveMatch(state.matchesById[match.id], match) ? state.matchesById[match.id] : match,
+        )
+        .filter((match) => match.status !== ConnectFiveMatchStatus.ACTIVE);
       payload.forEach((match) => {
-        state.matchesById[match.id] = match;
+        if (!isOlderConnectFiveMatch(state.matchesById[match.id], match)) state.matchesById[match.id] = match;
       });
     },
     setIncomingChallenges: (state: ConnectFiveState, {payload}: PayloadAction<ConnectFiveChallenge[]>) => {
@@ -109,10 +118,11 @@ const connectFive = createSlice({
       {payload}: PayloadAction<{match: ConnectFiveMatch; selfId?: number | null}>,
     ) => {
       const {match, selfId} = payload;
+      if (isOlderConnectFiveMatch(state.matchesById[match.id], match)) return;
       state.matchesById[match.id] = match;
 
       if (!selfId) return;
-      if (match.player_a.id !== selfId && match.player_b.id !== selfId) return;
+      if (match.player_a.id !== selfId && match.player_b?.id !== selfId) return;
 
       if (match.status === ConnectFiveMatchStatus.ACTIVE) {
         upsertMatchInList(state.activeMatches, match);
