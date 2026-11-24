@@ -11,6 +11,7 @@ import {
   PATH_CONNECT_FIVE,
   PATH_CURRENCIES,
   PATH_DEFAULT,
+  PATH_DOTS_AND_BOXES,
   PATH_EXCHANGE,
   PATH_GAMES,
   PATH_HOME,
@@ -27,6 +28,7 @@ import Battleship from 'pages/Battleship';
 import Checkers from 'pages/Checkers';
 import ConnectFive from 'pages/ConnectFive';
 import Currencies from 'pages/Currencies';
+import DotsAndBoxes from 'pages/DotsAndBoxes';
 import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
 import Games from 'pages/Games';
@@ -50,6 +52,7 @@ const MainArea: SFC = ({className}) => {
         <Route element={<Checkers />} path={PATH_CHECKERS} />
         <Route path={PATH_CONNECT_FIVE} element={<ConnectFive />} />
         <Route path={PATH_CURRENCIES} element={<Currencies />} />
+        <Route element={<DotsAndBoxes />} path={PATH_DOTS_AND_BOXES} />
         <Route path={PATH_EXCHANGE} element={<Exchange />} />
         <Route element={<Games />} path={PATH_GAMES} />
         <Route path={PATH_HOME} element={<Feed />} />
