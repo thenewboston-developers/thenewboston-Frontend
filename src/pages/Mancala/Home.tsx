@@ -3,9 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createMancalaMatch, getMancalaMatches} from 'api/mancala';
-import mancalaHero from 'assets/mancala-hero.webp';
 import AuthButtons from 'components/AuthButtons';
-import GameHero from 'components/GameHero';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -16,6 +14,7 @@ import {AppDispatch, UserReadSerializer} from 'types';
 import {MancalaDifficulty, MancalaMatch, MancalaMode} from 'types/mancala';
 import {isCancellationError} from 'utils/errors';
 
+import Hero from './Hero';
 import Rules from './Rules';
 import * as S from './Styles';
 import {getErrorMessage, getPlayerName, STORE} from './utils';
@@ -211,18 +210,7 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Sow · Capture · Count</S.Badge>
       </S.Navigation>
-      <GameHero
-        artwork={mancalaHero}
-        artworkAlt="A carved walnut mancala board with glass stones in jewel colors"
-        challengeHref="#mancala-challenge"
-        description="Sow your stones around the board, earn extra turns, and capture what your opponent leaves open. Play a quick game against the computer or start a rivalry."
-        eyebrow="COUNT & CAPTURE STRATEGY"
-        game="Mancala"
-        highlights={['48 stones in play', 'Extra turns & captures', '3 difficulty levels']}
-        playHref="#mancala-computer"
-        tagline="Every stone counts."
-        theme="amber"
-      />
+      <Hero />
       {createError && <S.Error role="alert">{createError}</S.Error>}
       <S.PanelGrid>
         <S.Panel id="mancala-computer" tabIndex={-1}>
