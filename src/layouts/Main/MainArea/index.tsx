@@ -15,6 +15,7 @@ import {
   PATH_GAMES,
   PATH_HOME,
   PATH_LEGACY_FEED,
+  PATH_MANCALA,
   PATH_NOTIFICATIONS,
   PATH_POST_DETAIL,
   PATH_PROFILE,
@@ -29,6 +30,7 @@ import Currencies from 'pages/Currencies';
 import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
 import Games from 'pages/Games';
+import Mancala from 'pages/Mancala';
 import Notifications from 'pages/Notifications';
 import PostDetail from 'pages/PostDetail';
 import Profile from 'pages/Profile';
@@ -52,6 +54,7 @@ const MainArea: SFC = ({className}) => {
         <Route element={<Games />} path={PATH_GAMES} />
         <Route path={PATH_HOME} element={<Feed />} />
         <Route path={PATH_LEGACY_FEED} element={<Navigate to={PATH_HOME} replace />} />
+        <Route element={<Mancala />} path={PATH_MANCALA} />
         <Route
           path={PATH_NOTIFICATIONS}
           element={

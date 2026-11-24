@@ -42,6 +42,14 @@ export interface ExchangeOrderFilledPayload {
   secondary_currency: CurrencyTinySerializer;
 }
 
+export interface MancalaChallengePayload {
+  challenger: Pick<UserReadSerializer, 'id' | 'username' | 'avatar'>;
+  match_id: number;
+  notification_type: NotificationType.MANCALA_CHALLENGE;
+  stake_amount: number;
+  time_limit_seconds: number;
+}
+
 export interface PostCoinTransferPayload {
   content: string;
   notification_type: NotificationType.POST_COIN_TRANSFER;
@@ -127,6 +135,7 @@ export type NotificationPayload =
   | CommentMentionPayload
   | ConnectFiveChallengePayload
   | ExchangeOrderFilledPayload
+  | MancalaChallengePayload
   | PostCoinTransferPayload
   | PostCommentPayload
   | PostLikePayload

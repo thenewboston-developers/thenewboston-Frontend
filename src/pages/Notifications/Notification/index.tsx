@@ -51,6 +51,10 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       navigate(`/backgammon/matches/${notification.payload.match_id}`);
       return;
     }
+    if (notification.payload.notification_type === NotificationType.MANCALA_CHALLENGE) {
+      navigate(`/mancala/matches/${notification.payload.match_id}`);
+      return;
+    }
     if (notification.payload.notification_type === NotificationType.REVERSI_CHALLENGE) {
       navigate(`/reversi/matches/${notification.payload.match_id}`);
       return;
@@ -167,6 +171,37 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     );
   };
 
+  const renderMancalaChallengeNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.MANCALA_CHALLENGE) return null;
+
+    const {challenger, match_id, stake_amount, time_limit_seconds} = notification.payload;
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/mancala/matches/${match_id}`}>
+          <S.AvatarContainer>
+            <Avatar size="45px" src={challenger.avatar} />
+            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
+          </S.AvatarContainer>
+        </Link>
+        <S.TextContainer>
+          <S.MainText>
+            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
+              {challenger.username}
+            </S.Link>{' '}
+            challenged you to Mancala
+          </S.MainText>
+          <S.PostPreviewText>
+            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} ·{' '}
+            {time_limit_seconds / 60} min per player
+          </S.PostPreviewText>
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
+  };
+
   const renderContent = () => {
     const notificationTypes: {[key in NotificationType]: () => ReactNode} = {
       [NotificationType.BACKGAMMON_CHALLENGE]: renderBackgammonChallengeNotification,
@@ -175,6 +210,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       [NotificationType.COMMENT_MENTION]: renderCommentMentionNotification,
       [NotificationType.CONNECT_FIVE_CHALLENGE]: renderConnectFiveChallengeNotification,
       [NotificationType.EXCHANGE_ORDER_FILLED]: renderExchangeOrderFilledNotification,
+      [NotificationType.MANCALA_CHALLENGE]: renderMancalaChallengeNotification,
       [NotificationType.POST_COIN_TRANSFER]: renderPostCoinTransferNotification,
       [NotificationType.POST_COMMENT]: renderPostCommentNotification,
       [NotificationType.POST_LIKE]: renderPostLikeNotification,
