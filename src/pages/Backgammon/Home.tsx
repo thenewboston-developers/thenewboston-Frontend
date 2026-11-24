@@ -77,12 +77,32 @@ const Home = () => {
   const [publicMatches, setPublicMatches] = useState<BackgammonMatch[]>([]);
   const [retryKey, setRetryKey] = useState(0);
   const [stake, setStake] = useState('0');
+  const activeViewer = useRef<{authenticated: boolean; userId?: number | null}>({authenticated: false});
   const creationLock = useRef(false);
   const creationRequest = useRef<{id: string; signature: string} | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useIsAuthenticated();
+  const live = useRef(true);
   const navigate = useNavigate();
   const self = useSelector(getSelf);
+  activeViewer.current = {authenticated: isAuthenticated, userId: self.id};
+
+  useEffect(() => {
+    live.current = true;
+    return () => {
+      live.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    creationLock.current = false;
+    creationRequest.current = null;
+    setCreatingMode(null);
+    setCreateError('');
+    setMine([]);
+    setHistory([]);
+    setOpponent(null);
+  }, [isAuthenticated, self.id]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -134,12 +154,16 @@ const Home = () => {
       controller.abort();
       clearTimeout(timer);
     };
-  }, [isAuthenticated, retryKey]);
+  }, [isAuthenticated, retryKey, self.id]);
 
   const handleCreate = useCallback(
     async (event: FormEvent<HTMLFormElement>, mode: BackgammonMode) => {
       event.preventDefault();
-      if (creationLock.current) return;
+      if ((!isAuthenticated && mode !== 'computer') || creationLock.current) return;
+      const isCurrent = () =>
+        live.current &&
+        activeViewer.current.authenticated === isAuthenticated &&
+        activeViewer.current.userId === self.id;
       setCreateError('');
       if (mode === 'human' && (!opponent || opponent.id === self.id)) {
         setCreateError(opponent ? 'Choose another member to challenge.' : 'Choose a member to challenge.');
@@ -166,18 +190,21 @@ const Home = () => {
         if (creationRequest.current?.signature !== signature)
           creationRequest.current = {id: crypto.randomUUID(), signature};
         const match = await createBackgammonMatch({...data, request_id: creationRequest.current.id});
+        if (!isCurrent()) return;
         creationRequest.current = null;
         dispatch(upsertBackgammonMatch(match));
         if (amount) dispatch(getAllUserWallets()).catch(() => undefined);
         navigate(`/backgammon/matches/${match.id}`);
       } catch (actionError) {
-        setCreateError(getErrorMessage(actionError));
+        if (isCurrent()) setCreateError(getErrorMessage(actionError));
       } finally {
-        creationLock.current = false;
-        setCreatingMode(null);
+        if (isCurrent()) {
+          creationLock.current = false;
+          setCreatingMode(null);
+        }
       }
     },
-    [dispatch, navigate, opponent, self.id, stake],
+    [dispatch, isAuthenticated, navigate, opponent, self.id, stake],
   );
 
   const activeMatches = mine.filter((match) => match.status !== 'pending');
@@ -209,43 +236,39 @@ const Home = () => {
           <Board board={INITIAL_BOARD} decorative />
         </S.HeroBoard>
       </S.Hero>
-      {!isAuthenticated ? (
-        <S.Panel>
-          <S.TitleSmall>Your seat at the board is waiting.</S.TitleSmall>
-          <S.HeroDescription>
-            Sign in to play free computer games, challenge a member, or join a match for TNB. You can watch live games
-            below.
-          </S.HeroDescription>
-          <AuthButtons />
-        </S.Panel>
-      ) : (
-        <>
-          {createError && <S.Error role="alert">{createError}</S.Error>}
-          <S.PanelGrid>
-            <S.Panel>
-              <S.Eyebrow>Find your rhythm</S.Eyebrow>
-              <S.TitleSmall>Play the computer</S.TitleSmall>
-              <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
-                <S.Detail>Always free. Learn the board or sharpen your next move.</S.Detail>
-                <S.Field htmlFor="computer-difficulty">
-                  Difficulty
-                  <S.Select defaultValue="normal" id="computer-difficulty" name="difficulty">
-                    <option value="easy">Easy · Get comfortable</option>
-                    <option value="normal">Normal · Think ahead</option>
-                    <option value="hard">Hard · Take the challenge</option>
-                  </S.Select>
-                </S.Field>
-                <MatchOptions prefix="computer" />
-                <S.Actions>
-                  <S.Button disabled={!!creatingMode} type="submit">
-                    {creatingMode === 'computer' ? 'Setting the board…' : 'Play free →'}
-                  </S.Button>
-                </S.Actions>
-              </S.Form>
-            </S.Panel>
-            <S.Panel>
-              <S.Eyebrow>Make it a rivalry</S.Eyebrow>
-              <S.TitleSmall>Challenge a player</S.TitleSmall>
+      <>
+        {createError && <S.Error role="alert">{createError}</S.Error>}
+        <S.PanelGrid>
+          <S.Panel>
+            <S.Eyebrow>Find your rhythm</S.Eyebrow>
+            <S.TitleSmall>Play the computer</S.TitleSmall>
+            <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
+              <S.Detail>Always free. No account needed. Learn the board or sharpen your next move.</S.Detail>
+              <S.Field htmlFor="computer-difficulty">
+                Difficulty
+                <S.Select defaultValue="normal" id="computer-difficulty" name="difficulty">
+                  <option value="easy">Easy · Get comfortable</option>
+                  <option value="normal">Normal · Think ahead</option>
+                  <option value="hard">Hard · Take the challenge</option>
+                </S.Select>
+              </S.Field>
+              <MatchOptions prefix="computer" />
+              <S.Actions>
+                <S.Button disabled={!!creatingMode} type="submit">
+                  {creatingMode === 'computer' ? 'Setting the board…' : 'Play free →'}
+                </S.Button>
+              </S.Actions>
+            </S.Form>
+          </S.Panel>
+          <S.Panel>
+            <S.Eyebrow>Make it a rivalry</S.Eyebrow>
+            <S.TitleSmall>Challenge a player</S.TitleSmall>
+            {!isAuthenticated ? (
+              <>
+                <S.Detail>Create an account to challenge friends and earn TNB from eligible computer wins.</S.Detail>
+                <AuthButtons />
+              </>
+            ) : (
               <S.Form onSubmit={(event) => handleCreate(event, 'human')}>
                 <UserSearchInput
                   errors={{}}
@@ -283,10 +306,10 @@ const Home = () => {
                   </S.Button>
                 </S.Actions>
               </S.Form>
-            </S.Panel>
-          </S.PanelGrid>
-        </>
-      )}
+            )}
+          </S.Panel>
+        </S.PanelGrid>
+      </>
       {error && (
         <S.Error role="alert">
           {error}{' '}

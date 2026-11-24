@@ -6,9 +6,11 @@ import {getConnectFiveMatch} from 'api/connectFive';
 import Button from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
+import {useIsAuthenticated} from 'hooks';
 import {getConnectFiveMatchesById, getSelf} from 'selectors/state';
 import {upsertMatch} from 'store/connectFive';
 import {AppDispatch, SFC} from 'types';
+import {isCurrentGuestGame} from 'utils/guestGames';
 
 import ComputerMatch from './ComputerMatch';
 import HumanMatch from './HumanMatch';
@@ -18,6 +20,7 @@ const Match: SFC = ({className}) => {
   const [error, setError] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
   const dispatch = useDispatch<AppDispatch>();
+  const isAuthenticated = useIsAuthenticated();
   const {matchId} = useParams();
   const matchesById = useSelector(getConnectFiveMatchesById);
   const self = useSelector(getSelf);
@@ -43,7 +46,12 @@ const Match: SFC = ({className}) => {
     };
   }, [dispatch, hasMatch, id, retryKey, self.id]);
 
-  if (match?.mode === 'computer' && match.player_a.id !== self.id)
+  if (
+    match?.mode === 'computer' &&
+    (match.guest_mode
+      ? isAuthenticated || !isCurrentGuestGame(match)
+      : !isAuthenticated || match.player_a.id !== self.id)
+  )
     return (
       <S.Container>
         <EmptyText>This computer game belongs to another player.</EmptyText>

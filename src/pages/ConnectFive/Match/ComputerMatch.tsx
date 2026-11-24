@@ -126,8 +126,8 @@ const ComputerMatch: SFC<{match: ConnectFiveMatch}> = ({className, match}) => {
   useEffect(() => {
     if (active) return;
     setResultOpen(true);
-    dispatch(getAllUserWallets()).catch(() => undefined);
-  }, [active, dispatch]);
+    if (!match.guest_mode) dispatch(getAllUserWallets()).catch(() => undefined);
+  }, [active, dispatch, match.guest_mode]);
 
   const isValidMove = (x: number, y: number) =>
     previewCells(activeMoveType, x, y).every((cell) => {
@@ -289,7 +289,7 @@ const ComputerMatch: SFC<{match: ConnectFiveMatch}> = ({className, match}) => {
             <p>
               Both players begin with two of each special. Connect five in a row to win. Paid purchases are disabled.
             </p>
-            {!active && <ComputerRewardNotice reward={match.computer_reward} />}
+            {!active && <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />}
             {active ? (
               <Button
                 color={ButtonColor.danger}

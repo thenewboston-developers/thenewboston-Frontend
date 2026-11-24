@@ -855,12 +855,15 @@ const ConnectFiveHome: SFC = ({className}) => {
     );
   };
 
-  // Signed-out visitors can watch matches, playing one needs an account
+  // Visitors can play the computer immediately; accounts unlock multiplayer and rewards.
   const renderGuestIntro = () => {
     return (
       <S.Section>
         <S.SectionTitle>A little strategy. A great rivalry.</S.SectionTitle>
-        <S.GuestText>Easy to learn, with plenty of room for your next clever move.</S.GuestText>
+        <S.GuestText>
+          Create an account to earn rewards from eligible computer wins and challenge other players.
+        </S.GuestText>
+        <AuthButtons />
         <S.GuideGrid>
           <S.GuideItem>
             <S.GuideTitle>Find your opponent</S.GuideTitle>
@@ -898,7 +901,6 @@ const ConnectFiveHome: SFC = ({className}) => {
             </S.ProfileDetails>
           </S.ProfileHeaderContent>
         </S.ProfileHeader>
-        <ComputerSetup key={self.id} />
         <S.TopRow>
           <S.EloSection>
             <S.SectionTitle>Your ELO</S.SectionTitle>
@@ -1033,7 +1035,7 @@ const ConnectFiveHome: SFC = ({className}) => {
                   Challenge a player
                 </S.HeroPrimaryLink>
               ) : (
-                <AuthButtons />
+                <S.HeroPrimaryLink href="#computer-game">Play free</S.HeroPrimaryLink>
               )}
               <S.HeroLink {...analyticsTarget('leaderboard')} to="/connect-five/leaderboard">
                 Leaderboard
@@ -1044,6 +1046,7 @@ const ConnectFiveHome: SFC = ({className}) => {
             <S.HeroImage alt="" src={connectFiveCover} />
           </S.HeroVisual>
         </S.Hero>
+        <ComputerSetup key={self.id} />
         {isAuthenticated ? renderMemberOverview() : renderGuestIntro()}
 
         {incomingChallenges.length > 0 && (

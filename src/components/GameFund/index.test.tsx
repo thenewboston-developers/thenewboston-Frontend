@@ -154,3 +154,26 @@ it('does not let a previous account session settle a new contribution after swit
   await act(async () => resolveNew({id: 2, amount: 35, currency: 'TNB', fund: {...fund, balance: 60}}));
   expect(container).toHaveTextContent('Contributed 35 TNB');
 });
+
+it('uses the live reward amount to explain contributions and winning rewards', async () => {
+  (getGameFund as jest.Mock).mockResolvedValueOnce({
+    ...fund,
+    reward_amount: 25,
+    balance: 100,
+    wins_remaining: 4,
+    available: true,
+  });
+  await render();
+  expect(container).toHaveTextContent('earn 25 TNB');
+  expect(container).toHaveTextContent('Every 25 TNB can fund');
+  expect(container).toHaveTextContent('4 rewards funded');
+  expect(container).toHaveTextContent('If fewer than 25 TNB');
+});
+
+it('does not imply rewards are available when the fund cannot be loaded', async () => {
+  (getGameFund as jest.Mock).mockRejectedValueOnce(new Error('Offline'));
+  await render();
+  expect(container).toHaveTextContent('The fund balance is temporarily unavailable');
+  expect(container).not.toHaveTextContent('Rewards available');
+  expect(button('Refresh fund balance')).toBeEnabled();
+});

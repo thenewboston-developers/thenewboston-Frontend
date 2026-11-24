@@ -34,6 +34,8 @@ export interface CreateConnectFiveComputerMatch {
 }
 
 export interface ConnectFiveMatch extends CreatedModified {
+  guest_mode?: boolean;
+  guest_session_id?: string | null;
   computer_reward?: ComputerReward | null;
   active_side: 'a' | 'b' | null;
   computer_name: string | null;

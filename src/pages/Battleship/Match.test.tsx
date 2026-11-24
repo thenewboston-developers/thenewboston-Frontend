@@ -7,6 +7,7 @@ import {getBattleshipMatch, performBattleshipAction} from 'api/battleship';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
 import {BattleshipMatch} from 'types/battleship';
+import {hasGuestGameSession, isCurrentGuestGame} from 'utils/guestGames';
 
 import Match from './Match';
 import {randomFleet} from './utils';
@@ -16,6 +17,7 @@ jest.mock('api/battleship', () => ({getBattleshipMatch: jest.fn(), performBattle
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
 jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
+jest.mock('utils/guestGames', () => ({hasGuestGameSession: jest.fn(), isCurrentGuestGame: jest.fn()}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -52,6 +54,8 @@ beforeEach(() => {
   document.body.appendChild(container);
   root = createRoot(container);
   selfId = 11;
+  (hasGuestGameSession as jest.Mock).mockReturnValue(false);
+  (isCurrentGuestGame as jest.Mock).mockImplementation(() => hasGuestGameSession());
   mockMatchId = '1';
   dispatch.mockImplementation(() => Promise.resolve());
   match = {
@@ -261,4 +265,48 @@ describe('Battleship match interaction', () => {
     expect(getAllUserWallets).toHaveBeenCalled();
     expect(container.textContent).toContain('20 TNB prize paid to Alice.');
   });
+});
+
+it('allows a guest owner to play and never requests a wallet', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  (hasGuestGameSession as jest.Mock).mockReturnValue(true);
+  selfId = 0;
+  match.guest_mode = true;
+  match.mode = 'computer';
+  match.stake_amount = 0;
+  match.prize_pool_total = 0;
+  match.host = {id: 0, username: 'Guest', avatar: null};
+  await renderMatch();
+  const target = container.querySelector('[role="group"][aria-label="Target waters"]')!;
+  act(() => (target.querySelector('[aria-label="B3: water"]') as HTMLButtonElement).click());
+  await act(async () => button('Fire at B3').click());
+  expect(performBattleshipAction).toHaveBeenCalledWith(match, 'fire', {row: 1, column: 2});
+  expect(getAllUserWallets).not.toHaveBeenCalled();
+});
+
+it('shows a signup invitation when a guest wins without refreshing a wallet', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  (hasGuestGameSession as jest.Mock).mockReturnValue(true);
+  selfId = 0;
+  match.guest_mode = true;
+  match.mode = 'computer';
+  match.status = 'finished';
+  match.phase = 'finished';
+  match.computer_reward = {status: 'guest', amount: 10, currency: 'TNB'};
+  match.winner = 'host';
+  await renderMatch();
+  expect(container).toHaveTextContent('this win would have earned you 10 coins');
+  expect(container.querySelector('a[href="/create-account?next=%2Fgames"]')).not.toBeNull();
+  expect(getAllUserWallets).not.toHaveBeenCalled();
+});
+
+it('does not show a cached board from another guest session', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  (hasGuestGameSession as jest.Mock).mockReturnValue(true);
+  (isCurrentGuestGame as jest.Mock).mockReturnValue(false);
+  match.guest_mode = true;
+  match.mode = 'computer';
+  await renderMatch();
+  expect(container.querySelector('[aria-label="B3: water"]')).toBeNull();
+  expect(container.querySelector('button[aria-label="Point 6: 1 white checker"]')).toBeNull();
 });

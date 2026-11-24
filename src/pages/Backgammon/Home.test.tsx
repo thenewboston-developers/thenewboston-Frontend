@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {MemoryRouter} from 'react-router-dom';
 
 import {createBackgammonMatch, getBackgammonMatches} from 'api/backgammon';
+import {useIsAuthenticated} from 'hooks';
 
 import Home from './Home';
 
@@ -12,7 +13,7 @@ jest.mock('api/backgammon', () => ({createBackgammonMatch: jest.fn(), getBackgam
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('components/UserSearchInput', () => () => <div>Find a member</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
-jest.mock('hooks', () => ({useIsAuthenticated: () => true}));
+jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
 jest.mock('react-router-dom', () => ({...jest.requireActual('react-router-dom'), useNavigate: () => jest.fn()}));
 
@@ -44,6 +45,7 @@ beforeEach(() => {
   container = document.createElement('div');
   document.body.appendChild(container);
   root = createRoot(container);
+  (useIsAuthenticated as jest.Mock).mockReturnValue(true);
   Object.defineProperty(window, 'crypto', {configurable: true, value: {randomUUID}});
   randomUUID.mockReturnValueOnce(firstId).mockReturnValue(secondId);
   (useSelector as unknown as jest.Mock).mockImplementation((selector) => selector({self: {id: 11}}));
@@ -138,4 +140,15 @@ describe('creating backgammon matches', () => {
     await submit();
     expect(createBackgammonMatch).toHaveBeenCalledTimes(1);
   });
+});
+
+it('lets signed-out visitors start a free Backgammon computer match', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  (useSelector as unknown as jest.Mock).mockImplementation((selector) => selector({self: {id: null}}));
+  (createBackgammonMatch as jest.Mock).mockResolvedValue({id: 42, version: 1, guest_mode: true});
+  await renderHome();
+  expect(container.querySelectorAll('form')).toHaveLength(1);
+  expect(container).toHaveTextContent('No account needed');
+  await submit();
+  expect(createBackgammonMatch).toHaveBeenCalledWith(expect.objectContaining({mode: 'computer', stake_amount: 0}));
 });

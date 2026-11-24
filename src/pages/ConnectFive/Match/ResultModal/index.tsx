@@ -72,7 +72,7 @@ const ResultModal: SFC<ResultModalProps> = ({
   onRematchDecline,
   onRematchRequest,
 }) => {
-  if (!isOpen || !selfId) return null;
+  if (!isOpen || selfId === null) return null;
 
   const eloSnapshot = getEloSnapshot(match, selfId);
   const eloDelta = eloSnapshot?.delta ?? 0;
@@ -142,7 +142,7 @@ const ResultModal: SFC<ResultModalProps> = ({
     );
   }
 
-  const isWinner = match.winner === selfId;
+  const isWinner = match.mode === 'computer' ? match.winner_side === 'a' : match.winner === selfId;
   const tnbDeltaLabel =
     tnbDeltaTarget !== null ? `${resultTnbDelta > 0 ? '+' : ''}${resultTnbDelta.toLocaleString()} TNB` : null;
   const tnbVariant: 'loss' | 'win' = isWinner ? 'win' : 'loss';
@@ -174,7 +174,7 @@ const ResultModal: SFC<ResultModalProps> = ({
             </S.EloChangeRow>
           </S.EloChange>
         )}
-        {match.mode === 'computer' && <ComputerRewardNotice reward={match.computer_reward} />}
+        {match.mode === 'computer' && <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />}
         {match.mode === 'computer' && <S.RematchNotice>Free computer game · ELO unchanged</S.RematchNotice>}
         {tnbDeltaLabel && (
           <S.ResultTnbChange>

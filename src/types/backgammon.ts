@@ -31,6 +31,9 @@ export interface BackgammonPlayer {
 }
 
 export interface BackgammonMatch {
+  guest_mode?: boolean;
+  guest_session_id?: string | null;
+  your_side?: BackgammonSide | null;
   computer_reward?: ComputerReward | null;
   id: number;
   mode: BackgammonMode;

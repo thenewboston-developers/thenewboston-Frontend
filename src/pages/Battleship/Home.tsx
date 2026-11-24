@@ -149,9 +149,11 @@ const Home = () => {
   const handleCreate = useCallback(
     async (event: FormEvent<HTMLFormElement>, mode: BattleshipMode) => {
       event.preventDefault();
-      if (!isAuthenticated || creationLock.current) return;
+      if ((!isAuthenticated && mode !== 'computer') || creationLock.current) return;
       const isCurrent = () =>
-        live.current && activeViewer.current.authenticated && activeViewer.current.userId === self.id;
+        live.current &&
+        activeViewer.current.authenticated === isAuthenticated &&
+        activeViewer.current.userId === self.id;
       setCreateError('');
       if (mode === 'human' && (!opponent || opponent.id === self.id)) {
         setCreateError(opponent ? 'Choose another member to challenge.' : 'Choose a member to challenge.');
@@ -222,43 +224,39 @@ const Home = () => {
         </div>
         <Artwork />
       </S.Hero>
-      {!isAuthenticated ? (
-        <S.Panel>
-          <S.TitleSmall>Your fleet is ready for a captain.</S.TitleSmall>
-          <S.HeroDescription>
-            Sign in to play the computer for free or challenge a member with optional TNB stakes. Match boards are
-            private to their players.
-          </S.HeroDescription>
-          <AuthButtons />
-        </S.Panel>
-      ) : (
-        <>
-          {createError && <S.Error role="alert">{createError}</S.Error>}
-          <S.PanelGrid>
-            <S.Panel>
-              <S.Eyebrow>Practice your tactics</S.Eyebrow>
-              <S.TitleSmall>Play the computer</S.TitleSmall>
-              <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
-                <S.Detail>Always free. Learn the grid or put your tactics to the test.</S.Detail>
-                <S.Field htmlFor="computer-difficulty">
-                  Difficulty
-                  <S.Select defaultValue="normal" id="computer-difficulty" name="difficulty">
-                    <option value="easy">Easy · Find your sea legs</option>
-                    <option value="normal">Normal · Hunt and target</option>
-                    <option value="hard">Hard · A calculated opponent</option>
-                  </S.Select>
-                </S.Field>
-                <MatchOptions prefix="computer" />
-                <S.Actions>
-                  <S.Button disabled={!!creatingMode} type="submit">
-                    {creatingMode === 'computer' ? 'Preparing your fleet…' : 'Play free →'}
-                  </S.Button>
-                </S.Actions>
-              </S.Form>
-            </S.Panel>
-            <S.Panel>
-              <S.Eyebrow>Make it a rivalry</S.Eyebrow>
-              <S.TitleSmall>Challenge a player</S.TitleSmall>
+      <>
+        {createError && <S.Error role="alert">{createError}</S.Error>}
+        <S.PanelGrid>
+          <S.Panel>
+            <S.Eyebrow>Practice your tactics</S.Eyebrow>
+            <S.TitleSmall>Play the computer</S.TitleSmall>
+            <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
+              <S.Detail>Always free. No account needed. Learn the grid or put your tactics to the test.</S.Detail>
+              <S.Field htmlFor="computer-difficulty">
+                Difficulty
+                <S.Select defaultValue="normal" id="computer-difficulty" name="difficulty">
+                  <option value="easy">Easy · Find your sea legs</option>
+                  <option value="normal">Normal · Hunt and target</option>
+                  <option value="hard">Hard · A calculated opponent</option>
+                </S.Select>
+              </S.Field>
+              <MatchOptions prefix="computer" />
+              <S.Actions>
+                <S.Button disabled={!!creatingMode} type="submit">
+                  {creatingMode === 'computer' ? 'Preparing your fleet…' : 'Play free →'}
+                </S.Button>
+              </S.Actions>
+            </S.Form>
+          </S.Panel>
+          <S.Panel>
+            <S.Eyebrow>Make it a rivalry</S.Eyebrow>
+            <S.TitleSmall>Challenge a player</S.TitleSmall>
+            {!isAuthenticated ? (
+              <>
+                <S.Detail>Create an account to challenge friends and earn TNB from eligible computer wins.</S.Detail>
+                <AuthButtons />
+              </>
+            ) : (
               <S.Form onSubmit={(event) => handleCreate(event, 'human')}>
                 <UserSearchInput
                   errors={{}}
@@ -296,10 +294,10 @@ const Home = () => {
                   </S.Button>
                 </S.Actions>
               </S.Form>
-            </S.Panel>
-          </S.PanelGrid>
-        </>
-      )}
+            )}
+          </S.Panel>
+        </S.PanelGrid>
+      </>
       {error && (
         <S.Error role="alert">
           {error}{' '}

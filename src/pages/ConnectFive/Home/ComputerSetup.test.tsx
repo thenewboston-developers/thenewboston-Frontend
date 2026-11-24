@@ -52,3 +52,21 @@ it('creates a free computer game and keeps the request ID stable after an ambigu
   ]);
   expect(container).toHaveTextContent('No stakes or paid purchases');
 });
+
+it('starts a free computer game without a signed-in user', async () => {
+  (useSelector as unknown as jest.Mock).mockImplementation((selector) => selector({self: {id: null}}));
+  (createConnectFiveComputerMatch as jest.Mock).mockResolvedValue({id: 42, guest_mode: true});
+  await act(async () =>
+    root.render(
+      <MemoryRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
+        <ComputerSetup />
+      </MemoryRouter>,
+    ),
+  );
+  await submit();
+  expect(createConnectFiveComputerMatch).toHaveBeenCalledWith({
+    request_id: requestId,
+    difficulty: 'normal',
+    time_limit_seconds: 900,
+  });
+});

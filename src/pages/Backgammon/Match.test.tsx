@@ -7,6 +7,7 @@ import {getBackgammonMatch, performBackgammonAction} from 'api/backgammon';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
 import {BackgammonMatch, BackgammonMove} from 'types/backgammon';
+import {hasGuestGameSession, isCurrentGuestGame} from 'utils/guestGames';
 
 import Match from './Match';
 
@@ -15,6 +16,7 @@ jest.mock('api/backgammon', () => ({getBackgammonMatch: jest.fn(), performBackga
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
 jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
+jest.mock('utils/guestGames', () => ({hasGuestGameSession: jest.fn(), isCurrentGuestGame: jest.fn()}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
 jest.mock('react-router-dom', () => ({...jest.requireActual('react-router-dom'), useParams: () => ({matchId: '1'})}));
 
@@ -49,6 +51,8 @@ beforeEach(() => {
   document.body.appendChild(container);
   root = createRoot(container);
   selfId = 11;
+  (hasGuestGameSession as jest.Mock).mockReturnValue(false);
+  (isCurrentGuestGame as jest.Mock).mockImplementation(() => hasGuestGameSession());
   dispatch.mockImplementation(() => Promise.resolve());
   match = {
     id: 1,
@@ -177,4 +181,50 @@ describe('backgammon match interaction', () => {
     await act(async () => button('Accept · 10 TNB').click());
     expect(performBackgammonAction).toHaveBeenCalledWith(match, 'accept', {});
   });
+});
+
+it('allows a guest owner to play and never requests a wallet', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  (hasGuestGameSession as jest.Mock).mockReturnValue(true);
+  selfId = 0;
+  match.guest_mode = true;
+  match.your_side = 'white';
+  match.mode = 'computer';
+  match.stake_amount = 0;
+  match.prize_pool_total = 0;
+  match.white = {id: 0, username: 'Guest', avatar: null};
+  match.phase = 'awaiting_roll';
+  await renderMatch();
+  await act(async () => button('Roll dice').click());
+  expect(performBackgammonAction).toHaveBeenCalledWith(match, 'roll', {});
+  expect(container).not.toHaveTextContent('You’re watching this match');
+  expect(getAllUserWallets).not.toHaveBeenCalled();
+});
+
+it('shows a signup invitation when a guest wins without refreshing a wallet', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  (hasGuestGameSession as jest.Mock).mockReturnValue(true);
+  selfId = 0;
+  match.guest_mode = true;
+  match.your_side = 'white';
+  match.mode = 'computer';
+  match.status = 'finished';
+  match.phase = 'finished';
+  match.computer_reward = {status: 'guest', amount: 10, currency: 'TNB'};
+  match.winner = 'white';
+  await renderMatch();
+  expect(container).toHaveTextContent('this win would have earned you 10 coins');
+  expect(container.querySelector('a[href="/create-account?next=%2Fgames"]')).not.toBeNull();
+  expect(getAllUserWallets).not.toHaveBeenCalled();
+});
+
+it('does not show a cached board from another guest session', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  (hasGuestGameSession as jest.Mock).mockReturnValue(true);
+  (isCurrentGuestGame as jest.Mock).mockReturnValue(false);
+  match.guest_mode = true;
+  match.mode = 'computer';
+  await renderMatch();
+  expect(container.querySelector('[aria-label="B3: water"]')).toBeNull();
+  expect(container.querySelector('button[aria-label="Point 6: 1 white checker"]')).toBeNull();
 });
