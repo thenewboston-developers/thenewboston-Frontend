@@ -22,7 +22,9 @@ export const checkForDeploymentUpdate = () => async (dispatch: AppDispatch) => {
 
     return deployment;
   } catch (error) {
+    // The check runs in the background and polling repeats it. A request that fails, as it does while the API
+    // restarts during a backend deployment, is not an error for the visitor or for Sentry.
     dispatch(setPollingEnabled(true));
-    throw error;
+    return null;
   }
 };
