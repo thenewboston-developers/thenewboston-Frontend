@@ -98,6 +98,22 @@ export const Category = styled.p`
   margin: 0 0 14px;
 `;
 
+export const CheckersArtwork = styled.div`
+  align-items: center;
+  background: linear-gradient(135deg, #e9e7d8, #c9d5ba);
+  display: flex;
+  justify-content: center;
+  padding: 64px 48px 40px;
+  position: relative;
+
+  svg {
+    border-radius: 24px;
+    box-shadow: 0 20px 32px #203c2933;
+    max-width: 380px !important;
+    transform: rotate(-5deg);
+  }
+`;
+
 export const Container = styled.div`
   ${pagePadding};
   padding-top: 48px;

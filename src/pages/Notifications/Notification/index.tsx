@@ -39,6 +39,10 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     }
 
     const notificationType = notification.payload.notification_type;
+    if (notification.payload.notification_type === NotificationType.CHECKERS_CHALLENGE) {
+      navigate(`/checkers/matches/${notification.payload.match_id}`);
+      return;
+    }
     if (notification.payload.notification_type === NotificationType.BATTLESHIP_CHALLENGE) {
       navigate(`/battleship/matches/${notification.payload.match_id}`);
       return;
@@ -128,10 +132,42 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     );
   };
 
+  const renderCheckersChallengeNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.CHECKERS_CHALLENGE) return null;
+
+    const {challenger, match_id, stake_amount, time_limit_seconds} = notification.payload;
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/checkers/matches/${match_id}`}>
+          <S.AvatarContainer>
+            <Avatar size="45px" src={challenger.avatar} />
+            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
+          </S.AvatarContainer>
+        </Link>
+        <S.TextContainer>
+          <S.MainText>
+            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
+              {challenger.username}
+            </S.Link>{' '}
+            challenged you to Checkers
+          </S.MainText>
+          <S.PostPreviewText>
+            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} ·{' '}
+            {time_limit_seconds / 60} min per player
+          </S.PostPreviewText>
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
+  };
+
   const renderContent = () => {
     const notificationTypes: {[key in NotificationType]: () => ReactNode} = {
       [NotificationType.BACKGAMMON_CHALLENGE]: renderBackgammonChallengeNotification,
       [NotificationType.BATTLESHIP_CHALLENGE]: renderBattleshipChallengeNotification,
+      [NotificationType.CHECKERS_CHALLENGE]: renderCheckersChallengeNotification,
       [NotificationType.COMMENT_MENTION]: renderCommentMentionNotification,
       [NotificationType.CONNECT_FIVE_CHALLENGE]: renderConnectFiveChallengeNotification,
       [NotificationType.EXCHANGE_ORDER_FILLED]: renderExchangeOrderFilledNotification,
