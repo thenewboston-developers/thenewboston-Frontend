@@ -14,7 +14,7 @@ const Hero = ({isCreating, onPlay}: Props) => (
   <S.Hero aria-label="Reversi overview">
     <S.Artwork>
       <S.Image
-        alt="A luminous cyan Reversi arena with black and ivory disks and one disk suspended mid-flip"
+        alt="A classic green felt Reversi board with black and ivory disks in a dark forest frame"
         fetchPriority="high"
         height={960}
         src={reversiArena}

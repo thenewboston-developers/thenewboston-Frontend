@@ -10,9 +10,9 @@ import {BLACK_DISK, boardPanel, caption, disk, reversi, SPLIT_DISK, WHITE_DISK} 
 
 export {Container, Navigation} from '../Styles';
 
-// A radio card: dark until chosen, then lit with the hero's cyan edge light
+// The selected radio card uses the same mint outline as the board controls.
 const choiceCard = css`
-  background: #08132acc;
+  background: ${reversi.ink}cc;
   border: 1px solid ${reversi.edge};
   border-radius: 12px;
   transition:
@@ -26,21 +26,21 @@ const choiceCard = css`
   }
 
   input:checked + & {
-    background: linear-gradient(180deg, #78edff1f, #78edff08);
-    border-color: ${reversi.cyan};
+    background: linear-gradient(180deg, ${reversi.mint}1f, ${reversi.mint}08);
+    border-color: ${reversi.mint};
     box-shadow:
-      inset 0 0 0 1px ${reversi.cyan},
-      0 0 24px #78edff1f;
+      inset 0 0 0 1px ${reversi.mint},
+      0 0 24px ${reversi.mint}1f;
   }
 
   input:focus-visible + & {
-    outline: 2px solid ${reversi.cyanLight};
+    outline: 2px solid ${reversi.mintLight};
     outline-offset: 3px;
   }
 `;
 
 const fieldControl = css`
-  background: #050c18b3;
+  background: ${reversi.night}b3;
   border: 1px solid ${reversi.edge};
   border-radius: 12px;
   color: ${reversi.text};
@@ -53,8 +53,8 @@ const fieldControl = css`
   }
 
   &:focus {
-    border-color: ${reversi.cyan};
-    box-shadow: 0 0 0 3px #78edff2e;
+    border-color: ${reversi.mint};
+    box-shadow: 0 0 0 3px ${reversi.mint}2e;
     outline: none;
   }
 `;
@@ -73,8 +73,8 @@ const hiddenRadio = css`
 `;
 
 const livePulse = keyframes`
-  0% { box-shadow: 0 0 0 0 #78edff8c; }
-  100% { box-shadow: 0 0 0 10px #78edff00; }
+  0% { box-shadow: 0 0 0 0 ${reversi.mint}8c; }
+  100% { box-shadow: 0 0 0 10px ${reversi.mint}00; }
 `;
 
 // The faint inner rim keeps black disks readable on the dark board and disappears on ivory ones
@@ -96,7 +96,7 @@ export const Actions = styled.div`
 
 export const Alert = styled.div`
   align-items: center;
-  background: linear-gradient(90deg, #3b1a1f, #161525);
+  background: linear-gradient(90deg, #3b1a1f, #1c211a);
   border: 1px solid #ff9b8f59;
   border-radius: 14px;
   color: #ffdcd6;
@@ -129,10 +129,10 @@ export const AuthButtons = styled(UAuthButtons)`
 
 export const Badge = styled.span`
   align-items: center;
-  background: ${reversi.obsidian};
+  background: ${reversi.panel};
   border: 1px solid ${reversi.edge};
   border-radius: 999px;
-  color: #d4e8f7;
+  color: ${reversi.text};
   display: inline-flex;
   font-size: 12px;
   font-weight: ${fonts.weight.semiBold};
@@ -150,7 +150,7 @@ export const BadgeDisk = styled.span`
 // A pending challenge has no disk count yet: the tile shows a disk waiting to be flipped
 export const ChallengeTile = styled.span`
   align-items: center;
-  background: #050c18b3;
+  background: ${reversi.night}b3;
   border: 1px solid ${reversi.edge};
   border-radius: 12px;
   display: flex;
@@ -230,18 +230,18 @@ export const ColorDisk = styled.span<{$side: 'black' | 'random' | 'white'}>`
   input:checked + * > & {
     box-shadow:
       inset 0 0 0 1px #ffffff2e,
-      0 0 0 2px ${reversi.obsidian},
-      0 0 0 3.5px ${reversi.cyan},
-      0 0 14px #78edff59;
+      0 0 0 2px ${reversi.panel},
+      0 0 0 3.5px ${reversi.mint},
+      0 0 14px ${reversi.mint}59;
   }
 `;
 
 export const Count = styled.span`
   ${caption};
-  background: #78edff14;
-  border: 1px solid #78edff47;
+  background: ${reversi.mint}14;
+  border: 1px solid ${reversi.mint}47;
   border-radius: 999px;
-  color: ${reversi.cyanLight};
+  color: ${reversi.mintLight};
   font-size: 10px;
   padding: 3px 10px;
 `;
@@ -263,7 +263,7 @@ export const DifficultyCard = styled.span`
 
 export const Empty = styled.div`
   align-items: center;
-  background: #050c1880;
+  background: ${reversi.night}80;
   border: 1px dashed ${reversi.edgeBright};
   border-radius: 14px;
   display: flex;
@@ -280,7 +280,7 @@ export const Empty = styled.div`
 
 export const Eyebrow = styled.p`
   ${caption};
-  color: ${reversi.cyan};
+  color: ${reversi.mint};
   margin: 0 0 4px;
 `;
 
@@ -324,7 +324,7 @@ export const GhostButton = styled.button`
   }
 
   &:focus-visible {
-    outline: 2px solid ${reversi.cyanLight};
+    outline: 2px solid ${reversi.mintLight};
     outline-offset: 3px;
   }
 `;
@@ -345,7 +345,7 @@ export const Legend = styled.legend`
 `;
 
 export const LiveDot = styled.span<{$live: boolean}>`
-  background: ${({$live}) => ($live ? reversi.cyan : reversi.edgeBright)};
+  background: ${({$live}) => ($live ? reversi.mint : reversi.edgeBright)};
   border-radius: 50%;
   flex-shrink: 0;
   height: 9px;
@@ -395,8 +395,8 @@ export const LogTitle = styled.h2`
 
 export const MatchAction = styled.span<{$incoming: boolean}>`
   ${caption};
-  background: ${({$incoming}) => ($incoming ? reversi.cyan : 'transparent')};
-  border: 1px solid ${({$incoming}) => ($incoming ? reversi.cyan : '#78edff4d')};
+  background: ${({$incoming}) => ($incoming ? reversi.mint : 'transparent')};
+  border: 1px solid ${({$incoming}) => ($incoming ? reversi.mint : `${reversi.mint}4d`)};
   border-radius: 999px;
   color: ${({$incoming}) => ($incoming ? reversi.ink : reversi.text)};
   flex-shrink: 0;
@@ -411,8 +411,8 @@ export const MatchInfo = styled.div`
 
 export const MatchLink = styled(Link)`
   align-items: center;
-  background: #050c188c;
-  border: 1px solid #1a344eb3;
+  background: ${reversi.night}8c;
+  border: 1px solid ${reversi.edge}b3;
   border-radius: 14px;
   color: ${reversi.text};
   display: grid;
@@ -425,14 +425,14 @@ export const MatchLink = styled(Link)`
     border-color 0.15s ease;
 
   &:hover {
-    background: ${reversi.cyanSoft};
+    background: ${reversi.mintSoft};
     border-color: ${reversi.edgeBright};
     color: ${reversi.text};
     text-decoration: none;
   }
 
   &:focus-visible {
-    outline: 2px solid ${reversi.cyanLight};
+    outline: 2px solid ${reversi.mintLight};
     outline-offset: 2px;
   }
 
@@ -545,17 +545,17 @@ export const Pips = styled.span<{$level: number}>`
   input:checked + * > & i:nth-child(-n + ${({$level}) => $level}) {
     box-shadow:
       0 1px 2px #00000080,
-      0 0 8px #78edff8c;
+      0 0 8px ${reversi.mint}8c;
   }
 `;
 
 export const PlayButton = styled.button`
   align-items: center;
-  background: ${reversi.cyan};
-  border: 1px solid #a9f5ff;
+  background: ${reversi.mint};
+  border: 1px solid ${reversi.mintLight};
   border-radius: 12px;
   box-shadow:
-    0 12px 28px #40d5fb26,
+    0 12px 28px ${reversi.felt}26,
     inset 0 1px 0 #ffffff80;
   color: ${reversi.ink};
   cursor: pointer;
@@ -574,9 +574,9 @@ export const PlayButton = styled.button`
   width: 100%;
 
   &:hover:not(:disabled) {
-    background: ${reversi.cyanLight};
+    background: ${reversi.mintLight};
     box-shadow:
-      0 16px 34px #40d5fb3d,
+      0 16px 34px ${reversi.felt}3d,
       inset 0 1px 0 #ffffff80;
     transform: translateY(-1px);
   }
@@ -586,7 +586,7 @@ export const PlayButton = styled.button`
   }
 
   &:focus-visible {
-    outline: 2px solid ${reversi.cyan};
+    outline: 2px solid ${reversi.mint};
     outline-offset: 4px;
   }
 
@@ -624,8 +624,8 @@ export const Rules = styled(URules)`
   }
 
   summary::after {
-    border-bottom: 2px solid ${reversi.cyan};
-    border-right: 2px solid ${reversi.cyan};
+    border-bottom: 2px solid ${reversi.mint};
+    border-right: 2px solid ${reversi.mint};
     content: '';
     height: 8px;
     margin: -4px 4px 0 auto;
@@ -641,7 +641,7 @@ export const Rules = styled(URules)`
 
   summary:focus-visible {
     border-radius: 6px;
-    outline: 2px solid ${reversi.cyanLight};
+    outline: 2px solid ${reversi.mintLight};
     outline-offset: 4px;
   }
 
@@ -684,7 +684,7 @@ export const Rules = styled(URules)`
 
   li:nth-child(even)::before {
     background: ${WHITE_DISK};
-    color: #25212f;
+    color: #202522;
   }
 
   @media (max-width: 600px) {
@@ -719,7 +719,7 @@ export const ScoreTile = styled.span`
 
   b:last-child {
     background: ${WHITE_DISK};
-    color: #25212f;
+    color: #202522;
   }
 `;
 
@@ -752,19 +752,19 @@ export const Segment = styled.label`
   }
 
   input:checked + span {
-    background: linear-gradient(180deg, #78edff29, #78edff0f);
-    box-shadow: inset 0 0 0 1px ${reversi.cyan};
+    background: linear-gradient(180deg, ${reversi.mint}29, ${reversi.mint}0f);
+    box-shadow: inset 0 0 0 1px ${reversi.mint};
     color: ${reversi.text};
   }
 
   input:focus-visible + span {
-    outline: 2px solid ${reversi.cyanLight};
+    outline: 2px solid ${reversi.mintLight};
     outline-offset: 2px;
   }
 `;
 
 export const Segmented = styled.div`
-  background: #050c1899;
+  background: ${reversi.night}99;
   border: 1px solid ${reversi.edge};
   border-radius: 12px;
   display: grid;
@@ -824,7 +824,7 @@ export const StakeUnit = styled.span`
 
 export const Status = styled.div`
   align-items: center;
-  background: ${reversi.obsidian};
+  background: ${reversi.panel};
   border: 1px solid ${reversi.edge};
   border-radius: 14px;
   color: ${reversi.mist};
@@ -836,7 +836,7 @@ export const Status = styled.div`
 `;
 
 export const Terms = styled.p`
-  background: linear-gradient(90deg, #f2c66d14, transparent 85%);
+  background: linear-gradient(90deg, ${reversi.gold}14, transparent 85%);
   border-left: 2px solid ${reversi.gold};
   border-radius: 0 10px 10px 0;
   color: ${reversi.mist};
@@ -847,7 +847,7 @@ export const Terms = styled.p`
 `;
 
 export const TextLink = styled(Link)`
-  color: #1d3a5c;
+  color: ${reversi.mint};
   font-size: 13px;
   font-weight: ${fonts.weight.semiBold};
 `;

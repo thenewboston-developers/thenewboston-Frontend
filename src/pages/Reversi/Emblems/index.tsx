@@ -1,5 +1,7 @@
 import {useId} from 'react';
 
+import {reversi} from '../theme';
+
 import * as S from './Styles';
 
 // Every emblem is decorative: the headings and text next to them carry the meaning.
@@ -7,7 +9,7 @@ import * as S from './Styles';
 type Side = 'black' | 'white';
 
 // A faint light rim keeps black disks readable on the dark board
-const BLACK_RIM = {stroke: '#b7b1cf', strokeOpacity: 0.45, strokeWidth: 0.9};
+const BLACK_RIM = {stroke: '#b4cbbc', strokeOpacity: 0.45, strokeWidth: 0.9};
 
 // The flipping example: black plays c4 and traps three disks along the row and one on the diagonal
 const CELL = 30;
@@ -40,13 +42,13 @@ const center = (index: number) => 25 + index * CELL;
 const DiskGradients = ({ids}: {ids: Record<Side, string>}) => (
   <defs>
     <radialGradient cx="0.34" cy="0.28" fx="0.34" fy="0.28" id={ids.black} r="0.98">
-      <stop offset="0" stopColor="#5a5666" />
-      <stop offset="0.46" stopColor="#24212d" />
-      <stop offset="1" stopColor="#0d0b12" />
+      <stop offset="0" stopColor="#4c514e" />
+      <stop offset="0.46" stopColor="#202522" />
+      <stop offset="1" stopColor="#090d0a" />
     </radialGradient>
     <radialGradient cx="0.34" cy="0.28" fx="0.34" fy="0.28" id={ids.white} r="0.98">
       <stop offset="0" stopColor="#ffffff" />
-      <stop offset="0.52" stopColor="#f1ebdd" />
+      <stop offset="0.52" stopColor="#f4efe3" />
       <stop offset="1" stopColor="#cfc5ae" />
     </radialGradient>
   </defs>
@@ -63,13 +65,28 @@ export const CornerEmblem = () => {
   return (
     <S.Emblem aria-hidden="true" viewBox="0 0 64 64">
       <DiskGradients ids={ids} />
-      <rect fill="#0b1934" height="62" rx="16" stroke="#f2c66d" strokeOpacity="0.5" width="62" x="1" y="1" />
-      <path d="M12 26H54M12 40H54M26 12V54M40 12V54" stroke="#78edff" strokeOpacity="0.2" />
-      <path d="M12 54V17C12 14.2 14.2 12 17 12H54" fill="none" stroke="#78edff" strokeOpacity="0.7" strokeWidth="2" />
-      <circle cx="40" cy="40" fill="#78edff" fillOpacity="0.7" r="1.6" />
-      <rect fill="#f2c66d" fillOpacity="0.16" height="12" rx="2" width="12" x="13" y="13" />
-      <S.CornerGlow cx="19" cy="19" fill="#f2c66d" r="8" />
-      <circle cx="19" cy="19" fill={`url(#${ids.black})`} r="5.2" stroke="#f2c66d" strokeWidth="1.3" />
+      <rect
+        fill={reversi.feltDark}
+        height="62"
+        rx="16"
+        stroke={reversi.gold}
+        strokeOpacity="0.5"
+        width="62"
+        x="1"
+        y="1"
+      />
+      <path d="M12 26H54M12 40H54M26 12V54M40 12V54" stroke={reversi.mint} strokeOpacity="0.2" />
+      <path
+        d="M12 54V17C12 14.2 14.2 12 17 12H54"
+        fill="none"
+        stroke={reversi.mint}
+        strokeOpacity="0.7"
+        strokeWidth="2"
+      />
+      <circle cx="40" cy="40" fill={reversi.mint} fillOpacity="0.7" r="1.6" />
+      <rect fill={reversi.gold} fillOpacity="0.16" height="12" rx="2" width="12" x="13" y="13" />
+      <S.CornerGlow cx="19" cy="19" fill={reversi.gold} r="8" />
+      <circle cx="19" cy="19" fill={`url(#${ids.black})`} r="5.2" stroke={reversi.gold} strokeWidth="1.3" />
       <circle cx="33" cy="19" fill={`url(#${ids.black})`} r="4.6" {...BLACK_RIM} />
       <circle cx="19" cy="33" fill={`url(#${ids.white})`} r="4.6" />
     </S.Emblem>
@@ -79,24 +96,24 @@ export const CornerEmblem = () => {
 // The four corners of an empty board, still waiting for someone to take them
 export const CornersBoard = () => (
   <S.CornersBoard aria-hidden="true" viewBox="0 0 132 132">
-    <rect fill="#0a1730" height="128" rx="10" stroke="#1a344e" width="128" x="2" y="2" />
+    <rect fill={reversi.felt} height="128" rx="10" stroke={reversi.edge} width="128" x="2" y="2" />
     <path
       d={Array.from({length: 7}, (_, index) => 24 + index * 14)
         .map((offset) => `M${offset} 10V122M10 ${offset}H122`)
         .join('')}
-      stroke="#78edff"
+      stroke={reversi.mint}
       strokeOpacity="0.14"
     />
-    <rect fill="none" height="112" rx="3" stroke="#78edff" strokeOpacity="0.4" width="112" x="10" y="10" />
+    <rect fill="none" height="112" rx="3" stroke={reversi.mint} strokeOpacity="0.4" width="112" x="10" y="10" />
     {[10, 108].flatMap((x) =>
       [10, 108].map((y) => (
-        <S.OpenCorner fill="#f2c66d" fillOpacity="0.1" height="14" key={`${x}-${y}`} width="14" x={x} y={y} />
+        <S.OpenCorner fill={reversi.gold} fillOpacity="0.1" height="14" key={`${x}-${y}`} width="14" x={x} y={y} />
       )),
     )}
-    <circle cx="59" cy="59" fill="#f4efe3" r="5" />
-    <circle cx="73" cy="59" fill="#24212d" r="5" {...BLACK_RIM} />
-    <circle cx="59" cy="73" fill="#24212d" r="5" {...BLACK_RIM} />
-    <circle cx="73" cy="73" fill="#f4efe3" r="5" />
+    <circle cx="59" cy="59" fill={reversi.ivory} r="5" />
+    <circle cx="73" cy="59" fill="#202522" r="5" {...BLACK_RIM} />
+    <circle cx="59" cy="73" fill="#202522" r="5" {...BLACK_RIM} />
+    <circle cx="73" cy="73" fill={reversi.ivory} r="5" />
   </S.CornersBoard>
 );
 
@@ -107,12 +124,12 @@ export const FlipBoard = () => {
     <S.Figure>
       <S.FlipBoardArt aria-hidden="true" viewBox="0 0 260 260">
         <DiskGradients ids={ids} />
-        <rect fill="#071022" height="256" rx="14" stroke="#1a344e" width="256" x="2" y="2" />
-        <rect fill="#0a1730" height="240" rx="6" width="240" x="10" y="10" />
-        <path d={GRID_LINES} stroke="#78edff" strokeOpacity="0.16" />
-        <rect fill="none" height="240" rx="6" stroke="#78edff" strokeOpacity="0.5" width="240" x="10" y="10" />
+        <rect fill={reversi.forest} height="256" rx="14" stroke={reversi.edge} width="256" x="2" y="2" />
+        <rect fill={reversi.felt} height="240" rx="6" width="240" x="10" y="10" />
+        <path d={GRID_LINES} stroke={reversi.mint} strokeOpacity="0.16" />
+        <rect fill="none" height="240" rx="6" stroke={reversi.mint} strokeOpacity="0.5" width="240" x="10" y="10" />
         {STAR_POINTS.map(({x, y}) => (
-          <circle cx={x} cy={y} fill="#78edff" fillOpacity="0.6" key={`${x}-${y}`} r="2.4" />
+          <circle cx={x} cy={y} fill={reversi.mint} fillOpacity="0.6" key={`${x}-${y}`} r="2.4" />
         ))}
         {DEMO_STILL.map(({column, row, side}) => (
           <circle
@@ -146,7 +163,7 @@ export const FlipBoard = () => {
           cy={center(DEMO_MOVE.row)}
           fill={disk('black')}
           r="11.5"
-          stroke="#78edff"
+          stroke={reversi.mint}
           strokeOpacity="0.7"
         />
       </S.FlipBoardArt>
@@ -163,9 +180,18 @@ export const OpeningEmblem = () => {
   return (
     <S.Emblem aria-hidden="true" viewBox="0 0 64 64">
       <DiskGradients ids={ids} />
-      <rect fill="#0b1934" height="62" rx="16" stroke="#78edff" strokeOpacity="0.45" width="62" x="1" y="1" />
-      <path d="M8 20H56M8 32H56M8 44H56M20 8V56M32 8V56M44 8V56" stroke="#78edff" strokeOpacity="0.16" />
-      <rect fill="none" height="48" rx="4" stroke="#78edff" strokeOpacity="0.32" width="48" x="8" y="8" />
+      <rect
+        fill={reversi.feltDark}
+        height="62"
+        rx="16"
+        stroke={reversi.mint}
+        strokeOpacity="0.45"
+        width="62"
+        x="1"
+        y="1"
+      />
+      <path d="M8 20H56M8 32H56M8 44H56M20 8V56M32 8V56M44 8V56" stroke={reversi.mint} strokeOpacity="0.16" />
+      <rect fill="none" height="48" rx="4" stroke={reversi.mint} strokeOpacity="0.32" width="48" x="8" y="8" />
       <circle cx="26" cy="26" fill={`url(#${ids.white})`} r="4.7" />
       <circle cx="38" cy="26" fill={`url(#${ids.black})`} r="4.7" {...BLACK_RIM} />
       <circle cx="26" cy="38" fill={`url(#${ids.black})`} r="4.7" {...BLACK_RIM} />
@@ -188,8 +214,16 @@ export const RivalsEmblem = () => {
   return (
     <S.Emblem aria-hidden="true" viewBox="0 0 64 64">
       <DiskGradients ids={ids} />
-      <circle cx="32" cy="32" fill="#0b1934" r="31" stroke="#78edff" strokeOpacity="0.45" />
-      <S.RivalsOrbit cx="32" cy="32" fill="none" r="25" stroke="#78edff" strokeDasharray="2 5" strokeOpacity="0.35" />
+      <circle cx="32" cy="32" fill={reversi.feltDark} r="31" stroke={reversi.mint} strokeOpacity="0.45" />
+      <S.RivalsOrbit
+        cx="32"
+        cy="32"
+        fill="none"
+        r="25"
+        stroke={reversi.mint}
+        strokeDasharray="2 5"
+        strokeOpacity="0.35"
+      />
       <circle cx="39.5" cy="29" fill="#00000059" r="11" transform="translate(1.5 2.5)" />
       <circle cx="39.5" cy="29" fill={`url(#${ids.white})`} r="11" />
       <circle cx="24.5" cy="35" fill="#00000073" r="11" transform="translate(1.5 2.5)" />
@@ -198,7 +232,7 @@ export const RivalsEmblem = () => {
         cy="35"
         fill={`url(#${ids.black})`}
         r="11"
-        stroke="#78edff"
+        stroke={reversi.mint}
         strokeOpacity="0.85"
         strokeWidth="1.2"
       />

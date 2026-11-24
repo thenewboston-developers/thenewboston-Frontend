@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 import {fonts} from 'styles';
 
+import {reversi, SPLIT_DISK} from '../theme';
+
 export const Actions = styled.div`
   align-items: center;
   display: flex;
@@ -25,7 +27,9 @@ export const Artwork = styled.div`
   width: 78%;
 
   &::after {
-    background: linear-gradient(0deg, #050c18, transparent 24%), linear-gradient(180deg, #050c18a6, transparent 18%);
+    background:
+      linear-gradient(0deg, ${reversi.night}, transparent 24%),
+      linear-gradient(180deg, ${reversi.night}a6, transparent 18%);
     content: '';
     inset: 0;
     position: absolute;
@@ -48,8 +52,8 @@ export const Artwork = styled.div`
 `;
 
 export const ChallengeLink = styled.a`
-  border-bottom: 1px solid #758caa;
-  color: #edf6ff;
+  border-bottom: 1px solid ${reversi.edgeBright};
+  color: ${reversi.text};
   font-size: 0.875rem;
   font-weight: ${fonts.weight.semiBold};
   line-height: 1.5;
@@ -57,13 +61,13 @@ export const ChallengeLink = styled.a`
   text-decoration: none;
 
   &:hover {
-    border-color: #78edff;
-    color: #78edff;
+    border-color: ${reversi.mint};
+    color: ${reversi.mint};
     text-decoration: none;
   }
 
   &:focus-visible {
-    outline: 2px solid #78edff;
+    outline: 2px solid ${reversi.mint};
     outline-offset: 6px;
   }
 `;
@@ -88,7 +92,7 @@ export const Content = styled.div`
 `;
 
 export const Description = styled.p`
-  color: #b9c8dc;
+  color: ${reversi.mist};
   font-size: 1rem;
   line-height: 1.7;
   margin: 18px 0 0;
@@ -104,10 +108,10 @@ export const Description = styled.p`
 `;
 
 export const DiskMark = styled.span`
-  background: linear-gradient(135deg, #edf6ff 48%, #78edff 49%, #78edff 51%, #0a1426 52%);
-  border: 1px solid #78edff;
+  background: ${SPLIT_DISK};
+  border: 1px solid ${reversi.mint};
   border-radius: 50%;
-  box-shadow: 0 0 18px #47c9ff26;
+  box-shadow: 0 0 18px ${reversi.mint}26;
   flex: 0 0 auto;
   height: 23px;
   width: 23px;
@@ -115,7 +119,7 @@ export const DiskMark = styled.span`
 
 export const Eyebrow = styled.p`
   align-items: center;
-  color: #78edff;
+  color: ${reversi.mint};
   display: flex;
   font-size: 0.6875rem;
   font-weight: ${fonts.weight.bold};
@@ -131,7 +135,7 @@ export const Eyebrow = styled.p`
 `;
 
 export const Facts = styled.ul`
-  color: #96abc5;
+  color: ${reversi.mist};
   display: flex;
   flex-wrap: wrap;
   font-size: 0.75rem;
@@ -142,7 +146,7 @@ export const Facts = styled.ul`
   padding: 0;
 
   li + li {
-    border-left: 1px solid #34455f;
+    border-left: 1px solid ${reversi.edge};
     padding-left: 16px;
   }
 
@@ -158,11 +162,11 @@ export const Facts = styled.ul`
 
 export const Hero = styled.section`
   align-items: center;
-  background: #050c18;
-  border: 1px solid #1a344e;
+  background: ${reversi.night};
+  border: 1px solid ${reversi.edge};
   border-radius: 24px;
-  box-shadow: 0 18px 46px #06162d1a;
-  color: #f6faff;
+  box-shadow: 0 18px 46px ${reversi.night}1a;
+  color: ${reversi.text};
   display: flex;
   isolation: isolate;
   margin-bottom: 28px;
@@ -200,7 +204,7 @@ export const Image = styled.img`
 `;
 
 export const Note = styled.p`
-  color: #96abc5;
+  color: ${reversi.mist};
   font-size: 0.75rem;
   line-height: 1.6;
   margin: 12px 0 0;
@@ -208,11 +212,11 @@ export const Note = styled.p`
 
 export const PlayButton = styled.button`
   align-items: center;
-  background: #78edff;
-  border: 1px solid #a9f5ff;
+  background: ${reversi.mint};
+  border: 1px solid ${reversi.mintLight};
   border-radius: 8px;
-  box-shadow: 0 4px 24px #40d5fb20;
-  color: #061525;
+  box-shadow: 0 4px 24px ${reversi.felt}20;
+  color: ${reversi.ink};
   cursor: pointer;
   display: inline-flex;
   font-family: inherit;
@@ -225,12 +229,12 @@ export const PlayButton = styled.button`
   text-decoration: none;
 
   &:hover {
-    background: #c5f8ff;
+    background: ${reversi.mintLight};
     text-decoration: none;
   }
 
   &:focus-visible {
-    outline: 2px solid #78edff;
+    outline: 2px solid ${reversi.mint};
     outline-offset: 5px;
   }
 
@@ -241,7 +245,7 @@ export const PlayButton = styled.button`
 `;
 
 export const Tagline = styled.p`
-  color: #e7f0ff;
+  color: ${reversi.text};
   font-size: clamp(1.25rem, 1.8vw, 1.65rem);
   font-weight: ${fonts.weight.semiBold};
   letter-spacing: -0.035em;

@@ -13,7 +13,7 @@ const PODIUM: Record<number, string> = {1: reversi.gold, 2: reversi.silver, 3: r
 
 const isPodium = (rank: number) => rank <= 3;
 
-const rankColor = (rank: number): string => PODIUM[rank] ?? reversi.cyan;
+const rankColor = (rank: number): string => PODIUM[rank] ?? reversi.mint;
 
 // Corner disks take the rank's color; edge disks are plain ivory
 const heldColor = (holding: Holding, rank: number): string => (holding === 'edge' ? reversi.ivory : rankColor(rank));
@@ -22,8 +22,8 @@ const heldColor = (holding: Holding, rank: number): string => (holding === 'edge
 const flipOver = keyframes`
   0% { background: ${BLACK_DISK}; color: var(--rank-color); transform: scaleX(1); }
   49.9% { background: ${BLACK_DISK}; color: var(--rank-color); transform: scaleX(0.06); }
-  50% { background: ${WHITE_DISK}; color: #25212f; transform: scaleX(0.06); }
-  100% { background: ${WHITE_DISK}; color: #25212f; transform: scaleX(1); }
+  50% { background: ${WHITE_DISK}; color: #202522; transform: scaleX(0.06); }
+  100% { background: ${WHITE_DISK}; color: #202522; transform: scaleX(1); }
 `;
 
 export const Amount = styled.strong`
@@ -52,7 +52,7 @@ export const Amount = styled.strong`
 export const Avatar = styled(UAvatar)<{$rank: number}>`
   border-radius: 50%;
   box-shadow:
-    0 0 0 2px ${reversi.obsidian},
+    0 0 0 2px ${reversi.panel},
     0 0 0 3px ${({$rank}) => (isPodium($rank) ? `${rankColor($rank)}b3` : reversi.edgeBright)};
 
   @media (max-width: 480px) {
@@ -123,7 +123,7 @@ export const Eyebrow = styled.p`
 
 export const Footer = styled.div`
   align-items: center;
-  background: #050c1866;
+  background: ${reversi.night}66;
   border-top: 1px solid ${reversi.edge};
   display: flex;
   flex-wrap: wrap;
@@ -138,7 +138,7 @@ export const Footer = styled.div`
 
 // A small piece of the board around the square the rank holds
 export const Glyph = styled.svg`
-  border: 1px solid #78edff26;
+  border: 1px solid ${reversi.mint}26;
   border-radius: 5px;
   display: block;
   flex-shrink: 0;
@@ -196,13 +196,13 @@ export const Note = styled.p`
 
 export const Pagination = styled(UPagination)`
   button {
-    background: ${reversi.obsidian};
+    background: ${reversi.panel};
     border-color: ${reversi.edge};
     color: ${reversi.text};
   }
 
   button:hover:not(:disabled) {
-    background: #12284a;
+    background: ${reversi.feltDark};
     border-color: ${reversi.edgeBright};
   }
 
@@ -213,14 +213,14 @@ export const Pagination = styled(UPagination)`
   }
 
   button:focus-visible {
-    border-color: ${reversi.cyan};
-    box-shadow: 0 0 0 2px #78edff66;
+    border-color: ${reversi.mint};
+    box-shadow: 0 0 0 2px ${reversi.mint}66;
   }
 
   button[aria-current='page'],
   button[aria-current='page']:hover {
-    background: ${reversi.cyan};
-    border-color: ${reversi.cyan};
+    background: ${reversi.mint};
+    border-color: ${reversi.mint};
     color: ${reversi.ink};
   }
 
@@ -308,17 +308,18 @@ export const Retry = styled.button`
   }
 
   &:focus-visible {
-    outline: 2px solid ${reversi.cyanLight};
+    outline: 2px solid ${reversi.mintLight};
     outline-offset: 3px;
   }
 `;
 
 export const Row = styled.tr<{$rank: number}>`
-  background: ${({$rank}) => ($rank === 1 ? 'linear-gradient(90deg, #f2c66d14, transparent 65%)' : 'transparent')};
+  background: ${({$rank}) =>
+    $rank === 1 ? `linear-gradient(90deg, ${reversi.gold}14, transparent 65%)` : 'transparent'};
   transition: background 0.15s ease;
 
   &:hover {
-    background: ${reversi.cyanSoft};
+    background: ${reversi.mintSoft};
   }
 `;
 
@@ -335,8 +336,8 @@ export const SquareLabel = styled.span`
 `;
 
 export const StartDisk = styled.circle<{$side: 'black' | 'white'}>`
-  fill: ${({$side}) => ($side === 'black' ? '#24212d' : reversi.ivory)};
-  stroke: ${({$side}) => ($side === 'black' ? '#b7b1cf73' : 'none')};
+  fill: ${({$side}) => ($side === 'black' ? '#202522' : reversi.ivory)};
+  stroke: ${({$side}) => ($side === 'black' ? '#b4cbbc73' : 'none')};
   stroke-width: 0.9;
 `;
 
@@ -357,7 +358,7 @@ export const Table = styled.table`
 
   th {
     ${caption};
-    background: #050c1880;
+    background: ${reversi.night}80;
     border-bottom: 1px solid ${reversi.edge};
     color: ${reversi.fog};
     font-size: 10px;
@@ -366,7 +367,7 @@ export const Table = styled.table`
   }
 
   td {
-    border-bottom: 1px solid #1a344e80;
+    border-bottom: 1px solid ${reversi.edge}80;
     padding: 14px 16px;
     vertical-align: middle;
   }
@@ -446,12 +447,12 @@ export const Username = styled(Link)`
   white-space: nowrap;
 
   &:hover {
-    color: ${reversi.cyan};
+    color: ${reversi.mint};
     text-decoration: underline;
   }
 
   &:focus-visible {
-    outline: 2px solid ${reversi.cyanLight};
+    outline: 2px solid ${reversi.mintLight};
     outline-offset: 2px;
   }
 `;

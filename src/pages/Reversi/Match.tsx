@@ -294,41 +294,43 @@ const Match = () => {
     const rematchLabel = match.mode === 'computer' ? 'Play again' : 'Offer rematch';
     const {winner} = match;
     return (
-      <GameResultPanel
-        description={
-          <>
-            {RESULT_LABELS[match.result_reason] ?? 'Game complete'} · Black {match.scores.black} – White{' '}
-            {match.scores.white}
-          </>
-        }
-        game="Reversi"
-        outcome={getGameResultOutcome(winner, side)}
-        title={winner ? `${getPlayerName(match, winner)} wins` : 'The game is a draw'}
-      >
-        {match.mode === 'computer' && isParticipant && (
-          <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
-        )}
-        {match.prize_pool_total > 0 && (
-          <strong>
-            {winner
-              ? `${match.prize_pool_total.toLocaleString()} TNB prize paid to ${getPlayerName(match, winner)}.`
-              : `Each player’s ${match.stake_amount.toLocaleString()} TNB stake was returned.`}
-          </strong>
-        )}
-        {isParticipant && (
-          <GameResultActions>
-            <S.Button disabled={!canAct} onClick={() => handleAction('rematch')} type="button">
-              {busyAction === 'rematch' ? 'Creating…' : rematchLabel}
-            </S.Button>
-            <S.TextLink to="/reversi/home">Back to the lobby</S.TextLink>
-          </GameResultActions>
-        )}
-        {match.mode === 'human' && isParticipant && (
-          <GameResultNote>
-            A rematch keeps the stake and time, and swaps colors. Both players must agree again.
-          </GameResultNote>
-        )}
-      </GameResultPanel>
+      <S.ResultWrap>
+        <GameResultPanel
+          description={
+            <>
+              {RESULT_LABELS[match.result_reason] ?? 'Game complete'} · Black {match.scores.black} – White{' '}
+              {match.scores.white}
+            </>
+          }
+          game="Reversi"
+          outcome={getGameResultOutcome(winner, side)}
+          title={winner ? `${getPlayerName(match, winner)} wins` : 'The game is a draw'}
+        >
+          {match.mode === 'computer' && isParticipant && (
+            <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
+          )}
+          {match.prize_pool_total > 0 && (
+            <strong>
+              {winner
+                ? `${match.prize_pool_total.toLocaleString()} TNB prize paid to ${getPlayerName(match, winner)}.`
+                : `Each player’s ${match.stake_amount.toLocaleString()} TNB stake was returned.`}
+            </strong>
+          )}
+          {isParticipant && (
+            <GameResultActions>
+              <S.Button disabled={!canAct} onClick={() => handleAction('rematch')} type="button">
+                {busyAction === 'rematch' ? 'Creating…' : rematchLabel}
+              </S.Button>
+              <S.TextLink to="/reversi/home">Back to the lobby</S.TextLink>
+            </GameResultActions>
+          )}
+          {match.mode === 'human' && isParticipant && (
+            <GameResultNote>
+              A rematch keeps the stake and time, and swaps colors. Both players must agree again.
+            </GameResultNote>
+          )}
+        </GameResultPanel>
+      </S.ResultWrap>
     );
   };
 
@@ -392,17 +394,22 @@ const Match = () => {
           {isParticipant ? modeLabel : 'Spectating'} · {match.stake_amount ? 'TNB match' : 'Free play'}
         </S.Badge>
       </S.Navigation>
-      <S.MatchTitle>
-        {getPlayerName(match, 'black')} vs. {getPlayerName(match, 'white')}
-      </S.MatchTitle>
-      <S.Detail>
-        {Math.round(match.time_limit_seconds / 60)} minutes per player
-        {match.status === 'pending' && ' · Challenge pending'}
-        {match.status === 'active' && ` · Move ${match.move_count + 1}`}
-      </S.Detail>
-      <S.Actions style={{marginBottom: 16}}>
-        <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
-      </S.Actions>
+      <S.MatchHeader>
+        <div>
+          <S.Eyebrow>Reversi · Classic strategy</S.Eyebrow>
+          <S.MatchTitle>
+            {getPlayerName(match, 'black')} vs. {getPlayerName(match, 'white')}
+          </S.MatchTitle>
+          <S.Detail>
+            {Math.round(match.time_limit_seconds / 60)} minutes per player
+            {match.status === 'pending' && ' · Challenge pending'}
+            {match.status === 'active' && ` · Move ${match.move_count + 1}`}
+          </S.Detail>
+        </div>
+        <S.SoundControls>
+          <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+        </S.SoundControls>
+      </S.MatchHeader>
       {loadError && (
         <S.Error role="alert">
           Connection interrupted. {loadError} Controls will return when the board reconnects.
@@ -440,6 +447,12 @@ const Match = () => {
                 onSelect={canMove ? handleSelect : undefined}
                 turn={match.active_side}
               />
+              {(canMove || match.last_move) && (
+                <S.BoardLegend>
+                  {canMove && <S.BoardLegendItem>Available move</S.BoardLegendItem>}
+                  {match.last_move && <S.BoardLegendItem $last>Last move</S.BoardLegendItem>}
+                </S.BoardLegend>
+              )}
             </S.BoardWrap>
           )}
         </S.MatchMain>
@@ -450,13 +463,16 @@ const Match = () => {
               {SIDES.map((playerSide) => (
                 <S.Player $active={match.status === 'active' && match.active_side === playerSide} key={playerSide}>
                   <S.PlayerIdentity>
-                    <S.PlayerPiece $side={playerSide} />
+                    <S.PlayerPiece $side={playerSide} aria-hidden="true" />
                     <div>
                       <S.PlayerName>
                         {getPlayerName(match, playerSide)}
                         {side === playerSide ? ' (you)' : ''}
                       </S.PlayerName>
                       <S.Timer>{renderClock(playerSide)} remaining</S.Timer>
+                      {match.status === 'active' && match.active_side === playerSide && (
+                        <S.PlayerTurn>To move</S.PlayerTurn>
+                      )}
                     </div>
                   </S.PlayerIdentity>
                   <S.Score aria-label={`${SIDE_LABELS[playerSide]} disks: ${match.scores[playerSide]}`}>

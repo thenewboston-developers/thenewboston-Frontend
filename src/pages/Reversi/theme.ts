@@ -2,32 +2,34 @@ import {css} from 'styled-components';
 
 import {fonts} from 'styles';
 
-export const BLACK_DISK = 'radial-gradient(circle at 34% 28%, #5a5666 0%, #24212d 46%, #0d0b12 100%)';
-export const WHITE_DISK = 'radial-gradient(circle at 34% 28%, #ffffff 0%, #f1ebdd 52%, #cfc5ae 100%)';
+export const BLACK_DISK = 'radial-gradient(circle at 34% 28%, #4c514e 0%, #202522 46%, #090d0a 100%)';
+export const WHITE_DISK = 'radial-gradient(circle at 34% 28%, #ffffff 0%, #f4efe3 52%, #cfc5ae 100%)';
 
-// A disk caught mid-flip, ivory on one half and black on the other, split by the hero's cyan edge light
-export const SPLIT_DISK =
-  'radial-gradient(circle at 34% 28%, #ffffff59, transparent 58%), linear-gradient(135deg, #f4efe3 0 46%, #78edff 46% 54%, #1d1a26 54% 100%)';
-
-// The lobby's obsidian board look, taken from the hero: a midnight board, a hairline cyan grid, black and ivory disks
+// Classic green felt and black/ivory disks shared by the lobby, illustrations, and live board.
 export const reversi = {
   bronze: '#dca274',
-  cyan: '#78edff',
-  cyanLight: '#c5f8ff',
-  cyanSoft: '#78edff1f',
-  edge: '#1a344e',
-  edgeBright: '#2d5479',
-  fog: '#8095b0',
-  gold: '#f2c66d',
-  ink: '#061525',
+  edge: '#315644',
+  edgeBright: '#47765d',
+  felt: '#278052',
+  feltDark: '#12452e',
+  feltHover: '#319361',
+  fog: '#8eac9a',
+  forest: '#102b21',
+  gold: '#f2cc79',
+  ink: '#0b2118',
   ivory: '#f4efe3',
-  mist: '#aebdd2',
-  night: '#050c18',
-  obsidian: '#0a1730',
-  rose: '#ff9b8f',
-  silver: '#cfd9e6',
-  text: '#edf6ff',
+  mint: '#b9efcf',
+  mintLight: '#e0f6e7',
+  mintSoft: '#b9efcf1f',
+  mist: '#b4cbbc',
+  night: '#071a12',
+  panel: '#102b21',
+  rose: '#ffaca0',
+  silver: '#d4dfd7',
+  text: '#f4f7ee',
 };
+
+export const SPLIT_DISK = `radial-gradient(circle at 34% 28%, #ffffff59, transparent 58%), linear-gradient(135deg, ${reversi.ivory} 0 48%, ${reversi.gold} 48% 52%, #202522 52% 100%)`;
 
 // Small uppercase labels, like the hero eyebrow
 export const caption = css`
@@ -43,16 +45,15 @@ export const disk = (side: 'black' | 'random' | 'white') => {
   return side === 'black' ? BLACK_DISK : WHITE_DISK;
 };
 
-// A dark board: a hairline grid with the four board dots every four squares, fading out under the content, and the
-// slim cyan inlay that runs around the hero board. Content needs no extra stacking: both layers sit behind it.
+// A quiet board grid and inset frame carry the felt-green identity through every panel.
 export const boardPanel = css`
   background:
-    radial-gradient(120% 80% at 100% 0%, #3fc8f01c, transparent 58%),
-    radial-gradient(90% 70% at 0% 100%, #7c6cff12, transparent 62%), linear-gradient(180deg, #0a1730, #060e1d);
+    radial-gradient(120% 80% at 100% 0%, ${reversi.felt}33, transparent 58%),
+    linear-gradient(180deg, ${reversi.panel}, ${reversi.ink});
   border: 1px solid ${reversi.edge};
   border-radius: 22px;
   box-shadow:
-    0 18px 44px #050c1824,
+    0 18px 44px ${reversi.night}24,
     inset 0 1px 0 #ffffff0d;
   color: ${reversi.text};
   color-scheme: dark;
@@ -61,8 +62,9 @@ export const boardPanel = css`
 
   &::before {
     background-image:
-      radial-gradient(circle, #78edff4d 0 2px, transparent 2.5px), linear-gradient(#78edff14 1px, transparent 1px),
-      linear-gradient(90deg, #78edff14 1px, transparent 1px);
+      radial-gradient(circle, ${reversi.mint}4d 0 2px, transparent 2.5px),
+      linear-gradient(${reversi.mint}14 1px, transparent 1px),
+      linear-gradient(90deg, ${reversi.mint}14 1px, transparent 1px);
     background-position:
       -88px -88px,
       -1px -1px,
@@ -81,11 +83,11 @@ export const boardPanel = css`
   }
 
   &::after {
-    border: 1px solid #78edff21;
+    border: 1px solid ${reversi.mint}21;
     border-radius: 16px;
     box-shadow:
-      inset 0 0 22px #78edff0a,
-      0 0 14px #78edff08;
+      inset 0 0 22px ${reversi.mint}0a,
+      0 0 14px ${reversi.mint}08;
     content: '';
     inset: 7px;
     pointer-events: none;

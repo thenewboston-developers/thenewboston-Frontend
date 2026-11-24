@@ -93,7 +93,7 @@ export const CaptureLine = styled.path<{$delay: number}>`
   ${({$delay}) => demoAnimation(capture, $delay)};
   fill: none;
   opacity: 0;
-  stroke: ${reversi.cyan};
+  stroke: ${reversi.mint};
   stroke-dasharray: 1;
   stroke-linecap: round;
   stroke-width: 2.5;
@@ -145,7 +145,7 @@ export const FigureCaption = styled.figcaption`
 
 export const FlipBoardArt = styled.svg`
   display: block;
-  filter: drop-shadow(0 16px 30px #050c1873) drop-shadow(0 0 22px #78edff1a);
+  filter: drop-shadow(0 16px 30px ${reversi.night}73) drop-shadow(0 0 22px ${reversi.mint}1a);
   height: auto;
   max-width: 280px;
   width: 100%;
@@ -166,8 +166,8 @@ export const Loader = styled.span`
   background: ${BLACK_DISK};
   border-radius: 50%;
   box-shadow:
-    0 0 0 1px #78edff59,
-    0 0 14px #78edff33;
+    0 0 0 1px ${reversi.mint}59,
+    0 0 14px ${reversi.mint}33;
   display: inline-block;
   flex-shrink: 0;
   height: 22px;
@@ -175,14 +175,14 @@ export const Loader = styled.span`
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
-    background: linear-gradient(90deg, #24212d 50%, #f1ebdd 50%);
+    background: linear-gradient(90deg, #202522 50%, #f1ebdd 50%);
   }
 `;
 
 export const MoveHint = styled.circle`
   ${ownCenter};
   ${demoAnimation(moveHint)};
-  fill: ${reversi.cyan};
+  fill: ${reversi.mint};
   opacity: 0;
 `;
 
@@ -195,7 +195,7 @@ export const OpenCorner = styled.rect`
 export const OpeningHint = styled.circle<{$index: number}>`
   ${ownCenter};
   animation: ${hintPulse} 2.8s ease-in-out ${({$index}) => $index * 0.35}s infinite both;
-  fill: ${reversi.cyan};
+  fill: ${reversi.mint};
   opacity: 0.7;
   ${reducedMotion};
 `;

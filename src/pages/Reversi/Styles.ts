@@ -1,15 +1,10 @@
 import {Link} from 'react-router-dom';
 import styled, {css, keyframes} from 'styled-components';
 
-import {colors, fonts, pagePadding} from 'styles';
+import * as GameResult from 'components/GameResultPanel/Styles';
+import {fonts, pagePadding} from 'styles';
 
-import {BLACK_DISK, WHITE_DISK} from './theme';
-
-const FELT = '#1f7358';
-const FELT_DARK = '#124735';
-const FOCUS = '#c88a2c';
-const INK = '#25212f';
-const LINE = '#e8e2d4';
+import {BLACK_DISK, boardPanel, caption, reversi, WHITE_DISK} from './theme';
 
 const flipFromBlack = keyframes`
   0% {
@@ -73,9 +68,10 @@ export const Actions = styled.div`
 `;
 
 export const Badge = styled.span`
-  background: #efe9dc;
+  background: ${reversi.mintSoft};
+  border: 1px solid ${reversi.edge};
   border-radius: 999px;
-  color: #5b4a25;
+  color: ${reversi.mint};
   display: inline-flex;
   font-size: 12px;
   font-weight: 700;
@@ -83,9 +79,12 @@ export const Badge = styled.span`
 `;
 
 export const BoardFrame = styled.div`
-  background: linear-gradient(145deg, #3a3346, ${INK});
+  background: linear-gradient(145deg, #263c30, #0a120e);
+  border: 1px solid ${reversi.edgeBright};
   border-radius: 22px;
-  box-shadow: 0 14px 32px #1d1a2633;
+  box-shadow:
+    0 20px 42px #00000059,
+    inset 0 1px 0 #ffffff24;
   display: grid;
   gap: 4px;
   grid-template-columns: 18px minmax(0, 1fr);
@@ -94,8 +93,8 @@ export const BoardFrame = styled.div`
 
 export const BoardGrid = styled.div`
   aspect-ratio: 1;
-  background: ${FELT_DARK};
-  border: 2px solid ${FELT_DARK};
+  background: ${reversi.feltDark};
+  border: 1px solid ${reversi.gold}73;
   border-radius: 8px;
   display: grid;
   gap: 2px;
@@ -106,7 +105,7 @@ export const BoardGrid = styled.div`
 
 export const BoardLabel = styled.span`
   align-items: center;
-  color: #b9b2c6;
+  color: ${reversi.mist};
   display: flex;
   font-size: 11px;
   font-weight: 600;
@@ -128,22 +127,49 @@ export const BoardLabels = styled.div<{$direction: 'column' | 'row'}>`
         `}
 `;
 
-// The board stays within the height of the window, so a move never needs scrolling
+export const BoardLegend = styled.div`
+  align-items: center;
+  color: ${reversi.mist};
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 12px;
+  gap: 12px 24px;
+  justify-content: center;
+  margin-top: 18px;
+`;
+
+export const BoardLegendItem = styled.span<{$last?: boolean}>`
+  align-items: center;
+  display: inline-flex;
+  gap: 9px;
+
+  &::before {
+    background: ${({$last}) => ($last ? reversi.gold : 'transparent')};
+    border: 2px solid ${reversi.gold};
+    border-radius: ${({$last}) => ($last ? '2px' : '50%')};
+    content: '';
+    height: 10px;
+    transform: ${({$last}) => ($last ? 'rotate(45deg)' : 'none')};
+    width: 10px;
+  }
+`;
+
+// Keep the playable board comfortable on wide screens while allowing narrow screens to use their full width.
 export const BoardWrap = styled.div`
   margin: 0 auto;
-  max-width: min(640px, max(300px, calc(100vh - 290px)));
+  max-width: min(680px, max(340px, calc(100vh - 300px)));
   width: 100%;
 `;
 
 export const Button = styled.button<{$danger?: boolean; $secondary?: boolean}>`
   align-items: center;
   background: ${({$danger, $secondary}) => {
-    if ($secondary) return '#f3efe6';
-    return $danger ? '#9e3434' : INK;
+    if ($secondary) return reversi.ink;
+    return $danger ? '#853d35' : reversi.mint;
   }};
-  border: 1px solid ${({$secondary}) => ($secondary ? '#ddd5c3' : 'transparent')};
+  border: 1px solid ${({$danger, $secondary}) => ($danger || $secondary ? reversi.edgeBright : reversi.mint)};
   border-radius: 12px;
-  color: ${({$secondary}) => ($secondary ? INK : colors.white)};
+  color: ${({$danger, $secondary}) => ($danger || $secondary ? reversi.text : reversi.ink)};
   cursor: pointer;
   display: inline-flex;
   font-family: inherit;
@@ -158,7 +184,7 @@ export const Button = styled.button<{$danger?: boolean; $secondary?: boolean}>`
     opacity 150ms;
 
   &:hover:not(:disabled) {
-    filter: brightness(${({$danger, $secondary}) => ($secondary || $danger ? 0.95 : 1.35)});
+    filter: brightness(1.1);
   }
 
   &:disabled {
@@ -167,21 +193,25 @@ export const Button = styled.button<{$danger?: boolean; $secondary?: boolean}>`
   }
 
   &:focus-visible {
-    outline: 3px solid ${FOCUS};
+    outline: 3px solid ${reversi.gold};
     outline-offset: 3px;
   }
 `;
 
 export const Container = styled.div`
   ${pagePadding};
+  background: radial-gradient(ellipse at 50% 0, #1b3b294d, transparent 65%), ${reversi.night};
+  color: ${reversi.text};
+  color-scheme: dark;
   margin: 0 auto;
   max-width: 1500px;
+  min-height: 100%;
   padding-bottom: 48px;
   padding-top: 28px;
 `;
 
 export const Detail = styled.p`
-  color: ${colors.secondary};
+  color: ${reversi.mist};
   font-size: 14px;
   line-height: 1.6;
   margin: 0;
@@ -192,7 +222,8 @@ export const Disk = styled.span<{$animation?: 'flip' | 'place'; $last?: boolean;
   border-radius: 50%;
   box-shadow:
     0 2px 3px #0000004d,
-    inset 0 -2px 3px #00000026;
+    inset 0 -2px 3px #00000026,
+    inset 0 0 0 1px #ffffff26;
   height: 78%;
   position: relative;
   width: 78%;
@@ -213,13 +244,15 @@ export const Disk = styled.span<{$animation?: 'flip' | 'place'; $last?: boolean;
     $last &&
     css`
       &::after {
-        background: ${FOCUS};
-        border-radius: 50%;
+        background: ${reversi.gold};
+        border: 1px solid ${reversi.ink};
+        border-radius: 2px;
         content: '';
         height: 22%;
         left: 39%;
         position: absolute;
         top: 39%;
+        transform: rotate(45deg);
         width: 22%;
       }
     `}
@@ -230,26 +263,26 @@ export const Disk = styled.span<{$animation?: 'flip' | 'place'; $last?: boolean;
 `;
 
 export const Empty = styled.div`
-  background: #faf8f2;
-  border: 1px dashed #d9d1bf;
+  background: ${reversi.ink};
+  border: 1px dashed ${reversi.edgeBright};
   border-radius: 16px;
-  color: ${colors.secondary};
+  color: ${reversi.mist};
   line-height: 1.7;
   padding: 24px;
 `;
 
 export const Error = styled.div`
-  background: #fff0ec;
-  border: 1px solid #eac8bb;
+  background: #351d19;
+  border: 1px solid #8e5145;
   border-radius: 12px;
-  color: #813e2c;
+  color: ${reversi.rose};
   line-height: 1.6;
   margin: 16px 0;
   padding: 14px 18px;
 `;
 
 export const Eyebrow = styled.p`
-  color: #8a7a55;
+  color: ${reversi.mint};
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -258,7 +291,7 @@ export const Eyebrow = styled.p`
 `;
 
 export const Field = styled.label`
-  color: #4a4458;
+  color: ${reversi.mist};
   display: flex;
   flex-direction: column;
   font-size: 13px;
@@ -287,20 +320,25 @@ export const GuestActions = styled.div`
 `;
 
 export const Hint = styled.span<{$side: 'black' | 'white'}>`
-  background: ${({$side}) => ($side === 'black' ? '#0d0b1259' : '#ffffff73')};
+  background: ${({$side}) => ($side === 'black' ? '#101b1314' : '#ffffff14')};
+  border: 2px solid ${reversi.gold};
   border-radius: 50%;
-  height: 24%;
+  height: 26%;
   transition:
     height 120ms,
     width 120ms;
-  width: 24%;
+  width: 26%;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 `;
 
 export const Input = styled.input`
-  background: ${colors.white};
-  border: 1px solid #d6cfbe;
+  background: ${reversi.ink};
+  border: 1px solid ${reversi.edgeBright};
   border-radius: 10px;
-  color: ${colors.primary};
+  color: ${reversi.text};
   font-family: inherit;
   font-size: 15px;
   min-height: 44px;
@@ -309,7 +347,7 @@ export const Input = styled.input`
   width: 100%;
 
   &:focus-visible {
-    outline: 2px solid ${FOCUS};
+    outline: 2px solid ${reversi.gold};
     outline-offset: 2px;
   }
 `;
@@ -323,7 +361,7 @@ export const MatchGrid = styled.div`
   align-items: start;
   display: grid;
   gap: 24px;
-  grid-template-columns: minmax(0, 1fr) 300px;
+  grid-template-columns: minmax(0, 1fr) 320px;
   margin-top: 24px;
 
   @media (max-width: 1180px) {
@@ -331,10 +369,25 @@ export const MatchGrid = styled.div`
   }
 `;
 
+export const MatchHeader = styled.header`
+  align-items: center;
+  border-bottom: 1px solid ${reversi.edge};
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+  padding-bottom: 24px;
+
+  > div:first-child {
+    flex: 1;
+    min-width: min(100%, 240px);
+  }
+`;
+
 export const MatchLink = styled(Link)`
   align-items: center;
-  background: ${colors.white};
-  border: 1px solid ${LINE};
+  background: ${reversi.ink};
+  border: 1px solid ${reversi.edge};
   border-radius: 14px;
   display: flex;
   flex-wrap: wrap;
@@ -343,12 +396,12 @@ export const MatchLink = styled(Link)`
   padding: 18px 20px;
 
   &:hover {
-    border-color: #b8ab8a;
+    border-color: ${reversi.mint};
     text-decoration: none;
   }
 
   &:focus-visible {
-    outline: 3px solid ${FOCUS};
+    outline: 3px solid ${reversi.gold};
     outline-offset: 2px;
   }
 `;
@@ -367,10 +420,11 @@ export const MatchMain = styled.div`
 `;
 
 export const MatchTitle = styled.h1`
-  color: ${INK};
+  color: ${reversi.text};
   font-size: clamp(24px, 3vw, 34px);
   letter-spacing: -0.035em;
-  margin-bottom: 10px;
+  margin: 0 0 10px;
+  overflow-wrap: anywhere;
 `;
 
 export const Navigation = styled.nav`
@@ -383,9 +437,8 @@ export const Navigation = styled.nav`
 `;
 
 export const Panel = styled.section`
-  background: ${colors.white};
-  border: 1px solid ${LINE};
-  border-radius: 20px;
+  ${boardPanel};
+  min-width: 0;
   padding: 24px;
   scroll-margin-top: 24px;
 `;
@@ -403,8 +456,8 @@ export const PanelGrid = styled.div`
 
 export const Player = styled.div<{$active: boolean}>`
   align-items: center;
-  background: ${({$active}) => ($active ? '#f6f0e1' : '#fbfaf6')};
-  border: 1px solid ${({$active}) => ($active ? '#c9b480' : '#ebe6d9')};
+  background: ${({$active}) => ($active ? '#224532' : reversi.ink)};
+  border: 1px solid ${({$active}) => ($active ? reversi.mint : reversi.edge)};
   border-radius: 14px;
   display: flex;
   gap: 10px;
@@ -427,16 +480,24 @@ export const PlayerName = styled.strong`
 
 export const PlayerPiece = styled.span<{$side: 'black' | 'white'}>`
   background: ${({$side}) => ($side === 'black' ? BLACK_DISK : WHITE_DISK)};
-  border: 1px solid ${({$side}) => ($side === 'black' ? '#0d0b12' : '#b9ae93')};
+  border: 1px solid ${({$side}) => ($side === 'black' ? '#647367' : '#b9ae93')};
   border-radius: 50%;
   flex-shrink: 0;
   height: 28px;
   width: 28px;
 `;
 
+export const PlayerTurn = styled.span`
+  ${caption};
+  color: ${reversi.mint};
+  display: block;
+  font-size: 9px;
+  margin-top: 6px;
+`;
+
 export const Result = styled.div`
-  background: #f6f0e1;
-  border: 1px solid #d8c796;
+  background: ${reversi.panel};
+  border: 1px solid ${reversi.edgeBright};
   border-radius: 16px;
   display: flex;
   flex-direction: column;
@@ -445,19 +506,47 @@ export const Result = styled.div`
   padding: 22px;
 `;
 
+export const ResultWrap = styled.div`
+  ${GameResult.Panel} {
+    background: radial-gradient(ellipse at 90% 0, #f2cc7924, transparent 55%), ${reversi.panel};
+    border-color: ${reversi.edgeBright};
+    color: ${reversi.text};
+    margin: 0;
+  }
+
+  ${GameResult.Description},
+  ${GameResult.Note},
+  ${GameResult.Eyebrow} span {
+    color: ${reversi.mist};
+  }
+
+  ${GameResult.Actions} > a {
+    color: ${reversi.mint};
+  }
+
+  ${GameResult.Actions} > button:focus-visible,
+  ${GameResult.Actions} > a:focus-visible {
+    outline-color: ${reversi.gold};
+  }
+`;
+
 export const Rules = styled.details`
-  background: ${colors.white};
-  border: 1px solid ${LINE};
-  border-radius: 16px;
-  color: ${colors.secondary};
+  ${boardPanel};
+  color: ${reversi.mist};
   line-height: 1.75;
   margin-top: 24px;
   padding: 20px 24px;
 
   summary {
-    color: ${INK};
+    color: ${reversi.text};
     cursor: pointer;
     font-weight: 600;
+  }
+
+  summary:focus-visible {
+    border-radius: 4px;
+    outline: 2px solid ${reversi.gold};
+    outline-offset: 4px;
   }
 
   li {
@@ -470,7 +559,7 @@ export const Rules = styled.details`
 `;
 
 export const Score = styled.div`
-  color: ${INK};
+  color: ${reversi.text};
   font-size: 30px;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
@@ -478,7 +567,7 @@ export const Score = styled.div`
 `;
 
 export const ScoreBar = styled.div<{$black: number}>`
-  background: linear-gradient(90deg, #24212d 0 ${({$black}) => $black}%, #efe8d8 ${({$black}) => $black}% 100%);
+  background: linear-gradient(90deg, #171c18 0 ${({$black}) => $black}%, #efe8d8 ${({$black}) => $black}% 100%);
   border: 1px solid #cfc5ae;
   border-radius: 999px;
   height: 10px;
@@ -490,10 +579,10 @@ export const Section = styled.section`
 `;
 
 export const Select = styled.select`
-  background: ${colors.white};
-  border: 1px solid #d6cfbe;
+  background: ${reversi.ink};
+  border: 1px solid ${reversi.edgeBright};
   border-radius: 10px;
-  color: ${colors.primary};
+  color: ${reversi.text};
   font-family: inherit;
   font-size: 14px;
   min-height: 44px;
@@ -502,7 +591,7 @@ export const Select = styled.select`
   width: 100%;
 
   &:focus-visible {
-    outline: 2px solid ${FOCUS};
+    outline: 2px solid ${reversi.gold};
     outline-offset: 2px;
   }
 `;
@@ -519,15 +608,33 @@ export const Sidebar = styled.aside`
 `;
 
 export const Small = styled.p`
-  color: ${colors.secondary};
+  color: ${reversi.mist};
   font-size: 12px;
   line-height: 1.6;
   margin: 8px 0 0;
 `;
 
+export const SoundControls = styled.div`
+  > button {
+    background: ${reversi.panel};
+    border-color: ${reversi.edgeBright};
+    color: ${reversi.mint};
+    min-height: 44px;
+  }
+
+  > button:hover {
+    background: ${reversi.forest};
+    filter: brightness(1.15);
+  }
+
+  > button:focus-visible {
+    outline-color: ${reversi.gold};
+  }
+`;
+
 export const Square = styled.button<{$legal?: boolean}>`
   align-items: center;
-  background: ${FELT};
+  background: ${reversi.felt};
   border: 0;
   cursor: ${({$legal}) => ($legal ? 'pointer' : 'default')};
   display: flex;
@@ -540,9 +647,10 @@ export const Square = styled.button<{$legal?: boolean}>`
     css`
       &:hover,
       &:focus-visible {
-        background: #2a8a6b;
+        background: ${reversi.feltHover};
 
         ${Hint} {
+          border-color: ${reversi.mintLight};
           height: 62%;
           width: 62%;
         }
@@ -550,14 +658,14 @@ export const Square = styled.button<{$legal?: boolean}>`
     `}
 
   &:focus-visible {
-    outline: 3px solid ${FOCUS};
+    outline: 3px solid ${reversi.mintLight};
     outline-offset: -3px;
   }
 `;
 
 export const Stat = styled.div`
   align-items: center;
-  border-bottom: 1px solid #efeadd;
+  border-bottom: 1px solid ${reversi.edge};
   display: flex;
   gap: 12px;
   justify-content: space-between;
@@ -570,10 +678,8 @@ export const Stat = styled.div`
 `;
 
 export const Status = styled.div`
+  ${boardPanel};
   align-items: center;
-  background: ${colors.white};
-  border: 1px solid ${LINE};
-  border-radius: 16px;
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
@@ -584,20 +690,30 @@ export const Status = styled.div`
 `;
 
 export const TextLink = styled(Link)`
-  color: #5b4a25;
+  color: ${reversi.mint};
   font-size: 13px;
   font-weight: 600;
+
+  &:hover {
+    color: ${reversi.mintLight};
+  }
+
+  &:focus-visible {
+    border-radius: 4px;
+    outline: 2px solid ${reversi.gold};
+    outline-offset: 4px;
+  }
 `;
 
 export const Timer = styled.span`
-  color: #5f596b;
+  color: ${reversi.mist};
   font-size: 13px;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 `;
 
 export const TitleSmall = styled.h2`
-  color: ${INK};
+  color: ${reversi.text};
   font-size: 20px;
   font-weight: ${fonts.weight.semiBold};
   letter-spacing: -0.025em;
