@@ -935,7 +935,7 @@ const ConnectFiveMatch: SFC = ({className}) => {
         rematchViewState={rematchViewState}
         resultOutcomeLabel={resultOutcomeLabel}
         resultTnbDelta={resultTnbDelta}
-        selfId={selfId ?? null}
+        selfId={isAuthenticated ? (selfId ?? null) : null}
         showInsufficientFunds={showInsufficientFunds}
         tnbDeltaTarget={tnbDeltaTarget}
       />

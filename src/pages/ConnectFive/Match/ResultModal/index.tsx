@@ -1,17 +1,10 @@
-import {
-  mdiArrowRight,
-  mdiEmoticonExcitedOutline,
-  mdiEmoticonSadOutline,
-  mdiMinus,
-  mdiTrendingDown,
-  mdiTrendingUp,
-} from '@mdi/js';
+import {mdiArrowRight, mdiMinus, mdiTrendingDown, mdiTrendingUp} from '@mdi/js';
 
 import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
+import GameResultPanel, {getGameResultOutcome} from 'components/GameResultPanel';
 import Icon from 'components/Icon';
-import {ModalBody, ModalFooter} from 'components/Modal';
 import {ConnectFiveMatch, SFC} from 'types';
 
 import * as S from './Styles';
@@ -74,7 +67,10 @@ const ResultModal: SFC<ResultModalProps> = ({
 }) => {
   if (!isOpen || selfId === null) return null;
 
-  const eloSnapshot = getEloSnapshot(match, selfId);
+  let viewer: number | string | null = null;
+  if (selfId === match.player_a.id) viewer = match.mode === 'computer' ? 'a' : selfId;
+  else if (match.mode !== 'computer' && selfId === match.player_b?.id) viewer = selfId;
+  const eloSnapshot = viewer !== null && match.mode !== 'computer' ? getEloSnapshot(match, selfId) : null;
   const eloDelta = eloSnapshot?.delta ?? 0;
   let eloDeltaLabel = '--';
   let eloIcon = mdiMinus;
@@ -142,57 +138,66 @@ const ResultModal: SFC<ResultModalProps> = ({
     );
   }
 
-  const isWinner = match.mode === 'computer' ? match.winner_side === 'a' : match.winner === selfId;
+  if (viewer === null) rematchButtons = null;
+
+  const winner = match.mode === 'computer' ? match.winner_side : match.winner;
+  const resultVariant = match.status === 'cancelled' ? 'complete' : getGameResultOutcome(winner, viewer);
   const tnbDeltaLabel =
     tnbDeltaTarget !== null ? `${resultTnbDelta > 0 ? '+' : ''}${resultTnbDelta.toLocaleString()} TNB` : null;
-  const tnbVariant: 'loss' | 'win' = isWinner ? 'win' : 'loss';
-  let resultVariant: 'loss' | 'win' = 'loss';
-  let resultLabel = resultOutcomeLabel ?? 'You lost';
-
-  if (isWinner) {
-    resultVariant = 'win';
-    resultLabel = resultOutcomeLabel ?? 'You won!';
-  }
+  const tnbVariant: 'loss' | 'win' = resultTnbDelta >= 0 ? 'win' : 'loss';
+  let resultLabel = resultOutcomeLabel ?? 'Match complete';
+  if (resultVariant === 'win') resultLabel = resultOutcomeLabel ?? 'You won!';
+  if (resultVariant === 'loss') resultLabel = resultOutcomeLabel ?? 'You lost';
+  if (resultVariant === 'draw') resultLabel = 'It’s a draw';
+  if (resultVariant === 'complete') resultLabel = 'Match complete';
+  const resultDescriptions: Record<string, string> = {
+    cancelled: 'Match cancelled',
+    finished_connect5: 'Five in a row',
+    finished_full_board: 'The board is full',
+    finished_resign: 'Match ended by resignation',
+    finished_timeout: 'A player ran out of time',
+  };
 
   return (
     <S.ResultModal close={onClose} header="Match Results">
-      <ModalBody>
-        <S.ResultSummary $variant={resultVariant}>
-          <S.ResultOutcome $variant={resultVariant}>{resultLabel}</S.ResultOutcome>
-        </S.ResultSummary>
-        {match.mode !== 'computer' && (
-          <S.EloChange>
-            <S.EloChangeLabel>Your ELO</S.EloChangeLabel>
-            <S.EloChangeRow>
-              <S.EloNumber>{eloSnapshot?.before ?? '--'}</S.EloNumber>
-              <S.EloChangeArrow icon={mdiArrowRight} size={18} />
-              <S.EloNumber>{eloSnapshot?.after ?? '--'}</S.EloNumber>
-              <S.EloChangeValue $variant={eloVariant}>
-                <span>({eloDeltaLabel})</span>
-                <Icon icon={eloIcon} size={20} />
-              </S.EloChangeValue>
-            </S.EloChangeRow>
-          </S.EloChange>
-        )}
-        {match.mode === 'computer' && <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />}
-        {match.mode === 'computer' && <S.RematchNotice>Free computer game · ELO unchanged</S.RematchNotice>}
-        {tnbDeltaLabel && (
-          <S.ResultTnbChange>
-            <S.ResultFaceIcon
-              $variant={tnbVariant}
-              icon={isWinner ? mdiEmoticonExcitedOutline : mdiEmoticonSadOutline}
-              size={32}
-            />
-            <S.ResultTnbChangeValue $variant={tnbVariant}>{tnbDeltaLabel}</S.ResultTnbChangeValue>
-          </S.ResultTnbChange>
-        )}
-        {rematchMessage && <S.RematchStateText $variant={rematchMessageVariant}>{rematchMessage}</S.RematchStateText>}
-        {showInsufficientFunds && <S.RematchNotice>Insufficient funds for rematch</S.RematchNotice>}
-      </ModalBody>
-      <ModalFooter>
+      <S.ResultModalBody>
+        <GameResultPanel
+          description={resultDescriptions[match.status]}
+          game="Connect Five"
+          outcome={resultVariant}
+          title={resultLabel}
+        >
+          {match.mode !== 'computer' && viewer !== null && (
+            <S.EloChange>
+              <S.EloChangeLabel>Your ELO</S.EloChangeLabel>
+              <S.EloChangeRow>
+                <S.EloNumber>{eloSnapshot?.before ?? '--'}</S.EloNumber>
+                <S.EloChangeArrow icon={mdiArrowRight} size={18} />
+                <S.EloNumber>{eloSnapshot?.after ?? '--'}</S.EloNumber>
+                <S.EloChangeValue $variant={eloVariant}>
+                  <span>({eloDeltaLabel})</span>
+                  <Icon icon={eloIcon} size={20} />
+                </S.EloChangeValue>
+              </S.EloChangeRow>
+            </S.EloChange>
+          )}
+          {match.mode === 'computer' && (
+            <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
+          )}
+          {match.mode === 'computer' && <S.RematchNotice>Free computer game · ELO unchanged</S.RematchNotice>}
+          {tnbDeltaLabel && (
+            <S.ResultTnbChange>
+              <S.ResultTnbChangeValue $variant={tnbVariant}>{tnbDeltaLabel}</S.ResultTnbChangeValue>
+            </S.ResultTnbChange>
+          )}
+          {rematchMessage && <S.RematchStateText $variant={rematchMessageVariant}>{rematchMessage}</S.RematchStateText>}
+          {showInsufficientFunds && <S.RematchNotice>Insufficient funds for rematch</S.RematchNotice>}
+        </GameResultPanel>
+      </S.ResultModalBody>
+      <S.ResultModalFooter>
         <Button color={ButtonColor.secondary} onClick={onClose} text="Close" />
         {rematchButtons}
-      </ModalFooter>
+      </S.ResultModalFooter>
     </S.ResultModal>
   );
 };

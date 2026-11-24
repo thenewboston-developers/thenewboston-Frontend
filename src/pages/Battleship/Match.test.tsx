@@ -294,6 +294,20 @@ describe('Battleship match interaction', () => {
     expect(getBattleshipMatch).toHaveBeenCalledTimes(1);
     expect(getAllUserWallets).toHaveBeenCalled();
     expect(container.textContent).toContain('20 TNB prize paid to Alice.');
+    expect(container.querySelector('[data-outcome="win"]')).toHaveTextContent('Victory');
+  });
+
+  it('shows the opponent winner and payout without celebrating a viewer loss', async () => {
+    match.status = 'finished';
+    match.phase = 'finished';
+    match.winner = 'guest';
+    match.result_reason = 'fleet_sunk';
+    await renderMatch();
+    const result = container.querySelector('[data-outcome="loss"]');
+    expect(result).toHaveTextContent('Bob wins the battle');
+    expect(result).toHaveTextContent('20 TNB prize paid to Bob.');
+    expect(result).not.toHaveTextContent('Victory');
+    expect(button('Offer rematch')).toBeEnabled();
   });
 });
 

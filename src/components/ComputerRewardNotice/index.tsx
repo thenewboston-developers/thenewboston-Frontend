@@ -4,6 +4,7 @@ import {ComputerReward} from 'types/gameFund';
 import {getAuthenticationPath} from 'utils/authentication';
 import {captureGameRewardOffer, captureGameSignupClick} from 'utils/gameAnalytics';
 
+import PaidRewardArtwork from './PaidRewardArtwork';
 import RewardArtwork from './RewardArtwork';
 import * as S from './Styles';
 
@@ -20,35 +21,61 @@ const ComputerRewardNotice = ({guest, reward}: {guest?: boolean; reward?: Comput
   if (reward.status === 'guest')
     return (
       <S.Notice $guest ref={exposure} role="status">
-        <S.GuestContent>
-          <S.Eyebrow>YOUR NEXT WIN COULD PAY OFF</S.Eyebrow>
-          <S.RewardAmount>
-            {reward.amount.toLocaleString()} <span>TNB</span>
-          </S.RewardAmount>
-          <S.GuestTitle>Great win. Imagine that in your wallet.</S.GuestTitle>
-          <S.GuestDescription>
-            With an account, this win would have earned you {reward.amount.toLocaleString()} coins. Make your next
-            victory count with rewards on eligible computer wins while the community fund has coins.
-          </S.GuestDescription>
-          <S.CreateAccount
-            onClick={() => captureGameSignupClick('guest_reward')}
-            to={getAuthenticationPath(PATH_AUTHENTICATION.CREATE_ACCOUNT, PATH_GAMES)}
-          >
-            Create a free account <span aria-hidden="true">→</span>
-          </S.CreateAccount>
-          <S.FinePrint>This was a guest game. No coins were earned or reserved.</S.FinePrint>
-        </S.GuestContent>
-        <S.Artwork>
-          <RewardArtwork />
-          <S.ArtworkCaption>PLAY. WIN. EARN.</S.ArtworkCaption>
-        </S.Artwork>
+        <S.GuestLayout>
+          <S.GuestContent>
+            <S.Eyebrow>YOUR NEXT WIN COULD PAY OFF</S.Eyebrow>
+            <S.RewardAmount>
+              {reward.amount.toLocaleString()} <span>TNB</span>
+            </S.RewardAmount>
+            <S.GuestTitle>Great win. Imagine that in your wallet.</S.GuestTitle>
+            <S.GuestDescription>
+              With an account, this win would have earned you {reward.amount.toLocaleString()} coins. Make your next
+              victory count with rewards on eligible computer wins while the community fund has coins.
+            </S.GuestDescription>
+            <S.CreateAccount
+              onClick={() => captureGameSignupClick('guest_reward')}
+              to={getAuthenticationPath(PATH_AUTHENTICATION.CREATE_ACCOUNT, PATH_GAMES)}
+            >
+              Create a free account <span aria-hidden="true">→</span>
+            </S.CreateAccount>
+            <S.FinePrint>This was a guest game. No coins were earned or reserved.</S.FinePrint>
+          </S.GuestContent>
+          <S.Artwork>
+            <RewardArtwork />
+            <S.ArtworkCaption>PLAY. WIN. EARN.</S.ArtworkCaption>
+          </S.Artwork>
+        </S.GuestLayout>
       </S.Notice>
     );
   if (reward.status === 'paid')
     return (
       <S.Notice $paid role="status">
-        <strong>+{reward.amount.toLocaleString()} TNB game reward</strong>
-        <span>Paid to your wallet from the community game fund.</span>
+        <S.PaidLayout>
+          <S.PaidContent>
+            <S.PaymentBadge>
+              <svg aria-hidden="true" fill="none" focusable="false" viewBox="0 0 16 16">
+                <circle cx="8" cy="8" fill="currentColor" r="8" />
+                <path
+                  d="m4.5 8 2.2 2.2 4.8-4.7"
+                  stroke="#fffdf1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.6"
+                />
+              </svg>
+              Payment confirmed
+            </S.PaymentBadge>
+            <S.PaidAmount>
+              +{reward.amount.toLocaleString()} <S.PaidCurrency>TNB</S.PaidCurrency>
+              <S.PaidRewardLabel> game reward</S.PaidRewardLabel>
+            </S.PaidAmount>
+            <S.PaidTitle>That win just paid off.</S.PaidTitle>
+            <S.PaidDescription>Paid to your wallet from the community game fund.</S.PaidDescription>
+          </S.PaidContent>
+          <S.PaidArtwork>
+            <PaidRewardArtwork />
+          </S.PaidArtwork>
+        </S.PaidLayout>
       </S.Notice>
     );
   if (reward.status === 'fund_empty')

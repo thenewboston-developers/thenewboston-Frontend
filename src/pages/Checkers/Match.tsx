@@ -4,6 +4,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 import {getCheckersMatch, performCheckersAction} from 'api/checkers';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
+import GameResultPanel, {GameResultActions, GameResultNote, getGameResultOutcome} from 'components/GameResultPanel';
 import GameSoundToggle from 'components/GameSoundToggle';
 import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -469,11 +470,12 @@ const Match = () => {
     if (!match || status !== 'finished') return null;
     const rematchLabel = match.mode === 'computer' ? 'Play again' : 'Offer rematch';
     return (
-      <S.Result role="status">
-        <S.TitleSmall>
-          {match.winner ? `${getPlayerName(match, match.winner)} wins the match` : 'Draw · stakes refunded'}
-        </S.TitleSmall>
-        <S.Detail>{RESULT_LABELS[match.result_reason] ?? 'Match complete'}</S.Detail>
+      <GameResultPanel
+        description={<>{RESULT_LABELS[match.result_reason] ?? 'Match complete'}</>}
+        game="Checkers"
+        outcome={getGameResultOutcome(match.winner, side)}
+        title={match.winner ? `${getPlayerName(match, match.winner)} wins the match` : 'Draw · stakes refunded'}
+      >
         {match.mode === 'computer' && side === 'white' && (
           <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
         )}
@@ -484,21 +486,21 @@ const Match = () => {
               : 'Both players’ stakes have been refunded.'}
           </strong>
         )}
-        <S.Actions>
+        <GameResultActions>
           {side && (
             <S.Button disabled={!canAct} onClick={() => handleAction('rematch')} type="button">
               {busyAction === 'rematch' ? 'Creating…' : rematchLabel}
             </S.Button>
           )}
           <S.TextLink to="/checkers/home">Back to Checkers</S.TextLink>
-        </S.Actions>
+        </GameResultActions>
         {match.mode === 'human' && side && (
-          <S.Small>
+          <GameResultNote>
             A rematch uses the same stake and time limit. Your stake locks when you offer it; your opponent must accept
             again.
-          </S.Small>
+          </GameResultNote>
         )}
-      </S.Result>
+      </GameResultPanel>
     );
   };
 

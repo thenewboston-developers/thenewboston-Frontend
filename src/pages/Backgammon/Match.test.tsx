@@ -228,3 +228,31 @@ it('does not show a cached board from another guest session', async () => {
   expect(container.querySelector('[aria-label="B3: water"]')).toBeNull();
   expect(container.querySelector('button[aria-label="Point 6: 1 white checker"]')).toBeNull();
 });
+
+it.each([
+  [11, 'win'],
+  [12, 'loss'],
+  [99, 'complete'],
+] as const)('presents a finished result for viewer %s as %s', async (viewerId, outcome) => {
+  selfId = viewerId;
+  match.status = 'finished';
+  match.winner = 'white';
+  match.phase = 'finished';
+  await renderMatch();
+  const result = container.querySelector('[data-outcome]');
+  expect(result).toHaveAttribute('data-outcome', outcome);
+  expect(result).toHaveTextContent('20 TNB prize paid to Alice');
+  expect(result?.textContent?.includes('Offer rematch')).toBe(outcome !== 'complete');
+});
+
+it('uses the current game winner between games and keeps the next-game action', async () => {
+  match.status = 'between_games';
+  match.phase = 'finished';
+  match.game_winner = 'white';
+  match.winner = null;
+  await renderMatch();
+  const result = container.querySelector('[data-outcome]');
+  expect(result).toHaveAttribute('data-outcome', 'win');
+  expect(result).toHaveTextContent('Alice wins the game');
+  expect(button('Next game →')).toBeEnabled();
+});

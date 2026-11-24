@@ -160,6 +160,8 @@ it('recognizes a computer win with a null winner ID and does not show ranked ELO
   match.active_side = null;
   await render();
   expect(modal).toHaveTextContent('Computer wins');
+  expect(modal.querySelector('[data-outcome]')).toHaveAttribute('data-outcome', 'loss');
+  expect(container.querySelector('[data-outcome]')).toHaveAttribute('data-outcome', 'loss');
   expect(modal).toHaveTextContent('ELO unchanged');
   expect(modal).not.toHaveTextContent('Your ELO');
   expect(dispatch).toHaveBeenCalledWith('refresh-wallets');
@@ -203,6 +205,8 @@ it('lets a guest use free specials and shows a reward invitation after winning',
   };
   await render();
   expect(modal).toHaveTextContent('You beat the computer!');
+  expect(modal.querySelector('[data-outcome]')).toHaveAttribute('data-outcome', 'win');
+  expect(container.querySelector('[data-outcome]')).toHaveAttribute('data-outcome', 'win');
   expect(modal).toHaveTextContent('this win would have earned you 10 coins');
   expect(dispatch).not.toHaveBeenCalledWith('refresh-wallets');
 });

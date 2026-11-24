@@ -278,6 +278,16 @@ export const Result = styled.div`
   padding: 22px;
 `;
 
+export const ResultDice = styled.div`
+  > [role='group'] {
+    align-items: flex-start;
+
+    > span {
+      color: #b9cbd3;
+    }
+  }
+`;
+
 export const Rules = styled.details`
   background: #ffffff;
   border: 1px solid #e1e6dc;

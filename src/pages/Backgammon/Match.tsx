@@ -5,6 +5,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {getBackgammonMatch, performBackgammonAction} from 'api/backgammon';
 import AuthButtons from 'components/AuthButtons';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
+import GameResultPanel, {GameResultActions, GameResultNote, getGameResultOutcome} from 'components/GameResultPanel';
 import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
@@ -290,18 +291,25 @@ const Match = () => {
       ? Math.max(0, Math.ceil((Date.parse(match.next_game_at) - now - serverOffset) / 1000))
       : null;
     return (
-      <S.Result role="status">
-        <S.TitleSmall>{title}</S.TitleSmall>
-        <Dice
-          animate={presentation.animateDice}
-          dice={presentation.dice}
-          label={presentation.diceLabel}
-          rollKey={presentation.rollKey}
-        />
-        <S.Detail>
-          {RESULT_LABELS[match.result_reason] ?? 'Game complete'} · {match.scores.white}–{match.scores.black}
-          {!finished ? ` · ${match.result_points} point${match.result_points === 1 ? '' : 's'}` : ''}
-        </S.Detail>
+      <GameResultPanel
+        description={
+          <>
+            {RESULT_LABELS[match.result_reason] ?? 'Game complete'} · {match.scores.white}–{match.scores.black}
+            {!finished ? ` · ${match.result_points} point${match.result_points === 1 ? '' : 's'}` : ''}
+          </>
+        }
+        game="Backgammon"
+        outcome={winner ? getGameResultOutcome(winner, side) : 'complete'}
+        title={title}
+      >
+        <S.ResultDice>
+          <Dice
+            animate={presentation.animateDice}
+            dice={presentation.dice}
+            label={presentation.diceLabel}
+            rollKey={presentation.rollKey}
+          />
+        </S.ResultDice>
         {finished && match.mode === 'computer' && isParticipant && (
           <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
         )}
@@ -312,15 +320,15 @@ const Match = () => {
           </strong>
         )}
         {!finished && (
-          <S.Detail>
+          <GameResultNote>
             {nextSeconds !== null
               ? `The next game starts automatically ${nextSeconds > 0 ? `in ${nextSeconds} seconds` : 'shortly'}.`
               : 'Ready for the next game?'}{' '}
             Your remaining match time carries over.
-          </S.Detail>
+          </GameResultNote>
         )}
         {isParticipant && (
-          <S.Actions>
+          <GameResultActions>
             {finished ? (
               <S.Button disabled={!canAct} onClick={() => handleAction('rematch')} type="button">
                 {busyAction === 'rematch' ? 'Creating…' : rematchLabel}
@@ -331,12 +339,14 @@ const Match = () => {
               </S.Button>
             )}
             <S.TextLink to="/backgammon/home">Back to the club</S.TextLink>
-          </S.Actions>
+          </GameResultActions>
         )}
         {finished && match.mode === 'human' && isParticipant && (
-          <S.Small>A rematch uses the same match length and stake. Both players must agree again.</S.Small>
+          <GameResultNote>
+            A rematch uses the same match length and stake. Both players must agree again.
+          </GameResultNote>
         )}
-      </S.Result>
+      </GameResultPanel>
     );
   };
 
