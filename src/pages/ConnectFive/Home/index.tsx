@@ -925,12 +925,12 @@ const ConnectFiveHome: SFC = ({className}) => {
     );
   };
 
+  // No count here: the history holds only the first page of a member's matches, not all they have played
   const renderMatchHistory = () => {
     return (
       <S.ListPanel aria-labelledby="match-history-heading">
         <S.ListHeader>
           <S.ListTitle id="match-history-heading">Match history</S.ListTitle>
-          <S.Count>{completedMatchesSorted.length}</S.Count>
         </S.ListHeader>
         <S.CardGrid>{visibleCompletedMatches.map(renderMatchCard)}</S.CardGrid>
         {hasMoreCompletedMatches && (
