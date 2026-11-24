@@ -1,291 +1,344 @@
 import styled from 'styled-components';
 
-import {colors, controlStyle, fonts} from 'styles';
+import {fonts} from 'styles';
 
-export const Amount = styled.strong`
-  color: #ffe1a0;
-  display: block;
-  font-size: clamp(38px, 4.4vw, 60px);
-  font-variant-numeric: tabular-nums;
-  font-weight: ${fonts.weight.bold};
-  letter-spacing: -0.05em;
-  line-height: 1.15;
-  margin: 8px 0;
-  overflow-wrap: anywhere;
-
-  span {
-    color: #c3cce1;
-    font-size: 20px;
-    font-weight: ${fonts.weight.medium};
-    letter-spacing: 0;
-  }
-`;
-export const BalanceLabel = styled.p`
-  color: #c3cce1;
-  font-size: 13px;
-  margin: 22px 0 0;
-`;
 export const Card = styled.section`
-  background: #ffffff;
-  border: 1px solid #e1e4ec;
-  border-radius: 24px;
-  box-shadow: 0 8px 28px #17223c08;
+  background: #111d30;
+  border: 1px solid #233249;
+  border-radius: 28px;
+  box-shadow: 0 16px 48px #101b3014;
+  color: #ffffff;
   overflow: hidden;
 `;
-export const Contribution = styled.div`
+export const ContributeLink = styled.button`
   align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: space-between;
-  padding: 24px 32px;
+  background: none;
+  border: 0;
+  color: #aab7ca;
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 12px;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0;
+  text-align: left;
+  text-underline-offset: 4px;
 
-  @media (max-width: 600px) {
-    padding: 24px;
+  &:hover {
+    color: #ffe2a4;
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    border-radius: 3px;
+    outline: 2px solid #ffe2a4;
+    outline-offset: 4px;
   }
 `;
-export const ContributionTitle = styled.h3`
-  color: ${colors.primary};
-  font-size: 16px;
-  font-weight: ${fonts.weight.semiBold};
-  margin: 0 0 6px;
-`;
-export const CurrencyLogo = styled.img`
-  border-radius: 50%;
-  box-shadow: 0 0 0 3px #ffffff14;
-  display: block;
-  flex-shrink: 0;
-  height: 48px;
-  object-fit: cover;
-  width: 48px;
-`;
-export const Description = styled.p`
-  color: ${colors.secondary};
-  font-size: 14px;
-  line-height: 1.7;
-  margin: 0;
-`;
-export const Error = styled.p`
-  color: #a03030;
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0;
-  padding: 12px 24px;
+export const DetailsText = styled.p`
+  color: #aab7ca;
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 10px 0 12px;
+  max-width: 760px;
 `;
 export const Eyebrow = styled.p`
-  color: #adbee1;
+  color: #b9c8e0;
   font-size: 10px;
   font-weight: ${fonts.weight.bold};
-  letter-spacing: 0.14em;
-  margin: 0 0 14px;
-`;
-export const Field = styled.label`
-  color: ${colors.secondary};
-  display: flex;
-  flex-direction: column;
-  font-size: 12px;
-  font-weight: ${fonts.weight.medium};
-  gap: 7px;
+  letter-spacing: 0.18em;
+  line-height: 1.6;
+  margin: 0 0 18px;
 `;
 export const Flow = styled.div`
   align-items: center;
+  color: #7587a3;
   display: flex;
+  gap: 16px;
+  justify-content: center;
   margin-top: 24px;
-  max-width: 400px;
+
+  @media (max-width: 400px) {
+    gap: 10px;
+  }
 `;
-export const FlowConnector = styled.div`
-  background: linear-gradient(90deg, #52678e, #8195b5);
-  flex: 1;
-  height: 1px;
-  margin: 0 12px;
-  min-width: 8px;
-`;
-export const FlowStep = styled.div`
+export const FlowStep = styled.span`
   align-items: center;
-  color: #c3cce1;
+  color: #d9e2f1;
   display: flex;
-  flex-direction: column;
-  font-size: 11px;
-  gap: 9px;
-  line-height: 1.5;
-  text-align: center;
-
-  strong {
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: ${fonts.weight.semiBold};
-  }
-`;
-export const Form = styled.form`
-  align-items: end;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-`;
-export const FundedWins = styled.p`
-  color: #ffffff;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: ${fonts.weight.medium};
-  margin: 0;
+  gap: 7px;
+
+  &:last-child {
+    color: #ffdc94;
+  }
 `;
-export const GuestActions = styled.div`
+export const Footer = styled.div`
+  align-items: baseline;
+  border-top: 1px solid #ffffff0d;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-export const Heading = styled.h2`
-  color: ${colors.primary};
-  font-size: 28px;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
-  margin: 0 0 12px;
-`;
-export const Hero = styled.div`
-  background:
-    radial-gradient(ellipse at 100% 0%, #304f67 0%, transparent 55%),
-    linear-gradient(120deg, #182337, #172238 65%, #1f3447);
-  display: grid;
-  gap: 32px;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-  padding: 32px;
-
-  ${Heading} {
-    color: #ffffff;
-  }
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-  }
+  gap: 8px 28px;
+  justify-content: space-between;
+  padding: 6px 40px;
 
   @media (max-width: 600px) {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px 24px;
+  }
+`;
+export const Heading = styled.h2`
+  color: #ffffff;
+  font-size: clamp(36px, 4.2vw, 58px);
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+  margin: 0 0 20px;
+
+  span {
+    color: #ffda8c;
+  }
+`;
+export const Hero = styled.div`
+  align-items: center;
+  background:
+    radial-gradient(ellipse at 80% 40%, #39516b45, transparent 55%), linear-gradient(125deg, #17253d, #101b2f 70%);
+  display: grid;
+  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  padding: 40px 48px;
+
+  @media (max-width: 900px) {
     gap: 24px;
-    padding: 24px;
+    padding: 36px 32px;
+  }
+
+  @media (max-width: 720px) {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 32px 24px;
   }
 `;
 export const HeroDescription = styled.p`
-  color: #c0cce0;
-  font-size: 14px;
-  line-height: 1.7;
-  margin: 0;
-  max-width: 460px;
-`;
-export const Input = styled.input`
-  ${controlStyle};
-  background: #ffffff;
-  font: inherit;
+  color: #b9c7dd;
   font-size: 15px;
-  max-width: 100%;
-  padding: 10px 58px 10px 14px;
-  width: 180px;
+  line-height: 1.75;
+  margin: 0;
+  max-width: 390px;
 `;
-export const InputUnit = styled.span`
-  color: #657085;
-  font-size: 12px;
-  pointer-events: none;
-  position: absolute;
-  right: 28px;
-  top: 13px;
-`;
-export const InputWrapper = styled.span`
-  position: relative;
+export const Illustration = styled.svg`
+  display: block;
+  height: auto;
+  margin: -6px auto -20px;
+  max-width: 440px;
+  overflow: visible;
+  width: 100%;
 `;
 export const Overview = styled.div`
-  align-self: center;
+  min-width: 0;
 `;
-export const PaidTotal = styled.span`
-  color: #b9c6de;
-  font-size: 12px;
-  line-height: 1.5;
+export const PlayLink = styled.a`
+  align-items: center;
+  background: #ffda8c;
+  border: 1px solid #ffe4b0;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px #efba5220;
+  color: #172238;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: ${fonts.weight.bold};
+  gap: 24px;
+  margin-top: 26px;
+  min-height: 46px;
+  padding: 12px 18px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #ffe6b4;
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 4px;
+  }
+`;
+export const PlayNote = styled.p`
+  color: #94a5c0;
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 12px 0 0;
 `;
 export const Pool = styled.div`
-  align-self: center;
-  background: #ffffff08;
-  border: 1px solid #ffffff26;
-  border-radius: 18px;
-  box-shadow: inset 0 1px 0 #ffffff0a;
-  min-width: 0;
-  padding: 24px;
+  background: #ffffff03;
+  border-top: 1px solid #ffffff0d;
+  padding: 24px 40px;
+
+  @media (max-width: 600px) {
+    padding: 22px 24px;
+  }
 `;
-export const PoolFooter = styled.div`
-  align-items: center;
-  border-top: 1px solid #ffffff20;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: space-between;
-  margin-top: 22px;
-  padding-top: 16px;
-`;
-export const PoolHeader = styled.div`
-  align-items: center;
-  display: flex;
-  gap: 16px;
-  justify-content: space-between;
-`;
-export const PoolLabel = styled.h3`
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: ${fonts.weight.semiBold};
+export const PoolMessage = styled.p`
+  color: #b9c7dd;
+  font-size: 13px;
+  line-height: 1.6;
   margin: 0;
 `;
 export const RefreshButton = styled.button`
-  background: transparent;
-  border: 1px solid #ffffff60;
+  background: none;
+  border: 1px solid #77869d;
   border-radius: 8px;
-  color: #ffffff;
+  color: #e0e8f4;
   cursor: pointer;
   font: inherit;
-  font-size: 14px;
-  margin-top: 14px;
-  padding: 9px 12px;
+  font-size: 12px;
+  margin-top: 12px;
+  min-height: 40px;
+  padding: 8px 12px;
 
   &:focus-visible {
-    outline: 2px solid #ffe1a0;
+    outline: 2px solid #ffe2a4;
     outline-offset: 3px;
   }
 `;
+export const RewardAmount = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  position: relative;
+
+  strong {
+    color: #ffe3a4;
+    font-size: clamp(42px, 4.8vw, 64px);
+    font-variant-numeric: tabular-nums;
+    font-weight: ${fonts.weight.bold};
+    letter-spacing: -0.055em;
+    line-height: 1;
+  }
+`;
 export const RewardDetails = styled.details`
-  border-top: 1px solid #eef0f4;
-  padding: 14px 32px;
+  min-width: 0;
 
   summary {
-    color: #687184;
+    align-content: center;
+    color: #aab7ca;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 12px;
+    min-height: 44px;
     width: fit-content;
   }
 
   summary:focus-visible {
-    outline: 2px solid #475f90;
+    border-radius: 3px;
+    outline: 2px solid #ffe2a4;
     outline-offset: 4px;
   }
+`;
+export const RewardShowcase = styled.div`
+  min-width: 0;
+  padding-bottom: 6px;
+  text-align: center;
+`;
+export const RewardUnit = styled.span`
+  color: #ffe3a4;
+  font-size: 21px;
+  font-weight: ${fonts.weight.semiBold};
+  line-height: 1.4;
+  text-align: left;
 
-  &[open] summary {
-    margin-bottom: 10px;
+  span {
+    color: #aebed6;
+    display: block;
+    font-size: 11px;
+    font-weight: ${fonts.weight.regular};
+  }
+`;
+export const Stat = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 6px;
+  min-width: 0;
+
+  dt {
+    color: #aab7ca;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  dd {
+    color: #f3f6fc;
+    font-size: 24px;
+    font-variant-numeric: tabular-nums;
+    font-weight: ${fonts.weight.semiBold};
+    letter-spacing: -0.03em;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  dd span {
+    color: #aab7ca;
+    font-size: 12px;
+    font-weight: ${fonts.weight.regular};
+    letter-spacing: 0;
+  }
+
+  & + & {
+    border-left: 1px solid #ffffff12;
+    padding-left: 28px;
   }
 
   @media (max-width: 600px) {
-    padding: 14px 24px;
+    dd {
+      font-size: 20px;
+    }
+
+    dt,
+    dd span {
+      font-size: 10px;
+    }
+
+    & + & {
+      padding-left: 12px;
+    }
+  }
+`;
+export const Stats = styled.dl`
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+
+  @media (max-width: 600px) {
+    gap: 12px;
   }
 `;
 export const Status = styled.span<{$available: boolean}>`
-  background: ${({$available}) => ($available ? '#79d6af1a' : '#ffffff14')};
-  border: 1px solid ${({$available}) => ($available ? '#79d6af30' : '#ffffff20')};
-  border-radius: 999px;
-  color: ${({$available}) => ($available ? '#a8edcc' : '#d0d9eb')};
-  font-size: 11px;
-  font-weight: 600;
-  padding: 6px 9px;
-`;
-
-export const StepIcon = styled.span`
   align-items: center;
-  background: #ffffff0c;
-  border: 1px solid #ffffff24;
-  border-radius: 12px;
-  color: #e8cf97;
-  display: flex;
-  height: 44px;
-  justify-content: center;
-  width: 44px;
+  background: ${({$available}) => ($available ? '#a2e9c50c' : '#ffffff07')};
+  border: 1px solid ${({$available}) => ($available ? '#a2e9c529' : '#ffffff20')};
+  border-radius: 999px;
+  color: ${({$available}) => ($available ? '#ace8cb' : '#bdc9db')};
+  display: inline-flex;
+  font-size: 11px;
+  gap: 7px;
+  line-height: 1.5;
+  padding: 6px 10px;
+`;
+export const StatusDot = styled.span<{$available: boolean}>`
+  background: ${({$available}) => ($available ? '#8fdfb8' : '#8e9cb2')};
+  border-radius: 50%;
+  height: 5px;
+  width: 5px;
+`;
+export const Success = styled.p`
+  color: #ace8cb;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+  padding: 12px 24px;
 `;

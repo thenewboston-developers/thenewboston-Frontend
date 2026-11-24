@@ -1,179 +1,129 @@
 import {act} from 'react';
 import {createRoot, Root} from 'react-dom/client';
-import {useDispatch, useSelector} from 'react-redux';
-import {MemoryRouter} from 'react-router-dom';
 
-import {depositGameFund, getGameFund} from 'api/gameFund';
-import {useIsAuthenticated} from 'hooks';
+import {getGameFund} from 'api/gameFund';
+import {GameFund as GameFundData} from 'types/gameFund';
 
 import GameFund from './index';
 
-jest.mock('api/gameFund', () => ({depositGameFund: jest.fn(), getGameFund: jest.fn()}));
-jest.mock('components/AuthButtons', () => () => <div>Sign in to contribute</div>);
-jest.mock('dispatchers/wallets', () => ({getAllUserWallets: () => 'wallet-refresh'}));
-jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
-jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
+jest.mock('api/gameFund', () => ({getGameFund: jest.fn()}));
+jest.mock('hooks', () => ({useIsAuthenticated: () => false}));
+jest.mock(
+  './ContributionModal',
+  () =>
+    ({close, onSuccess}: {close(): void; onSuccess(fund: GameFundData, message: string): void}) => (
+      <div aria-label="Contribution" role="dialog">
+        <button
+          onClick={() => {
+            onSuccess(
+              {
+                balance: 25,
+                currency: 'TNB',
+                reward_amount: 10,
+                wins_remaining: 2,
+                total_deposited: 25,
+                total_paid: 0,
+                enabled: true,
+                available: true,
+              },
+              'Contributed 25 TNB',
+            );
+            close();
+          }}
+          type="button"
+        >
+          Complete contribution
+        </button>
+      </div>
+    ),
+);
 
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
 let container: HTMLDivElement;
-let modal: HTMLDivElement;
 let root: Root;
-let selfId: number;
-const dispatch = jest.fn();
 const fund = {
-  balance: 0,
+  balance: 230,
   currency: 'TNB',
   reward_amount: 10,
-  wins_remaining: 0,
-  total_deposited: 0,
-  total_paid: 0,
+  wins_remaining: 23,
+  total_deposited: 260,
+  total_paid: 30,
   enabled: true,
-  available: false,
+  available: true,
 };
-const requestId = '11111111-1111-4111-8111-111111111111';
-
 const render = async () => {
-  await act(async () =>
-    root.render(
-      <MemoryRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
-        <GameFund />
-      </MemoryRouter>,
-    ),
-  );
+  await act(async () => root.render(<GameFund />));
 };
 const button = (text: string) =>
-  Array.from(document.querySelectorAll('button')).find((element) => element.textContent === text)!;
-const review = async (amount = '25') => {
-  const input = container.querySelector('input')!;
-  act(() => {
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, amount);
-    input.dispatchEvent(new Event('input', {bubbles: true}));
-  });
-  await act(async () => button('Review contribution').click());
-};
+  Array.from(container.querySelectorAll('button')).find((element) => element.textContent?.includes(text))!;
 
 beforeEach(() => {
   container = document.createElement('div');
   document.body.appendChild(container);
-  modal = document.createElement('div');
-  modal.id = 'modal-root';
-  document.body.appendChild(modal);
   root = createRoot(container);
-  selfId = 11;
-  dispatch.mockImplementation(() => Promise.resolve());
-  (useDispatch as unknown as jest.Mock).mockReturnValue(dispatch);
-  (useSelector as unknown as jest.Mock).mockImplementation((selector) => selector({self: {id: selfId}}));
-  (useIsAuthenticated as jest.Mock).mockReturnValue(true);
   (getGameFund as jest.Mock).mockResolvedValue(fund);
-  Object.defineProperty(window, 'crypto', {configurable: true, value: {randomUUID: () => requestId}});
 });
 afterEach(() => {
   act(() => root.unmount());
   container.remove();
-  modal.remove();
+  jest.useRealTimers();
 });
 
-it('requires an explicit amount confirmation and does not deposit on review or cancel', async () => {
+it('leads with winning coins and opens contributions only from the small link', async () => {
   await render();
-  expect(button('Review contribution')).toBeDisabled();
-  await review();
-  expect(button('Review contribution')).toBeEnabled();
-  expect(modal).toHaveTextContent('Contribute 25 TNB?');
-  expect(modal).toHaveTextContent('Contributions are final and cannot be withdrawn');
-  expect(depositGameFund).not.toHaveBeenCalled();
-  act(() => button('Cancel').click());
-  expect(modal.textContent).toBe('');
-  expect(depositGameFund).not.toHaveBeenCalled();
+  expect(container).toHaveTextContent('Play for fun.Win real coins.');
+  expect(container).toHaveTextContent('+10TNB');
+  expect(container).toHaveTextContent('Rewards available');
+  expect(container.querySelector('a')).toHaveAttribute('href', '#featured-game-heading');
+  expect(container.querySelector('input')).toBeNull();
+  expect(container.querySelector('[role="dialog"]')).toBeNull();
+  act(() => button('Contribute to the reward pool').click());
+  expect(container.querySelector('[role="dialog"]')).not.toBeNull();
+  act(() => button('Complete contribution').click());
+  expect(container.querySelector('[role="dialog"]')).toBeNull();
+  expect(container).toHaveTextContent('Contributed 25 TNB');
+  expect(container).toHaveTextContent('25 TNB');
 });
 
-it('retries an ambiguous contribution with the same request ID, then refreshes wallet and balance', async () => {
-  (depositGameFund as jest.Mock).mockRejectedValueOnce(new Error('Network lost')).mockResolvedValueOnce({
-    id: 1,
-    amount: 25,
-    currency: 'TNB',
-    fund: {...fund, balance: 25, wins_remaining: 2, available: true},
-  });
+it('uses the live reward amount and explains eligibility even to guests', async () => {
+  (getGameFund as jest.Mock).mockResolvedValue({...fund, reward_amount: 25, wins_remaining: 9});
   await render();
-  await review();
-  await act(async () => button('Contribute 25 TNB').click());
-  expect(modal).toHaveTextContent('without paying twice');
-  await act(async () => button('Contribute 25 TNB').click());
-  expect((depositGameFund as jest.Mock).mock.calls).toEqual([
-    [{amount: 25, request_id: requestId}],
-    [{amount: 25, request_id: requestId}],
-  ]);
-  expect(container).toHaveTextContent('2 rewards funded');
-  expect(dispatch).toHaveBeenCalledWith('wallet-refresh');
-});
-
-it('shows an empty fund without disabling free games and lets visitors see the balance', async () => {
-  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
-  await render();
-  expect(container).toHaveTextContent('0 TNB');
-  expect(container).toHaveTextContent('free play continues without a reward');
-  expect(container).toHaveTextContent('Sign in to contribute');
-  expect(container.querySelector('form')).toBeNull();
-});
-
-it('rejects fractional or zero contributions before review', async () => {
-  await render();
-  await review('0');
-  expect(button('Review contribution')).toBeDisabled();
-  expect(modal.textContent).toBe('');
-  await review('1.5');
-  expect(modal.textContent).toBe('');
-  expect(depositGameFund).not.toHaveBeenCalled();
-});
-
-it('does not let a previous account session settle a new contribution after switching away and back', async () => {
-  let resolveOld: (value: unknown) => void = () => undefined;
-  let resolveNew: (value: unknown) => void = () => undefined;
-  (depositGameFund as jest.Mock)
-    .mockReturnValueOnce(
-      new Promise((resolve) => {
-        resolveOld = resolve;
-      }),
-    )
-    .mockReturnValueOnce(
-      new Promise((resolve) => {
-        resolveNew = resolve;
-      }),
-    );
-  await render();
-  await review('25');
-  act(() => button('Contribute 25 TNB').click());
-  selfId = 22;
-  await render();
-  selfId = 11;
-  await render();
-  await review('35');
-  act(() => button('Contribute 35 TNB').click());
-  await act(async () => resolveOld({id: 1, amount: 25, currency: 'TNB', fund: {...fund, balance: 25}}));
-  expect(modal).toHaveTextContent('Contribute 35 TNB?');
-  expect(Array.from(modal.querySelectorAll('button')).every((element) => element.disabled)).toBe(true);
-  await act(async () => resolveNew({id: 2, amount: 35, currency: 'TNB', fund: {...fund, balance: 60}}));
-  expect(container).toHaveTextContent('Contributed 35 TNB');
-});
-
-it('uses the live reward amount to explain contributions and winning rewards', async () => {
-  (getGameFund as jest.Mock).mockResolvedValueOnce({
-    ...fund,
-    reward_amount: 25,
-    balance: 100,
-    wins_remaining: 4,
-    available: true,
-  });
-  await render();
+  expect(container).toHaveTextContent('+25TNB');
   expect(container).toHaveTextContent('earn 25 TNB');
-  expect(container).toHaveTextContent('Every 25 TNB can fund');
-  expect(container).toHaveTextContent('4 rewards funded');
-  expect(container).toHaveTextContent('If fewer than 25 TNB');
+  expect(container).toHaveTextContent('fewer than 25 TNB');
+  expect(container).toHaveTextContent('Sign in before starting a computer match');
+  expect(container).toHaveTextContent('Guest wins do not earn coins');
 });
 
-it('does not imply rewards are available when the fund cannot be loaded', async () => {
+it('distinguishes an empty pool from paused rewards without promising available rewards', async () => {
+  (getGameFund as jest.Mock).mockResolvedValueOnce({...fund, available: false, balance: 0, wins_remaining: 0});
+  await render();
+  expect(container).toHaveTextContent('More rewards on the way');
+  expect(container).toHaveTextContent('free play continues without a reward');
+  act(() => root.unmount());
+  root = createRoot(container);
+  (getGameFund as jest.Mock).mockResolvedValueOnce({...fund, available: false, enabled: false});
+  await render();
+  expect(container).toHaveTextContent('Rewards paused');
+  expect(container).not.toHaveTextContent('Rewards available');
+});
+
+it('does not imply rewards are available before loading or on failure and supports retry', async () => {
   (getGameFund as jest.Mock).mockRejectedValueOnce(new Error('Offline'));
   await render();
   expect(container).toHaveTextContent('The fund balance is temporarily unavailable');
+  expect(container).toHaveTextContent('Reward status unavailable');
+  expect(container).not.toHaveTextContent('+10');
+  await act(async () => button('Refresh fund balance').click());
+  expect(container).toHaveTextContent('Rewards available');
+});
+
+it('marks previously loaded data as stale after a failed refresh', async () => {
+  jest.useFakeTimers();
+  await render();
+  (getGameFund as jest.Mock).mockRejectedValueOnce(new Error('Offline'));
+  await act(async () => jest.advanceTimersByTime(30000));
+  expect(container).toHaveTextContent('Last known reward pool');
+  expect(container).toHaveTextContent('Reward status unavailable');
   expect(container).not.toHaveTextContent('Rewards available');
-  expect(button('Refresh fund balance')).toBeEnabled();
 });
