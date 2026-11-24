@@ -51,6 +51,10 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       navigate(`/backgammon/matches/${notification.payload.match_id}`);
       return;
     }
+    if (notification.payload.notification_type === NotificationType.REVERSI_CHALLENGE) {
+      navigate(`/reversi/matches/${notification.payload.match_id}`);
+      return;
+    }
     if (
       notificationType === NotificationType.COMMENT_MENTION ||
       notificationType === NotificationType.CONNECT_FIVE_CHALLENGE ||
@@ -176,6 +180,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       [NotificationType.POST_LIKE]: renderPostLikeNotification,
       [NotificationType.POST_MENTION]: renderPostMentionNotification,
       [NotificationType.PROFILE_FOLLOW]: renderProfileFollowNotification,
+      [NotificationType.REVERSI_CHALLENGE]: renderReversiChallengeNotification,
     };
 
     const renderFunction = notificationTypes[notification.payload.notification_type as NotificationType];
@@ -423,6 +428,37 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       <S.DotContainer>
         <S.Dot />
       </S.DotContainer>
+    );
+  };
+
+  const renderReversiChallengeNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.REVERSI_CHALLENGE) return null;
+
+    const {challenger, match_id, stake_amount, time_limit_seconds} = notification.payload;
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/reversi/matches/${match_id}`}>
+          <S.AvatarContainer>
+            <Avatar size="45px" src={challenger.avatar} />
+            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
+          </S.AvatarContainer>
+        </Link>
+        <S.TextContainer>
+          <S.MainText>
+            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
+              {challenger.username}
+            </S.Link>{' '}
+            challenged you to Reversi
+          </S.MainText>
+          <S.PostPreviewText>
+            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} ·{' '}
+            {time_limit_seconds / 60} min per player
+          </S.PostPreviewText>
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
+        {renderRedDot()}
+      </S.NotificationContainer>
     );
   };
 

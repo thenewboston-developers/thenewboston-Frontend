@@ -20,6 +20,7 @@ const redirectRoutes = [
   '/currencies',
   '/exchange',
   '/feed',
+  '/reversi',
   '/wallets',
 ];
 
@@ -54,6 +55,8 @@ const routes = [
   '/profile/:id/following',
   '/profile/:id/invitations',
   '/profile/:id/photos',
+  '/reversi/home',
+  '/reversi/matches/:id',
   '/wallets/home',
   '/wallets/learn-more',
 ];

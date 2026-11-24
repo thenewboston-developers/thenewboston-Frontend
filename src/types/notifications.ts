@@ -112,6 +112,14 @@ export interface ProfileFollowPayload {
   follower: UserReadSerializer;
 }
 
+export interface ReversiChallengePayload {
+  challenger: Pick<UserReadSerializer, 'id' | 'username' | 'avatar'>;
+  match_id: number;
+  notification_type: NotificationType.REVERSI_CHALLENGE;
+  stake_amount: number;
+  time_limit_seconds: number;
+}
+
 export type NotificationPayload =
   | BackgammonChallengePayload
   | BattleshipChallengePayload
@@ -123,7 +131,8 @@ export type NotificationPayload =
   | PostCommentPayload
   | PostLikePayload
   | PostMentionPayload
-  | ProfileFollowPayload;
+  | ProfileFollowPayload
+  | ReversiChallengePayload;
 
 export interface Notification extends CreatedModified {
   id: number;

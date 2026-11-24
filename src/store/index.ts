@@ -35,6 +35,7 @@ import mintsReducer from 'store/mints';
 import notificationsReducer from 'store/notifications';
 import orderBookReducer from 'store/orderBook';
 import postsReducer from 'store/posts';
+import reversiReducer from 'store/reversi';
 import selfReducer from 'store/self';
 import tradePriceChartDataReducer from 'store/tradePriceChartData';
 import tradesReducer from 'store/trades';
@@ -64,6 +65,7 @@ const rootReducer = combineReducers({
   notifications: notificationsReducer,
   orderBook: orderBookReducer,
   posts: postsReducer,
+  reversi: reversiReducer,
   self: selfReducer,
   tradePriceChartData: tradePriceChartDataReducer,
   trades: tradesReducer,
@@ -83,7 +85,7 @@ const persistConfig = {
   migrate: createMigrate(migrations, {debug: false}),
   storage,
   version: 3,
-  blacklist: ['authPrompt', 'backgammon', 'battleship', 'checkers', 'frontendDeployments'],
+  blacklist: ['authPrompt', 'backgammon', 'battleship', 'checkers', 'frontendDeployments', 'reversi'],
 };
 
 const persistedReducer = persistReducer(persistConfig, appReducer);
