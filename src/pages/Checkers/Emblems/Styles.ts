@@ -133,7 +133,7 @@ export const Matchup = styled.svg`
 
 export const Scene = styled.svg`
   display: block;
-  filter: drop-shadow(0 14px 22px #0a154766);
+  filter: drop-shadow(0 14px 22px #10201866);
   height: auto;
   max-width: 380px;
   width: 100%;
@@ -165,7 +165,7 @@ export const SceneJumper = styled.g`
 
 export const Tile = styled.svg`
   display: block;
-  filter: drop-shadow(0 6px 12px #0a154759);
+  filter: drop-shadow(0 6px 12px #10201859);
   flex-shrink: 0;
   height: 56px;
   width: 56px;

@@ -2,9 +2,11 @@ import styled from 'styled-components';
 
 import {fonts} from 'styles';
 
+import {board} from '../theme';
+
 export const ActionBar = styled.div`
   align-items: center;
-  background: #16285c;
+  background: #1f382c;
   display: flex;
   flex-wrap: wrap;
   gap: 16px 28px;
@@ -55,8 +57,8 @@ export const Artwork = styled.div`
 `;
 
 export const ChallengeLink = styled.a`
-  border-bottom: 1px solid #a6b8e1;
-  color: #f0f4ff;
+  border-bottom: 1px solid #acbea7;
+  color: #fff8e6;
   font-size: 0.875rem;
   font-weight: ${fonts.weight.semiBold};
   line-height: 1.5;
@@ -90,7 +92,7 @@ export const Content = styled.div`
 `;
 
 export const Description = styled.p`
-  color: #43527c;
+  color: #52644e;
   font-size: 1rem;
   line-height: 1.6;
   margin: 18px 0 0;
@@ -102,7 +104,7 @@ export const Description = styled.p`
 `;
 
 export const Eyebrow = styled.p`
-  color: #b72d41;
+  color: #456236;
   font-size: 0.75rem;
   font-weight: ${fonts.weight.extraBold};
   letter-spacing: 0.09em;
@@ -112,7 +114,7 @@ export const Eyebrow = styled.p`
 `;
 
 export const Features = styled.ul`
-  color: #425077;
+  color: #52644e;
   display: flex;
   flex-wrap: wrap;
   font-size: 0.8125rem;
@@ -124,16 +126,16 @@ export const Features = styled.ul`
   padding: 0;
 
   li {
-    border-bottom: 2px solid #667ca94d;
+    border-bottom: 2px solid #7696564d;
     padding-bottom: 6px;
   }
 `;
 
 export const Hero = styled.section`
-  background: linear-gradient(120deg, #eef4ff 6%, #d0e4fc 60%, #c5dcf8);
-  border: 1px solid #bbceea;
+  background: linear-gradient(120deg, #f1f4e9 6%, #e3ead8 60%, #dce6ce);
+  border: 1px solid #cad5bd;
   border-radius: 24px;
-  color: #172e70;
+  color: #172b22;
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.3fr);
   isolation: isolate;
@@ -158,7 +160,7 @@ export const Image = styled.img`
 `;
 
 export const Note = styled.p`
-  color: #c6d3ee;
+  color: #d2ddce;
   font-size: 0.8125rem;
   line-height: 1.6;
   margin: 0;
@@ -167,10 +169,10 @@ export const Note = styled.p`
 
 export const PlayButton = styled.button`
   align-items: center;
-  background: #d92e47;
+  background: #b8d58c;
   border-radius: 9px;
-  box-shadow: 0 4px 0 #961b39;
-  color: #ffffff;
+  box-shadow: 0 4px 0 #56783e;
+  color: ${board.ink};
   cursor: pointer;
   display: inline-flex;
   font-family: inherit;
@@ -183,7 +185,7 @@ export const PlayButton = styled.button`
   text-decoration: none;
 
   &:hover {
-    background: #bd243c;
+    background: #cbe4a5;
     text-decoration: none;
   }
 
@@ -206,7 +208,7 @@ export const Tagline = styled.p`
   margin: 20px 0 0;
 
   span {
-    color: #c72e45;
+    color: #456236;
   }
 `;
 

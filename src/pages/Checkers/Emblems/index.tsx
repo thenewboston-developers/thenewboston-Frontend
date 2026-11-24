@@ -1,29 +1,31 @@
 import {ReactNode, useId} from 'react';
 
+import {board} from '../theme';
+
 import * as S from './Styles';
 
 // Every emblem is decorative: the headings and text next to them carry the meaning.
 
-type PieceColor = 'gold' | 'ivory' | 'ruby';
+type PieceColor = 'gold' | 'ivory' | 'charcoal';
 
 const CROWN_PATH = 'M-8 3L-9.5-6L-4.5-2L0-8.5L4.5-2L9.5-6L8 3Z';
-const DARK_SQUARE = '#2a46c9';
-const FRAME = '#0a1547';
-const FRAME_LINE = '#4462dc';
-const GOLD = '#f4c95d';
-const LIGHT_SQUARE = '#fdebcf';
+const DARK_SQUARE = board.squareDark;
+const FRAME = board.edge;
+const FRAME_LINE = board.line;
+const GOLD = board.gold;
+const LIGHT_SQUARE = board.squareLight;
 
 const PIECES: Record<PieceColor, {edge: string; ring: string; rim: string; top: string}> = {
   gold: {edge: '#8f6416', ring: '#d6a23a', rim: '#ffe9a8', top: GOLD},
-  ivory: {edge: '#b3946a', ring: '#e2c9a1', rim: '#fffaf0', top: LIGHT_SQUARE},
-  ruby: {edge: '#7a0e23', ring: '#b81c36', rim: '#ff6b80', top: '#e32b44'},
+  ivory: {edge: '#b3946a', ring: '#e2c9a1', rim: '#fffaf0', top: board.pieceLight},
+  charcoal: {edge: board.edge, ring: '#65765a', rim: '#91a687', top: board.pieceDark},
 };
 
 const SCENE_OFFSET = 10;
 const SCENE_PIECES: [PieceColor, number, number][] = [
-  ['ruby', 0, 1],
-  ['ruby', 0, 7],
-  ['ruby', 1, 6],
+  ['charcoal', 0, 1],
+  ['charcoal', 0, 7],
+  ['charcoal', 1, 6],
   ['ivory', 2, 1],
   ['ivory', 2, 3],
   ['ivory', 2, 7],
@@ -121,7 +123,7 @@ export const EmptyKingsRow = () => (
         fill="none"
         key={col}
         r="12.5"
-        stroke="#c3cbf2"
+        stroke={board.mist}
         strokeDasharray="3 4"
         strokeOpacity="0.8"
         strokeWidth="1.6"
@@ -153,13 +155,13 @@ export const HopLoader = () => {
       </g>
       <rect fill="none" height="39" rx="7.5" stroke={FRAME_LINE} width="39" x="0.5" y="0.5" />
       <S.HopPiece>
-        <Piece color="ruby" r={6.5} x={10} y={9.5} />
+        <Piece color="charcoal" r={6.5} x={10} y={9.5} />
       </S.HopPiece>
     </S.Hop>
   );
 };
 
-// A slice of a game in progress: a ruby checker jumps an ivory one and lands on the gold dot, then the board resets.
+// A slice of a game in progress: a charcoal checker jumps an ivory one and lands on the gold dot, then the board resets.
 // With reduced motion the jump stays drawn as a dotted arc.
 export const JumpScene = () => {
   const clip = useSvgId('checkers-scene');
@@ -190,19 +192,19 @@ export const JumpScene = () => {
         <Piece color="ivory" r={13} x={sceneCenter(4)} y={sceneCenter(1) - 1} />
       </S.SceneCaptured>
       <S.SceneJumper>
-        <Piece color="ruby" r={13} x={sceneCenter(3)} y={sceneCenter(0) - 1} />
+        <Piece color="charcoal" r={13} x={sceneCenter(3)} y={sceneCenter(0) - 1} />
       </S.SceneJumper>
     </S.Scene>
   );
 };
 
-// A ruby checker jumping an ivory one onto a gold dot: the capture that makes a rivalry
+// A charcoal checker jumping an ivory one onto a gold dot: the capture that makes a rivalry
 export const JumpTile = () => (
   <Tile>
     <Piece color="ivory" r={6.4} x={30} y={29} />
     <path d="M15 12.5C31 4 51 19 46.5 39" fill="none" stroke={GOLD} strokeDasharray="2.4 2.6" strokeWidth="1.8" />
     <circle cx="46" cy="46" fill={GOLD} r="3.2" />
-    <Piece color="ruby" r={6.4} x={14} y={13} />
+    <Piece color="charcoal" r={6.4} x={14} y={13} />
   </Tile>
 );
 
@@ -223,11 +225,11 @@ export const KingCrest = () => (
   </S.Tile>
 );
 
-// Two checkers, ivory for the player who moves first and ruby for the other
+// Two checkers, ivory for the player who moves first and charcoal for the other
 export const Matchup = () => (
   <S.Matchup aria-hidden="true" viewBox="0 0 44 28">
     <Piece color="ivory" r={10} x={13} y={12} />
-    <Piece color="ruby" r={10} x={31} y={12} />
+    <Piece color="charcoal" r={10} x={31} y={12} />
   </S.Matchup>
 );
 

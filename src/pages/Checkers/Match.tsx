@@ -337,7 +337,8 @@ const Match = () => {
     let instruction = prefersDragging
       ? 'Drag a piece onto a gold dot, or click the piece and then the dot.'
       : 'Tap one of your pieces, then tap a gold dot to move it.';
-    if (captureRequired) instruction = 'A capture is available, so you must jump. Pieces that can capture are pulsing.';
+    if (captureRequired)
+      instruction = 'A capture is available, so you must jump. Pieces that can capture are outlined in gold.';
     if (path.length > 1 && !complete) instruction = 'Keep jumping with the same piece: move it to the next gold dot.';
     if (busyAction === 'move') instruction = 'Playing your move…';
     const turnLabel = captureRequired ? 'Your turn · Capture required' : 'Your turn';
@@ -387,10 +388,10 @@ const Match = () => {
           targets={targets}
         />
         {match.last_move && (
-          <S.Small aria-live="polite">
+          <S.LastMove aria-live="polite">
             Last move: {getPlayerName(match, match.last_move.side)} · {match.last_move.path.map(cellLabel).join(' → ')}
             {match.last_move.captured.length ? ` · ${match.last_move.captured.length} captured` : ''}
-          </S.Small>
+          </S.LastMove>
         )}
       </>
     );
@@ -477,7 +478,9 @@ const Match = () => {
         title={match.winner ? `${getPlayerName(match, match.winner)} wins the match` : 'Draw · stakes refunded'}
       >
         {match.mode === 'computer' && side === 'white' && (
-          <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
+          <S.MatchReward $paid={match.computer_reward?.status === 'paid'}>
+            <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
+          </S.MatchReward>
         )}
         {match.prize_pool_total > 0 && (
           <strong>
@@ -507,9 +510,14 @@ const Match = () => {
   return (
     <S.MatchContainer>
       <S.MatchNavigation>
-        <S.TextLink to="/checkers/home">← Back to Checkers</S.TextLink>
-        <S.Badge>Checkers {Number.isSafeInteger(id) ? `· Match ${id}` : ''}</S.Badge>
-        <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+        <S.MatchHeading>
+          <S.TextLink to="/checkers/home">Back to Checkers</S.TextLink>
+          <h1>Checkers</h1>
+        </S.MatchHeading>
+        <S.Actions>
+          <S.Badge>{Number.isSafeInteger(id) ? `Match ${id}` : 'Match'}</S.Badge>
+          <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+        </S.Actions>
       </S.MatchNavigation>
       {loadError && (
         <S.Error role="alert">
@@ -529,41 +537,54 @@ const Match = () => {
       )}
       {match && (
         <>
-          <S.PlayerGrid>
-            {(['white', 'black'] as const).map((playerSide) => (
-              <S.MatchPlayer $active={status === 'active' && match.active_side === playerSide} key={playerSide}>
-                <div>
-                  <strong>
-                    {getPlayerName(match, playerSide)}
-                    {side === playerSide ? ' (you)' : ''}
-                  </strong>
-                  <S.Small>
-                    {match.mode === 'computer' && playerSide === 'black'
-                      ? `${match.difficulty} computer`
-                      : `${playerSide === 'white' ? 'Ivory' : 'Charcoal'}`}
-                    {renderPieceCount(playerSide)}
-                  </S.Small>
-                </div>
-                <S.Timer aria-label={`${getPlayerName(match, playerSide)} clock`}>{renderClock(playerSide)}</S.Timer>
-              </S.MatchPlayer>
-            ))}
-          </S.PlayerGrid>
-          <S.Actions style={{margin: '10px 0'}}>
-            <S.Badge>
-              {match.stake_amount ? `${match.stake_amount.toLocaleString()} TNB per player` : 'Free play'}
-            </S.Badge>
-            {match.stake_amount > 0 && <S.Badge>{match.prize_pool_total.toLocaleString()} TNB in prize pool</S.Badge>}
-          </S.Actions>
-          {renderPending()}
-          {renderResult()}
-          {renderBoard()}
-          {['cancelled', 'declined', 'expired'].includes(match.status) && (
-            <S.Empty>
-              This challenge was {match.status}.{' '}
-              {match.stake_amount ? 'The challenger’s stake has been refunded.' : 'No coins were taken.'}{' '}
-              <S.TextLink to="/checkers/home">Find your next match →</S.TextLink>
-            </S.Empty>
-          )}
+          <S.MatchArena aria-label="Checkers match">
+            <S.MatchSidebar aria-label="Players and match details">
+              <S.PlayerGrid>
+                {(['white', 'black'] as const).map((playerSide) => (
+                  <S.MatchPlayer $active={status === 'active' && match.active_side === playerSide} key={playerSide}>
+                    <S.PlayerIdentity>
+                      <S.PieceMarker $white={playerSide === 'white'} aria-hidden="true" />
+                      <div>
+                        <strong>
+                          {getPlayerName(match, playerSide)}
+                          {side === playerSide ? ' (you)' : ''}
+                        </strong>
+                        <S.PlayerLabel>
+                          {playerSide === 'white' ? 'Ivory' : 'Charcoal'}
+                          {renderPieceCount(playerSide)}
+                        </S.PlayerLabel>
+                      </div>
+                    </S.PlayerIdentity>
+                    <S.PlayerClock>
+                      <S.Timer aria-label={`${getPlayerName(match, playerSide)} clock`}>
+                        {renderClock(playerSide)}
+                      </S.Timer>
+                      {status === 'active' && match.active_side === playerSide && <S.TurnBadge>To move</S.TurnBadge>}
+                    </S.PlayerClock>
+                  </S.MatchPlayer>
+                ))}
+              </S.PlayerGrid>
+              <S.MatchInfo>
+                <span>{match.mode === 'computer' ? `${match.difficulty} computer` : 'Head to head'}</span>
+                <span>
+                  {match.stake_amount ? `${match.stake_amount.toLocaleString()} TNB per player` : 'Free play'}
+                </span>
+                {match.stake_amount > 0 && <span>{match.prize_pool_total.toLocaleString()} TNB in prize pool</span>}
+              </S.MatchInfo>
+            </S.MatchSidebar>
+            <S.MatchBoard>
+              {renderPending()}
+              <S.MatchResult>{renderResult()}</S.MatchResult>
+              {renderBoard()}
+              {['cancelled', 'declined', 'expired'].includes(match.status) && (
+                <S.Empty>
+                  This challenge was {match.status}.{' '}
+                  {match.stake_amount ? 'The challenger’s stake has been refunded.' : 'No coins were taken.'}{' '}
+                  <S.TextLink to="/checkers/home">Find your next match</S.TextLink>
+                </S.Empty>
+              )}
+            </S.MatchBoard>
+          </S.MatchArena>
           {status === 'active' && side && (
             <S.Section>
               <S.Actions>
