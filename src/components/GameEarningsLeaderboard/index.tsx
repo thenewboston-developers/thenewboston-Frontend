@@ -7,16 +7,21 @@ import Pagination from 'components/Pagination';
 import UserLabel from 'components/UserLabel';
 import {GameEarningsPage, RewardGame} from 'types/gameEarnings';
 
+import * as Backgammon from './BackgammonStyles';
 import * as S from './Styles';
 
 const PAGE_SIZE = 10;
 
-const Leaderboard = ({game}: {game: RewardGame}) => {
+type LeaderboardProps = {game: RewardGame; variant?: 'backgammon'};
+
+const Leaderboard = ({game, variant}: LeaderboardProps) => {
   const [data, setData] = useState<GameEarningsPage | null>(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [retry, setRetry] = useState(0);
+  const Card = variant === 'backgammon' ? Backgammon.Card : S.Card;
+  const Rank = variant === 'backgammon' ? Backgammon.Rank : S.Rank;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -36,13 +41,13 @@ const Leaderboard = ({game}: {game: RewardGame}) => {
   }, [game, page, retry]);
 
   return (
-    <S.Card aria-labelledby={`${game}-earners-title`} id="top-earners">
+    <Card aria-labelledby={`${game}-earners-title`} id="top-earners">
       <S.Header>
         <S.Trophy aria-hidden="true">
           <Icon path={mdiTrophyOutline} size="28px" />
         </S.Trophy>
         <div>
-          <S.Eyebrow>THE REWARDS LEADERBOARD</S.Eyebrow>
+          <S.Eyebrow>{variant === 'backgammon' ? 'THE BACKGAMMON HONORS BOARD' : 'THE REWARDS LEADERBOARD'}</S.Eyebrow>
           <S.Heading id={`${game}-earners-title`}>Top earners</S.Heading>
           <S.Description>
             Real wins. Real rewards. All-time TNB paid from the community game fund in this game.
@@ -80,7 +85,7 @@ const Leaderboard = ({game}: {game: RewardGame}) => {
               {data.results.map((entry) => (
                 <tr key={entry.user.id}>
                   <td>
-                    <S.Rank $podium={entry.rank <= 3}>#{entry.rank}</S.Rank>
+                    <Rank $podium={entry.rank <= 3}>#{entry.rank}</Rank>
                   </td>
                   <td>
                     <UserLabel
@@ -107,10 +112,12 @@ const Leaderboard = ({game}: {game: RewardGame}) => {
           </S.Footer>
         </>
       )}
-    </S.Card>
+    </Card>
   );
 };
 
-const GameEarningsLeaderboard = ({game}: {game: RewardGame}) => <Leaderboard game={game} key={game} />;
+const GameEarningsLeaderboard = ({game, variant}: LeaderboardProps) => (
+  <Leaderboard game={game} key={game} variant={variant} />
+);
 
 export default GameEarningsLeaderboard;
