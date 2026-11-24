@@ -2,6 +2,7 @@ import useGameEarnings from 'components/GameEarningsLeaderboard/useGameEarnings'
 import {GameEarningsEntry} from 'types/gameEarnings';
 
 import {CornerEmblem, CornersBoard, FlipLoader} from '../Emblems';
+import {reversi} from '../theme';
 
 import {getHolding, getHoldingLabel, Holding} from './holdings';
 import * as S from './Styles';
@@ -38,9 +39,9 @@ const Square = ({rank}: {rank: number}) => {
   return (
     <S.SquareLabel>
       <S.Glyph aria-hidden="true" viewBox="0 0 40 40">
-        <rect fill="#0a1730" height="40" width="40" />
-        <path d="M10 0V40M20 0V40M30 0V40M0 10H40M0 20H40M0 30H40" stroke="#78edff" strokeOpacity="0.2" />
-        {frame && <path d={frame} fill="none" stroke="#78edff" strokeOpacity="0.8" strokeWidth="2" />}
+        <rect fill={reversi.felt} height="40" width="40" />
+        <path d="M10 0V40M20 0V40M30 0V40M0 10H40M0 20H40M0 30H40" stroke={reversi.mint} strokeOpacity="0.2" />
+        {frame && <path d={frame} fill="none" stroke={reversi.mint} strokeOpacity="0.8" strokeWidth="2" />}
         {holding === 'center' ? (
           START_DISKS.map(({side, x, y}) => <S.StartDisk $side={side} cx={x} cy={y} key={`${x}-${y}`} r="3.6" />)
         ) : (
