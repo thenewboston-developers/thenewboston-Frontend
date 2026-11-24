@@ -51,6 +51,10 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       navigate(`/backgammon/matches/${notification.payload.match_id}`);
       return;
     }
+    if (notification.payload.notification_type === NotificationType.DOTS_AND_BOXES_CHALLENGE) {
+      navigate(`/dots-and-boxes/matches/${notification.payload.match_id}`);
+      return;
+    }
     if (notification.payload.notification_type === NotificationType.MANCALA_CHALLENGE) {
       navigate(`/mancala/matches/${notification.payload.match_id}`);
       return;
@@ -209,6 +213,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       [NotificationType.CHECKERS_CHALLENGE]: renderCheckersChallengeNotification,
       [NotificationType.COMMENT_MENTION]: renderCommentMentionNotification,
       [NotificationType.CONNECT_FIVE_CHALLENGE]: renderConnectFiveChallengeNotification,
+      [NotificationType.DOTS_AND_BOXES_CHALLENGE]: renderDotsAndBoxesChallengeNotification,
       [NotificationType.EXCHANGE_ORDER_FILLED]: renderExchangeOrderFilledNotification,
       [NotificationType.MANCALA_CHALLENGE]: renderMancalaChallengeNotification,
       [NotificationType.POST_COIN_TRANSFER]: renderPostCoinTransferNotification,
@@ -221,6 +226,37 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
 
     const renderFunction = notificationTypes[notification.payload.notification_type as NotificationType];
     return renderFunction ? renderFunction() : null;
+  };
+
+  const renderDotsAndBoxesChallengeNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.DOTS_AND_BOXES_CHALLENGE) return null;
+
+    const {board_size, challenger, match_id, stake_amount, time_limit_seconds} = notification.payload;
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/dots-and-boxes/matches/${match_id}`}>
+          <S.AvatarContainer>
+            <Avatar size="45px" src={challenger.avatar} />
+            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
+          </S.AvatarContainer>
+        </Link>
+        <S.TextContainer>
+          <S.MainText>
+            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
+              {challenger.username}
+            </S.Link>{' '}
+            challenged you to Dots and Boxes
+          </S.MainText>
+          <S.PostPreviewText>
+            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} · {board_size} ×{' '}
+            {board_size} board · {time_limit_seconds / 60} min per player
+          </S.PostPreviewText>
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
   };
 
   const renderExchangeOrderFilledNotification = () => {

@@ -128,12 +128,22 @@ export interface ReversiChallengePayload {
   time_limit_seconds: number;
 }
 
+export interface DotsAndBoxesChallengePayload {
+  board_size: number;
+  challenger: Pick<UserReadSerializer, 'id' | 'username' | 'avatar'>;
+  match_id: number;
+  notification_type: NotificationType.DOTS_AND_BOXES_CHALLENGE;
+  stake_amount: number;
+  time_limit_seconds: number;
+}
+
 export type NotificationPayload =
   | BackgammonChallengePayload
   | BattleshipChallengePayload
   | CheckersChallengePayload
   | CommentMentionPayload
   | ConnectFiveChallengePayload
+  | DotsAndBoxesChallengePayload
   | ExchangeOrderFilledPayload
   | MancalaChallengePayload
   | PostCoinTransferPayload
