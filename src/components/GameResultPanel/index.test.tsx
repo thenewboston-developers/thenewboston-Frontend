@@ -46,3 +46,51 @@ it.each<GameResultOutcome>(['win', 'loss', 'draw', 'complete'])(
     act(() => root.unmount());
   },
 );
+
+it('shows named scores and the declared winner, including a win with fewer points after resignation', () => {
+  const container = document.createElement('div');
+  const root = createRoot(container);
+  act(() =>
+    root.render(
+      <GameResultPanel
+        outcome="loss"
+        scoreLabel="Boxes claimed"
+        scores={[
+          {label: 'You', value: 13},
+          {label: 'Computer', value: 3, winner: true},
+        ]}
+        title="Computer wins the match"
+      >
+        <p>Match ended by resignation.</p>
+      </GameResultPanel>,
+    ),
+  );
+  const scoreboard = container.querySelector('[aria-label="Boxes claimed"]')!;
+  expect(scoreboard).toHaveTextContent('You13ComputerWinner3');
+  expect(scoreboard.querySelector('[aria-hidden="true"]')).toHaveTextContent('');
+  expect(container).not.toHaveTextContent('Victory');
+  act(() => root.unmount());
+});
+
+it('handles a scoreless draw without inventing a winner or an invalid score share', () => {
+  const container = document.createElement('div');
+  const root = createRoot(container);
+  act(() =>
+    root.render(
+      <GameResultPanel
+        outcome="draw"
+        scores={[
+          {label: 'Blue', value: 0},
+          {label: 'Red', value: 0},
+        ]}
+        title="Draw"
+      >
+        <p>Stakes refunded.</p>
+      </GameResultPanel>,
+    ),
+  );
+  expect(container.querySelector('[aria-label="Final score"]')).toHaveTextContent('Blue0Red0');
+  expect(container).not.toHaveTextContent('Winner');
+  expect(container.querySelector('[style]')).toHaveStyle({width: '50%'});
+  act(() => root.unmount());
+});

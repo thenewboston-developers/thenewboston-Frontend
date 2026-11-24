@@ -156,7 +156,7 @@ export const GuestTitle = styled.h3`
   margin: 10px 0 0;
 `;
 
-export const Notice = styled.div<{$guest?: boolean; $paid?: boolean}>`
+export const Notice = styled.div<{$guest?: boolean; $paid?: boolean; $subdued?: boolean}>`
   background: #f3f5f8;
   border: 1px solid #dce2eb;
   border-radius: 12px;
@@ -171,6 +171,18 @@ export const Notice = styled.div<{$guest?: boolean; $paid?: boolean}>`
   margin: 14px 0;
   min-width: 0;
   padding: 16px;
+
+  ${({$subdued}) =>
+    $subdued &&
+    css`
+      background: #ffffff05;
+      border: 1px solid #a8c5cd26;
+      color: #afc6ce;
+      font-size: 12px;
+      gap: 3px;
+      margin: 0;
+      padding: 13px 16px;
+    `}
 
   ${({$paid}) =>
     $paid &&
@@ -358,4 +370,10 @@ export const RewardAmount = styled.span`
     font-size: 0.5em;
     letter-spacing: 0;
   }
+`;
+
+export const RewardLabel = styled.strong`
+  color: #d5e4e8;
+  font-size: 12px;
+  font-weight: 600;
 `;

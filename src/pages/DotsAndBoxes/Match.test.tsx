@@ -2,6 +2,7 @@ import {act} from 'react';
 import {createRoot, Root} from 'react-dom/client';
 import {useDispatch, useSelector} from 'react-redux';
 import {MemoryRouter} from 'react-router-dom';
+import axios from 'axios';
 
 import {getDotsAndBoxesMatch, performDotsAndBoxesAction} from 'api/dotsAndBoxes';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -131,45 +132,53 @@ afterEach(() => {
 });
 
 describe('Dots and Boxes match interaction', () => {
-  it('previews a line on the first press and draws it when the same line is pressed again', async () => {
+  it.each([0, 1])('draws a line on its first activation (click detail: %s)', async (detail) => {
     await renderMatch();
-    expect(button('Draw line')).toBeDisabled();
-    act(() => line('A1 to B1').click());
-    expect(line('A1 to B1')).toHaveAccessibleName('Line A1 to B1: selected, press again to draw');
-    expect(container).toHaveTextContent('Line A1 to B1 is selected');
-    expect(performDotsAndBoxesAction).not.toHaveBeenCalled();
-    await act(async () => line('A1 to B1').click());
+    expect(container).not.toHaveTextContent('Draw line');
+    expect(container).not.toHaveTextContent('Clear');
+    expect(container).toHaveTextContent('Click or tap an open line to draw it');
+    await act(async () => line('A1 to B1').dispatchEvent(new MouseEvent('click', {bubbles: true, detail})));
+    expect(performDotsAndBoxesAction).toHaveBeenCalledTimes(1);
     expect(performDotsAndBoxesAction).toHaveBeenCalledWith(match, 'move', {line: 0});
   });
 
-  it('moves the preview to another line, clears it, and draws from the toolbar', async () => {
+  it('draws a vertical line with one activation too', async () => {
     await renderMatch();
-    act(() => line('A1 to B1').click());
-    act(() => line('A1 to A2').click());
-    expect(line('A1 to B1')).toHaveAccessibleName('Line A1 to B1: open');
-    expect(line('A1 to A2')).toHaveAccessibleName('Line A1 to A2: selected, press again to draw');
-    expect(performDotsAndBoxesAction).not.toHaveBeenCalled();
-    act(() => button('Clear').click());
-    expect(button('Draw line')).toBeDisabled();
-    act(() => line('D3 to D4').click());
-    await act(async () => button('Draw line').click());
+    await act(async () => line('D3 to D4').click());
+    expect(performDotsAndBoxesAction).toHaveBeenCalledTimes(1);
     expect(performDotsAndBoxesAction).toHaveBeenCalledWith(match, 'move', {line: 23});
   });
 
-  it('drops a preview that was made on an older version of the board', async () => {
+  it('refreshes a rejected stale move before allowing the next move', async () => {
     await renderMatch();
-    act(() => line('A1 to B1').click());
-    match = withLines([[5, 2]]);
+    (performDotsAndBoxesAction as jest.Mock).mockImplementationOnce(() => {
+      match = withLines([[0, 1]], {active_side: 'red'});
+      (axios.isAxiosError as unknown as jest.Mock).mockReturnValueOnce(true);
+      return Promise.reject(Object.assign(new Error('The board has changed.'), {response: {status: 409}}));
+    });
+    await act(async () => line('A1 to B1').click());
+    expect(getDotsAndBoxesMatch).toHaveBeenCalledTimes(2);
+    expect(container).toHaveTextContent('The match changed. The board has been refreshed; please try again.');
+    expect(line('A1 to B1')).toHaveAccessibleName('Line A1 to B1: drawn by Alice');
+    expect(line('B1 to C1')).toBeDisabled();
+    expect(line('A1 to B1')).toHaveAttribute('aria-busy', 'false');
+    act(() => line('B1 to C1').click());
+    expect(performDotsAndBoxesAction).toHaveBeenCalledTimes(1);
+    match = withLines([[5, 2]], {active_side: 'blue'});
     await renderMatch();
-    expect(line('A1 to B1')).toHaveAccessibleName('Line A1 to B1: open');
-    expect(button('Draw line')).toBeDisabled();
+    // A hidden tab skips the opponent replay, as a refreshed match would.
+    Object.defineProperty(document, 'hidden', {configurable: true, value: true});
+    act(() => document.dispatchEvent(new Event('visibilitychange')));
+    Object.defineProperty(document, 'hidden', {configurable: true, value: false});
+    await act(async () => line('B1 to C1').click());
+    expect(performDotsAndBoxesAction).toHaveBeenLastCalledWith(match, 'move', {line: 1});
   });
 
   it('prevents moves on the opponent turn and offers no controls to spectators', async () => {
     match.active_side = 'red';
     await renderMatch();
     expect(heading()).toBe('Bob’s turn');
-    expect(button('Draw line')).toBeDisabled();
+    expect(line('A1 to B1')).toBeDisabled();
     expect(
       Array.from(container.querySelectorAll('[role="group"] button')).every(
         (element) => (element as HTMLButtonElement).disabled,
@@ -265,12 +274,16 @@ describe('Dots and Boxes match interaction', () => {
       }),
     );
     await renderMatch();
-    act(() => line('A1 to B1').click());
-    act(() => line('A1 to B1').click());
-    act(() => line('A1 to B1').click());
-    act(() => line('B1 to C1').click());
+    act(() => {
+      line('A1 to B1').click();
+      line('A1 to B1').click();
+      line('A1 to B1').click();
+      line('B1 to C1').click();
+    });
     expect(performDotsAndBoxesAction).toHaveBeenCalledTimes(1);
-    expect(button('Drawing…')).toBeDisabled();
+    expect(heading()).toBe('Drawing your line…');
+    expect(line('A1 to B1')).toHaveAttribute('aria-busy', 'true');
+    expect(line('B1 to C1')).toBeDisabled();
   });
 
   it('stops polling terminal matches and refreshes the wallet after settlement', async () => {
@@ -446,7 +459,6 @@ describe('polling', () => {
     (performDotsAndBoxesAction as jest.Mock).mockImplementation(() =>
       Promise.resolve(withLines([[0, 1]], {active_side: 'red'})),
     );
-    act(() => line('A1 to B1').click());
     await act(async () => line('A1 to B1').click());
     expect(getDotsAndBoxesMatch).toHaveBeenCalledTimes(1);
     await act(async () => {
@@ -468,7 +480,6 @@ it('lets a guest draw a line without requesting a wallet', async () => {
   match.stake_amount = 0;
   match.prize_pool_total = 0;
   await renderMatch();
-  act(() => line('A1 to B1').click());
   await act(async () => line('A1 to B1').click());
   expect(performDotsAndBoxesAction).toHaveBeenCalledWith(match, 'move', {line: 0});
   expect(getAllUserWallets).not.toHaveBeenCalled();
@@ -534,9 +545,9 @@ it('preserves signed-out spectator access without participant controls', async (
 });
 
 describe('Dots and Boxes sounds', () => {
-  it('stays silent on hydration and selection, then sounds only a committed visible line', async () => {
+  it('stays silent while submitting, then sounds only a committed visible line', async () => {
     await renderMatch();
-    act(() => line('A1 to B1').click());
+    await act(async () => line('A1 to B1').click());
     expect(playSound).not.toHaveBeenCalled();
     match = withLines([[0, 1]], {active_side: 'red'});
     await renderMatch();

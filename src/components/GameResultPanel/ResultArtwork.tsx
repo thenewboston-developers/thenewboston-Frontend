@@ -1,7 +1,8 @@
 import {useId} from 'react';
 
-const ResultArtwork = ({victory}: {victory: boolean}) => {
+const ResultArtwork = ({outcome}: {outcome: 'win' | 'loss' | 'draw' | 'complete'}) => {
   const id = useId();
+  const victory = outcome === 'win';
 
   return (
     <svg aria-hidden="true" focusable="false" viewBox="0 0 240 210">
@@ -25,6 +26,16 @@ const ResultArtwork = ({victory}: {victory: boolean}) => {
       <circle cx="120" cy="104" fill={`url(#${id}-halo)`} r="104" />
       <circle cx="120" cy="104" fill="#102d39" r="74" stroke="#ffffff16" />
       <circle cx="120" cy="104" fill="none" r="66" stroke={victory ? '#e3bc6555' : '#9bcbd455'} />
+      <circle
+        cx="120"
+        cy="104"
+        fill="none"
+        r="80"
+        stroke={victory ? '#e3bc6570' : '#9bcbd470'}
+        strokeDasharray="38 30 4 30"
+        strokeWidth="1"
+        transform="rotate(-25 120 104)"
+      />
       <g fill={`url(#${id}-metal)`}>
         {[false, true].map((mirrored) => (
           <g key={String(mirrored)} transform={mirrored ? 'translate(240 0) scale(-1 1)' : undefined}>
@@ -43,7 +54,7 @@ const ResultArtwork = ({victory}: {victory: boolean}) => {
           </g>
         ))}
       </g>
-      {victory ? (
+      {victory && (
         <g>
           <path
             d="M91 65H73V82C73 99 83 108 100 108M149 65H167V82C167 99 157 108 140 108"
@@ -73,7 +84,21 @@ const ResultArtwork = ({victory}: {victory: boolean}) => {
             <circle cx="174" cy="177" r="2" />
           </g>
         </g>
-      ) : (
+      )}
+      {outcome === 'loss' && (
+        <g fill="none" stroke={`url(#${id}-metal)`} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M150 87A35 35 0 1 0 154 118" strokeWidth="9" />
+          <path d="M151 65V90H126" strokeWidth="9" />
+          <path d="m111 91 19 13-19 13Z" fill={`url(#${id}-metal)`} strokeWidth="2" />
+        </g>
+      )}
+      {outcome === 'draw' && (
+        <g fill={`url(#${id}-metal)`}>
+          <rect height="12" rx="6" width="58" x="91" y="85" />
+          <rect height="12" rx="6" width="58" x="91" y="111" />
+        </g>
+      )}
+      {outcome === 'complete' && (
         <g>
           <path d="M120 55 151 68V100C151 125 136 141 120 151C104 141 89 125 89 100V68Z" fill={`url(#${id}-metal)`} />
           <path d="M120 66 142 75V100C142 119 132 132 120 140C108 132 98 119 98 100V75Z" fill="#173e4b" />

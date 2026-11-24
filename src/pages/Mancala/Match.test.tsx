@@ -229,7 +229,10 @@ describe('mancala match interaction', () => {
     match.board = [0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 28];
     await renderMatch();
     expect(container.textContent).toContain('Bob wins');
-    expect(container.textContent).toContain('Most stones · 20–28');
+    expect(container.textContent).toContain('Most stones');
+    const scores = container.querySelector('[aria-label="Stones stored"]');
+    expect(scores?.textContent).toContain('Alice20');
+    expect(scores?.textContent).toContain('BobWinner28');
     expect(container.textContent).toContain('20 TNB prize paid to Bob.');
     expect(getAllUserWallets).toHaveBeenCalled();
     await act(async () => {

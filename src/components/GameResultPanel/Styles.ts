@@ -15,11 +15,12 @@ export const Actions = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  padding-top: 4px;
 
   > a,
   > button {
     align-items: center;
-    background: #ffffff0a;
+    background: #ffffff06;
     border: 1px solid #ffffff30;
     border-radius: 12px;
     color: #edf7f7;
@@ -31,6 +32,9 @@ export const Actions = styled.div`
     min-height: 48px;
     padding: 12px 20px;
     text-decoration: none;
+    transition:
+      background 160ms ease,
+      transform 160ms ease;
 
     &:first-child {
       background: linear-gradient(135deg, #ffe6ab, #efc568);
@@ -53,6 +57,20 @@ export const Actions = styled.div`
 
     &:hover:not(:disabled) {
       filter: brightness(1.08);
+      transform: translateY(-2px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+
+      &:hover:not(:disabled),
+      &:active:not(:disabled) {
+        transform: none;
+      }
     }
   }
 
@@ -64,12 +82,12 @@ export const Actions = styled.div`
   }
 `;
 
-export const Artwork = styled.div<{$victory: boolean}>`
+export const Artwork = styled.div`
   align-self: center;
-  animation: ${({$victory}) => ($victory ? crestArrival : 'none')} 650ms ease-out both;
-  flex: 0 0 clamp(140px, 18vw, 210px);
+  animation: ${crestArrival} 650ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  flex: 0 0 clamp(100px, 15vw, 160px);
   pointer-events: none;
-  width: clamp(140px, 18vw, 210px);
+  width: clamp(100px, 15vw, 160px);
 
   svg {
     display: block;
@@ -85,16 +103,16 @@ export const Artwork = styled.div<{$victory: boolean}>`
 
   @media (max-width: 640px) {
     flex-basis: auto;
-    margin: -8px 0 -4px;
+    margin: -12px 0 -8px;
     order: -1;
-    width: 132px;
+    width: 112px;
   }
 
   @container (max-width: 560px) {
     flex-basis: auto;
-    margin: -8px 0 -4px;
+    margin: -12px 0 -8px;
     order: -1;
-    width: 132px;
+    width: 112px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -109,7 +127,7 @@ export const Artwork = styled.div<{$victory: boolean}>`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
   min-width: 0;
   position: relative;
 
@@ -121,10 +139,10 @@ export const Content = styled.div`
 `;
 
 export const Description = styled.div`
-  color: #b9cbd3;
+  color: #bbced2;
   font-size: 15px;
   line-height: 1.65;
-  margin-top: 12px;
+  margin-top: 10px;
 
   p {
     color: inherit;
@@ -139,20 +157,23 @@ export const Eyebrow = styled.div`
   flex-wrap: wrap;
   font-size: 11px;
   font-weight: 700;
-  gap: 10px;
-  letter-spacing: 0.16em;
+  gap: 12px;
+  letter-spacing: 0.12em;
   line-height: 1.5;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   text-transform: uppercase;
 
   span {
     color: #a9c7ce;
+  }
 
-    &::after {
-      color: #6b929b;
-      content: '/';
-      margin-left: 10px;
-    }
+  strong {
+    background: #ffffff0a;
+    border: 1px solid #e9cd8b30;
+    border-radius: 100px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 5px 9px;
   }
 
   @media (max-width: 640px) {
@@ -169,9 +190,9 @@ export const Eyebrow = styled.div`
 export const Header = styled.div`
   align-items: center;
   display: flex;
-  gap: 16px 32px;
+  gap: 16px 24px;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 22px;
   position: relative;
 
   @media (max-width: 640px) {
@@ -201,8 +222,8 @@ export const Note = styled.p`
 
 export const Panel = styled.section<{$victory: boolean}>`
   background:
-    radial-gradient(ellipse at 95% 0, ${({$victory}) => ($victory ? '#b88c3b24' : '#73a7be18')}, transparent 48%),
-    radial-gradient(ellipse at 0 100%, #1d706b38, transparent 55%), linear-gradient(120deg, #0c1c2b, #123c43);
+    radial-gradient(ellipse at 95% 0, ${({$victory}) => ($victory ? '#b88c3b35' : '#73a7be28')}, transparent 48%),
+    radial-gradient(ellipse at 0 100%, #1d706b38, transparent 55%), linear-gradient(120deg, #101e2c, #143b41);
   border: 1px solid ${({$victory}) => ($victory ? '#bda26470' : '#739aab55')};
   border-radius: 24px;
   box-shadow:
@@ -214,7 +235,7 @@ export const Panel = styled.section<{$victory: boolean}>`
   margin: 24px 0;
   min-width: 0;
   overflow: hidden;
-  padding: clamp(24px, 4vw, 40px);
+  padding: clamp(24px, 3vw, 32px);
   position: relative;
 
   &::before {
@@ -227,10 +248,110 @@ export const Panel = styled.section<{$victory: boolean}>`
     top: 0;
   }
 
+  &::after {
+    background-image: radial-gradient(#9ac8cb2b 1px, transparent 1px);
+    background-size: 20px 20px;
+    content: '';
+    height: 260px;
+    mask-image: linear-gradient(90deg, transparent, #000000);
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50%;
+    z-index: -1;
+  }
+
   @media (max-width: 640px) {
     border-radius: 20px;
     padding: 24px 20px;
   }
+`;
+
+export const Scoreboard = styled.div`
+  background: #0718245c;
+  border: 1px solid #b2d3d520;
+  border-radius: 16px;
+  margin: 0 0 20px;
+  padding: 18px 20px;
+  position: relative;
+
+  @container (max-width: 560px) {
+    padding: 16px;
+  }
+`;
+
+export const ScoreLabel = styled.p`
+  color: #9eb9c0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+`;
+
+export const ScoreName = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 6px 8px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+
+  @container (max-width: 380px) {
+    align-content: flex-start;
+    flex: 1;
+  }
+`;
+
+export const ScorePlayer = styled.div<{$winner: boolean}>`
+  align-items: center;
+  color: ${({$winner}) => ($winner ? '#fff0c7' : '#d0e0e5')};
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  min-width: 0;
+
+  @container (max-width: 380px) {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: flex-start;
+  }
+`;
+
+export const ScorePlayers = styled.div`
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @container (max-width: 560px) {
+    gap: 18px;
+  }
+`;
+
+export const ScoreShare = styled.div`
+  background: linear-gradient(90deg, #78bee8, #a0d8f0);
+  border-radius: inherit;
+  height: 100%;
+`;
+
+export const ScoreTrack = styled.div`
+  background: linear-gradient(90deg, #d48680, #f1b3a2);
+  border-radius: 100px;
+  height: 5px;
+  margin-top: 14px;
+  overflow: hidden;
+`;
+
+export const ScoreValue = styled.strong`
+  font-size: clamp(28px, 4vw, 40px);
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 1;
 `;
 
 export const Title = styled.h2`
@@ -245,4 +366,18 @@ export const Title = styled.h2`
   @container (max-width: 560px) {
     font-size: 28px;
   }
+`;
+
+export const WinnerBadge = styled.span`
+  border: 1px solid #efd18645;
+  border-radius: 5px;
+  color: #eed296;
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  padding: 3px 6px;
+  text-transform: uppercase;
+  white-space: nowrap;
 `;

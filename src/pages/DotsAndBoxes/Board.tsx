@@ -8,34 +8,35 @@ interface Props {
   disabled?: boolean;
   lines: DotsAndBoxesOwner[];
   names: Record<DotsAndBoxesSide, string>;
-  onSelect: (line: number) => void;
+  onPlay: (line: number) => void;
+  pending?: number | null;
   recent?: number[];
-  selected?: number | null;
   side: DotsAndBoxesSide;
   size: number;
 }
 
 const OWNERS: Record<number, DotsAndBoxesSide> = {1: 'blue', 2: 'red'};
 
-const Board = ({boxes, disabled = false, lines, names, onSelect, recent = [], selected = null, side, size}: Props) => {
+const Board = ({boxes, disabled = false, lines, names, onPlay, pending = null, recent = [], side, size}: Props) => {
   const indexes = Array.from({length: size + 1}, (_, index) => index);
 
   const renderLine = (line: number, row: number, column: number, vertical: boolean) => {
     const owner = OWNERS[lines[line]];
-    const isSelected = selected === line;
+    const isPending = pending === line;
     let state = owner ? `drawn by ${names[owner]}` : 'open';
-    if (isSelected) state = 'selected, press again to draw';
+    if (isPending && !owner) state = 'drawing…';
     return (
       <S.Line
         $owner={owner}
-        $preview={isSelected ? side : undefined}
+        $pending={isPending}
         $recent={recent.includes(line)}
+        $side={side}
         $vertical={vertical}
+        aria-busy={isPending}
         aria-label={`Line ${lineLabel(size, line)}: ${state}`}
-        aria-pressed={owner ? undefined : isSelected}
-        disabled={disabled || !!owner}
+        disabled={disabled || pending !== null || !!owner}
         key={`line-${line}`}
-        onClick={() => onSelect(line)}
+        onClick={() => onPlay(line)}
         style={
           vertical
             ? {gridColumn: 2 * column + 1, gridRow: `${2 * row + 1} / span 3`}
@@ -94,7 +95,7 @@ const Board = ({boxes, disabled = false, lines, names, onSelect, recent = [], se
       <S.Legend>
         <S.LegendItem $side="blue">{names.blue}</S.LegendItem>
         <S.LegendItem $side="red">{names.red}</S.LegendItem>
-        {selected !== null && <span>Preview · press the line again to draw it</span>}
+        {!disabled && pending === null && <span>Click or tap an open line to draw it</span>}
       </S.Legend>
     </S.BoardFrame>
   );

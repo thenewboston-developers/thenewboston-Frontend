@@ -19,6 +19,8 @@ export interface SowingFrame {
   side: MancalaSide;
   // Board index of the pit that was played
   source: number;
+  // The visible flight paths for this step, expressed as board indexes (independent of the viewer’s side).
+  transfers?: {from: number; to: number; stones: number}[];
   // Version of the match once this move is complete
   version: number;
 }
@@ -86,23 +88,46 @@ export const sowingFrames = (board: MancalaBoard, move: MancalaRecentMove): Sowi
   const dropDuration = Math.round(Math.min(240, Math.max(90, 1800 / Math.max(stones, 1))));
   let index = source;
   for (let hand = stones - 1; hand >= 0; hand -= 1) {
+    const from = index;
     index = (index + 1) % BOARD_SIZE;
     if (index === skipped) index = (index + 1) % BOARD_SIZE;
     current = [...current];
     current[index] += 1;
-    frames.push({...shared, board: current, duration: dropDuration, hand, kind: 'drop', marked: [index]});
+    frames.push({
+      ...shared,
+      board: current,
+      duration: dropDuration,
+      hand,
+      kind: 'drop',
+      marked: [index],
+      transfers: [{from, to: index, stones: 1}],
+    });
   }
   if (move.captured) {
     const opposite = 2 * PITS - index;
+    const transfers = [index, opposite].map((from) => ({from, to: STORE[side], stones: current[from]}));
     current = [...current];
     current[STORE[side]] += current[index] + current[opposite];
     current[index] = 0;
     current[opposite] = 0;
-    frames.push({...shared, board: current, duration: 700, hand: 0, kind: 'capture', marked: [index, opposite]});
+    frames.push({
+      ...shared,
+      board: current,
+      duration: 700,
+      hand: 0,
+      kind: 'capture',
+      marked: [index, opposite],
+      transfers,
+    });
   }
   if (move.swept) {
     const marked = [STORE.host, STORE.guest];
-    frames.push({...shared, board: move.board, duration: 700, hand: 0, kind: 'sweep', marked});
+    const transfers = current.flatMap((remaining, from) =>
+      from !== STORE.host && from !== STORE.guest && remaining > 0
+        ? [{from, to: from < STORE.host ? STORE.host : STORE.guest, stones: remaining}]
+        : [],
+    );
+    frames.push({...shared, board: move.board, duration: 700, hand: 0, kind: 'sweep', marked, transfers});
   }
   const last = frames[frames.length - 1];
   frames[frames.length - 1] = {...last, board: move.board, duration: Math.max(last.duration, 450)};
