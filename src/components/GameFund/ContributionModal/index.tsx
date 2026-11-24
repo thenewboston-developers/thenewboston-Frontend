@@ -125,8 +125,8 @@ const ContributionModal = ({close, onSuccess, rewardAmount}: ContributionModalPr
     captureAnalyticsEvent('game_fund_contribution_started', {amount: confirmAmount, currency: 'TNB'});
     try {
       const deposit = await depositGameFund({amount: confirmAmount, request_id: requestId});
-      if (pendingRequests.get(requestKey) === requestId) pendingRequests.delete(requestKey);
       if (!isCurrent()) return;
+      if (pendingRequests.get(requestKey) === requestId) pendingRequests.delete(requestKey);
       dispatch(getAllUserWallets()).catch(() => undefined);
       onSuccess(deposit.fund, `Contributed ${deposit.amount.toLocaleString()} TNB to the game fund. Thank you!`);
       close();
