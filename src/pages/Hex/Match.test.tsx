@@ -525,3 +525,20 @@ it('preserves signed-out spectator access without participant controls', async (
   expect(container).toHaveTextContent('You are watching this match');
   expect(container).not.toHaveTextContent('Confirm move');
 });
+
+it.each([
+  [11, 'win'],
+  [12, 'loss'],
+  [99, 'complete'],
+] as const)('presents a finished result for viewer %s as %s', async (viewerId, outcome) => {
+  selfId = viewerId;
+  match.your_side = viewerId === 11 ? 'red' : 'blue';
+  if (viewerId === 99) match.your_side = null;
+  match.status = 'finished';
+  match.winner = 'red';
+  await renderMatch();
+  const result = container.querySelector('[data-outcome]');
+  expect(result).toHaveAttribute('data-outcome', outcome);
+  expect(result).toHaveTextContent('20 TNB prize paid to Alice');
+  expect(result?.textContent?.includes('Offer rematch')).toBe(outcome !== 'complete');
+});

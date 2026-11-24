@@ -323,17 +323,6 @@ export const Player = styled.div<{$active: boolean}>`
   padding: 16px;
 `;
 
-export const Result = styled.section`
-  background: #e8f3f0;
-  border: 1px solid #a7c7bd;
-  border-radius: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 20px 0;
-  padding: 24px;
-`;
-
 export const Rules = styled.details`
   background: #ffffff;
   border: 1px solid #dce6eb;

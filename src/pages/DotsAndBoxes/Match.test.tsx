@@ -673,3 +673,29 @@ it('does not narrate catch-up moves after a failed poll', async () => {
   await renderMatch();
   expect(playSound).toHaveBeenCalledWith('move');
 });
+
+it.each([
+  [11, 'win'],
+  [12, 'loss'],
+  [99, 'complete'],
+] as const)('presents a finished result for viewer %s as %s', async (viewerId, outcome) => {
+  selfId = viewerId;
+  match.your_side = viewerId === 11 ? 'blue' : 'red';
+  if (viewerId === 99) match.your_side = null;
+  match.status = 'finished';
+  match.winner = 'blue';
+  await renderMatch();
+  const result = container.querySelector('[data-outcome]');
+  expect(result).toHaveAttribute('data-outcome', outcome);
+  expect(result).toHaveTextContent('20 TNB prize paid to Alice');
+  expect(result?.textContent?.includes('Offer rematch')).toBe(outcome !== 'complete');
+});
+
+it('presents a draw with the existing stake refund information', async () => {
+  match.status = 'finished';
+  match.winner = null;
+  await renderMatch();
+  const result = container.querySelector('[data-outcome]');
+  expect(result).toHaveAttribute('data-outcome', 'draw');
+  expect(result).toHaveTextContent(/refund|returned/);
+});

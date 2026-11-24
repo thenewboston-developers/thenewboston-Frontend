@@ -101,7 +101,7 @@ const games = [
     category: 'Connection strategy',
     description: 'One chain. Two edges. Block their path while you build yours.',
     imageDescription:
-      'A close-up of ruby and cobalt glass stones on a porcelain Hex board with warm and cool studio lighting',
+      'Ruby and cobalt glass stones centered on a crisp ivory honeycomb in a sleek close-up Hex composition',
     name: 'Hex',
     path: 'hex',
     target: 'hex',

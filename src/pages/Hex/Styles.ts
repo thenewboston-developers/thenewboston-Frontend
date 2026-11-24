@@ -228,17 +228,6 @@ export const PlayerGrid = styled.div`
   grid-template-columns: repeat(2, minmax(0, 1fr));
 `;
 
-export const Result = styled.section`
-  background: #eef1fb;
-  border: 1px solid #b9c3e6;
-  border-radius: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 20px 0;
-  padding: 24px;
-`;
-
 export const Rules = styled.details`
   background: #ffffff;
   border: 1px solid #dde1ee;

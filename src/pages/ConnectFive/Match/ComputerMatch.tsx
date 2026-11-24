@@ -10,6 +10,7 @@ import {
 } from 'api/connectFive';
 import Button, {ButtonColor} from 'components/Button';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
+import GameResultPanel, {GameResultActions, getGameResultOutcome} from 'components/GameResultPanel';
 import GameSoundToggle from 'components/GameSoundToggle';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {ConnectFiveMatchStatus, ConnectFiveMoveType, ConnectFiveSpecialType} from 'enums';
@@ -230,7 +231,9 @@ const ComputerMatch: SFC<{match: ConnectFiveMatch}> = ({className, match}) => {
     return formatClock(base - elapsed);
   };
 
-  const outcome = match.winner_side === 'a' ? 'You beat the computer!' : 'Computer wins';
+  let outcome = 'Match complete';
+  if (match.winner_side === 'a') outcome = 'You beat the computer!';
+  if (match.winner_side === 'b') outcome = 'Computer wins';
   const turnLabel = myTurn ? 'Your turn. Place a piece or use a special.' : 'The computer is thinking…';
 
   return (
@@ -292,30 +295,39 @@ const ComputerMatch: SFC<{match: ConnectFiveMatch}> = ({className, match}) => {
           </S.PlayerRow>
         </S.BoardSection>
         <SidebarStyles.Sidebar>
-          <S.MatchInfo>
-            <S.PanelTitle>{active ? 'Computer game' : outcome}</S.PanelTitle>
-            <S.PanelSubtitle>{match.difficulty} difficulty · Free play · ELO unchanged</S.PanelSubtitle>
-            <p aria-live="polite">{active ? turnLabel : 'The match has ended.'}</p>
-            <p>
-              Both players begin with two of each special. Connect five in a row to win. Paid purchases are disabled.
-            </p>
-            {!active && <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />}
-            {active ? (
+          {active ? (
+            <S.MatchInfo>
+              <S.PanelTitle>Computer game</S.PanelTitle>
+              <S.PanelSubtitle>{match.difficulty} difficulty · Free play · ELO unchanged</S.PanelSubtitle>
+              <p aria-live="polite">{turnLabel}</p>
+              <p>
+                Both players begin with two of each special. Connect five in a row to win. Paid purchases are disabled.
+              </p>
               <Button
                 color={ButtonColor.danger}
                 disabled={!canAct}
                 onClick={() => setResignOpen(true)}
                 text="Resign match"
               />
-            ) : (
-              <Button
-                disabled={!canAct}
-                isSubmitting={pending === 'rematch'}
-                onClick={handleRematch}
-                text="Play again"
-              />
-            )}
-          </S.MatchInfo>
+            </S.MatchInfo>
+          ) : (
+            <GameResultPanel
+              description={`${match.difficulty} difficulty · Free play · ELO unchanged`}
+              game="Connect Five"
+              outcome={match.status === 'cancelled' ? 'complete' : getGameResultOutcome(match.winner_side, 'a')}
+              title={outcome}
+            >
+              <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
+              <GameResultActions>
+                <Button
+                  disabled={!canAct}
+                  isSubmitting={pending === 'rematch'}
+                  onClick={handleRematch}
+                  text="Play again"
+                />
+              </GameResultActions>
+            </GameResultPanel>
+          )}
         </SidebarStyles.Sidebar>
       </S.MatchLayout>
       <ResultModal

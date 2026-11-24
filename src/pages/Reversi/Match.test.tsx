@@ -342,3 +342,27 @@ describe('reversi match interaction', () => {
     expect(button('Play again')).toBeEnabled();
   });
 });
+
+it.each([
+  [11, 'win'],
+  [12, 'loss'],
+  [99, 'complete'],
+] as const)('presents a finished result for viewer %s as %s', async (viewerId, outcome) => {
+  selfId = viewerId;
+  match.status = 'finished';
+  match.winner = 'black';
+  await renderMatch();
+  const result = container.querySelector('[data-outcome]');
+  expect(result).toHaveAttribute('data-outcome', outcome);
+  expect(result).toHaveTextContent('20 TNB prize paid to Alice');
+  expect(result?.textContent?.includes('Offer rematch')).toBe(outcome !== 'complete');
+});
+
+it('presents a draw with the existing stake refund information', async () => {
+  match.status = 'finished';
+  match.winner = null;
+  await renderMatch();
+  const result = container.querySelector('[data-outcome]');
+  expect(result).toHaveAttribute('data-outcome', 'draw');
+  expect(result).toHaveTextContent(/refund|returned/);
+});

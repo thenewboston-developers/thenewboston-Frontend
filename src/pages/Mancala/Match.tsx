@@ -5,6 +5,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {getMancalaMatch, performMancalaAction} from 'api/mancala';
 import AuthButtons from 'components/AuthButtons';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
+import GameResultPanel, {GameResultActions, GameResultNote, getGameResultOutcome} from 'components/GameResultPanel';
 import GameSoundToggle from 'components/GameSoundToggle';
 import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -285,11 +286,17 @@ const Match = () => {
     const rematchLabel = match.mode === 'computer' ? 'Play again' : 'Offer rematch';
     const title = match.winner ? `${getPlayerName(match, match.winner)} wins` : 'It’s a draw';
     return (
-      <S.Result role="status">
-        <S.TitleSmall>{title}</S.TitleSmall>
-        <S.Detail>
-          {RESULT_LABELS[match.result_reason] ?? 'Game complete'} · {match.board[STORE.host]}–{match.board[STORE.guest]}
-        </S.Detail>
+      <GameResultPanel
+        description={
+          <>
+            {RESULT_LABELS[match.result_reason] ?? 'Game complete'} · {match.board[STORE.host]}–
+            {match.board[STORE.guest]}
+          </>
+        }
+        game="Mancala"
+        outcome={getGameResultOutcome(match.winner, side)}
+        title={title}
+      >
         {match.mode === 'computer' && isParticipant && (
           <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
         )}
@@ -301,17 +308,17 @@ const Match = () => {
           </strong>
         )}
         {isParticipant && (
-          <S.Actions>
+          <GameResultActions>
             <S.Button disabled={!canAct} onClick={() => handleAction('rematch')} type="button">
               {busyAction === 'rematch' ? 'Creating…' : rematchLabel}
             </S.Button>
             <S.TextLink to="/mancala/home">Back to the table</S.TextLink>
-          </S.Actions>
+          </GameResultActions>
         )}
         {match.mode === 'human' && isParticipant && (
-          <S.Small>A rematch uses the same clock and stake. Both players must agree again.</S.Small>
+          <GameResultNote>A rematch uses the same clock and stake. Both players must agree again.</GameResultNote>
         )}
-      </S.Result>
+      </GameResultPanel>
     );
   };
 

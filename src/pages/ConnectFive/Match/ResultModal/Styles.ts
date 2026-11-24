@@ -1,7 +1,7 @@
 import styled, {keyframes} from 'styled-components';
 
 import UIcon from 'components/Icon';
-import UModal from 'components/Modal';
+import UModal, {ModalBody as UModalBody, ModalFooter as UModalFooter} from 'components/Modal';
 import {colors, eyebrowStyle, fonts, radii} from 'styles';
 
 const eloPop = keyframes`
@@ -29,31 +29,17 @@ const fadeInUp = keyframes`
   }
 `;
 
-const resultPulse = keyframes`
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.02);
-  }
-`;
-
-const resultShine = keyframes`
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 200%;
-  }
-`;
-
 export const EloChange = styled.div`
   align-items: center;
   animation: ${fadeInUp} 0.4s ease-out 0.15s both;
+  background: #ffffff08;
+  border: 1px solid #ffffff18;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin: 24px 0;
+  margin: 0;
+  padding: 18px;
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
@@ -61,13 +47,14 @@ export const EloChange = styled.div`
 `;
 
 export const EloChangeArrow = styled(UIcon)`
-  color: ${colors.secondary};
+  color: #c0d3dd;
   flex-shrink: 0;
   margin: 0 -4px;
 `;
 
 export const EloChangeLabel = styled.span`
   ${eyebrowStyle};
+  color: #c0d3dd;
 `;
 
 export const EloChangeRow = styled.div`
@@ -80,9 +67,9 @@ export const EloChangeValue = styled.div<{$variant: 'down' | 'equal' | 'up'}>`
   align-items: center;
   animation: ${eloPop} 0.5s ease-out 0.3s both;
   color: ${({$variant}) => {
-    if ($variant === 'up') return colors.palette.green[700];
-    if ($variant === 'down') return colors.palette.red[600];
-    return colors.secondary;
+    if ($variant === 'up') return '#a7edc6';
+    if ($variant === 'down') return '#ffb3b3';
+    return '#c0d3dd';
   }};
   display: flex;
   font-size: 18px;
@@ -96,7 +83,7 @@ export const EloChangeValue = styled.div<{$variant: 'down' | 'equal' | 'up'}>`
 `;
 
 export const EloNumber = styled.span`
-  color: ${colors.primary};
+  color: #f5faff;
   font-size: 20px;
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.semiBold};
@@ -137,101 +124,38 @@ export const RematchStateText = styled.div<{$variant: 'neutral' | 'warning'}>`
   }
 `;
 
-export const ResultFaceIcon = styled(UIcon)<{$variant: 'loss' | 'win'}>`
-  color: ${({$variant}) => ($variant === 'win' ? colors.palette.green[500] : colors.palette.red[500])};
-  flex-shrink: 0;
-`;
-
 export const ResultModal = styled(UModal)`
+  max-height: calc(100dvh - 32px);
   max-width: calc(100vw - 32px);
-  width: 420px;
-`;
-
-// The gradients stay on the dark steps of each palette, so the label keeps at least 3:1 on top of the tinted banner
-export const ResultOutcome = styled.span<{$variant: 'loss' | 'win'}>`
-  -webkit-background-clip: text;
-  background: ${({$variant}) => {
-    if ($variant === 'win') {
-      return `linear-gradient(135deg, ${colors.palette.green[700]} 0%, ${colors.palette.green[800]} 100%)`;
-    }
-
-    return `linear-gradient(135deg, ${colors.palette.red[600]} 0%, ${colors.palette.red[800]} 100%)`;
-  }};
-  background-clip: text;
-  color: transparent;
-  font-size: 28px;
-  font-weight: ${fonts.weight.bold};
-  letter-spacing: 0.02em;
-  line-height: 1.2;
-  overflow-wrap: anywhere;
-  position: relative;
-  text-transform: uppercase;
-  z-index: 1;
-`;
-
-export const ResultSummary = styled.div<{$variant: 'loss' | 'win'}>`
-  align-items: center;
-  animation: ${resultPulse} 2s ease-in-out infinite;
-  background: ${({$variant}) => {
-    if ($variant === 'win') {
-      return `linear-gradient(145deg, ${colors.palette.green[50]} 0%, ${colors.palette.green[100]} 50%, ${colors.palette.green[50]} 100%)`;
-    }
-
-    return `linear-gradient(145deg, ${colors.accentSoft} 0%, ${colors.palette.red[50]} 50%, ${colors.accentSoft} 100%)`;
-  }};
-  border: 1px solid
-    ${({$variant}) => {
-      if ($variant === 'win') return colors.palette.green[200];
-
-      return colors.palette.red[50];
-    }};
-  border-radius: ${radii.large};
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 24px;
   overflow: hidden;
-  padding: 28px 24px;
-  position: relative;
-  text-align: center;
+  width: 620px;
 
-  &::before {
-    animation: ${resultShine} 3s ease-in-out infinite;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
-    content: '';
-    height: 100%;
-    position: absolute;
-    top: 0;
-    width: 50%;
-    z-index: 0;
+  > div:first-child {
+    flex-shrink: 0;
   }
 
-  &::after {
-    background: ${({$variant}) => {
-      if ($variant === 'win') {
-        return `radial-gradient(circle at 80% 20%, ${colors.palette.green[200]} 0%, transparent 50%)`;
-      }
-
-      return `radial-gradient(circle at 80% 20%, ${colors.palette.red[100]} 0%, transparent 50%)`;
-    }};
-    content: '';
-    height: 100%;
-    left: 0;
-    opacity: 0.6;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    width: 100%;
+  > div:last-child {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
+`;
 
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
+export const ResultModalBody = styled(UModalBody)`
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px;
 
-    &::before {
-      animation: none;
-      display: none;
-    }
+  > section {
+    margin: 0;
   }
+`;
+
+export const ResultModalFooter = styled(UModalFooter)`
+  border-top: 1px solid ${colors.borderSubtle};
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  padding: 12px 16px;
 `;
 
 export const ResultTnbChange = styled.div`
@@ -247,7 +171,7 @@ export const ResultTnbChange = styled.div`
 `;
 
 export const ResultTnbChangeValue = styled.span<{$variant: 'loss' | 'win'}>`
-  color: ${({$variant}) => ($variant === 'win' ? colors.palette.green[700] : colors.palette.red[600])};
+  color: ${({$variant}) => ($variant === 'win' ? '#a7edc6' : '#ffb3b3')};
   font-size: 22px;
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.bold};
