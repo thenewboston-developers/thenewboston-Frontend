@@ -200,3 +200,44 @@ it('locks submission and ignores responses from a previous account session', asy
   await act(async () => resolveNew({amount: 35, fund}));
   expect(onSuccess).toHaveBeenCalledTimes(1);
 });
+
+it('keeps the original request ID when an old session succeeds before the current retry loses its response', async () => {
+  let resolveOld: (value: unknown) => void = () => undefined;
+  let rejectCurrent: (reason: Error) => void = () => undefined;
+  const randomUUID = jest.fn().mockReturnValueOnce(requestId).mockReturnValue('22222222-2222-4222-8222-222222222222');
+  Object.defineProperty(window, 'crypto', {configurable: true, value: {randomUUID}});
+  (depositGameFund as jest.Mock)
+    .mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveOld = resolve;
+      }),
+    )
+    .mockReturnValueOnce(
+      new Promise((_resolve, reject) => {
+        rejectCurrent = reject;
+      }),
+    )
+    .mockResolvedValueOnce({amount: 25, fund});
+  await render();
+  await review();
+  act(() => button('Contribute 25 TNB').click());
+  selfId = 22;
+  await render();
+  selfId = 11;
+  await render();
+  await review();
+  act(() => button('Contribute 25 TNB').click());
+  await act(async () => resolveOld({amount: 25, fund}));
+  expect(onSuccess).not.toHaveBeenCalled();
+  await act(async () => rejectCurrent(new Error('Response lost')));
+  expect(modal).toHaveTextContent('without paying twice');
+  await act(async () => button('Contribute 25 TNB').click());
+  expect((depositGameFund as jest.Mock).mock.calls).toEqual([
+    [{amount: 25, request_id: requestId}],
+    [{amount: 25, request_id: requestId}],
+    [{amount: 25, request_id: requestId}],
+  ]);
+  expect(randomUUID).toHaveBeenCalledTimes(1);
+  expect(onSuccess).toHaveBeenCalledTimes(1);
+  expect(close).toHaveBeenCalledTimes(1);
+});
