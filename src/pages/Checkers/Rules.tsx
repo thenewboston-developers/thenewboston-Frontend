@@ -21,6 +21,10 @@ const Rules = () => (
         either direction, one step or jump at a time.
       </li>
       <li>
+        To move, drag a piece onto a gold dot, or select it and then the dot. A move is played as soon as its last jump
+        lands, so there is nothing to confirm; during a jump chain you can undo a jump until the chain is complete.
+      </li>
+      <li>
         Win by capturing every opposing piece or leaving your opponent without a legal move. Your clock runs during your
         turn; running out of time or resigning loses the match.
       </li>

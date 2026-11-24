@@ -1,4 +1,6 @@
-import {INITIAL_BOARD, matchingMoves, previewBoard} from './utils';
+import {CheckersPiece} from 'types/checkers';
+
+import {countPieces, extendPath, INITIAL_BOARD, matchingMoves, previewBoard} from './utils';
 
 jest.mock('axios', () => ({isAxiosError: jest.fn(() => false)}));
 
@@ -20,6 +22,43 @@ describe('Checkers move previews', () => {
       [42, 28, 14],
     ]);
     expect(matchingMoves(moves, [42, 28, 14])).toEqual([[42, 28, 14]]);
+  });
+
+  it('extends a selected route to a dropped landing only when the route there is unambiguous', () => {
+    const moves = [
+      [42, 28, 10],
+      [42, 28, 14],
+      [40, 33],
+    ];
+    expect(extendPath(moves, [42], 28)).toEqual([42, 28]);
+    expect(extendPath(moves, [42], 14)).toEqual([42, 28, 14]);
+    expect(extendPath(moves, [42, 28], 10)).toEqual([42, 28, 10]);
+    expect(extendPath(moves, [42], 33)).toBeNull();
+    expect(
+      extendPath(
+        [
+          [42, 28, 14],
+          [42, 24, 10, 28, 14],
+        ],
+        [42],
+        14,
+      ),
+    ).toBeNull();
+    expect(
+      extendPath(
+        [
+          [42, 28, 14],
+          [42, 24, 10, 28, 14],
+        ],
+        [42],
+        28,
+      ),
+    ).toEqual([42, 28]);
+  });
+
+  it('counts the pieces left for each side', () => {
+    expect(countPieces(INITIAL_BOARD, 'white')).toBe(12);
+    expect(countPieces([2, -1, 0, -2, 1] as CheckersPiece[], 'black')).toBe(2);
   });
 
   it('removes captures and crowns without mutating the authoritative board', () => {

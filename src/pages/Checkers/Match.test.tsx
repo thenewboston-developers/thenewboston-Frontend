@@ -46,6 +46,25 @@ const button = (label: string): HTMLButtonElement => {
   return found;
 };
 
+const cell = (label: string): HTMLButtonElement => {
+  const found = container.querySelector(`[aria-label="${label}"]`);
+  if (!found) throw new Error(`Square not found: ${label}`);
+  return found as HTMLButtonElement;
+};
+
+const cellName = (index: number): string => `${String.fromCharCode(97 + (index % 8))}${8 - Math.floor(index / 8)}`;
+
+const click = (label: string) => act(() => cell(label).click());
+
+// An action that is still in flight
+const neverSettles = () => new Promise(() => {});
+
+const pointer = (type: string, target: Element, clientX: number, clientY: number, pointerType: string) => {
+  const event = new MouseEvent(type, {bubbles: true, button: 0, cancelable: true, clientX, clientY});
+  Object.defineProperties(event, {pointerId: {value: 1}, pointerType: {value: pointerType}});
+  target.dispatchEvent(event);
+};
+
 const renderMatch = async () => {
   await act(async () => {
     root.render(
@@ -172,18 +191,28 @@ it('does not sound Checkers history after a failed poll reconnects', async () =>
 });
 
 describe('Checkers match interaction', () => {
-  it('previews a legal move and requires confirmation before committing it', async () => {
+  it('plays a simple move as soon as its landing is chosen, without a confirmation step', async () => {
+    (performCheckersAction as jest.Mock).mockReturnValue(neverSettles());
     await renderMatch();
-    expect(button('Confirm move')).toBeDisabled();
-    act(() => (container.querySelector('[aria-label="a3: white man"]') as HTMLButtonElement).click());
-    act(() => (container.querySelector('[aria-label="b4: empty, legal destination"]') as HTMLButtonElement).click());
-    expect(container.querySelector('[aria-label="b4: white man, selected"]')).toBeInTheDocument();
+    expect(container.textContent).not.toContain('Confirm move');
+    click('a3: white man');
+    expect(container.querySelector('[aria-label="a3: white man, selected"]')).toBeInTheDocument();
     expect(performCheckersAction).not.toHaveBeenCalled();
-    await act(async () => button('Confirm move').click());
+    await act(async () => cell('b4: empty, legal destination').click());
     expect(performCheckersAction).toHaveBeenCalledWith(match, 'move', {path: [40, 33]});
+    expect(container.querySelector('[aria-label="b4: white man, selected"]')).toBeInTheDocument();
+    expect(container.textContent).toContain('Playing your move');
   });
 
-  it('requires the complete mandatory multi-jump chain and lets the player undo a preview step', async () => {
+  it('deselects a piece when it is clicked again', async () => {
+    await renderMatch();
+    click('a3: white man');
+    click('a3: white man, selected');
+    expect(container.querySelector('[aria-label="a3: white man"]')).toBeInTheDocument();
+    expect(container.querySelector('[aria-label="b4: empty, legal destination"]')).toBeNull();
+  });
+
+  it('waits for the complete mandatory multi-jump chain and lets the player undo a jump', async () => {
     match.board = Array(64).fill(0);
     match.board[42] = 1;
     match.board[35] = -1;
@@ -191,17 +220,16 @@ describe('Checkers match interaction', () => {
     match.legal_moves = [[42, 28, 14]];
     await renderMatch();
     expect(container.textContent).toContain('Capture required');
-    act(() => (container.querySelector('[aria-label="c3: white man"]') as HTMLButtonElement).click());
-    act(() => (container.querySelector('[aria-label="e5: empty, legal destination"]') as HTMLButtonElement).click());
-    expect(button('Confirm move')).toBeDisabled();
+    click('c3: white man');
+    click('e5: empty, legal destination');
+    expect(performCheckersAction).not.toHaveBeenCalled();
     expect(container.textContent).toContain('Keep jumping');
     expect(container.querySelector('[aria-label="d4: empty"]')).toBeInTheDocument();
-    act(() => (container.querySelector('[aria-label="g7: empty, legal destination"]') as HTMLButtonElement).click());
-    expect(button('Confirm move')).toBeEnabled();
-    act(() => button('Undo').click());
-    expect(button('Confirm move')).toBeDisabled();
-    act(() => (container.querySelector('[aria-label="g7: empty, legal destination"]') as HTMLButtonElement).click());
-    await act(async () => button('Confirm move').click());
+    act(() => button('Undo jump').click());
+    expect(container.querySelector('[aria-label="c3: white man, selected"]')).toBeInTheDocument();
+    click('e5: empty, legal destination');
+    await act(async () => cell('g7: empty, legal destination').click());
+    expect(performCheckersAction).toHaveBeenCalledTimes(1);
     expect(performCheckersAction).toHaveBeenCalledWith(match, 'move', {path: [42, 28, 14]});
   });
 
@@ -213,25 +241,138 @@ describe('Checkers match interaction', () => {
     });
     match.legal_moves = [[42, 24, 10, 28, 42]];
     await renderMatch();
-    const renderedContainer = container;
     for (const label of [
       'c3: white king',
       'a5: empty, legal destination',
       'c7: empty, legal destination',
       'e5: empty, legal destination',
-      'c3: empty, legal destination',
     ]) {
-      act(() => (renderedContainer.querySelector(`[aria-label="${label}"]`) as HTMLButtonElement).click());
+      click(label);
     }
-    expect(button('Confirm move')).toBeEnabled();
-    await act(async () => button('Confirm move').click());
+    expect(performCheckersAction).not.toHaveBeenCalled();
+    await act(async () => cell('c3: empty, legal destination').click());
     expect(performCheckersAction).toHaveBeenCalledWith(match, 'move', {path: [42, 24, 10, 28, 42]});
+  });
+
+  it('returns the piece and explains the problem when the server rejects a move', async () => {
+    (performCheckersAction as jest.Mock).mockRejectedValue(new Error('rejected'));
+    await renderMatch();
+    click('a3: white man');
+    await act(async () => cell('b4: empty, legal destination').click());
+    expect(container.querySelector('[role="alert"]')).toHaveTextContent('We could not reach the game');
+    expect(container.querySelector('[aria-label="a3: white man"]')).toBeInTheDocument();
+    expect(container.querySelector('[aria-label="b4: empty"]')).toBeInTheDocument();
+  });
+
+  describe('dragging with a mouse', () => {
+    beforeEach(() => {
+      // The board's piece layer measures 400 by 400 px, so every square is 50 px
+      jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+        bottom: 400,
+        height: 400,
+        left: 0,
+        right: 400,
+        top: 0,
+        width: 400,
+        x: 0,
+        y: 0,
+        toJSON: () => undefined,
+      });
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    const center = (index: number): [number, number] => [(index % 8) * 50 + 25, Math.floor(index / 8) * 50 + 25];
+
+    // `from` and `to` are positions on screen; `square` names the square pressed when the board is flipped
+    const drag = async (from: number, to: number, pointerType = 'mouse', square = from) => {
+      const start = container.querySelector(`[aria-label^="${cellName(square)}:"]`)!;
+      const end = container.querySelector('[role="group"]')!;
+      act(() => {
+        pointer('pointerdown', start, ...center(from), pointerType);
+      });
+      act(() => {
+        pointer('pointermove', start, center(from)[0] + 10, center(from)[1] - 10, pointerType);
+      });
+      act(() => {
+        pointer('pointermove', end, ...center(to), pointerType);
+      });
+      await act(async () => {
+        pointer('pointerup', end, ...center(to), pointerType);
+      });
+    };
+
+    it('plays a piece dropped on a legal landing', async () => {
+      await renderMatch();
+      await drag(40, 33);
+      expect(performCheckersAction).toHaveBeenCalledWith(match, 'move', {path: [40, 33]});
+    });
+
+    it('returns a piece dropped on an illegal square and keeps it selected', async () => {
+      await renderMatch();
+      await drag(40, 32);
+      expect(performCheckersAction).not.toHaveBeenCalled();
+      expect(container.querySelector('[aria-label="a3: white man, selected"]')).toBeInTheDocument();
+    });
+
+    it('plays a whole jump chain when the piece is dropped on its final landing', async () => {
+      match.board = Array(64).fill(0);
+      match.board[42] = 1;
+      match.board[35] = -1;
+      match.board[21] = -1;
+      match.legal_moves = [[42, 28, 14]];
+      await renderMatch();
+      await drag(42, 14);
+      expect(performCheckersAction).toHaveBeenCalledWith(match, 'move', {path: [42, 28, 14]});
+    });
+
+    it('continues a jump chain by dragging the same piece again', async () => {
+      match.board = Array(64).fill(0);
+      match.board[42] = 1;
+      match.board[35] = -1;
+      match.board[21] = -1;
+      match.legal_moves = [[42, 28, 14]];
+      await renderMatch();
+      await drag(42, 28);
+      expect(performCheckersAction).not.toHaveBeenCalled();
+      expect(container.querySelector('[aria-label="e5: white man, selected"]')).toBeInTheDocument();
+      await drag(28, 14);
+      expect(performCheckersAction).toHaveBeenCalledWith(match, 'move', {path: [42, 28, 14]});
+    });
+
+    it('maps drops on the flipped board when playing the charcoal pieces', async () => {
+      selfId = 12;
+      match.your_side = 'black';
+      match.active_side = 'black';
+      match.legal_moves = [
+        [21, 28],
+        [21, 30],
+      ];
+      await renderMatch();
+      // Charcoal sits at the bottom, so f6 (square 21) is drawn where c3 would be
+      await drag(63 - 21, 63 - 28, 'mouse', 21);
+      expect(performCheckersAction).toHaveBeenCalledWith(match, 'move', {path: [21, 28]});
+    });
+
+    it('does not drag with touch, so a finger can still scroll the page', async () => {
+      await renderMatch();
+      await drag(40, 33, 'touch');
+      expect(performCheckersAction).not.toHaveBeenCalled();
+    });
+
+    it('does not let pieces be dragged on the opponent turn', async () => {
+      match.active_side = 'black';
+      await renderMatch();
+      await drag(40, 33);
+      expect(performCheckersAction).not.toHaveBeenCalled();
+    });
   });
 
   it('prevents moves on the opponent turn and offers no controls to spectators', async () => {
     match.active_side = 'black';
     await renderMatch();
-    expect(button('Confirm move')).toBeDisabled();
     expect(
       Array.from(container.querySelectorAll('[role="group"] button')).every(
         (element) => (element as HTMLButtonElement).disabled,
@@ -272,9 +413,8 @@ describe('Checkers match interaction', () => {
       }),
     );
     await renderMatch();
-    act(() => (container.querySelector('[aria-label="a3: white man"]') as HTMLButtonElement).click());
-    act(() => (container.querySelector('[aria-label="b4: empty, legal destination"]') as HTMLButtonElement).click());
-    act(() => button('Confirm move').click());
+    click('a3: white man');
+    click('b4: empty, legal destination');
     selfId = 99;
     await renderMatch();
     dispatch.mockClear();
@@ -285,26 +425,26 @@ describe('Checkers match interaction', () => {
 
   it('releases the previous match action lock when navigating to another board', async () => {
     let resolveAction: (data: CheckersMatch) => void = () => undefined;
-    (performCheckersAction as jest.Mock).mockReturnValue(
+    (performCheckersAction as jest.Mock).mockReturnValueOnce(
       new Promise((resolve) => {
         resolveAction = resolve;
       }),
     );
+    (performCheckersAction as jest.Mock).mockReturnValueOnce(neverSettles());
     await renderMatch();
-    act(() => (container.querySelector('[aria-label="a3: white man"]') as HTMLButtonElement).click());
-    act(() => (container.querySelector('[aria-label="b4: empty, legal destination"]') as HTMLButtonElement).click());
-    act(() => button('Confirm move').click());
+    click('a3: white man');
+    click('b4: empty, legal destination');
     const previous = match;
     match = {...match, id: 2};
     mockMatchId = '2';
     await renderMatch();
-    act(() => (container.querySelector('[aria-label="a3: white man"]') as HTMLButtonElement).click());
-    act(() => (container.querySelector('[aria-label="b4: empty, legal destination"]') as HTMLButtonElement).click());
-    expect(button('Confirm move')).toBeEnabled();
+    click('a3: white man');
+    click('b4: empty, legal destination');
+    expect(performCheckersAction).toHaveBeenCalledTimes(2);
+    expect(performCheckersAction).toHaveBeenLastCalledWith(match, 'move', {path: [40, 33]});
     dispatch.mockClear();
     await act(async () => resolveAction({...previous, version: 5}));
     expect(dispatch).not.toHaveBeenCalled();
-    expect(button('Confirm move')).toBeEnabled();
   });
 
   it.each([4, 5])(
@@ -333,9 +473,8 @@ describe('Checkers match interaction', () => {
         match = {...match, version: 5, active_side: 'black', server_time: new Date(Date.now()).toISOString()};
         return Promise.resolve(match);
       });
-      act(() => (container.querySelector('[aria-label="a3: white man"]') as HTMLButtonElement).click());
-      act(() => (container.querySelector('[aria-label="b4: empty, legal destination"]') as HTMLButtonElement).click());
-      await act(async () => button('Confirm move').click());
+      click('a3: white man');
+      await act(async () => cell('b4: empty, legal destination').click());
       expect(container.querySelector('[aria-label="Bob clock"]')).toHaveTextContent('14:56');
       dispatch.mockClear();
       await act(async () => resolvePoll(stale));
@@ -369,11 +508,28 @@ it('lets a guest complete a legal move without requesting a wallet', async () =>
   match.stake_amount = 0;
   match.prize_pool_total = 0;
   await renderMatch();
-  act(() => (container.querySelector('[aria-label="a3: white man"]') as HTMLButtonElement).click());
-  act(() => (container.querySelector('[aria-label="b4: empty, legal destination"]') as HTMLButtonElement).click());
-  await act(async () => button('Confirm move').click());
+  click('a3: white man');
+  await act(async () => cell('b4: empty, legal destination').click());
   expect(performCheckersAction).toHaveBeenCalledWith(match, 'move', {path: [40, 33]});
   expect(getAllUserWallets).not.toHaveBeenCalled();
+});
+
+it('checks for the computer reply sooner after a move against the computer', async () => {
+  jest.useFakeTimers();
+  match.mode = 'computer';
+  match.black = null;
+  match.computer_name = 'Computer';
+  (performCheckersAction as jest.Mock).mockImplementation(() =>
+    Promise.resolve({...match, version: 5, active_side: 'black'}),
+  );
+  await renderMatch();
+  expect(getCheckersMatch).toHaveBeenCalledTimes(1);
+  click('a3: white man');
+  await act(async () => cell('b4: empty, legal destination').click());
+  await act(async () => {
+    jest.advanceTimersByTime(700);
+  });
+  expect(getCheckersMatch).toHaveBeenCalledTimes(2);
 });
 
 it('invites a winning guest to create an account and lets them play again', async () => {
