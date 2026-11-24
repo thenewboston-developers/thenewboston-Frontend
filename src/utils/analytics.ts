@@ -20,6 +20,7 @@ const redirectRoutes = [
   '/currencies',
   '/exchange',
   '/feed',
+  '/mancala',
   '/reversi',
   '/wallets',
 ];
@@ -37,6 +38,8 @@ const routes = [
   '/battleship/matches/:id',
   '/backgammon/home',
   '/backgammon/matches/:id',
+  '/mancala/home',
+  '/mancala/matches/:id',
   '/connect-five/home',
   '/connect-five/leaderboard',
   '/connect-five/challenges/:id',

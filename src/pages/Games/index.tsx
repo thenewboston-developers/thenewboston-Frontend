@@ -5,6 +5,7 @@ import backgammonCover from 'assets/backgammon-cover.webp';
 import battleshipCover from 'assets/battleship-cover.webp';
 import checkersCover from 'assets/checkers-cover.webp';
 import connectFiveCover from 'assets/connect-five-cover.webp';
+import mancalaCover from 'assets/mancala-cover.webp';
 import reversiCover from 'assets/reversi-cover.webp';
 import GameFund from 'components/GameFund';
 import {SFC} from 'types';
@@ -67,6 +68,17 @@ const games = [
     name: 'Reversi',
     path: 'reversi',
     target: 'reversi',
+  },
+  {
+    accent: '#b4472e',
+    art: mancalaCover,
+    badge: 'NEWEST ARRIVAL',
+    category: 'Count & capture strategy',
+    description: 'Sow your stones. Steal a turn. Capture what they leave open.',
+    imageDescription: 'A carved walnut mancala board with glass stones in jewel colors',
+    name: 'Mancala',
+    path: 'mancala',
+    target: 'mancala',
   },
 ];
 

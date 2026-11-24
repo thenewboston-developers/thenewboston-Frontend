@@ -8,7 +8,7 @@ import {PATH_GAMES} from 'constants/paths';
 export const isPathActive = (pathname: string, rootPath: string): boolean => {
   const sectionPaths =
     rootPath === PATH_GAMES
-      ? [PATH_GAMES, '/connect-five', '/backgammon', '/battleship', '/checkers', '/reversi']
+      ? [PATH_GAMES, '/connect-five', '/backgammon', '/battleship', '/checkers', '/reversi', '/mancala']
       : [rootPath];
   return sectionPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 };

@@ -30,6 +30,7 @@ import frontendDeploymentsReducer from 'store/frontendDeployments';
 import invitationLimitsReducer from 'store/invitationLimits';
 import invitationsReducer from 'store/invitations';
 import managerReducer from 'store/manager';
+import mancalaReducer from 'store/mancala';
 import migrations from 'store/migrations';
 import mintsReducer from 'store/mints';
 import notificationsReducer from 'store/notifications';
@@ -61,6 +62,7 @@ const rootReducer = combineReducers({
   invitationLimits: invitationLimitsReducer,
   invitations: invitationsReducer,
   manager: managerReducer,
+  mancala: mancalaReducer,
   mints: mintsReducer,
   notifications: notificationsReducer,
   orderBook: orderBookReducer,
@@ -85,7 +87,7 @@ const persistConfig = {
   migrate: createMigrate(migrations, {debug: false}),
   storage,
   version: 3,
-  blacklist: ['authPrompt', 'backgammon', 'battleship', 'checkers', 'frontendDeployments', 'reversi'],
+  blacklist: ['authPrompt', 'backgammon', 'battleship', 'checkers', 'frontendDeployments', 'mancala', 'reversi'],
 };
 
 const persistedReducer = persistReducer(persistConfig, appReducer);

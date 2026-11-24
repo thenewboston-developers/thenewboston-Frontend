@@ -16,6 +16,9 @@ describe('isPathActive', () => {
     '/reversi',
     '/reversi/home',
     '/reversi/matches/12',
+    '/mancala',
+    '/mancala/home',
+    '/mancala/matches/12',
   ])('keeps Games active on %s', (pathname) => {
     expect(isPathActive(pathname, '/games')).toBe(true);
   });
@@ -26,6 +29,7 @@ describe('isPathActive', () => {
     '/backgammon-extra',
     '/battleship-extra',
     '/reversi-extra',
+    '/mancala-extra',
     '/exchange',
     '/',
   ])('does not activate Games on %s', (pathname) => {
