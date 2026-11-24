@@ -14,6 +14,7 @@ let identifiedUserId: string | null = null;
 // The router replaces these paths with a real page straight away, and that page records its own pageview
 const redirectRoutes = [
   '/checkers',
+  '/hex',
   '/battleship',
   '/backgammon',
   '/connect-five',
@@ -35,6 +36,8 @@ const routes = [
   '/notifications',
   '/checkers/home',
   '/checkers/matches/:id',
+  '/hex/home',
+  '/hex/matches/:id',
   '/battleship/home',
   '/battleship/matches/:id',
   '/backgammon/home',

@@ -6,6 +6,7 @@ import battleshipThumbnail from 'assets/battleship-thumbnail.webp';
 import checkersThumbnail from 'assets/checkers-thumbnail.webp';
 import connectFiveThumbnail from 'assets/connect-five-thumbnail.webp';
 import dotsAndBoxesThumbnail from 'assets/dots-and-boxes-thumbnail.webp';
+import hexThumbnail from 'assets/hex-thumbnail.webp';
 import mancalaThumbnail from 'assets/mancala-thumbnail.webp';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
 import GameFund from 'components/GameFund';
@@ -91,6 +92,17 @@ const games = [
     name: 'Dots and Boxes',
     path: 'dots-and-boxes',
     target: 'dots_and_boxes',
+  },
+  {
+    accent: '#3257b8',
+    art: hexThumbnail,
+    badge: 'NO DRAWS, EVER',
+    category: 'Connection strategy',
+    description: 'One chain. Two edges. Block their path while you build yours.',
+    imageDescription: 'Red and blue stones on a diamond of six-sided cells, a glowing red chain joining two edges',
+    name: 'Hex',
+    path: 'hex',
+    target: 'hex',
   },
 ];
 

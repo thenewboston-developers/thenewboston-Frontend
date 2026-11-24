@@ -55,6 +55,10 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       navigate(`/dots-and-boxes/matches/${notification.payload.match_id}`);
       return;
     }
+    if (notification.payload.notification_type === NotificationType.HEX_CHALLENGE) {
+      navigate(`/hex/matches/${notification.payload.match_id}`);
+      return;
+    }
     if (notification.payload.notification_type === NotificationType.MANCALA_CHALLENGE) {
       navigate(`/mancala/matches/${notification.payload.match_id}`);
       return;
@@ -175,6 +179,37 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
     );
   };
 
+  const renderHexChallengeNotification = () => {
+    if (notification.payload.notification_type !== NotificationType.HEX_CHALLENGE) return null;
+
+    const {board_size, challenger, match_id, stake_amount, time_limit_seconds} = notification.payload;
+
+    return (
+      <S.NotificationContainer>
+        <Link to={`/hex/matches/${match_id}`}>
+          <S.AvatarContainer>
+            <Avatar size="45px" src={challenger.avatar} />
+            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
+          </S.AvatarContainer>
+        </Link>
+        <S.TextContainer>
+          <S.MainText>
+            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
+              {challenger.username}
+            </S.Link>{' '}
+            challenged you to Hex
+          </S.MainText>
+          <S.PostPreviewText>
+            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} · {board_size} ×{' '}
+            {board_size} board · {time_limit_seconds / 60} min per player
+          </S.PostPreviewText>
+          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
+        </S.TextContainer>
+        {renderRedDot()}
+      </S.NotificationContainer>
+    );
+  };
+
   const renderMancalaChallengeNotification = () => {
     if (notification.payload.notification_type !== NotificationType.MANCALA_CHALLENGE) return null;
 
@@ -215,6 +250,7 @@ const Notification: SFC<NotificationProps> = ({className, notification}) => {
       [NotificationType.CONNECT_FIVE_CHALLENGE]: renderConnectFiveChallengeNotification,
       [NotificationType.DOTS_AND_BOXES_CHALLENGE]: renderDotsAndBoxesChallengeNotification,
       [NotificationType.EXCHANGE_ORDER_FILLED]: renderExchangeOrderFilledNotification,
+      [NotificationType.HEX_CHALLENGE]: renderHexChallengeNotification,
       [NotificationType.MANCALA_CHALLENGE]: renderMancalaChallengeNotification,
       [NotificationType.POST_COIN_TRANSFER]: renderPostCoinTransferNotification,
       [NotificationType.POST_COMMENT]: renderPostCommentNotification,

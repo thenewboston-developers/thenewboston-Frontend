@@ -13,6 +13,7 @@ export const PATH_CURRENCIES = `/currencies/${WILDCARD}`;
 export const PATH_DOTS_AND_BOXES = `/dots-and-boxes/${WILDCARD}`;
 export const PATH_EXCHANGE = `/exchange/${WILDCARD}`;
 export const PATH_GAMES = '/games';
+export const PATH_HEX = `/hex/${WILDCARD}`;
 export const PATH_HOME = '/';
 // The feed used to live at this path, so links and bookmarks that point to it are redirected to the home page
 export const PATH_LEGACY_FEED = '/feed';
