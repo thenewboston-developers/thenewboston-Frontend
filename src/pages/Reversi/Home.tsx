@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createReversiMatch, getReversiMatches} from 'api/reversi';
-import reversiCover from 'assets/reversi-cover.webp';
+import reversiHero from 'assets/reversi-hero.webp';
 import AuthButtons from 'components/AuthButtons';
 import GameHero from 'components/GameHero';
 import Loader from 'components/Loader';
@@ -219,8 +219,8 @@ const Home = () => {
         <S.Badge>Classic strategy · Black and white</S.Badge>
       </S.Navigation>
       <GameHero
-        artwork={reversiCover}
-        artworkAlt="Black and ivory disks on an emerald Reversi board, with one disk caught mid-flip"
+        artwork={reversiHero}
+        artworkAlt="Black and ivory disks on a complete emerald Reversi board"
         challengeHref="#reversi-challenge"
         description="Trap your opponent’s disks and flip them to your color. Fight for the corners and finish with the most disks."
         eyebrow="CLASSIC DISK STRATEGY"
