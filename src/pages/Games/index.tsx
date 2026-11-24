@@ -5,6 +5,7 @@ import GameFund from 'components/GameFund';
 import BackgammonBoard from 'pages/Backgammon/Board';
 import {INITIAL_BOARD} from 'pages/Backgammon/utils';
 import BattleshipArtwork from 'pages/Battleship/Artwork';
+import CheckersArtwork from 'pages/Checkers/Artwork';
 import {SFC} from 'types';
 import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
 
@@ -23,12 +24,44 @@ const Games: SFC = ({className}) => {
         <section aria-labelledby="featured-game-heading">
           <S.SectionHeader>
             <S.SectionTitle id="featured-game-heading">In the spotlight</S.SectionTitle>
-            <S.GameCount>3 games</S.GameCount>
+            <S.GameCount>4 games</S.GameCount>
           </S.SectionHeader>
+          <S.GameCard aria-label="Checkers — open game lobby" to="/checkers/home">
+            <S.CheckersArtwork>
+              <CheckersArtwork />
+              <S.FeaturedBadge>NEW GAME</S.FeaturedBadge>
+            </S.CheckersArtwork>
+            <S.GameDetails>
+              <S.Category>CLASSIC STRATEGY · COMPUTER & MULTIPLAYER</S.Category>
+              <S.GameTitle>Checkers</S.GameTitle>
+              <S.Tagline>
+                Small moves.
+                <br />
+                Big possibilities.
+              </S.Tagline>
+              <S.Description>
+                Read the board, plan your jumps, and crown your next king. Play the computer for free or challenge a
+                member for TNB.
+              </S.Description>
+              <S.Facts>
+                <S.Fact>
+                  <S.FactValue>Every jump matters</S.FactValue>
+                  <S.FactLabel>Classic American rules</S.FactLabel>
+                </S.Fact>
+                <S.Fact>
+                  <S.FactValue>Optional TNB stakes</S.FactValue>
+                  <S.FactLabel>Three computer levels</S.FactLabel>
+                </S.Fact>
+              </S.Facts>
+              <S.PlayLabel>Open lobby</S.PlayLabel>
+              <S.BrowserNote>Play in your browser · No download needed</S.BrowserNote>
+            </S.GameDetails>
+          </S.GameCard>
+          <S.CardSpacer />
           <S.GameCard aria-label="Battleship — open game lobby" to="/battleship/home">
             <S.BattleshipArtwork>
               <BattleshipArtwork />
-              <S.FeaturedBadge>NEW GAME</S.FeaturedBadge>
+              <S.FeaturedBadge>NAVAL STRATEGY</S.FeaturedBadge>
             </S.BattleshipArtwork>
             <S.GameDetails>
               <S.Category>NAVAL STRATEGY · COMPUTER & MULTIPLAYER</S.Category>
@@ -139,7 +172,7 @@ const Games: SFC = ({className}) => {
           <S.AboutItem>
             <S.AboutTitle>Find your rhythm</S.AboutTitle>
             <S.AboutText>
-              Practice all three games against the computer, or climb the Connect Five leaderboard.
+              Practice all four games against the computer, or climb the Connect Five leaderboard.
             </S.AboutText>
           </S.AboutItem>
           <S.AboutItem>

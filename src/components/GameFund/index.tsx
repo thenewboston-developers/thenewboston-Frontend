@@ -144,8 +144,8 @@ const GameFund = () => {
       <div>
         <S.Heading id="game-fund-title">Community game fund</S.Heading>
         <S.Description>
-          Help keep the games rewarding. Win a computer match in Connect Five, Backgammon, or Battleship to earn 10 TNB
-          when the fund can cover the reward.
+          Help keep the games rewarding. Win a computer match in Connect Five, Backgammon, Battleship, or Checkers to
+          earn 10 TNB when the fund can cover the reward.
         </S.Description>
       </div>
       {fund ? (
