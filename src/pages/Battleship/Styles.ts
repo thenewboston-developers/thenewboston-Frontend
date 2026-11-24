@@ -1,7 +1,32 @@
 import {Link} from 'react-router-dom';
-import styled, {keyframes} from 'styled-components';
+import styled, {css, keyframes} from 'styled-components';
 
-import {colors, pagePadding} from 'styles';
+import UAuthButtons from 'components/AuthButtons';
+import UAvatar from 'components/Avatar';
+import {fonts, pagePadding} from 'styles';
+
+import {naval, navalConsole, navalMono, readout} from './theme';
+
+export type CellState = 'hit' | 'miss' | 'ship' | 'sunk' | 'water';
+export type StatusTone = 'deploy' | 'fire' | 'wait';
+
+const CELL_BACKGROUNDS: Record<CellState, string> = {
+  hit: 'radial-gradient(circle, #ffc27a 0%, #f2703a 55%, #8f2f17 100%)',
+  miss: `radial-gradient(circle, ${naval.sonar} 0 13%, #64d2ec40 16%, transparent 34%), #0a2034`,
+  ship: 'linear-gradient(180deg, #4b7a98, #2c5169)',
+  sunk: 'radial-gradient(circle, #7a3124, #3a1c1c 85%)',
+  water: '#0a2034',
+};
+
+const CELL_BORDERS: Record<CellState, string> = {
+  hit: '#ffb27a',
+  miss: '#1c3a52',
+  ship: '#6c9ab7',
+  sunk: '#a2483a',
+  water: '#1c3a52',
+};
+
+const STATUS_TONES: Record<StatusTone, string> = {deploy: naval.gold, fire: naval.amber, wait: naval.sonar};
 
 const impactBurst = keyframes`
   0% { opacity: 0; transform: scale(0.15) rotate(-25deg); }
@@ -21,6 +46,20 @@ const impactSparks = keyframes`
   100% { opacity: 0; transform: scale(2.3) rotate(35deg); }
 `;
 
+const pulse = keyframes`
+  0% { box-shadow: 0 0 0 0 #64d2ec8c; }
+  100% { box-shadow: 0 0 0 10px #64d2ec00; }
+`;
+
+// Short strips and cards keep the console surface but drop the HUD corner brackets, which crowd them
+const compactConsole = css`
+  ${navalConsole};
+
+  &::after {
+    display: none;
+  }
+`;
+
 export const Actions = styled.div`
   align-items: center;
   display: flex;
@@ -28,28 +67,57 @@ export const Actions = styled.div`
   gap: 10px;
 `;
 
+export const AuthButtons = styled(UAuthButtons)`
+  button {
+    height: 44px;
+    padding: 0 20px;
+  }
+
+  button:first-child {
+    background: transparent;
+    border-color: ${naval.steelBright};
+    color: ${naval.ice};
+  }
+
+  button:first-child:hover {
+    background: #ffffff14;
+  }
+`;
+
+export const Avatar = styled(UAvatar)<{$active: boolean}>`
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px ${naval.deep},
+    0 0 0 3px ${({$active}) => ($active ? naval.sonar : naval.steelBright)};
+  flex-shrink: 0;
+`;
+
 export const Badge = styled.span`
-  background: #e5f0f4;
+  ${readout};
+  align-items: center;
+  background: ${naval.hull};
+  border: 1px solid ${naval.steel};
   border-radius: 999px;
-  color: #17556b;
+  color: ${naval.mist};
   display: inline-flex;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 10px;
+  gap: 6px;
   padding: 7px 12px;
 `;
 
 export const BoardFrame = styled.div`
-  background: radial-gradient(ellipse at top, #1b4c61, #102e40 70%);
-  border: 1px solid #315568;
-  border-radius: 20px;
-  box-shadow: 0 12px 32px #102e401a;
-  color: #e2f2fa;
-  padding: 16px;
+  ${navalConsole};
+  min-width: 0;
+  padding: 22px 24px 18px;
   width: 100%;
 
   @media (max-width: 550px) {
     border-radius: 14px;
-    padding: 10px;
+    padding: 12px 10px;
+
+    &::after {
+      display: none;
+    }
   }
 `;
 
@@ -61,9 +129,10 @@ export const BoardGrid = styled.div`
 
 export const BoardLabel = styled.span`
   align-items: center;
-  color: #9dbcca;
+  color: ${naval.fog};
   display: flex;
-  font-size: clamp(9px, 1vw, 12px);
+  font-family: ${navalMono};
+  font-size: clamp(9px, 1vw, 11px);
   font-variant-numeric: tabular-nums;
   justify-content: center;
   min-height: 18px;
@@ -75,90 +144,240 @@ export const BoardTitle = styled.div`
   flex-wrap: wrap;
   gap: 8px;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 
   h2 {
-    color: #f1f8fc;
+    color: ${naval.ice};
     font-size: 17px;
+    font-weight: ${fonts.weight.bold};
+    letter-spacing: -0.01em;
     margin: 0;
   }
 
   span {
-    color: #b3ceda;
-    font-size: 12px;
+    ${readout};
+    border: 1px solid ${naval.steel};
+    border-radius: 999px;
+    color: ${naval.mist};
+    font-size: 10px;
+    padding: 5px 10px;
   }
 `;
 
-export const Button = styled.button<{$secondary?: boolean; $danger?: boolean}>`
+export const Button = styled.button<{$danger?: boolean; $secondary?: boolean}>`
   align-items: center;
-  background: ${({$secondary, $danger}) => {
-    if ($secondary) return '#edf3f6';
-    return $danger ? '#9a4036' : '#155a73';
+  background: ${({$danger, $secondary}) => {
+    if ($secondary) return naval.hull;
+    return $danger ? '#4a1c14' : 'linear-gradient(180deg, #ffbd86, #ff9d55)';
   }};
-  border: 1px solid ${({$secondary}) => ($secondary ? '#cbdce4' : 'transparent')};
+  border: 1px solid
+    ${({$danger, $secondary}) => {
+      if ($secondary) return naval.steelBright;
+      return $danger ? '#ff7a4d99' : '#ffc89c';
+    }};
   border-radius: 12px;
-  color: ${({$secondary}) => ($secondary ? '#16485c' : '#ffffff')};
+  box-shadow: ${({$danger, $secondary}) =>
+    $danger || $secondary ? 'none' : '0 10px 24px #ff8c4026, inset 0 1px 0 #ffffff66'};
+  color: ${({$danger, $secondary}) => {
+    if ($secondary) return naval.ice;
+    return $danger ? '#ffd2bd' : naval.ink;
+  }};
   cursor: pointer;
   display: inline-flex;
   font-family: inherit;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: ${fonts.weight.bold};
   gap: 8px;
   justify-content: center;
   min-height: 44px;
   padding: 11px 18px;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    filter 0.15s ease,
+    transform 0.15s ease;
 
   &:hover:not(:disabled) {
-    filter: brightness(0.92);
+    border-color: ${({$danger, $secondary}) => ($secondary || $danger ? naval.amberLight : '#ffc89c')};
+    filter: brightness(1.06);
+    transform: translateY(-1px);
   }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
   &:disabled {
     cursor: default;
     opacity: 0.5;
   }
+
   &:focus-visible {
-    outline: 3px solid #c58e37;
+    outline: 2px solid ${naval.amberLight};
     outline-offset: 3px;
   }
 `;
 
-export const Cell = styled.button<{$state: string; $selected?: boolean; $preview?: boolean; $invalid?: boolean}>`
+export const Calm = styled.div`
+  ${navalConsole};
+  align-items: center;
+  display: flex;
+  gap: 20px;
+  margin-top: 24px;
+  padding: 24px 28px;
+
+  @media (max-width: 600px) {
+    padding: 22px 20px;
+  }
+`;
+
+export const CalmCopy = styled.div`
+  strong {
+    color: ${naval.ice};
+    display: block;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  p {
+    color: ${naval.mist};
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+  }
+`;
+
+export const CalmLink = styled(Link)`
+  color: ${naval.amberLight};
+  font-weight: ${fonts.weight.semiBold};
+  white-space: nowrap;
+
+  &:hover {
+    color: ${naval.amber};
+  }
+`;
+
+export const Caption = styled.span`
+  ${readout};
+  color: ${naval.fog};
+  font-size: 9px;
+`;
+
+export const Cell = styled.button<{
+  $aim?: boolean;
+  $invalid?: boolean;
+  $preview?: boolean;
+  $selected?: boolean;
+  $state: CellState;
+}>`
   align-items: center;
   aspect-ratio: 1;
   background: ${({$invalid, $preview, $state}) => {
-    if ($invalid) return '#963e48';
-    if ($preview) return '#2a9c9e';
-    if ($state === 'sunk') return 'radial-gradient(circle, #713326, #3e2728)';
-    if ($state === 'hit') return 'radial-gradient(circle, #ea9b46, #a94629)';
-    if ($state === 'miss') return 'radial-gradient(circle, #307185, #1b4054)';
-    if ($state === 'ship') return '#648b9e';
-    return '#1b4054';
+    if ($invalid) return '#ff5a5a40';
+    if ($preview) return '#64d2ec4d';
+    return CELL_BACKGROUNDS[$state];
   }};
-  border: 1px solid ${({$selected}) => ($selected ? '#f5ca72' : '#34576a')};
+  border: 1px solid
+    ${({$invalid, $preview, $selected, $state}) => {
+      if ($selected) return naval.amberLight;
+      if ($invalid) return '#ff8a8a';
+      if ($preview) return naval.sonar;
+      return CELL_BORDERS[$state];
+    }};
   border-radius: 4px;
-  box-shadow: ${({$selected}) => ($selected ? 'inset 0 0 0 2px #f5ca72' : 'none')};
-  color: #ffffff;
+  box-shadow: ${({$selected, $state}) => {
+    if ($selected) return `inset 0 0 0 2px ${naval.amberLight}`;
+    if ($state === 'hit') return '0 0 12px #ff8c4059';
+    if ($state === 'ship') return 'inset 0 1px 0 #ffffff26';
+    return 'none';
+  }};
+  color: ${({$state}) => ($state === 'sunk' ? '#ffc2b0' : naval.ice)};
   cursor: pointer;
   display: flex;
   font-size: clamp(12px, 2vw, 22px);
-  font-weight: 600;
+  font-weight: ${fonts.weight.bold};
   justify-content: center;
   min-width: 0;
   padding: 0;
   position: relative;
   touch-action: manipulation;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease;
 
   &:disabled {
     cursor: default;
   }
+
   &:hover:not(:disabled) {
-    border-color: #e9d494;
-    background: #366d80;
+    background: ${({$aim}) => ($aim ? '#ffad6a24' : '#33607f')};
+    border-color: ${({$aim}) => ($aim ? naval.amber : naval.amberLight)};
   }
+
+  ${({$aim}) =>
+    $aim &&
+    css`
+      cursor: crosshair;
+
+      &:hover:not(:disabled)::before {
+        background:
+          linear-gradient(${naval.amber}, ${naval.amber}) center / 1px 64% no-repeat,
+          linear-gradient(${naval.amber}, ${naval.amber}) center / 64% 1px no-repeat;
+        content: '';
+        inset: 0;
+        position: absolute;
+      }
+
+      &:hover:not(:disabled)::after {
+        border: 1px solid ${naval.amberLight};
+        border-radius: 50%;
+        content: '';
+        inset: 24%;
+        position: absolute;
+      }
+    `}
+
   &:focus-visible {
-    outline: 3px solid #f5ca72;
+    outline: 2px solid ${naval.amberLight};
     outline-offset: 1px;
     z-index: 1;
   }
+`;
+
+export const Clock = styled.div`
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 2px;
+`;
+
+export const ClockLabel = styled.span<{$active: boolean}>`
+  ${readout};
+  align-items: center;
+  color: ${({$active}) => ($active ? naval.sonar : naval.fog)};
+  display: inline-flex;
+  font-size: 9px;
+  gap: 6px;
+
+  ${({$active}) =>
+    $active &&
+    css`
+      &::before {
+        animation: ${pulse} 1.6s ease-out infinite;
+        background: currentColor;
+        border-radius: 50%;
+        content: '';
+        height: 6px;
+        width: 6px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        &::before {
+          animation: none;
+        }
+      }
+    `}
 `;
 
 export const Container = styled.div`
@@ -169,116 +388,157 @@ export const Container = styled.div`
   padding-top: 28px;
 `;
 
+export const Deadline = styled.div`
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: auto;
+`;
+
 export const Detail = styled.p`
-  color: ${colors.secondary};
+  color: ${naval.mist};
   font-size: 14px;
   line-height: 1.7;
   margin: 0;
 `;
 
-export const Empty = styled.div`
-  background: #f4f8fa;
-  border: 1px dashed #cadbe3;
-  border-radius: 16px;
-  color: ${colors.secondary};
-  line-height: 1.7;
-  padding: 24px;
-`;
-
 export const Error = styled.div`
-  background: #fff1ec;
-  border: 1px solid #eac8bb;
-  border-radius: 12px;
-  color: #813e2c;
-  line-height: 1.6;
-  margin: 16px 0;
-  padding: 14px 18px;
-`;
-
-export const Eyebrow = styled.p`
-  color: #397184;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  margin: 0 0 12px;
-  text-transform: uppercase;
-`;
-
-export const Field = styled.label`
-  color: #284e60;
+  align-items: center;
+  background: linear-gradient(90deg, #3b1a12, #1d1519);
+  border: 1px solid #ff7a4d66;
+  border-radius: 14px;
+  color: #ffdccb;
   display: flex;
-  flex-direction: column;
-  font-size: 13px;
-  font-weight: 600;
-  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  gap: 12px 16px;
+  justify-content: space-between;
+  line-height: 1.6;
+  margin: 20px 0;
+  padding: 14px 18px;
+
+  p {
+    color: inherit;
+    flex-basis: 100%;
+    margin: 0;
+    opacity: 0.8;
+  }
 `;
 
 export const Fleet = styled.div`
+  display: grid;
+  gap: 8px;
+  margin: 18px 0;
+`;
+
+export const FleetButton = styled(Button)<{$placed: boolean; $selected: boolean}>`
+  background: ${({$selected}) => ($selected ? 'linear-gradient(180deg, #64d2ec1f, #64d2ec08)' : '#081a2dcc')};
+  border-color: ${({$selected}) => ($selected ? naval.sonar : naval.steel)};
+  box-shadow: ${({$selected}) => ($selected ? `inset 0 0 0 1px ${naval.sonar}, 0 0 22px #64d2ec1f` : 'none')};
+  color: ${naval.ice};
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) auto 18px;
+  justify-content: stretch;
+  min-height: 48px;
+  padding: 10px 14px;
+  text-align: left;
+
+  i {
+    background: ${({$placed}) => ($placed ? naval.sonar : 'transparent')};
+    border: 1px ${({$placed}) => ($placed ? 'solid' : 'dashed')} ${({$placed}) => ($placed ? naval.sonar : '#6f94ad')};
+    border-radius: 2px;
+    box-shadow: ${({$placed}) => ($placed ? '0 0 8px #64d2ec59' : 'none')};
+    display: block;
+    height: 10px;
+    width: 10px;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: ${({$selected}) => ($selected ? naval.sonar : naval.steelBright)};
+    filter: none;
+  }
+`;
+
+export const FleetCheck = styled.span`
+  color: ${naval.kelp};
+  font-size: 14px;
+  text-align: right;
+`;
+
+export const FleetName = styled.span`
+  font-size: 14px;
+  font-weight: ${fonts.weight.bold};
+`;
+
+export const GhostButton = styled.button`
+  ${readout};
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: inherit;
+  cursor: pointer;
+  padding: 8px 16px;
+
+  &:hover {
+    background: #ffffff14;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${naval.amberLight};
+    outline-offset: 3px;
+  }
+`;
+
+export const Hull = styled.span`
+  display: inline-flex;
+  gap: 3px;
+`;
+
+export const LastShot = styled.p<{$result: 'hit' | 'miss' | 'sunk'}>`
+  ${compactConsole};
+  align-items: center;
+  border-radius: 14px;
+  color: ${naval.mist};
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 16px 0;
+  font-size: 13px;
+  gap: 4px 10px;
+  margin: 0 0 16px;
+  padding: 10px 16px;
+
+  span {
+    ${readout};
+    background: ${({$result}) => ($result === 'miss' ? '#64d2ec1f' : '#ffad6a24')};
+    border: 1px solid ${({$result}) => ($result === 'miss' ? '#64d2ec66' : '#ffad6a73')};
+    border-radius: 999px;
+    color: ${({$result}) => ($result === 'miss' ? naval.sonar : naval.amberLight)};
+    font-size: 9px;
+    padding: 4px 9px;
+  }
 `;
 
-export const FleetButton = styled(Button)<{$selected?: boolean}>`
-  border-color: ${({$selected}) => ($selected ? '#155a73' : '#cbdce4')};
-  box-shadow: ${({$selected}) => ($selected ? 'inset 0 0 0 1px #155a73' : 'none')};
-  font-size: 12px;
-  padding: 8px 12px;
-`;
-
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-export const GuestActions = styled.div`
-  margin: 24px 0 8px;
-`;
-
-export const Input = styled.input`
-  background: #ffffff;
-  border: 1px solid #c5d7df;
-  border-radius: 10px;
-  color: ${colors.primary};
-  font: inherit;
-  min-height: 44px;
-  padding: 10px 12px;
+export const LaunchButton = styled(Button)`
+  font-size: 15px;
+  gap: 10px;
+  min-height: 50px;
   width: 100%;
 `;
 
 export const Legend = styled.div`
-  color: #b3ceda;
+  ${readout};
+  color: ${naval.mist};
   display: flex;
   flex-wrap: wrap;
-  font-size: 11px;
-  gap: 16px;
-  margin-top: 14px;
-`;
+  font-size: 9px;
+  gap: 8px 16px;
+  margin-top: 12px;
 
-export const List = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-export const MatchLink = styled(Link)`
-  align-items: center;
-  background: #ffffff;
-  border: 1px solid #d9e5eb;
-  border-radius: 14px;
-  color: ${colors.primary};
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: space-between;
-  padding: 18px 20px;
-  text-decoration: none;
-
-  &:hover {
-    background: #f2f8fa;
-    text-decoration: none;
+  span {
+    align-items: center;
+    display: inline-flex;
+    gap: 6px;
   }
 `;
 
@@ -292,12 +552,18 @@ export const Navigation = styled.nav`
 `;
 
 export const Panel = styled.section`
-  background: #ffffff;
-  border: 1px solid #dce6eb;
-  border-radius: 20px;
+  ${navalConsole};
   min-width: 0;
-  padding: 24px;
+  padding: 26px 28px;
   scroll-margin-top: 24px;
+
+  @media (max-width: 600px) {
+    padding: 22px 20px;
+  }
+`;
+
+export const PanelActions = styled(Actions)`
+  margin-top: 20px;
 `;
 
 export const PanelGrid = styled.div`
@@ -311,50 +577,165 @@ export const PanelGrid = styled.div`
   }
 `;
 
-export const Player = styled.div<{$active: boolean}>`
+export const PanelHeader = styled.header`
   align-items: center;
-  background: ${({$active}) => ($active ? '#e8f3f5' : '#f8fafb')};
-  border: 1px solid ${({$active}) => ($active ? '#82afb8' : '#dce6eb')};
-  border-radius: 14px;
+  display: flex;
+  gap: 14px;
+  margin-bottom: 14px;
+
+  h2 {
+    margin: 0;
+  }
+`;
+
+export const Player = styled.div<{$active: boolean}>`
+  ${compactConsole};
+  align-items: center;
+  border-color: ${({$active}) => ($active ? naval.sonar : naval.steel)};
+  box-shadow: ${({$active}) =>
+    $active ? `inset 0 0 0 1px ${naval.sonar}, 0 0 26px #64d2ec26` : '0 18px 42px #0613231f, inset 0 1px 0 #ffffff0a'};
+  display: flex;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px 20px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+`;
+
+export const PlayerIdentity = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+
+  strong {
+    color: ${naval.ice};
+    font-size: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 480px) {
+    strong {
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+  }
+`;
+
+export const ResignBar = styled.div<{$confirming: boolean}>`
+  align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  justify-content: space-between;
-  padding: 16px;
+  gap: 12px 16px;
+  justify-content: ${({$confirming}) => ($confirming ? 'space-between' : 'flex-end')};
+  margin-top: 24px;
+
+  ${({$confirming}) =>
+    $confirming &&
+    css`
+      ${compactConsole};
+      border-color: #ff7a4d66;
+      padding: 16px 20px;
+    `}
 `;
 
 export const Rules = styled.details`
-  background: #ffffff;
-  border: 1px solid #dce6eb;
-  border-radius: 16px;
-  color: ${colors.secondary};
+  ${navalConsole};
+  color: ${naval.mist};
   line-height: 1.75;
   margin-top: 24px;
-  padding: 20px 24px;
+  padding: 20px 28px;
+
+  &:not([open])::after {
+    display: none;
+  }
 
   summary {
-    color: #244c60;
+    align-items: center;
+    color: ${naval.ice};
     cursor: pointer;
-    font-weight: 600;
+    display: flex;
+    font-weight: ${fonts.weight.semiBold};
+    gap: 14px;
+    list-style: none;
+    min-height: 32px;
   }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::before {
+    background: radial-gradient(circle, ${naval.sonar} 0 2px, transparent 3px);
+    border: 1px solid #64d2ec8c;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #64d2ec33;
+    content: '';
+    flex-shrink: 0;
+    height: 24px;
+    width: 24px;
+  }
+
+  summary::after {
+    border-bottom: 2px solid ${naval.amberLight};
+    border-right: 2px solid ${naval.amberLight};
+    content: '';
+    height: 8px;
+    margin: -4px 4px 0 auto;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    width: 8px;
+  }
+
+  &[open] summary::after {
+    margin-top: 4px;
+    transform: rotate(-135deg);
+  }
+
+  summary:focus-visible {
+    border-radius: 6px;
+    outline: 2px solid ${naval.amberLight};
+    outline-offset: 4px;
+  }
+
+  ol {
+    counter-reset: order;
+    display: grid;
+    gap: 14px;
+    list-style: none;
+    margin: 20px 0 8px;
+    padding: 0;
+  }
+
   li {
-    margin-top: 8px;
+    counter-increment: order;
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 36px minmax(0, 1fr);
   }
-`;
 
-export const Section = styled.section`
-  margin-top: 28px;
-`;
+  li::before {
+    ${readout};
+    align-items: center;
+    background: #ffad6a14;
+    border: 1px solid #ffad6a59;
+    border-radius: 8px;
+    color: ${naval.amberLight};
+    content: counter(order, decimal-leading-zero);
+    display: flex;
+    height: 28px;
+    justify-content: center;
+    letter-spacing: 0.04em;
+    margin-top: 1px;
+  }
 
-export const Select = styled.select`
-  background: #ffffff;
-  border: 1px solid #c5d7df;
-  border-radius: 10px;
-  color: ${colors.primary};
-  font: inherit;
-  min-height: 44px;
-  padding: 10px 12px;
-  width: 100%;
+  @media (max-width: 600px) {
+    padding: 18px 20px;
+  }
 `;
 
 export const ShotEffect = styled.span<{$result: 'hit' | 'miss' | 'sunk'}>`
@@ -413,60 +794,140 @@ export const ShotEffect = styled.span<{$result: 'hit' | 'miss' | 'sunk'}>`
 `;
 
 export const ShotReport = styled.div`
-  color: #ffe0a1;
-  font-size: 13px;
-  font-weight: 600;
+  ${readout};
+  color: ${naval.amberLight};
+  font-size: 11px;
   margin-top: 12px;
-  min-height: 20px;
+  min-height: 18px;
 `;
 
 export const Small = styled.p`
-  color: ${colors.secondary};
+  color: ${naval.mist};
   font-size: 12px;
   line-height: 1.7;
   margin: 8px 0 0;
 `;
 
+// Restyles the shared sound toggle as a HUD chip beside the match badge
+export const Sound = styled.span`
+  button {
+    ${readout};
+    background: ${naval.hull};
+    border-color: ${naval.steel};
+    border-radius: 999px;
+    color: ${naval.mist};
+    font-size: 10px;
+    min-height: 34px;
+    padding: 6px 14px;
+  }
+
+  button:hover {
+    border-color: ${naval.steelBright};
+    color: ${naval.ice};
+    filter: none;
+  }
+`;
+
 export const Stat = styled.div`
   align-items: center;
-  border-bottom: 1px solid #e1eaf0;
+  border-bottom: 1px solid #1f3d5699;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   justify-content: space-between;
-  padding: 14px 0;
+  padding: 13px 0;
+
+  span {
+    color: ${naval.mist};
+    font-size: 13px;
+  }
+
+  strong {
+    color: ${naval.ice};
+    font-family: ${navalMono};
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
 `;
 
-export const Status = styled.div`
+export const StatGroup = styled.div`
+  margin: 16px 0 8px;
+`;
+
+export const Status = styled.div<{$tone?: StatusTone}>`
+  ${compactConsole};
   align-items: center;
-  background: #f0f6f9;
-  border: 1px solid #cfdee6;
-  border-radius: 16px;
+  border-color: ${({$tone}) => ($tone ? `${STATUS_TONES[$tone]}73` : naval.steel)};
+  box-shadow: ${({$tone}) =>
+    $tone ? `0 0 30px ${STATUS_TONES[$tone]}2e, 0 18px 42px #0613231f` : '0 18px 42px #0613231f'};
+  color: ${naval.mist};
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  justify-content: space-between;
-  margin: 20px 0;
-  min-height: 80px;
-  padding: 18px 22px;
+  gap: 14px 18px;
+  margin: 16px 0;
+  padding: 16px 20px;
+`;
+
+export const StatusCopy = styled.div`
+  flex: 1;
+  min-width: 200px;
+
+  strong {
+    color: ${naval.ice};
+    display: block;
+    font-size: 16px;
+  }
+
+  p {
+    margin-top: 4px;
+  }
+`;
+
+export const Swatch = styled.i<{$state: CellState}>`
+  background: ${({$state}) => CELL_BACKGROUNDS[$state]};
+  border: 1px solid ${({$state}) => CELL_BORDERS[$state]};
+  border-radius: 3px;
+  display: block;
+  height: 12px;
+  width: 12px;
+`;
+
+export const Tags = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
 `;
 
 export const TextLink = styled(Link)`
   color: #255b70;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: ${fonts.weight.semiBold};
 `;
 
-export const Timer = styled.strong`
-  color: #194b61;
-  font-size: 22px;
+export const Timer = styled.strong<{$warning?: boolean}>`
+  color: ${({$warning}) => ($warning ? naval.flare : naval.ice)};
+  font-family: ${navalMono};
+  font-size: 24px;
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
 `;
 
 export const TitleSmall = styled.h2`
-  color: #203f52;
+  color: ${naval.ice};
   font-size: 21px;
-  font-weight: 600;
+  font-weight: ${fonts.weight.bold};
   letter-spacing: -0.025em;
-  margin: 0 0 16px;
+  margin: 0 0 10px;
+`;
+
+export const VisuallyHidden = styled.span`
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 `;

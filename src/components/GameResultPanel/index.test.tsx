@@ -94,3 +94,18 @@ it('handles a scoreless draw without inventing a winner or an invalid score shar
   expect(container.querySelector('[style]')).toHaveStyle({width: '50%'});
   act(() => root.unmount());
 });
+
+it('shows a game’s own artwork in place of the default crest', () => {
+  const container = document.createElement('div');
+  const root = createRoot(container);
+  act(() =>
+    root.render(
+      <GameResultPanel artwork={<svg aria-hidden="true" data-testid="naval-crest" />} outcome="win" title="Alice wins">
+        <p>Fleet sunk.</p>
+      </GameResultPanel>,
+    ),
+  );
+  expect(container.querySelectorAll('svg')).toHaveLength(1);
+  expect(container.querySelector('[data-testid="naval-crest"]')).not.toBeNull();
+  act(() => root.unmount());
+});
