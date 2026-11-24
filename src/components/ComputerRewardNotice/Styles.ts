@@ -175,13 +175,14 @@ export const Notice = styled.div<{$guest?: boolean; $paid?: boolean; $subdued?: 
   ${({$subdued}) =>
     $subdued &&
     css`
-      background: #ffffff05;
-      border: 1px solid #a8c5cd26;
-      color: #afc6ce;
+      background: #ffffff04;
+      border: 1px solid #a8c5cd18;
+      border-left: 2px solid #8297b34d;
+      color: #a9b8ce;
       font-size: 12px;
       gap: 3px;
       margin: 0;
-      padding: 13px 16px;
+      padding: 12px 16px;
     `}
 
   ${({$paid}) =>

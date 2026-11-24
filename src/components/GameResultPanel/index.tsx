@@ -64,14 +64,16 @@ const GameResultPanel = ({children, description, game, outcome, scoreLabel = 'Fi
           <S.ScoreLabel>{scoreLabel}</S.ScoreLabel>
           <S.ScorePlayers>
             {scores.map(({label, value, winner}, index) => (
-              <S.ScorePlayer $winner={!!winner} key={index}>
+              <S.ScorePlayer $opponent={index === 1} $winner={!!winner} key={index}>
                 <S.ScoreName>
+                  <S.PlayerMarker aria-hidden="true" />
                   {label}
                   {winner && <S.WinnerBadge>Winner</S.WinnerBadge>}
                 </S.ScoreName>
                 <S.ScoreValue>{value.toLocaleString()}</S.ScoreValue>
               </S.ScorePlayer>
             ))}
+            <S.ScoreVersus aria-hidden="true">vs</S.ScoreVersus>
           </S.ScorePlayers>
           <S.ScoreTrack aria-hidden="true">
             <S.ScoreShare style={{width: `${totalScore ? (scores[0].value / totalScore) * 100 : 50}%`}} />
