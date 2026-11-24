@@ -6,6 +6,7 @@ import SentryRoutes from 'components/SentryRoutes';
 import {
   PATH_AUTHENTICATION,
   PATH_BACKGAMMON,
+  PATH_BATTLESHIP,
   PATH_CONNECT_FIVE,
   PATH_CURRENCIES,
   PATH_DEFAULT,
@@ -19,6 +20,7 @@ import {
   PATH_WALLETS,
 } from 'constants/paths';
 import Backgammon from 'pages/Backgammon';
+import Battleship from 'pages/Battleship';
 import ConnectFive from 'pages/ConnectFive';
 import Currencies from 'pages/Currencies';
 import Exchange from 'pages/Exchange';
@@ -38,6 +40,7 @@ const MainArea: SFC = ({className}) => {
       <SentryRoutes>
         <Route path="*" element={<Navigate to={PATH_DEFAULT} replace />} />
         <Route element={<Backgammon />} path={PATH_BACKGAMMON} />
+        <Route element={<Battleship />} path={PATH_BATTLESHIP} />
         <Route path={PATH_CONNECT_FIVE} element={<ConnectFive />} />
         <Route path={PATH_CURRENCIES} element={<Currencies />} />
         <Route path={PATH_EXCHANGE} element={<Exchange />} />

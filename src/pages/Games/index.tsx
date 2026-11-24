@@ -3,6 +3,7 @@ import {mdiArrowRight} from '@mdi/js';
 import connectFiveCover from 'assets/connect-five-cover.webp';
 import BackgammonBoard from 'pages/Backgammon/Board';
 import {INITIAL_BOARD} from 'pages/Backgammon/utils';
+import BattleshipArtwork from 'pages/Battleship/Artwork';
 import {SFC} from 'types';
 import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
 
@@ -20,12 +21,44 @@ const Games: SFC = ({className}) => {
         <section aria-labelledby="featured-game-heading">
           <S.SectionHeader>
             <S.SectionTitle id="featured-game-heading">In the spotlight</S.SectionTitle>
-            <S.GameCount>2 games</S.GameCount>
+            <S.GameCount>3 games</S.GameCount>
           </S.SectionHeader>
+          <S.GameCard aria-label="Battleship — open game lobby" to="/battleship/home">
+            <S.BattleshipArtwork>
+              <BattleshipArtwork />
+              <S.FeaturedBadge>NEW GAME</S.FeaturedBadge>
+            </S.BattleshipArtwork>
+            <S.GameDetails>
+              <S.Category>NAVAL STRATEGY · COMPUTER & MULTIPLAYER</S.Category>
+              <S.GameTitle>Battleship</S.GameTitle>
+              <S.Tagline>
+                Hide your fleet.
+                <br />
+                Hunt theirs.
+              </S.Tagline>
+              <S.Description>
+                Plot your fleet, read the water, and make every shot count. Play the computer for free or challenge a
+                member for TNB.
+              </S.Description>
+              <S.Facts>
+                <S.Fact>
+                  <S.FactValue>Five ships. One mission.</S.FactValue>
+                  <S.FactLabel>Sink the opposing fleet</S.FactLabel>
+                </S.Fact>
+                <S.Fact>
+                  <S.FactValue>Optional TNB stakes</S.FactValue>
+                  <S.FactLabel>Free computer practice</S.FactLabel>
+                </S.Fact>
+              </S.Facts>
+              <S.PlayLabel>Open lobby</S.PlayLabel>
+              <S.BrowserNote>Private boards · No download needed</S.BrowserNote>
+            </S.GameDetails>
+          </S.GameCard>
+          <S.CardSpacer />
           <S.GameCard aria-label="Backgammon — open game lobby" to="/backgammon/home">
             <S.BackgammonArtwork>
               <BackgammonBoard board={INITIAL_BOARD} decorative />
-              <S.FeaturedBadge>NEW GAME</S.FeaturedBadge>
+              <S.FeaturedBadge>CLASSIC GAME</S.FeaturedBadge>
             </S.BackgammonArtwork>
             <S.GameDetails>
               <S.Category>CLASSIC STRATEGY · COMPUTER & MULTIPLAYER</S.Category>
@@ -104,7 +137,7 @@ const Games: SFC = ({className}) => {
           </S.AboutItem>
           <S.AboutItem>
             <S.AboutTitle>Find your rhythm</S.AboutTitle>
-            <S.AboutText>Practice your backgammon or climb the Connect Five leaderboard.</S.AboutText>
+            <S.AboutText>Practice Battleship or Backgammon, or climb the Connect Five leaderboard.</S.AboutText>
           </S.AboutItem>
           <S.AboutItem>
             <S.AboutTitle>Take a front-row seat</S.AboutTitle>

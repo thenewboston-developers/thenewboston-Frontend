@@ -7,6 +7,14 @@ import {CreatedModified} from 'types/createdModified';
 import {Dict} from 'types/generic';
 import {PaginatedResponse, Pagination} from 'types/pagination';
 
+export interface BattleshipChallengePayload {
+  challenger: Pick<UserReadSerializer, 'id' | 'username' | 'avatar'>;
+  match_id: number;
+  notification_type: NotificationType.BATTLESHIP_CHALLENGE;
+  stake_amount: number;
+  time_limit_seconds: number;
+}
+
 export interface BackgammonChallengePayload {
   challenger: Pick<UserReadSerializer, 'id' | 'username' | 'avatar'>;
   match_id: number;
@@ -98,6 +106,7 @@ export interface ProfileFollowPayload {
 
 export type NotificationPayload =
   | BackgammonChallengePayload
+  | BattleshipChallengePayload
   | CommentMentionPayload
   | ConnectFiveChallengePayload
   | ExchangeOrderFilledPayload

@@ -10,11 +10,14 @@ describe('isPathActive', () => {
     '/backgammon',
     '/backgammon/home',
     '/backgammon/matches/12',
+    '/battleship',
+    '/battleship/home',
+    '/battleship/matches/12',
   ])('keeps Games active on %s', (pathname) => {
     expect(isPathActive(pathname, '/games')).toBe(true);
   });
 
-  it.each(['/games-extra', '/connect-five-extra', '/backgammon-extra', '/exchange', '/'])(
+  it.each(['/games-extra', '/connect-five-extra', '/backgammon-extra', '/battleship-extra', '/exchange', '/'])(
     'does not activate Games on %s',
     (pathname) => {
       expect(isPathActive(pathname, '/games')).toBe(false);
