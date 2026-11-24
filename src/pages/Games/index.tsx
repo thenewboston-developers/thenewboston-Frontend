@@ -5,6 +5,7 @@ import backgammonCover from 'assets/backgammon-cover.webp';
 import battleshipCover from 'assets/battleship-cover.webp';
 import checkersCover from 'assets/checkers-cover.webp';
 import connectFiveCover from 'assets/connect-five-cover.webp';
+import dotsAndBoxesCover from 'assets/dots-and-boxes-cover.webp';
 import mancalaThumbnail from 'assets/mancala-thumbnail.webp';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
 import GameFund from 'components/GameFund';
@@ -79,6 +80,18 @@ const games = [
     name: 'Mancala',
     path: 'mancala',
     target: 'mancala',
+  },
+  {
+    accent: '#2f5bd0',
+    art: dotsAndBoxesCover,
+    badge: 'PEN-AND-PAPER CLASSIC',
+    category: 'Line-by-line strategy',
+    description: 'Draw a line. Close a box. Go again. Simple to start, sneaky to master.',
+    imageDescription:
+      'Ivory pegs on a midnight-blue board joined by blue and coral rods, with claimed boxes glowing in each color',
+    name: 'Dots and Boxes',
+    path: 'dots-and-boxes',
+    target: 'dots_and_boxes',
   },
 ];
 

@@ -23,6 +23,7 @@ import checkersReducer from 'store/checkers';
 import commentsReducer from 'store/comments';
 import connectFiveReducer from 'store/connectFive';
 import currenciesReducer from 'store/currencies';
+import dotsAndBoxesReducer from 'store/dotsAndBoxes';
 import exchangeOrdersReducer from 'store/exchangeOrders';
 import followersReducer from 'store/followers';
 import followingsReducer from 'store/followings';
@@ -55,6 +56,7 @@ const rootReducer = combineReducers({
   comments: commentsReducer,
   connectFive: connectFiveReducer,
   currencies: currenciesReducer,
+  dotsAndBoxes: dotsAndBoxesReducer,
   exchangeOrders: exchangeOrdersReducer,
   followers: followersReducer,
   followings: followingsReducer,
@@ -87,7 +89,16 @@ const persistConfig = {
   migrate: createMigrate(migrations, {debug: false}),
   storage,
   version: 3,
-  blacklist: ['authPrompt', 'backgammon', 'battleship', 'checkers', 'frontendDeployments', 'mancala', 'reversi'],
+  blacklist: [
+    'authPrompt',
+    'backgammon',
+    'battleship',
+    'checkers',
+    'dotsAndBoxes',
+    'frontendDeployments',
+    'mancala',
+    'reversi',
+  ],
 };
 
 const persistedReducer = persistReducer(persistConfig, appReducer);
