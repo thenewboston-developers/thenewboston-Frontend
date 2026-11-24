@@ -1,7 +1,7 @@
 import * as S from './Styles';
 
-const Rules = () => (
-  <S.Rules>
+const Rules = ({className}: {className?: string}) => (
+  <S.Rules className={className}>
     <summary>How to play backgammon</summary>
     <ol>
       <li>
