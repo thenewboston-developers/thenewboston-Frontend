@@ -1,5 +1,7 @@
 import styled, {css, keyframes} from 'styled-components';
 
+import {board} from './theme';
+
 const appear = keyframes`
   from {
     opacity: 0;
@@ -44,26 +46,29 @@ const crown = keyframes`
 const mustCapture = keyframes`
   0%,
   100% {
-    box-shadow: inset 0 0 0 3px #efcb7500;
+    box-shadow: inset 0 0 0 2px ${board.edge}, inset 0 0 0 4px ${board.gold};
   }
 
   50% {
-    box-shadow: inset 0 0 0 3px #efcb75;
+    box-shadow: inset 0 0 0 2px ${board.edge}, inset 0 0 0 6px ${board.gold};
   }
 `;
 
 export const BoardFrame = styled.div`
-  background: #263e30;
-  border: 1px solid #415b41;
+  background: ${board.forest};
+  border: 1px solid ${board.line};
   border-radius: 22px;
-  box-shadow: 0 16px 32px #243c291c;
+  box-shadow:
+    0 5px 0 ${board.edge},
+    0 20px 40px #10201840,
+    inset 0 1px 0 #ffffff12;
   margin: 0 auto;
   max-width: 640px;
   padding: 20px;
   width: 100%;
 
   @media (min-width: 1000px) and (min-height: 600px) {
-    max-width: min(640px, calc(100dvh - 280px));
+    max-width: min(640px, calc(100dvh - 230px));
   }
 
   @media (max-width: 550px) {
@@ -73,7 +78,7 @@ export const BoardFrame = styled.div`
 `;
 
 export const BoardGrid = styled.div<{$dragging: boolean}>`
-  border: 3px solid #182c20;
+  border: 3px solid ${board.edge};
   border-radius: 4px;
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
@@ -93,7 +98,7 @@ export const BoardGrid = styled.div<{$dragging: boolean}>`
 `;
 
 export const BoardTitle = styled.div`
-  color: #f0f1df;
+  color: ${board.ivoryLight};
   display: flex;
   flex-wrap: wrap;
   font-size: 13px;
@@ -114,12 +119,13 @@ export const Cell = styled.button<{
   align-items: center;
   aspect-ratio: 1;
   background: ${({$dark, $dropTarget, $last}) => {
-    if ($dropTarget) return '#a7b46f';
-    if ($last) return '#8f9c66';
-    return $dark ? '#6b805d' : '#e9e3d0';
+    if ($dropTarget) return '#b7ca8c';
+    if ($last) return '#9db577';
+    return $dark ? board.squareDark : board.squareLight;
   }};
   border: 0;
-  box-shadow: ${({$selected}) => ($selected ? 'inset 0 0 0 4px #efcb75' : 'none')};
+  box-shadow: ${({$mustCapture, $selected}) =>
+    $selected || $mustCapture ? `inset 0 0 0 2px ${board.edge}, inset 0 0 0 5px ${board.gold}` : 'none'};
   cursor: ${({$movable}) => ($movable ? 'grab' : 'pointer')};
   display: flex;
   justify-content: center;
@@ -133,18 +139,20 @@ export const Cell = styled.button<{
   }
 
   &:hover:not(:disabled) {
-    box-shadow: inset 0 0 0 3px #efcb75;
+    box-shadow:
+      inset 0 0 0 2px ${board.edge},
+      inset 0 0 0 6px ${board.gold};
   }
 
   &:focus-visible {
-    outline: 4px solid #f7c958;
-    outline-offset: -4px;
+    outline: 3px solid ${board.edge};
+    outline-offset: -3px;
     z-index: 1;
   }
 
   &::after {
-    background: #f1d38a;
-    border: 2px solid #354b30;
+    background: ${board.gold};
+    border: 2px solid ${board.edge};
     border-radius: 50%;
     content: ${({$target}) => ($target ? "''" : 'none')};
     height: ${({$dropTarget}) => ($dropTarget ? '32%' : '24%')};
@@ -170,7 +178,7 @@ export const Cell = styled.button<{
 
 export const Coordinate = styled.span<{$dark: boolean}>`
   bottom: 2px;
-  color: ${({$dark}) => ($dark ? '#eff4de' : '#506044')};
+  color: ${({$dark}) => ($dark ? board.edge : board.muted)};
   font-size: clamp(8px, 1.1vw, 11px);
   left: 3px;
   line-height: 1;
@@ -191,10 +199,10 @@ export const Crown = styled.span<{$delay: number | null}>`
 `;
 
 export const Legend = styled.div`
-  color: #d6dfc5;
+  color: ${board.mist};
   display: flex;
   flex-wrap: wrap;
-  font-size: 12px;
+  font-size: 13px;
   gap: 16px;
   line-height: 1.5;
   padding-top: 14px;
@@ -203,14 +211,16 @@ export const Legend = styled.div`
 export const Piece = styled.span<{$lifted: boolean; $white: boolean}>`
   align-items: center;
   background: ${({$white}) =>
-    $white ? 'linear-gradient(145deg, #fff8e6, #dcd2b6)' : 'linear-gradient(145deg, #4b5650, #17251d)'};
-  border: 2px solid ${({$white}) => ($white ? '#fff8e6' : '#59685c')};
+    $white
+      ? `linear-gradient(145deg, ${board.pieceLight}, #e7dec2)`
+      : `linear-gradient(145deg, #45554a, ${board.pieceDark})`};
+  border: 2px solid ${({$white}) => ($white ? '#fff8e6' : '#a4b793')};
   border-radius: 50%;
   box-shadow: ${({$lifted, $white}) =>
     $lifted
       ? `0 6px 0 ${$white ? '#a49c83' : '#102018'}, 0 16px 18px #10201880, inset 0 0 0 4px ${$white ? '#c7bea354' : '#8a967c33'}`
       : `0 4px 0 ${$white ? '#a49c83' : '#102018'}, 0 6px 7px #10201866, inset 0 0 0 4px ${$white ? '#c7bea354' : '#8a967c33'}`};
-  color: ${({$white}) => ($white ? '#5b5336' : '#f1dd9c')};
+  color: ${({$white}) => ($white ? board.ink : board.gold)};
   display: flex;
   font-size: clamp(18px, 4vw, 36px);
   height: 74%;

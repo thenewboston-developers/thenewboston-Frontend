@@ -14,17 +14,17 @@ export {Container, Navigation} from '../Styles';
 export type MatchTone = 'active' | 'closed' | 'incoming' | 'lost' | 'turn' | 'waiting' | 'won';
 
 const TONES: Record<MatchTone, {accent: string; chip: string; chipText: string; edge: string}> = {
-  active: {accent: board.ivory, chip: 'transparent', chipText: board.ivoryLight, edge: '#fdebcf66'},
-  closed: {accent: board.haze, chip: 'transparent', chipText: board.haze, edge: '#9aa6dc59'},
-  incoming: {accent: board.rubyLight, chip: board.ruby, chipText: '#ffffff', edge: board.ruby},
-  lost: {accent: board.haze, chip: 'transparent', chipText: board.haze, edge: '#9aa6dc59'},
+  active: {accent: board.ivory, chip: 'transparent', chipText: board.ivoryLight, edge: '#eeeed266'},
+  closed: {accent: board.haze, chip: 'transparent', chipText: board.haze, edge: '#acbea759'},
+  incoming: {accent: board.accentLight, chip: board.accent, chipText: board.ink, edge: board.accent},
+  lost: {accent: board.haze, chip: 'transparent', chipText: board.haze, edge: '#acbea759'},
   turn: {accent: board.gold, chip: board.gold, chipText: board.ink, edge: board.gold},
-  waiting: {accent: board.mist, chip: 'transparent', chipText: board.mist, edge: '#c3cbf259'},
-  won: {accent: board.gold, chip: 'transparent', chipText: board.gold, edge: '#f4c95d99'},
+  waiting: {accent: board.mist, chip: 'transparent', chipText: board.mist, edge: '#d2ddce59'},
+  won: {accent: board.gold, chip: 'transparent', chipText: board.gold, edge: '#f4ce7299'},
 };
 
 const fieldControl = css`
-  background: #0a1547cc;
+  background: #102018cc;
   border: 1px solid ${board.line};
   border-radius: 12px;
   color: ${board.ivoryLight};
@@ -33,12 +33,12 @@ const fieldControl = css`
     box-shadow 0.15s ease;
 
   &:hover {
-    border-color: #4b67df;
+    border-color: #8ba774;
   }
 
   &:focus {
     border-color: ${board.gold};
-    box-shadow: 0 0 0 3px #f4c95d2e;
+    box-shadow: 0 0 0 3px #f4ce722e;
     outline: none;
   }
 `;
@@ -68,11 +68,11 @@ const ivoryTile = css`
 
 const pulse = keyframes`
   0% {
-    box-shadow: 0 0 0 0 #e32b4499;
+    box-shadow: 0 0 0 0 #b8d58c99;
   }
 
   100% {
-    box-shadow: 0 0 0 10px #e32b4400;
+    box-shadow: 0 0 0 10px #b8d58c00;
   }
 `;
 
@@ -107,7 +107,7 @@ export const AuthButtons = styled(UAuthButtons)`
 
   button:first-child {
     background: transparent;
-    border-color: #5a74e0;
+    border-color: #8ba774;
     color: ${board.ivoryLight};
   }
 
@@ -116,12 +116,13 @@ export const AuthButtons = styled(UAuthButtons)`
   }
 
   button:last-child {
-    background: ${board.ruby};
-    box-shadow: 0 3px 0 ${board.rubyDark};
+    background: ${board.accent};
+    box-shadow: 0 3px 0 ${board.accentDark};
+    color: ${board.ink};
   }
 
   button:last-child:hover {
-    background: #cf2139;
+    background: #cbe4a5;
   }
 
   button:focus-visible {
@@ -131,10 +132,10 @@ export const AuthButtons = styled(UAuthButtons)`
 
 export const Badge = styled.span`
   align-items: center;
-  background: #e6edff;
-  border: 1px solid #c9d6fb;
+  background: #edf2e5;
+  border: 1px solid #cad5bd;
   border-radius: 999px;
-  color: #1b2f8f;
+  color: #294631;
   display: inline-flex;
   font-size: 12px;
   font-weight: ${fonts.weight.semiBold};
@@ -142,10 +143,10 @@ export const Badge = styled.span`
   padding: 6px 12px 6px 8px;
 
   &::before {
-    background: ${board.ruby};
-    border: 2px solid #ff6b80;
+    background: ${board.accent};
+    border: 2px solid #91a687;
     border-radius: 50%;
-    box-shadow: 0 2px 0 ${board.rubyDark};
+    box-shadow: 0 2px 0 ${board.accentDark};
     content: '';
     height: 12px;
     width: 12px;
@@ -199,15 +200,15 @@ export const Choice = styled.label`
   ${hiddenRadio};
 `;
 
-// Difficulty pips are checkers: ivory on the dark cards, ruby once the card is chosen
+// Difficulty pips are checkers: ivory on the dark cards, charcoal once the card is chosen
 export const ChoiceCard = styled.span`
   --pip-edge: #b3946a;
-  --pip-empty: #6d82dc;
+  --pip-empty: #637c5e;
   --pip-ring: #e2c9a1;
   --pip-rim: #fffaf0;
   --pip-top: ${board.ivory};
   align-content: start;
-  background: #0a154780;
+  background: #10201880;
   border: 1px solid ${board.line};
   border-radius: 14px;
   display: grid;
@@ -240,27 +241,27 @@ export const ChoiceCard = styled.span`
   }
 
   label:hover > & {
-    border-color: #4b67df;
+    border-color: #8ba774;
   }
 
   input:checked + & {
-    --pip-edge: ${board.rubyDark};
+    --pip-edge: ${board.edge};
     --pip-empty: #c7ad83;
-    --pip-ring: #b81c36;
-    --pip-rim: #ff6b80;
-    --pip-top: ${board.ruby};
+    --pip-ring: #65765a;
+    --pip-rim: #91a687;
+    --pip-top: ${board.pieceDark};
     ${ivoryTile};
     border-color: ${board.ivoryLight};
     box-shadow:
       0 4px 0 #b3946a,
-      0 12px 24px #0a154766;
+      0 12px 24px #10201866;
 
     strong {
       color: ${board.ink};
     }
 
     small {
-      color: #4a5081;
+      color: #52644e;
     }
   }
 
@@ -294,8 +295,8 @@ export const ChoiceGrid = styled.div`
 
 export const Count = styled.span`
   ${label};
-  background: #f4c95d1f;
-  border: 1px solid #f4c95d59;
+  background: #f4ce721f;
+  border: 1px solid #f4ce7259;
   border-radius: 999px;
   color: ${board.gold};
   letter-spacing: 0.06em;
@@ -406,7 +407,7 @@ export const MatchAction = styled.span<{$tone: MatchTone}>`
   border-radius: 999px;
   color: ${({$tone}) => TONES[$tone].chipText};
   flex-shrink: 0;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   padding: 8px 12px;
   white-space: nowrap;
@@ -428,8 +429,8 @@ export const MatchInfo = styled.div`
 
 export const MatchLink = styled(Link)<{$tone: MatchTone}>`
   align-items: center;
-  background: #0a15478c;
-  border: 1px solid #2e49b9b3;
+  background: #1020188c;
+  border: 1px solid #49644cb3;
   border-radius: 14px;
   box-shadow: ${({$tone}) =>
     $tone === 'incoming' || $tone === 'turn' ? `inset 3px 0 0 ${TONES[$tone].accent}` : 'none'};
@@ -444,8 +445,8 @@ export const MatchLink = styled(Link)<{$tone: MatchTone}>`
     border-color 0.15s ease;
 
   &:hover {
-    background: #2a46c938;
-    border-color: #4b67df;
+    background: #76965638;
+    border-color: #8ba774;
     color: ${board.ivoryLight};
     text-decoration: none;
   }
@@ -565,13 +566,13 @@ export const Pips = styled.span<{$level: number}>`
 
 export const PlayButton = styled.button`
   align-items: center;
-  background: linear-gradient(180deg, #ee3f57, #d8273f);
-  border: 1px solid #ff6b80;
+  background: linear-gradient(180deg, #c8e1a4, #b8d58c);
+  border: 1px solid #91a687;
   border-radius: 12px;
   box-shadow:
-    0 4px 0 ${board.rubyDark},
-    0 14px 26px #e32b4430;
-  color: #ffffff;
+    0 4px 0 ${board.accentDark},
+    0 14px 26px #b8d58c30;
+  color: ${board.ink};
   cursor: pointer;
   display: flex;
   font-family: inherit;
@@ -593,8 +594,8 @@ export const PlayButton = styled.button`
 
   &:active:not(:disabled) {
     box-shadow:
-      0 1px 0 ${board.rubyDark},
-      0 6px 14px #e32b4426;
+      0 1px 0 ${board.accentDark},
+      0 6px 14px #b8d58c26;
     transform: translateY(3px);
   }
 
@@ -608,7 +609,7 @@ export const PlayButton = styled.button`
   }
 `;
 
-// The rule numbers are ivory checkers and the summary carries a ruby one
+// The rule numbers are ivory checkers and the summary carries a charcoal one
 export const Rules = styled(URules)`
   ${boardPanel};
   color: ${board.mist};
@@ -633,10 +634,10 @@ export const Rules = styled(URules)`
   }
 
   summary::before {
-    background: radial-gradient(circle, ${board.ruby} 0 30%, #b81c36 31% 46%, ${board.ruby} 47%);
-    border: 2px solid #ff6b80;
+    background: radial-gradient(circle, ${board.pieceDark} 0 30%, #65765a 31% 46%, ${board.pieceDark} 47%);
+    border: 2px solid #91a687;
     border-radius: 50%;
-    box-shadow: 0 3px 0 ${board.rubyDark};
+    box-shadow: 0 3px 0 ${board.accentDark};
     content: '';
     flex-shrink: 0;
     height: 22px;
@@ -751,7 +752,7 @@ export const Segment = styled.label`
 `;
 
 export const Segmented = styled.div`
-  background: #0a1547b3;
+  background: #102018b3;
   border: 1px solid ${board.line};
   border-radius: 12px;
   display: grid;
@@ -795,7 +796,7 @@ export const StakeUnit = styled.span`
 
 export const Status = styled.div`
   align-items: center;
-  background: ${board.navy};
+  background: ${board.forest};
   border: 1px solid ${board.line};
   border-radius: 14px;
   box-shadow: 0 4px 0 ${board.edge};
@@ -814,7 +815,7 @@ export const StatusText = styled.span<{$tone: MatchTone}>`
 `;
 
 export const Terms = styled.p`
-  background: linear-gradient(90deg, #f4c95d17, transparent 85%);
+  background: linear-gradient(90deg, #f4ce7217, transparent 85%);
   border-left: 2px solid ${board.gold};
   border-radius: 0 10px 10px 0;
   color: ${board.mist};
@@ -825,7 +826,7 @@ export const Terms = styled.p`
 `;
 
 export const TextLink = styled(Link)`
-  color: #1f3399;
+  color: #36572c;
   font-size: 13px;
   font-weight: ${fonts.weight.semiBold};
 `;

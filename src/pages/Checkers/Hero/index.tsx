@@ -13,7 +13,7 @@ interface Props {
 const Hero = ({isCreating, onPlay}: Props) => (
   <S.Hero aria-label="Checkers overview">
     <S.Content>
-      <S.Eyebrow>A classic. With attitude.</S.Eyebrow>
+      <S.Eyebrow>Classic board. Fresh challenge.</S.Eyebrow>
       <S.Title>Checkers</S.Title>
       <S.Tagline>
         Make your move.
@@ -29,7 +29,7 @@ const Hero = ({isCreating, onPlay}: Props) => (
     </S.Content>
     <S.Artwork>
       <S.Image
-        alt="A cobalt and ivory eight-by-eight Checkers board with ruby-red and ivory disks and a stacked red king"
+        alt="A green and ivory eight-by-eight Checkers board with charcoal and ivory disks"
         fetchPriority="high"
         height={960}
         src={checkersCrown}
