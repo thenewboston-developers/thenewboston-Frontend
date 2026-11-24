@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 
 import {createBattleshipMatch, getBattleshipMatches} from 'api/battleship';
 import AuthButtons from 'components/AuthButtons';
+import GameEarningsLeaderboard from 'components/GameEarningsLeaderboard';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -147,8 +148,8 @@ const Home = () => {
   }, [isAuthenticated, retryKey, self.id]);
 
   const handleCreate = useCallback(
-    async (event: FormEvent<HTMLFormElement>, mode: BattleshipMode) => {
-      event.preventDefault();
+    async (event: FormEvent<HTMLFormElement> | null, mode: BattleshipMode) => {
+      event?.preventDefault();
       if ((!isAuthenticated && mode !== 'computer') || creationLock.current) return;
       const isCurrent = () =>
         live.current &&
@@ -159,7 +160,7 @@ const Home = () => {
         setCreateError(opponent ? 'Choose another member to challenge.' : 'Choose a member to challenge.');
         return;
       }
-      const form = new FormData(event.currentTarget);
+      const form = event ? new FormData(event.currentTarget) : new FormData();
       const amount = mode === 'human' ? Number(stake) : 0;
       if (!Number.isSafeInteger(amount) || amount < 0 || amount > 1000000000) {
         setCreateError('Enter a whole-number stake from 0 to 1,000,000,000 TNB.');
@@ -173,7 +174,7 @@ const Home = () => {
           mode,
           opponent_id: mode === 'human' ? opponent!.id : undefined,
           stake_amount: amount,
-          time_limit_seconds: Number(form.get('time_limit_seconds')),
+          time_limit_seconds: Number(form.get('time_limit_seconds') ?? 900),
         };
         const signature = JSON.stringify(data);
         if (creationRequest.current?.signature !== signature)
@@ -205,7 +206,7 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Naval strategy · Every shot counts</S.Badge>
       </S.Navigation>
-      <Hero />
+      <Hero isCreating={!!creatingMode} onPlay={() => handleCreate(null, 'computer')} />
       <>
         {createError && <S.Error role="alert">{createError}</S.Error>}
         <S.PanelGrid>
@@ -236,7 +237,9 @@ const Home = () => {
             {!isAuthenticated ? (
               <>
                 <S.Detail>Create an account to challenge friends and earn TNB from eligible computer wins.</S.Detail>
-                <AuthButtons />
+                <S.GuestActions>
+                  <AuthButtons />
+                </S.GuestActions>
               </>
             ) : (
               <S.Form onSubmit={(event) => handleCreate(event, 'human')}>
@@ -329,6 +332,7 @@ const Home = () => {
           </S.List>
         </S.Section>
       )}
+      <GameEarningsLeaderboard game="battleship" />
       <Rules />
     </S.Container>
   );

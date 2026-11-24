@@ -1,7 +1,25 @@
 import {Link} from 'react-router-dom';
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 
 import {colors, pagePadding} from 'styles';
+
+const impactBurst = keyframes`
+  0% { opacity: 0; transform: scale(0.15) rotate(-25deg); }
+  18% { opacity: 1; transform: scale(1.3) rotate(10deg); }
+  65% { opacity: 0.65; }
+  100% { opacity: 0; transform: scale(2.1) rotate(35deg); }
+`;
+
+const impactRing = keyframes`
+  0% { opacity: 1; transform: scale(0.25); }
+  100% { opacity: 0; transform: scale(2.8); }
+`;
+
+const impactSparks = keyframes`
+  0% { opacity: 1; transform: scale(0.2) rotate(0); }
+  70% { opacity: 0.8; }
+  100% { opacity: 0; transform: scale(2.3) rotate(35deg); }
+`;
 
 export const Actions = styled.div`
   align-items: center;
@@ -21,7 +39,7 @@ export const Badge = styled.span`
 `;
 
 export const BoardFrame = styled.div`
-  background: #102e40;
+  background: radial-gradient(ellipse at top, #1b4c61, #102e40 70%);
   border: 1px solid #315568;
   border-radius: 20px;
   box-shadow: 0 12px 32px #102e401a;
@@ -109,8 +127,9 @@ export const Cell = styled.button<{$state: string; $selected?: boolean; $preview
   background: ${({$invalid, $preview, $state}) => {
     if ($invalid) return '#963e48';
     if ($preview) return '#2a9c9e';
-    if ($state === 'sunk') return '#9a493c';
-    if ($state === 'hit') return '#c27045';
+    if ($state === 'sunk') return 'radial-gradient(circle, #713326, #3e2728)';
+    if ($state === 'hit') return 'radial-gradient(circle, #ea9b46, #a94629)';
+    if ($state === 'miss') return 'radial-gradient(circle, #307185, #1b4054)';
     if ($state === 'ship') return '#648b9e';
     return '#1b4054';
   }};
@@ -125,6 +144,8 @@ export const Cell = styled.button<{$state: string; $selected?: boolean; $preview
   justify-content: center;
   min-width: 0;
   padding: 0;
+  position: relative;
+  touch-action: manipulation;
 
   &:disabled {
     cursor: default;
@@ -210,6 +231,10 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 20px;
+`;
+
+export const GuestActions = styled.div`
+  margin: 24px 0 8px;
 `;
 
 export const Input = styled.input`
@@ -341,6 +366,69 @@ export const Select = styled.select`
   min-height: 44px;
   padding: 10px 12px;
   width: 100%;
+`;
+
+export const ShotEffect = styled.span<{$result: 'hit' | 'miss' | 'sunk'}>`
+  color: ${({$result}) => ($result === 'miss' ? '#9ce8ff' : '#ffc46d')};
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 3;
+
+  span {
+    inset: 10%;
+    position: absolute;
+  }
+
+  span:nth-child(1) {
+    animation: ${impactRing} ${({$result}) => ($result === 'sunk' ? '1.4s' : '1s')} ease-out both;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    box-shadow:
+      0 0 12px currentColor,
+      inset 0 0 8px currentColor;
+  }
+
+  span:nth-child(2) {
+    animation: ${impactBurst} ${({$result}) => ($result === 'sunk' ? '1.4s' : '0.9s')} ease-out both;
+    background: ${({$result}) =>
+      $result === 'miss'
+        ? 'radial-gradient(circle, #ffffff 0%, #9ce8ff 25%, #3ab8d944 65%, transparent 72%)'
+        : 'radial-gradient(circle, #fff9d9 0%, #ffc46d 25%, #f26b29bb 50%, transparent 72%)'};
+    border-radius: ${({$result}) => ($result === 'miss' ? '50%' : '35% 60% 40% 65%')};
+    filter: drop-shadow(0 0 8px currentColor);
+  }
+
+  span:nth-child(3) {
+    animation: ${impactSparks} 1.2s ease-out both;
+    background: currentColor;
+    border-radius: 50%;
+    box-shadow:
+      -12px -8px 0 currentColor,
+      11px -12px 0 currentColor,
+      14px 9px 0 currentColor,
+      -9px 14px 0 currentColor;
+    inset: 45%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    span {
+      animation: none !important;
+    }
+
+    span:nth-child(2),
+    span:nth-child(3) {
+      display: none;
+    }
+  }
+`;
+
+export const ShotReport = styled.div`
+  color: #ffe0a1;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 12px;
+  min-height: 20px;
 `;
 
 export const Small = styled.p`

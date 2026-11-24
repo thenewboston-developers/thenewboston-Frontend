@@ -5,7 +5,12 @@ import checkersCrown from 'assets/checkers-crown.webp';
 
 import * as S from './Styles';
 
-const Hero = () => (
+interface Props {
+  isCreating: boolean;
+  onPlay: () => void;
+}
+
+const Hero = ({isCreating, onPlay}: Props) => (
   <S.Hero aria-label="Checkers overview">
     <S.Content>
       <S.Eyebrow>A classic. With attitude.</S.Eyebrow>
@@ -33,10 +38,10 @@ const Hero = () => (
     </S.Artwork>
     <S.ActionBar>
       <S.Actions>
-        <S.PlayLink href="#checkers-computer">
+        <S.PlayButton disabled={isCreating} onClick={onPlay} type="button">
           <Icon aria-hidden path={mdiPlay} size={0.9} />
-          Play free
-        </S.PlayLink>
+          {isCreating ? 'Preparing your game…' : 'Play free'}
+        </S.PlayButton>
         <S.ChallengeLink href="#checkers-challenge">Challenge a player</S.ChallengeLink>
       </S.Actions>
       <S.Note>No account needed for computer play</S.Note>

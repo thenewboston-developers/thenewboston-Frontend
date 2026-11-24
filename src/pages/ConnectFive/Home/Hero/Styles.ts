@@ -177,14 +177,16 @@ export const LeaderboardLink = styled(ULink)`
   }
 `;
 
-export const PrimaryLink = styled.a`
+export const PrimaryButton = styled.button`
   align-items: center;
   background: #e5d0ff;
   border: 1px solid #f2e6ff;
   border-radius: 999px;
   box-shadow: 0 4px 28px #b883ff26;
   color: #24113e;
+  cursor: pointer;
   display: inline-flex;
+  font-family: inherit;
   font-size: 0.9375rem;
   font-weight: ${fonts.weight.bold};
   gap: 8px;
@@ -201,6 +203,11 @@ export const PrimaryLink = styled.a`
   &:focus-visible {
     outline: 2px solid #e8ceff;
     outline-offset: 5px;
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.7;
   }
 `;
 

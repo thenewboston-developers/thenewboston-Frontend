@@ -5,7 +5,12 @@ import dotsAndBoxesPlayground from 'assets/dots-and-boxes-playground.webp';
 
 import * as S from './Styles';
 
-const Hero = () => (
+interface Props {
+  isCreating: boolean;
+  onPlay: () => void;
+}
+
+const Hero = ({isCreating, onPlay}: Props) => (
   <S.Hero aria-label="Dots and Boxes overview">
     <S.Artwork>
       <S.Image
@@ -27,10 +32,10 @@ const Hero = () => (
       </S.Title>
       <S.Tagline>Draw a line. Close a box. Go again.</S.Tagline>
       <S.Actions>
-        <S.PlayLink href="#dots-and-boxes-computer">
+        <S.PlayButton disabled={isCreating} onClick={onPlay} type="button">
           <Icon aria-hidden path={mdiPlay} size={0.85} />
-          Play free
-        </S.PlayLink>
+          {isCreating ? 'Preparing your game…' : 'Play free'}
+        </S.PlayButton>
         <S.ChallengeLink href="#dots-and-boxes-challenge">Challenge a player</S.ChallengeLink>
       </S.Actions>
       <S.Note>No account needed for computer play</S.Note>

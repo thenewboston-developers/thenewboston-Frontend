@@ -5,7 +5,12 @@ import mancalaStudio from 'assets/mancala-studio.webp';
 
 import * as S from './Styles';
 
-const Hero = () => (
+interface Props {
+  isCreating: boolean;
+  onPlay: () => void;
+}
+
+const Hero = ({isCreating, onPlay}: Props) => (
   <S.Hero aria-label="Mancala overview">
     <S.Artwork>
       <S.Image
@@ -28,10 +33,10 @@ const Hero = () => (
       </S.Tagline>
       <S.Description>Sow your stones, find your rhythm, and make every move count.</S.Description>
       <S.Actions>
-        <S.PlayLink href="#mancala-computer">
+        <S.PlayButton disabled={isCreating} onClick={onPlay} type="button">
           <Icon aria-hidden path={mdiPlay} size={0.85} />
-          Play free
-        </S.PlayLink>
+          {isCreating ? 'Preparing your game…' : 'Play free'}
+        </S.PlayButton>
         <S.ChallengeLink href="#mancala-challenge">Challenge a player</S.ChallengeLink>
       </S.Actions>
       <S.Note>No account needed for computer play</S.Note>

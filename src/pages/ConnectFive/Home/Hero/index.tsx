@@ -7,10 +7,11 @@ import {analyticsTarget} from 'utils/analyticsAttributes';
 import * as S from './Styles';
 
 interface Props {
-  isAuthenticated: boolean;
+  isCreating: boolean;
+  onPlay: () => void;
 }
 
-const Hero = ({isAuthenticated}: Props) => (
+const Hero = ({isCreating, onPlay}: Props) => (
   <S.Hero aria-label="Connect Five overview">
     <S.Artwork>
       <S.Image
@@ -37,19 +38,13 @@ const Hero = ({isAuthenticated}: Props) => (
       </S.Title>
       <S.Description>Five in a row. A move ahead.</S.Description>
       <S.Actions>
-        {isAuthenticated ? (
-          <S.PrimaryLink {...analyticsTarget('challenge_a_player')} href="#challenge-player">
-            Challenge a player
-          </S.PrimaryLink>
-        ) : (
-          <S.PrimaryLink href="#computer-game">
-            <Icon aria-hidden path={mdiPlay} size={0.85} />
-            Play free
-          </S.PrimaryLink>
-        )}
+        <S.PrimaryButton disabled={isCreating} onClick={onPlay} type="button">
+          <Icon aria-hidden path={mdiPlay} size={0.85} />
+          {isCreating ? 'Preparing your game…' : 'Play free'}
+        </S.PrimaryButton>
         <S.LeaderboardLink {...analyticsTarget('leaderboard')} to="/connect-five/leaderboard">
           <Icon aria-hidden path={mdiTrophyOutline} size={0.85} />
-          Leaderboard
+          ELO leaderboard
         </S.LeaderboardLink>
       </S.Actions>
       <S.Facts aria-label="Game features">

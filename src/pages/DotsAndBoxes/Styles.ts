@@ -113,6 +113,10 @@ export const Form = styled.form`
   gap: 20px;
 `;
 
+export const GuestActions = styled.div`
+  margin: 24px 0 8px;
+`;
+
 export const Input = styled.input`
   background: #ffffff;
   border: 1px solid #c9d3ea;

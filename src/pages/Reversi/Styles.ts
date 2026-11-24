@@ -282,6 +282,10 @@ export const Form = styled.form`
   gap: 20px;
 `;
 
+export const GuestActions = styled.div`
+  margin: 24px 0 8px;
+`;
+
 export const Hint = styled.span<{$side: 'black' | 'white'}>`
   background: ${({$side}) => ($side === 'black' ? '#0d0b1259' : '#ffffff73')};
   border-radius: 50%;

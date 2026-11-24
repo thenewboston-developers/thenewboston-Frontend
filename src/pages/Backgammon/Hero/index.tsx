@@ -5,7 +5,12 @@ import backgammonClub from 'assets/backgammon-club.webp';
 
 import * as S from './Styles';
 
-const Hero = () => (
+interface Props {
+  isCreating: boolean;
+  onPlay: () => void;
+}
+
+const Hero = ({isCreating, onPlay}: Props) => (
   <S.Hero aria-label="Backgammon overview">
     <S.Content>
       <S.Eyebrow>The strategy club</S.Eyebrow>
@@ -19,10 +24,10 @@ const Hero = () => (
         Race your checkers home. Read the board, trust your instincts, and make every roll count.
       </S.Description>
       <S.Actions>
-        <S.PlayLink href="#backgammon-computer">
+        <S.PlayButton disabled={isCreating} onClick={onPlay} type="button">
           <Icon aria-hidden path={mdiPlay} size={0.85} />
-          Play free
-        </S.PlayLink>
+          {isCreating ? 'Preparing your game…' : 'Play free'}
+        </S.PlayButton>
         <S.ChallengeLink href="#backgammon-challenge">Challenge a player</S.ChallengeLink>
       </S.Actions>
       <S.Note>No account needed for computer play</S.Note>

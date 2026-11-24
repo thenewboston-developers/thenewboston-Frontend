@@ -180,6 +180,10 @@ export const Form = styled.form`
   gap: 20px;
 `;
 
+export const GuestActions = styled.div`
+  margin: 24px 0 8px;
+`;
+
 export const Hollow = styled.span<{$marked: boolean; $playable: boolean; $source: boolean}>`
   ${hollow};
   aspect-ratio: 1;

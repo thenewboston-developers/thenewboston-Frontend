@@ -206,14 +206,16 @@ export const Note = styled.p`
   margin: 12px 0 0;
 `;
 
-export const PlayLink = styled.a`
+export const PlayButton = styled.button`
   align-items: center;
   background: #78edff;
   border: 1px solid #a9f5ff;
   border-radius: 8px;
   box-shadow: 0 4px 24px #40d5fb20;
   color: #061525;
+  cursor: pointer;
   display: inline-flex;
+  font-family: inherit;
   font-size: 0.9375rem;
   font-weight: ${fonts.weight.bold};
   gap: 8px;
@@ -230,6 +232,11 @@ export const PlayLink = styled.a`
   &:focus-visible {
     outline: 2px solid #78edff;
     outline-offset: 5px;
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.7;
   }
 `;
 

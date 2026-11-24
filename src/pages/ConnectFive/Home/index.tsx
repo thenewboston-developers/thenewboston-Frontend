@@ -21,6 +21,7 @@ import {BadgeStyle} from 'components/Badge';
 import Button, {ButtonColor, ButtonType} from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import {FormField} from 'components/FormElements';
+import GameEarningsLeaderboard from 'components/GameEarningsLeaderboard';
 import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
 import {ConnectFiveChallengeStatus, ConnectFiveMatchStatus} from 'enums';
@@ -862,7 +863,9 @@ const ConnectFiveHome: SFC = ({className}) => {
         <S.GuestText>
           Create an account to earn rewards from eligible computer wins and challenge other players.
         </S.GuestText>
-        <AuthButtons />
+        <S.GuestActions>
+          <AuthButtons />
+        </S.GuestActions>
         <S.GuideGrid>
           <S.GuideItem>
             <S.GuideTitle>Find your opponent</S.GuideTitle>
@@ -1014,9 +1017,11 @@ const ConnectFiveHome: SFC = ({className}) => {
   return (
     <S.Container {...analyticsArea('connect_five_lobby')} className={className}>
       <S.Content>
-        <Hero isAuthenticated={isAuthenticated} />
-        <ComputerSetup key={self.id} />
+        <ComputerSetup key={self.id}>
+          {({isCreating, onPlay}) => <Hero isCreating={isCreating} onPlay={onPlay} />}
+        </ComputerSetup>
         {isAuthenticated ? renderMemberOverview() : renderGuestIntro()}
+        <GameEarningsLeaderboard game="connect_five" />
 
         {incomingChallenges.length > 0 && (
           <S.MatchesSection>
