@@ -1,7 +1,9 @@
+import {SFC} from 'types';
+
 import * as S from './Styles';
 
-const Rules = () => (
-  <S.Rules>
+const Rules: SFC = ({className}) => (
+  <S.Rules className={className}>
     <summary>How to play Reversi</summary>
     <ol>
       <li>
