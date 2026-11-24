@@ -4,6 +4,8 @@ import {logoutUser} from 'store/actions';
 import {setAuthentication} from 'store/authentication';
 import {setSelf} from 'store/self';
 import {AppDispatch, LoginRequest} from 'types';
+import {syncAnalyticsIdentity} from 'utils/analytics';
+import {clearGameAttribution} from 'utils/gameAnalytics';
 
 export const login = (data: LoginRequest) => async (dispatch: AppDispatch) => {
   const responseData = await _login(data);
@@ -12,6 +14,9 @@ export const login = (data: LoginRequest) => async (dispatch: AppDispatch) => {
     authentication: {access_token, refresh_token},
     user,
   } = responseData;
+
+  syncAnalyticsIdentity(String(user.id), !!user.is_staff);
+  clearGameAttribution();
 
   dispatch(
     setAuthentication({
@@ -26,6 +31,8 @@ export const login = (data: LoginRequest) => async (dispatch: AppDispatch) => {
 };
 
 export const logout = () => (dispatch: AppDispatch) => {
+  clearGameAttribution();
+  syncAnalyticsIdentity(null);
   dispatch(logoutUser());
   persistor.purge();
 };

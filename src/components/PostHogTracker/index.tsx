@@ -10,6 +10,7 @@ import {
   isAnalyticsRedirectPath,
   syncAnalyticsIdentity,
 } from 'utils/analytics';
+import {captureGamePage} from 'utils/gameAnalytics';
 
 const PostHogTracker = () => {
   const authentication = useSelector(getAuthentication);
@@ -35,7 +36,8 @@ const PostHogTracker = () => {
       $pathname: path,
       page_path: path,
     });
-  }, [location.pathname]);
+    captureGamePage(location.pathname, !!userId);
+  }, [location.pathname, userId]);
 
   return null;
 };

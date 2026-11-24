@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-import {captureAnalyticsEvent} from 'utils/analytics';
+import {captureAnalyticsEvent, getAnalyticsHeaders} from 'utils/analytics';
+import {getGameAttributionHeaders} from 'utils/gameAnalytics';
 
 import {registerApiAnalytics} from './apiAnalytics';
 
@@ -13,7 +14,8 @@ jest.mock('axios', () => ({
   isCancel: (error: any) => error?.code === 'ERR_CANCELED',
 }));
 
-jest.mock('utils/analytics', () => ({captureAnalyticsEvent: jest.fn()}));
+jest.mock('utils/analytics', () => ({captureAnalyticsEvent: jest.fn(), getAnalyticsHeaders: jest.fn()}));
+jest.mock('utils/gameAnalytics', () => ({captureGameStartRequest: jest.fn(), getGameAttributionHeaders: jest.fn()}));
 
 const API_URL = 'https://api.example.test';
 const originalApiUrl = process.env.REACT_APP_API_URL;
@@ -29,6 +31,11 @@ describe('API analytics', () => {
 
   beforeEach(() => {
     process.env.REACT_APP_API_URL = API_URL;
+    (getAnalyticsHeaders as jest.Mock).mockReturnValue({
+      'X-POSTHOG-DISTINCT-ID': 'anonymous',
+      'X-POSTHOG-SESSION-ID': 'session',
+    });
+    (getGameAttributionHeaders as jest.Mock).mockReturnValue({'X-POSTHOG-GAME': 'checkers'});
     (axios.interceptors.request.use as jest.Mock).mockReturnValue(1);
     (axios.interceptors.response.use as jest.Mock).mockReturnValue(2);
     unregister = registerApiAnalytics();
@@ -39,6 +46,49 @@ describe('API analytics', () => {
     jest.restoreAllMocks();
     if (originalApiUrl === undefined) delete process.env.REACT_APP_API_URL;
     else process.env.REACT_APP_API_URL = originalApiUrl;
+  });
+
+  it('bridges own-API signup and guest requests without copying credentials into events', () => {
+    const {onRequest} = getInterceptors();
+    const config = onRequest({
+      headers: {'X-Guest-Token': 'private-capability'},
+      method: 'post',
+      url: `${API_URL}/api/guest-games/session`,
+    });
+    expect(config.headers).toEqual({
+      'X-Guest-Token': 'private-capability',
+      'X-POSTHOG-DISTINCT-ID': 'anonymous',
+      'X-POSTHOG-GAME': 'checkers',
+      'X-POSTHOG-SESSION-ID': 'session',
+    });
+    expect(captureAnalyticsEvent).not.toHaveBeenCalled();
+  });
+
+  it.each(['https://foreign.test/api/users', `${API_URL}/api-private/users`])(
+    'never forwards analytics identities to %s',
+    (url) => {
+      const {onRequest} = getInterceptors();
+      const config = onRequest({headers: {'X-POSTHOG-DISTINCT-ID': 'stale'}, method: 'post', url});
+      expect(config.headers).toEqual({});
+      expect(getAnalyticsHeaders).not.toHaveBeenCalled();
+    },
+  );
+
+  it('refreshes reused request headers for opt-in, opt-out, then opt-in', () => {
+    const {onRequest} = getInterceptors();
+    const config = {headers: {}, method: 'get', url: `${API_URL}/api/game-fund`};
+    onRequest(config);
+    expect(config.headers).toHaveProperty('X-POSTHOG-DISTINCT-ID', 'anonymous');
+    (getAnalyticsHeaders as jest.Mock).mockReturnValue({'X-POSTHOG-OPT-OUT': '1'});
+    onRequest(config);
+    expect(config.headers).toEqual({'X-POSTHOG-OPT-OUT': '1'});
+    (getAnalyticsHeaders as jest.Mock).mockReturnValue({
+      'X-POSTHOG-DISTINCT-ID': 'new-account',
+      'X-POSTHOG-SESSION-ID': 'new-session',
+    });
+    onRequest(config);
+    expect(config.headers).not.toHaveProperty('X-POSTHOG-OPT-OUT');
+    expect(config.headers).toHaveProperty('X-POSTHOG-DISTINCT-ID', 'new-account');
   });
 
   it('reports mutation outcomes without IDs, credentials, query strings, bodies, or response data', () => {

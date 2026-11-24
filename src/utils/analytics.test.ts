@@ -4,7 +4,10 @@ jest.mock('posthog-js', () => ({
   __esModule: true,
   default: {
     capture: jest.fn(),
+    get_distinct_id: jest.fn(),
     get_property: jest.fn(),
+    get_session_id: jest.fn(),
+    has_opted_out_capturing: jest.fn(),
     identify: jest.fn(),
     init: jest.fn(),
     register: jest.fn(),
@@ -15,7 +18,10 @@ jest.mock('posthog-js', () => ({
 type Analytics = typeof import('./analytics');
 interface MockPostHog {
   capture: jest.Mock;
+  get_distinct_id: jest.Mock;
   get_property: jest.Mock;
+  get_session_id: jest.Mock;
+  has_opted_out_capturing: jest.Mock;
   identify: jest.Mock;
   init: jest.Mock;
   register: jest.Mock;
@@ -47,10 +53,49 @@ beforeEach(() => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
     posthog = require('posthog-js').default;
   });
+  posthog.get_distinct_id.mockReturnValue('anonymous-browser');
+  posthog.get_session_id.mockReturnValue('analytics-session');
+  posthog.has_opted_out_capturing.mockReturnValue(false);
 });
 
 afterEach(() => {
   process.env = originalEnvironment;
+  jest.restoreAllMocks();
+});
+
+describe('API analytics identity headers', () => {
+  it('sends only explicit opt-out when analytics is unavailable', () => {
+    expect(analytics.getAnalyticsHeaders()).toEqual({'X-POSTHOG-OPT-OUT': '1'});
+  });
+
+  it('bridges anonymous/session IDs and the sticky staff flag without account credentials', () => {
+    analytics.initializeAnalytics();
+    analytics.syncAnalyticsIdentity('42', true);
+    expect(analytics.getAnalyticsHeaders()).toEqual({
+      'X-POSTHOG-DISTINCT-ID': 'anonymous-browser',
+      'X-POSTHOG-INTERNAL-TRAFFIC': '1',
+      'X-POSTHOG-SESSION-ID': 'analytics-session',
+    });
+  });
+
+  it('propagates SDK opt-out and browser DNT without reading identity', () => {
+    analytics.initializeAnalytics();
+    posthog.has_opted_out_capturing.mockReturnValue(true);
+    expect(analytics.getAnalyticsHeaders()).toEqual({'X-POSTHOG-OPT-OUT': '1'});
+    posthog.has_opted_out_capturing.mockReturnValue(false);
+    Object.defineProperty(navigator, 'doNotTrack', {configurable: true, value: '1'});
+    expect(analytics.getAnalyticsHeaders()).toEqual({'X-POSTHOG-OPT-OUT': '1'});
+    expect(posthog.get_distinct_id).not.toHaveBeenCalled();
+    Object.defineProperty(navigator, 'doNotTrack', {configurable: true, value: undefined});
+  });
+
+  it('fails closed if the SDK cannot supply identity', () => {
+    analytics.initializeAnalytics();
+    posthog.get_session_id.mockImplementationOnce(() => {
+      throw new Error('unavailable');
+    });
+    expect(analytics.getAnalyticsHeaders()).toEqual({'X-POSTHOG-OPT-OUT': '1'});
+  });
 });
 
 describe('analytics initialization and identity', () => {

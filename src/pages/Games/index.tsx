@@ -11,6 +11,7 @@ import mancalaThumbnail from 'assets/mancala-thumbnail.webp';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
 import GameFund from 'components/GameFund';
 import {SFC} from 'types';
+import {captureAnalyticsEvent} from 'utils/analytics';
 import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
 
 import * as S from './Styles';
@@ -135,6 +136,7 @@ const Games: SFC = ({className}) => (
               $accent={game.accent}
               aria-label={`${game.name} — play now`}
               key={game.path}
+              onClick={() => captureAnalyticsEvent('game_selected', {game: game.target, source: 'games_hub'})}
               to={`/${game.path}/home`}
             >
               <S.Artwork>

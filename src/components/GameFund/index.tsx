@@ -10,9 +10,12 @@ import Button, {ButtonColor, ButtonType} from 'components/Button';
 import Modal, {ModalBody, ModalFooter} from 'components/Modal';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
+import useAnalyticsExposure from 'hooks/useAnalyticsExposure';
 import {getSelf} from 'selectors/state';
 import {AppDispatch} from 'types';
 import {GameFund as GameFundData} from 'types/gameFund';
+import {captureAnalyticsEvent} from 'utils/analytics';
+import {captureGameRewardOffer} from 'utils/gameAnalytics';
 
 import * as S from './Styles';
 
@@ -28,6 +31,16 @@ const GameFund = () => {
   const currentViewer = useRef<number | null | undefined>(null);
   const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useIsAuthenticated();
+  const fundExposure = useAnalyticsExposure<HTMLParagraphElement>(fund ? `game_fund:${isAuthenticated}` : null, () =>
+    captureGameRewardOffer(
+      {
+        auth_state: isAuthenticated ? 'authenticated' : 'guest',
+        reward_amount: fund?.reward_amount ?? 0,
+        rewards_available: !!fund?.available,
+      },
+      'game_fund',
+    ),
+  );
   const latestRead = useRef(0);
   const live = useRef(true);
   const request = useRef<{amount: number; id: string; userId: number} | null>(null);
@@ -96,6 +109,7 @@ const GameFund = () => {
     setError('');
     if (request.current?.amount !== confirmAmount || request.current.userId !== viewerId)
       request.current = {amount: confirmAmount, id: crypto.randomUUID(), userId: viewerId};
+    captureAnalyticsEvent('game_fund_contribution_started', {amount: confirmAmount, currency: 'TNB'});
     try {
       const deposit = await depositGameFund({amount: confirmAmount, request_id: request.current.id});
       if (!isCurrent()) return;
@@ -109,6 +123,7 @@ const GameFund = () => {
       dispatch(getAllUserWallets()).catch(() => undefined);
     } catch (depositError) {
       if (!isCurrent()) return;
+      captureAnalyticsEvent('game_fund_contribution_request_failed', {amount: confirmAmount, currency: 'TNB'});
       const data = (depositError as {response?: {data?: Record<string, unknown>}}).response?.data;
       const details = data
         ? Object.values(data)
@@ -152,7 +167,7 @@ const GameFund = () => {
             <br />
             More rewarding wins.
           </S.Heading>
-          <S.HeroDescription>
+          <S.HeroDescription ref={fundExposure}>
             The community game fund turns donated coins into rewards for players. Beat the computer with an account to
             earn {fund?.reward_amount ?? 10} TNB when the fund can cover your win.
           </S.HeroDescription>
@@ -257,7 +272,7 @@ const GameFund = () => {
         ) : (
           <S.GuestActions>
             <S.Description>Sign in to contribute or earn rewards.</S.Description>
-            <AuthButtons />
+            <AuthButtons analyticsSource="game_fund" />
           </S.GuestActions>
         )}
       </S.Contribution>

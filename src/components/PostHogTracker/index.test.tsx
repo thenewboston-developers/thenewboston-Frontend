@@ -10,10 +10,12 @@ import {
   isAnalyticsRedirectPath,
   syncAnalyticsIdentity,
 } from 'utils/analytics';
+import {captureGamePage} from 'utils/gameAnalytics';
 
 import PostHogTracker from './index';
 
 jest.mock('react-redux', () => ({useSelector: jest.fn()}));
+jest.mock('utils/gameAnalytics', () => ({captureGamePage: jest.fn()}));
 jest.mock('react-router-dom', () => ({useLocation: jest.fn()}));
 jest.mock('utils/analytics', () => ({
   captureAnalyticsEvent: jest.fn(),
@@ -67,6 +69,14 @@ afterEach(() => {
 });
 
 describe('PostHogTracker', () => {
+  it('records game navigation once without repeating it when identity resolves', () => {
+    location.pathname = '/checkers/home';
+    renderTracker(true);
+    state = {authentication: {accessToken: 'private-token'}, self: {id: 42}};
+    renderTracker(true);
+    expect(captureGamePage).toHaveBeenCalledTimes(1);
+    expect(captureGamePage).toHaveBeenCalledWith('/checkers/home', false);
+  });
   it('initializes and synchronizes identity before the first pageview', () => {
     state = {authentication: {accessToken: 'private-token'}, self: {id: 42}};
     renderTracker();

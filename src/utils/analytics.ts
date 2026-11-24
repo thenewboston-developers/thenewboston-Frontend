@@ -192,6 +192,26 @@ export const captureAnalyticsEvent = (event: string, properties?: AnalyticsPrope
   }
 };
 
+/** Explicitly propagate browser privacy choices to the API; a server must not revive opted-out tracking. */
+export const getAnalyticsHeaders = (): Record<string, string> => {
+  const disabled = {'X-POSTHOG-OPT-OUT': '1'};
+  if (!initialized) return disabled;
+  try {
+    const doNotTrack = navigator.doNotTrack || (window as Window & {doNotTrack?: string}).doNotTrack;
+    if (doNotTrack === '1' || doNotTrack === 'yes' || posthog.has_opted_out_capturing()) return disabled;
+    const distinctId = posthog.get_distinct_id();
+    const sessionId = posthog.get_session_id();
+    if (!distinctId || !sessionId) return disabled;
+    return {
+      'X-POSTHOG-DISTINCT-ID': distinctId,
+      'X-POSTHOG-SESSION-ID': sessionId,
+      ...(isInternalBrowser(false) ? {'X-POSTHOG-INTERNAL-TRAFFIC': '1'} : {}),
+    };
+  } catch {
+    return disabled;
+  }
+};
+
 export const initializeAnalytics = (): void => {
   const apiHost = process.env.REACT_APP_POSTHOG_HOST;
   const projectToken = process.env.REACT_APP_POSTHOG_KEY;
