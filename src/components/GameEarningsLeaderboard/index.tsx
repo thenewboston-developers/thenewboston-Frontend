@@ -1,44 +1,20 @@
-import {useEffect, useState} from 'react';
 import {mdiTrophyOutline} from '@mdi/js';
 import Icon from '@mdi/react';
 
-import {getGameEarnings} from 'api/gameEarnings';
 import Pagination from 'components/Pagination';
 import UserLabel from 'components/UserLabel';
-import {GameEarningsPage, RewardGame} from 'types/gameEarnings';
+import {RewardGame} from 'types/gameEarnings';
 
 import * as Backgammon from './BackgammonStyles';
 import * as S from './Styles';
-
-const PAGE_SIZE = 10;
+import useGameEarnings from './useGameEarnings';
 
 type LeaderboardProps = {game: RewardGame; variant?: 'backgammon'};
 
 const Leaderboard = ({game, variant}: LeaderboardProps) => {
-  const [data, setData] = useState<GameEarningsPage | null>(null);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [retry, setRetry] = useState(0);
+  const {data, error, loading, page, retry, setPage, totalPages} = useGameEarnings(game);
   const Card = variant === 'backgammon' ? Backgammon.Card : S.Card;
   const Rank = variant === 'backgammon' ? Backgammon.Rank : S.Rank;
-
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError(false);
-    getGameEarnings(game, page, PAGE_SIZE, controller.signal)
-      .then((response) => {
-        if (!controller.signal.aborted) setData(response);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
-    return () => controller.abort();
-  }, [game, page, retry]);
 
   return (
     <Card aria-labelledby={`${game}-earners-title`} id="top-earners">
@@ -59,7 +35,7 @@ const Leaderboard = ({game, variant}: LeaderboardProps) => {
       {!loading && error && (
         <S.Message role="alert">
           We couldn’t load the leaderboard.
-          <S.Retry onClick={() => setRetry((value) => value + 1)} type="button">
+          <S.Retry onClick={retry} type="button">
             Try again
           </S.Retry>
         </S.Message>
@@ -108,7 +84,7 @@ const Leaderboard = ({game, variant}: LeaderboardProps) => {
           </S.Table>
           <S.Footer>
             <S.Description>Paid rewards only. Guest games and player stakes aren’t included.</S.Description>
-            <Pagination currentPage={page} onPageChange={setPage} totalPages={Math.ceil(data.count / PAGE_SIZE)} />
+            <Pagination currentPage={page} onPageChange={setPage} totalPages={totalPages} />
           </S.Footer>
         </>
       )}
