@@ -1,61 +1,143 @@
 import {FormEvent, useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import {mdiCrosshairsGps, mdiPlay} from '@mdi/js';
+import Icon from '@mdi/react';
 
 import {createBattleshipMatch, getBattleshipMatches} from 'api/battleship';
-import AuthButtons from 'components/AuthButtons';
-import GameEarningsLeaderboard from 'components/GameEarningsLeaderboard';
-import Loader from 'components/Loader';
-import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
 import {getSelf} from 'selectors/state';
 import {upsertBattleshipMatch} from 'store/battleship';
 import {AppDispatch, UserReadSerializer} from 'types';
-import {BattleshipDifficulty, BattleshipMatch, BattleshipMode} from 'types/battleship';
+import {BattleshipDifficulty, BattleshipMatch, BattleshipMode, BattleshipStatus} from 'types/battleship';
 import {isCancellationError} from 'utils/errors';
 
-import Hero from './Hero';
-import Rules from './Rules';
-import * as S from './Styles';
-import {getErrorMessage, getPlayerName} from './utils';
+import {EngagementArt, RadarScope, SonarPing, TargetReticle} from '../Emblems';
+import Hero from '../Hero';
+import Leaderboard from '../Leaderboard';
+import {getErrorMessage, getPlayerName} from '../utils';
 
-const MatchOptions = ({prefix}: {prefix: string}) => (
-  <div>
-    <S.Field htmlFor={`${prefix}-time`}>
-      Time per player, whole match
-      <S.Select defaultValue="900" id={`${prefix}-time`} name="time_limit_seconds">
-        <option value="300">5 minutes</option>
-        <option value="600">10 minutes</option>
-        <option value="900">15 minutes</option>
-        <option value="1800">30 minutes</option>
-      </S.Select>
-    </S.Field>
-  </div>
+import * as S from './Styles';
+
+const DIFFICULTIES: {description: string; label: string; level: number; value: BattleshipDifficulty}[] = [
+  {description: 'Find your sea legs', label: 'Easy', level: 1, value: 'easy'},
+  {description: 'Hunt and target', label: 'Normal', level: 2, value: 'normal'},
+  {description: 'A calculated opponent', label: 'Hard', level: 3, value: 'hard'},
+];
+
+const STATUS_LABELS: Record<BattleshipStatus, string> = {
+  active: 'In battle',
+  cancelled: 'Cancelled',
+  declined: 'Declined',
+  expired: 'Expired',
+  finished: 'Finished',
+  pending: 'Pending',
+};
+
+const TIME_LIMITS = [
+  {label: '5 min', value: 300},
+  {label: '10 min', value: 600},
+  {label: '15 min', value: 900},
+  {label: '30 min', value: 1800},
+];
+
+const getMatchTone = (match: BattleshipMatch, selfId?: number | null): S.MatchTone => {
+  if (match.status === 'pending') return match.guest?.id === selfId ? 'incoming' : 'waiting';
+  if (match.status === 'active') return 'active';
+  if (match.status !== 'finished' || !match.winner) return 'closed';
+  const winnerId = match.winner === 'host' ? match.host.id : match.guest?.id;
+  return winnerId === selfId ? 'won' : 'lost';
+};
+
+const DifficultyOptions = () => (
+  <S.Fieldset>
+    <S.Legend>Difficulty</S.Legend>
+    <S.ChoiceGrid>
+      {DIFFICULTIES.map(({description, label, level, value}) => (
+        <S.Choice key={value}>
+          <input
+            defaultChecked={value === 'normal'}
+            id={`computer-difficulty-${value}`}
+            name="difficulty"
+            type="radio"
+            value={value}
+          />
+          <S.ChoiceCard>
+            <S.ThreatBars $level={level} aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </S.ThreatBars>
+            <strong>{label}</strong>
+            <small>{description}</small>
+          </S.ChoiceCard>
+        </S.Choice>
+      ))}
+    </S.ChoiceGrid>
+  </S.Fieldset>
 );
 
 const MatchRow = ({match, selfId}: {match: BattleshipMatch; selfId?: number | null}) => {
   const isIncoming = match.status === 'pending' && match.guest?.id === selfId;
   const isOutgoing = match.status === 'pending' && match.host.id === selfId;
+  const tone = getMatchTone(match, selfId);
   let label = match.status === 'finished' ? 'View result' : 'Open board';
   if (isIncoming) label = 'Review challenge';
   if (isOutgoing) label = 'Awaiting reply';
   return (
     <S.MatchLink to={`/battleship/matches/${match.id}`}>
-      <div>
-        <strong>
+      <S.Beacon $tone={tone} aria-hidden="true" />
+      <S.MatchInfo>
+        <S.Opponents>
           {getPlayerName(match, 'host')} <span aria-label="versus">vs.</span> {getPlayerName(match, 'guest')}
-        </strong>
-        <S.Small>
-          {match.phase === 'placing' && match.status === 'active' ? 'Placing fleets' : match.status} ·{' '}
-          {match.stake_amount ? `${match.stake_amount.toLocaleString()} TNB each` : 'Free play'}
+        </S.Opponents>
+        <S.MatchMeta>
+          {match.phase === 'placing' && match.status === 'active'
+            ? 'Placing fleets'
+            : (STATUS_LABELS[match.status] ?? match.status)}{' '}
+          · {match.stake_amount ? `${match.stake_amount.toLocaleString()} TNB each` : 'Free play'}
           {match.winner ? ` · ${getPlayerName(match, match.winner)} won` : ''}
-        </S.Small>
-      </div>
-      <S.Badge>{label} →</S.Badge>
+        </S.MatchMeta>
+      </S.MatchInfo>
+      <S.MatchAction $tone={tone}>{label} →</S.MatchAction>
     </S.MatchLink>
   );
 };
+
+const MatchLog = ({matches, selfId, title}: {matches: BattleshipMatch[]; selfId?: number | null; title: string}) => (
+  <S.Log>
+    <S.LogHeader>
+      <S.LogTitle>{title}</S.LogTitle>
+      <S.Count>{matches.length}</S.Count>
+    </S.LogHeader>
+    <S.LogList>
+      {matches.map((match) => (
+        <MatchRow key={match.id} match={match} selfId={selfId} />
+      ))}
+    </S.LogList>
+  </S.Log>
+);
+
+const TimeOptions = ({prefix}: {prefix: string}) => (
+  <S.Fieldset>
+    <S.Legend>Time per player, whole match</S.Legend>
+    <S.Segmented>
+      {TIME_LIMITS.map(({label, value}) => (
+        <S.Segment key={value}>
+          <input
+            defaultChecked={value === 900}
+            id={`${prefix}-time-${value}`}
+            name="time_limit_seconds"
+            type="radio"
+            value={value}
+          />
+          <span>{label}</span>
+        </S.Segment>
+      ))}
+    </S.Segmented>
+  </S.Fieldset>
+);
 
 const Home = () => {
   const [createError, setCreateError] = useState('');
@@ -207,55 +289,60 @@ const Home = () => {
         <S.Badge>Naval strategy · Every shot counts</S.Badge>
       </S.Navigation>
       <Hero isCreating={!!creatingMode} onPlay={() => handleCreate(null, 'computer')} />
-      <>
-        {createError && <S.Error role="alert">{createError}</S.Error>}
-        <S.PanelGrid>
-          <S.Panel id="battleship-computer" tabIndex={-1}>
-            <S.Eyebrow>Practice your tactics</S.Eyebrow>
-            <S.TitleSmall>Play the computer</S.TitleSmall>
-            <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
-              <S.Detail>Always free. No account needed. Learn the grid or put your tactics to the test.</S.Detail>
-              <S.Field htmlFor="computer-difficulty">
-                Difficulty
-                <S.Select defaultValue="normal" id="computer-difficulty" name="difficulty">
-                  <option value="easy">Easy · Find your sea legs</option>
-                  <option value="normal">Normal · Hunt and target</option>
-                  <option value="hard">Hard · A calculated opponent</option>
-                </S.Select>
-              </S.Field>
-              <MatchOptions prefix="computer" />
-              <S.Actions>
-                <S.Button disabled={!!creatingMode} type="submit">
-                  {creatingMode === 'computer' ? 'Preparing your fleet…' : 'Play free →'}
-                </S.Button>
-              </S.Actions>
-            </S.Form>
-          </S.Panel>
-          <S.Panel id="battleship-challenge" tabIndex={-1}>
-            <S.Eyebrow>Make it a rivalry</S.Eyebrow>
-            <S.TitleSmall>Challenge a player</S.TitleSmall>
-            {!isAuthenticated ? (
-              <>
-                <S.Detail>Create an account to challenge friends and earn TNB from eligible computer wins.</S.Detail>
-                <S.GuestActions>
-                  <AuthButtons />
-                </S.GuestActions>
-              </>
-            ) : (
-              <S.Form onSubmit={(event) => handleCreate(event, 'human')}>
-                <UserSearchInput
-                  errors={{}}
-                  label="Find a member"
-                  name="opponent"
-                  onChange={setOpponent}
-                  placeholder="Search by username"
-                  touched={{}}
-                  value={opponent}
-                />
-                <MatchOptions prefix="human" />
-                <S.Field htmlFor="human-stake">
-                  Stake per player (TNB)
-                  <S.Input
+      {createError && <S.Alert role="alert">{createError}</S.Alert>}
+      <S.Deck>
+        <S.Console id="battleship-computer" tabIndex={-1}>
+          <S.ConsoleHeader>
+            <RadarScope />
+            <div>
+              <S.Eyebrow>Practice your tactics</S.Eyebrow>
+              <S.Title>Play the computer</S.Title>
+            </div>
+          </S.ConsoleHeader>
+          <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
+            <S.Lead>Always free. No account needed. Learn the grid or put your tactics to the test.</S.Lead>
+            <DifficultyOptions />
+            <TimeOptions prefix="computer" />
+            <S.Actions>
+              <S.LaunchButton disabled={!!creatingMode} type="submit">
+                <Icon aria-hidden path={mdiPlay} size="20px" />
+                {creatingMode === 'computer' ? 'Preparing your fleet…' : 'Play free'}
+              </S.LaunchButton>
+            </S.Actions>
+          </S.Form>
+        </S.Console>
+        <S.Console id="battleship-challenge" tabIndex={-1}>
+          <S.ConsoleHeader>
+            <TargetReticle />
+            <div>
+              <S.Eyebrow>Make it a rivalry</S.Eyebrow>
+              <S.Title>Challenge a player</S.Title>
+            </div>
+          </S.ConsoleHeader>
+          {!isAuthenticated ? (
+            <>
+              <S.Lead>Create an account to challenge friends and earn TNB from eligible computer wins.</S.Lead>
+              <S.AuthButtons />
+              <S.Horizon>
+                <EngagementArt />
+              </S.Horizon>
+            </>
+          ) : (
+            <S.Form onSubmit={(event) => handleCreate(event, 'human')}>
+              <S.MemberSearch
+                errors={{}}
+                label="Find a member"
+                name="opponent"
+                onChange={setOpponent}
+                placeholder="Search by username"
+                touched={{}}
+                value={opponent}
+              />
+              <TimeOptions prefix="human" />
+              <S.Field htmlFor="human-stake">
+                <S.FieldLabel>Stake per player</S.FieldLabel>
+                <S.StakeControl>
+                  <S.StakeInput
                     id="human-stake"
                     inputMode="numeric"
                     max={1000000000}
@@ -267,73 +354,52 @@ const Home = () => {
                     type="number"
                     value={stake}
                   />
-                </S.Field>
-                <S.Detail>
-                  {Number(stake) > 0
-                    ? `${Number(stake).toLocaleString()} TNB locks when you send the challenge. Your opponent matches it when accepting. The winner receives both stakes. Unaccepted challenges are refunded.`
-                    : 'Set the stake to 0 for a free match. Both players agree to the terms before the game starts.'}
-                </S.Detail>
-                <S.Actions>
-                  <S.Button disabled={!!creatingMode} type="submit">
-                    {creatingMode === 'human' ? 'Sending…' : 'Send challenge →'}
-                  </S.Button>
-                </S.Actions>
-              </S.Form>
-            )}
-          </S.Panel>
-        </S.PanelGrid>
-      </>
+                  <S.StakeUnit>TNB</S.StakeUnit>
+                </S.StakeControl>
+              </S.Field>
+              <S.Dispatch>
+                {Number(stake) > 0
+                  ? `${Number(stake).toLocaleString()} TNB locks when you send the challenge. Your opponent matches it when accepting. The winner receives both stakes. Unaccepted challenges are refunded.`
+                  : 'Set the stake to 0 for a free match. Both players agree to the terms before the game starts.'}
+              </S.Dispatch>
+              <S.Actions>
+                <S.LaunchButton disabled={!!creatingMode} type="submit">
+                  <Icon aria-hidden path={mdiCrosshairsGps} size="20px" />
+                  {creatingMode === 'human' ? 'Sending…' : 'Send challenge'}
+                </S.LaunchButton>
+              </S.Actions>
+            </S.Form>
+          )}
+        </S.Console>
+      </S.Deck>
       {error && (
-        <S.Error role="alert">
-          {error}{' '}
-          <S.Button $secondary onClick={() => setRetryKey((key) => key + 1)} type="button">
+        <S.Alert role="alert">
+          <span>{error}</span>
+          <S.GhostButton onClick={() => setRetryKey((key) => key + 1)} type="button">
             Retry
-          </S.Button>
-        </S.Error>
+          </S.GhostButton>
+        </S.Alert>
       )}
       {isLoading && (
         <S.Status role="status">
-          <Loader />
-          <S.Detail>Finding your next match…</S.Detail>
+          <RadarScope size="small" />
+          <span>Finding your next match…</span>
         </S.Status>
       )}
-      {challenges.length > 0 && (
-        <S.Section>
-          <S.TitleSmall>Challenges</S.TitleSmall>
-          <S.List>
-            {challenges.map((match) => (
-              <MatchRow key={match.id} match={match} selfId={self.id} />
-            ))}
-          </S.List>
-        </S.Section>
-      )}
-      {activeMatches.length > 0 && (
-        <S.Section>
-          <S.TitleSmall>Your active matches</S.TitleSmall>
-          <S.List>
-            {activeMatches.map((match) => (
-              <MatchRow key={match.id} match={match} selfId={self.id} />
-            ))}
-          </S.List>
-        </S.Section>
-      )}
+      {challenges.length > 0 && <MatchLog matches={challenges} selfId={self.id} title="Challenges" />}
+      {activeMatches.length > 0 && <MatchLog matches={activeMatches} selfId={self.id} title="Your active matches" />}
       {isAuthenticated && !isLoading && !mine.length && !error && (
-        <S.Section>
-          <S.Empty>No active matches. Launch a practice game or challenge a member to get started.</S.Empty>
-        </S.Section>
+        <S.Calm>
+          <SonarPing />
+          <S.CalmCopy>
+            <strong>All quiet on the water</strong>
+            <p>No active matches. Launch a practice game or challenge a member to get started.</p>
+          </S.CalmCopy>
+        </S.Calm>
       )}
-      {history.length > 0 && (
-        <S.Section>
-          <S.TitleSmall>Your recent matches</S.TitleSmall>
-          <S.List>
-            {history.map((match) => (
-              <MatchRow key={match.id} match={match} selfId={self.id} />
-            ))}
-          </S.List>
-        </S.Section>
-      )}
-      <GameEarningsLeaderboard game="battleship" />
-      <Rules />
+      {history.length > 0 && <MatchLog matches={history} selfId={self.id} title="Your recent matches" />}
+      <Leaderboard />
+      <S.Rules />
     </S.Container>
   );
 };

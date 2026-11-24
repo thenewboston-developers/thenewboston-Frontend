@@ -6,11 +6,11 @@ import {MemoryRouter} from 'react-router-dom';
 import {createBattleshipMatch, getBattleshipMatches} from 'api/battleship';
 import {useIsAuthenticated} from 'hooks';
 
-import Home from './Home';
+import Home from '.';
 
 jest.mock('axios', () => ({isAxiosError: jest.fn(() => false)}));
 jest.mock('api/battleship', () => ({createBattleshipMatch: jest.fn(), getBattleshipMatches: jest.fn()}));
-jest.mock('components/GameEarningsLeaderboard', () => () => <div>Top earners</div>);
+jest.mock('../Leaderboard', () => () => <div>Top admirals</div>);
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('components/UserSearchInput', () => () => <div>Find a member</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
@@ -34,6 +34,12 @@ const renderHome = async () => {
         <Home />
       </MemoryRouter>,
     );
+  });
+};
+
+const choose = async (selector: string) => {
+  await act(async () => {
+    (container.querySelector(selector) as HTMLInputElement).click();
   });
 };
 
@@ -145,13 +151,26 @@ describe('creating battleship matches', () => {
     (createBattleshipMatch as jest.Mock).mockRejectedValue(new Error('Connection lost'));
     await renderHome();
     await submit();
-    (container.querySelector('#computer-time') as HTMLSelectElement).value = '600';
+    await choose('#computer-time-600');
     await submit();
     expect((createBattleshipMatch as jest.Mock).mock.calls.map(([data]) => data.request_id)).toEqual([
       firstId,
       secondId,
     ]);
     expect((createBattleshipMatch as jest.Mock).mock.calls[1][0].time_limit_seconds).toBe(600);
+  });
+
+  it('sends the difficulty and clock picked on the themed controls', async () => {
+    (createBattleshipMatch as jest.Mock).mockResolvedValue({id: 42, version: 1});
+    await renderHome();
+    expect(container.querySelector<HTMLInputElement>('#computer-difficulty-normal')!.checked).toBe(true);
+    expect(container.querySelector<HTMLInputElement>('#computer-time-900')!.checked).toBe(true);
+    await choose('#computer-difficulty-hard');
+    await choose('#computer-time-300');
+    await submit();
+    expect(createBattleshipMatch).toHaveBeenCalledWith(
+      expect.objectContaining({difficulty: 'hard', mode: 'computer', time_limit_seconds: 300}),
+    );
   });
 
   it('prevents a double submission while creation is pending', async () => {
@@ -165,6 +184,34 @@ describe('creating battleship matches', () => {
     await submit();
     expect(createBattleshipMatch).toHaveBeenCalledTimes(1);
   });
+});
+
+it('logs matches with readable states and the action each one needs', async () => {
+  const base = {guest: {id: 11, username: 'Alice'}, phase: 'battle', stake_amount: 0, winner: null};
+  (getBattleshipMatches as jest.Mock).mockImplementation((params) =>
+    Promise.resolve({
+      count: 2,
+      next: null,
+      previous: null,
+      results:
+        params.status === 'pending,active'
+          ? [
+              {...base, host: {id: 12, username: 'Bob'}, id: 1, status: 'pending'},
+              {...base, host: {id: 13, username: 'Cy'}, id: 2, stake_amount: 2500, status: 'active'},
+            ]
+          : [{...base, host: {id: 14, username: 'Di'}, id: 3, phase: 'finished', status: 'finished', winner: 'guest'}],
+    }),
+  );
+  await renderHome();
+  expect(container.querySelector('a[href="/battleship/matches/1"]')).toHaveTextContent('Review challenge');
+  expect(container.querySelector('a[href="/battleship/matches/2"]')).toHaveTextContent(
+    `In battle · ${(2500).toLocaleString()} TNB each`,
+  );
+  expect(container.querySelector('a[href="/battleship/matches/3"]')).toHaveTextContent(
+    'Finished · Free play · Alice won',
+  );
+  expect(container).toHaveTextContent('Your recent matches');
+  expect(container).not.toHaveTextContent('All quiet on the water');
 });
 
 it('lets signed-out visitors start a free Battleship computer match', async () => {
@@ -185,8 +232,8 @@ it.each([false, true])('starts the default game directly from the hero (authenti
   );
   (createBattleshipMatch as jest.Mock).mockResolvedValue({id: 42, version: 1, guest_mode: !authenticated});
   await renderHome();
-  (container.querySelector('#computer-time') as HTMLSelectElement).value = '300';
-  (container.querySelector('#computer-difficulty') as HTMLSelectElement).value = 'hard';
+  await choose('#computer-time-300');
+  await choose('#computer-difficulty-hard');
   const heroButton = container.querySelector('[aria-label="Battleship overview"] button') as HTMLButtonElement;
   await act(async () => heroButton.click());
   expect(createBattleshipMatch).toHaveBeenCalledWith({
