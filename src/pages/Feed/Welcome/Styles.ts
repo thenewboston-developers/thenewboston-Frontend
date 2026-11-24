@@ -132,7 +132,7 @@ export const Heading = styled.h2`
 
 export const Logo = styled.img`
   border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 16px;
+  border-radius: 50%;
   box-shadow:
     0 24px 48px rgba(0, 0, 0, 0.4),
     0 0 48px rgba(220, 13, 22, 0.25);
@@ -151,7 +151,7 @@ export const LogoStack = styled.div`
   &::before,
   &::after {
     border: 1px solid rgba(255, 104, 117, 0.4);
-    border-radius: 16px;
+    border-radius: 50%;
     content: '';
     inset: 0;
     position: absolute;
