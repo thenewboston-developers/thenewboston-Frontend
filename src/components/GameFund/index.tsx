@@ -1,75 +1,36 @@
-import {FormEvent, useEffect, useRef, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {mdiAccountGroupOutline, mdiTrophyOutline, mdiWalletOutline} from '@mdi/js';
+import {useEffect, useRef, useState} from 'react';
+import {mdiArrowRight, mdiGamepadVariantOutline, mdiTrophyOutline, mdiWalletOutline} from '@mdi/js';
 import Icon from '@mdi/react';
 
-import {depositGameFund, getGameFund} from 'api/gameFund';
-import tnbLogo from 'assets/logo192.png';
-import AuthButtons from 'components/AuthButtons';
-import Button, {ButtonColor, ButtonType} from 'components/Button';
-import Modal, {ModalBody, ModalFooter} from 'components/Modal';
-import {getAllUserWallets} from 'dispatchers/wallets';
+import {getGameFund} from 'api/gameFund';
 import {useIsAuthenticated} from 'hooks';
 import useAnalyticsExposure from 'hooks/useAnalyticsExposure';
-import {getSelf} from 'selectors/state';
-import {AppDispatch} from 'types';
 import {GameFund as GameFundData} from 'types/gameFund';
-import {captureAnalyticsEvent} from 'utils/analytics';
 import {captureGameRewardOffer} from 'utils/gameAnalytics';
 
+import ContributionModal from './ContributionModal';
+import RewardIllustration from './RewardIllustration';
 import * as S from './Styles';
 
 const GameFund = () => {
-  const [amount, setAmount] = useState('');
-  const [confirmAmount, setConfirmAmount] = useState<number | null>(null);
-  const [error, setError] = useState('');
+  const [contributionIsOpen, setContributionIsOpen] = useState(false);
   const [fund, setFund] = useState<GameFundData | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
   const [success, setSuccess] = useState('');
-  const currentViewer = useRef<number | null | undefined>(null);
-  const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useIsAuthenticated();
   const fundExposure = useAnalyticsExposure<HTMLParagraphElement>(fund ? `game_fund:${isAuthenticated}` : null, () =>
     captureGameRewardOffer(
       {
         auth_state: isAuthenticated ? 'authenticated' : 'guest',
         reward_amount: fund?.reward_amount ?? 0,
-        rewards_available: !!fund?.available,
+        rewards_available: !!fund?.available && !loadError,
       },
       'game_fund',
     ),
   );
   const latestRead = useRef(0);
-  const live = useRef(true);
-  const request = useRef<{amount: number; id: string; userId: number} | null>(null);
-  const self = useSelector(getSelf);
-  const submissionLock = useRef(false);
-  const viewerGeneration = useRef(0);
-  const viewerIdentity = `${isAuthenticated}:${self.id}`;
-  const previousViewer = useRef(viewerIdentity);
-  if (previousViewer.current !== viewerIdentity) {
-    viewerGeneration.current += 1;
-    previousViewer.current = viewerIdentity;
-  }
-  currentViewer.current = isAuthenticated ? self.id : null;
-
-  useEffect(() => {
-    live.current = true;
-    return () => {
-      live.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    setConfirmAmount(null);
-    setError('');
-    setSuccess('');
-    setIsSubmitting(false);
-    submissionLock.current = false;
-    request.current = null;
-  }, [isAuthenticated, self.id]);
+  const rewardsAvailable = !!fund?.available && !loadError;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -98,227 +59,134 @@ const GameFund = () => {
     };
   }, [retryKey]);
 
-  const handleConfirm = async () => {
-    if (confirmAmount === null || !isAuthenticated || !self.id || submissionLock.current) return;
-    const viewerId = self.id;
-    const generation = viewerGeneration.current;
-    const isCurrent = () =>
-      live.current && currentViewer.current === viewerId && generation === viewerGeneration.current;
-    submissionLock.current = true;
-    setIsSubmitting(true);
-    setError('');
-    if (request.current?.amount !== confirmAmount || request.current.userId !== viewerId)
-      request.current = {amount: confirmAmount, id: crypto.randomUUID(), userId: viewerId};
-    captureAnalyticsEvent('game_fund_contribution_started', {amount: confirmAmount, currency: 'TNB'});
-    try {
-      const deposit = await depositGameFund({amount: confirmAmount, request_id: request.current.id});
-      if (!isCurrent()) return;
-      latestRead.current += 1;
-      setFund(deposit.fund);
-      setLoadError(false);
-      setSuccess(`Contributed ${deposit.amount.toLocaleString()} TNB to the game fund. Thank you!`);
-      request.current = null;
-      setAmount('');
-      setConfirmAmount(null);
-      dispatch(getAllUserWallets()).catch(() => undefined);
-    } catch (depositError) {
-      if (!isCurrent()) return;
-      captureAnalyticsEvent('game_fund_contribution_request_failed', {amount: confirmAmount, currency: 'TNB'});
-      const data = (depositError as {response?: {data?: Record<string, unknown>}}).response?.data;
-      const details = data
-        ? Object.values(data)
-            .flat()
-            .filter((value) => typeof value === 'string')
-            .join(' ')
-        : '';
-      setError(
-        details || 'We could not confirm your contribution. Retry to check the same contribution without paying twice.',
-      );
-    } finally {
-      if (isCurrent()) {
-        submissionLock.current = false;
-        setIsSubmitting(false);
-      }
-    }
+  const handleContributionSuccess = (updatedFund: GameFundData, message: string) => {
+    latestRead.current += 1;
+    setFund(updatedFund);
+    setLoadError(false);
+    setSuccess(message);
   };
 
-  const handleReview = (event: FormEvent) => {
-    event.preventDefault();
-    setError('');
-    setSuccess('');
-    const value = Number(amount);
-    if (!Number.isSafeInteger(value) || value < 1 || value > 1000000000) {
-      setError('Enter a whole-number contribution from 1 to 1,000,000,000 TNB.');
-      return;
-    }
-    setConfirmAmount(value);
-  };
-
-  let availability = 'Rewards paused';
-  if (fund?.enabled) availability = fund.available ? 'Rewards available' : 'Awaiting contributions';
+  let availability = 'Checking rewards…';
+  if (loadError) availability = 'Reward status unavailable';
+  else if (fund) {
+    if (!fund.enabled) availability = 'Rewards paused';
+    else availability = fund.available ? 'Rewards available' : 'More rewards on the way';
+  }
 
   return (
     <S.Card aria-labelledby="game-fund-title">
       <S.Hero>
         <S.Overview>
-          <S.Eyebrow>POWERED BY THE COMMUNITY</S.Eyebrow>
+          <S.Eyebrow>YOUR NEXT WIN IS WORTH MORE</S.Eyebrow>
           <S.Heading id="game-fund-title">
-            Small contributions.
+            Play for fun.
             <br />
-            More rewarding wins.
+            <span>Win real coins.</span>
           </S.Heading>
           <S.HeroDescription ref={fundExposure}>
-            The community game fund turns donated coins into rewards for players. Beat the computer with an account to
-            earn {fund?.reward_amount ?? 10} TNB when the fund can cover your win.
+            Beat the computer. Earn TNB. Get coins straight to your wallet when you play signed in and rewards are
+            available.
           </S.HeroDescription>
-          <S.Flow aria-label="How the community game fund works">
+          <S.PlayLink href="#featured-game-heading">
+            Choose a game <Icon aria-hidden="true" path={mdiArrowRight} size="19px" />
+          </S.PlayLink>
+          <S.PlayNote>Free to play. A little skill goes a long way.</S.PlayNote>
+        </S.Overview>
+        <S.RewardShowcase aria-label="Win games to earn TNB coins">
+          <S.Status $available={rewardsAvailable} role="status">
+            <S.StatusDot aria-hidden="true" $available={rewardsAvailable} />
+            {availability}
+          </S.Status>
+          <RewardIllustration />
+          <S.RewardAmount>
+            <strong>{fund ? `+${fund.reward_amount.toLocaleString()}` : '—'}</strong>
+            <S.RewardUnit>
+              TNB<span>per funded win</span>
+            </S.RewardUnit>
+          </S.RewardAmount>
+          <S.Flow aria-label="Play, win, earn coins">
             <S.FlowStep>
-              <S.StepIcon>
-                <Icon aria-hidden="true" path={mdiAccountGroupOutline} size="22px" />
-              </S.StepIcon>
-              <span>
-                Members
-                <br />
-                <strong>contribute</strong>
-              </span>
+              <Icon aria-hidden="true" path={mdiGamepadVariantOutline} size="20px" />
+              Play
             </S.FlowStep>
-            <S.FlowConnector aria-hidden="true" />
+            <Icon aria-hidden="true" path={mdiArrowRight} size="16px" />
             <S.FlowStep>
-              <S.StepIcon>
-                <Icon aria-hidden="true" path={mdiWalletOutline} size="22px" />
-              </S.StepIcon>
-              <span>
-                Shared fund
-                <br />
-                <strong>fills up</strong>
-              </span>
+              <Icon aria-hidden="true" path={mdiTrophyOutline} size="20px" />
+              Win
             </S.FlowStep>
-            <S.FlowConnector aria-hidden="true" />
+            <Icon aria-hidden="true" path={mdiArrowRight} size="16px" />
             <S.FlowStep>
-              <S.StepIcon>
-                <Icon aria-hidden="true" path={mdiTrophyOutline} size="22px" />
-              </S.StepIcon>
-              <span>
-                You win
-                <br />
-                <strong>earn coins</strong>
-              </span>
+              <Icon aria-hidden="true" path={mdiWalletOutline} size="20px" />
+              Earn coins
             </S.FlowStep>
           </S.Flow>
-        </S.Overview>
-        <S.Pool aria-label="Community game fund balance">
-          <S.PoolHeader>
-            <S.PoolLabel>Community game fund</S.PoolLabel>
-            <S.CurrencyLogo alt="TNB logo" height={48} src={tnbLogo} width={48} />
-          </S.PoolHeader>
-          {fund ? (
-            <>
-              <S.BalanceLabel>{loadError ? 'Last known balance' : 'Available to win'}</S.BalanceLabel>
-              <S.Amount>
-                {fund.balance.toLocaleString()} <span>TNB</span>
-              </S.Amount>
-              <S.FundedWins>{fund.wins_remaining.toLocaleString()} rewards funded</S.FundedWins>
-              <S.PoolFooter>
-                <S.Status $available={fund.available && !loadError}>
-                  {loadError ? 'Update unavailable' : availability}
-                </S.Status>
-                <S.PaidTotal>{fund.total_paid.toLocaleString()} TNB paid to players</S.PaidTotal>
-              </S.PoolFooter>
-            </>
-          ) : (
-            <S.HeroDescription role="status">
-              {loadError ? 'The fund balance is temporarily unavailable.' : 'Loading the game fund…'}
-            </S.HeroDescription>
-          )}
-          {loadError && (
-            <S.RefreshButton onClick={() => setRetryKey((value) => value + 1)} type="button">
-              Refresh fund balance
-            </S.RefreshButton>
-          )}
-        </S.Pool>
+        </S.RewardShowcase>
       </S.Hero>
-      <S.Contribution>
-        <div>
-          <S.ContributionTitle>Keep the good games going.</S.ContributionTitle>
-          <S.Description>Every {fund?.reward_amount ?? 10} TNB can fund another winning moment.</S.Description>
-        </div>
-        {isAuthenticated ? (
-          <S.Form onSubmit={handleReview}>
-            <S.Field htmlFor="game-fund-amount">
-              Contribute from your TNB wallet
-              <S.InputWrapper>
-                <S.Input
-                  id="game-fund-amount"
-                  inputMode="numeric"
-                  max={1000000000}
-                  min={1}
-                  onChange={(event) => setAmount(event.target.value)}
-                  placeholder="Amount"
-                  required
-                  step={1}
-                  type="number"
-                  value={amount}
-                />
-                <S.InputUnit aria-hidden="true">TNB</S.InputUnit>
-              </S.InputWrapper>
-            </S.Field>
-            <Button
-              disabled={isSubmitting}
-              isValid={Number.isSafeInteger(Number(amount)) && Number(amount) >= 1 && Number(amount) <= 1000000000}
-              text="Review contribution"
-              type={ButtonType.submit}
-            />
-          </S.Form>
+      <S.Pool aria-label="Game reward pool">
+        {fund ? (
+          <S.Stats>
+            <S.Stat>
+              <dt>{loadError ? 'Last known reward pool' : 'In the reward pool'}</dt>
+              <dd>
+                {fund.balance.toLocaleString()} <span>TNB</span>
+              </dd>
+            </S.Stat>
+            <S.Stat>
+              <dt>Rewards funded</dt>
+              <dd>
+                {fund.wins_remaining.toLocaleString()} <span>wins</span>
+              </dd>
+            </S.Stat>
+            <S.Stat>
+              <dt>Paid to players</dt>
+              <dd>
+                {fund.total_paid.toLocaleString()} <span>TNB</span>
+              </dd>
+            </S.Stat>
+          </S.Stats>
         ) : (
-          <S.GuestActions>
-            <S.Description>Sign in to contribute or earn rewards.</S.Description>
-            <AuthButtons analyticsSource="game_fund" />
-          </S.GuestActions>
+          <S.PoolMessage role="status">
+            {loadError ? 'The fund balance is temporarily unavailable.' : 'Loading the reward pool…'}
+          </S.PoolMessage>
         )}
-      </S.Contribution>
-      <S.RewardDetails>
-        <summary>How rewards work</summary>
-        <S.Description>
-          Sign in before starting a computer match to qualify. Rewards are paid when a qualifying match ends; coins are
-          not reserved when you start. If fewer than {fund?.reward_amount ?? 10} TNB are available or rewards are
-          paused, free play continues without a reward. Guest wins do not earn coins, and later contributions or account
-          creation do not pay for earlier wins.
-        </S.Description>
-      </S.RewardDetails>
-      {error && !confirmAmount && <S.Error role="alert">{error}</S.Error>}
-      {success && <S.Description role="status">{success}</S.Description>}
-      {confirmAmount !== null && (
-        <Modal
-          close={() => {
-            if (!isSubmitting) setConfirmAmount(null);
+        {loadError && (
+          <S.RefreshButton onClick={() => setRetryKey((value) => value + 1)} type="button">
+            Refresh fund balance
+          </S.RefreshButton>
+        )}
+      </S.Pool>
+      <S.Footer>
+        <S.RewardDetails>
+          <summary>How rewards work</summary>
+          <S.DetailsText>
+            Sign in before starting a computer match to qualify.{' '}
+            {fund ? `Win to earn ${fund.reward_amount.toLocaleString()} TNB when rewards are available. ` : ''}
+            Rewards are paid when a qualifying match ends; coins are not reserved when you start. If{' '}
+            {fund
+              ? `fewer than ${fund.reward_amount.toLocaleString()} TNB are available`
+              : 'the reward pool cannot cover your win'}{' '}
+            or rewards are paused, free play continues without a reward. Guest wins do not earn coins, and later
+            contributions or account creation do not pay for earlier wins.
+          </S.DetailsText>
+        </S.RewardDetails>
+        <S.ContributeLink
+          aria-haspopup="dialog"
+          onClick={() => {
+            setSuccess('');
+            setContributionIsOpen(true);
           }}
-          disableOverlayClick={isSubmitting}
-          header="Confirm game fund contribution"
+          type="button"
         >
-          <ModalBody>
-            <S.Heading>Contribute {confirmAmount.toLocaleString()} TNB?</S.Heading>
-            <S.Description>
-              This transfers {confirmAmount.toLocaleString()} TNB from your wallet into the community game fund.
-              Contributions are final and cannot be withdrawn. The coins fund eligible computer-game rewards for all
-              players.
-            </S.Description>
-            {error && <S.Error role="alert">{error}</S.Error>}
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              color={ButtonColor.secondary}
-              disabled={isSubmitting}
-              onClick={() => setConfirmAmount(null)}
-              text="Cancel"
-            />
-            <Button
-              disabled={isSubmitting}
-              isSubmitting={isSubmitting}
-              onClick={handleConfirm}
-              text={`Contribute ${confirmAmount.toLocaleString()} TNB`}
-            />
-          </ModalFooter>
-        </Modal>
+          Contribute to the reward pool <span aria-hidden="true">↗</span>
+        </S.ContributeLink>
+      </S.Footer>
+      {success && <S.Success role="status">{success}</S.Success>}
+      {contributionIsOpen && (
+        <ContributionModal
+          close={() => setContributionIsOpen(false)}
+          onSuccess={handleContributionSuccess}
+          rewardAmount={fund?.reward_amount ?? 10}
+        />
       )}
     </S.Card>
   );
