@@ -3,9 +3,30 @@ import styled from 'styled-components';
 import {fonts} from 'styles';
 
 const themes = {
-  amber: {accent: '#ffd18a', background: '#241c15', glow: '#62432c'},
-  emerald: {accent: '#a9e9cb', background: '#102a25', glow: '#225442'},
-  ocean: {accent: '#91dff1', background: '#101e30', glow: '#203e58'},
+  amber: {
+    accent: '#f5d9a6',
+    end: '#392416',
+    glow: '#946137',
+    mobileGlow: '#644326',
+    muted: '#e1d2c1',
+    start: '#21170f',
+  },
+  emerald: {
+    accent: '#d4ed92',
+    end: '#174a3b',
+    glow: '#3d8065',
+    mobileGlow: '#275c46',
+    muted: '#c2d7ca',
+    start: '#081f19',
+  },
+  ocean: {
+    accent: '#b3eaf3',
+    end: '#143e5c',
+    glow: '#26748b',
+    mobileGlow: '#20546b',
+    muted: '#c0d5e1',
+    start: '#081c30',
+  },
 };
 
 export const Actions = styled.div`
@@ -17,54 +38,23 @@ export const Actions = styled.div`
 `;
 
 export const Artwork = styled.div`
+  align-items: center;
   align-self: stretch;
-  min-height: 360px;
+  display: flex;
+  justify-content: center;
   min-width: 0;
+  padding: 24px 24px 24px 0;
   position: relative;
 
-  &::after {
-    background:
-      linear-gradient(90deg, var(--hero-background), transparent 32%),
-      linear-gradient(0deg, var(--hero-background), transparent 35%);
-    content: '';
-    inset: 0;
-    pointer-events: none;
-    position: absolute;
-  }
-
   @media (max-width: 1100px) {
-    min-height: 280px;
-
-    &::after {
-      background: linear-gradient(0deg, var(--hero-background), transparent 35%);
-    }
+    justify-self: center;
+    max-width: 560px;
+    padding: 0 28px 28px;
+    width: 100%;
   }
 
   @media (max-width: 600px) {
-    min-height: 220px;
-  }
-`;
-
-export const ArtworkCaption = styled.span`
-  align-items: center;
-  backdrop-filter: blur(12px);
-  background: #08141080;
-  border: 1px solid #ffffff26;
-  border-radius: 30px;
-  bottom: 28px;
-  color: #f2f6f5;
-  display: flex;
-  font-size: 11px;
-  font-weight: ${fonts.weight.medium};
-  gap: 8px;
-  padding: 9px 14px;
-  position: absolute;
-  right: 28px;
-  z-index: 1;
-
-  @media (max-width: 1100px) {
-    bottom: 24px;
-    right: 24px;
+    padding: 0 16px 20px;
   }
 `;
 
@@ -73,14 +63,15 @@ export const ChallengeLink = styled.a`
   border-radius: 8px;
   color: #f2f5f5;
   display: inline-flex;
-  font-size: 13px;
+  font-size: 0.9375rem;
   font-weight: ${fonts.weight.semiBold};
   gap: 8px;
-  min-height: 46px;
+  min-height: 48px;
   text-decoration: none;
 
   &:hover {
     color: var(--hero-accent);
+    text-decoration: none;
   }
 
   &:focus-visible {
@@ -92,53 +83,59 @@ export const ChallengeLink = styled.a`
 export const Content = styled.div`
   align-self: center;
   min-width: 0;
-  padding: 44px 0 40px 40px;
+  padding: 48px 0 48px 40px;
   position: relative;
   z-index: 1;
 
   @media (max-width: 1100px) {
-    padding: 32px 32px 16px;
+    padding: 36px 36px 12px;
   }
 
   @media (max-width: 600px) {
-    padding: 28px 24px 16px;
+    padding: 32px 24px 8px;
   }
 `;
 
 export const Description = styled.p`
-  color: #c3cecc;
-  font-size: 15px;
+  color: var(--hero-muted);
+  font-size: 1rem;
   line-height: 1.7;
-  margin: 16px 0 0;
-  max-width: 360px;
+  margin: 18px 0 0;
+  max-width: 430px;
 `;
 
 export const Eyebrow = styled.p`
   color: var(--hero-accent);
-  font-size: 10px;
-  font-weight: ${fonts.weight.bold};
-  letter-spacing: 0.15em;
+  font-size: 0.75rem;
+  font-weight: ${fonts.weight.semiBold};
+  letter-spacing: 0.12em;
   line-height: 1.6;
-  margin: 0 0 18px;
+  margin: 0 0 20px;
   text-transform: uppercase;
 `;
 
 export const Hero = styled.section<{$theme: keyof typeof themes}>`
   --hero-accent: ${({$theme}) => themes[$theme].accent};
-  --hero-background: ${({$theme}) => themes[$theme].background};
+  --hero-muted: ${({$theme}) => themes[$theme].muted};
+  align-items: center;
   background:
-    radial-gradient(ellipse at top left, ${({$theme}) => themes[$theme].glow}, transparent 65%), var(--hero-background);
+    radial-gradient(ellipse at 84% 36%, ${({$theme}) => themes[$theme].glow}, transparent 65%),
+    linear-gradient(115deg, ${({$theme}) => themes[$theme].start} 10%, ${({$theme}) => themes[$theme].end});
   border: 1px solid #ffffff14;
   border-radius: 24px;
   box-shadow: 0 16px 40px #10251f14;
   color: #ffffff;
   display: grid;
+  gap: 8px;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   isolation: isolate;
   margin-bottom: 28px;
   overflow: hidden;
 
   @media (max-width: 1100px) {
+    background:
+      radial-gradient(ellipse at 84% 80%, ${({$theme}) => themes[$theme].mobileGlow}, transparent 65%),
+      linear-gradient(115deg, ${({$theme}) => themes[$theme].start} 10%, ${({$theme}) => themes[$theme].end});
     grid-template-columns: minmax(0, 1fr);
   }
 `;
@@ -149,7 +146,7 @@ export const Highlights = styled.ul`
   color: #d6dfdc;
   display: flex;
   flex-wrap: wrap;
-  font-size: 11px;
+  font-size: 0.875rem;
   font-weight: ${fonts.weight.medium};
   gap: 12px 28px;
   grid-column: 1 / -1;
@@ -163,14 +160,6 @@ export const Highlights = styled.ul`
     gap: 8px;
   }
 
-  li::before {
-    background: var(--hero-accent);
-    border-radius: 50%;
-    content: '';
-    height: 4px;
-    width: 4px;
-  }
-
   @media (max-width: 1100px) {
     padding: 18px 32px;
   }
@@ -182,26 +171,20 @@ export const Highlights = styled.ul`
 `;
 
 export const Image = styled.img`
+  aspect-ratio: 1;
   display: block;
-  height: 100%;
-  inset: 0;
-  object-fit: cover;
+  filter: drop-shadow(0 18px 24px #00000030);
+  height: auto;
+  margin: -10% 0;
+  max-width: 640px;
+  object-fit: contain;
   object-position: center;
-  position: absolute;
   width: 100%;
 `;
 
-export const LiveDot = styled.span`
-  background: var(--hero-accent);
-  border-radius: 50%;
-  box-shadow: 0 0 10px var(--hero-accent);
-  height: 6px;
-  width: 6px;
-`;
-
 export const Note = styled.p`
-  color: #b2c1bd;
-  font-size: 11px;
+  color: var(--hero-muted);
+  font-size: 0.8125rem;
   line-height: 1.6;
   margin: 14px 0 0;
 `;
@@ -212,16 +195,17 @@ export const PlayLink = styled.a`
   border-radius: 10px;
   color: #14251f;
   display: inline-flex;
-  font-size: 14px;
+  font-size: 0.9375rem;
   font-weight: ${fonts.weight.bold};
   gap: 6px;
   justify-content: center;
-  min-height: 46px;
+  min-height: 48px;
   padding: 0 20px;
   text-decoration: none;
 
   &:hover {
     background: #ffffff;
+    text-decoration: none;
   }
 
   &:focus-visible {
@@ -232,21 +216,22 @@ export const PlayLink = styled.a`
 
 export const Tagline = styled.p`
   color: #f2f5f3;
-  font-size: clamp(18px, 1.6vw, 24px);
+  font-size: clamp(1.125rem, 1.6vw, 1.5rem);
   font-weight: ${fonts.weight.medium};
-  letter-spacing: -0.035em;
+  letter-spacing: -0.025em;
   line-height: 1.4;
-  margin: 14px 0 0;
+  margin: 16px 0 0;
 `;
 
 export const Title = styled.h1`
-  font-size: clamp(38px, 4.5vw, 64px);
+  font-size: clamp(2.375rem, 4.5vw, 4rem);
   font-weight: ${fonts.weight.bold};
-  letter-spacing: -0.065em;
+  letter-spacing: -0.055em;
   line-height: 1.1;
   margin: 0;
+  overflow-wrap: anywhere;
 
   @media (max-width: 600px) {
-    font-size: clamp(32px, 8.8vw, 48px);
+    font-size: clamp(2rem, 8.8vw, 3rem);
   }
 `;

@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createMancalaMatch, getMancalaMatches} from 'api/mancala';
-import mancalaCover from 'assets/mancala-cover.webp';
+import mancalaHero from 'assets/mancala-hero.webp';
 import AuthButtons from 'components/AuthButtons';
 import GameHero from 'components/GameHero';
 import Loader from 'components/Loader';
@@ -212,7 +212,7 @@ const Home = () => {
         <S.Badge>Sow · Capture · Count</S.Badge>
       </S.Navigation>
       <GameHero
-        artwork={mancalaCover}
+        artwork={mancalaHero}
         artworkAlt="A carved walnut mancala board with glass stones in jewel colors"
         challengeHref="#mancala-challenge"
         description="Sow your stones around the board, earn extra turns, and capture what your opponent leaves open. Play a quick game against the computer or start a rivalry."

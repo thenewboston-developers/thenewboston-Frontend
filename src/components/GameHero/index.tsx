@@ -47,11 +47,7 @@ const GameHero = ({
       <S.Note>No account needed for computer play</S.Note>
     </S.Content>
     <S.Artwork>
-      <S.Image alt={artworkAlt} fetchPriority="high" height={800} src={artwork} width={1200} />
-      <S.ArtworkCaption aria-hidden="true">
-        <S.LiveDot />
-        Your next great game
-      </S.ArtworkCaption>
+      <S.Image alt={artworkAlt} fetchPriority="high" height={1000} src={artwork} width={1000} />
     </S.Artwork>
     <S.Highlights aria-label="Game features">
       {highlights.map((highlight) => (
