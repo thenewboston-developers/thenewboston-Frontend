@@ -20,7 +20,21 @@ import {isCurrentGuestGame} from 'utils/guestGames';
 import Board from './Board';
 import Rules from './Rules';
 import * as S from './Styles';
-import {cellLabel, formatClock, getErrorMessage, getPlayerName, isCapture, matchingMoves, previewBoard} from './utils';
+import {
+  cellLabel,
+  countPieces,
+  extendPath,
+  formatClock,
+  getErrorMessage,
+  getPlayerName,
+  isCapture,
+  matchingMoves,
+  previewBoard,
+} from './utils';
+
+// Poll faster while the computer is choosing its reply so it appears soon after it is made
+const COMPUTER_POLL_MS = 700;
+const POLL_MS = 2000;
 
 const RESULT_LABELS: Record<string, string> = {
   no_pieces: 'All opposing pieces captured',
@@ -37,6 +51,7 @@ const Match = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [now, setNow] = useState(Date.now());
+  const [prefersDragging] = useState(() => !!window.matchMedia?.('(hover: hover) and (pointer: fine)').matches);
   const [resigning, setResigning] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
   const [selection, setSelection] = useState<{version: number; path: number[]} | null>(null);
@@ -59,6 +74,7 @@ const Match = () => {
     (state: RootState) => (state.checkers as CheckersState | undefined)?.matchesById[id],
   );
   const navigate = useNavigate();
+  const pollSoon = useRef<() => void>(() => undefined);
   const self = useSelector(getSelf);
   // Never render a cached private board for a different signed-in account.
   const match =
@@ -78,11 +94,15 @@ const Match = () => {
   const legalMoves = match?.legal_moves ?? [];
   const candidates = matchingMoves(legalMoves, path);
   const complete = path.length > 1 && candidates.some((move) => move.length === path.length);
-  const targets = path.length
-    ? Array.from(new Set(candidates.filter((move) => move.length > path.length).map((move) => move[path.length])))
-    : [];
+  const targets =
+    path.length && !complete
+      ? Array.from(new Set(candidates.filter((move) => move.length > path.length).map((move) => move[path.length])))
+      : [];
   const selectable = path.length <= 1 ? Array.from(new Set(legalMoves.map((move) => move[0]))) : [];
   const captureRequired = legalMoves.length > 0 && isCapture(legalMoves[0]);
+  // Mid-chain only the jumping piece may continue
+  let draggable = selectable;
+  if (path.length > 1) draggable = complete ? [] : [path[path.length - 1]];
 
   const {observeSoundEvents, resetSoundEvents} = useGameEventSounds<CheckersMatch>(playSound, (previous, next) => {
     const sounds: ArcadeSound[] = [];
@@ -147,13 +167,17 @@ const Match = () => {
     resetSoundEvents();
     let hydrateSounds = true;
     const controller = new AbortController();
+    let hurry = false;
+    let inFlight = false;
     let polling = true;
     let timer: ReturnType<typeof setTimeout>;
     setIsLoading(true);
     setResigning(false);
     setActionError('');
     const load = async () => {
+      let computerTurn = false;
       let shouldPoll = true;
+      inFlight = true;
       try {
         if (!Number.isSafeInteger(id) || id < 1) {
           shouldPoll = false;
@@ -161,6 +185,11 @@ const Match = () => {
         }
         const data = await getCheckersMatch(id, controller.signal);
         shouldPoll = ['pending', 'active'].includes(data.status);
+        computerTurn =
+          data.mode === 'computer' &&
+          data.status === 'active' &&
+          !!data.your_side &&
+          data.active_side !== data.your_side;
         if (polling) {
           receiveMatch(data, hydrateSounds);
           hydrateSounds = false;
@@ -169,15 +198,31 @@ const Match = () => {
         hydrateSounds = true;
         if (polling && !isCancellationError(error)) setLoadError(getErrorMessage(error));
       } finally {
+        inFlight = false;
         if (polling) {
           setIsLoading(false);
-          if (shouldPoll) timer = setTimeout(load, document.hidden ? 10000 : 2000);
+          if (shouldPoll) {
+            let delay = computerTurn || hurry ? COMPUTER_POLL_MS : POLL_MS;
+            if (document.hidden) delay = 10000;
+            hurry = false;
+            timer = setTimeout(load, delay);
+          }
         }
       }
+    };
+    pollSoon.current = () => {
+      if (!polling) return;
+      if (inFlight) {
+        hurry = true;
+        return;
+      }
+      clearTimeout(timer);
+      timer = setTimeout(load, COMPUTER_POLL_MS);
     };
     load();
     return () => {
       polling = false;
+      pollSoon.current = () => undefined;
       controller.abort();
       clearTimeout(timer);
     };
@@ -186,6 +231,14 @@ const Match = () => {
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 250);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !actionLock.current) setSelection(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   useEffect(() => {
@@ -220,9 +273,12 @@ const Match = () => {
         dispatch(getAllUserWallets()).catch(() => undefined);
       }
       if (action === 'rematch') navigate(`/checkers/matches/${updated.id}`);
+      else if (action === 'move' && updated.mode === 'computer' && updated.status === 'active') pollSoon.current();
       setSelection(null);
     } catch (error) {
       if (!isCurrent()) return;
+      // The piece slides back to where it was before the rejected move
+      setSelection(null);
       setActionError(getErrorMessage(error));
       try {
         const refreshed = await getCheckersMatch(id);
@@ -239,20 +295,50 @@ const Match = () => {
     }
   };
 
+  const handleDragStart = (index: number) => {
+    if (!canMove || !match || path.length > 1 || !selectable.includes(index) || path[0] === index) return;
+    setSelection({version: match.version, path: [index]});
+  };
+
+  const handleDrop = (from: number, to: number): boolean => {
+    if (!canMove || !match) return false;
+    let base: number[] | null = null;
+    if (path.length > 1) base = path[path.length - 1] === from ? path : null;
+    else if (selectable.includes(from)) base = [from];
+    if (!base) return false;
+    const next = extendPath(legalMoves, base, to);
+    if (!next) {
+      setSelection({version: match.version, path: base});
+      return false;
+    }
+    playPath(next);
+    return true;
+  };
+
   const handleSelect = (index: number) => {
     if (!canMove || !match) return;
-    if (targets.includes(index)) setSelection({version: match.version, path: [...path, index]});
-    else if (selectable.includes(index)) setSelection({version: match.version, path: [index]});
+    if (targets.includes(index)) playPath([...path, index]);
+    else if (selectable.includes(index))
+      setSelection(path.length === 1 && path[0] === index ? null : {version: match.version, path: [index]});
+  };
+
+  // Plays the move as soon as the route is complete; a partial jump chain waits for the next landing
+  const playPath = (next: number[]) => {
+    if (!match) return;
+    setSelection({version: match.version, path: next});
+    if (next.length > 1 && matchingMoves(legalMoves, next).some((move) => move.length === next.length)) {
+      handleAction('move', {path: next});
+    }
   };
 
   const renderBoard = () => {
     if (!match || !['active', 'finished'].includes(match.status)) return null;
-    let instruction = 'Select one of your pieces, then a highlighted landing square.';
-    if (captureRequired) instruction = 'A capture is available. Choose a piece and follow its highlighted jumps.';
-    if (path.length > 1)
-      instruction = complete
-        ? 'Your move is ready. Confirm it, or reset to choose a different route.'
-        : 'Keep jumping with this piece. Select the next highlighted landing.';
+    let instruction = prefersDragging
+      ? 'Drag a piece onto a gold dot, or click the piece and then the dot.'
+      : 'Tap one of your pieces, then tap a gold dot to move it.';
+    if (captureRequired) instruction = 'A capture is available, so you must jump. Pieces that can capture are pulsing.';
+    if (path.length > 1 && !complete) instruction = 'Keep jumping with the same piece: move it to the next gold dot.';
+    if (busyAction === 'move') instruction = 'Playing your move…';
     const turnLabel = captureRequired ? 'Your turn · Capture required' : 'Your turn';
     let waitingLabel =
       match.mode === 'computer' ? 'The computer is planning its next move…' : 'Waiting for your opponent to move.';
@@ -266,27 +352,19 @@ const Match = () => {
                 {match.active_side === side ? turnLabel : `${getPlayerName(match, match.active_side!)}’s turn`}
               </strong>
               <S.Small>{match.active_side === side ? instruction : waitingLabel}</S.Small>
-              {path.length > 1 && <S.Small>Preview: {path.map(cellLabel).join(' → ')}</S.Small>}
             </div>
-            {side && (
+            {side && path.length > 1 && !complete && (
               <S.Actions>
-                {path.length > 0 && (
-                  <S.Button $secondary disabled={!canMove} onClick={() => setSelection(null)} type="button">
-                    Reset
-                  </S.Button>
-                )}
-                {path.length > 1 && (
-                  <S.Button
-                    $secondary
-                    disabled={!canMove}
-                    onClick={() => setSelection({version: match.version, path: path.slice(0, -1)})}
-                    type="button"
-                  >
-                    Undo
-                  </S.Button>
-                )}
-                <S.Button disabled={!canMove || !complete} onClick={() => handleAction('move', {path})} type="button">
-                  {busyAction === 'move' ? 'Playing…' : 'Confirm move'}
+                <S.Button
+                  $secondary
+                  disabled={!canMove}
+                  onClick={() => setSelection({version: match.version, path: path.slice(0, -1)})}
+                  type="button"
+                >
+                  Undo jump
+                </S.Button>
+                <S.Button $secondary disabled={!canMove} onClick={() => setSelection(null)} type="button">
+                  Start over
                 </S.Button>
               </S.Actions>
             )}
@@ -295,9 +373,14 @@ const Match = () => {
         <Board
           board={previewBoard(match.board, path)}
           disabled={!canMove}
+          draggable={draggable}
           lastMove={path.length ? [] : match.last_move?.path}
+          mustCapture={captureRequired && path.length === 0}
+          onDragStart={handleDragStart}
+          onDrop={handleDrop}
           onSelect={handleSelect}
           path={path}
+          routes={match.last_move ? [path, match.last_move.path] : [path]}
           selectable={selectable}
           side={side ?? 'white'}
           targets={targets}
@@ -376,6 +459,12 @@ const Match = () => {
     );
   };
 
+  const renderPieceCount = (playerSide: CheckersSide) => {
+    if (!match || !['active', 'finished'].includes(match.status)) return '';
+    const count = countPieces(match.board, playerSide);
+    return ` · ${count} ${count === 1 ? 'piece' : 'pieces'}`;
+  };
+
   const renderResult = () => {
     if (!match || status !== 'finished') return null;
     const rematchLabel = match.mode === 'computer' ? 'Play again' : 'Offer rematch';
@@ -449,7 +538,8 @@ const Match = () => {
                   <S.Small>
                     {match.mode === 'computer' && playerSide === 'black'
                       ? `${match.difficulty} computer`
-                      : `${playerSide === 'white' ? 'Ivory' : 'Charcoal'} pieces`}
+                      : `${playerSide === 'white' ? 'Ivory' : 'Charcoal'}`}
+                    {renderPieceCount(playerSide)}
                   </S.Small>
                 </div>
                 <S.Timer aria-label={`${getPlayerName(match, playerSide)} clock`}>{renderClock(playerSide)}</S.Timer>
