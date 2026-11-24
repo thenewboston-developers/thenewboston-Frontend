@@ -3,9 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createCheckersMatch, getCheckersMatches} from 'api/checkers';
-import checkersCover from 'assets/checkers-cover.webp';
+import checkersHero from 'assets/checkers-hero.webp';
 import AuthButtons from 'components/AuthButtons';
-import GameHero from 'components/GameHero';
+import GameIllustrationHero from 'components/GameIllustrationHero';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -211,14 +211,13 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Classic strategy · Think a move ahead</S.Badge>
       </S.Navigation>
-      <GameHero
-        artwork={checkersCover}
-        artworkAlt="Polished black and ivory checkers on a warm wooden board with a crowned king"
+      <GameIllustrationHero
+        artwork={checkersHero}
+        artworkAlt="A complete walnut checkers board with polished black and ivory pieces and a stacked king"
         challengeHref="#checkers-challenge"
         description="Plan your jumps, find your opening, and crown your next king. A classic board with endless ways to outplay."
         eyebrow="CLASSIC BOARD STRATEGY"
         game="Checkers"
-        highlights={['12 pieces per side', 'Kings & captures', '3 difficulty levels']}
         playHref="#checkers-computer"
         tagline="Small moves. Big possibilities."
         theme="amber"

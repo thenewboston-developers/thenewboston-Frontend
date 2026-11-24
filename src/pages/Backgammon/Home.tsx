@@ -3,9 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createBackgammonMatch, getBackgammonMatches} from 'api/backgammon';
-import backgammonCover from 'assets/backgammon-cover.webp';
+import backgammonHero from 'assets/backgammon-hero.webp';
 import AuthButtons from 'components/AuthButtons';
-import GameHero from 'components/GameHero';
+import GameIllustrationHero from 'components/GameIllustrationHero';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -217,14 +217,13 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Classic strategy · A fresh rivalry</S.Badge>
       </S.Navigation>
-      <GameHero
-        artwork={backgammonCover}
-        artworkAlt="An emerald and walnut backgammon board with polished checkers and ivory dice"
+      <GameIllustrationHero
+        artwork={backgammonHero}
+        artworkAlt="A complete walnut backgammon board with emerald felt, polished checkers, and ivory dice"
         challengeHref="#backgammon-challenge"
         description="Race your checkers home and find the right moment to double. Roll into a quick practice game or your next rivalry."
         eyebrow="DICE & STRATEGY"
         game="Backgammon"
-        highlights={['15 checkers', 'Doubling cube', '3 difficulty levels']}
         playHref="#backgammon-computer"
         tagline="A little luck. A lot of strategy."
         theme="emerald"
