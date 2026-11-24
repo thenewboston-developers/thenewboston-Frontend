@@ -32,24 +32,6 @@ export const Card = styled.section`
   box-shadow: 0 8px 28px #17223c08;
   overflow: hidden;
 `;
-export const Coin = styled.span`
-  align-items: center;
-  background: linear-gradient(135deg, #fff1c8, #efb749 70%, #bd7b21);
-  border: 3px solid #f9d47f;
-  border-radius: 50%;
-  box-shadow:
-    4px 5px 0 #ad752d,
-    0 6px 28px #ffc86035;
-  color: #95601a;
-  display: flex;
-  flex-shrink: 0;
-  font-size: 27px;
-  font-weight: 700;
-  height: 48px;
-  justify-content: center;
-  transform: rotate(-14deg);
-  width: 48px;
-`;
 export const Contribution = styled.div`
   align-items: center;
   display: flex;
@@ -67,6 +49,15 @@ export const ContributionTitle = styled.h3`
   font-size: 16px;
   font-weight: ${fonts.weight.semiBold};
   margin: 0 0 6px;
+`;
+export const CurrencyLogo = styled.img`
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px #ffffff14;
+  display: block;
+  flex-shrink: 0;
+  height: 48px;
+  object-fit: cover;
+  width: 48px;
 `;
 export const Description = styled.p`
   color: ${colors.secondary};

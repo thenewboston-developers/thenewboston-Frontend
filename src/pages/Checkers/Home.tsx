@@ -3,7 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createCheckersMatch, getCheckersMatches} from 'api/checkers';
+import checkersCover from 'assets/checkers-cover.webp';
 import AuthButtons from 'components/AuthButtons';
+import GameHero from 'components/GameHero';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -14,7 +16,6 @@ import {AppDispatch, UserReadSerializer} from 'types';
 import {CheckersDifficulty, CheckersMatch, CheckersMode} from 'types/checkers';
 import {isCancellationError} from 'utils/errors';
 
-import Artwork from './Artwork';
 import Rules from './Rules';
 import * as S from './Styles';
 import {getErrorMessage, getPlayerName} from './utils';
@@ -210,29 +211,22 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Classic strategy · Think a move ahead</S.Badge>
       </S.Navigation>
-      <S.Hero>
-        <div>
-          <S.Eyebrow>Checkers</S.Eyebrow>
-          <S.Title>
-            Small moves.
-            <br />
-            Big possibilities.
-          </S.Title>
-          <S.HeroDescription>
-            Jump, capture, and crown your way across the board. Sharpen your strategy against the computer or challenge
-            a member for TNB.
-          </S.HeroDescription>
-          <S.Actions>
-            <S.Badge>Computer & multiplayer</S.Badge>
-            <S.Badge>Optional TNB stakes</S.Badge>
-          </S.Actions>
-        </div>
-        <Artwork />
-      </S.Hero>
+      <GameHero
+        artwork={checkersCover}
+        artworkAlt="Polished black and ivory checkers on a warm wooden board with a crowned king"
+        challengeHref="#checkers-challenge"
+        description="Plan your jumps, find your opening, and crown your next king. A classic board with endless ways to outplay."
+        eyebrow="CLASSIC BOARD STRATEGY"
+        game="Checkers"
+        highlights={['12 pieces per side', 'Kings & captures', '3 difficulty levels']}
+        playHref="#checkers-computer"
+        tagline="Small moves. Big possibilities."
+        theme="amber"
+      />
       <>
         {createError && <S.Error role="alert">{createError}</S.Error>}
         <S.PanelGrid>
-          <S.Panel>
+          <S.Panel id="checkers-computer" tabIndex={-1}>
             <S.Eyebrow>Practice your tactics</S.Eyebrow>
             <S.TitleSmall>Play the computer</S.TitleSmall>
             <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
@@ -256,7 +250,7 @@ const Home = () => {
               </S.Actions>
             </S.Form>
           </S.Panel>
-          <S.Panel>
+          <S.Panel id="checkers-challenge" tabIndex={-1}>
             <S.Eyebrow>Make it a rivalry</S.Eyebrow>
             <S.TitleSmall>Challenge a player</S.TitleSmall>
             {!isAuthenticated ? (

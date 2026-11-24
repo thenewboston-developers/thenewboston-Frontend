@@ -4,6 +4,7 @@ import {mdiAccountGroupOutline, mdiTrophyOutline, mdiWalletOutline} from '@mdi/j
 import Icon from '@mdi/react';
 
 import {depositGameFund, getGameFund} from 'api/gameFund';
+import tnbLogo from 'assets/logo192.png';
 import AuthButtons from 'components/AuthButtons';
 import Button, {ButtonColor, ButtonType} from 'components/Button';
 import Modal, {ModalBody, ModalFooter} from 'components/Modal';
@@ -193,7 +194,7 @@ const GameFund = () => {
         <S.Pool aria-label="Community game fund balance">
           <S.PoolHeader>
             <S.PoolLabel>Community game fund</S.PoolLabel>
-            <S.Coin aria-hidden="true">₮</S.Coin>
+            <S.CurrencyLogo alt="TNB logo" height={48} src={tnbLogo} width={48} />
           </S.PoolHeader>
           {fund ? (
             <>
