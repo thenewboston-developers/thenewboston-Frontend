@@ -23,6 +23,10 @@ const spin = keyframes`
   to { transform: rotate(360deg); }
 `;
 
+export type EmblemSize = 'large' | 'medium' | 'small';
+
+const EMBLEM_SIZES: Record<EmblemSize, string> = {large: '58px', medium: '44px', small: '22px'};
+
 const reducedMotion = css`
   @media (prefers-reduced-motion: reduce) {
     animation: none;
@@ -50,7 +54,7 @@ export const EngagementTarget = styled.g`
   ${reducedMotion};
 `;
 
-export const Insignia = styled.span`
+export const Insignia = styled.span<{$size: EmblemSize}>`
   align-items: center;
   background: radial-gradient(circle at 50% 35%, #173450, #0a1a2b 70%);
   border: 1px solid #f6cb6f99;
@@ -61,10 +65,10 @@ export const Insignia = styled.span`
   color: ${naval.gold};
   display: flex;
   flex-shrink: 0;
-  height: 58px;
+  height: ${({$size}) => EMBLEM_SIZES[$size]};
   justify-content: center;
   position: relative;
-  width: 58px;
+  width: ${({$size}) => EMBLEM_SIZES[$size]};
 
   &::after {
     border: 1px dashed #f6cb6f59;
@@ -75,7 +79,7 @@ export const Insignia = styled.span`
   }
 `;
 
-export const Radar = styled.span<{$size: 'large' | 'small'}>`
+export const Radar = styled.span<{$size: EmblemSize}>`
   background:
     radial-gradient(
       circle,
@@ -91,13 +95,13 @@ export const Radar = styled.span<{$size: 'large' | 'small'}>`
   border: 1px solid #64d2ec8c;
   border-radius: 50%;
   box-shadow: ${({$size}) =>
-    $size === 'large' ? `0 0 0 5px #64d2ec0f, 0 0 26px #64d2ec2e, inset 0 0 18px #00000073` : 'none'};
+    $size === 'small' ? 'none' : `0 0 0 5px #64d2ec0f, 0 0 26px #64d2ec2e, inset 0 0 18px #00000073`};
   display: inline-block;
   flex-shrink: 0;
-  height: ${({$size}) => ($size === 'large' ? '58px' : '22px')};
+  height: ${({$size}) => EMBLEM_SIZES[$size]};
   overflow: hidden;
   position: relative;
-  width: ${({$size}) => ($size === 'large' ? '58px' : '22px')};
+  width: ${({$size}) => EMBLEM_SIZES[$size]};
 `;
 
 export const RadarBlip = styled.span`
@@ -126,12 +130,12 @@ export const RadarSweep = styled.span`
   ${reducedMotion};
 `;
 
-export const Reticle = styled.svg`
+export const Reticle = styled.svg<{$size: EmblemSize}>`
   display: block;
   flex-shrink: 0;
   filter: drop-shadow(0 0 14px #ffad6a33);
-  height: 58px;
-  width: 58px;
+  height: ${({$size}) => EMBLEM_SIZES[$size]};
+  width: ${({$size}) => EMBLEM_SIZES[$size]};
 `;
 
 export const ReticleRing = styled.circle`

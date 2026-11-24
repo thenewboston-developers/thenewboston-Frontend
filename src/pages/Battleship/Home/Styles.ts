@@ -1,14 +1,23 @@
 import {Link} from 'react-router-dom';
 import styled, {css, keyframes} from 'styled-components';
 
-import UAuthButtons from 'components/AuthButtons';
 import UUserSearchInput from 'components/UserSearchInput';
 import {fonts} from 'styles';
 
-import URules from '../Rules';
 import {naval, navalConsole, navalMono, readout} from '../theme';
 
-export {Badge, Container, Navigation, TextLink} from '../Styles';
+export {
+  AuthButtons,
+  Badge,
+  Calm,
+  CalmCopy,
+  Container,
+  Error,
+  GhostButton,
+  LaunchButton,
+  Navigation,
+  TextLink,
+} from '../Styles';
 
 export type MatchTone = 'active' | 'closed' | 'incoming' | 'lost' | 'waiting' | 'won';
 
@@ -66,39 +75,6 @@ export const Actions = styled.div`
   margin-top: auto;
 `;
 
-export const Alert = styled.div`
-  align-items: center;
-  background: linear-gradient(90deg, #3b1a12, #1d1519);
-  border: 1px solid #ff7a4d66;
-  border-radius: 14px;
-  color: #ffdccb;
-  display: flex;
-  flex-wrap: wrap;
-  font-size: 14px;
-  gap: 12px 16px;
-  justify-content: space-between;
-  line-height: 1.6;
-  margin: 0 0 20px;
-  padding: 14px 18px;
-`;
-
-export const AuthButtons = styled(UAuthButtons)`
-  button {
-    height: 44px;
-    padding: 0 20px;
-  }
-
-  button:first-child {
-    background: transparent;
-    border-color: ${naval.steelBright};
-    color: ${naval.ice};
-  }
-
-  button:first-child:hover {
-    background: #ffffff14;
-  }
-`;
-
 export const Beacon = styled.span<{$tone: MatchTone}>`
   background: ${({$tone}) => TONES[$tone]};
   border-radius: 50%;
@@ -116,35 +92,6 @@ export const Beacon = styled.span<{$tone: MatchTone}>`
         animation: none;
       }
     `}
-`;
-
-export const Calm = styled.div`
-  ${navalConsole};
-  align-items: center;
-  display: flex;
-  gap: 20px;
-  margin-top: 24px;
-  padding: 24px 28px;
-
-  @media (max-width: 600px) {
-    padding: 22px 20px;
-  }
-`;
-
-export const CalmCopy = styled.div`
-  strong {
-    color: ${naval.ice};
-    display: block;
-    font-size: 16px;
-    margin-bottom: 4px;
-  }
-
-  p {
-    color: ${naval.mist};
-    font-size: 14px;
-    line-height: 1.6;
-    margin: 0;
-  }
 `;
 
 export const Choice = styled.label`
@@ -317,76 +264,10 @@ export const Form = styled.form`
   gap: 22px;
 `;
 
-export const GhostButton = styled.button`
-  ${readout};
-  background: transparent;
-  border: 1px solid currentColor;
-  border-radius: 999px;
-  color: inherit;
-  cursor: pointer;
-  padding: 8px 16px;
-
-  &:hover {
-    background: #ffffff14;
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${naval.amberLight};
-    outline-offset: 3px;
-  }
-`;
-
 export const Horizon = styled.div`
   display: flex;
   justify-content: center;
   margin-top: auto;
-`;
-
-export const LaunchButton = styled.button`
-  align-items: center;
-  background: linear-gradient(180deg, #ffbd86, #ff9d55);
-  border: 1px solid #ffc89c;
-  border-radius: 12px;
-  box-shadow:
-    0 12px 26px #ff8c4026,
-    inset 0 1px 0 #ffffff66;
-  color: ${naval.ink};
-  cursor: pointer;
-  display: flex;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: ${fonts.weight.bold};
-  gap: 10px;
-  justify-content: center;
-  min-height: 50px;
-  padding: 0 22px;
-  transition:
-    box-shadow 0.15s ease,
-    filter 0.15s ease,
-    transform 0.15s ease;
-  width: 100%;
-
-  &:hover:not(:disabled) {
-    box-shadow:
-      0 16px 32px #ff8c4038,
-      inset 0 1px 0 #ffffff66;
-    filter: brightness(1.05);
-    transform: translateY(-1px);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0);
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${naval.amberLight};
-    outline-offset: 3px;
-  }
-
-  &:disabled {
-    cursor: wait;
-    opacity: 0.65;
-  }
 `;
 
 export const Lead = styled.p`
@@ -533,99 +414,6 @@ export const Opponents = styled.strong`
     font-size: 12px;
     font-weight: ${fonts.weight.regular};
     margin: 0 4px;
-  }
-`;
-
-export const Rules = styled(URules)`
-  ${navalConsole};
-  color: ${naval.mist};
-  margin-top: 24px;
-  padding: 20px 28px;
-
-  summary {
-    align-items: center;
-    color: ${naval.ice};
-    display: flex;
-    gap: 14px;
-    list-style: none;
-    min-height: 32px;
-  }
-
-  &:not([open])::after {
-    display: none;
-  }
-
-  summary::-webkit-details-marker {
-    display: none;
-  }
-
-  summary::before {
-    background: radial-gradient(circle, ${naval.sonar} 0 2px, transparent 3px);
-    border: 1px solid #64d2ec8c;
-    border-radius: 50%;
-    box-shadow: 0 0 12px #64d2ec33;
-    content: '';
-    flex-shrink: 0;
-    height: 24px;
-    width: 24px;
-  }
-
-  summary::after {
-    border-bottom: 2px solid ${naval.amberLight};
-    border-right: 2px solid ${naval.amberLight};
-    content: '';
-    height: 8px;
-    margin: -4px 4px 0 auto;
-    transform: rotate(45deg);
-    transition: transform 0.2s ease;
-    width: 8px;
-  }
-
-  &[open] summary::after {
-    margin-top: 4px;
-    transform: rotate(-135deg);
-  }
-
-  summary:focus-visible {
-    border-radius: 6px;
-    outline: 2px solid ${naval.amberLight};
-    outline-offset: 4px;
-  }
-
-  ol {
-    counter-reset: order;
-    display: grid;
-    gap: 14px;
-    list-style: none;
-    margin: 20px 0 8px;
-    padding: 0;
-  }
-
-  li {
-    counter-increment: order;
-    display: grid;
-    gap: 14px;
-    grid-template-columns: 36px minmax(0, 1fr);
-    margin: 0;
-  }
-
-  li::before {
-    ${readout};
-    align-items: center;
-    background: #ffad6a14;
-    border: 1px solid #ffad6a59;
-    border-radius: 8px;
-    color: ${naval.amberLight};
-    content: counter(order, decimal-leading-zero);
-    display: flex;
-    height: 28px;
-    justify-content: center;
-    letter-spacing: 0.04em;
-    margin-top: 1px;
-  }
-
-  @media (max-width: 600px) {
-    padding: 18px 20px;
   }
 `;
 

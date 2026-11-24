@@ -16,6 +16,7 @@ import {isCancellationError} from 'utils/errors';
 import {EngagementArt, RadarScope, SonarPing, TargetReticle} from '../Emblems';
 import Hero from '../Hero';
 import Leaderboard from '../Leaderboard';
+import Rules from '../Rules';
 import {getErrorMessage, getPlayerName} from '../utils';
 
 import * as S from './Styles';
@@ -289,7 +290,7 @@ const Home = () => {
         <S.Badge>Naval strategy · Every shot counts</S.Badge>
       </S.Navigation>
       <Hero isCreating={!!creatingMode} onPlay={() => handleCreate(null, 'computer')} />
-      {createError && <S.Alert role="alert">{createError}</S.Alert>}
+      {createError && <S.Error role="alert">{createError}</S.Error>}
       <S.Deck>
         <S.Console id="battleship-computer" tabIndex={-1}>
           <S.ConsoleHeader>
@@ -373,12 +374,12 @@ const Home = () => {
         </S.Console>
       </S.Deck>
       {error && (
-        <S.Alert role="alert">
+        <S.Error role="alert">
           <span>{error}</span>
           <S.GhostButton onClick={() => setRetryKey((key) => key + 1)} type="button">
             Retry
           </S.GhostButton>
-        </S.Alert>
+        </S.Error>
       )}
       {isLoading && (
         <S.Status role="status">
@@ -399,7 +400,7 @@ const Home = () => {
       )}
       {history.length > 0 && <MatchLog matches={history} selfId={self.id} title="Your recent matches" />}
       <Leaderboard />
-      <S.Rules />
+      <Rules />
     </S.Container>
   );
 };

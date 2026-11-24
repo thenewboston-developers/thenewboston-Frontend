@@ -12,6 +12,8 @@ interface GameResultScore {
 }
 
 interface Props {
+  // Replaces the default trophy crest, for games with their own result artwork
+  artwork?: ReactNode;
   children: ReactNode;
   description?: ReactNode;
   game?: string;
@@ -40,7 +42,16 @@ export const getGameResultOutcome = (
 export const GameResultActions = S.Actions;
 export const GameResultNote = S.Note;
 
-const GameResultPanel = ({children, description, game, outcome, scoreLabel = 'Final score', scores, title}: Props) => {
+const GameResultPanel = ({
+  artwork,
+  children,
+  description,
+  game,
+  outcome,
+  scoreLabel = 'Final score',
+  scores,
+  title,
+}: Props) => {
   const titleId = useId();
   const totalScore = scores ? scores[0].value + scores[1].value : 0;
 
@@ -55,9 +66,7 @@ const GameResultPanel = ({children, description, game, outcome, scoreLabel = 'Fi
           <S.Title id={titleId}>{title}</S.Title>
           {description && <S.Description>{description}</S.Description>}
         </S.HeadingGroup>
-        <S.Artwork>
-          <ResultArtwork outcome={outcome} />
-        </S.Artwork>
+        <S.Artwork>{artwork ?? <ResultArtwork outcome={outcome} />}</S.Artwork>
       </S.Header>
       {scores && (
         <S.Scoreboard aria-label={scoreLabel} role="group">

@@ -69,7 +69,7 @@ const Board = ({disabled = false, label, onSelect, placement, selected, ships = 
               const cell = {row, column};
               const coordinate = cellLabel(cell);
               const shot = shotMap.get(coordinate);
-              const state = sunk.has(coordinate)
+              const state: S.CellState = sunk.has(coordinate)
                 ? 'sunk'
                 : (shot?.result ?? (occupied.has(coordinate) ? 'ship' : 'water'));
               let marker = '';
@@ -79,6 +79,7 @@ const Board = ({disabled = false, label, onSelect, placement, selected, ships = 
               const effect = effects.find((event) => cellLabel(event) === coordinate);
               return (
                 <S.Cell
+                  $aim={!placement && !!onSelect}
                   $invalid={previewCells.has(coordinate) && !previewValid}
                   $preview={previewCells.has(coordinate)}
                   $selected={isSelected}
@@ -111,10 +112,24 @@ const Board = ({disabled = false, label, onSelect, placement, selected, ships = 
           `${cellLabel(effects[effects.length - 1])} · ${SHOT_LABELS[effects[effects.length - 1].result]}`}
       </S.ShotReport>
       <S.Legend>
-        <span>• Miss</span>
-        <span>× Hit</span>
-        <span>Rust red · Sunk</span>
-        {ships.length > 0 && <span>Blue · Ship</span>}
+        <span>
+          <S.Swatch $state="miss" aria-hidden="true" />
+          Miss
+        </span>
+        <span>
+          <S.Swatch $state="hit" aria-hidden="true" />
+          Hit
+        </span>
+        <span>
+          <S.Swatch $state="sunk" aria-hidden="true" />
+          Sunk
+        </span>
+        {ships.length > 0 && (
+          <span>
+            <S.Swatch $state="ship" aria-hidden="true" />
+            Ship
+          </span>
+        )}
       </S.Legend>
     </S.BoardFrame>
   );

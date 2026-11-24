@@ -1,13 +1,13 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
+import {mdiBroom, mdiFlagOutline, mdiLockOutline, mdiRotateRight, mdiShuffleVariant} from '@mdi/js';
+import Icon from '@mdi/react';
 
 import {getBattleshipMatch, performBattleshipAction} from 'api/battleship';
-import AuthButtons from 'components/AuthButtons';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
 import GameResultPanel, {GameResultActions, GameResultNote, getGameResultOutcome} from 'components/GameResultPanel';
 import GameSoundToggle from 'components/GameSoundToggle';
-import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
 import {getSelf} from 'selectors/state';
@@ -27,6 +27,7 @@ import {isCancellationError} from 'utils/errors';
 import {hasGuestGameSession, isCurrentGuestGame} from 'utils/guestGames';
 
 import Board from './Board';
+import {AnchorInsignia, RadarScope, ResultArtwork, SonarPing, TargetReticle} from './Emblems';
 import Rules from './Rules';
 import * as S from './Styles';
 import useGameSounds from './useGameSounds';
@@ -213,6 +214,16 @@ const Match = () => {
     }
   }, [match, playSound, self.id]);
 
+  const getClockMs = (playerSide: BattleshipSide) => {
+    if (!match) return 0;
+    const stored = playerSide === 'host' ? match.clock_host_ms : match.clock_guest_ms;
+    const elapsed =
+      match.status === 'active' && match.phase === 'battle' && match.active_side === playerSide && match.turn_started_at
+        ? Math.max(0, now + serverOffset - Date.parse(match.turn_started_at))
+        : 0;
+    return stored - elapsed;
+  };
+
   const handleAction = async (action: BattleshipAction, data: BattleshipActionData = {}) => {
     if (!match || !canAct || actionLock.current) return;
     if (
@@ -293,8 +304,9 @@ const Match = () => {
     return (
       <>
         {status === 'active' && (
-          <S.Status aria-live="polite">
-            <div>
+          <S.Status $tone={match.active_side === side ? 'fire' : 'wait'} aria-live="polite">
+            {match.active_side === side ? <TargetReticle size="medium" /> : <RadarScope size="medium" />}
+            <S.StatusCopy>
               <strong>
                 {match.active_side === side ? yourTurnLabel : `${getPlayerName(match, match.active_side!)}’s turn`}
               </strong>
@@ -303,18 +315,19 @@ const Match = () => {
                   ? 'Click or tap an untried square to fire. Every shot counts.'
                   : waitingLabel}
               </S.Small>
-            </div>
+            </S.StatusCopy>
             <S.Badge>{busyAction === 'fire' ? 'Firing…' : 'One tap · one shot'}</S.Badge>
           </S.Status>
         )}
         {match.last_shot && (
-          <S.Small aria-live="polite" style={{marginBottom: 16}}>
+          <S.LastShot $result={match.last_shot.result} aria-live="polite">
+            <span>Last shot</span>
             {getPlayerName(match, match.last_shot.side)} fired at {cellLabel(match.last_shot)}:{' '}
             {match.last_shot.result === 'sunk'
               ? `sunk the ${match.last_shot.ship_id ?? 'ship'}`
               : match.last_shot.result}
             .
-          </S.Small>
+          </S.LastShot>
         )}
         <S.PanelGrid>
           <Board
@@ -338,16 +351,6 @@ const Match = () => {
     );
   };
 
-  const renderClock = (playerSide: BattleshipSide) => {
-    if (!match) return '';
-    const stored = playerSide === 'host' ? match.clock_host_ms : match.clock_guest_ms;
-    const elapsed =
-      match.status === 'active' && match.phase === 'battle' && match.active_side === playerSide && match.turn_started_at
-        ? Math.max(0, now + serverOffset - Date.parse(match.turn_started_at))
-        : 0;
-    return formatClock(stored - elapsed);
-  };
-
   const renderPending = () => {
     if (!match || status !== 'pending') return null;
     const acceptLabel = match.stake_amount
@@ -355,25 +358,30 @@ const Match = () => {
       : 'Accept free match';
     return (
       <S.Panel>
-        <S.TitleSmall>
-          {side === 'guest' ? `A challenge from ${match.host.username}` : 'Waiting for your opponent'}
-        </S.TitleSmall>
+        <S.PanelHeader>
+          <TargetReticle size="medium" />
+          <S.TitleSmall>
+            {side === 'guest' ? `A challenge from ${match.host.username}` : 'Waiting for your opponent'}
+          </S.TitleSmall>
+        </S.PanelHeader>
         <S.Detail>
           {getPlayerName(match, 'host')} challenged {getPlayerName(match, 'guest')} to Battleship. Each player has{' '}
           {match.time_limit_seconds / 60} minutes of thinking time after placing their fleet.
         </S.Detail>
-        <S.Stat>
-          <span>Stake per player</span>
-          <strong>{match.stake_amount.toLocaleString()} TNB</strong>
-        </S.Stat>
-        <S.Stat>
-          <span>Prize when accepted</span>
-          <strong>{(match.stake_amount * 2).toLocaleString()} TNB</strong>
-        </S.Stat>
-        <S.Stat>
-          <span>Invitation expires in</span>
-          <strong>{formatClock(Date.parse(match.expires_at!) - now - serverOffset)}</strong>
-        </S.Stat>
+        <S.StatGroup>
+          <S.Stat>
+            <span>Stake per player</span>
+            <strong>{match.stake_amount.toLocaleString()} TNB</strong>
+          </S.Stat>
+          <S.Stat>
+            <span>Prize when accepted</span>
+            <strong>{(match.stake_amount * 2).toLocaleString()} TNB</strong>
+          </S.Stat>
+          <S.Stat>
+            <span>Invitation expires in</span>
+            <strong>{formatClock(Date.parse(match.expires_at!) - now - serverOffset)}</strong>
+          </S.Stat>
+        </S.StatGroup>
         <S.Small>
           {match.stake_amount
             ? 'Accepting locks your stake until the match ends. The winner receives both stakes. An expired, declined, or canceled invitation refunds the challenger.'
@@ -383,7 +391,7 @@ const Match = () => {
           After acceptance, both players have five minutes to lock their fleet. If only one is ready at the deadline,
           that player wins. If neither is ready, both stakes are refunded.
         </S.Small>
-        <S.Actions style={{marginTop: 20}}>
+        <S.PanelActions>
           {side === 'guest' ? (
             <>
               <S.Button disabled={!canAct} onClick={() => handleAction('accept')} type="button">
@@ -398,7 +406,7 @@ const Match = () => {
               Cancel challenge
             </S.Button>
           )}
-        </S.Actions>
+        </S.PanelActions>
       </S.Panel>
     );
   };
@@ -408,19 +416,20 @@ const Match = () => {
     const remaining = match.placement_deadline ? Date.parse(match.placement_deadline) - now - serverOffset : 0;
     return (
       <>
-        <S.Status aria-live="polite">
-          <div>
+        <S.Status $tone="deploy" aria-live="polite">
+          <AnchorInsignia size="medium" />
+          <S.StatusCopy>
             <strong>{ownReady ? 'Fleet locked. Waiting for your opponent.' : 'Deploy your fleet'}</strong>
             <S.Small>
               {ownReady
                 ? 'Your positions are set. Battle begins when both fleets are ready.'
                 : 'Choose a ship, then select its starting square. Rotate to change direction.'}
             </S.Small>
-          </div>
-          <div>
-            <S.Small>Placement deadline</S.Small>
-            <S.Timer>{formatClock(remaining)}</S.Timer>
-          </div>
+          </S.StatusCopy>
+          <S.Deadline>
+            <S.Caption>Placement deadline</S.Caption>
+            <S.Timer $warning={remaining < 60000}>{formatClock(remaining)}</S.Timer>
+          </S.Deadline>
         </S.Status>
         <S.PanelGrid>
           <Board
@@ -439,20 +448,33 @@ const Match = () => {
                 : 'Place all five ships. Ships may touch, but cannot overlap. Select a placed ship below to move it.'}
             </S.Detail>
             <S.Fleet>
-              {FLEET.map((ship) => (
-                <S.FleetButton
-                  $secondary
-                  $selected={ship.id === selectedShip && !ownReady}
-                  aria-pressed={ship.id === selectedShip && !ownReady}
-                  disabled={!canPlace}
-                  key={ship.id}
-                  onClick={() => setSelectedShip(ship.id)}
-                  type="button"
-                >
-                  {ship.name} · {ship.length}
-                  {ownReady || ships.some(({id: shipId}) => shipId === ship.id) ? ' ✓' : ''}
-                </S.FleetButton>
-              ))}
+              {FLEET.map((ship) => {
+                const isPlaced = ownReady || ships.some(({id: shipId}) => shipId === ship.id);
+                const isSelected = ship.id === selectedShip && !ownReady;
+                return (
+                  <S.FleetButton
+                    $placed={isPlaced}
+                    $secondary
+                    $selected={isSelected}
+                    aria-pressed={isSelected}
+                    disabled={!canPlace}
+                    key={ship.id}
+                    onClick={() => setSelectedShip(ship.id)}
+                    type="button"
+                  >
+                    <S.FleetName>
+                      {ship.name}
+                      <S.VisuallyHidden> · {ship.length}</S.VisuallyHidden>
+                    </S.FleetName>
+                    <S.Hull aria-hidden="true">
+                      {Array.from({length: ship.length}, (_, index) => (
+                        <i key={index} />
+                      ))}
+                    </S.Hull>
+                    <S.FleetCheck>{isPlaced ? ' ✓' : ''}</S.FleetCheck>
+                  </S.FleetButton>
+                );
+              })}
             </S.Fleet>
             {!ownReady && (
               <>
@@ -463,6 +485,7 @@ const Match = () => {
                     onClick={() => setOrientation((value) => (value === 'horizontal' ? 'vertical' : 'horizontal'))}
                     type="button"
                   >
+                    <Icon aria-hidden path={mdiRotateRight} size="18px" />
                     Rotate · {orientation === 'horizontal' ? 'Horizontal →' : 'Vertical ↓'}
                   </S.Button>
                   <S.Button
@@ -474,6 +497,7 @@ const Match = () => {
                     }}
                     type="button"
                   >
+                    <Icon aria-hidden path={mdiShuffleVariant} size="18px" />
                     Randomize fleet
                   </S.Button>
                   <S.Button
@@ -485,31 +509,35 @@ const Match = () => {
                     }}
                     type="button"
                   >
+                    <Icon aria-hidden path={mdiBroom} size="18px" />
                     Clear
                   </S.Button>
                 </S.Actions>
                 <S.Small>Your ships cannot move after you lock the fleet.</S.Small>
-                <S.Actions style={{marginTop: 20}}>
-                  <S.Button
+                <S.PanelActions>
+                  <S.LaunchButton
                     disabled={!canPlace || ships.length !== 5}
                     onClick={() => handleAction('place', {ships})}
                     type="button"
                   >
+                    <Icon aria-hidden path={mdiLockOutline} size="18px" />
                     {busyAction === 'place' ? 'Locking fleet…' : 'Lock fleet & get ready'}
-                  </S.Button>
-                </S.Actions>
+                  </S.LaunchButton>
+                </S.PanelActions>
               </>
             )}
             <S.Small>
               If only one player locks their fleet before the deadline, that player wins. If neither does, both stakes
               are refunded.
             </S.Small>
-            <S.Stat>
-              <span>{getPlayerName(match, side === 'host' ? 'guest' : 'host')}</span>
-              <strong>
-                {(side === 'host' ? match.guest_ready : match.host_ready) ? 'Fleet ready' : 'Placing ships'}
-              </strong>
-            </S.Stat>
+            <S.StatGroup>
+              <S.Stat>
+                <span>{getPlayerName(match, side === 'host' ? 'guest' : 'host')}</span>
+                <strong>
+                  {(side === 'host' ? match.guest_ready : match.host_ready) ? 'Fleet ready' : 'Placing ships'}
+                </strong>
+              </S.Stat>
+            </S.StatGroup>
           </S.Panel>
         </S.PanelGrid>
       </>
@@ -518,12 +546,14 @@ const Match = () => {
 
   const renderResult = () => {
     if (!match || status !== 'finished') return null;
+    const outcome = match.winner ? getGameResultOutcome(match.winner, side) : 'complete';
     const rematchLabel = match.mode === 'computer' ? 'Play again' : 'Offer rematch';
     return (
       <GameResultPanel
+        artwork={<ResultArtwork outcome={outcome} />}
         description={RESULT_LABELS[match.result_reason] ?? 'Match complete'}
         game="Battleship"
-        outcome={match.winner ? getGameResultOutcome(match.winner, side) : 'complete'}
+        outcome={outcome}
         title={match.winner ? `${getPlayerName(match, match.winner)} wins the battle` : 'Match ended · stakes refunded'}
       >
         {match.mode === 'computer' && <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />}
@@ -553,11 +583,18 @@ const Match = () => {
   if (!isAuthenticated && !isGuestSession)
     return (
       <S.Container>
-        <S.TextLink to="/battleship/home">← Battleship</S.TextLink>
-        <S.Panel style={{marginTop: 20}}>
-          <S.TitleSmall>Sign in to open your match</S.TitleSmall>
+        <S.Navigation>
+          <S.TextLink to="/battleship/home">← Battleship</S.TextLink>
+        </S.Navigation>
+        <S.Panel>
+          <S.PanelHeader>
+            <TargetReticle size="medium" />
+            <S.TitleSmall>Sign in to open your match</S.TitleSmall>
+          </S.PanelHeader>
           <S.Detail>Only the two players can view this private board.</S.Detail>
-          <AuthButtons />
+          <S.PanelActions>
+            <S.AuthButtons />
+          </S.PanelActions>
         </S.Panel>
       </S.Container>
     );
@@ -568,85 +605,104 @@ const Match = () => {
         <S.TextLink to="/battleship/home">← Back to the harbor</S.TextLink>
         <S.Actions>
           <S.Badge>Battleship {Number.isSafeInteger(id) ? `· Match ${id}` : ''}</S.Badge>
-          <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+          <S.Sound>
+            <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+          </S.Sound>
         </S.Actions>
       </S.Navigation>
       {loadError && (
         <S.Error role="alert">
-          {loadError}{' '}
-          <S.Button $secondary onClick={() => setRetryKey((value) => value + 1)} type="button">
+          <span>{loadError}</span>
+          <S.GhostButton onClick={() => setRetryKey((value) => value + 1)} type="button">
             Reconnect
-          </S.Button>
+          </S.GhostButton>
           <S.Small>Moves are paused until the connection is restored. Match clocks continue to run.</S.Small>
         </S.Error>
       )}
       {actionError && <S.Error role="alert">{actionError}</S.Error>}
       {isLoading && (
         <S.Status role="status">
-          <Loader />
+          <RadarScope size="small" />
           <span>Opening your match…</span>
         </S.Status>
       )}
       {match && (
         <>
           <S.PanelGrid>
-            {(['host', 'guest'] as const).map((playerSide) => (
-              <S.Player
-                $active={status === 'active' && match.phase === 'battle' && match.active_side === playerSide}
-                key={playerSide}
-              >
-                <div>
-                  <strong>
-                    {getPlayerName(match, playerSide)}
-                    {side === playerSide ? ' (you)' : ''}
-                  </strong>
-                  <S.Small>
-                    {match.mode === 'computer' && playerSide === 'guest'
-                      ? `${match.difficulty} computer`
-                      : 'Fleet commander'}
-                  </S.Small>
-                </div>
-                <S.Timer aria-label={`${getPlayerName(match, playerSide)} clock`}>{renderClock(playerSide)}</S.Timer>
-              </S.Player>
-            ))}
+            {(['host', 'guest'] as const).map((playerSide) => {
+              const clockMs = getClockMs(playerSide);
+              const isActive = status === 'active' && match.phase === 'battle' && match.active_side === playerSide;
+              const isComputer = match.mode === 'computer' && playerSide === 'guest';
+              return (
+                <S.Player $active={isActive} key={playerSide}>
+                  {isComputer ? (
+                    <RadarScope size="medium" />
+                  ) : (
+                    <S.Avatar $active={isActive} size="44px" src={match[playerSide]?.avatar ?? null} />
+                  )}
+                  <S.PlayerIdentity>
+                    <strong>
+                      {getPlayerName(match, playerSide)}
+                      {side === playerSide ? ' (you)' : ''}
+                    </strong>
+                    <S.Caption>{isComputer ? `${match.difficulty} computer` : 'Fleet commander'}</S.Caption>
+                  </S.PlayerIdentity>
+                  <S.Clock>
+                    <S.Timer
+                      $warning={isActive && clockMs < 60000}
+                      aria-label={`${getPlayerName(match, playerSide)} clock`}
+                    >
+                      {formatClock(clockMs)}
+                    </S.Timer>
+                    <S.ClockLabel $active={isActive}>{isActive ? 'On the clock' : 'Time left'}</S.ClockLabel>
+                  </S.Clock>
+                </S.Player>
+              );
+            })}
           </S.PanelGrid>
-          <S.Actions style={{margin: '16px 0'}}>
+          <S.Tags>
             <S.Badge>
               {match.stake_amount ? `${match.stake_amount.toLocaleString()} TNB per player` : 'Free play'}
             </S.Badge>
             {match.stake_amount > 0 && <S.Badge>{match.prize_pool_total.toLocaleString()} TNB in prize pool</S.Badge>}
-          </S.Actions>
+          </S.Tags>
           {renderPending()}
           {renderResult()}
           {renderPlacement()}
           {renderBattle()}
           {['cancelled', 'declined', 'expired'].includes(match.status) && (
-            <S.Empty>
-              This challenge was {match.status}.{' '}
-              {match.stake_amount ? 'The challenger’s stake has been refunded.' : 'No coins were taken.'}{' '}
-              <S.TextLink to="/battleship/home">Find your next match →</S.TextLink>
-            </S.Empty>
+            <S.Calm>
+              <SonarPing />
+              <S.CalmCopy>
+                <strong>This challenge was {match.status}.</strong>
+                <p>
+                  {match.stake_amount ? 'The challenger’s stake has been refunded.' : 'No coins were taken.'}{' '}
+                  <S.CalmLink to="/battleship/home">Find your next match →</S.CalmLink>
+                </p>
+              </S.CalmCopy>
+            </S.Calm>
           )}
           {status === 'active' && (
-            <S.Section>
-              <S.Actions>
-                {resigning ? (
-                  <>
-                    <S.Detail>Resign and concede this match{match.stake_amount ? ' and your stake' : ''}?</S.Detail>
+            <S.ResignBar $confirming={resigning}>
+              {resigning ? (
+                <>
+                  <S.Detail>Resign and concede this match{match.stake_amount ? ' and your stake' : ''}?</S.Detail>
+                  <S.Actions>
                     <S.Button $danger disabled={!canAct} onClick={() => handleAction('resign')} type="button">
                       Confirm resignation
                     </S.Button>
                     <S.Button $secondary disabled={!canAct} onClick={() => setResigning(false)} type="button">
                       Keep playing
                     </S.Button>
-                  </>
-                ) : (
-                  <S.Button $secondary disabled={!canAct} onClick={() => setResigning(true)} type="button">
-                    Resign match
-                  </S.Button>
-                )}
-              </S.Actions>
-            </S.Section>
+                  </S.Actions>
+                </>
+              ) : (
+                <S.Button $secondary disabled={!canAct} onClick={() => setResigning(true)} type="button">
+                  <Icon aria-hidden path={mdiFlagOutline} size="18px" />
+                  Resign match
+                </S.Button>
+              )}
+            </S.ResignBar>
           )}
         </>
       )}
