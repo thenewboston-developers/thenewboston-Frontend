@@ -77,7 +77,9 @@ const PrivacyPolicyModal: SFC<PrivacyPolicyModalProps> = ({className, close}) =>
             on our behalf. Replays help us understand navigation and interaction problems. Our PostHog integration masks
             input values and page text and blocks images and other media. It does not intentionally send passwords,
             authentication tokens, wallet signing keys, account numbers, balances, message contents, or request and
-            response bodies to PostHog.
+            response bodies to PostHog. Game analytics includes game activity, signup attribution, public account
+            identifiers, and game reward and community fund contribution amounts to understand participation and whether
+            rewards encourage users to join.
           </S.Paragraph>
         </S.Section>
 

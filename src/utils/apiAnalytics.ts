@@ -1,6 +1,7 @@
 import axios, {AxiosRequestConfig, InternalAxiosRequestConfig} from 'axios';
 
-import {captureAnalyticsEvent} from 'utils/analytics';
+import {captureAnalyticsEvent, getAnalyticsHeaders} from 'utils/analytics';
+import {captureGameStartRequest, getGameAttributionHeaders} from 'utils/gameAnalytics';
 
 // Only these method/path pairs may become analytics properties. Numeric IDs are normalized before lookup;
 // request bodies, query strings, headers, response data, and error messages never enter an event.
@@ -159,7 +160,7 @@ interface RequestAnalytics {
 
 let unregisterApiAnalytics: (() => void) | undefined;
 
-const getRequestAnalytics = (config: AxiosRequestConfig): RequestAnalytics | null => {
+const getApiEndpoint = (config: AxiosRequestConfig): string | null => {
   const apiUrl = process.env.REACT_APP_API_URL;
   if (!apiUrl || !config.url) return null;
 
@@ -168,20 +169,9 @@ const getRequestAnalytics = (config: AxiosRequestConfig): RequestAnalytics | nul
     const requestUrl = new URL(config.url, config.baseURL || window.location.origin);
     if (requestUrl.origin !== apiRoot.origin || !requestUrl.pathname.startsWith(apiRoot.pathname)) return null;
 
-    const endpoint = `/${requestUrl.pathname.slice(apiRoot.pathname.length)}`
+    return `/${requestUrl.pathname.slice(apiRoot.pathname.length)}`
       .replace(/\/\d+(?=\/|$)/g, '/:id')
       .replace(/\/$/, '');
-    const method = (config.method || 'GET').toUpperCase();
-    const operation = API_OPERATIONS[`${method} ${endpoint}`];
-    if (!operation) return null;
-
-    return {
-      endpoint,
-      method,
-      operation,
-      startedAt: Date.now(),
-      trackSuccess: method !== 'GET' || operation === 'user_search',
-    };
   } catch {
     return null;
   }
@@ -192,12 +182,32 @@ export const registerApiAnalytics = (): (() => void) => {
 
   const requests = new WeakMap<InternalAxiosRequestConfig, RequestAnalytics>();
   const requestInterceptor = axios.interceptors.request.use((config) => {
-    const request = getRequestAnalytics(config);
-    if (request) {
+    Object.keys(config.headers || {}).forEach((header) => {
+      if (header.toLowerCase().startsWith('x-posthog-')) delete config.headers[header];
+    });
+    const endpoint = getApiEndpoint(config);
+    if (endpoint === null) return config;
+    // These identity headers are scoped to our API, including guest-session creation and signup.
+    // Never inspect or forward authorization/guest capability headers into analytics.
+    const analyticsHeaders = getAnalyticsHeaders();
+    Object.assign(config.headers || (config.headers = {} as InternalAxiosRequestConfig['headers']), {
+      ...analyticsHeaders,
+      ...(!analyticsHeaders['X-POSTHOG-OPT-OUT'] ? getGameAttributionHeaders() : {}),
+    });
+    const method = (config.method || 'GET').toUpperCase();
+    const operation = API_OPERATIONS[`${method} ${endpoint}`];
+    if (operation) {
+      const request = {
+        endpoint,
+        method,
+        operation,
+        startedAt: Date.now(),
+        trackSuccess: method !== 'GET' || operation === 'user_search',
+      };
       requests.set(config, request);
       if (request.trackSuccess) {
-        const {endpoint, method, operation} = request;
         captureAnalyticsEvent('api_operation_started', {endpoint, method, operation});
+        if (method === 'POST') captureGameStartRequest(endpoint, config.data);
       }
     }
     return config;

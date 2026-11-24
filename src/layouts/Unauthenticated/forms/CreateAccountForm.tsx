@@ -12,6 +12,7 @@ import {useToggle} from 'hooks';
 import PrivacyPolicyModal from 'modals/PrivacyPolicyModal';
 import TermsModal from 'modals/TermsModal';
 import {AppDispatch, SFC} from 'types';
+import {captureAnalyticsEvent} from 'utils/analytics';
 import {handleFormikAPIError} from 'utils/forms';
 import yup from 'utils/yup';
 
@@ -34,6 +35,7 @@ const CreateAccountForm: SFC = () => {
   type FormValues = typeof initialValues;
 
   const handleSubmit = async (values: FormValues, helpers: any): Promise<void> => {
+    captureAnalyticsEvent('signup_started');
     try {
       const requestData: any = {
         agree_to_terms: values.agreeToTerms,
