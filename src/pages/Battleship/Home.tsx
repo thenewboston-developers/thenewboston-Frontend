@@ -3,9 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createBattleshipMatch, getBattleshipMatches} from 'api/battleship';
-import battleshipHero from 'assets/battleship-hero.webp';
 import AuthButtons from 'components/AuthButtons';
-import GameIllustrationHero from 'components/GameIllustrationHero';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -16,6 +14,7 @@ import {AppDispatch, UserReadSerializer} from 'types';
 import {BattleshipDifficulty, BattleshipMatch, BattleshipMode} from 'types/battleship';
 import {isCancellationError} from 'utils/errors';
 
+import Hero from './Hero';
 import Rules from './Rules';
 import * as S from './Styles';
 import {getErrorMessage, getPlayerName} from './utils';
@@ -206,17 +205,7 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Naval strategy · Every shot counts</S.Badge>
       </S.Navigation>
-      <GameIllustrationHero
-        artwork={battleshipHero}
-        artworkAlt="A complete miniature naval fleet on a luminous ocean-blue strategy board"
-        challengeHref="#battleship-challenge"
-        description="Plot your fleet, read the water, and make every shot count. Take on the computer or challenge a friend."
-        eyebrow="NAVAL STRATEGY"
-        game="Battleship"
-        playHref="#battleship-computer"
-        tagline="Hide your fleet. Hunt theirs."
-        theme="ocean"
-      />
+      <Hero />
       <>
         {createError && <S.Error role="alert">{createError}</S.Error>}
         <S.PanelGrid>

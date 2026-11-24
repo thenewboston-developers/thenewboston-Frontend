@@ -15,17 +15,15 @@ import {
   getConnectFiveLeaderboard,
   getConnectFiveMatches,
 } from 'api/connectFive';
-import connectFiveCover from 'assets/connect-five-cover.webp';
 import AuthButtons from 'components/AuthButtons';
 import Avatar from 'components/Avatar';
 import {BadgeStyle} from 'components/Badge';
-import BannerArt from 'components/BannerArt';
 import Button, {ButtonColor, ButtonType} from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import {FormField} from 'components/FormElements';
 import Loader from 'components/Loader';
 import UserLabel from 'components/UserLabel';
-import {BannerArtVariant, ConnectFiveChallengeStatus, ConnectFiveMatchStatus} from 'enums';
+import {ConnectFiveChallengeStatus, ConnectFiveMatchStatus} from 'enums';
 import {useIsAuthenticated} from 'hooks';
 import {
   getConnectFiveActiveMatches,
@@ -62,6 +60,7 @@ import {displayErrorToast} from 'utils/toasts';
 import yup from 'utils/yup';
 
 import ComputerSetup from './ComputerSetup';
+import Hero from './Hero';
 import * as S from './Styles';
 
 const timeLimitOptions: SelectOption[] = [
@@ -1015,37 +1014,7 @@ const ConnectFiveHome: SFC = ({className}) => {
   return (
     <S.Container {...analyticsArea('connect_five_lobby')} className={className}>
       <S.Content>
-        <S.Hero>
-          <BannerArt variant={BannerArtVariant.board} />
-          <S.HeroContent>
-            <S.HeroEyebrow>The strategy lobby</S.HeroEyebrow>
-            <S.HeroTitle>Connect Five</S.HeroTitle>
-            <S.HeroTagline>Five in a row. A move ahead.</S.HeroTagline>
-            <S.HeroDescription>
-              Practice against the computer or challenge the community. Find your winning line.
-            </S.HeroDescription>
-            <S.HeroMeta aria-label="Game features">
-              <S.HeroMetaItem>Computer & multiplayer</S.HeroMetaItem>
-              <S.HeroMetaItem>Live strategy</S.HeroMetaItem>
-              <S.HeroMetaItem>Ranked matches</S.HeroMetaItem>
-            </S.HeroMeta>
-            <S.HeroActions>
-              {isAuthenticated ? (
-                <S.HeroPrimaryLink {...analyticsTarget('challenge_a_player')} href="#challenge-player">
-                  Challenge a player
-                </S.HeroPrimaryLink>
-              ) : (
-                <S.HeroPrimaryLink href="#computer-game">Play free</S.HeroPrimaryLink>
-              )}
-              <S.HeroLink {...analyticsTarget('leaderboard')} to="/connect-five/leaderboard">
-                Leaderboard
-              </S.HeroLink>
-            </S.HeroActions>
-          </S.HeroContent>
-          <S.HeroVisual>
-            <S.HeroImage alt="" src={connectFiveCover} />
-          </S.HeroVisual>
-        </S.Hero>
+        <Hero isAuthenticated={isAuthenticated} />
         <ComputerSetup key={self.id} />
         {isAuthenticated ? renderMemberOverview() : renderGuestIntro()}
 

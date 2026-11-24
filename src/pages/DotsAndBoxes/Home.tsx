@@ -3,9 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createDotsAndBoxesMatch, getDotsAndBoxesMatches} from 'api/dotsAndBoxes';
-import dotsAndBoxesHero from 'assets/dots-and-boxes-hero.webp';
 import AuthButtons from 'components/AuthButtons';
-import GameHero from 'components/GameHero';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -16,6 +14,7 @@ import {AppDispatch, UserReadSerializer} from 'types';
 import {DotsAndBoxesBoardSize, DotsAndBoxesDifficulty, DotsAndBoxesMatch, DotsAndBoxesMode} from 'types/dotsAndBoxes';
 import {isCancellationError} from 'utils/errors';
 
+import Hero from './Hero';
 import Rules from './Rules';
 import * as S from './Styles';
 import {getErrorMessage, getPlayerName, getScoreLine} from './utils';
@@ -224,18 +223,7 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Pen-and-paper classic · Close the box</S.Badge>
       </S.Navigation>
-      <GameHero
-        artwork={dotsAndBoxesHero}
-        artworkAlt="A complete Dots and Boxes board with ivory pegs, blue and coral lines, and four claimed boxes"
-        challengeHref="#dots-and-boxes-challenge"
-        description="Draw a line, close a box, and go again. The pencil-and-paper classic with more strategy than it looks."
-        eyebrow="PEN-AND-PAPER STRATEGY"
-        game="Dots and Boxes"
-        highlights={['3 board sizes', 'Chains & extra turns', '3 difficulty levels']}
-        playHref="#dots-and-boxes-computer"
-        tagline="Connect the dots. Claim the board."
-        theme="ocean"
-      />
+      <Hero />
       <>
         {createError && <S.Error role="alert">{createError}</S.Error>}
         <S.PanelGrid>

@@ -1,11 +1,11 @@
 import {mdiGamepadVariantOutline, mdiTrophyOutline, mdiWeb} from '@mdi/js';
 import Icon from '@mdi/react';
 
-import backgammonCover from 'assets/backgammon-cover.webp';
-import battleshipCover from 'assets/battleship-cover.webp';
-import checkersCover from 'assets/checkers-cover.webp';
-import connectFiveCover from 'assets/connect-five-cover.webp';
-import dotsAndBoxesCover from 'assets/dots-and-boxes-cover.webp';
+import backgammonThumbnail from 'assets/backgammon-thumbnail.webp';
+import battleshipThumbnail from 'assets/battleship-thumbnail.webp';
+import checkersThumbnail from 'assets/checkers-thumbnail.webp';
+import connectFiveThumbnail from 'assets/connect-five-thumbnail.webp';
+import dotsAndBoxesThumbnail from 'assets/dots-and-boxes-thumbnail.webp';
 import mancalaThumbnail from 'assets/mancala-thumbnail.webp';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
 import GameFund from 'components/GameFund';
@@ -16,45 +16,45 @@ import * as S from './Styles';
 
 const games = [
   {
-    accent: '#146984',
-    art: battleshipCover,
+    accent: '#ad542b',
+    art: battleshipThumbnail,
     badge: 'TACTICAL FAVORITE',
     category: 'Naval strategy',
     description: 'Hide your fleet. Read your rival. Make every shot count.',
-    imageDescription: 'Sculpted naval ships on an illuminated ocean-blue tactical board',
+    imageDescription: 'A miniature naval fleet on a stormy ocean tactical grid with warm targeting lights',
     name: 'Battleship',
     path: 'battleship',
     target: 'battleship',
   },
   {
-    accent: '#23735c',
-    art: backgammonCover,
+    accent: '#26675e',
+    art: backgammonThumbnail,
     badge: 'TIMELESS CLASSIC',
     category: 'Dice & strategy',
     description: 'A little luck. A lot of strategy. Race your checkers home.',
-    imageDescription: 'An emerald and walnut backgammon board with polished checkers and ivory dice',
+    imageDescription: 'A refined teal and brass backgammon board with polished checkers and ivory dice',
     name: 'Backgammon',
     path: 'backgammon',
     target: 'backgammon',
   },
   {
-    accent: '#6c51ae',
-    art: connectFiveCover,
+    accent: '#7842ba',
+    art: connectFiveThumbnail,
     badge: 'ONE MORE ROUND',
     category: 'Five-in-a-row strategy',
     description: 'Simple rules. Brilliant rivalries. Find your winning line.',
-    imageDescription: 'Black and ivory stones with five connected in a glowing violet line',
+    imageDescription: 'Black and ivory stones with a glowing five-stone winning line in a violet arena',
     name: 'Connect Five',
     path: 'connect-five',
     target: 'connect_five',
   },
   {
-    accent: '#9a642d',
-    art: checkersCover,
+    accent: '#bd3349',
+    art: checkersThumbnail,
     badge: 'NEW TO THE ARCADE',
     category: 'Classic board strategy',
     description: 'Plan your jumps. Find your opening. Crown your next king.',
-    imageDescription: 'Polished black and ivory checkers on a warm wooden board with a crowned king',
+    imageDescription: 'Glossy red and ivory checkers with a stacked king on a cobalt and ivory board',
     name: 'Checkers',
     path: 'checkers',
     target: 'checkers',
@@ -83,12 +83,11 @@ const games = [
   },
   {
     accent: '#2f5bd0',
-    art: dotsAndBoxesCover,
+    art: dotsAndBoxesThumbnail,
     badge: 'PEN-AND-PAPER CLASSIC',
     category: 'Line-by-line strategy',
     description: 'Draw a line. Close a box. Go again. Simple to start, sneaky to master.',
-    imageDescription:
-      'Ivory pegs on a midnight-blue board joined by blue and coral rods, with claimed boxes glowing in each color',
+    imageDescription: 'Porcelain pegs and blue and coral rods forming claimed boxes in a playful geometric scene',
     name: 'Dots and Boxes',
     path: 'dots-and-boxes',
     target: 'dots_and_boxes',
