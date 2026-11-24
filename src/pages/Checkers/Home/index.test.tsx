@@ -6,11 +6,11 @@ import {MemoryRouter} from 'react-router-dom';
 import {createCheckersMatch, getCheckersMatches} from 'api/checkers';
 import {useIsAuthenticated} from 'hooks';
 
-import Home from './Home';
+import Home from '.';
 
 jest.mock('axios', () => ({isAxiosError: jest.fn(() => false)}));
 jest.mock('api/checkers', () => ({createCheckersMatch: jest.fn(), getCheckersMatches: jest.fn()}));
-jest.mock('components/GameEarningsLeaderboard', () => () => <div>Top earners</div>);
+jest.mock('../Leaderboard', () => () => <div>King’s row</div>);
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('components/UserSearchInput', () => () => <div>Find a member</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
@@ -34,6 +34,12 @@ const renderHome = async () => {
         <Home />
       </MemoryRouter>,
     );
+  });
+};
+
+const choose = async (selector: string) => {
+  await act(async () => {
+    (container.querySelector(selector) as HTMLInputElement).click();
   });
 };
 
@@ -141,10 +147,23 @@ describe('creating checkers matches', () => {
     (createCheckersMatch as jest.Mock).mockRejectedValue(new Error('Connection lost'));
     await renderHome();
     await submit();
-    (container.querySelector('#computer-time') as HTMLSelectElement).value = '600';
+    await choose('#computer-time-600');
     await submit();
     expect((createCheckersMatch as jest.Mock).mock.calls.map(([data]) => data.request_id)).toEqual([firstId, secondId]);
     expect((createCheckersMatch as jest.Mock).mock.calls[1][0].time_limit_seconds).toBe(600);
+  });
+
+  it('sends the difficulty and clock picked on the board controls', async () => {
+    (createCheckersMatch as jest.Mock).mockResolvedValue({id: 42, version: 1});
+    await renderHome();
+    expect(container.querySelector<HTMLInputElement>('#computer-difficulty-normal')!.checked).toBe(true);
+    expect(container.querySelector<HTMLInputElement>('#computer-time-900')!.checked).toBe(true);
+    await choose('#computer-difficulty-hard');
+    await choose('#computer-time-300');
+    await submit();
+    expect(createCheckersMatch).toHaveBeenCalledWith(
+      expect.objectContaining({difficulty: 'hard', mode: 'computer', time_limit_seconds: 300}),
+    );
   });
 
   it('prevents a double submission while creation is pending', async () => {
@@ -158,6 +177,55 @@ describe('creating checkers matches', () => {
     await submit();
     expect(createCheckersMatch).toHaveBeenCalledTimes(1);
   });
+});
+
+it('logs matches with readable states, whose move it is and the action each one needs', async () => {
+  const alice = {avatar: null, id: 11, username: 'Alice'};
+  const base = {active_side: null, black: alice, stake_amount: 0, winner: null, your_side: 'black'};
+  (getCheckersMatches as jest.Mock).mockImplementation((params) =>
+    Promise.resolve({
+      count: 3,
+      next: null,
+      previous: null,
+      results:
+        params.status === 'pending,active'
+          ? [
+              {...base, id: 1, status: 'pending', white: {id: 12, username: 'Bob'}},
+              {
+                ...base,
+                active_side: 'black',
+                id: 2,
+                stake_amount: 2500,
+                status: 'active',
+                white: {id: 13, username: 'Cy'},
+              },
+              {...base, active_side: 'white', id: 4, status: 'active', white: {id: 15, username: 'Ed'}},
+            ]
+          : [{...base, id: 3, status: 'finished', white: {id: 14, username: 'Di'}, winner: 'black'}],
+    }),
+  );
+  await renderHome();
+  const challenge = container.querySelector('a[href="/checkers/matches/1"]');
+  expect(challenge).toHaveTextContent('Bob vs. Alice');
+  expect(challenge).toHaveTextContent('Challenge received · Free play');
+  expect(challenge).toHaveTextContent('Review challenge →');
+  expect(container.querySelector('a[href="/checkers/matches/2"]')).toHaveTextContent(
+    `Your move · ${(2500).toLocaleString()} TNB each`,
+  );
+  expect(container.querySelector('a[href="/checkers/matches/2"]')).toHaveTextContent('Make your move →');
+  expect(container.querySelector('a[href="/checkers/matches/4"]')).toHaveTextContent('Open board →');
+  expect(container.querySelector('a[href="/checkers/matches/4"]')).toHaveTextContent('Their move · Free play');
+  expect(container.querySelector('a[href="/checkers/matches/3"]')).toHaveTextContent(
+    'Finished · Free play · Alice won',
+  );
+  expect(container).toHaveTextContent('Your recent matches');
+  expect(container).not.toHaveTextContent('The board is set');
+});
+
+it('shows an empty board when a signed-in player has no matches', async () => {
+  await renderHome();
+  expect(container).toHaveTextContent('The board is set');
+  expect(container.querySelector('[role="status"]')).toBeNull();
 });
 
 it('lets signed-out visitors start a free Checkers computer match', async () => {
@@ -178,8 +246,8 @@ it.each([false, true])('starts the default game directly from the hero (authenti
   );
   (createCheckersMatch as jest.Mock).mockResolvedValue({id: 42, version: 1, guest_mode: !authenticated});
   await renderHome();
-  (container.querySelector('#computer-time') as HTMLSelectElement).value = '300';
-  (container.querySelector('#computer-difficulty') as HTMLSelectElement).value = 'hard';
+  await choose('#computer-time-300');
+  await choose('#computer-difficulty-hard');
   const heroButton = container.querySelector('[aria-label="Checkers overview"] button') as HTMLButtonElement;
   await act(async () => heroButton.click());
   expect(createCheckersMatch).toHaveBeenCalledWith({
