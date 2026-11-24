@@ -4,6 +4,7 @@ import {ComputerReward} from 'types/gameFund';
 import {getAuthenticationPath} from 'utils/authentication';
 import {captureGameRewardOffer, captureGameSignupClick} from 'utils/gameAnalytics';
 
+import RewardArtwork from './RewardArtwork';
 import * as S from './Styles';
 
 const ComputerRewardNotice = ({guest, reward}: {guest?: boolean; reward?: ComputerReward | null}) => {
@@ -19,19 +20,28 @@ const ComputerRewardNotice = ({guest, reward}: {guest?: boolean; reward?: Comput
   if (reward.status === 'guest')
     return (
       <S.Notice $guest ref={exposure} role="status">
-        <S.RewardAmount>{reward.amount.toLocaleString()} TNB</S.RewardAmount>
-        <strong>Great win. Imagine that in your wallet.</strong>
-        <span>
-          With an account, this win would have earned you {reward.amount.toLocaleString()} coins. Create your free
-          account to earn rewards on future eligible wins while the community fund has coins.
-        </span>
-        <S.CreateAccount
-          onClick={() => captureGameSignupClick('guest_reward')}
-          to={getAuthenticationPath(PATH_AUTHENTICATION.CREATE_ACCOUNT, PATH_GAMES)}
-        >
-          Create a free account
-        </S.CreateAccount>
-        <S.FinePrint>This was a guest game. No coins were earned or reserved.</S.FinePrint>
+        <S.GuestContent>
+          <S.Eyebrow>YOUR NEXT WIN COULD PAY OFF</S.Eyebrow>
+          <S.RewardAmount>
+            {reward.amount.toLocaleString()} <span>TNB</span>
+          </S.RewardAmount>
+          <S.GuestTitle>Great win. Imagine that in your wallet.</S.GuestTitle>
+          <S.GuestDescription>
+            With an account, this win would have earned you {reward.amount.toLocaleString()} coins. Make your next
+            victory count with rewards on eligible computer wins while the community fund has coins.
+          </S.GuestDescription>
+          <S.CreateAccount
+            onClick={() => captureGameSignupClick('guest_reward')}
+            to={getAuthenticationPath(PATH_AUTHENTICATION.CREATE_ACCOUNT, PATH_GAMES)}
+          >
+            Create a free account <span aria-hidden="true">→</span>
+          </S.CreateAccount>
+          <S.FinePrint>This was a guest game. No coins were earned or reserved.</S.FinePrint>
+        </S.GuestContent>
+        <S.Artwork>
+          <RewardArtwork />
+          <S.ArtworkCaption>PLAY. WIN. EARN.</S.ArtworkCaption>
+        </S.Artwork>
       </S.Notice>
     );
   if (reward.status === 'paid')

@@ -10,12 +10,13 @@ import Home from './Home';
 
 jest.mock('axios', () => ({isAxiosError: jest.fn(() => false)}));
 jest.mock('api/battleship', () => ({createBattleshipMatch: jest.fn(), getBattleshipMatches: jest.fn()}));
+jest.mock('components/GameEarningsLeaderboard', () => () => <div>Top earners</div>);
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('components/UserSearchInput', () => () => <div>Find a member</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
 jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
-jest.mock('react-router-dom', () => ({...jest.requireActual('react-router-dom'), useNavigate: () => jest.fn()}));
+jest.mock('react-router-dom', () => ({...jest.requireActual('react-router-dom'), useNavigate: () => mockNavigate}));
 
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -24,6 +25,7 @@ let root: Root;
 const firstId = '11111111-1111-4111-8111-111111111111';
 const secondId = '22222222-2222-4222-8222-222222222222';
 const randomUUID = jest.fn();
+const mockNavigate = jest.fn();
 
 const renderHome = async () => {
   await act(async () => {
@@ -174,4 +176,45 @@ it('lets signed-out visitors start a free Battleship computer match', async () =
   expect(container).toHaveTextContent('No account needed');
   await submit();
   expect(createBattleshipMatch).toHaveBeenCalledWith(expect.objectContaining({mode: 'computer', stake_amount: 0}));
+});
+
+it.each([false, true])('starts the default game directly from the hero (authenticated: %s)', async (authenticated) => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(authenticated);
+  (useSelector as unknown as jest.Mock).mockImplementation((selector) =>
+    selector({self: {id: authenticated ? 11 : null}}),
+  );
+  (createBattleshipMatch as jest.Mock).mockResolvedValue({id: 42, version: 1, guest_mode: !authenticated});
+  await renderHome();
+  (container.querySelector('#computer-time') as HTMLSelectElement).value = '300';
+  (container.querySelector('#computer-difficulty') as HTMLSelectElement).value = 'hard';
+  const heroButton = container.querySelector('[aria-label="Battleship overview"] button') as HTMLButtonElement;
+  await act(async () => heroButton.click());
+  expect(createBattleshipMatch).toHaveBeenCalledWith({
+    difficulty: 'normal',
+    mode: 'computer',
+    opponent_id: undefined,
+    request_id: firstId,
+    stake_amount: 0,
+
+    time_limit_seconds: 900,
+  });
+  expect(mockNavigate).toHaveBeenCalledWith('/battleship/matches/42');
+});
+
+it('shares the pending creation lock between the hero and custom setup', async () => {
+  (createBattleshipMatch as jest.Mock).mockReturnValue(
+    new Promise(() => {
+      // Keep creation pending while checking the shared submission lock.
+    }),
+  );
+  await renderHome();
+  const heroButton = container.querySelector('[aria-label="Battleship overview"] button') as HTMLButtonElement;
+  await act(async () => {
+    heroButton.click();
+    heroButton.click();
+    container.querySelector('form')!.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
+  });
+  expect(createBattleshipMatch).toHaveBeenCalledTimes(1);
+  expect(heroButton).toBeDisabled();
+  expect(heroButton).toHaveTextContent('Preparing your game');
 });

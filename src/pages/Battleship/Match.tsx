@@ -27,6 +27,7 @@ import {hasGuestGameSession, isCurrentGuestGame} from 'utils/guestGames';
 import Board from './Board';
 import Rules from './Rules';
 import * as S from './Styles';
+import useGameSounds from './useGameSounds';
 import {
   canPlaceShip,
   cellLabel,
@@ -58,8 +59,8 @@ const Match = () => {
   const [retryKey, setRetryKey] = useState(0);
   const [selectedShip, setSelectedShip] = useState<ShipId>('carrier');
   const [serverOffset, setServerOffset] = useState(0);
-  const [target, setTarget] = useState<(Cell & {version: number}) | null>(null);
   const {matchId} = useParams();
+  const {playSound, soundEnabled, toggleSound} = useGameSounds();
   const actionLock = useRef(false);
   const actionGeneration = useRef(0);
   const currentViewer = useRef<{id: number; userId?: number | null; authenticated: boolean}>({
@@ -69,6 +70,7 @@ const Match = () => {
   const latestSnapshot = useRef<BattleshipMatch | undefined>(undefined);
   const mounted = useRef(true);
   const receivedSnapshots = useRef<Record<string, {version: number; serverTime: number}>>({});
+  const heardShots = useRef<{key: string; incoming: number; outgoing: number} | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const id = Number(matchId);
   const isAuthenticated = useIsAuthenticated();
@@ -95,7 +97,6 @@ const Match = () => {
   const canPlace = canAct && status === 'active' && match?.phase === 'placing' && !ownReady;
   const canFire = canAct && status === 'active' && match?.phase === 'battle' && match.active_side === side;
   const ships = draft.id === id ? draft.ships : [];
-  const selectedTarget = target?.version === match?.version ? target : null;
 
   const receiveMatch = useCallback(
     (data: BattleshipMatch) => {
@@ -141,7 +142,6 @@ const Match = () => {
     actionGeneration.current += 1;
     actionLock.current = false;
     setBusyAction(null);
-    setTarget(null);
     if (!isAuthenticated && !isGuestSession) return undefined;
     const controller = new AbortController();
     let polling = true;
@@ -193,8 +193,31 @@ const Match = () => {
     }
   }, [dispatch, id, isAuthenticated, status]);
 
+  useEffect(() => {
+    if (!match) {
+      heardShots.current = null;
+      return;
+    }
+    const key = `${match.id}:${self.id}:${match.guest_session_id ?? ''}`;
+    const previous = heardShots.current;
+    const incoming = match.board.incoming_shots.length;
+    const outgoing = match.board.shots.length;
+    heardShots.current = {key, incoming, outgoing};
+    // Opening an existing board or polling the same snapshot never replays old shots.
+    if (!previous || previous.key !== key) return;
+    if (outgoing > previous.outgoing) playSound(match.board.shots[outgoing - 1].result);
+    if (incoming > previous.incoming) {
+      playSound(match.board.incoming_shots[incoming - 1].result, outgoing > previous.outgoing ? 380 : 0);
+    }
+  }, [match, playSound, self.id]);
+
   const handleAction = async (action: BattleshipAction, data: BattleshipActionData = {}) => {
     if (!match || !canAct || actionLock.current) return;
+    if (
+      action === 'fire' &&
+      (!canFire || match.board.shots.some((shot) => shot.row === data.row && shot.column === data.column))
+    )
+      return;
     actionGeneration.current += 1;
     const generation = actionGeneration.current;
     const viewerId = self.id;
@@ -205,6 +228,7 @@ const Match = () => {
       currentViewer.current.userId === viewerId &&
       currentViewer.current.id === id;
     actionLock.current = true;
+    if (action === 'fire') playSound('fire');
     setBusyAction(action);
     setActionError('');
     try {
@@ -218,7 +242,6 @@ const Match = () => {
         dispatch(getAllUserWallets()).catch(() => undefined);
       }
       if (action === 'rematch') navigate(`/battleship/matches/${updated.id}`);
-      setTarget(null);
     } catch (error) {
       if (!isCurrent()) return;
       setActionError(getErrorMessage(error));
@@ -257,7 +280,7 @@ const Match = () => {
     if (!match || (match.phase !== 'battle' && status !== 'finished')) return null;
     const waitingLabel =
       match.mode === 'computer' ? 'The computer is scanning the waters…' : 'Waiting for your opponent to fire.';
-    const targetLabel = selectedTarget ? `Fire at ${cellLabel(selectedTarget)}` : 'Select a target';
+    const yourTurnLabel = busyAction === 'fire' ? 'Shot away…' : 'Your turn. Fire at will.';
     const ownSunk = match.board.ships.filter((ship) =>
       shipCells(ship).every((cell) =>
         match.board.incoming_shots.some(
@@ -271,23 +294,15 @@ const Match = () => {
           <S.Status aria-live="polite">
             <div>
               <strong>
-                {match.active_side === side
-                  ? 'Your turn. Choose your target.'
-                  : `${getPlayerName(match, match.active_side!)}’s turn`}
+                {match.active_side === side ? yourTurnLabel : `${getPlayerName(match, match.active_side!)}’s turn`}
               </strong>
               <S.Small>
-                {match.active_side === side ? 'Select an untried square, then confirm your shot.' : waitingLabel}
+                {match.active_side === side
+                  ? 'Click or tap an untried square to fire. Every shot counts.'
+                  : waitingLabel}
               </S.Small>
             </div>
-            <S.Button
-              disabled={!canFire || !selectedTarget}
-              onClick={() =>
-                selectedTarget && handleAction('fire', {row: selectedTarget.row, column: selectedTarget.column})
-              }
-              type="button"
-            >
-              {busyAction === 'fire' ? 'Firing…' : targetLabel}
-            </S.Button>
+            <S.Badge>{busyAction === 'fire' ? 'Firing…' : 'One tap · one shot'}</S.Badge>
           </S.Status>
         )}
         {match.last_shot && (
@@ -302,14 +317,15 @@ const Match = () => {
         <S.PanelGrid>
           <Board
             disabled={!canFire}
+            key={`target-${match.id}`}
             label="Target waters"
-            onSelect={(cell) => setTarget({...cell, version: match.version})}
-            selected={selectedTarget}
+            onSelect={(cell) => handleAction('fire', cell)}
             ships={match.board.opponent_sunk_ships}
             shots={match.board.shots}
             subtitle={`${match.board.opponent_sunk_ships.length} of 5 enemy ships sunk`}
           />
           <Board
+            key={`own-${match.id}`}
             label="Your waters"
             ships={match.board.ships}
             shots={match.board.incoming_shots}
@@ -547,7 +563,20 @@ const Match = () => {
     <S.Container>
       <S.Navigation>
         <S.TextLink to="/battleship/home">← Back to the harbor</S.TextLink>
-        <S.Badge>Battleship {Number.isSafeInteger(id) ? `· Match ${id}` : ''}</S.Badge>
+        <S.Actions>
+          <S.Badge>Battleship {Number.isSafeInteger(id) ? `· Match ${id}` : ''}</S.Badge>
+          <S.Button
+            $secondary
+            aria-label="Game sound"
+            aria-pressed={soundEnabled}
+            onClick={toggleSound}
+            title={soundEnabled ? 'Mute game sounds' : 'Enable game sounds'}
+            type="button"
+          >
+            <span aria-hidden="true">{soundEnabled ? '♪' : '♩'}</span>
+            {soundEnabled ? 'Sound on' : 'Sound off'}
+          </S.Button>
+        </S.Actions>
       </S.Navigation>
       {loadError && (
         <S.Error role="alert">

@@ -5,7 +5,12 @@ import battleshipCommand from 'assets/battleship-command.webp';
 
 import * as S from './Styles';
 
-const Hero = () => (
+interface Props {
+  isCreating: boolean;
+  onPlay: () => void;
+}
+
+const Hero = ({isCreating, onPlay}: Props) => (
   <S.Hero aria-label="Battleship overview">
     <S.Artwork>
       <S.Image
@@ -25,10 +30,10 @@ const Hero = () => (
       <S.Tagline>Hide your fleet. Hunt theirs.</S.Tagline>
       <S.Description>Read the water. Plan your next strike. Make every shot count.</S.Description>
       <S.Actions>
-        <S.PlayLink href="#battleship-computer">
+        <S.PlayButton disabled={isCreating} onClick={onPlay} type="button">
           <Icon aria-hidden path={mdiPlay} size={0.85} />
-          Play free
-        </S.PlayLink>
+          {isCreating ? 'Preparing your game…' : 'Play free'}
+        </S.PlayButton>
         <S.ChallengeLink href="#battleship-challenge">Challenge a player</S.ChallengeLink>
       </S.Actions>
       <S.Note>No account needed for computer play</S.Note>

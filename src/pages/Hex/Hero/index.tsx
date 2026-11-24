@@ -5,7 +5,12 @@ import hexArena from 'assets/hex-arena.webp';
 
 import * as S from './Styles';
 
-const Hero = () => (
+interface Props {
+  isCreating: boolean;
+  onPlay: () => void;
+}
+
+const Hero = ({isCreating, onPlay}: Props) => (
   <S.Hero aria-label="Hex overview">
     <S.Content>
       <S.Eyebrow>Two colors. One winner. Always.</S.Eyebrow>
@@ -27,7 +32,7 @@ const Hero = () => (
     </S.Content>
     <S.Artwork>
       <S.Image
-        alt="Red and blue stones on a diamond-shaped board of six-sided cells, with a glowing red chain joining its two red edges"
+        alt="Glossy ruby and cobalt stones on a sculpted ivory Hex board with red and blue edges in a midnight-blue arena"
         fetchPriority="high"
         height={960}
         src={hexArena}
@@ -36,10 +41,10 @@ const Hero = () => (
     </S.Artwork>
     <S.ActionBar>
       <S.Actions>
-        <S.PlayLink href="#hex-computer">
+        <S.PlayButton disabled={isCreating} onClick={onPlay} type="button">
           <Icon aria-hidden path={mdiPlay} size={0.9} />
-          Play free
-        </S.PlayLink>
+          {isCreating ? 'Preparing your game…' : 'Play free'}
+        </S.PlayButton>
         <S.ChallengeLink href="#hex-challenge">Challenge a player</S.ChallengeLink>
       </S.Actions>
       <S.Note>No account needed for computer play</S.Note>

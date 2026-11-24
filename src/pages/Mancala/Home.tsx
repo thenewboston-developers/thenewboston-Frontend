@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 
 import {createMancalaMatch, getMancalaMatches} from 'api/mancala';
 import AuthButtons from 'components/AuthButtons';
+import GameEarningsLeaderboard from 'components/GameEarningsLeaderboard';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -150,8 +151,8 @@ const Home = () => {
   }, [isAuthenticated, retryKey, self.id]);
 
   const handleCreate = useCallback(
-    async (event: FormEvent<HTMLFormElement>, mode: MancalaMode) => {
-      event.preventDefault();
+    async (event: FormEvent<HTMLFormElement> | null, mode: MancalaMode) => {
+      event?.preventDefault();
       // A signed-out visitor can play the computer as a guest; challenging a member needs an account
       if ((!isAuthenticated && mode !== 'computer') || creationLock.current) return;
       const isCurrent = () =>
@@ -163,7 +164,7 @@ const Home = () => {
         setCreateError(opponent ? 'Choose another member to challenge.' : 'Choose a member to challenge.');
         return;
       }
-      const form = new FormData(event.currentTarget);
+      const form = event ? new FormData(event.currentTarget) : new FormData();
       const amount = mode === 'human' ? Number(stake) : 0;
       if (!Number.isSafeInteger(amount) || amount < 0 || amount > 1000000000) {
         setCreateError('Enter a whole-number stake from 0 to 1,000,000,000 TNB.');
@@ -177,7 +178,7 @@ const Home = () => {
           mode,
           opponent_id: mode === 'human' ? opponent!.id : undefined,
           stake_amount: amount,
-          time_limit_seconds: Number(form.get('time_limit_seconds')),
+          time_limit_seconds: Number(form.get('time_limit_seconds') ?? 600),
         };
         // A retry after a lost response must reach the server as the same request, or the stake could lock twice
         const signature = JSON.stringify(data);
@@ -210,7 +211,7 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Sow · Capture · Count</S.Badge>
       </S.Navigation>
-      <Hero />
+      <Hero isCreating={!!creatingMode} onPlay={() => handleCreate(null, 'computer')} />
       {createError && <S.Error role="alert">{createError}</S.Error>}
       <S.PanelGrid>
         <S.Panel id="mancala-computer" tabIndex={-1}>
@@ -245,7 +246,9 @@ const Home = () => {
           {!isAuthenticated ? (
             <>
               <S.Detail>Create an account to challenge friends and earn TNB from computer wins.</S.Detail>
-              <AuthButtons />
+              <S.GuestActions>
+                <AuthButtons />
+              </S.GuestActions>
             </>
           ) : (
             <S.Form onSubmit={(event) => handleCreate(event, 'human')}>
@@ -346,6 +349,7 @@ const Home = () => {
           </S.List>
         </S.Section>
       )}
+      <GameEarningsLeaderboard game="mancala" />
       <Rules />
     </S.Container>
   );

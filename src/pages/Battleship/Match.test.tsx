@@ -106,14 +106,12 @@ afterEach(() => {
 });
 
 describe('Battleship match interaction', () => {
-  it('requires explicit confirmation before firing and does not expose ships on the target board', async () => {
+  it('fires immediately from a target square and does not expose the hidden fleet', async () => {
     await renderMatch();
-    expect(button('Select a target')).toBeDisabled();
+    expect(container.textContent).toContain('Click or tap an untried square to fire');
     const target = container.querySelector('[role="group"][aria-label="Target waters"]')!;
     expect(target.querySelectorAll('[aria-label*="ship"]')).toHaveLength(0);
-    act(() => (target.querySelector('[aria-label="B3: water"]') as HTMLButtonElement).click());
-    expect(performBattleshipAction).not.toHaveBeenCalled();
-    await act(async () => button('Fire at B3').click());
+    await act(async () => (target.querySelector('[aria-label="B3: water"]') as HTMLButtonElement).click());
     expect(performBattleshipAction).toHaveBeenCalledWith(match, 'fire', {row: 1, column: 2});
   });
 
@@ -184,7 +182,6 @@ describe('Battleship match interaction', () => {
     );
     await renderMatch();
     act(() => (container.querySelector('[aria-label="A1: water"]') as HTMLButtonElement).click());
-    act(() => button('Fire at A1').click());
     selfId = 99;
     await renderMatch();
     dispatch.mockClear();
@@ -195,24 +192,58 @@ describe('Battleship match interaction', () => {
 
   it('releases the previous match action lock when navigating to another board', async () => {
     let resolveAction: (data: BattleshipMatch) => void = () => undefined;
-    (performBattleshipAction as jest.Mock).mockReturnValue(
-      new Promise((resolve) => {
-        resolveAction = resolve;
-      }),
+    (performBattleshipAction as jest.Mock).mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveAction = resolve;
+        }),
     );
     await renderMatch();
     act(() => (container.querySelector('[aria-label="A1: water"]') as HTMLButtonElement).click());
-    act(() => button('Fire at A1').click());
     const previous = match;
     match = {...match, id: 2};
     mockMatchId = '2';
     await renderMatch();
-    act(() => (container.querySelector('[aria-label="A2: water"]') as HTMLButtonElement).click());
-    expect(button('Fire at A2')).toBeEnabled();
+    await act(async () => (container.querySelector('[aria-label="A2: water"]') as HTMLButtonElement).click());
+    expect(performBattleshipAction).toHaveBeenLastCalledWith(match, 'fire', {row: 0, column: 1});
     dispatch.mockClear();
     await act(async () => resolveAction({...previous, version: 5}));
     expect(dispatch).not.toHaveBeenCalled();
-    expect(button('Fire at A2')).toBeEnabled();
+  });
+
+  it('locks synchronously against two rapid target activations and unlocks after a failed shot', async () => {
+    let rejectAction: (error: Error) => void = () => undefined;
+    (performBattleshipAction as jest.Mock).mockImplementationOnce(
+      () =>
+        new Promise((resolve, reject) => {
+          rejectAction = reject;
+        }),
+    );
+    await renderMatch();
+    const targets = container.querySelector('[role="group"][aria-label="Target waters"]')!;
+    act(() => {
+      (targets.querySelector('[aria-label="A1: water"]') as HTMLButtonElement).click();
+      (targets.querySelector('[aria-label="A2: water"]') as HTMLButtonElement).click();
+    });
+    expect(performBattleshipAction).toHaveBeenCalledTimes(1);
+    expect(Array.from(targets.querySelectorAll('button')).every((element) => element.disabled)).toBe(true);
+    await act(async () => rejectAction(new Error('Connection interrupted')));
+    expect(container.querySelector('[role="alert"]')).toHaveTextContent(
+      'We could not reach the game. Please try again.',
+    );
+    await act(async () => (targets.querySelector('[aria-label="A2: water"]') as HTMLButtonElement).click());
+    expect(performBattleshipAction).toHaveBeenCalledTimes(2);
+  });
+
+  it('offers an accessible sound toggle that starts off', async () => {
+    localStorage.clear();
+    await renderMatch();
+    const toggle = container.querySelector('button[aria-label="Game sound"]')!;
+    expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    act(() => (toggle as HTMLButtonElement).click());
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    expect(localStorage.getItem('thenewboston.battleship.soundEnabled')).toBe('true');
+    localStorage.clear();
   });
 
   it.each([4, 5])(
@@ -241,8 +272,7 @@ describe('Battleship match interaction', () => {
         match = {...match, version: 5, active_side: 'guest', server_time: new Date(Date.now()).toISOString()};
         return Promise.resolve(match);
       });
-      act(() => (container.querySelector('[aria-label="A1: water"]') as HTMLButtonElement).click());
-      await act(async () => button('Fire at A1').click());
+      await act(async () => (container.querySelector('[aria-label="A1: water"]') as HTMLButtonElement).click());
       expect(container.querySelector('[aria-label="Bob clock"]')).toHaveTextContent('14:56');
       dispatch.mockClear();
       await act(async () => resolvePoll(stale));
@@ -278,8 +308,7 @@ it('allows a guest owner to play and never requests a wallet', async () => {
   match.host = {id: 0, username: 'Guest', avatar: null};
   await renderMatch();
   const target = container.querySelector('[role="group"][aria-label="Target waters"]')!;
-  act(() => (target.querySelector('[aria-label="B3: water"]') as HTMLButtonElement).click());
-  await act(async () => button('Fire at B3').click());
+  await act(async () => (target.querySelector('[aria-label="B3: water"]') as HTMLButtonElement).click());
   expect(performBattleshipAction).toHaveBeenCalledWith(match, 'fire', {row: 1, column: 2});
   expect(getAllUserWallets).not.toHaveBeenCalled();
 });

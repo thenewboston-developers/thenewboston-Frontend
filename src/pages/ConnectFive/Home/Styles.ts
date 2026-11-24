@@ -260,6 +260,10 @@ export const FormRow = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 `;
 
+export const GuestActions = styled.div`
+  margin: 0 0 28px;
+`;
+
 export const GuestText = styled.p`
   color: ${colors.secondary};
   font-size: 16px;

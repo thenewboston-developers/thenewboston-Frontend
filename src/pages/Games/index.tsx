@@ -100,7 +100,7 @@ const games = [
     badge: 'NO DRAWS, EVER',
     category: 'Connection strategy',
     description: 'One chain. Two edges. Block their path while you build yours.',
-    imageDescription: 'Red and blue stones on a diamond of six-sided cells, a glowing red chain joining two edges',
+    imageDescription: 'Glossy ruby and cobalt stones on a sculpted ivory Hex board with red and blue edges',
     name: 'Hex',
     path: 'hex',
     target: 'hex',

@@ -1,10 +1,12 @@
-# Hex hero artwork
+# Hex artwork
 
-Not made with image generation. Both images show the final position of a game the Hex computer played against itself on an 11 × 11 board: Red's winning chain runs between the two red edges. A script draws the scene as an SVG with a perspective projection, headless Chrome captures it, and `cwebp` resizes and encodes it. The hero image has a transparent background and sits on the hero's CSS gradient; the thumbnail is the same board in a dark scene at card resolution.
+Created with the built-in image generation tool, then optimized to WebP quality 84 with `cwebp`. The illustration is promotional artwork, not a specific recorded game position.
 
-| Asset                           | Dimensions |  Bytes | Encoding                                 |
-| ------------------------------- | ---------- | -----: | ---------------------------------------- |
-| `src/assets/hex-arena.webp`     | 1440 × 960 | 78,336 | WebP quality 85, alpha quality 100       |
-| `src/assets/hex-thumbnail.webp` | 900 × 600  | 45,298 | WebP quality 85, resized from 1200 × 800 |
+| Asset                           | Dimensions | Usage       |
+| ------------------------------- | ---------- | ----------- |
+| `src/assets/hex-arena.webp`     | 1440 × 960 | Lobby hero  |
+| `src/assets/hex-thumbnail.webp` | 900 × 600  | Arcade card |
 
-Both can be replaced by generated artwork in the style of the other games without a code change, as long as the file names and dimensions stay the same.
+Generation prompt: Premium 3D editorial illustration of a rhombus-shaped Hex board with ivory ceramic honeycomb cells, polished ruby and cobalt stones, thick rounded rails, elegant three-quarter perspective, warm peach key light and cool blue edge light, midnight navy studio backdrop. Keep all corners visible with breathing room. No text, logos, people, dice, or watermarks.
+
+Refinement prompt: Preserve composition, lighting, cells, stones, and backdrop. Correct the four border rails so the entire upper-left and lower-right edges are red, and the entire upper-right and lower-left edges are cobalt blue. Each complete side is one uninterrupted color; opposite sides share a color.

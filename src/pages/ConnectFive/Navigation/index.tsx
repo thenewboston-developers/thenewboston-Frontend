@@ -10,7 +10,7 @@ const ConnectFiveNavigation: SFC = ({className}) => {
       <S.BackLink to={PATH_GAMES}>All games</S.BackLink>
       <S.MenuItems>
         <ToolbarMenuLink text="Lobby" to="/connect-five/home" />
-        <ToolbarMenuLink text="Leaderboard" to="/connect-five/leaderboard" />
+        <ToolbarMenuLink text="ELO leaderboard" to="/connect-five/leaderboard" />
       </S.MenuItems>
       <S.Right />
     </S.Container>

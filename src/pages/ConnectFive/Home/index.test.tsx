@@ -22,6 +22,7 @@ jest.mock('api/connectFive', () => ({
 }));
 jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
+jest.mock('components/GameEarningsLeaderboard', () => () => <div>Top earners</div>);
 jest.mock('components/AuthButtons', () => () => <div>Sign in</div>);
 jest.mock('components/BannerArt', () => ({
   __esModule: true,

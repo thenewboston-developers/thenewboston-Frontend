@@ -169,12 +169,14 @@ export const Note = styled.p`
   max-width: 300px;
 `;
 
-export const PlayLink = styled.a`
+export const PlayButton = styled.button`
   align-items: center;
   background: #4a2632;
   border-radius: 100px;
   color: #fff1df;
+  cursor: pointer;
   display: inline-flex;
+  font-family: inherit;
   font-size: 0.9375rem;
   font-weight: ${fonts.weight.bold};
   gap: 7px;
@@ -199,6 +201,11 @@ export const PlayLink = styled.a`
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.7;
   }
 `;
 

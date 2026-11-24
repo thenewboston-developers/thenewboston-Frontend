@@ -1,9 +1,11 @@
-import {Fragment, useState} from 'react';
+import {Fragment, useEffect, useRef, useState} from 'react';
 
 import {Cell, Ship, Shot} from 'types/battleship';
 
 import * as S from './Styles';
 import {canPlaceShip, cellLabel, shipCells} from './utils';
+
+const SHOT_LABELS = {hit: 'Direct hit!', miss: 'Splash. Open water.', sunk: 'Ship sunk!'};
 
 interface Props {
   disabled?: boolean;
@@ -17,7 +19,9 @@ interface Props {
 }
 
 const Board = ({disabled = false, label, onSelect, placement, selected, ships = [], shots = [], subtitle}: Props) => {
+  const [effects, setEffects] = useState<Shot[]>([]);
   const [hovered, setHovered] = useState<Cell | null>(null);
+  const previousShots = useRef(new Set(shots.map(cellLabel)));
   const occupied = new Set(ships.flatMap(shipCells).map(cellLabel));
   const preview = placement && hovered ? {...placement, ...hovered} : null;
   const previewCells = new Set(preview ? shipCells(preview).map(cellLabel) : []);
@@ -34,6 +38,18 @@ const Board = ({disabled = false, label, onSelect, placement, selected, ships = 
       .flatMap(shipCells)
       .map(cellLabel),
   );
+
+  useEffect(() => {
+    const added = shots.filter((shot) => !previousShots.current.has(cellLabel(shot)));
+    previousShots.current = new Set(shots.map(cellLabel));
+    if (added.length) setEffects((current) => [...current, ...added]);
+  }, [shots]);
+
+  useEffect(() => {
+    if (!effects.length) return undefined;
+    const timer = setTimeout(() => setEffects([]), 1500);
+    return () => clearTimeout(timer);
+  }, [effects]);
 
   return (
     <S.BoardFrame>
@@ -60,6 +76,7 @@ const Board = ({disabled = false, label, onSelect, placement, selected, ships = 
               if (state === 'miss') marker = '•';
               if (state === 'hit' || state === 'sunk') marker = '×';
               const isSelected = selected?.row === row && selected.column === column;
+              const effect = effects.find((event) => cellLabel(event) === coordinate);
               return (
                 <S.Cell
                   $invalid={previewCells.has(coordinate) && !previewValid}
@@ -67,7 +84,7 @@ const Board = ({disabled = false, label, onSelect, placement, selected, ships = 
                   $selected={isSelected}
                   $state={state}
                   aria-label={`${coordinate}: ${state}${isSelected ? ', selected' : ''}`}
-                  aria-pressed={isSelected}
+                  aria-pressed={placement ? isSelected : undefined}
                   disabled={disabled || !onSelect || (!placement && !!shot)}
                   key={column}
                   onClick={() => onSelect?.(cell)}
@@ -75,13 +92,24 @@ const Board = ({disabled = false, label, onSelect, placement, selected, ships = 
                   onMouseEnter={() => setHovered(cell)}
                   type="button"
                 >
-                  {marker}
+                  <span aria-hidden="true">{marker}</span>
+                  {effect && (
+                    <S.ShotEffect $result={effect.result} aria-hidden="true" data-shot-effect={effect.result}>
+                      <span />
+                      <span />
+                      <span />
+                    </S.ShotEffect>
+                  )}
                 </S.Cell>
               );
             })}
           </Fragment>
         ))}
       </S.BoardGrid>
+      <S.ShotReport aria-live="polite">
+        {effects.length > 0 &&
+          `${cellLabel(effects[effects.length - 1])} · ${SHOT_LABELS[effects[effects.length - 1].result]}`}
+      </S.ShotReport>
       <S.Legend>
         <span>• Miss</span>
         <span>× Hit</span>
