@@ -5,8 +5,8 @@ import backgammonCover from 'assets/backgammon-cover.webp';
 import battleshipCover from 'assets/battleship-cover.webp';
 import checkersCover from 'assets/checkers-cover.webp';
 import connectFiveCover from 'assets/connect-five-cover.webp';
-import mancalaCover from 'assets/mancala-cover.webp';
-import reversiCover from 'assets/reversi-cover.webp';
+import mancalaThumbnail from 'assets/mancala-thumbnail.webp';
+import reversiThumbnail from 'assets/reversi-thumbnail.webp';
 import GameFund from 'components/GameFund';
 import {SFC} from 'types';
 import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
@@ -59,23 +59,23 @@ const games = [
     target: 'checkers',
   },
   {
-    accent: '#3f4a6b',
-    art: reversiCover,
+    accent: '#087c91',
+    art: reversiThumbnail,
     badge: 'JUST ARRIVED',
     category: 'Classic disk strategy',
     description: 'One move. The whole board turns. Outflank, flip, and take the corners.',
-    imageDescription: 'Black and ivory disks on an emerald Reversi board, with one disk caught mid-flip',
+    imageDescription: 'Glossy black and ivory Reversi disks on a cyan-lit futuristic board',
     name: 'Reversi',
     path: 'reversi',
     target: 'reversi',
   },
   {
     accent: '#b4472e',
-    art: mancalaCover,
+    art: mancalaThumbnail,
     badge: 'NEWEST ARRIVAL',
     category: 'Count & capture strategy',
     description: 'Sow your stones. Steal a turn. Capture what they leave open.',
-    imageDescription: 'A carved walnut mancala board with glass stones in jewel colors',
+    imageDescription: 'A sculptural Mancala board and jewel-colored glass stones in a warm coral scene',
     name: 'Mancala',
     path: 'mancala',
     target: 'mancala',

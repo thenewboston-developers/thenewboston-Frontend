@@ -3,9 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createReversiMatch, getReversiMatches} from 'api/reversi';
-import reversiHero from 'assets/reversi-hero.webp';
 import AuthButtons from 'components/AuthButtons';
-import GameHero from 'components/GameHero';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -16,6 +14,7 @@ import {AppDispatch, UserReadSerializer} from 'types';
 import {ReversiColorChoice, ReversiDifficulty, ReversiMatch, ReversiMode} from 'types/reversi';
 import {isCancellationError} from 'utils/errors';
 
+import Hero from './Hero';
 import Rules from './Rules';
 import * as S from './Styles';
 import {getErrorMessage, getPlayerName} from './utils';
@@ -218,18 +217,7 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Classic strategy · Black and white</S.Badge>
       </S.Navigation>
-      <GameHero
-        artwork={reversiHero}
-        artworkAlt="Black and ivory disks on a complete emerald Reversi board"
-        challengeHref="#reversi-challenge"
-        description="Trap your opponent’s disks and flip them to your color. Fight for the corners and finish with the most disks."
-        eyebrow="CLASSIC DISK STRATEGY"
-        game="Reversi"
-        highlights={['8 by 8 board', 'Flips & corners', '3 difficulty levels']}
-        playHref="#reversi-computer"
-        tagline="One move. The whole board turns."
-        theme="emerald"
-      />
+      <Hero />
       {createError && <S.Error role="alert">{createError}</S.Error>}
       <S.PanelGrid>
         <S.Panel id="reversi-computer" tabIndex={-1}>
