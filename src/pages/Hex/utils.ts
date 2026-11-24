@@ -15,11 +15,11 @@ export interface BoardLayout {
   viewBox: string;
 }
 
-export const BOARD_SIZES: {label: string; value: HexBoardSize}[] = [
-  {label: '7 × 7 · Quick game', value: 7},
-  {label: '9 × 9 · Short game', value: 9},
-  {label: '11 × 11 · Classic', value: 11},
-  {label: '13 × 13 · Long game', value: 13},
+export const BOARD_SIZES: {description: string; value: HexBoardSize}[] = [
+  {description: 'Quick game', value: 7},
+  {description: 'Short game', value: 9},
+  {description: 'Classic', value: 11},
+  {description: 'Long game', value: 13},
 ];
 export const HEX_RADIUS = 20;
 export const SIDE_NAMES: Record<HexSide, string> = {blue: 'Blue', red: 'Red'};
