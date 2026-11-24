@@ -18,6 +18,7 @@ export const PATH_LEGACY_FEED = '/feed';
 export const PATH_NOTIFICATIONS = '/notifications';
 export const PATH_POST_DETAIL = '/posts/:postId';
 export const PATH_PROFILE = `/profile/:id/${WILDCARD}`;
+export const PATH_REVERSI = `/reversi/${WILDCARD}`;
 export const PATH_WALLETS = `/wallets/${WILDCARD}`;
 
 // Default redirect path

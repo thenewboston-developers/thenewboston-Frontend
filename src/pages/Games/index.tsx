@@ -5,6 +5,7 @@ import backgammonCover from 'assets/backgammon-cover.webp';
 import battleshipCover from 'assets/battleship-cover.webp';
 import checkersCover from 'assets/checkers-cover.webp';
 import connectFiveCover from 'assets/connect-five-cover.webp';
+import reversiCover from 'assets/reversi-cover.webp';
 import GameFund from 'components/GameFund';
 import {SFC} from 'types';
 import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
@@ -55,6 +56,17 @@ const games = [
     name: 'Checkers',
     path: 'checkers',
     target: 'checkers',
+  },
+  {
+    accent: '#3f4a6b',
+    art: reversiCover,
+    badge: 'JUST ARRIVED',
+    category: 'Classic disk strategy',
+    description: 'One move. The whole board turns. Outflank, flip, and take the corners.',
+    imageDescription: 'Black and ivory disks on an emerald Reversi board, with one disk caught mid-flip',
+    name: 'Reversi',
+    path: 'reversi',
+    target: 'reversi',
   },
 ];
 

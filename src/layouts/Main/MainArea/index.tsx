@@ -18,6 +18,7 @@ import {
   PATH_NOTIFICATIONS,
   PATH_POST_DETAIL,
   PATH_PROFILE,
+  PATH_REVERSI,
   PATH_WALLETS,
 } from 'constants/paths';
 import Backgammon from 'pages/Backgammon';
@@ -31,6 +32,7 @@ import Games from 'pages/Games';
 import Notifications from 'pages/Notifications';
 import PostDetail from 'pages/PostDetail';
 import Profile from 'pages/Profile';
+import Reversi from 'pages/Reversi';
 import Wallets from 'pages/Wallets';
 import {SFC} from 'types';
 
@@ -60,6 +62,7 @@ const MainArea: SFC = ({className}) => {
         />
         <Route path={PATH_POST_DETAIL} element={<PostDetail />} />
         <Route path={PATH_PROFILE} element={<Profile />} />
+        <Route element={<Reversi />} path={PATH_REVERSI} />
         <Route path={PATH_AUTHENTICATION.LOGOUT} element={<Logout />} />
         <Route path={PATH_WALLETS} element={<Wallets />} />
       </SentryRoutes>
