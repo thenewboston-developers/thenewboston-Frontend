@@ -301,6 +301,11 @@ const Match = () => {
         ),
       ),
     ).length;
+    const afloat = match.board.ships.length - ownSunk;
+    // A match can end during placement before this player locked a fleet, leaving nothing to count
+    const ownSubtitle = match.board.ships.length
+      ? `${afloat} ${afloat === 1 ? 'ship' : 'ships'} afloat`
+      : 'No fleet deployed';
     return (
       <>
         {status === 'active' && (
@@ -344,7 +349,7 @@ const Match = () => {
             label="Your waters"
             ships={match.board.ships}
             shots={match.board.incoming_shots}
-            subtitle={`${5 - ownSunk} ships afloat`}
+            subtitle={ownSubtitle}
           />
         </S.PanelGrid>
       </>
