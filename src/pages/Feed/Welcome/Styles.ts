@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-import {breakpoints, cardStyle, colors, fonts} from 'styles';
+import UAuthButtons from 'components/AuthButtons';
+import {breakpoints, colors, fonts} from 'styles';
 
 export const Artwork = styled.div`
   flex: 0 0 188px;
@@ -8,57 +9,69 @@ export const Artwork = styled.div`
   pointer-events: none;
   position: relative;
 
-  @media (max-width: ${breakpoints.mini}) {
-    height: 100px;
+  &::before {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+    content: '';
+    inset: -100px -80px -100px -36px;
+    mask-image: linear-gradient(90deg, transparent, black);
     position: absolute;
-    right: 4px;
-    top: 2px;
-    transform: scale(0.5);
+    transform: rotate(-18deg);
+  }
+
+  @media (max-width: ${breakpoints.mini}) {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: scale(0.48);
     transform-origin: top right;
     width: 188px;
   }
 `;
 
-export const ChatSatellite = styled.div`
-  align-items: center;
-  background: ${colors.white};
-  border: 1px solid #eeded5;
-  border-radius: 14px;
-  box-shadow: 0 5px 12px rgba(100, 35, 25, 0.06);
-  color: ${colors.accent};
-  display: flex;
-  height: 44px;
-  justify-content: center;
-  left: 8px;
-  position: absolute;
-  top: 24px;
-  transform: rotate(-12deg);
-  width: 44px;
-`;
+/* Keep the shared authentication flow, with button colors scoped to this dark surface. */
+export const AuthButtons = styled(UAuthButtons)`
+  gap: 10px;
 
-export const CoinSatellite = styled.div`
-  align-items: center;
-  background: #ffda86;
-  border: 4px solid #ffedbd;
-  border-radius: 50%;
-  box-shadow: 0 5px 12px rgba(100, 35, 25, 0.08);
-  color: #86521a;
-  display: flex;
-  height: 46px;
-  justify-content: center;
-  position: absolute;
-  right: 0;
-  top: 152px;
-  transform: rotate(14deg);
-  width: 46px;
+  > button {
+    background: ${colors.white};
+    border-color: ${colors.white};
+    border-radius: 8px;
+    color: ${colors.primary};
+    height: 44px;
+
+    &:hover {
+      background: ${colors.whiteSmoke};
+      border-color: ${colors.whiteSmoke};
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colors.white};
+      outline-offset: 4px;
+    }
+  }
+
+  > button:first-child {
+    background: transparent;
+    border-color: #555861;
+    color: ${colors.white};
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #91949d;
+    }
+  }
 `;
 
 /* Keep the same edge-to-edge treatment as feed posts on phones. */
 export const Container = styled.div`
-  ${cardStyle};
   align-items: center;
-  background: radial-gradient(ellipse at 100% 50%, #ffe0c8 0%, transparent 65%), #fff9f2;
-  border-color: #eeded5;
+  background: radial-gradient(ellipse at 100% 70%, rgba(220, 13, 22, 0.22), transparent 60%), #111216;
+  border: 1px solid #292a31;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(15, 20, 25, 0.08);
   display: flex;
   gap: 12px;
   isolation: isolate;
@@ -68,7 +81,6 @@ export const Container = styled.div`
 
   @media (max-width: ${breakpoints.mini}) {
     border: none;
-    border-bottom: 1px solid #eeded5;
     border-radius: 0;
     box-shadow: none;
     padding: 24px 20px;
@@ -83,10 +95,10 @@ export const Content = styled.div`
 `;
 
 export const Eyebrow = styled.p`
-  color: ${colors.accentHover};
+  color: #ff9ca3;
   font-size: 10px;
   font-weight: ${fonts.weight.bold};
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   line-height: 1.6;
   text-transform: uppercase;
 
@@ -96,20 +108,21 @@ export const Eyebrow = styled.p`
 `;
 
 export const Greeting = styled.span`
+  color: #c2c3cc;
   display: block;
-  font-size: 18px;
-  font-weight: ${fonts.weight.medium};
+  font-size: 17px;
+  font-weight: ${fonts.weight.regular};
   letter-spacing: -0.02em;
-  line-height: 1.5;
+  line-height: 1.6;
 `;
 
 export const Heading = styled.h2`
-  color: ${colors.primary};
-  font-size: 32px;
-  font-weight: ${fonts.weight.bold};
-  letter-spacing: -0.045em;
+  color: ${colors.white};
+  font-size: 34px;
+  font-weight: ${fonts.weight.extraBold};
+  letter-spacing: -0.055em;
   line-height: 1.2;
-  margin-top: 16px;
+  margin-top: 18px;
 
   @media (max-width: ${breakpoints.mini}) {
     font-size: 30px;
@@ -118,64 +131,47 @@ export const Heading = styled.h2`
 `;
 
 export const Logo = styled.img`
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.4),
+    0 0 48px rgba(220, 13, 22, 0.25);
   display: block;
-  height: 112px;
-  width: 112px;
+  height: 128px;
+  position: relative;
+  width: 128px;
 `;
 
-export const LogoTile = styled.div`
-  border: 6px solid ${colors.white};
-  border-radius: 28px;
-  box-shadow: 0 18px 28px rgba(150, 27, 27, 0.2);
-  left: 38px;
-  overflow: hidden;
+export const LogoStack = styled.div`
+  left: 24px;
   position: absolute;
-  top: 64px;
-  transform: rotate(-12deg);
-`;
+  top: 54px;
+  transform: rotate(-18deg);
 
-export const Orbit = styled.div`
-  border: 1px solid rgba(190, 84, 55, 0.2);
-  border-radius: 50%;
-  height: 184px;
-  left: 4px;
-  position: absolute;
-  top: 22px;
-  transform: rotate(-25deg);
-  width: 184px;
+  &::before,
+  &::after {
+    border: 1px solid rgba(255, 104, 117, 0.4);
+    border-radius: 16px;
+    content: '';
+    inset: 0;
+    position: absolute;
+  }
 
   &::before {
-    border: 1px dashed rgba(190, 84, 55, 0.18);
-    border-radius: 50%;
-    content: '';
-    inset: -22px;
-    position: absolute;
+    transform: translate(16px, -16px);
   }
 
   &::after {
-    background: ${colors.accent};
-    border: 4px solid #fff0e5;
-    border-radius: 50%;
-    bottom: 12px;
-    content: '';
-    height: 13px;
-    left: 20px;
-    position: absolute;
-    width: 13px;
+    border-color: rgba(255, 104, 117, 0.18);
+    transform: translate(32px, -32px);
+    z-index: -1;
   }
 `;
 
-export const Spark = styled.div`
-  color: ${colors.accent};
-  position: absolute;
-  right: 8px;
-  top: 36px;
-`;
-
 export const Text = styled.p`
-  color: ${colors.secondary};
+  color: #b8bac5;
   font-size: 14px;
   line-height: 1.6;
-  margin: 12px 0 20px;
+  margin: 12px 0 22px;
   max-width: 360px;
 `;
