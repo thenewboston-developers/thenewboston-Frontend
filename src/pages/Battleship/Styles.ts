@@ -212,30 +212,6 @@ export const Form = styled.form`
   gap: 20px;
 `;
 
-export const Hero = styled.section`
-  align-items: center;
-  background: linear-gradient(135deg, #eff6f8, #d8e9ef);
-  border: 1px solid #cbdde5;
-  border-radius: 24px;
-  display: grid;
-  gap: 32px;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 28px;
-  overflow: hidden;
-  padding: 40px;
-
-  @media (max-width: 1000px) {
-    grid-template-columns: 1fr;
-    padding: 28px;
-  }
-`;
-
-export const HeroDescription = styled(Detail)`
-  font-size: 16px;
-  margin: 20px 0 24px;
-  max-width: 480px;
-`;
-
 export const Input = styled.input`
   background: #ffffff;
   border: 1px solid #c5d7df;
@@ -296,6 +272,7 @@ export const Panel = styled.section`
   border-radius: 20px;
   min-width: 0;
   padding: 24px;
+  scroll-margin-top: 24px;
 `;
 
 export const PanelGrid = styled.div`
@@ -407,16 +384,6 @@ export const Timer = styled.strong`
   color: #194b61;
   font-size: 22px;
   font-variant-numeric: tabular-nums;
-`;
-
-export const Title = styled.h1`
-  color: #173a50;
-  font-family: Georgia, serif;
-  font-size: clamp(40px, 5vw, 64px);
-  font-weight: 400;
-  letter-spacing: -0.045em;
-  line-height: 1.08;
-  margin: 0;
 `;
 
 export const TitleSmall = styled.h2`

@@ -3,7 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createBattleshipMatch, getBattleshipMatches} from 'api/battleship';
+import battleshipCover from 'assets/battleship-cover.webp';
 import AuthButtons from 'components/AuthButtons';
+import GameHero from 'components/GameHero';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -14,7 +16,6 @@ import {AppDispatch, UserReadSerializer} from 'types';
 import {BattleshipDifficulty, BattleshipMatch, BattleshipMode} from 'types/battleship';
 import {isCancellationError} from 'utils/errors';
 
-import Artwork from './Artwork';
 import Rules from './Rules';
 import * as S from './Styles';
 import {getErrorMessage, getPlayerName} from './utils';
@@ -205,29 +206,22 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Naval strategy · Every shot counts</S.Badge>
       </S.Navigation>
-      <S.Hero>
-        <div>
-          <S.Eyebrow>Battleship</S.Eyebrow>
-          <S.Title>
-            Hide your fleet.
-            <br />
-            Hunt theirs.
-          </S.Title>
-          <S.HeroDescription>
-            Plot your fleet, read the water, and make every shot count. Practice against the computer or challenge a
-            member for TNB.
-          </S.HeroDescription>
-          <S.Actions>
-            <S.Badge>Computer & multiplayer</S.Badge>
-            <S.Badge>Optional TNB stakes</S.Badge>
-          </S.Actions>
-        </div>
-        <Artwork />
-      </S.Hero>
+      <GameHero
+        artwork={battleshipCover}
+        artworkAlt="Sculpted naval ships on an illuminated ocean-blue tactical board"
+        challengeHref="#battleship-challenge"
+        description="Plot your fleet, read the water, and make every shot count. Take on the computer or challenge a friend."
+        eyebrow="NAVAL STRATEGY"
+        game="Battleship"
+        highlights={['5 ships to sink', 'Private fleets', '3 difficulty levels']}
+        playHref="#battleship-computer"
+        tagline="Hide your fleet. Hunt theirs."
+        theme="ocean"
+      />
       <>
         {createError && <S.Error role="alert">{createError}</S.Error>}
         <S.PanelGrid>
-          <S.Panel>
+          <S.Panel id="battleship-computer" tabIndex={-1}>
             <S.Eyebrow>Practice your tactics</S.Eyebrow>
             <S.TitleSmall>Play the computer</S.TitleSmall>
             <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
@@ -248,7 +242,7 @@ const Home = () => {
               </S.Actions>
             </S.Form>
           </S.Panel>
-          <S.Panel>
+          <S.Panel id="battleship-challenge" tabIndex={-1}>
             <S.Eyebrow>Make it a rivalry</S.Eyebrow>
             <S.TitleSmall>Challenge a player</S.TitleSmall>
             {!isAuthenticated ? (

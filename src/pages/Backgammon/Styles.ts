@@ -131,45 +131,6 @@ export const Form = styled.form`
   gap: 20px;
 `;
 
-export const Hero = styled.header`
-  align-items: center;
-  background: linear-gradient(120deg, #faf9f1 0%, #e9eee2 100%);
-  border: 1px solid #e0e5d7;
-  border-radius: 24px;
-  display: grid;
-  gap: 32px;
-  grid-template-columns: 1fr 1fr;
-  margin: 20px 0 28px;
-  overflow: hidden;
-  padding: 40px;
-
-  @media (max-width: 1000px) {
-    gap: 24px;
-    grid-template-columns: 1fr;
-    padding: 28px;
-  }
-`;
-
-export const HeroBoard = styled.div`
-  filter: drop-shadow(0 16px 16px #254b3526);
-  transform: rotate(-5deg);
-
-  @media (max-width: 1000px) {
-    margin: 0 auto;
-    max-width: 500px;
-    transform: rotate(-2deg);
-    width: 100%;
-  }
-`;
-
-export const HeroDescription = styled.p`
-  color: #5a6b59;
-  font-size: 16px;
-  line-height: 1.75;
-  margin: 20px 0;
-  max-width: 440px;
-`;
-
 export const Input = styled.input`
   background: #ffffff;
   border: 1px solid #cdd6c9;
@@ -254,6 +215,7 @@ export const Panel = styled.section`
   border: 1px solid #e1e6dc;
   border-radius: 20px;
   padding: 24px;
+  scroll-margin-top: 24px;
 `;
 
 export const PanelGrid = styled.div`
@@ -423,15 +385,6 @@ export const Timer = styled.span`
   font-size: 13px;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-`;
-
-export const Title = styled.h1`
-  color: #243e2d;
-  font-family: Georgia, serif;
-  font-size: clamp(40px, 5vw, 66px);
-  font-weight: 400;
-  letter-spacing: -0.05em;
-  line-height: 1.05;
 `;
 
 export const TitleSmall = styled.h2`

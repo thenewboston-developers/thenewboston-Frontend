@@ -3,7 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createBackgammonMatch, getBackgammonMatches} from 'api/backgammon';
+import backgammonCover from 'assets/backgammon-cover.webp';
 import AuthButtons from 'components/AuthButtons';
+import GameHero from 'components/GameHero';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -14,10 +16,9 @@ import {AppDispatch, UserReadSerializer} from 'types';
 import {BackgammonDifficulty, BackgammonMatch, BackgammonMode} from 'types/backgammon';
 import {isCancellationError} from 'utils/errors';
 
-import Board from './Board';
 import Rules from './Rules';
 import * as S from './Styles';
-import {getErrorMessage, getPlayerName, INITIAL_BOARD} from './utils';
+import {getErrorMessage, getPlayerName} from './utils';
 
 const MatchOptions = ({prefix}: {prefix: string}) => (
   <S.FieldGrid>
@@ -216,30 +217,22 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Classic strategy · A fresh rivalry</S.Badge>
       </S.Navigation>
-      <S.Hero>
-        <div>
-          <S.Eyebrow>The backgammon club</S.Eyebrow>
-          <S.Title>
-            A little luck.
-            <br />A lot of strategy.
-          </S.Title>
-          <S.HeroDescription>
-            Race your checkers home. Find the right moment to double. Practice against the computer or put your skills
-            to the test with the community.
-          </S.HeroDescription>
-          <S.Actions>
-            <S.Badge>Computer & multiplayer</S.Badge>
-            <S.Badge>Optional TNB stakes</S.Badge>
-          </S.Actions>
-        </div>
-        <S.HeroBoard>
-          <Board board={INITIAL_BOARD} decorative />
-        </S.HeroBoard>
-      </S.Hero>
+      <GameHero
+        artwork={backgammonCover}
+        artworkAlt="An emerald and walnut backgammon board with polished checkers and ivory dice"
+        challengeHref="#backgammon-challenge"
+        description="Race your checkers home and find the right moment to double. Roll into a quick practice game or your next rivalry."
+        eyebrow="DICE & STRATEGY"
+        game="Backgammon"
+        highlights={['15 checkers', 'Doubling cube', '3 difficulty levels']}
+        playHref="#backgammon-computer"
+        tagline="A little luck. A lot of strategy."
+        theme="emerald"
+      />
       <>
         {createError && <S.Error role="alert">{createError}</S.Error>}
         <S.PanelGrid>
-          <S.Panel>
+          <S.Panel id="backgammon-computer" tabIndex={-1}>
             <S.Eyebrow>Find your rhythm</S.Eyebrow>
             <S.TitleSmall>Play the computer</S.TitleSmall>
             <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
@@ -260,7 +253,7 @@ const Home = () => {
               </S.Actions>
             </S.Form>
           </S.Panel>
-          <S.Panel>
+          <S.Panel id="backgammon-challenge" tabIndex={-1}>
             <S.Eyebrow>Make it a rivalry</S.Eyebrow>
             <S.TitleSmall>Challenge a player</S.TitleSmall>
             {!isAuthenticated ? (
