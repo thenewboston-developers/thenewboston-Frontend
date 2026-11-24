@@ -15,8 +15,8 @@ interface PieceColors {
   top: string;
 }
 
-// The top three ranks are crowned kings in gold, silver and bronze; everyone after them is a cobalt checker
-const CHECKER: PieceColors = {edge: board.edge, ring: '#3553d6', rim: '#4b67df', text: board.mist, top: '#1b2f8f'};
+// The top three ranks are crowned kings in gold, silver and bronze; everyone after them is a green checker
+const CHECKER: PieceColors = {edge: board.edge, ring: '#49644c', rim: '#8ba774', text: board.mist, top: '#294631'};
 
 const KINGS: Record<number, PieceColors> = {
   1: {edge: '#8f6416', ring: '#d6a23a', rim: '#ffe9a8', text: '#3d2a05', top: board.gold},
@@ -27,7 +27,7 @@ const KINGS: Record<number, PieceColors> = {
 const crown = (color: string) =>
   `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12'%3E%3Cpath d='M2.2 11 .6 2.2 5.7 6 10 .6 14.3 6 19.4 2.2 17.8 11Z' fill='${encodeURIComponent(
     color,
-  )}' stroke='%230a1547' stroke-linejoin='round' stroke-width='1.1'/%3E%3C/svg%3E")`;
+  )}' stroke='%23102018' stroke-linejoin='round' stroke-width='1.1'/%3E%3C/svg%3E")`;
 
 const isKing = (rank: number) => rank <= 3;
 
@@ -48,7 +48,7 @@ export const Amount = styled.strong`
   small {
     ${label};
     color: ${board.mist};
-    font-size: 10px;
+    font-size: 12px;
   }
 
   @media (max-width: 480px) {
@@ -59,7 +59,7 @@ export const Amount = styled.strong`
 export const Avatar = styled(UAvatar)<{$rank: number}>`
   border-radius: 50%;
   box-shadow:
-    0 0 0 2px ${board.navy},
+    0 0 0 2px ${board.forest},
     0 0 0 4px ${({$rank}) => (isKing($rank) ? pieceColors($rank).top : board.line)};
 `;
 
@@ -83,10 +83,10 @@ export const Description = styled.p`
   margin: 6px 0 0;
 `;
 
-// The board's edge: two rows of ivory and cobalt squares between the header and the standings
+// The board's edge: two rows of ivory and green squares between the header and the standings
 export const Edge = styled.div`
-  ${checkerPattern('#fdebcfd9', 20)};
-  background-color: ${board.cobalt};
+  ${checkerPattern('#eeeed2d9', 20)};
+  background-color: ${board.green};
   box-shadow:
     0 -1px 0 ${board.edge},
     0 1px 0 ${board.edge};
@@ -124,7 +124,7 @@ export const Eyebrow = styled.p`
 
 export const Footer = styled.div`
   align-items: center;
-  background: #0a154766;
+  background: #10201866;
   border-top: 1px solid ${board.line};
   display: flex;
   flex-wrap: wrap;
@@ -181,14 +181,14 @@ export const Note = styled.p`
 
 export const Pagination = styled(UPagination)`
   button {
-    background: ${board.navy};
+    background: ${board.forest};
     border-color: ${board.line};
     color: ${board.ivoryLight};
   }
 
   button:hover:not(:disabled) {
-    background: #1b2f8f;
-    border-color: #4b67df;
+    background: #294631;
+    border-color: #8ba774;
   }
 
   button:disabled {
@@ -199,7 +199,7 @@ export const Pagination = styled(UPagination)`
 
   button:focus-visible {
     border-color: ${board.gold};
-    box-shadow: 0 0 0 2px #f4c95d66;
+    box-shadow: 0 0 0 2px #f4ce7266;
   }
 
   button[aria-current='page'],
@@ -216,11 +216,11 @@ export const Pagination = styled(UPagination)`
 
 export const Period = styled.span`
   ${label};
-  border: 1px solid #4b67df;
+  border: 1px solid #8ba774;
   border-radius: 999px;
   color: ${board.mist};
   flex-shrink: 0;
-  font-size: 10px;
+  font-size: 12px;
   margin-left: auto;
   padding: 7px 12px;
 
@@ -288,7 +288,7 @@ export const Rank = styled.span<{$rank: number}>`
 export const Retry = styled.button`
   ${label};
   background: transparent;
-  border: 1px solid #4b67df;
+  border: 1px solid #8ba774;
   border-radius: 999px;
   color: ${board.ivoryLight};
   cursor: pointer;
@@ -305,11 +305,11 @@ export const Retry = styled.button`
 `;
 
 export const Row = styled.tr<{$rank: number}>`
-  background: ${({$rank}) => ($rank === 1 ? 'linear-gradient(90deg, #f4c95d1c, transparent 65%)' : 'transparent')};
+  background: ${({$rank}) => ($rank === 1 ? 'linear-gradient(90deg, #f4ce721c, transparent 65%)' : 'transparent')};
   transition: background 0.15s ease;
 
   &:hover {
-    background: #2a46c933;
+    background: #76965633;
   }
 `;
 
@@ -330,10 +330,10 @@ export const Table = styled.table`
 
   th {
     ${label};
-    background: #0a154780;
+    background: #10201880;
     border-bottom: 1px solid ${board.line};
     color: ${board.haze};
-    font-size: 10px;
+    font-size: 12px;
     padding: 12px 16px;
     text-align: left;
   }

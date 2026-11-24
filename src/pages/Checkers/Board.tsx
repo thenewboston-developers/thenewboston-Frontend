@@ -294,7 +294,7 @@ const Board = ({
   return (
     <S.BoardFrame>
       <S.BoardTitle>
-        <strong>CHECKERS</strong>
+        <strong>8 × 8 · English draughts</strong>
         <span>{side === 'white' ? 'Ivory' : 'Charcoal'} side below</span>
       </S.BoardTitle>
       <S.BoardGrid $dragging={dragging !== null} aria-label="Checkers board" role="group">

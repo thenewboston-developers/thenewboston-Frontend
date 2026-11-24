@@ -56,7 +56,7 @@ const games = [
     badge: 'NEW TO THE ARCADE',
     category: 'Classic board strategy',
     description: 'Plan your jumps. Find your opening. Crown your next king.',
-    imageDescription: 'Glossy red and ivory checkers with a stacked king on a cobalt and ivory board',
+    imageDescription: 'Charcoal and ivory checkers on a classic green and ivory board',
     name: 'Checkers',
     path: 'checkers',
     target: 'checkers',
