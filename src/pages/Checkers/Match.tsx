@@ -4,9 +4,12 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 import {getCheckersMatch, performCheckersAction} from 'api/checkers';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
+import GameSoundToggle from 'components/GameSoundToggle';
 import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
+import useArcadeSounds, {ArcadeSound} from 'hooks/useArcadeSounds';
+import useGameEventSounds from 'hooks/useGameEventSounds';
 import {getSelf} from 'selectors/state';
 import {upsertCheckersMatch} from 'store/checkers';
 import {AppDispatch, RootState} from 'types';
@@ -39,6 +42,7 @@ const Match = () => {
   const [selection, setSelection] = useState<{version: number; path: number[]} | null>(null);
   const [serverOffset, setServerOffset] = useState(0);
   const {matchId} = useParams();
+  const {playSound, soundEnabled, toggleSound, unlockSound} = useArcadeSounds('checkers');
   const actionGeneration = useRef(0);
   const actionLock = useRef(false);
   const currentViewer = useRef<{id: number; userId?: number | null; authenticated: boolean}>({
@@ -80,8 +84,21 @@ const Match = () => {
   const selectable = path.length <= 1 ? Array.from(new Set(legalMoves.map((move) => move[0]))) : [];
   const captureRequired = legalMoves.length > 0 && isCapture(legalMoves[0]);
 
+  const {observeSoundEvents, resetSoundEvents} = useGameEventSounds<CheckersMatch>(playSound, (previous, next) => {
+    const sounds: ArcadeSound[] = [];
+    const move = next.last_move;
+    if (move && JSON.stringify(move) !== JSON.stringify(previous.last_move)) {
+      sounds.push(move.captured.length ? 'capture' : 'move');
+      const from = move.path[0];
+      const to = move.path[move.path.length - 1];
+      if (Math.abs(previous.board[from]) === 1 && Math.abs(next.board[to]) === 2) sounds.push('promote');
+    }
+    if (next.status === 'finished' && next.winner && next.winner === next.your_side) sounds.push('win');
+    return sounds;
+  });
+
   const receiveMatch = useCallback(
-    (data: CheckersMatch) => {
+    (data: CheckersMatch, silent = false) => {
       if (
         !mounted.current ||
         (data.guest_mode
@@ -107,11 +124,12 @@ const Match = () => {
       )
         return;
       receivedSnapshots.current[key] = {version: data.version, serverTime};
+      observeSoundEvents(data, silent);
       dispatch(upsertCheckersMatch(data));
       setServerOffset(serverTime - Date.now());
       setLoadError('');
     },
-    [dispatch],
+    [dispatch, observeSoundEvents],
   );
 
   useEffect(() => {
@@ -126,6 +144,8 @@ const Match = () => {
     actionLock.current = false;
     setBusyAction(null);
     setSelection(null);
+    resetSoundEvents();
+    let hydrateSounds = true;
     const controller = new AbortController();
     let polling = true;
     let timer: ReturnType<typeof setTimeout>;
@@ -141,8 +161,12 @@ const Match = () => {
         }
         const data = await getCheckersMatch(id, controller.signal);
         shouldPoll = ['pending', 'active'].includes(data.status);
-        if (polling) receiveMatch(data);
+        if (polling) {
+          receiveMatch(data, hydrateSounds);
+          hydrateSounds = false;
+        }
       } catch (error) {
+        hydrateSounds = true;
         if (polling && !isCancellationError(error)) setLoadError(getErrorMessage(error));
       } finally {
         if (polling) {
@@ -157,7 +181,7 @@ const Match = () => {
       controller.abort();
       clearTimeout(timer);
     };
-  }, [id, isAuthenticated, receiveMatch, retryKey, self.id]);
+  }, [id, isAuthenticated, receiveMatch, resetSoundEvents, retryKey, self.id]);
 
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 250);
@@ -172,6 +196,7 @@ const Match = () => {
 
   const handleAction = async (action: CheckersAction, data: CheckersActionData = {}) => {
     if (!match || !canAct || actionLock.current) return;
+    unlockSound();
     actionGeneration.current += 1;
     const generation = actionGeneration.current;
     const viewerId = self.id;
@@ -201,7 +226,7 @@ const Match = () => {
       setActionError(getErrorMessage(error));
       try {
         const refreshed = await getCheckersMatch(id);
-        if (isCurrent()) receiveMatch(refreshed);
+        if (isCurrent()) receiveMatch(refreshed, true);
       } catch (refreshError) {
         if (isCurrent()) setLoadError(getErrorMessage(refreshError));
       }
@@ -393,6 +418,7 @@ const Match = () => {
       <S.MatchNavigation>
         <S.TextLink to="/checkers/home">← Back to Checkers</S.TextLink>
         <S.Badge>Checkers {Number.isSafeInteger(id) ? `· Match ${id}` : ''}</S.Badge>
+        <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
       </S.MatchNavigation>
       {loadError && (
         <S.Error role="alert">

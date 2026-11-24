@@ -5,9 +5,11 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {getMancalaMatch, performMancalaAction} from 'api/mancala';
 import AuthButtons from 'components/AuthButtons';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
+import GameSoundToggle from 'components/GameSoundToggle';
 import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
+import useArcadeSounds from 'hooks/useArcadeSounds';
 import {getSelf} from 'selectors/state';
 import {upsertMancalaMatch} from 'store/mancala';
 import {AppDispatch, RootState} from 'types';
@@ -40,6 +42,7 @@ const Match = () => {
   const [retryKey, setRetryKey] = useState(0);
   const [serverOffset, setServerOffset] = useState(0);
   const {matchId} = useParams();
+  const {playSound, soundEnabled, toggleSound} = useArcadeSounds('mancala');
   const actionGeneration = useRef(0);
   const actionLock = useRef(false);
   const currentViewer = useRef('');
@@ -54,7 +57,6 @@ const Match = () => {
   // A guest game is private: never show a cached one to an account or to another guest session
   const match =
     matchSnapshot?.guest_mode && (!isGuestSession || !isCurrentGuestGame(matchSnapshot)) ? undefined : matchSnapshot;
-  const presentation = usePresentation(match);
   const status = match?.status;
   const viewerKey = `${id}:${isAuthenticated}:${self.id}`;
   currentViewer.current = viewerKey;
@@ -62,6 +64,8 @@ const Match = () => {
   // A member is recognised by their own account, never by what a cached snapshot said about an earlier viewer
   const memberSide = isAuthenticated && match ? getPlayerSide(match, self.id) : null;
   const side = match?.guest_mode && isGuestSession ? (match.your_side ?? null) : memberSide;
+  const presentation = usePresentation(match, playSound, side);
+  const {resetPresentation} = presentation;
   const isParticipant = !!side;
   const canAct = isParticipant && !busyAction && !loadError && !isLoading;
   const isMyTurn = !!side && match?.active_side === side;
@@ -69,12 +73,13 @@ const Match = () => {
   const board = presentation.board ?? match?.board;
 
   const receiveMatch = useCallback(
-    (data: MancalaMatch) => {
+    (data: MancalaMatch, silent = false) => {
+      if (silent) resetPresentation(data);
       dispatch(upsertMancalaMatch(data));
       setServerOffset(Date.parse(data.server_time) - Date.now());
       setLoadError('');
     },
-    [dispatch],
+    [dispatch, resetPresentation],
   );
 
   useEffect(() => {
@@ -91,6 +96,7 @@ const Match = () => {
     setBusyAction(null);
     setPendingPit(null);
     const controller = new AbortController();
+    let hydratePresentation = true;
     let mounted = true;
     let timer: ReturnType<typeof setTimeout>;
     setIsLoading(true);
@@ -102,8 +108,12 @@ const Match = () => {
         if (!Number.isSafeInteger(id) || id < 1) throw new Error('Invalid match');
         const data = await getMancalaMatch(id, controller.signal);
         shouldPoll = !CLOSED.includes(data.status);
-        if (mounted) receiveMatch(data);
+        if (mounted) {
+          receiveMatch(data, hydratePresentation);
+          hydratePresentation = false;
+        }
       } catch (error) {
+        hydratePresentation = true;
         if (mounted && !isCancellationError(error)) setLoadError(getErrorMessage(error));
       } finally {
         if (mounted) {
@@ -157,7 +167,7 @@ const Match = () => {
       setActionError(getErrorMessage(error));
       try {
         const refreshed = await getMancalaMatch(id);
-        if (isCurrent()) receiveMatch(refreshed);
+        if (isCurrent()) receiveMatch(refreshed, true);
       } catch (refreshError) {
         if (isCurrent()) setLoadError(getErrorMessage(refreshError));
       }
@@ -335,9 +345,12 @@ const Match = () => {
     <S.Container>
       <S.Navigation>
         <S.TextLink to="/mancala/home">← Mancala table</S.TextLink>
-        <S.Badge>
-          {isParticipant ? modeLabel : 'Spectating'} · {match.stake_amount ? 'TNB match' : 'Free play'}
-        </S.Badge>
+        <S.Actions>
+          <S.Badge>
+            {isParticipant ? modeLabel : 'Spectating'} · {match.stake_amount ? 'TNB match' : 'Free play'}
+          </S.Badge>
+          <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+        </S.Actions>
       </S.Navigation>
       <S.MatchTitle>
         {names.host} vs. {names.guest}

@@ -32,7 +32,7 @@ const Hero = ({isCreating, onPlay}: Props) => (
     </S.Content>
     <S.Artwork>
       <S.Image
-        alt="Glossy ruby and cobalt stones on a sculpted ivory Hex board with red and blue edges in a midnight-blue arena"
+        alt="A floating porcelain Hex board with ruby and cobalt glass stones, illuminated by warm red and cool blue light"
         fetchPriority="high"
         height={960}
         src={hexArena}

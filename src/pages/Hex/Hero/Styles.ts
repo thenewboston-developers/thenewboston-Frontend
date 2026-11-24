@@ -4,14 +4,14 @@ import {fonts} from 'styles';
 
 export const ActionBar = styled.div`
   align-items: center;
-  background: #0a1128;
-  border-top: 1px solid #ffffff14;
+  background: #07102040;
+  border-top: 1px solid #ffffff12;
   display: flex;
   flex-wrap: wrap;
   gap: 16px 28px;
   grid-column: 1 / -1;
   justify-content: space-between;
-  padding: 22px 36px;
+  padding: 24px 40px;
   position: relative;
   z-index: 1;
 
@@ -34,17 +34,18 @@ export const Actions = styled.div`
 
 export const Artwork = styled.div`
   align-self: center;
-  margin-left: -10%;
-  max-width: 820px;
+  margin-left: -3%;
+  max-width: 900px;
   min-width: 0;
-  padding: 18px 0;
+  padding: 26px 12px 18px 0;
   pointer-events: none;
-  width: 108%;
+  position: relative;
+  width: 103%;
 
   @media (max-width: 1100px) {
-    margin: -8px auto 4px;
-    max-width: 660px;
-    padding: 0 12px;
+    margin: 12px auto 0;
+    max-width: 760px;
+    padding: 0 6px 16px;
     width: 100%;
   }
 `;
@@ -71,7 +72,7 @@ export const ChallengeLink = styled.a`
 `;
 
 export const Content = styled.div`
-  padding: 36px 0 36px 36px;
+  padding: 44px 0 44px 40px;
   position: relative;
   z-index: 1;
 
@@ -126,13 +127,14 @@ export const Features = styled.ul`
 
 export const Hero = styled.section`
   background:
-    radial-gradient(ellipse at 72% 44%, #3a56b08c, transparent 62%),
-    linear-gradient(120deg, #0d1530 6%, #18244d 60%, #1f2f66);
-  border: 1px solid #2c3a6c;
+    radial-gradient(ellipse at 64% 18%, #a6403433, transparent 40%),
+    radial-gradient(ellipse at 88% 56%, #2456b470, transparent 54%),
+    linear-gradient(115deg, #0b142c, #101c38 60%, #132443);
+  border: 1px solid #ffffff14;
   border-radius: 24px;
   color: #ffffff;
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.3fr);
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.35fr);
   isolation: isolate;
   margin-bottom: 28px;
   overflow: hidden;
@@ -140,8 +142,9 @@ export const Hero = styled.section`
 
   @media (max-width: 1100px) {
     background:
-      radial-gradient(ellipse at 50% 72%, #3a56b07a, transparent 62%),
-      linear-gradient(120deg, #0d1530 6%, #18244d 60%, #1f2f66);
+      radial-gradient(ellipse at 25% 60%, #a640342b, transparent 40%),
+      radial-gradient(ellipse at 88% 67%, #2456b470, transparent 54%),
+      linear-gradient(130deg, #0b142c, #101c38 60%, #132443);
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -151,9 +154,8 @@ export const Hero = styled.section`
 `;
 
 export const Image = styled.img`
-  border-radius: 24px;
   display: block;
-  filter: drop-shadow(0 22px 26px #02061499);
+  filter: drop-shadow(0 24px 18px #02081770);
   height: auto;
   width: 100%;
 `;

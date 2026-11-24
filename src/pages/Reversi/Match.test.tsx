@@ -17,6 +17,12 @@ jest.mock('api/reversi', () => ({getReversiMatch: jest.fn(), performReversiActio
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
 jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
+jest.mock('hooks/useArcadeSounds', () => () => ({
+  playSound: mockPlaySound,
+  soundEnabled: false,
+  toggleSound: jest.fn(),
+  unlockSound: jest.fn(),
+}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
 jest.mock('react-router-dom', () => ({...jest.requireActual('react-router-dom'), useParams: () => ({matchId: '1'})}));
 jest.mock('utils/guestGames', () => ({hasGuestGameSession: jest.fn(), isCurrentGuestGame: jest.fn()}));
@@ -28,6 +34,7 @@ let match: ReversiMatch;
 let root: Root;
 let selfId: number;
 const dispatch = jest.fn(() => Promise.resolve());
+const mockPlaySound = jest.fn();
 
 const button = (text: string): HTMLButtonElement => {
   const found = Array.from(container.querySelectorAll('button')).find((element) => element.textContent === text);
@@ -110,6 +117,53 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
+it.each(['human', 'computer', 'guest'])('sounds live Reversi flips and a win once for %s play', async (mode) => {
+  jest.useFakeTimers();
+  if (mode !== 'human') {
+    match.mode = 'computer';
+    match.white = null;
+  }
+  if (mode === 'guest') {
+    match.guest_mode = true;
+    match.your_side = 'black';
+    (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+    (hasGuestGameSession as jest.Mock).mockReturnValue(true);
+    (isCurrentGuestGame as jest.Mock).mockReturnValue(true);
+  }
+  await renderMatch();
+  expect(container.querySelector('[aria-label="Game sound"]')).toHaveAttribute('aria-pressed', 'false');
+  expect(mockPlaySound).not.toHaveBeenCalled();
+  match = {
+    ...match,
+    version: 5,
+    move_count: 1,
+    last_move: {side: 'black', row: 2, column: 3, flipped: [[3, 3]], passed: null},
+  };
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound.mock.calls).toEqual([['flip', 0]]);
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound).toHaveBeenCalledTimes(1);
+  match = {...match, version: 6, status: 'finished', winner: 'black'};
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound).toHaveBeenLastCalledWith('win', 0);
+  expect(mockPlaySound).toHaveBeenCalledTimes(2);
+});
+
+it('keeps Reversi history silent after a failed poll reconnects', async () => {
+  jest.useFakeTimers();
+  await renderMatch();
+  (getReversiMatch as jest.Mock).mockRejectedValueOnce(new Error('Offline'));
+  await act(async () => jest.advanceTimersByTime(2000));
+  match = {
+    ...match,
+    version: 5,
+    move_count: 1,
+    last_move: {side: 'black', row: 2, column: 3, flipped: [[3, 3]], passed: null},
+  };
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound).not.toHaveBeenCalled();
+});
+
 describe('reversi match interaction', () => {
   it('sends a move when the player on turn chooses a legal square', async () => {
     await renderMatch();
@@ -151,7 +205,7 @@ describe('reversi match interaction', () => {
     selfId = 99;
     await renderMatch();
     expect(container.textContent).toContain('Spectating');
-    expect(container.querySelectorAll('button:not([disabled])')).toHaveLength(0);
+    expect(container.querySelectorAll('button:not([disabled]):not([aria-label="Game sound"])')).toHaveLength(0);
     expect(container.textContent).not.toContain('Resign match');
   });
 
@@ -181,9 +235,11 @@ describe('reversi match interaction', () => {
     match.active_side = null;
     await renderMatch();
     expect(container.textContent).toContain('Waiting for your opponent');
-    expect(Array.from(container.querySelectorAll('button')).map((element) => element.textContent)).toEqual([
-      'Cancel challenge',
-    ]);
+    expect(
+      Array.from(container.querySelectorAll('button:not([aria-label="Game sound"])')).map(
+        (element) => element.textContent,
+      ),
+    ).toEqual(['Cancel challenge']);
   });
 
   it('asks before resigning a staked match', async () => {

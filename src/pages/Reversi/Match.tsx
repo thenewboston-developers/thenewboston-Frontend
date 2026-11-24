@@ -5,9 +5,12 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {getReversiMatch, performReversiAction} from 'api/reversi';
 import AuthButtons from 'components/AuthButtons';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
+import GameSoundToggle from 'components/GameSoundToggle';
 import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
+import useArcadeSounds, {ArcadeSound} from 'hooks/useArcadeSounds';
+import useGameEventSounds from 'hooks/useGameEventSounds';
 import {getSelf} from 'selectors/state';
 import {upsertReversiMatch} from 'store/reversi';
 import {AppDispatch, RootState} from 'types';
@@ -56,6 +59,7 @@ const Match = () => {
   const [retryKey, setRetryKey] = useState(0);
   const [serverOffset, setServerOffset] = useState(0);
   const {matchId} = useParams();
+  const {playSound, soundEnabled, toggleSound, unlockSound} = useArcadeSounds('reversi');
   const actionGeneration = useRef(0);
   const actionLock = useRef(false);
   const currentViewer = useRef('');
@@ -84,13 +88,27 @@ const Match = () => {
   const canMove = canAct && isMyTurn && match?.status === 'active';
   const modeLabel = match?.mode === 'computer' ? `${DIFFICULTY_LABELS[match.difficulty]} computer` : 'Head to head';
 
+  const {observeSoundEvents, resetSoundEvents} = useGameEventSounds<ReversiMatch>(playSound, (previous, next) => {
+    const sounds: ArcadeSound[] = [];
+    if (next.last_move && next.move_count > previous.move_count)
+      sounds.push(next.last_move.flipped.length ? 'flip' : 'move');
+    if (
+      next.status === 'finished' &&
+      next.winner &&
+      (next.guest_mode ? next.winner === next.your_side : isAuthenticated && next[next.winner]?.id === self.id)
+    )
+      sounds.push('win');
+    return sounds;
+  });
+
   const receiveMatch = useCallback(
-    (data: ReversiMatch) => {
+    (data: ReversiMatch, silent = false) => {
+      observeSoundEvents(data, silent);
       dispatch(upsertReversiMatch(data));
       setServerOffset(Date.parse(data.server_time) - Date.now());
       setLoadError('');
     },
-    [dispatch],
+    [dispatch, observeSoundEvents],
   );
 
   useEffect(() => {
@@ -105,6 +123,8 @@ const Match = () => {
     actionGeneration.current += 1;
     actionLock.current = false;
     setBusyAction(null);
+    resetSoundEvents();
+    let hydrateSounds = true;
     const controller = new AbortController();
     let mounted = true;
     let timer: ReturnType<typeof setTimeout>;
@@ -119,8 +139,12 @@ const Match = () => {
         const data = await getReversiMatch(id, controller.signal);
         shouldPoll = !CLOSED_STATUSES.includes(data.status);
         if (isComputerToMove(data)) delay = COMPUTER_POLL_DELAY;
-        if (mounted) receiveMatch(data);
+        if (mounted) {
+          receiveMatch(data, hydrateSounds);
+          hydrateSounds = false;
+        }
       } catch (error) {
+        hydrateSounds = true;
         if (mounted && !isCancellationError(error)) setLoadError(getErrorMessage(error));
       } finally {
         if (mounted) {
@@ -140,7 +164,7 @@ const Match = () => {
       controller.abort();
       clearTimeout(timer);
     };
-  }, [id, isAuthenticated, receiveMatch, retryKey, self.id]);
+  }, [id, isAuthenticated, receiveMatch, resetSoundEvents, retryKey, self.id]);
 
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 250);
@@ -159,6 +183,7 @@ const Match = () => {
 
   const handleAction = async (action: ReversiAction, data: {column?: number; row?: number} = {}) => {
     if (!match || !canAct || actionLock.current) return;
+    unlockSound();
     actionGeneration.current += 1;
     const generation = actionGeneration.current;
     const isCurrent = () =>
@@ -181,7 +206,7 @@ const Match = () => {
       setActionError(getErrorMessage(error));
       try {
         const refreshed = await getReversiMatch(id);
-        if (isCurrent()) receiveMatch(refreshed);
+        if (isCurrent()) receiveMatch(refreshed, true);
       } catch (refreshError) {
         if (isCurrent()) setLoadError(getErrorMessage(refreshError));
       }
@@ -367,6 +392,9 @@ const Match = () => {
         {match.status === 'pending' && ' · Challenge pending'}
         {match.status === 'active' && ` · Move ${match.move_count + 1}`}
       </S.Detail>
+      <S.Actions style={{marginBottom: 16}}>
+        <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+      </S.Actions>
       {loadError && (
         <S.Error role="alert">
           Connection interrupted. {loadError} Controls will return when the board reconnects.

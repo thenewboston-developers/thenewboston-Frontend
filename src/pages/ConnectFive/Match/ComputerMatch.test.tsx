@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux';
 import {MemoryRouter} from 'react-router-dom';
 
 import {createConnectFiveComputerMatch, getConnectFiveMatch, submitConnectFiveMove} from 'api/connectFive';
+import {getArcadeSoundStorageKey} from 'hooks/useArcadeSounds';
 import {ConnectFiveMatch} from 'types';
 
 import ComputerMatch from './ComputerMatch';
@@ -40,6 +41,7 @@ const button = (text: string) =>
   Array.from(document.querySelectorAll('button')).find((element) => element.textContent === text)!;
 
 beforeEach(() => {
+  localStorage.clear();
   container = document.createElement('div');
   document.body.appendChild(container);
   modal = document.createElement('div');
@@ -203,4 +205,16 @@ it('lets a guest use free specials and shows a reward invitation after winning',
   expect(modal).toHaveTextContent('You beat the computer!');
   expect(modal).toHaveTextContent('this win would have earned you 10 coins');
   expect(dispatch).not.toHaveBeenCalledWith('refresh-wallets');
+});
+
+it('offers a default-off sound toggle that persists the player preference', async () => {
+  await render();
+  const toggle = container.querySelector('button[aria-label="Game sound"]') as HTMLButtonElement;
+  expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  act(() => toggle.click());
+  expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  expect(localStorage.getItem(getArcadeSoundStorageKey('connect_five'))).toBe('true');
+  act(() => toggle.click());
+  expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  expect(localStorage.getItem(getArcadeSoundStorageKey('connect_five'))).toBe('false');
 });

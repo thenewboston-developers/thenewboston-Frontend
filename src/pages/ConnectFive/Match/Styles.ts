@@ -458,3 +458,11 @@ export const PlayerRow = styled.div`
     }
   }
 `;
+
+export const SoundControls = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 auto;
+  max-width: 1400px;
+  width: 100%;
+`;

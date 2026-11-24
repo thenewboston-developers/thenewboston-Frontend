@@ -6,6 +6,7 @@ import {MemoryRouter} from 'react-router-dom';
 import {getMancalaMatch, performMancalaAction} from 'api/mancala';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
+import useArcadeSounds from 'hooks/useArcadeSounds';
 import {MancalaMatch, MancalaRecentMove} from 'types/mancala';
 import {hasGuestGameSession, isCurrentGuestGame} from 'utils/guestGames';
 
@@ -18,6 +19,7 @@ jest.mock('api/mancala', () => ({getMancalaMatch: jest.fn(), performMancalaActio
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
 jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
+jest.mock('hooks/useArcadeSounds', () => ({__esModule: true, default: jest.fn()}));
 jest.mock('utils/guestGames', () => ({hasGuestGameSession: jest.fn(), isCurrentGuestGame: jest.fn()}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
 jest.mock('react-router-dom', () => ({
@@ -64,6 +66,7 @@ const renderMatch = async () => {
 };
 
 beforeEach(() => {
+  (useArcadeSounds as jest.Mock).mockImplementation(jest.requireActual('hooks/useArcadeSounds').default);
   container = document.createElement('div');
   document.body.appendChild(container);
   root = createRoot(container);
@@ -213,9 +216,11 @@ describe('mancala match interaction', () => {
     match = {...match, active_side: null, prize_pool_total: 10, status: 'pending'};
     await renderMatch();
     expect(container.textContent).toContain('Your stake is locked.');
-    expect(Array.from(container.querySelectorAll('button')).map((element) => element.textContent)).toEqual([
-      'Cancel challenge',
-    ]);
+    expect(
+      Array.from(container.querySelectorAll('button:not([aria-label="Game sound"])')).map(
+        (element) => element.textContent,
+      ),
+    ).toEqual(['Cancel challenge']);
   });
 
   it('reports the prize, refreshes the wallet and stops polling once the match is over', async () => {
@@ -318,4 +323,47 @@ describe('guest play', () => {
     expect(container.querySelector('[aria-label="Mancala board"]')).not.toBeNull();
     expect(container.querySelectorAll('button[aria-label*=" pit "]')).toHaveLength(0);
   });
+});
+
+it('offers optional sound with a persistent on/off control', async () => {
+  localStorage.clear();
+  await renderMatch();
+  const toggle = container.querySelector('button[aria-label="Game sound"]') as HTMLButtonElement;
+  expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  await act(async () => toggle.click());
+  expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  await renderMatch();
+  expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  await act(async () => toggle.click());
+  expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  localStorage.clear();
+});
+
+it('silently catches up after a failed poll rather than replaying recovered stones', async () => {
+  jest.useFakeTimers();
+  const playSound = jest.fn();
+  (useArcadeSounds as jest.Mock).mockReturnValue({playSound, soundEnabled: true, toggleSound: jest.fn()});
+  await renderMatch();
+  (getMancalaMatch as jest.Mock).mockRejectedValueOnce(new Error('Disconnected'));
+  await act(async () => jest.advanceTimersByTime(2000));
+  match = {...match, board: guestMove.board, last_move: guestMove, recent_moves: [guestMove], version: 5};
+  await act(async () => jest.advanceTimersByTime(2000));
+  await renderMatch();
+  await act(async () => jest.advanceTimersByTime(5000));
+  expect(playSound).not.toHaveBeenCalled();
+});
+
+it.each([false, true])('uses the current player side for a live victory (guest: %s)', async (guest) => {
+  const playSound = jest.fn();
+  (useArcadeSounds as jest.Mock).mockReturnValue({playSound, soundEnabled: true, toggleSound: jest.fn()});
+  if (guest) {
+    (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+    (hasGuestGameSession as jest.Mock).mockReturnValue(true);
+    selfId = null;
+    match = {...match, guest_mode: true, mode: 'computer', host: {id: 0, username: 'Guest', avatar: null}, guest: null};
+  }
+  await renderMatch();
+  match = {...match, status: 'finished', winner: 'host', version: 5};
+  await renderMatch();
+  expect(playSound).toHaveBeenCalledWith('win');
 });
