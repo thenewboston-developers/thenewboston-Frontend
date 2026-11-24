@@ -10,7 +10,7 @@ import {BattleshipMatch} from 'types/battleship';
 import {hasGuestGameSession, isCurrentGuestGame} from 'utils/guestGames';
 
 import Match from './Match';
-import {randomFleet} from './utils';
+import {randomFleet, shipCells} from './utils';
 
 jest.mock('axios', () => ({isAxiosError: jest.fn(() => false)}));
 jest.mock('api/battleship', () => ({getBattleshipMatch: jest.fn(), performBattleshipAction: jest.fn()}));
@@ -295,6 +295,26 @@ describe('Battleship match interaction', () => {
     expect(getAllUserWallets).toHaveBeenCalled();
     expect(container.textContent).toContain('20 TNB prize paid to Alice.');
     expect(container.querySelector('[data-outcome="win"]')).toHaveTextContent('Victory');
+  });
+
+  it('says no fleet was deployed when the match ended before this player locked one', async () => {
+    match.status = 'finished';
+    match.phase = 'finished';
+    match.winner = 'guest';
+    match.result_reason = 'placement_timeout';
+    match.board.ships = [];
+    await renderMatch();
+    expect(container).toHaveTextContent('No fleet deployed');
+    expect(container).not.toHaveTextContent('ships afloat');
+  });
+
+  it('counts only the ships still afloat', async () => {
+    match.board.incoming_shots = match.board.ships
+      .slice(1)
+      .flatMap(shipCells)
+      .map((cell) => ({...cell, result: 'hit' as const}));
+    await renderMatch();
+    expect(container).toHaveTextContent('1 ship afloat');
   });
 
   it('shows the opponent winner and payout without celebrating a viewer loss', async () => {
