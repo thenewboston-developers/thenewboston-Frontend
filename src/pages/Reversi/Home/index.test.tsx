@@ -6,13 +6,21 @@ import {MemoryRouter} from 'react-router-dom';
 import {createReversiMatch, getReversiMatches} from 'api/reversi';
 import {useIsAuthenticated} from 'hooks';
 
-import Home from './Home';
+import Home from '.';
 
 jest.mock('axios', () => ({isAxiosError: jest.fn(() => false)}));
 jest.mock('api/reversi', () => ({createReversiMatch: jest.fn(), getReversiMatches: jest.fn()}));
-jest.mock('components/GameEarningsLeaderboard', () => () => <div>Top earners</div>);
+jest.mock('../Leaderboard', () => () => <div>Masters of the board</div>);
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
-jest.mock('components/UserSearchInput', () => () => <div>Find a member</div>);
+jest.mock(
+  'components/UserSearchInput',
+  () =>
+    ({onChange}: {onChange: (user: {id: number; username: string}) => void}) => (
+      <button id="pick-opponent" onClick={() => onChange({id: 12, username: 'Bob'})} type="button">
+        Find a member
+      </button>
+    ),
+);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
 jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
@@ -35,6 +43,12 @@ const renderHome = async () => {
         <Home />
       </MemoryRouter>,
     );
+  });
+};
+
+const choose = async (selector: string) => {
+  await act(async () => {
+    (container.querySelector(selector) as HTMLInputElement).click();
   });
 };
 
@@ -101,6 +115,51 @@ describe('reversi lobby', () => {
     expect(getReversiMatches).toHaveBeenCalledTimes(4);
   });
 
+  it('shows started matches as a disk count and challenges as a disk waiting to be played', async () => {
+    const base = {
+      black: {id: 11, username: 'Alice'},
+      host_side: 'black',
+      scores: {black: 2, white: 2},
+      stake_amount: 0,
+      white: {id: 13, username: 'Bob'},
+      winner: null,
+    };
+    (getReversiMatches as jest.Mock).mockImplementation((params) => {
+      if (params.status === 'pending,active') {
+        return Promise.resolve({
+          ...emptyPage,
+          results: [
+            {...base, id: 1, status: 'pending'},
+            {...base, id: 2, scores: {black: 30, white: 12}, status: 'active'},
+          ],
+        });
+      }
+      if (params.status === 'finished') {
+        return Promise.resolve({
+          ...emptyPage,
+          results: [
+            {...base, id: 3, scores: {black: 20, white: 44}, stake_amount: 50, status: 'finished', winner: 'white'},
+          ],
+        });
+      }
+      return Promise.resolve(emptyPage);
+    });
+    await renderHome();
+    const row = (id: number) => container.querySelector(`a[href="/reversi/matches/${id}"]`)!;
+    const counts = (id: number) => Array.from(row(id).querySelectorAll('b')).map((count) => count.textContent);
+    expect(row(1)).toHaveTextContent('Alice vs. Bob');
+    expect(row(1)).toHaveTextContent('Challenge · Free play');
+    expect(row(1)).toHaveTextContent('Awaiting reply →');
+    expect(counts(1)).toEqual([]);
+    expect(counts(2)).toEqual(['30', '12']);
+    expect(row(2)).toHaveTextContent('30–12 · Free play');
+    expect(row(2)).toHaveTextContent('Open board →');
+    expect(counts(3)).toEqual(['20', '44']);
+    expect(row(3)).toHaveTextContent('20–44 · 50 TNB each · Bob won');
+    expect(row(3)).toHaveTextContent('View result →');
+    expect(container.textContent).toContain('No other matches are underway.');
+  });
+
   it('lets a signed-out visitor watch live games and start a free computer game as a guest', async () => {
     (useIsAuthenticated as jest.Mock).mockReturnValue(false);
     (useSelector as unknown as jest.Mock).mockImplementation((selector) => selector({self: {}}));
@@ -158,10 +217,58 @@ describe('reversi lobby', () => {
     (createReversiMatch as jest.Mock).mockRejectedValue(new Error('Connection lost'));
     await renderHome();
     await submit();
-    (container.querySelector('#computer-color') as HTMLSelectElement).value = 'white';
+    await choose('#computer-color-white');
     await submit();
     expect((createReversiMatch as jest.Mock).mock.calls.map(([data]) => data.request_id)).toEqual([firstId, secondId]);
     expect((createReversiMatch as jest.Mock).mock.calls[1][0].color).toBe('white');
+  });
+
+  it('sends the difficulty, disks and clock picked on the board controls', async () => {
+    (createReversiMatch as jest.Mock).mockReturnValue(
+      new Promise(() => {
+        // Keep creation pending: only the request matters here.
+      }),
+    );
+    await renderHome();
+    expect((container.querySelector('#computer-difficulty-normal') as HTMLInputElement).checked).toBe(true);
+    expect((container.querySelector('#computer-color-random') as HTMLInputElement).checked).toBe(true);
+    expect((container.querySelector('#computer-time-900') as HTMLInputElement).checked).toBe(true);
+    await choose('#computer-difficulty-hard');
+    await choose('#computer-color-black');
+    await choose('#computer-time-300');
+    await submit();
+    expect((createReversiMatch as jest.Mock).mock.calls[0][0]).toMatchObject({
+      color: 'black',
+      difficulty: 'hard',
+      mode: 'computer',
+      time_limit_seconds: 300,
+    });
+  });
+
+  it('sends a challenge with the disks and clock picked in the challenge panel', async () => {
+    (createReversiMatch as jest.Mock).mockReturnValue(
+      new Promise(() => {
+        // Keep creation pending: only the request matters here.
+      }),
+    );
+    await renderHome();
+    await choose('#pick-opponent');
+    await choose('#human-color-white');
+    await choose('#human-time-600');
+    // The computer panel keeps its own choices
+    expect((container.querySelector('#computer-color-random') as HTMLInputElement).checked).toBe(true);
+    await act(async () => {
+      container.querySelectorAll('form')[1].dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
+    });
+    expect((createReversiMatch as jest.Mock).mock.calls[0][0]).toEqual({
+      color: 'white',
+      difficulty: 'normal',
+      mode: 'human',
+      opponent_id: 12,
+      request_id: firstId,
+      stake_amount: 0,
+      time_limit_seconds: 600,
+    });
   });
 
   it('prevents a double submission while creation is pending', async () => {
@@ -193,8 +300,8 @@ it.each([false, true])('starts the default game directly from the hero (authenti
   );
   (createReversiMatch as jest.Mock).mockResolvedValue({id: 42, version: 1, guest_mode: !authenticated});
   await renderHome();
-  (container.querySelector('#computer-time') as HTMLSelectElement).value = '300';
-  (container.querySelector('#computer-difficulty') as HTMLSelectElement).value = 'hard';
+  await choose('#computer-time-300');
+  await choose('#computer-difficulty-hard');
   const heroButton = container.querySelector('[aria-label="Reversi overview"] button') as HTMLButtonElement;
   await act(async () => heroButton.click());
   expect(createReversiMatch).toHaveBeenCalledWith({

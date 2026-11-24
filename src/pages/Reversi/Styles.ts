@@ -3,8 +3,8 @@ import styled, {css, keyframes} from 'styled-components';
 
 import {colors, fonts, pagePadding} from 'styles';
 
-const BLACK_DISK = 'radial-gradient(circle at 34% 28%, #5a5666 0%, #24212d 46%, #0d0b12 100%)';
-const WHITE_DISK = 'radial-gradient(circle at 34% 28%, #ffffff 0%, #f1ebdd 52%, #cfc5ae 100%)';
+import {BLACK_DISK, WHITE_DISK} from './theme';
+
 const FELT = '#1f7358';
 const FELT_DARK = '#124735';
 const FOCUS = '#c88a2c';
