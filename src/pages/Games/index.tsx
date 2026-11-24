@@ -3,6 +3,7 @@ import Icon from '@mdi/react';
 
 import backgammonCover from 'assets/backgammon-cover.webp';
 import battleshipCover from 'assets/battleship-cover.webp';
+import checkersCover from 'assets/checkers-cover.webp';
 import connectFiveCover from 'assets/connect-five-cover.webp';
 import GameFund from 'components/GameFund';
 import {SFC} from 'types';
@@ -44,6 +45,17 @@ const games = [
     path: 'connect-five',
     target: 'connect_five',
   },
+  {
+    accent: '#9a642d',
+    art: checkersCover,
+    badge: 'NEW TO THE ARCADE',
+    category: 'Classic board strategy',
+    description: 'Plan your jumps. Find your opening. Crown your next king.',
+    imageDescription: 'Polished black and ivory checkers on a warm wooden board with a crowned king',
+    name: 'Checkers',
+    path: 'checkers',
+    target: 'checkers',
+  },
 ];
 
 const Games: SFC = ({className}) => (
@@ -64,9 +76,9 @@ const Games: SFC = ({className}) => (
         <S.SectionHeader>
           <div>
             <S.SectionTitle id="featured-game-heading">Find your next obsession</S.SectionTitle>
-            <S.SectionDescription>Three classics. Endless ways to outplay.</S.SectionDescription>
+            <S.SectionDescription>Classic games. Endless ways to outplay.</S.SectionDescription>
           </div>
-          <S.GameCount>3 games · Free to play</S.GameCount>
+          <S.GameCount>{games.length} games · Free to play</S.GameCount>
         </S.SectionHeader>
         <S.GameGrid>
           {games.map((game) => (
@@ -91,7 +103,7 @@ const Games: SFC = ({className}) => (
                 </S.Tags>
                 <S.CardFooter>
                   <S.FreeLabel>
-                    Free to play<S.FreeNote>In your browser</S.FreeNote>
+                    Free<S.FreeNote>No install</S.FreeNote>
                   </S.FreeLabel>
                   <S.PlayLabel>Play now</S.PlayLabel>
                 </S.CardFooter>

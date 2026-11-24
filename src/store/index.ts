@@ -19,6 +19,7 @@ import authenticationReducer from 'store/authentication';
 import authPromptReducer from 'store/authPrompt';
 import backgammonReducer from 'store/backgammon';
 import battleshipReducer from 'store/battleship';
+import checkersReducer from 'store/checkers';
 import commentsReducer from 'store/comments';
 import connectFiveReducer from 'store/connectFive';
 import currenciesReducer from 'store/currencies';
@@ -48,6 +49,7 @@ const rootReducer = combineReducers({
   authentication: authenticationReducer,
   backgammon: backgammonReducer,
   battleship: battleshipReducer,
+  checkers: checkersReducer,
   comments: commentsReducer,
   connectFive: connectFiveReducer,
   currencies: currenciesReducer,
@@ -81,7 +83,7 @@ const persistConfig = {
   migrate: createMigrate(migrations, {debug: false}),
   storage,
   version: 3,
-  blacklist: ['authPrompt', 'backgammon', 'battleship', 'frontendDeployments'],
+  blacklist: ['authPrompt', 'backgammon', 'battleship', 'checkers', 'frontendDeployments'],
 };
 
 const persistedReducer = persistReducer(persistConfig, appReducer);

@@ -175,12 +175,12 @@ export const GameDetails = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 22px;
+  padding: 18px;
 `;
 export const GameGrid = styled.div`
   display: grid;
   gap: 22px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
   @media (max-width: 1100px) {
     gap: 18px;
@@ -219,7 +219,7 @@ export const PlayLabel = styled.span`
   color: #344366;
   font-size: 14px;
   font-weight: ${fonts.weight.bold};
-  padding: 11px 22px;
+  padding: 11px 16px;
   white-space: nowrap;
 
   ${GameCard}:hover &, ${GameCard}:focus-visible & {
