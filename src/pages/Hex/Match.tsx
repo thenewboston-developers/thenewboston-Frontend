@@ -4,9 +4,12 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 import {getHexMatch, performHexAction} from 'api/hex';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
+import GameSoundToggle from 'components/GameSoundToggle';
 import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated, useWindowSize} from 'hooks';
+import useArcadeSounds, {ArcadeSound} from 'hooks/useArcadeSounds';
+import useGameEventSounds from 'hooks/useGameEventSounds';
 import {getSelf} from 'selectors/state';
 import {upsertHexMatch} from 'store/hex';
 import {AppDispatch, RootState} from 'types';
@@ -45,6 +48,7 @@ const Match = () => {
   const [serverOffset, setServerOffset] = useState(0);
   const [swapping, setSwapping] = useState(false);
   const {matchId} = useParams();
+  const {playSound, soundEnabled, toggleSound, unlockSound} = useArcadeSounds('hex');
   const {height, width} = useWindowSize();
   const actionGeneration = useRef(0);
   const actionLock = useRef(false);
@@ -80,8 +84,15 @@ const Match = () => {
   const preview = useMemo(() => (selected !== null && side ? {cell: selected, side} : null), [selected, side]);
   const selectHandler = useRef<(cell: number) => void>(() => undefined);
 
+  const {observeSoundEvents, resetSoundEvents} = useGameEventSounds<HexMatch>(playSound, (previous, next) => {
+    const sounds: ArcadeSound[] = [];
+    if (next.last_move && next.move_count > previous.move_count) sounds.push(next.last_move.swap ? 'swap' : 'move');
+    if (next.status === 'finished' && next.winner && next.winner === next.your_side) sounds.push('win');
+    return sounds;
+  });
+
   const receiveMatch = useCallback(
-    (data: HexMatch) => {
+    (data: HexMatch, silent = false) => {
       if (
         !mounted.current ||
         (data.guest_mode
@@ -107,11 +118,12 @@ const Match = () => {
       )
         return;
       receivedSnapshots.current[key] = {version: data.version, serverTime};
+      observeSoundEvents(data, silent);
       dispatch(upsertHexMatch(data));
       setServerOffset(serverTime - Date.now());
       setLoadError('');
     },
-    [dispatch],
+    [dispatch, observeSoundEvents],
   );
 
   // The board is memoized, so it gets one function for its whole life that always runs the latest handler.
@@ -129,6 +141,8 @@ const Match = () => {
     actionLock.current = false;
     setBusyAction(null);
     setSelection(null);
+    resetSoundEvents();
+    let hydrateSounds = true;
     const controller = new AbortController();
     let polling = true;
     let timer: ReturnType<typeof setTimeout>;
@@ -145,8 +159,12 @@ const Match = () => {
         }
         const data = await getHexMatch(id, controller.signal);
         shouldPoll = ['pending', 'active'].includes(data.status);
-        if (polling) receiveMatch(data);
+        if (polling) {
+          receiveMatch(data, hydrateSounds);
+          hydrateSounds = false;
+        }
       } catch (error) {
+        hydrateSounds = true;
         if (polling && !isCancellationError(error)) setLoadError(getErrorMessage(error));
       } finally {
         if (polling) {
@@ -161,7 +179,7 @@ const Match = () => {
       controller.abort();
       clearTimeout(timer);
     };
-  }, [id, isAuthenticated, receiveMatch, retryKey, self.id]);
+  }, [id, isAuthenticated, receiveMatch, resetSoundEvents, retryKey, self.id]);
 
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 250);
@@ -176,6 +194,7 @@ const Match = () => {
 
   const handleAction = async (action: HexAction, data: HexActionData = {}) => {
     if (!match || !canAct || actionLock.current) return;
+    unlockSound();
     actionGeneration.current += 1;
     const generation = actionGeneration.current;
     const viewerId = self.id;
@@ -205,7 +224,7 @@ const Match = () => {
       setActionError(getErrorMessage(error));
       try {
         const refreshed = await getHexMatch(id);
-        if (isCurrent()) receiveMatch(refreshed);
+        if (isCurrent()) receiveMatch(refreshed, true);
       } catch (refreshError) {
         if (isCurrent()) setLoadError(getErrorMessage(refreshError));
       }
@@ -449,6 +468,7 @@ const Match = () => {
       <S.MatchNavigation>
         <S.TextLink to="/hex/home">← Back to Hex</S.TextLink>
         <S.Badge>Hex {Number.isSafeInteger(id) ? `· Match ${id}` : ''}</S.Badge>
+        <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
       </S.MatchNavigation>
       {loadError && (
         <S.Error role="alert">

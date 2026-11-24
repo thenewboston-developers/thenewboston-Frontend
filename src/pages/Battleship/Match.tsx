@@ -5,6 +5,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {getBattleshipMatch, performBattleshipAction} from 'api/battleship';
 import AuthButtons from 'components/AuthButtons';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
+import GameSoundToggle from 'components/GameSoundToggle';
 import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
@@ -565,17 +566,7 @@ const Match = () => {
         <S.TextLink to="/battleship/home">← Back to the harbor</S.TextLink>
         <S.Actions>
           <S.Badge>Battleship {Number.isSafeInteger(id) ? `· Match ${id}` : ''}</S.Badge>
-          <S.Button
-            $secondary
-            aria-label="Game sound"
-            aria-pressed={soundEnabled}
-            onClick={toggleSound}
-            title={soundEnabled ? 'Mute game sounds' : 'Enable game sounds'}
-            type="button"
-          >
-            <span aria-hidden="true">{soundEnabled ? '♪' : '♩'}</span>
-            {soundEnabled ? 'Sound on' : 'Sound off'}
-          </S.Button>
+          <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
         </S.Actions>
       </S.Navigation>
       {loadError && (

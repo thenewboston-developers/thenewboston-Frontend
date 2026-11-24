@@ -1,7 +1,7 @@
 import {act} from 'react';
 import {createRoot, Root} from 'react-dom/client';
 
-import {MancalaMatch, MancalaRecentMove} from 'types/mancala';
+import {MancalaMatch, MancalaRecentMove, MancalaSide} from 'types/mancala';
 
 import usePresentation from './usePresentation';
 import {INITIAL_BOARD} from './utils';
@@ -13,6 +13,8 @@ jest.mock('axios', () => ({isAxiosError: jest.fn(() => false)}));
 let container: HTMLDivElement;
 let presentation: ReturnType<typeof usePresentation>;
 let root: Root;
+let viewerSide: MancalaSide | null = 'host';
+const onSound = jest.fn();
 
 const AFTER_HOST = [4, 4, 0, 5, 5, 5, 1, 4, 4, 4, 4, 4, 4, 0];
 const AFTER_GUEST = [4, 4, 0, 5, 5, 5, 1, 4, 4, 0, 5, 5, 5, 1];
@@ -33,7 +35,7 @@ const createMatch = (changes: Partial<MancalaMatch> = {}): MancalaMatch =>
   ({board: INITIAL_BOARD, id: 1, recent_moves: [], version: 1, ...changes}) as MancalaMatch;
 
 const Probe = ({match}: {match?: MancalaMatch}) => {
-  presentation = usePresentation(match);
+  presentation = usePresentation(match, onSound, viewerSide);
   return null;
 };
 const render = (match?: MancalaMatch) => act(() => root.render(<Probe match={match} />));
@@ -42,6 +44,7 @@ const setReducedMotion = (matches: boolean) =>
   Object.defineProperty(window, 'matchMedia', {configurable: true, value: () => ({matches})});
 
 beforeEach(() => {
+  viewerSide = 'host';
   jest.useFakeTimers();
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -176,4 +179,98 @@ it('never shows one match’s stones on another match', () => {
   advance(5000);
   expect(presentation.board).toEqual(INITIAL_BOARD);
   expect(presentation.isBusy).toBe(false);
+});
+
+it('synchronizes sowing and extra-turn sounds to the stones shown, once per frame', () => {
+  render(createMatch());
+  render(createMatch({board: AFTER_HOST, recent_moves: [hostMove], version: 2}));
+  expect(onSound).not.toHaveBeenCalled();
+  advance(260);
+  expect(onSound.mock.calls).toEqual([['sow']]);
+  advance(240);
+  advance(240);
+  advance(240);
+  expect(onSound.mock.calls).toEqual([['sow'], ['sow'], ['sow'], ['extraTurn']]);
+  advance(1000);
+  render(createMatch({board: AFTER_HOST, recent_moves: [hostMove], version: 2}));
+  expect(onSound).toHaveBeenCalledTimes(4);
+});
+
+it('plays capture at the capture frame and victory only when the final board is shown', () => {
+  const before = [0, 0, 1, 0, 4, 0, 20, 0, 0, 5, 0, 0, 0, 18];
+  const captured: MancalaRecentMove = {
+    ...hostMove,
+    board: [0, 0, 0, 0, 4, 0, 26, 0, 0, 0, 0, 0, 0, 18],
+    captured: 6,
+    extra_turn: false,
+    last: 3,
+    stones: 1,
+  };
+  render(createMatch({board: before, status: 'active'}));
+  render(
+    createMatch({board: captured.board, recent_moves: [captured], status: 'finished', winner: 'host', version: 2}),
+  );
+  advance(260);
+  expect(onSound.mock.calls).toEqual([['sow']]);
+  advance(240);
+  expect(onSound.mock.calls).toEqual([['sow'], ['capture']]);
+  expect(presentation.isBusy).toBe(true);
+  advance(700);
+  expect(presentation.isBusy).toBe(false);
+  expect(onSound.mock.calls).toEqual([['sow'], ['capture'], ['win']]);
+});
+
+it('keeps historical moves and already-finished matches silent', () => {
+  render(createMatch({board: AFTER_HOST, recent_moves: [hostMove], status: 'finished', winner: 'host', version: 2}));
+  advance(5000);
+  expect(onSound).not.toHaveBeenCalled();
+});
+
+it('uses one current move cue under reduced motion without replaying older stones', () => {
+  render(createMatch({status: 'active'}));
+  setReducedMotion(true);
+  render(createMatch({board: AFTER_GUEST, recent_moves: [hostMove, {...guestMove, extra_turn: false}], version: 3}));
+  expect(presentation.isBusy).toBe(false);
+  expect(onSound.mock.calls).toEqual([['sow']]);
+  advance(5000);
+  expect(onSound).toHaveBeenCalledTimes(1);
+});
+
+it('drops hidden-tab cues and never replays them when visible again', () => {
+  render(createMatch());
+  render(createMatch({board: AFTER_HOST, recent_moves: [hostMove], version: 2}));
+  Object.defineProperty(document, 'hidden', {configurable: true, value: true});
+  act(() => document.dispatchEvent(new Event('visibilitychange')));
+  expect(presentation.isBusy).toBe(false);
+  advance(5000);
+  Object.defineProperty(document, 'hidden', {configurable: true, value: false});
+  render(createMatch({board: AFTER_HOST, recent_moves: [hostMove], version: 2}));
+  expect(onSound).not.toHaveBeenCalled();
+});
+
+it('cancels queued sounds when the visible match is cleared', () => {
+  render(createMatch());
+  render(createMatch({board: AFTER_HOST, recent_moves: [hostMove], version: 2}));
+  render(undefined);
+  advance(5000);
+  expect(onSound).not.toHaveBeenCalled();
+});
+
+it.each(['guest', null] as const)('does not celebrate another player’s win for viewer %s', (side) => {
+  viewerSide = side;
+  render(createMatch({status: 'active'}));
+  render(createMatch({status: 'finished', winner: 'host', version: 2}));
+  expect(onSound).not.toHaveBeenCalledWith('win');
+});
+
+it('snaps silently to a recovered snapshot and resumes cues only for later live moves', () => {
+  render(createMatch({status: 'active'}));
+  const recovered = createMatch({board: AFTER_HOST, recent_moves: [hostMove], version: 2});
+  act(() => presentation.resetPresentation(recovered));
+  render(recovered);
+  advance(5000);
+  expect(onSound).not.toHaveBeenCalled();
+  render(createMatch({board: AFTER_GUEST, recent_moves: [hostMove, guestMove], version: 3}));
+  advance(260);
+  expect(onSound).toHaveBeenCalledWith('sow');
 });

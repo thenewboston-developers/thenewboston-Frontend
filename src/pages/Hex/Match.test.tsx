@@ -17,6 +17,12 @@ jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
 jest.mock('hooks', () => ({useIsAuthenticated: jest.fn(), useWindowSize: jest.fn()}));
 jest.mock('utils/guestGames', () => ({isCurrentGuestGame: jest.fn()}));
+jest.mock('hooks/useArcadeSounds', () => () => ({
+  playSound: mockPlaySound,
+  soundEnabled: false,
+  toggleSound: jest.fn(),
+  unlockSound: jest.fn(),
+}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -34,6 +40,7 @@ let root: Root;
 let selfId: number;
 let mockMatchId = '1';
 const dispatch = jest.fn(() => Promise.resolve());
+const mockPlaySound = jest.fn();
 const mockNavigate = jest.fn();
 
 const button = (label: string): HTMLButtonElement => {
@@ -119,6 +126,51 @@ afterEach(() => {
   act(() => root.unmount());
   container.remove();
   jest.useRealTimers();
+});
+
+it.each(['human', 'computer', 'guest'])('sounds live Hex placements and a win once for %s play', async (mode) => {
+  jest.useFakeTimers();
+  if (mode !== 'human') {
+    match.mode = 'computer';
+    match.blue = null;
+  }
+  if (mode === 'guest') {
+    match.guest_mode = true;
+    (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+    (isCurrentGuestGame as jest.Mock).mockReturnValue(true);
+  }
+  await renderMatch();
+  expect(container.querySelector('[aria-label="Game sound"]')).toHaveAttribute('aria-pressed', 'false');
+  expect(mockPlaySound).not.toHaveBeenCalled();
+  match = {...match, version: 5, move_count: 3, last_move: {side: 'red', cell: CENTRE, swap: false}};
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound.mock.calls).toEqual([['move', 0]]);
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound).toHaveBeenCalledTimes(1);
+  match = {...match, version: 6, status: 'finished', winner: 'red'};
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound).toHaveBeenLastCalledWith('win', 0);
+  expect(mockPlaySound).toHaveBeenCalledTimes(2);
+});
+
+it('gives a live opening swap its own cue', async () => {
+  jest.useFakeTimers();
+  match.move_count = 1;
+  match.last_move = {side: 'red', cell: 1, swap: false};
+  await renderMatch();
+  match = {...match, version: 5, move_count: 2, last_move: {side: 'blue', cell: SIZE, swap: true, from: 1}};
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound.mock.calls).toEqual([['swap', 0]]);
+});
+
+it('does not sound Hex history after a failed poll reconnects', async () => {
+  jest.useFakeTimers();
+  await renderMatch();
+  (getHexMatch as jest.Mock).mockRejectedValueOnce(new Error('Offline'));
+  await act(async () => jest.advanceTimersByTime(2000));
+  match = {...match, version: 5, move_count: 3, last_move: {side: 'red', cell: CENTRE, swap: false}};
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound).not.toHaveBeenCalled();
 });
 
 describe('Hex match interaction', () => {
@@ -358,7 +410,11 @@ describe('Hex match interaction', () => {
   it('stands the board upright on a narrow screen held upright, and sends the same cell', async () => {
     (useWindowSize as jest.Mock).mockReturnValue({height: 812, width: 375});
     await renderMatch();
-    const [, , width, height] = container.querySelector('svg')!.getAttribute('viewBox')!.split(' ').map(Number);
+    const [, , width, height] = container
+      .querySelector('svg[aria-label^="Hex board"]')!
+      .getAttribute('viewBox')!
+      .split(' ')
+      .map(Number);
     expect(height).toBeGreaterThan(width);
     pressCell('f6: empty');
     await act(async () => button('Confirm move').click());
@@ -368,17 +424,21 @@ describe('Hex match interaction', () => {
   it('keeps the board wide on a phone held sideways, where an upright board would not fit', async () => {
     (useWindowSize as jest.Mock).mockReturnValue({height: 375, width: 667});
     await renderMatch();
-    const [, , width, height] = container.querySelector('svg')!.getAttribute('viewBox')!.split(' ').map(Number);
+    const [, , width, height] = container
+      .querySelector('svg[aria-label^="Hex board"]')!
+      .getAttribute('viewBox')!
+      .split(' ')
+      .map(Number);
     expect(width).toBeGreaterThan(height);
   });
 
   it('gives each match its own board, so keyboard focus from one match never carries over', async () => {
     await renderMatch();
-    const first = container.querySelector('svg');
+    const first = container.querySelector('svg[aria-label^="Hex board"]');
     match = {...match, id: 2, board_size: 7, board: Array(49).fill(0), last_move: null};
     mockMatchId = '2';
     await renderMatch();
-    expect(container.querySelector('svg')).not.toBe(first);
+    expect(container.querySelector('svg[aria-label^="Hex board"]')).not.toBe(first);
     expect(container.querySelectorAll('[data-cell]')).toHaveLength(49);
     expect(container.querySelectorAll('[data-cell][tabindex="0"]')).toHaveLength(1);
   });

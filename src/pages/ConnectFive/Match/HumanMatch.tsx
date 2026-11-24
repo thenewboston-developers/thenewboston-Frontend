@@ -15,8 +15,10 @@ import {
   submitConnectFiveMove,
 } from 'api/connectFive';
 import EmptyText from 'components/EmptyText';
+import GameSoundToggle from 'components/GameSoundToggle';
 import Loader from 'components/Loader';
 import {ConnectFiveChallengeStatus, ConnectFiveMatchStatus, ConnectFiveMoveType, ConnectFiveSpecialType} from 'enums';
+import {useIsAuthenticated} from 'hooks';
 import {getConnectFiveChallengesById, getConnectFiveMatchesById, getSelf} from 'selectors/state';
 import {upsertChallenge, upsertMatch} from 'store/connectFive';
 import {
@@ -28,10 +30,6 @@ import {
 } from 'types';
 import {displayErrorToast} from 'utils/toasts';
 
-import connectFiveBombSound from './assets/sounds/connect-five-bomb.mp3';
-import connectFiveDoubleSound from './assets/sounds/connect-five-double.mp3';
-import connectFivePieceSound from './assets/sounds/connect-five-piece.mp3';
-import connectFiveWinSound from './assets/sounds/connect-five-win.mp3';
 import Board from './Board';
 import PieceToolbar from './PieceToolbar';
 import PlayerInfo from './PlayerInfo';
@@ -39,6 +37,7 @@ import ResignModal from './ResignModal';
 import ResultModal from './ResultModal';
 import MatchSidebar from './Sidebar';
 import * as S from './Styles';
+import useMatchSounds from './useMatchSounds';
 
 type PlayerSide = 'black' | 'white';
 
@@ -109,13 +108,6 @@ const MOVE_TO_SPECIAL_TYPE: Record<ConnectFiveMoveType, ConnectFiveSpecialType |
   [ConnectFiveMoveType.H2]: ConnectFiveSpecialType.H2,
   [ConnectFiveMoveType.SINGLE]: null,
   [ConnectFiveMoveType.V2]: ConnectFiveSpecialType.V2,
-};
-
-const MOVE_SOUNDS: Record<ConnectFiveMoveType, string> = {
-  [ConnectFiveMoveType.BOMB]: connectFiveBombSound,
-  [ConnectFiveMoveType.H2]: connectFiveDoubleSound,
-  [ConnectFiveMoveType.SINGLE]: connectFivePieceSound,
-  [ConnectFiveMoveType.V2]: connectFiveDoubleSound,
 };
 
 const formatRemainingTime = (milliseconds: number): string => {
@@ -212,6 +204,7 @@ const ConnectFiveMatch: SFC = ({className}) => {
   const challengesById = useSelector(getConnectFiveChallengesById);
   const dispatch = useDispatch<AppDispatch>();
   const hasOpenedResultModal = useRef(false);
+  const isAuthenticated = useIsAuthenticated();
   const {matchId} = useParams();
   const matchesById = useSelector(getConnectFiveMatchesById);
   const navigate = useNavigate();
@@ -230,6 +223,7 @@ const ConnectFiveMatch: SFC = ({className}) => {
   const isParticipant = !!match && !!selfId && (match.player_a.id === selfId || match.player_b?.id === selfId);
   const isSpectator = !!match && !isParticipant;
   const participantId = isParticipant ? selfId : null;
+  const {soundEnabled, toggleSound} = useMatchSounds(match, !isLoading, isAuthenticated ? participantId : null);
   const challengeId = match?.challenge ?? null;
   const challenge = challengeId ? challengesById[challengeId] : null;
   const resultOutcomeLabel = useMemo(() => {
@@ -690,21 +684,6 @@ const ConnectFiveMatch: SFC = ({className}) => {
       return;
     }
 
-    let soundSource: string | null = null;
-
-    if (nextBombKeys.length) {
-      soundSource = MOVE_SOUNDS[ConnectFiveMoveType.BOMB];
-    } else if (nextMoveKeys.length === 2) {
-      soundSource = MOVE_SOUNDS[ConnectFiveMoveType.H2];
-    } else if (nextMoveKeys.length === 1) {
-      soundSource = MOVE_SOUNDS[ConnectFiveMoveType.SINGLE];
-    }
-
-    if (soundSource) {
-      const audio = new Audio(soundSource);
-      audio.play().catch(() => undefined);
-    }
-
     setLastMoveKeys((prev) => {
       if (!nextMoveKeys.length) {
         return prev.size ? new Set() : prev;
@@ -806,11 +785,6 @@ const ConnectFiveMatch: SFC = ({className}) => {
     let animationFrameId: number | null = null;
     let startTime: number | null = null;
     const startTimeoutId = setTimeout(() => {
-      if (tnbDeltaTarget > 0) {
-        const audio = new Audio(connectFiveWinSound);
-        audio.play().catch(() => undefined);
-      }
-
       const animate = (timestamp: number) => {
         if (startTime === null) {
           startTime = timestamp;
@@ -884,6 +858,9 @@ const ConnectFiveMatch: SFC = ({className}) => {
 
   return (
     <S.Container className={className}>
+      <S.SoundControls>
+        <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+      </S.SoundControls>
       <S.MatchLayout>
         <S.BoardSection>
           <S.PlayerRow>

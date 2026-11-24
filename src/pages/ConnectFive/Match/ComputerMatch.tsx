@@ -10,6 +10,7 @@ import {
 } from 'api/connectFive';
 import Button, {ButtonColor} from 'components/Button';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
+import GameSoundToggle from 'components/GameSoundToggle';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {ConnectFiveMatchStatus, ConnectFiveMoveType, ConnectFiveSpecialType} from 'enums';
 import {upsertMatch} from 'store/connectFive';
@@ -23,6 +24,7 @@ import PlayerInfo from './PlayerInfo';
 import ResignModal from './ResignModal';
 import ResultModal from './ResultModal';
 import * as S from './Styles';
+import useMatchSounds from './useMatchSounds';
 
 const MOVE_TO_SPECIAL: Record<ConnectFiveMoveType, ConnectFiveSpecialType | null> = {
   SINGLE: null,
@@ -59,6 +61,7 @@ const ComputerMatch: SFC<{match: ConnectFiveMatch}> = ({className, match}) => {
   const [resultOpen, setResultOpen] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
   const [serverOffset, setServerOffset] = useState(Date.parse(match.server_time) - Date.now());
+  const [soundReady, setSoundReady] = useState(false);
   const actionLock = useRef(false);
   const dispatch = useDispatch<AppDispatch>();
   const latest = useRef(match);
@@ -67,6 +70,7 @@ const ComputerMatch: SFC<{match: ConnectFiveMatch}> = ({className, match}) => {
   const rematchRequest = useRef<string | null>(null);
   const {id} = match;
   const selfId = match.player_a.id;
+  const {soundEnabled, toggleSound} = useMatchSounds(match, soundReady && !connectionError, selfId);
   const active = match.status === ConnectFiveMatchStatus.ACTIVE;
   const myTurn = active && match.active_side === 'a';
   const canAct = !pending && !connectionError;
@@ -107,7 +111,10 @@ const ComputerMatch: SFC<{match: ConnectFiveMatch}> = ({className, match}) => {
       } catch {
         if (polling) setConnectionError('Connection lost. Reconnecting to your game…');
       } finally {
-        if (polling && again) timer = setTimeout(load, document.hidden ? 10000 : 2000);
+        if (polling) {
+          setSoundReady(true);
+          if (again) timer = setTimeout(load, document.hidden ? 10000 : 2000);
+        }
       }
     };
     load();
@@ -228,6 +235,9 @@ const ComputerMatch: SFC<{match: ConnectFiveMatch}> = ({className, match}) => {
 
   return (
     <S.Container className={className}>
+      <S.SoundControls>
+        <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+      </S.SoundControls>
       {connectionError && (
         <S.MatchInfo role="alert">
           {connectionError}

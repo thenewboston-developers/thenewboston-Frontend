@@ -18,6 +18,12 @@ jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
 jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
 jest.mock('utils/guestGames', () => ({isCurrentGuestGame: jest.fn()}));
+jest.mock('hooks/useArcadeSounds', () => () => ({
+  playSound: mockPlaySound,
+  soundEnabled: false,
+  toggleSound: jest.fn(),
+  unlockSound: jest.fn(),
+}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -32,6 +38,7 @@ let root: Root;
 let selfId: number;
 let mockMatchId = '1';
 const dispatch = jest.fn(() => Promise.resolve());
+const mockPlaySound = jest.fn();
 
 const button = (label: string): HTMLButtonElement => {
   const found = Array.from(container.querySelectorAll('button')).find((element) => element.textContent === label);
@@ -103,6 +110,65 @@ afterEach(() => {
   act(() => root.unmount());
   container.remove();
   jest.useRealTimers();
+});
+
+it.each(['human', 'computer', 'guest'])('sounds fresh Checkers moves once for %s play', async (mode) => {
+  jest.useFakeTimers();
+  if (mode !== 'human') {
+    match.mode = 'computer';
+    match.black = null;
+  }
+  if (mode === 'guest') {
+    match.guest_mode = true;
+    (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+    (isCurrentGuestGame as jest.Mock).mockReturnValue(true);
+  }
+  await renderMatch();
+  expect(container.querySelector('[aria-label="Game sound"]')).toHaveAttribute('aria-pressed', 'false');
+  expect(mockPlaySound).not.toHaveBeenCalled();
+  match = {...match, version: 5, last_move: {side: 'white', path: [40, 33], captured: []}};
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound.mock.calls).toEqual([['move', 0]]);
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound).toHaveBeenCalledTimes(1);
+});
+
+it('sounds a capture, promotion and live win without replaying a finished Checkers board', async () => {
+  jest.useFakeTimers();
+  match.board = Array(64).fill(0);
+  match.board[17] = 1;
+  match.board[10] = -1;
+  await renderMatch();
+  const board = [...match.board];
+  board[17] = 0;
+  board[10] = 0;
+  board[3] = 2;
+  match = {
+    ...match,
+    board,
+    version: 5,
+    last_move: {side: 'white', path: [17, 3], captured: [10]},
+    status: 'finished',
+    winner: 'white',
+  };
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound.mock.calls).toEqual([
+    ['capture', 0],
+    ['promote', 160],
+    ['win', 320],
+  ]);
+  await renderMatch();
+  expect(mockPlaySound).toHaveBeenCalledTimes(3);
+});
+
+it('does not sound Checkers history after a failed poll reconnects', async () => {
+  jest.useFakeTimers();
+  await renderMatch();
+  (getCheckersMatch as jest.Mock).mockRejectedValueOnce(new Error('Offline'));
+  await act(async () => jest.advanceTimersByTime(2000));
+  match = {...match, version: 5, last_move: {side: 'white', path: [40, 33], captured: []}};
+  await act(async () => jest.advanceTimersByTime(2000));
+  expect(mockPlaySound).not.toHaveBeenCalled();
 });
 
 describe('Checkers match interaction', () => {

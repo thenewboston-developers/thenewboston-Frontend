@@ -4,9 +4,11 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 import {getDotsAndBoxesMatch, performDotsAndBoxesAction} from 'api/dotsAndBoxes';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
+import GameSoundToggle from 'components/GameSoundToggle';
 import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
+import useArcadeSounds from 'hooks/useArcadeSounds';
 import {getSelf} from 'selectors/state';
 import {upsertDotsAndBoxesMatch} from 'store/dotsAndBoxes';
 import {AppDispatch, RootState} from 'types';
@@ -61,6 +63,7 @@ const Match = () => {
   const [serverOffset, setServerOffset] = useState(0);
   const [shown, setShown] = useState<{count: number; id: number} | null>(null);
   const {matchId} = useParams();
+  const {playSound, soundEnabled, toggleSound} = useArcadeSounds('dots_and_boxes');
   const actionGeneration = useRef(0);
   const actionLock = useRef(false);
   const currentViewer = useRef<{id: number; userId?: number | null; authenticated: boolean}>({
@@ -71,6 +74,8 @@ const Match = () => {
   const mounted = useRef(true);
   const pollSoon = useRef<() => void>(() => undefined);
   const receivedSnapshots = useRef<Record<string, {version: number; serverTime: number}>>({});
+  const silentSnapshot = useRef<{id: number; version: number} | null>(null);
+  const sounded = useRef<{key: string; count: number; finished: boolean} | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const id = Number(matchId);
   const isAuthenticated = useIsAuthenticated();
@@ -101,7 +106,7 @@ const Match = () => {
   const selectedLine = match && selection?.version === match.version ? selection.line : null;
 
   const receiveMatch = useCallback(
-    (data: DotsAndBoxesMatch) => {
+    (data: DotsAndBoxesMatch, silent = false) => {
       if (
         !mounted.current ||
         (data.guest_mode
@@ -127,6 +132,16 @@ const Match = () => {
       )
         return;
       receivedSnapshots.current[key] = {version: data.version, serverTime};
+      if (silent) {
+        silentSnapshot.current = {id: data.id, version: data.version};
+        const viewer = currentViewer.current;
+        sounded.current = {
+          key: `${data.id}:${viewer.authenticated}:${viewer.userId}:${data.guest_session_id ?? ''}`,
+          count: data.moves.length,
+          finished: data.status === 'finished',
+        };
+        setShown({count: data.moves.length, id: data.id});
+      }
       dispatch(upsertDotsAndBoxesMatch(data));
       setServerOffset(serverTime - Date.now());
       setLoadError('');
@@ -147,6 +162,7 @@ const Match = () => {
     setBusyAction(null);
     setSelection(null);
     const controller = new AbortController();
+    let hydratePresentation = true;
     let polling = true;
     let requesting = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -168,8 +184,12 @@ const Match = () => {
         // The computer answers within a moment, so look again sooner while it is drawing.
         if (data.mode === 'computer' && data.status === 'active' && data.active_side === 'red')
           delay = COMPUTER_POLL_DELAY;
-        if (polling) receiveMatch(data);
+        if (polling) {
+          receiveMatch(data, hydratePresentation);
+          hydratePresentation = false;
+        }
       } catch (error) {
+        hydratePresentation = true;
         if (polling && !isCancellationError(error)) setLoadError(getErrorMessage(error));
       } finally {
         requesting = false;
@@ -214,6 +234,10 @@ const Match = () => {
       return undefined;
     }
     if (shown.count >= totalLines) return undefined;
+    if (document.hidden || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      setShown({count: totalLines, id});
+      return undefined;
+    }
     // Your own lines appear at once.
     const own = side ? SIDE_NUMBERS[side] : null;
     let {count} = shown;
@@ -225,6 +249,40 @@ const Match = () => {
     const timer = setTimeout(() => setShown({count: shown.count + 1, id}), REPLAY_DELAY);
     return () => clearTimeout(timer);
   }, [id, shown, side, totalLines]);
+
+  useEffect(() => {
+    const skipHiddenReplay = () => {
+      if (document.hidden) setShown({count: totalLines, id});
+    };
+    document.addEventListener('visibilitychange', skipHiddenReplay);
+    return () => document.removeEventListener('visibilitychange', skipHiddenReplay);
+  }, [id, totalLines]);
+
+  useEffect(() => {
+    if (!match) {
+      sounded.current = null;
+      return;
+    }
+    const key = `${match.id}:${isAuthenticated}:${self.id}:${match.guest_session_id ?? ''}`;
+    const finished = match.status === 'finished' && !replaying;
+    const previous = sounded.current;
+    sounded.current = {key, count: shownLines, finished};
+    // Sounds follow the visible board; initial hydration, viewer changes, and repeated polls stay silent.
+    if (
+      !previous ||
+      previous.key !== key ||
+      document.hidden ||
+      (silentSnapshot.current?.id === match.id && match.version <= silentSnapshot.current.version)
+    )
+      return;
+    if (shownLines > previous.count) {
+      const before = positionAfter(match, previous.count).boxes.filter(Boolean).length;
+      const after = positionAfter(match, shownLines).boxes.filter(Boolean).length;
+      playSound(after > before ? 'claim' : 'move');
+    }
+    if (finished && !previous.finished && side && match.winner === side)
+      playSound('win', shownLines > previous.count ? 180 : 0);
+  }, [isAuthenticated, match, playSound, replaying, self.id, shownLines, side]);
 
   const handleAction = async (action: DotsAndBoxesAction, data: DotsAndBoxesActionData = {}) => {
     if (!match || !canAct || actionLock.current) return;
@@ -259,7 +317,7 @@ const Match = () => {
       setActionError(getErrorMessage(error));
       try {
         const refreshed = await getDotsAndBoxesMatch(id);
-        if (isCurrent()) receiveMatch(refreshed);
+        if (isCurrent()) receiveMatch(refreshed, true);
       } catch (refreshError) {
         if (isCurrent()) setLoadError(getErrorMessage(refreshError));
       }
@@ -464,7 +522,10 @@ const Match = () => {
     <S.MatchContainer>
       <S.MatchNavigation>
         <S.TextLink to="/dots-and-boxes/home">← Back to Dots and Boxes</S.TextLink>
-        <S.Badge>Dots and Boxes {Number.isSafeInteger(id) ? `· Match ${id}` : ''}</S.Badge>
+        <S.Actions>
+          <S.Badge>Dots and Boxes {Number.isSafeInteger(id) ? `· Match ${id}` : ''}</S.Badge>
+          <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+        </S.Actions>
       </S.MatchNavigation>
       {loadError && (
         <S.Error role="alert">

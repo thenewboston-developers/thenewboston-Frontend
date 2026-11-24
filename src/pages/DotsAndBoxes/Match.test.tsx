@@ -6,6 +6,7 @@ import {MemoryRouter} from 'react-router-dom';
 import {getDotsAndBoxesMatch, performDotsAndBoxesAction} from 'api/dotsAndBoxes';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
+import useArcadeSounds from 'hooks/useArcadeSounds';
 import {DotsAndBoxesMatch, DotsAndBoxesOwner} from 'types/dotsAndBoxes';
 import {isCurrentGuestGame} from 'utils/guestGames';
 
@@ -16,6 +17,7 @@ jest.mock('api/dotsAndBoxes', () => ({getDotsAndBoxesMatch: jest.fn(), performDo
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
 jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
+jest.mock('hooks/useArcadeSounds', () => ({__esModule: true, default: jest.fn()}));
 jest.mock('utils/guestGames', () => ({isCurrentGuestGame: jest.fn()}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
 jest.mock('react-router-dom', () => ({
@@ -31,6 +33,8 @@ let root: Root;
 let selfId: number;
 let mockMatchId = '1';
 const dispatch = jest.fn(() => Promise.resolve());
+const playSound = jest.fn();
+const toggleSound = jest.fn();
 
 const button = (label: string): HTMLButtonElement => {
   const found = Array.from(container.querySelectorAll('button')).find((element) => element.textContent === label);
@@ -69,6 +73,9 @@ const withLines = (drawn: [number, DotsAndBoxesOwner][], changes: Partial<DotsAn
 };
 
 beforeEach(() => {
+  (useArcadeSounds as jest.Mock).mockReturnValue({playSound, soundEnabled: false, toggleSound});
+  Object.defineProperty(document, 'hidden', {configurable: true, value: false});
+  Object.defineProperty(window, 'matchMedia', {configurable: true, value: () => ({matches: false})});
   container = document.createElement('div');
   document.body.appendChild(container);
   root = createRoot(container);
@@ -524,4 +531,145 @@ it('preserves signed-out spectator access without participant controls', async (
   expect(container.querySelector('[role="group"]')).not.toBeNull();
   expect(container).toHaveTextContent('You are watching this match');
   expect(container).not.toHaveTextContent('Draw line');
+});
+
+describe('Dots and Boxes sounds', () => {
+  it('stays silent on hydration and selection, then sounds only a committed visible line', async () => {
+    await renderMatch();
+    act(() => line('A1 to B1').click());
+    expect(playSound).not.toHaveBeenCalled();
+    match = withLines([[0, 1]], {active_side: 'red'});
+    await renderMatch();
+    expect(playSound.mock.calls).toEqual([['move']]);
+    match = {...match, server_time: new Date(Date.now() + 2000).toISOString()};
+    await renderMatch();
+    expect(playSound).toHaveBeenCalledTimes(1);
+  });
+
+  it('plays the claim cue when the opponent box is shown without celebrating their win', async () => {
+    jest.useFakeTimers();
+    match = withLines(
+      [
+        [0, 1],
+        [3, 1],
+        [12, 1],
+      ],
+      {active_side: 'red'},
+    );
+    await renderMatch();
+    expect(playSound).not.toHaveBeenCalled();
+    match = withLines([[13, 2]], {
+      boxes: [2, 0, 0, 0, 0, 0, 0, 0, 0],
+      score_red: 1,
+      status: 'finished',
+      winner: 'red',
+      result_reason: 'completed',
+    });
+    await renderMatch();
+    expect(playSound).not.toHaveBeenCalled();
+    await act(async () => jest.advanceTimersByTime(450));
+    expect(playSound.mock.calls).toEqual([['claim']]);
+    await renderMatch();
+    expect(playSound).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not celebrate a historical result or replay it after enabling sounds', async () => {
+    match = {...match, status: 'finished', winner: 'blue'};
+    await renderMatch();
+    expect(playSound).not.toHaveBeenCalled();
+    act(() => (container.querySelector('[aria-label="Game sound"]') as HTMLButtonElement).click());
+    expect(toggleSound).toHaveBeenCalledTimes(1);
+    (useArcadeSounds as jest.Mock).mockReturnValue({playSound, soundEnabled: true, toggleSound});
+    await renderMatch();
+    expect(container.querySelector('[aria-label="Game sound"]')).toHaveAttribute('aria-pressed', 'true');
+    expect(playSound).not.toHaveBeenCalled();
+  });
+
+  it('skips hidden replay and does not sound missed lines when returning to the tab', async () => {
+    jest.useFakeTimers();
+    await renderMatch();
+    Object.defineProperty(document, 'hidden', {configurable: true, value: true});
+    match = withLines(
+      [
+        [0, 2],
+        [1, 2],
+      ],
+      {active_side: 'blue'},
+    );
+    await renderMatch();
+    Object.defineProperty(document, 'hidden', {configurable: true, value: false});
+    await act(async () => jest.advanceTimersByTime(1000));
+    await renderMatch();
+    expect(playSound).not.toHaveBeenCalled();
+  });
+
+  it('gives one immediate board cue for a live update under reduced motion', async () => {
+    await renderMatch();
+    Object.defineProperty(window, 'matchMedia', {configurable: true, value: () => ({matches: true})});
+    match = withLines(
+      [
+        [0, 2],
+        [1, 2],
+      ],
+      {active_side: 'blue'},
+    );
+    await renderMatch();
+    expect(line('A1 to B1')).toHaveAccessibleName('Line A1 to B1: drawn by Bob');
+    expect(playSound.mock.calls).toEqual([['move']]);
+  });
+
+  it('uses the shared optional sound control to turn audio on and back off', async () => {
+    (useArcadeSounds as jest.Mock).mockImplementation(jest.requireActual('hooks/useArcadeSounds').default);
+    localStorage.clear();
+    await renderMatch();
+    const toggle = container.querySelector('[aria-label="Game sound"]') as HTMLButtonElement;
+    expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    await act(async () => toggle.click());
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    await act(async () => toggle.click());
+    expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    localStorage.clear();
+  });
+});
+
+it.each([false, true])('celebrates only the current player’s live victory (guest: %s)', async (guest) => {
+  if (guest) {
+    (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+    (isCurrentGuestGame as jest.Mock).mockReturnValue(true);
+    selfId = 0;
+    match = {...match, guest_mode: true, mode: 'computer', blue: {id: 0, username: 'Guest', avatar: null}, red: null};
+  }
+  await renderMatch();
+  match = {...match, status: 'finished', winner: 'blue', version: match.version + 1};
+  await renderMatch();
+  expect(playSound).toHaveBeenCalledWith('win', 0);
+});
+
+it('does not play a personal victory sound for spectators', async () => {
+  match = {...match, your_side: null};
+  await renderMatch();
+  match = {...match, status: 'finished', winner: 'blue', version: match.version + 1};
+  await renderMatch();
+  expect(playSound).not.toHaveBeenCalledWith('win', expect.anything());
+});
+
+it('does not narrate catch-up moves after a failed poll', async () => {
+  jest.useFakeTimers();
+  await renderMatch();
+  (getDotsAndBoxesMatch as jest.Mock).mockRejectedValueOnce(new Error('Disconnected'));
+  await act(async () => jest.advanceTimersByTime(2000));
+  match = withLines(
+    [
+      [0, 2],
+      [1, 2],
+    ],
+    {active_side: 'blue'},
+  );
+  await act(async () => jest.advanceTimersByTime(2000));
+  await renderMatch();
+  await act(async () => jest.advanceTimersByTime(1000));
+  expect(playSound).not.toHaveBeenCalled();
+  match = withLines([[2, 1]], {active_side: 'red'});
+  await renderMatch();
+  expect(playSound).toHaveBeenCalledWith('move');
 });
