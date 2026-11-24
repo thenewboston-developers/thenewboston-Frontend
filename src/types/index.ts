@@ -29,6 +29,7 @@ import {
   ConnectFiveChallengePaginatedResponse,
   ConnectFiveChatMessage,
   ConnectFiveChatMessagePaginatedResponse,
+  ConnectFiveDifficulty,
   ConnectFiveEloSnapshot,
   ConnectFiveLeaderboardEntry,
   ConnectFiveLeaderboardPaginatedResponse,
@@ -37,6 +38,7 @@ import {
   ConnectFiveMatchPlayer,
   ConnectFiveRematchStatus,
   ConnectFiveState,
+  CreateConnectFiveComputerMatch,
 } from 'types/connectFive';
 import {CreatedModified} from 'types/createdModified';
 import {Currencies, Currency} from 'types/currencies';
@@ -83,6 +85,7 @@ export {
   ConnectFiveChallengePaginatedResponse,
   ConnectFiveChatMessage,
   ConnectFiveChatMessagePaginatedResponse,
+  ConnectFiveDifficulty,
   ConnectFiveEloSnapshot,
   ConnectFiveLeaderboardEntry,
   ConnectFiveLeaderboardPaginatedResponse,
@@ -92,6 +95,7 @@ export {
   ConnectFiveRematchStatus,
   ConnectFiveState,
   CreateCommentRequest,
+  CreateConnectFiveComputerMatch,
   CreatedModified,
   CreateExchangeOrderRequest,
   CreateFollowerRequest,

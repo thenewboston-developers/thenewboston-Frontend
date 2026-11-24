@@ -11,6 +11,7 @@ import {
   ConnectFiveMatch,
   ConnectFiveMatchPaginatedResponse,
   ConnectFiveRematchStatus,
+  CreateConnectFiveComputerMatch,
 } from 'types';
 import {authorizationHeaders} from 'utils/authentication';
 
@@ -85,6 +86,13 @@ export const createConnectFiveChatMessage = async (
   }
 };
 
+export const createConnectFiveComputerMatch = async (
+  data: CreateConnectFiveComputerMatch,
+): Promise<ConnectFiveMatch> => {
+  const response = await axios.post<ConnectFiveMatch>(`${BASE_URL}/matches/computer`, data, authorizationHeaders());
+  return response.data;
+};
+
 export const getConnectFiveChallenge = async (
   challengeId: number,
   params?: {mine?: string},
@@ -152,11 +160,16 @@ export const getConnectFiveEloSnapshots = async (): Promise<ConnectFiveEloSnapsh
   }
 };
 
-export const getConnectFiveMatch = async (matchId: number, params?: {mine?: string}): Promise<ConnectFiveMatch> => {
+export const getConnectFiveMatch = async (
+  matchId: number,
+  params?: {mine?: string},
+  signal?: AbortSignal,
+): Promise<ConnectFiveMatch> => {
   try {
     const response = await axios.get<ConnectFiveMatch>(`${BASE_URL}/matches/${matchId}`, {
       ...authorizationHeaders(),
       params,
+      signal,
     });
     return response.data;
   } catch (error) {
@@ -234,11 +247,11 @@ export const purchaseConnectFiveSpecial = async (
   }
 };
 
-export const resignConnectFiveMatch = async (matchId: number): Promise<ConnectFiveMatch> => {
+export const resignConnectFiveMatch = async (matchId: number, expectedVersion?: number): Promise<ConnectFiveMatch> => {
   try {
     const response = await axios.post<ConnectFiveMatch>(
       `${BASE_URL}/matches/${matchId}/resign`,
-      {},
+      {expected_version: expectedVersion},
       authorizationHeaders(),
     );
     return response.data;
@@ -249,7 +262,7 @@ export const resignConnectFiveMatch = async (matchId: number): Promise<ConnectFi
 
 export const submitConnectFiveMove = async (
   matchId: number,
-  data: {move_type: ConnectFiveMoveType; x: number; y: number},
+  data: {expected_version?: number; move_type: ConnectFiveMoveType; x: number; y: number},
 ): Promise<ConnectFiveMatch> => {
   try {
     const response = await axios.post<ConnectFiveMatch>(

@@ -4,6 +4,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 import {getBackgammonMatch, performBackgammonAction} from 'api/backgammon';
 import AuthButtons from 'components/AuthButtons';
+import ComputerRewardNotice from 'components/ComputerRewardNotice';
 import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
@@ -267,6 +268,9 @@ const Match = () => {
           {RESULT_LABELS[match.result_reason] ?? 'Game complete'} · {match.scores.white}–{match.scores.black}
           {!finished ? ` · ${match.result_points} point${match.result_points === 1 ? '' : 's'}` : ''}
         </S.Detail>
+        {finished && match.mode === 'computer' && isParticipant && (
+          <ComputerRewardNotice reward={match.computer_reward} />
+        )}
         {finished && match.prize_pool_total > 0 && (
           <strong>
             {match.prize_pool_total.toLocaleString()} TNB prize paid to{' '}

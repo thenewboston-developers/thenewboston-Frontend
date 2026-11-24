@@ -9,6 +9,7 @@ import {
 
 import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
+import ComputerRewardNotice from 'components/ComputerRewardNotice';
 import Icon from 'components/Icon';
 import {ModalBody, ModalFooter} from 'components/Modal';
 import {ConnectFiveMatch, SFC} from 'types';
@@ -136,7 +137,7 @@ const ResultModal: SFC<ResultModalProps> = ({
         disabled={isRematchSubmitting || !canRequestRematch}
         isSubmitting={rematchAction === 'request'}
         onClick={onRematchRequest}
-        text="Rematch"
+        text={match.mode === 'computer' ? 'Play again' : 'Rematch'}
       />
     );
   }
@@ -159,18 +160,22 @@ const ResultModal: SFC<ResultModalProps> = ({
         <S.ResultSummary $variant={resultVariant}>
           <S.ResultOutcome $variant={resultVariant}>{resultLabel}</S.ResultOutcome>
         </S.ResultSummary>
-        <S.EloChange>
-          <S.EloChangeLabel>Your ELO</S.EloChangeLabel>
-          <S.EloChangeRow>
-            <S.EloNumber>{eloSnapshot?.before ?? '--'}</S.EloNumber>
-            <S.EloChangeArrow icon={mdiArrowRight} size={18} />
-            <S.EloNumber>{eloSnapshot?.after ?? '--'}</S.EloNumber>
-            <S.EloChangeValue $variant={eloVariant}>
-              <span>({eloDeltaLabel})</span>
-              <Icon icon={eloIcon} size={20} />
-            </S.EloChangeValue>
-          </S.EloChangeRow>
-        </S.EloChange>
+        {match.mode !== 'computer' && (
+          <S.EloChange>
+            <S.EloChangeLabel>Your ELO</S.EloChangeLabel>
+            <S.EloChangeRow>
+              <S.EloNumber>{eloSnapshot?.before ?? '--'}</S.EloNumber>
+              <S.EloChangeArrow icon={mdiArrowRight} size={18} />
+              <S.EloNumber>{eloSnapshot?.after ?? '--'}</S.EloNumber>
+              <S.EloChangeValue $variant={eloVariant}>
+                <span>({eloDeltaLabel})</span>
+                <Icon icon={eloIcon} size={20} />
+              </S.EloChangeValue>
+            </S.EloChangeRow>
+          </S.EloChange>
+        )}
+        {match.mode === 'computer' && <ComputerRewardNotice reward={match.computer_reward} />}
+        {match.mode === 'computer' && <S.RematchNotice>Free computer game · ELO unchanged</S.RematchNotice>}
         {tnbDeltaLabel && (
           <S.ResultTnbChange>
             <S.ResultFaceIcon

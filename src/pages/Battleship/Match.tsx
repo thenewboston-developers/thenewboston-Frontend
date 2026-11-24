@@ -4,6 +4,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 import {getBattleshipMatch, performBattleshipAction} from 'api/battleship';
 import AuthButtons from 'components/AuthButtons';
+import ComputerRewardNotice from 'components/ComputerRewardNotice';
 import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
@@ -494,6 +495,7 @@ const Match = () => {
           {match.winner ? `${getPlayerName(match, match.winner)} wins the battle` : 'Match ended · stakes refunded'}
         </S.TitleSmall>
         <S.Detail>{RESULT_LABELS[match.result_reason] ?? 'Match complete'}</S.Detail>
+        {match.mode === 'computer' && <ComputerRewardNotice reward={match.computer_reward} />}
         {match.prize_pool_total > 0 && (
           <strong>
             {match.winner

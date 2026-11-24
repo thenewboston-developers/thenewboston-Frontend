@@ -10,6 +10,12 @@ import {COMPACT_PLAYER_ROW_QUERY, linkFocusStyle} from '../../mixins';
 const COMPACT_AVATAR_SIZE = 36;
 
 // The ring in the color of the page separates the piece from the avatar, the inset line keeps a white piece visible
+export const ComputerName = styled.strong`
+  color: ${colors.primary};
+  font-size: 14px;
+  font-weight: ${fonts.weight.semiBold};
+`;
+
 export const PlayerAvatar = styled(UAvatar)<{$variant: 'black' | 'white'}>`
   flex-shrink: 0;
   position: relative;

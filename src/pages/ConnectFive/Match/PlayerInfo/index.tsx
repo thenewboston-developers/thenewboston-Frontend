@@ -3,12 +3,26 @@ import {SFC} from 'types';
 import * as S from './Styles';
 
 interface PlayerInfoProps {
+  computerDifficulty?: string;
   player: {avatar: string | null; connect_five_elo: number | null; id: number; username: string} | null;
   playerSide: 'black' | 'white' | null;
 }
 
-const PlayerInfo: SFC<PlayerInfoProps> = ({className, player, playerSide}) => {
-  if (!player || !playerSide) return null;
+const PlayerInfo: SFC<PlayerInfoProps> = ({className, computerDifficulty, player, playerSide}) => {
+  if (!playerSide) return null;
+  if (!player && computerDifficulty)
+    return (
+      <S.PlayerLabel className={className}>
+        <S.PlayerAvatar $variant={playerSide} size="44px" src={null} />
+        <S.PlayerLabelDetails>
+          <S.ComputerName>Computer</S.ComputerName>
+          <S.PlayerMeta>
+            {computerDifficulty} · {playerSide === 'black' ? 'Black' : 'White'}
+          </S.PlayerMeta>
+        </S.PlayerLabelDetails>
+      </S.PlayerLabel>
+    );
+  if (!player) return null;
 
   const hasElo = typeof player.connect_five_elo === 'number';
   const profilePath = `/profile/${player.id}`;
