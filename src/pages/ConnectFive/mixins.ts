@@ -18,17 +18,6 @@ const WARNING_TEXT_COLOR = '#8f4700';
 export const WHITE_PIECE_OUTLINE =
   'drop-shadow(0 0 0.75px rgba(0, 0, 0, 0.75)) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35))';
 
-// Light gray block that groups the label/value rows inside of a card
-export const detailsBlockStyle = css`
-  background: ${colors.palette.gray[50]};
-  border-radius: ${radii.medium};
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 12px 16px;
-  width: 100%;
-`;
-
 export const detailsLabelStyle = css`
   ${eyebrowStyle};
   flex-shrink: 0;
@@ -63,14 +52,6 @@ export const linkFocusStyle = css`
   }
 `;
 
-export const loaderPanelStyle = css`
-  ${cardStyle};
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  min-height: 200px;
-`;
-
 export const panelStyle = css`
   ${cardStyle};
   display: flex;
@@ -94,15 +75,6 @@ export const panelSubtitleStyle = css`
 export const panelTitleStyle = css`
   color: ${colors.primary};
   font-size: 16px;
-  font-weight: ${fonts.weight.semiBold};
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-  margin: 0;
-`;
-
-export const sectionTitleStyle = css`
-  color: ${colors.primary};
-  font-size: 17px;
   font-weight: ${fonts.weight.semiBold};
   letter-spacing: -0.01em;
   line-height: 1.3;
@@ -152,63 +124,4 @@ export const statusBadgeStyle = css<{badgeStyle: BadgeStyle}>`
       color: ${colors.palette.blue[600]};
     `;
   }}
-`;
-
-// The card table rules below mirror pages/Currencies/Detail/mixins, copied to avoid coupling the two pages
-export const tableBodyStyle = css`
-  tr {
-    transition: background 0.15s ease;
-  }
-
-  @media (hover: hover) {
-    tr:hover {
-      background: ${colors.palette.gray[50]};
-    }
-  }
-
-  tr:not(:last-child) td {
-    border-bottom: 1px solid ${colors.borderSubtle};
-  }
-`;
-
-export const tableDataStyle = css`
-  color: ${colors.primary};
-  font-size: 14px;
-  padding: 14px 24px;
-  vertical-align: middle;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 10px 12px;
-  }
-`;
-
-export const tableHeadStyle = css`
-  ${eyebrowStyle};
-  background: ${colors.palette.gray[50]};
-  border-bottom: 1px solid ${colors.borderSubtle};
-  padding: 12px 24px;
-  text-align: left;
-  white-space: nowrap;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 10px 12px;
-  }
-`;
-
-// The fixed layout keeps the table as wide as its wrapper on small screens: the columns with an explicit width keep it,
-// the remaining column takes what is left and truncates its content instead of growing the table
-export const tableStyle = css`
-  border-collapse: collapse;
-  width: 100%;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    table-layout: fixed;
-  }
-`;
-
-// The wrapper owns the card look and its horizontal scroll is the safety net for values that outgrow their column
-export const tableWrapperStyle = css`
-  ${cardStyle};
-  overflow-x: auto;
-  overflow-y: hidden;
 `;

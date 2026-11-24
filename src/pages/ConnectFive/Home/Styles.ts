@@ -1,19 +1,10 @@
-import {Link} from 'react-router-dom';
 import UIcon from '@mdi/react';
+import {Field as FormikField} from 'formik';
 import styled, {css} from 'styled-components';
 
-import {Img as AvatarImg} from 'components/Avatar/Styles';
-import UBadge from 'components/Badge';
-import UButton from 'components/Button';
-import {Input as UInput, Select as USelect} from 'components/FormElements';
-import {Container as FormFieldContainer} from 'components/FormElements/FormField/Styles';
-import {ErrorMessage as InputErrorMessage, Label as InputLabel} from 'components/FormElements/Input/Styles';
-import {
-  ErrorMessage as SelectErrorMessage,
-  Label as SelectLabel,
-  Select as SelectElement,
-} from 'components/FormElements/Select/Styles';
+import UAuthButtons from 'components/AuthButtons';
 import UPagination from 'components/Pagination';
+import {Description as UserLabelDescription, Username as UserLabelUsername} from 'components/UserLabel/Styles';
 import UUserSearchInput from 'components/UserSearchInput';
 import {
   ClearButton as UserSearchClearButton,
@@ -24,99 +15,195 @@ import {
   Label as UserSearchLabel,
   NoResultsMessage as UserSearchNoResultsMessage,
 } from 'components/UserSearchInput/Styles';
-import {breakpoints, cardStyle, colors, controlStyle, fonts, pagePadding, radii, shadows} from 'styles';
+import {breakpoints, fonts, pagePadding} from 'styles';
 
+import {Stone} from '../Stones';
 import {
-  detailsBlockStyle,
-  detailsLabelStyle,
-  detailsRowStyle,
-  detailsValueStyle,
-  sectionTitleStyle,
-  statusBadgeStyle,
-} from '../mixins';
+  boardPanel,
+  cosmos,
+  eyebrow,
+  fieldControl,
+  fieldLabel,
+  ghostButton,
+  goldButton,
+  paginationStyle,
+} from '../theme';
 
-interface FieldErrorProps {
-  errors: {[field: string]: string};
-  name: string;
-  touched: {[field: string]: boolean};
-}
+export type BadgeTone = 'gold' | 'lavender' | 'mint' | 'muted' | 'rose';
 
-const CHEVRON_COLOR = encodeURIComponent(colors.secondary);
-const CHEVRON_ICON = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='${CHEVRON_COLOR}' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E")`;
-const CONTROL_HEIGHT = 44;
-// Translucent colors.palette.red[500], the error counterpart of shadows.focusRing
-const ERROR_FOCUS_RING = '0 0 0 2px rgb(220 13 22 / 75%)';
+const BADGE_TONES: Record<BadgeTone, {background: string; color: string}> = {
+  gold: {background: cosmos.goldSoft, color: cosmos.gold},
+  lavender: {background: cosmos.lavenderSoft, color: cosmos.lilac},
+  mint: {background: cosmos.mintSoft, color: cosmos.mint},
+  muted: {background: 'rgba(255, 255, 255, 0.06)', color: cosmos.mist},
+  rose: {background: cosmos.roseSoft, color: cosmos.rose},
+};
 
-const cardListMixin = css`
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
+// Named containers: the lobby lays out by the width it really has, which the app's side navigation changes
+const COMPUTER_FORM = 'connect-five-computer';
+const LOBBY = 'connect-five-lobby';
+
+const cardTile = css`
+  background: linear-gradient(180deg, rgba(36, 26, 76, 0.55), rgba(14, 9, 35, 0.75));
+  border: 1px solid ${cosmos.edge};
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 18px;
 `;
 
-// components/FormElements is restyled from here, so the fields have to bring back the error state that the shared
-// components paint through their own border
-const fieldErrorMixin = css<FieldErrorProps>`
-  ${({errors, name, touched}) =>
-    !!errors[name] &&
-    touched[name] &&
+// An input that is visually replaced by the card or segment right after it, while it keeps the focus and the keyboard
+const hiddenRadio = css`
+  input {
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    width: 1px;
+  }
+`;
+
+const panelPadding = css`
+  padding: 28px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 20px;
+  }
+`;
+
+export const AmountControl = styled.div`
+  position: relative;
+`;
+
+export const AmountInput = styled(FormikField)<{$hasError: boolean}>`
+  ${fieldControl};
+  appearance: textfield;
+  font-variant-numeric: tabular-nums;
+  padding-right: 56px;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+
+  ${({$hasError}) =>
+    $hasError &&
     css`
-      border-color: ${colors.palette.red[400]};
+      border-color: ${cosmos.rose};
 
       &:hover {
-        border-color: ${colors.palette.red[400]};
+        border-color: ${cosmos.rose};
       }
 
       &:focus {
-        border-color: ${colors.palette.red[500]};
-        box-shadow: ${ERROR_FOCUS_RING};
+        border-color: ${cosmos.rose};
+        box-shadow: 0 0 0 3px rgba(255, 128, 156, 0.25);
       }
     `}
 `;
 
-const fieldMixin = css<FieldErrorProps>`
-  ${controlStyle};
-  ${fieldErrorMixin};
-  height: ${`${CONTROL_HEIGHT}px`};
-  padding: 0 14px;
+export const AmountUnit = styled.span`
+  color: ${cosmos.gold};
+  font-size: 12px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: 0.08em;
+  pointer-events: none;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
 `;
 
-const sectionMixin = css`
-  ${cardStyle};
-  min-width: 0;
-  padding: 24px;
+// The shared buttons, recolored: signing in is the quiet option and creating an account gets the gold of the line
+export const AuthButtons = styled(UAuthButtons)`
+  button {
+    border-radius: 999px;
+    font-weight: ${fonts.weight.bold};
+    height: 44px;
+    padding: 0 22px;
+  }
 
-  @media (max-width: ${breakpoints.mini}) {
-    padding: 16px;
+  button:first-child {
+    background: transparent;
+    border-color: ${cosmos.edgeBright};
+    color: ${cosmos.lilac};
+  }
+
+  button:first-child:hover {
+    background: ${cosmos.lavenderSoft};
+    border-color: ${cosmos.lavender};
+  }
+
+  button:last-child {
+    background: linear-gradient(180deg, #ffe6ad, #f7c96c);
+    border-color: #fff0cc;
+    color: ${cosmos.goldInk};
+  }
+
+  button:last-child:hover {
+    background: linear-gradient(180deg, #ffe6ad, #f7c96c);
+    filter: brightness(1.05);
+  }
+
+  button:focus-visible {
+    outline: 2px solid ${cosmos.gold};
+    outline-offset: 3px;
   }
 `;
 
-export const Badge = styled(UBadge)`
-  ${statusBadgeStyle};
+// A gold ring around the avatar, with a gap of the panel's night between the two
+export const AvatarRing = styled.span`
+  background: conic-gradient(from 210deg, #ffd990, #f0a948, #ffe9b8, #ffd990);
+  border-radius: 50%;
+  box-shadow: 0 0 28px rgba(255, 200, 96, 0.22);
+  display: flex;
+  flex-shrink: 0;
+  padding: 3px;
+
+  > div {
+    background: ${cosmos.night};
+    border-radius: 50%;
+    padding: 3px;
+  }
+`;
+
+export const Badge = styled.span<{$tone: BadgeTone}>`
+  background: ${({$tone}) => BADGE_TONES[$tone].background};
+  border-radius: 999px;
+  color: ${({$tone}) => BADGE_TONES[$tone].color};
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  padding: 2px 10px;
+  white-space: nowrap;
 `;
 
 // Pinned to the bottom so the actions of the cards that share a row line up
-export const ChallengeActions = styled.div`
+export const CardActions = styled.div`
   display: flex;
   gap: 8px;
   justify-content: flex-end;
   margin-top: auto;
 `;
 
-export const ChallengeCard = styled.div`
-  ${cardStyle};
-  align-items: stretch;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-width: 0;
-  padding: 20px;
-
-  @media (max-width: ${breakpoints.mini}) {
-    padding: 16px;
-  }
+export const CardArrow = styled(UIcon)`
+  color: ${cosmos.mist};
+  flex-shrink: 0;
 `;
 
-export const ChallengeHeader = styled.div`
+export const CardGrid = styled.div`
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+`;
+
+export const CardHeader = styled.div`
   align-items: flex-start;
   display: flex;
   gap: 12px;
@@ -125,62 +212,48 @@ export const ChallengeHeader = styled.div`
   width: 100%;
 `;
 
-export const ChallengeInfo = styled.div`
-  ${detailsBlockStyle};
+export const CardMeta = styled.span`
+  color: ${cosmos.mist};
+  display: block;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 2px;
 `;
 
-export const ChallengeInfoLabel = styled.span`
-  ${detailsLabelStyle};
-`;
-
-export const ChallengeInfoRow = styled.div`
-  ${detailsRowStyle};
-`;
-
-export const ChallengeInfoValue = styled.span`
-  ${detailsValueStyle};
-`;
-
-export const ChallengeList = styled.div`
-  ${cardListMixin};
-`;
-
-export const Container = styled.div`
-  ${pagePadding};
-`;
-
-export const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  margin: 0 auto;
-  max-width: 1200px;
-  width: 100%;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    gap: 24px;
-  }
-`;
-
-export const EloChartBody = styled.div`
+export const CardPlayer = styled.div`
   align-items: center;
   display: flex;
-  flex: 1;
-  justify-content: center;
-  min-height: 240px;
+  gap: 12px;
   min-width: 0;
-  width: 100%;
 `;
 
-// The chart fills the wrapper through absolute positioning, which keeps its percentage height definite even when the
-// card has no fixed height (single column layout). The only child is the container div that recharts renders.
-export const EloChartWrapper = styled.div`
-  align-self: stretch;
+export const CardPlayerName = styled.strong`
+  color: ${cosmos.starlight};
+  display: block;
+  font-size: 15px;
+  font-weight: ${fonts.weight.bold};
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+export const CardPlayerText = styled.div`
+  min-width: 0;
+`;
+
+export const ChallengeCard = styled.div`
+  ${cardTile};
+`;
+
+// The chart fills the body through absolute positioning, which keeps its percentage height definite even when the
+// panel has no fixed height (single column layout). The only child is the container div that recharts renders.
+export const ChartBody = styled.div`
+  flex: 1;
   font-variant-numeric: tabular-nums;
   min-height: 240px;
   min-width: 0;
   position: relative;
-  width: 100%;
 
   > div {
     inset: 0;
@@ -188,145 +261,413 @@ export const EloChartWrapper = styled.div`
   }
 `;
 
-export const EloSection = styled.section`
-  ${sectionMixin};
+export const ChartState = styled.div`
+  align-items: center;
+  border: 1px dashed rgba(206, 181, 255, 0.22);
+  border-radius: 16px;
+  color: ${cosmos.haze};
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  font-size: 15px;
+  gap: 10px;
+  justify-content: center;
+  min-height: 240px;
+  padding: 24px;
+  text-align: center;
+
+  small {
+    color: ${cosmos.mist};
+    font-size: 13px;
+    max-width: 320px;
+  }
+`;
+
+export const Choice = styled.label`
+  ${hiddenRadio};
+  cursor: pointer;
+  display: block;
+  min-width: 0;
+  position: relative;
+`;
+
+// Next to each other the cards stack their stones above the level; alone in a narrow panel they put the stones first
+export const ChoiceCard = styled.span`
+  align-items: center;
+  background: rgba(12, 8, 32, 0.6);
+  border: 1px solid ${cosmos.edge};
+  border-radius: 16px;
+  column-gap: 14px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  height: 100%;
+  padding: 14px 16px;
+  row-gap: 4px;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  > span {
+    grid-row: span 2;
+  }
+
+  strong {
+    color: ${cosmos.starlight};
+    font-size: 15px;
+    font-weight: ${fonts.weight.bold};
+    line-height: 1.3;
+  }
+
+  small {
+    color: ${cosmos.mist};
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+
+  @container ${COMPUTER_FORM} (min-width: 420px) {
+    align-content: start;
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr);
+
+    > span {
+      grid-row: auto;
+      justify-self: start;
+      margin: 4px 4px 8px;
+    }
+  }
+
+  &:hover {
+    border-color: ${cosmos.edgeBright};
+  }
+
+  input:checked + & {
+    background: linear-gradient(180deg, rgba(206, 181, 255, 0.16), rgba(206, 181, 255, 0.06));
+    border-color: ${cosmos.lavender};
+    box-shadow: 0 0 24px rgba(160, 120, 255, 0.18);
+  }
+
+  input:focus-visible + & {
+    outline: 2px solid ${cosmos.lavender};
+    outline-offset: 3px;
+  }
+`;
+
+export const ChoiceGrid = styled.div`
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1fr);
+
+  @container ${COMPUTER_FORM} (min-width: 420px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+`;
+
+export const ComputerForm = styled.form`
+  container: ${COMPUTER_FORM} / inline-size;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+export const Container = styled.div`
+  ${pagePadding};
+`;
+
+export const Content = styled.div`
+  container: ${LOBBY} / inline-size;
   display: flex;
   flex-direction: column;
+  gap: 28px;
+  margin: 0 auto;
+  max-width: 1200px;
+  width: 100%;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    gap: 20px;
+  }
+`;
+
+export const Count = styled.span`
+  background: ${cosmos.goldSoft};
+  border: 1px solid rgba(255, 217, 144, 0.25);
+  border-radius: 999px;
+  color: ${cosmos.gold};
+  flex-shrink: 0;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.bold};
+  line-height: 1.5;
+  padding: 2px 10px;
+`;
+
+// Above the sections that follow, so the member search results can open over them
+export const Deck = styled.div`
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1fr);
+  position: relative;
+  z-index: 1;
+
+  @container ${LOBBY} (min-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    gap: 20px;
+  }
+`;
+
+export const DetailLabel = styled.span`
+  color: ${cosmos.muted};
+  flex-shrink: 0;
+  font-size: 10.5px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+`;
+
+export const DetailRow = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  min-height: 22px;
+  width: 100%;
+`;
+
+export const DetailValue = styled.span`
+  color: ${cosmos.starlight};
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.semiBold};
+  line-height: 1.4;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-align: right;
+`;
+
+export const Details = styled.div`
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(206, 181, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px;
+  width: 100%;
+`;
+
+export const EloArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 300px;
+  min-width: 0;
+`;
+
+export const EloHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 `;
 
 export const EmptyState = styled.div`
-  ${cardStyle};
   align-items: center;
-  background: linear-gradient(135deg, ${colors.white}, ${colors.palette.blue[50]});
+  background: rgba(12, 8, 32, 0.45);
+  border: 1px dashed rgba(206, 181, 255, 0.22);
+  border-radius: 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   justify-content: center;
   min-height: 190px;
   padding: 32px 24px;
   text-align: center;
+
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 24px 16px;
+  }
 `;
 
-export const EmptyStateDescription = styled.p`
-  color: ${colors.secondary};
-  font-size: 16px;
+export const EmptyText = styled.p`
+  color: ${cosmos.mist};
+  font-size: 15px;
   line-height: 1.6;
   margin: 0;
   max-width: 460px;
 `;
 
-export const EmptyStateTitle = styled.h3`
-  color: ${colors.primary};
-  font-size: 22px;
+export const EmptyTitle = styled.h3`
+  color: ${cosmos.starlight};
+  font-size: 20px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin: 4px 0 0;
+`;
+
+export const Eyebrow = styled.p`
+  ${eyebrow};
+  margin: 0 0 4px;
+`;
+
+export const Field = styled.div`
+  min-width: 0;
+`;
+
+export const FieldError = styled.p`
+  color: ${cosmos.rose};
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 6px 0 0;
+`;
+
+export const FieldLabel = styled.label`
+  ${fieldLabel};
+`;
+
+export const FieldRow = styled.div`
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+`;
+
+export const Fieldset = styled.fieldset`
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+`;
+
+export const Form = styled.form`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 18px;
+`;
+
+export const GhostButton = styled.button`
+  ${ghostButton};
+`;
+
+// Fills the bottom of the visitor's panel, which shares its row with the taller computer panel
+export const GuestArt = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  padding-top: 8px;
+`;
+
+export const Kit = styled.div`
+  background: rgba(12, 8, 32, 0.35);
+  border: 1px dashed rgba(206, 181, 255, 0.22);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+`;
+
+export const KitItem = styled.li`
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid ${cosmos.edge};
+  border-radius: 999px;
+  color: ${cosmos.haze};
+  display: inline-flex;
+  font-size: 13px;
   font-weight: ${fonts.weight.semiBold};
+  gap: 8px;
+  line-height: 1.4;
+  padding: 6px 12px 6px 10px;
+`;
+
+export const KitList = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
+
+export const KitNote = styled.p`
+  color: ${cosmos.mist};
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+`;
+
+export const KitTitle = styled.p`
+  ${fieldLabel};
+  margin: 0;
+`;
+
+export const Lead = styled.p`
+  color: ${cosmos.haze};
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+`;
+
+export const Legend = styled.legend`
+  ${fieldLabel};
+  padding: 0;
+`;
+
+export const ListDescription = styled.p`
+  color: ${cosmos.mist};
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 2px 0 0;
+`;
+
+export const ListHeader = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+`;
+
+export const ListHeading = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+
+export const ListPanel = styled.section`
+  ${boardPanel};
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 18px;
+  }
+`;
+
+export const ListTitle = styled.h2`
+  color: ${cosmos.starlight};
+  font-size: 20px;
+  font-weight: ${fonts.weight.bold};
   letter-spacing: -0.02em;
   line-height: 1.3;
   margin: 0;
 `;
 
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  /* The gap owns the vertical rhythm, so the shared form fields drop their own bottom margin */
-  ${FormFieldContainer} {
-    margin-bottom: 0;
-  }
-
-  ${InputErrorMessage},
-  ${SelectErrorMessage},
-  ${UserSearchErrorMessage} {
-    color: ${colors.palette.red[700]};
-    font-size: 12px;
-    line-height: 1.4;
-    margin-top: 6px;
-  }
-
-  ${InputLabel},
-  ${SelectLabel},
-  ${UserSearchLabel} {
-    color: ${colors.secondary};
-    font-size: 13px;
-    font-weight: ${fonts.weight.medium};
-    line-height: 1.4;
-    margin-bottom: 6px;
-  }
-`;
-
-export const FormRow = styled.div`
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-`;
-
-export const GuestActions = styled.div`
-  margin: 0 0 28px;
-`;
-
-export const GuestText = styled.p`
-  color: ${colors.secondary};
-  font-size: 16px;
-  line-height: 1.6;
-  margin: 0 0 24px;
-  max-width: 640px;
-`;
-
-export const GuideDescription = styled.p`
-  color: ${colors.secondary};
-  font-size: 16px;
-  line-height: 1.6;
-  margin: 0;
-`;
-
-export const GuideGrid = styled.div`
-  display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-
-  @media (max-width: ${breakpoints.tablet}) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-`;
-
-export const GuideItem = styled.div`
-  border-top: 2px solid ${colors.borderSubtle};
-  min-width: 0;
-  padding-top: 20px;
-`;
-
-export const GuideTitle = styled.h3`
-  color: ${colors.primary};
-  font-size: 17px;
-  font-weight: ${fonts.weight.semiBold};
-  line-height: 1.4;
-  margin: 0 0 8px;
-`;
-
-// The shared Input hands its className to the field itself
-export const Input = styled(UInput)`
-  ${fieldMixin};
-  font-variant-numeric: tabular-nums;
-`;
-
 export const LoadMoreRow = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 8px;
 `;
 
 export const MatchCard = styled.button`
-  ${cardStyle};
-  align-items: stretch;
+  ${cardTile};
   color: inherit;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
   font-family: inherit;
-  gap: 16px;
-  min-width: 0;
   outline: none;
-  padding: 20px;
   text-align: left;
   transition:
     border-color 0.2s ease,
@@ -336,8 +677,8 @@ export const MatchCard = styled.button`
 
   @media (hover: hover) {
     &:hover {
-      border-color: ${colors.borderDarker};
-      box-shadow: ${shadows.cardHover};
+      border-color: ${cosmos.edgeBright};
+      box-shadow: 0 12px 28px rgba(8, 4, 24, 0.45);
     }
   }
 
@@ -347,265 +688,19 @@ export const MatchCard = styled.button`
     }
   }
 
-  @media (max-width: ${breakpoints.mini}) {
-    padding: 16px;
-  }
-
-  /* Declared after the hover rules so a hovered card keeps its ring. The border shares the color of shadows.focusRing,
-     so the border and the ring read as a single outline */
+  /* Declared after the hover rules so a hovered card keeps its ring */
   &:focus-visible {
-    border-color: ${colors.palette.blue[500]};
-    box-shadow: ${shadows.card}, ${shadows.focusRing};
+    border-color: ${cosmos.lavender};
+    box-shadow: 0 0 0 3px rgba(206, 181, 255, 0.3);
   }
 `;
 
-export const MatchHeader = styled.div`
-  align-items: flex-start;
-  display: flex;
-  gap: 12px;
-  justify-content: space-between;
-  min-width: 0;
-  width: 100%;
-`;
-
-export const MatchHeaderMain = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-`;
-
-export const MatchIcon = styled(UIcon)`
-  color: ${colors.secondary};
-  flex-shrink: 0;
-`;
-
-export const MatchInfo = styled.div`
-  ${detailsBlockStyle};
-`;
-
-export const MatchInfoLabel = styled.span`
-  ${detailsLabelStyle};
-`;
-
-export const MatchInfoRow = styled.div`
-  ${detailsRowStyle};
-`;
-
-export const MatchInfoValue = styled.span`
-  ${detailsValueStyle};
-`;
-
-export const MatchList = styled.div`
-  ${cardListMixin};
-`;
-
-export const MatchesSection = styled.section`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-width: 0;
-`;
-
-export const MatchesSectionTitle = styled.h2`
-  ${sectionTitleStyle};
-`;
-
-export const Pagination = styled(UPagination)`
-  align-self: center;
-  margin-top: 8px;
-`;
-
-// The white ring mirrors the logo of the currency detail header
-export const ProfileAvatarWrapper = styled.div`
-  align-items: center;
-  display: flex;
-  flex-shrink: 0;
-
-  @media (max-width: ${breakpoints.mini}) {
-    ${AvatarImg} {
-      height: 72px;
-      width: 72px;
-    }
-  }
-`;
-
-export const ProfileDetails = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
-`;
-
-export const ProfileHeader = styled.div`
-  ${cardStyle};
-  min-width: 0;
-  padding: 24px;
-`;
-
-export const ProfileHeaderContent = styled.div`
-  align-items: center;
-  display: flex;
-  gap: 20px;
-  min-width: 0;
-
-  @media (max-width: ${breakpoints.mini}) {
-    gap: 16px;
-  }
-`;
-
-export const ProfileMeta = styled.div`
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-`;
-
-export const ProfileMetaItem = styled.span`
-  background: ${colors.white};
-  border: 1px solid ${colors.borderSubtle};
-  border-radius: ${radii.pill};
-  color: ${colors.secondary};
-  font-size: 12px;
-  font-variant-numeric: tabular-nums;
-  font-weight: ${fonts.weight.semiBold};
-  letter-spacing: 0.04em;
-  line-height: 1.5;
-  padding: 3px 12px;
-  text-transform: uppercase;
-  white-space: nowrap;
-`;
-
-export const ProfileUsername = styled.h2`
-  color: ${colors.primary};
-  font-size: 28px;
-  font-weight: ${fonts.weight.bold};
-  letter-spacing: -0.01em;
-  line-height: 1.2;
-  margin: 0;
-  overflow-wrap: anywhere;
-
-  @media (max-width: ${breakpoints.mini}) {
-    font-size: 22px;
-  }
-`;
-
-export const PublicMatchMeta = styled.span`
-  color: ${colors.secondary};
-  font-size: 12px;
-  line-height: 1.4;
-`;
-
-export const PublicMatchPlayer = styled.div`
-  align-items: center;
-  display: flex;
-  gap: 8px;
-  min-width: 0;
-`;
-
-export const PublicMatchPlayerName = styled.span`
-  color: ${colors.primary};
-  font-size: 14px;
-  font-weight: ${fonts.weight.semiBold};
-  line-height: 1.3;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`;
-
-export const PublicMatchPlayers = styled.div`
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 12px;
-  min-width: 0;
-`;
-
-export const PublicMatchVersus = styled.span`
-  color: ${colors.secondary};
-  font-size: 11px;
-  font-weight: ${fonts.weight.semiBold};
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-`;
-
-export const Section = styled.section`
-  ${sectionMixin};
-`;
-
-export const SectionDescription = styled.p`
-  color: ${colors.secondary};
-  font-size: 16px;
-  line-height: 1.6;
-  margin: -4px 0 24px;
-`;
-
-export const SectionTitle = styled.h2`
-  ${sectionTitleStyle};
-  margin-bottom: 16px;
-  scroll-margin-top: 24px;
-
-  &:focus-visible {
-    border-radius: ${radii.small};
-    outline: 2px solid ${colors.palette.blue[500]};
-    outline-offset: 4px;
-  }
-`;
-
-// The shared Select hands its className to both its wrapper and the select element, so the rules are scoped to the
-// element through the wrapper
-export const Select = styled(USelect)`
-  ${SelectElement} {
-    ${fieldMixin};
-    appearance: none;
-    background-image: ${CHEVRON_ICON};
-    background-position: right 14px center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    padding-right: 40px;
-    text-overflow: ellipsis;
-  }
-`;
-
-export const SubmitButton = styled(UButton)`
-  border-radius: ${radii.pill};
-  height: ${`${CONTROL_HEIGHT}px`};
-  width: 100%;
-
-  &:disabled,
-  &:disabled:hover {
-    background: ${colors.palette.gray[200]};
-    color: ${colors.palette.gray[600]};
-  }
-`;
-
-export const SubmitRow = styled.div`
-  display: flex;
-  margin-top: 4px;
-`;
-
-export const TopRow = styled.div`
-  display: grid;
-  gap: 24px;
-  grid-template-columns: minmax(0, 1fr);
-
-  @media (min-width: ${breakpoints.tablet}) {
-    align-items: stretch;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    gap: 16px;
-  }
-`;
-
-// The results open as a popover that matches the shared drop menus
-export const UserSearchInput = styled(UUserSearchInput)`
+// The shared member search, dark like the rest of the panel, with its results opening as a midnight popover
+export const MemberSearch = styled(UUserSearchInput)`
   ${UserSearchClearButton} {
     align-items: center;
     border-radius: 50%;
-    color: ${colors.secondary};
+    color: ${cosmos.mist};
     display: flex;
     height: 28px;
     justify-content: center;
@@ -614,30 +709,30 @@ export const UserSearchInput = styled(UUserSearchInput)`
     width: 28px;
 
     &:focus-visible {
-      box-shadow: ${shadows.focusRing};
-      outline: none;
+      outline: 2px solid ${cosmos.lavender};
     }
 
     &:hover {
-      color: ${colors.primary};
+      color: ${cosmos.starlight};
     }
   }
 
   ${UserSearchDropdown} {
-    border: 1px solid ${colors.borderSubtle};
-    border-radius: ${radii.medium};
-    box-shadow: ${shadows.popover};
+    background: #1b1339;
+    border: 1px solid ${cosmos.edgeBright};
+    border-radius: 14px;
+    box-shadow: 0 18px 40px rgba(6, 3, 18, 0.55);
     margin-top: 6px;
     padding: 4px;
   }
 
   ${UserSearchDropdownItem} {
-    border-radius: ${radii.small};
+    border-radius: 10px;
     padding: 8px 12px;
     transition: background 0.15s ease;
 
     &:hover {
-      background: ${colors.whiteHover};
+      background: ${cosmos.raised};
     }
 
     &:not(:last-child) {
@@ -646,19 +741,439 @@ export const UserSearchInput = styled(UUserSearchInput)`
   }
 
   ${UserSearchElement} {
-    ${fieldMixin};
+    ${fieldControl};
     padding-right: 44px;
     text-overflow: ellipsis;
   }
 
+  ${UserSearchErrorMessage} {
+    color: ${cosmos.rose};
+    margin-top: 6px;
+  }
+
+  ${UserSearchLabel} {
+    ${fieldLabel};
+  }
+
   ${UserSearchNoResultsMessage} {
-    color: ${colors.secondary};
+    color: ${cosmos.mist};
+  }
+
+  ${UserLabelDescription} {
+    color: ${cosmos.mist};
+  }
+
+  ${UserLabelUsername} {
+    color: ${cosmos.starlight};
   }
 `;
 
-export const WatchDescription = styled.p`
-  color: ${colors.secondary};
-  font-size: 16px;
+export const Pagination = styled(UPagination)`
+  ${paginationStyle};
+  align-self: center;
+`;
+
+export const Panel = styled.section`
+  ${boardPanel};
+  ${panelPadding};
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+export const PanelActions = styled.div`
+  display: flex;
+  margin-top: auto;
+  padding-top: 4px;
+`;
+
+export const PanelHeader = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  min-width: 0;
+`;
+
+export const PanelTitle = styled.h2`
+  color: ${cosmos.starlight};
+  font-size: 24px;
+  font-weight: ${fonts.weight.extraBold};
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin: 0;
+  scroll-margin-top: 24px;
+
+  &:focus-visible {
+    border-radius: 6px;
+    outline: 2px solid ${cosmos.lavender};
+    outline-offset: 4px;
+  }
+
+  @media (max-width: ${breakpoints.mini}) {
+    font-size: 21px;
+  }
+`;
+
+// The stone tells which color the player places: black for player A, white for player B and the computer
+export const PlayerAvatar = styled.span`
+  display: inline-flex;
+  flex-shrink: 0;
+  position: relative;
+`;
+
+export const PlayerHeading = styled.div`
+  min-width: 0;
+`;
+
+export const PlayerIdentity = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 18px;
+  min-width: 0;
+`;
+
+export const PlayerName = styled.h2`
+  color: ${cosmos.starlight};
+  font-size: 28px;
+  font-weight: ${fonts.weight.extraBold};
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin: 0;
+  overflow-wrap: anywhere;
+
+  @media (max-width: ${breakpoints.mini}) {
+    font-size: 22px;
+  }
+`;
+
+export const PlayerPanel = styled.section`
+  ${boardPanel};
+  ${panelPadding};
+  display: grid;
+  gap: 28px;
+  grid-template-columns: minmax(0, 1fr);
+
+  @container ${LOBBY} (min-width: 860px) {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+`;
+
+export const PlayerSummary = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+`;
+
+export const PrimaryButton = styled.button`
+  ${goldButton};
+  width: 100%;
+`;
+
+export const RecentForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const RecentHeader = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  justify-content: space-between;
+`;
+
+export const RecentLegend = styled.span`
+  color: ${cosmos.mist};
+  display: inline-flex;
+  font-size: 12px;
+  gap: 14px;
+
+  span {
+    align-items: center;
+    display: inline-flex;
+    gap: 6px;
+  }
+`;
+
+export const RecentStone = styled.span`
+  display: inline-flex;
+  position: relative;
+`;
+
+// Five intersections on one board line, filled with the results of the last five games
+export const RecentStones = styled.span`
+  align-items: center;
+  background: rgba(12, 8, 32, 0.5);
+  border: 1px solid ${cosmos.edge};
+  border-radius: 999px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 18px;
+  position: relative;
+
+  &::before {
+    background: rgba(206, 181, 255, 0.3);
+    content: '';
+    height: 1px;
+    left: 18px;
+    position: absolute;
+    right: 18px;
+  }
+`;
+
+export const SectionNote = styled.p`
+  color: ${cosmos.mist};
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+`;
+
+export const SectionTitle = styled.h3`
+  color: ${cosmos.starlight};
+  font-size: 18px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  margin: 0;
+`;
+
+export const Segment = styled.label`
+  ${hiddenRadio};
+  cursor: pointer;
+  min-width: 0;
+  position: relative;
+
+  span {
+    border-radius: 10px;
+    color: ${cosmos.mist};
+    display: block;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    font-weight: ${fonts.weight.semiBold};
+    padding: 9px 4px;
+    text-align: center;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+    white-space: nowrap;
+  }
+
+  &:hover span {
+    color: ${cosmos.starlight};
+  }
+
+  input:checked + span {
+    background: linear-gradient(180deg, rgba(206, 181, 255, 0.24), rgba(206, 181, 255, 0.12));
+    box-shadow: inset 0 0 0 1px rgba(206, 181, 255, 0.55);
+    color: ${cosmos.starlight};
+  }
+
+  input:focus-visible + span {
+    outline: 2px solid ${cosmos.lavender};
+    outline-offset: 2px;
+  }
+`;
+
+export const Segmented = styled.div`
+  background: rgba(12, 8, 32, 0.6);
+  border: 1px solid ${cosmos.edge};
+  border-radius: 14px;
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 4px;
+`;
+
+export const SideStone = styled(Stone)`
+  border: 2px solid ${cosmos.night};
+  bottom: -2px;
+  position: absolute;
+  right: -3px;
+`;
+
+export const SmallGoldButton = styled.button`
+  ${goldButton};
+  font-size: 14px;
+  min-height: 38px;
+  padding: 0 20px;
+`;
+
+export const Stat = styled.div`
+  background: rgba(12, 8, 32, 0.55);
+  border: 1px solid ${cosmos.edge};
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 12px 14px;
+`;
+
+// On a phone the record gets a row of its own, it is the longest of the three values
+export const StatGrid = styled.div`
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  @container ${LOBBY} (max-width: 520px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    > :last-child {
+      grid-column: 1 / -1;
+    }
+  }
+`;
+
+export const StatLabel = styled.span`
+  ${fieldLabel};
+  margin: 0;
+`;
+
+export const StatValue = styled.strong<{$isGold?: boolean}>`
+  color: ${({$isGold}) => ($isGold ? cosmos.gold : cosmos.starlight)};
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.extraBold};
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+export const Step = styled.li`
+  align-items: flex-start;
+  display: flex;
+  gap: 14px;
+  position: relative;
+
+  /* A board line joins the numbered stones of the steps */
+  &:not(:last-child)::before {
+    background: rgba(206, 181, 255, 0.3);
+    bottom: -18px;
+    content: '';
+    left: 14.5px;
+    position: absolute;
+    top: 30px;
+    width: 1px;
+  }
+`;
+
+export const StepStone = styled(Stone)`
+  align-items: center;
+  color: ${({$tone}) => ($tone === 'obsidian' ? cosmos.lilac : cosmos.goldInk)};
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: ${fonts.weight.extraBold};
+  justify-content: center;
+`;
+
+export const StepText = styled.p`
+  color: ${cosmos.mist};
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 2px 0 0;
+`;
+
+export const StepTitle = styled.h3`
+  color: ${cosmos.starlight};
+  font-size: 15px;
+  font-weight: ${fonts.weight.bold};
+  line-height: 1.4;
+  margin: 4px 0 0;
+`;
+
+export const Steps = styled.ol`
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+`;
+
+export const Term = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+`;
+
+// Aligned at the bottom, so the values stay on one line even when a label wraps on a narrow card
+export const TermGrid = styled.div`
+  align-items: end;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(206, 181, 255, 0.1);
+  border-radius: 12px;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 10px 14px;
+`;
+
+export const TermLabel = styled.span`
+  color: ${cosmos.muted};
+  font-size: 10.5px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+`;
+
+export const TermValue = styled.span`
+  color: ${cosmos.starlight};
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.semiBold};
+  overflow-wrap: anywhere;
+`;
+
+// Sits right above the send button: any room the taller computer panel leaves goes above the terms instead
+export const Terms = styled.p`
+  background: rgba(255, 217, 144, 0.06);
+  border-left: 2px solid ${cosmos.gold};
+  border-radius: 0 12px 12px 0;
+  color: ${cosmos.haze};
+  font-size: 13px;
   line-height: 1.6;
-  margin: -8px 0 4px;
+  margin: auto 0 0;
+  padding: 10px 14px;
+
+  & + ${PanelActions} {
+    margin-top: 0;
+  }
+`;
+
+export const Versus = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  min-width: 0;
+`;
+
+export const VersusMark = styled.span`
+  color: ${cosmos.muted};
+  font-size: 11px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+`;
+
+export const VersusName = styled.span`
+  color: ${cosmos.starlight};
+  font-size: 14px;
+  font-weight: ${fonts.weight.semiBold};
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+export const VersusPlayer = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  min-width: 0;
 `;

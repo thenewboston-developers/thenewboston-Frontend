@@ -17,6 +17,9 @@ jest.mock('utils/forms', () => ({handleFormikAPIError: jest.fn()}));
 let container: HTMLDivElement;
 let root: Root;
 const requestId = '11111111-1111-4111-8111-111111111111';
+const choose = async (selector: string) => {
+  await act(async () => (container.querySelector(selector) as HTMLInputElement).click());
+};
 const submit = async () => {
   const button = container.querySelector('button[type="submit"]') as HTMLButtonElement;
   expect(button).toBeEnabled();
@@ -72,6 +75,29 @@ it('starts a free computer game without a signed-in user', async () => {
   });
 });
 
+it('starts a computer game with the difficulty and clock chosen in the panel', async () => {
+  (createConnectFiveComputerMatch as jest.Mock).mockResolvedValue({id: 42});
+  await act(async () =>
+    root.render(
+      <MemoryRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
+        <ComputerSetup />
+      </MemoryRouter>,
+    ),
+  );
+  expect(container.querySelector('#computer-difficulty-normal')).toBeChecked();
+  expect(container.querySelector('#computer-time-900')).toBeChecked();
+  await choose('#computer-difficulty-hard');
+  await choose('#computer-time-300');
+  expect(container.querySelector('#computer-difficulty-hard')).toBeChecked();
+  expect(container.querySelector('#computer-difficulty-normal')).not.toBeChecked();
+  await submit();
+  expect(createConnectFiveComputerMatch).toHaveBeenCalledWith({
+    request_id: requestId,
+    difficulty: 'hard',
+    time_limit_seconds: 300,
+  });
+});
+
 it.each([null, 11])(
   'starts a default game from the hero for viewer %s and blocks duplicate creation',
   async (viewerId) => {
@@ -84,18 +110,19 @@ it.each([null, 11])(
     await act(async () =>
       root.render(
         <MemoryRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
-          <ComputerSetup>{({isCreating, onPlay}) => <Hero isCreating={isCreating} onPlay={onPlay} />}</ComputerSetup>
+          <ComputerSetup>
+            {({isCreating, onPlay, panel}) => (
+              <>
+                <Hero isCreating={isCreating} onPlay={onPlay} />
+                {panel}
+              </>
+            )}
+          </ComputerSetup>
         </MemoryRouter>,
       ),
     );
-    const difficulty = container.querySelector('[name="difficulty"]') as HTMLSelectElement;
-    const time = container.querySelector('[name="timeLimitSeconds"]') as HTMLSelectElement;
-    await act(async () => {
-      difficulty.value = 'hard';
-      difficulty.dispatchEvent(new Event('change', {bubbles: true}));
-      time.value = '300';
-      time.dispatchEvent(new Event('change', {bubbles: true}));
-    });
+    await choose('#computer-difficulty-hard');
+    await choose('#computer-time-300');
     const heroButton = container.querySelector('[aria-label="Connect Five overview"] button') as HTMLButtonElement;
     await act(async () => {
       heroButton.click();
