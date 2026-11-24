@@ -28,6 +28,8 @@ export interface BattleshipPlayer {
 }
 
 export interface BattleshipMatch {
+  guest_mode?: boolean;
+  guest_session_id?: string | null;
   computer_reward?: ComputerReward | null;
   id: number;
   mode: BattleshipMode;

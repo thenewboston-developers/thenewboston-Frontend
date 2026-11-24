@@ -13,6 +13,7 @@ import {upsertBackgammonMatch} from 'store/backgammon';
 import {AppDispatch, RootState} from 'types';
 import {BackgammonAction, BackgammonMatch, BackgammonMove, BackgammonSide, BackgammonState} from 'types/backgammon';
 import {isCancellationError} from 'utils/errors';
+import {hasGuestGameSession, isCurrentGuestGame} from 'utils/guestGames';
 
 import Board from './Board';
 import Dice from './Dice';
@@ -58,17 +59,28 @@ const Match = () => {
   const [serverOffset, setServerOffset] = useState(0);
   const {matchId} = useParams();
   const actionLock = useRef(false);
+  const actionGeneration = useRef(0);
+  const currentViewer = useRef('');
   const dispatch = useDispatch<AppDispatch>();
   const id = Number(matchId);
   const isAuthenticated = useIsAuthenticated();
-  const match = useSelector((state: RootState) => (state.backgammon as BackgammonState | undefined)?.matchesById[id]);
+  const matchSnapshot = useSelector(
+    (state: RootState) => (state.backgammon as BackgammonState | undefined)?.matchesById[id],
+  );
+  const live = useRef(true);
   const navigate = useNavigate();
   const self = useSelector(getSelf);
+  const isGuestSession = !isAuthenticated && hasGuestGameSession();
+  const match =
+    matchSnapshot?.guest_mode && (!isGuestSession || !isCurrentGuestGame(matchSnapshot)) ? undefined : matchSnapshot;
   const status = match?.status;
+  const viewerKey = `${id}:${isAuthenticated}:${self.id}`;
+  currentViewer.current = viewerKey;
   const {playSound, soundEnabled, toggleSound, unlockSound} = useGameSounds();
 
-  const side = match ? getPlayerSide(match, self.id) : null;
-  const isParticipant = isAuthenticated && !!side;
+  const memberSide = isAuthenticated && match ? getPlayerSide(match, self.id) : null;
+  const side = match?.guest_mode && isGuestSession ? (match.your_side ?? null) : memberSide;
+  const isParticipant = !!side;
   const modeLabel = match?.mode === 'computer' ? `${match.difficulty} computer` : 'Head to head';
   const canAct = isParticipant && !busyAction && !loadError && !isLoading;
   const isMyTurn = !!side && match?.active_side === side;
@@ -92,6 +104,16 @@ const Match = () => {
   );
 
   useEffect(() => {
+    live.current = true;
+    return () => {
+      live.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    actionGeneration.current += 1;
+    actionLock.current = false;
+    setBusyAction(null);
     const controller = new AbortController();
     let mounted = true;
     let timer: ReturnType<typeof setTimeout>;
@@ -120,7 +142,7 @@ const Match = () => {
       controller.abort();
       clearTimeout(timer);
     };
-  }, [id, receiveMatch, retryKey]);
+  }, [id, isAuthenticated, receiveMatch, retryKey, self.id]);
 
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 250);
@@ -139,28 +161,40 @@ const Match = () => {
   }, [dispatch, id, isAuthenticated, status]);
 
   const handleAction = async (action: BackgammonAction, data: {accept?: boolean; moves?: BackgammonMove[]} = {}) => {
-    if (!match || actionLock.current) return;
+    if (!match || !canAct || actionLock.current) return;
+    actionGeneration.current += 1;
+    const generation = actionGeneration.current;
+    const isCurrent = () =>
+      live.current && currentViewer.current === viewerKey && actionGeneration.current === generation;
     actionLock.current = true;
     setBusyAction(action);
     setActionError('');
     try {
       const updated = await performBackgammonAction(match, action, data);
+      if (!isCurrent()) return;
       receiveMatch(updated);
-      if (['accept', 'cancel', 'decline', 'resign', 'rematch'].includes(action) || updated.status === 'finished') {
+      if (
+        isAuthenticated &&
+        (['accept', 'cancel', 'decline', 'resign', 'rematch'].includes(action) || updated.status === 'finished')
+      ) {
         dispatch(getAllUserWallets()).catch(() => undefined);
       }
       if (action === 'rematch') navigate(`/backgammon/matches/${updated.id}`);
     } catch (error) {
+      if (!isCurrent()) return;
       setActionError(getErrorMessage(error));
       try {
-        receiveMatch(await getBackgammonMatch(id));
+        const refreshed = await getBackgammonMatch(id);
+        if (isCurrent()) receiveMatch(refreshed);
       } catch (refreshError) {
-        setLoadError(getErrorMessage(refreshError));
+        if (isCurrent()) setLoadError(getErrorMessage(refreshError));
       }
     } finally {
-      actionLock.current = false;
-      setBusyAction(null);
-      setResigning(false);
+      if (generation === actionGeneration.current) actionLock.current = false;
+      if (isCurrent()) {
+        setBusyAction(null);
+        setResigning(false);
+      }
     }
   };
 
@@ -269,7 +303,7 @@ const Match = () => {
           {!finished ? ` · ${match.result_points} point${match.result_points === 1 ? '' : 's'}` : ''}
         </S.Detail>
         {finished && match.mode === 'computer' && isParticipant && (
-          <ComputerRewardNotice reward={match.computer_reward} />
+          <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
         )}
         {finished && match.prize_pool_total > 0 && (
           <strong>
@@ -472,7 +506,7 @@ const Match = () => {
         </S.Error>
       )}
       {actionError && <S.Error role="alert">{actionError}</S.Error>}
-      {!isAuthenticated && (
+      {!isAuthenticated && !isParticipant && (
         <S.Status>
           <S.Detail>You’re watching this match. Sign in to start your own.</S.Detail>
           <AuthButtons />

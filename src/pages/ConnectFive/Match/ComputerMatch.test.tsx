@@ -179,3 +179,28 @@ it('shows the settled fund reward and reuses a computer rematch request after a 
   expect(calls[0][0]).toEqual(calls[1][0]);
   expect(calls[0][0]).toMatchObject({rematch_of: 1, difficulty: 'normal', time_limit_seconds: 900});
 });
+
+it('lets a guest use free specials and shows a reward invitation after winning', async () => {
+  const guest = {...match.player_a, id: 0, username: 'Guest'};
+  match.guest_mode = true;
+  match.player_a = guest;
+  match.players[0].user = guest;
+  await render();
+  expect(container.querySelector('a[href="/profile/0"]')).toBeNull();
+  act(() => (container.querySelector('button[aria-label="Horizontal 2"]') as HTMLButtonElement).click());
+  await act(async () =>
+    (container.querySelector('button[aria-label="Row 1, column 1: empty"]') as HTMLButtonElement).click(),
+  );
+  expect(submitConnectFiveMove).toHaveBeenCalled();
+  match = {
+    ...match,
+    version: 5,
+    status: 'finished',
+    winner_side: 'a',
+    computer_reward: {status: 'guest', amount: 10, currency: 'TNB'},
+  };
+  await render();
+  expect(modal).toHaveTextContent('You beat the computer!');
+  expect(modal).toHaveTextContent('this win would have earned you 10 coins');
+  expect(dispatch).not.toHaveBeenCalledWith('refresh-wallets');
+});

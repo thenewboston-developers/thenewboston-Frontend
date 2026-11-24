@@ -12,6 +12,7 @@ import {upsertCheckersMatch} from 'store/checkers';
 import {AppDispatch, RootState} from 'types';
 import {CheckersAction, CheckersActionData, CheckersMatch, CheckersSide, CheckersState} from 'types/checkers';
 import {isCancellationError} from 'utils/errors';
+import {isCurrentGuestGame} from 'utils/guestGames';
 
 import Board from './Board';
 import Rules from './Rules';
@@ -57,14 +58,17 @@ const Match = () => {
   const self = useSelector(getSelf);
   // Never render a cached private board for a different signed-in account.
   const match =
-    matchSnapshot && (!matchSnapshot.your_side || matchSnapshot[matchSnapshot.your_side]?.id === self.id)
+    matchSnapshot &&
+    (matchSnapshot.guest_mode
+      ? !isAuthenticated && isCurrentGuestGame(matchSnapshot)
+      : !matchSnapshot.your_side || (isAuthenticated && matchSnapshot[matchSnapshot.your_side]?.id === self.id))
       ? matchSnapshot
       : undefined;
   currentViewer.current = {id, userId: self.id, authenticated: isAuthenticated};
   latestSnapshot.current = match;
   const side = match?.your_side;
   const status = match?.status;
-  const canAct = isAuthenticated && !!match && !!side && !busyAction && !loadError && !isLoading;
+  const canAct = !!match && !!side && !busyAction && !loadError && !isLoading;
   const canMove = canAct && status === 'active' && match.active_side === side;
   const path = selection?.version === match?.version ? (selection?.path ?? []) : [];
   const legalMoves = match?.legal_moves ?? [];
@@ -78,7 +82,13 @@ const Match = () => {
 
   const receiveMatch = useCallback(
     (data: CheckersMatch) => {
-      if (!mounted.current || (data.your_side !== null && data[data.your_side]?.id !== currentViewer.current.userId))
+      if (
+        !mounted.current ||
+        (data.guest_mode
+          ? currentViewer.current.authenticated || !isCurrentGuestGame(data)
+          : data.your_side !== null &&
+            (!currentViewer.current.authenticated || data[data.your_side]?.id !== currentViewer.current.userId))
+      )
         return;
       const key = `${data.id}:${currentViewer.current.userId}`;
       const serverTime = Date.parse(data.server_time);
@@ -168,7 +178,7 @@ const Match = () => {
     const isCurrent = () =>
       generation === actionGeneration.current &&
       mounted.current &&
-      currentViewer.current.authenticated &&
+      currentViewer.current.authenticated === isAuthenticated &&
       currentViewer.current.userId === viewerId &&
       currentViewer.current.id === id;
     actionLock.current = true;
@@ -178,7 +188,10 @@ const Match = () => {
       const updated = await performCheckersAction(match, action, data);
       if (!isCurrent()) return;
       receiveMatch(updated);
-      if (['accept', 'cancel', 'decline', 'resign', 'rematch'].includes(action) || updated.status === 'finished') {
+      if (
+        isAuthenticated &&
+        (['accept', 'cancel', 'decline', 'resign', 'rematch'].includes(action) || updated.status === 'finished')
+      ) {
         dispatch(getAllUserWallets()).catch(() => undefined);
       }
       if (action === 'rematch') navigate(`/checkers/matches/${updated.id}`);
@@ -347,7 +360,9 @@ const Match = () => {
           {match.winner ? `${getPlayerName(match, match.winner)} wins the match` : 'Draw · stakes refunded'}
         </S.TitleSmall>
         <S.Detail>{RESULT_LABELS[match.result_reason] ?? 'Match complete'}</S.Detail>
-        {match.mode === 'computer' && side === 'white' && <ComputerRewardNotice reward={match.computer_reward} />}
+        {match.mode === 'computer' && side === 'white' && (
+          <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
+        )}
         {match.prize_pool_total > 0 && (
           <strong>
             {match.winner

@@ -157,3 +157,14 @@ describe('creating checkers matches', () => {
     expect(createCheckersMatch).toHaveBeenCalledTimes(1);
   });
 });
+
+it('lets signed-out visitors start a free Checkers computer match', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  (useSelector as unknown as jest.Mock).mockImplementation((selector) => selector({self: {id: null}}));
+  (createCheckersMatch as jest.Mock).mockResolvedValue({id: 42, version: 1, guest_mode: true});
+  await renderHome();
+  expect(container.querySelectorAll('form')).toHaveLength(1);
+  expect(container).toHaveTextContent('No account needed');
+  await submit();
+  expect(createCheckersMatch).toHaveBeenCalledWith(expect.objectContaining({mode: 'computer', stake_amount: 0}));
+});

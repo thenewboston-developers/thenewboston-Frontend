@@ -154,9 +154,11 @@ const Home = () => {
   const handleCreate = useCallback(
     async (event: FormEvent<HTMLFormElement>, mode: CheckersMode) => {
       event.preventDefault();
-      if (!isAuthenticated || creationLock.current) return;
+      if ((!isAuthenticated && mode !== 'computer') || creationLock.current) return;
       const isCurrent = () =>
-        live.current && activeViewer.current.authenticated && activeViewer.current.userId === self.id;
+        live.current &&
+        activeViewer.current.authenticated === isAuthenticated &&
+        activeViewer.current.userId === self.id;
       setCreateError('');
       if (mode === 'human' && (!opponent || opponent.id === self.id)) {
         setCreateError(opponent ? 'Choose another member to challenge.' : 'Choose a member to challenge.');
@@ -227,45 +229,42 @@ const Home = () => {
         </div>
         <Artwork />
       </S.Hero>
-      {!isAuthenticated ? (
-        <S.Panel>
-          <S.TitleSmall>Your next great move starts here.</S.TitleSmall>
-          <S.HeroDescription>
-            Sign in to play the computer for free or challenge a member with optional TNB stakes. Your matches are saved
-            so you can return to the board.
-          </S.HeroDescription>
-          <AuthButtons />
-        </S.Panel>
-      ) : (
-        <>
-          {createError && <S.Error role="alert">{createError}</S.Error>}
-          <S.PanelGrid>
-            <S.Panel>
-              <S.Eyebrow>Practice your tactics</S.Eyebrow>
-              <S.TitleSmall>Play the computer</S.TitleSmall>
-              <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
-                <S.Detail>
-                  Always free. Eligible wins earn TNB when the community game fund has coins available.
-                </S.Detail>
-                <S.Field htmlFor="computer-difficulty">
-                  Difficulty
-                  <S.Select defaultValue="normal" id="computer-difficulty" name="difficulty">
-                    <option value="easy">Easy · Learn the board</option>
-                    <option value="normal">Normal · Plan your captures</option>
-                    <option value="hard">Hard · Think further ahead</option>
-                  </S.Select>
-                </S.Field>
-                <MatchOptions prefix="computer" />
-                <S.Actions>
-                  <S.Button disabled={!!creatingMode} type="submit">
-                    {creatingMode === 'computer' ? 'Setting the board…' : 'Play free →'}
-                  </S.Button>
-                </S.Actions>
-              </S.Form>
-            </S.Panel>
-            <S.Panel>
-              <S.Eyebrow>Make it a rivalry</S.Eyebrow>
-              <S.TitleSmall>Challenge a player</S.TitleSmall>
+      <>
+        {createError && <S.Error role="alert">{createError}</S.Error>}
+        <S.PanelGrid>
+          <S.Panel>
+            <S.Eyebrow>Practice your tactics</S.Eyebrow>
+            <S.TitleSmall>Play the computer</S.TitleSmall>
+            <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
+              <S.Detail>
+                Always free. No account needed. Signed-in players can earn TNB for eligible wins while the community
+                fund has coins.
+              </S.Detail>
+              <S.Field htmlFor="computer-difficulty">
+                Difficulty
+                <S.Select defaultValue="normal" id="computer-difficulty" name="difficulty">
+                  <option value="easy">Easy · Learn the board</option>
+                  <option value="normal">Normal · Plan your captures</option>
+                  <option value="hard">Hard · Think further ahead</option>
+                </S.Select>
+              </S.Field>
+              <MatchOptions prefix="computer" />
+              <S.Actions>
+                <S.Button disabled={!!creatingMode} type="submit">
+                  {creatingMode === 'computer' ? 'Setting the board…' : 'Play free →'}
+                </S.Button>
+              </S.Actions>
+            </S.Form>
+          </S.Panel>
+          <S.Panel>
+            <S.Eyebrow>Make it a rivalry</S.Eyebrow>
+            <S.TitleSmall>Challenge a player</S.TitleSmall>
+            {!isAuthenticated ? (
+              <>
+                <S.Detail>Create an account to challenge friends and earn TNB from eligible computer wins.</S.Detail>
+                <AuthButtons />
+              </>
+            ) : (
               <S.Form onSubmit={(event) => handleCreate(event, 'human')}>
                 <UserSearchInput
                   errors={{}}
@@ -303,10 +302,10 @@ const Home = () => {
                   </S.Button>
                 </S.Actions>
               </S.Form>
-            </S.Panel>
-          </S.PanelGrid>
-        </>
-      )}
+            )}
+          </S.Panel>
+        </S.PanelGrid>
+      </>
       {error && (
         <S.Error role="alert">
           {error}{' '}

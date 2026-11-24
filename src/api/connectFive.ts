@@ -14,6 +14,7 @@ import {
   CreateConnectFiveComputerMatch,
 } from 'types';
 import {authorizationHeaders} from 'utils/authentication';
+import {gameHeaders} from 'utils/guestGames';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/connect-five`;
 
@@ -89,7 +90,7 @@ export const createConnectFiveChatMessage = async (
 export const createConnectFiveComputerMatch = async (
   data: CreateConnectFiveComputerMatch,
 ): Promise<ConnectFiveMatch> => {
-  const response = await axios.post<ConnectFiveMatch>(`${BASE_URL}/matches/computer`, data, authorizationHeaders());
+  const response = await axios.post<ConnectFiveMatch>(`${BASE_URL}/matches/computer`, data, await gameHeaders(true));
   return response.data;
 };
 
@@ -167,7 +168,7 @@ export const getConnectFiveMatch = async (
 ): Promise<ConnectFiveMatch> => {
   try {
     const response = await axios.get<ConnectFiveMatch>(`${BASE_URL}/matches/${matchId}`, {
-      ...authorizationHeaders(),
+      ...(await gameHeaders()),
       params,
       signal,
     });
@@ -252,7 +253,7 @@ export const resignConnectFiveMatch = async (matchId: number, expectedVersion?: 
     const response = await axios.post<ConnectFiveMatch>(
       `${BASE_URL}/matches/${matchId}/resign`,
       {expected_version: expectedVersion},
-      authorizationHeaders(),
+      await gameHeaders(),
     );
     return response.data;
   } catch (error) {
@@ -268,7 +269,7 @@ export const submitConnectFiveMove = async (
     const response = await axios.post<ConnectFiveMatch>(
       `${BASE_URL}/matches/${matchId}/move`,
       data,
-      authorizationHeaders(),
+      await gameHeaders(),
     );
     return response.data;
   } catch (error) {

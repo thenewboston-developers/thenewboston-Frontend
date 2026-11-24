@@ -1,5 +1,7 @@
 import {FormEvent, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {mdiAccountGroupOutline, mdiTrophyOutline, mdiWalletOutline} from '@mdi/js';
+import Icon from '@mdi/react';
 
 import {depositGameFund, getGameFund} from 'api/gameFund';
 import AuthButtons from 'components/AuthButtons';
@@ -141,73 +143,132 @@ const GameFund = () => {
 
   return (
     <S.Card aria-labelledby="game-fund-title">
-      <div>
-        <S.Heading id="game-fund-title">Community game fund</S.Heading>
-        <S.Description>
-          Help keep the games rewarding. Win a computer match in Connect Five, Backgammon, Battleship, or Checkers to
-          earn 10 TNB when the fund can cover the reward.
-        </S.Description>
-      </div>
-      {fund ? (
-        <>
-          <S.Statistics>
-            <S.Balance>
-              <S.Description>Available balance</S.Description>
-              <S.Amount>{fund.balance.toLocaleString()} TNB</S.Amount>
-            </S.Balance>
-            <S.Balance>
-              <strong>{fund.wins_remaining.toLocaleString()} rewards funded</strong>
-              <S.Description>{fund.total_paid.toLocaleString()} TNB paid to players</S.Description>
-            </S.Balance>
-            <S.Status $available={fund.available}>{availability}</S.Status>
-          </S.Statistics>
-          <S.Description>
-            Rewards are paid from the shared fund when a qualifying computer match ends; coins are not reserved when you
-            start. If fewer than 10 TNB are available, free play continues without a reward. Later contributions do not
-            pay for earlier wins.
-          </S.Description>
-        </>
-      ) : (
-        <S.Description>
-          {loadError ? 'The fund balance is temporarily unavailable.' : 'Loading the game fund…'}
-        </S.Description>
-      )}
-      {loadError && (
-        <Button
-          color={ButtonColor.secondary}
-          onClick={() => setRetryKey((value) => value + 1)}
-          text="Refresh fund balance"
-        />
-      )}
-      {isAuthenticated ? (
-        <S.Form onSubmit={handleReview}>
-          <S.Field htmlFor="game-fund-amount">
-            Contribute from your TNB wallet
-            <S.Input
-              id="game-fund-amount"
-              inputMode="numeric"
-              max={1000000000}
-              min={1}
-              onChange={(event) => setAmount(event.target.value)}
-              required
-              step={1}
-              type="number"
-              value={amount}
-            />
-          </S.Field>
-          <Button
-            disabled={isSubmitting}
-            isValid={Number.isSafeInteger(Number(amount)) && Number(amount) >= 1 && Number(amount) <= 1000000000}
-            text="Review contribution"
-            type={ButtonType.submit}
-          />
-        </S.Form>
-      ) : (
+      <S.Hero>
+        <S.Overview>
+          <S.Eyebrow>POWERED BY THE COMMUNITY</S.Eyebrow>
+          <S.Heading id="game-fund-title">
+            Small contributions.
+            <br />
+            More rewarding wins.
+          </S.Heading>
+          <S.HeroDescription>
+            The community game fund turns donated coins into rewards for players. Beat the computer with an account to
+            earn {fund?.reward_amount ?? 10} TNB when the fund can cover your win.
+          </S.HeroDescription>
+          <S.Flow aria-label="How the community game fund works">
+            <S.FlowStep>
+              <S.StepIcon>
+                <Icon aria-hidden="true" path={mdiAccountGroupOutline} size="22px" />
+              </S.StepIcon>
+              <span>
+                Members
+                <br />
+                <strong>contribute</strong>
+              </span>
+            </S.FlowStep>
+            <S.FlowConnector aria-hidden="true" />
+            <S.FlowStep>
+              <S.StepIcon>
+                <Icon aria-hidden="true" path={mdiWalletOutline} size="22px" />
+              </S.StepIcon>
+              <span>
+                Shared fund
+                <br />
+                <strong>fills up</strong>
+              </span>
+            </S.FlowStep>
+            <S.FlowConnector aria-hidden="true" />
+            <S.FlowStep>
+              <S.StepIcon>
+                <Icon aria-hidden="true" path={mdiTrophyOutline} size="22px" />
+              </S.StepIcon>
+              <span>
+                You win
+                <br />
+                <strong>earn coins</strong>
+              </span>
+            </S.FlowStep>
+          </S.Flow>
+        </S.Overview>
+        <S.Pool aria-label="Community game fund balance">
+          <S.PoolHeader>
+            <S.PoolLabel>Community game fund</S.PoolLabel>
+            <S.Coin aria-hidden="true">₮</S.Coin>
+          </S.PoolHeader>
+          {fund ? (
+            <>
+              <S.BalanceLabel>{loadError ? 'Last known balance' : 'Available to win'}</S.BalanceLabel>
+              <S.Amount>
+                {fund.balance.toLocaleString()} <span>TNB</span>
+              </S.Amount>
+              <S.FundedWins>{fund.wins_remaining.toLocaleString()} rewards funded</S.FundedWins>
+              <S.PoolFooter>
+                <S.Status $available={fund.available && !loadError}>
+                  {loadError ? 'Update unavailable' : availability}
+                </S.Status>
+                <S.PaidTotal>{fund.total_paid.toLocaleString()} TNB paid to players</S.PaidTotal>
+              </S.PoolFooter>
+            </>
+          ) : (
+            <S.HeroDescription role="status">
+              {loadError ? 'The fund balance is temporarily unavailable.' : 'Loading the game fund…'}
+            </S.HeroDescription>
+          )}
+          {loadError && (
+            <S.RefreshButton onClick={() => setRetryKey((value) => value + 1)} type="button">
+              Refresh fund balance
+            </S.RefreshButton>
+          )}
+        </S.Pool>
+      </S.Hero>
+      <S.Contribution>
         <div>
-          <S.Description>Sign in to contribute coins from your wallet.</S.Description>
-          <AuthButtons />
+          <S.ContributionTitle>Keep the good games going.</S.ContributionTitle>
+          <S.Description>Every {fund?.reward_amount ?? 10} TNB can fund another winning moment.</S.Description>
         </div>
-      )}
+        {isAuthenticated ? (
+          <S.Form onSubmit={handleReview}>
+            <S.Field htmlFor="game-fund-amount">
+              Contribute from your TNB wallet
+              <S.InputWrapper>
+                <S.Input
+                  id="game-fund-amount"
+                  inputMode="numeric"
+                  max={1000000000}
+                  min={1}
+                  onChange={(event) => setAmount(event.target.value)}
+                  placeholder="Amount"
+                  required
+                  step={1}
+                  type="number"
+                  value={amount}
+                />
+                <S.InputUnit aria-hidden="true">TNB</S.InputUnit>
+              </S.InputWrapper>
+            </S.Field>
+            <Button
+              disabled={isSubmitting}
+              isValid={Number.isSafeInteger(Number(amount)) && Number(amount) >= 1 && Number(amount) <= 1000000000}
+              text="Review contribution"
+              type={ButtonType.submit}
+            />
+          </S.Form>
+        ) : (
+          <S.GuestActions>
+            <S.Description>Sign in to contribute or earn rewards.</S.Description>
+            <AuthButtons />
+          </S.GuestActions>
+        )}
+      </S.Contribution>
+      <S.RewardDetails>
+        <summary>How rewards work</summary>
+        <S.Description>
+          Sign in before starting a computer match to qualify. Rewards are paid when a qualifying match ends; coins are
+          not reserved when you start. If fewer than {fund?.reward_amount ?? 10} TNB are available or rewards are
+          paused, free play continues without a reward. Guest wins do not earn coins, and later contributions or account
+          creation do not pay for earlier wins.
+        </S.Description>
+      </S.RewardDetails>
       {error && !confirmAmount && <S.Error role="alert">{error}</S.Error>}
       {success && <S.Description role="status">{success}</S.Description>}
       {confirmAmount !== null && (

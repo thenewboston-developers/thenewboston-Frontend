@@ -33,7 +33,7 @@ const ComputerSetup = () => {
   }, []);
 
   const handleSubmit = async (values: typeof initialValues, helpers: FormikHelpers<typeof initialValues>) => {
-    if (creationLock.current || !self.id) return;
+    if (creationLock.current) return;
     const viewerId = self.id;
     const isCurrent = () => live.current && currentViewer.current === viewerId;
     creationLock.current = true;
@@ -59,7 +59,8 @@ const ComputerSetup = () => {
     <S.Section aria-labelledby="computer-game">
       <S.SectionTitle id="computer-game">Play the computer</S.SectionTitle>
       <S.SectionDescription>
-        Free to play. Choose your challenge and practice your next winning line. Computer games do not change your ELO.
+        Free to play. No account needed. Choose your challenge and practice your next winning line. Computer games do
+        not change your ELO.
       </S.SectionDescription>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({errors, handleSubmit: submit, isSubmitting, touched}) => (

@@ -13,6 +13,8 @@ export interface CheckersPlayer {
 }
 
 export interface CheckersMatch {
+  guest_mode?: boolean;
+  guest_session_id?: string | null;
   id: number;
   mode: CheckersMode;
   difficulty: CheckersDifficulty;

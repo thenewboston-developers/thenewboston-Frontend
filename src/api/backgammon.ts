@@ -8,16 +8,17 @@ import {
   CreateBackgammonMatch,
 } from 'types/backgammon';
 import {authorizationHeaders} from 'utils/authentication';
+import {gameHeaders} from 'utils/guestGames';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/backgammon/matches`;
 
 export const createBackgammonMatch = async (data: CreateBackgammonMatch): Promise<BackgammonMatch> => {
-  const response = await axios.post<BackgammonMatch>(BASE_URL, data, authorizationHeaders());
+  const response = await axios.post<BackgammonMatch>(BASE_URL, data, await gameHeaders(data.mode === 'computer'));
   return response.data;
 };
 
 export const getBackgammonMatch = async (id: number, signal?: AbortSignal): Promise<BackgammonMatch> => {
-  const response = await axios.get<BackgammonMatch>(`${BASE_URL}/${id}`, {...authorizationHeaders(), signal});
+  const response = await axios.get<BackgammonMatch>(`${BASE_URL}/${id}`, {...(await gameHeaders()), signal});
   return response.data;
 };
 
@@ -37,7 +38,7 @@ export const performBackgammonAction = async (
   const response = await axios.post<BackgammonMatch>(
     `${BASE_URL}/${match.id}/${action}`,
     {...data, expected_version: match.version},
-    authorizationHeaders(),
+    await gameHeaders(),
   );
   return response.data;
 };

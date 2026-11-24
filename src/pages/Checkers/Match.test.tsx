@@ -7,6 +7,7 @@ import {getCheckersMatch, performCheckersAction} from 'api/checkers';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
 import {CheckersMatch} from 'types/checkers';
+import {isCurrentGuestGame} from 'utils/guestGames';
 
 import Match from './Match';
 import {INITIAL_BOARD} from './utils';
@@ -16,6 +17,7 @@ jest.mock('api/checkers', () => ({getCheckersMatch: jest.fn(), performCheckersAc
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
 jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
+jest.mock('utils/guestGames', () => ({isCurrentGuestGame: jest.fn()}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -52,6 +54,7 @@ beforeEach(() => {
   document.body.appendChild(container);
   root = createRoot(container);
   selfId = 11;
+  (isCurrentGuestGame as jest.Mock).mockReturnValue(false);
   mockMatchId = '1';
   dispatch.mockImplementation(() => Promise.resolve());
   match = {
@@ -288,4 +291,60 @@ describe('Checkers match interaction', () => {
     expect(getAllUserWallets).toHaveBeenCalled();
     expect(container.textContent).toContain('20 TNB prize paid to Alice.');
   });
+});
+
+it('lets a guest complete a legal move without requesting a wallet', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  (isCurrentGuestGame as jest.Mock).mockReturnValue(true);
+  selfId = 0;
+  match.guest_mode = true;
+  match.mode = 'computer';
+  match.white = {id: 0, username: 'Guest', avatar: null};
+  match.stake_amount = 0;
+  match.prize_pool_total = 0;
+  await renderMatch();
+  act(() => (container.querySelector('[aria-label="a3: white man"]') as HTMLButtonElement).click());
+  act(() => (container.querySelector('[aria-label="b4: empty, legal destination"]') as HTMLButtonElement).click());
+  await act(async () => button('Confirm move').click());
+  expect(performCheckersAction).toHaveBeenCalledWith(match, 'move', {path: [40, 33]});
+  expect(getAllUserWallets).not.toHaveBeenCalled();
+});
+
+it('invites a winning guest to create an account and lets them play again', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  (isCurrentGuestGame as jest.Mock).mockReturnValue(true);
+  selfId = 0;
+  match.guest_mode = true;
+  match.mode = 'computer';
+  match.white = {id: 0, username: 'Guest', avatar: null};
+  match.status = 'finished';
+  match.winner = 'white';
+  match.stake_amount = 0;
+  match.prize_pool_total = 0;
+  match.computer_reward = {status: 'guest', amount: 10, currency: 'TNB'};
+  await renderMatch();
+  expect(container).toHaveTextContent('this win would have earned you 10 coins');
+  expect(container.querySelector('a[href="/create-account?next=%2Fgames"]')).not.toBeNull();
+  await act(async () => button('Play again').click());
+  expect(performCheckersAction).toHaveBeenCalledWith(match, 'rematch', {});
+  expect(getAllUserWallets).not.toHaveBeenCalled();
+});
+
+it('does not reveal a cached board owned by another guest session', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  (isCurrentGuestGame as jest.Mock).mockReturnValue(false);
+  match.guest_mode = true;
+  match.mode = 'computer';
+  await renderMatch();
+  expect(container.querySelector('[role="group"]')).toBeNull();
+  expect(container).not.toHaveTextContent('Confirm move');
+});
+
+it('preserves signed-out spectator access without participant controls', async () => {
+  (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+  match.your_side = null;
+  await renderMatch();
+  expect(container.querySelector('[role="group"]')).not.toBeNull();
+  expect(container).toHaveTextContent('You are watching this match');
+  expect(container).not.toHaveTextContent('Confirm move');
 });

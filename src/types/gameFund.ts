@@ -17,7 +17,7 @@ export interface GameFundDeposit {
 }
 
 export interface ComputerReward {
-  status: 'paid' | 'fund_empty' | 'not_eligible';
+  status: 'paid' | 'fund_empty' | 'not_eligible' | 'guest';
   amount: number;
   currency: 'TNB';
 }

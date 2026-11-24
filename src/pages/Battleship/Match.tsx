@@ -22,6 +22,7 @@ import {
   ShipId,
 } from 'types/battleship';
 import {isCancellationError} from 'utils/errors';
+import {hasGuestGameSession, isCurrentGuestGame} from 'utils/guestGames';
 
 import Board from './Board';
 import Rules from './Rules';
@@ -71,19 +72,26 @@ const Match = () => {
   const dispatch = useDispatch<AppDispatch>();
   const id = Number(matchId);
   const isAuthenticated = useIsAuthenticated();
+  const isGuestSession = !isAuthenticated && hasGuestGameSession();
   const matchSnapshot = useSelector(
     (state: RootState) => (state.battleship as BattleshipState | undefined)?.matchesById[id],
   );
   const navigate = useNavigate();
   const self = useSelector(getSelf);
   // Never render a cached private board for a different signed-in account.
-  const match = matchSnapshot && matchSnapshot[matchSnapshot.your_side]?.id === self.id ? matchSnapshot : undefined;
+  const match =
+    matchSnapshot &&
+    (matchSnapshot.guest_mode
+      ? isGuestSession && isCurrentGuestGame(matchSnapshot)
+      : isAuthenticated && matchSnapshot[matchSnapshot.your_side]?.id === self.id)
+      ? matchSnapshot
+      : undefined;
   currentViewer.current = {id, userId: self.id, authenticated: isAuthenticated};
   latestSnapshot.current = match;
   const side = match?.your_side;
   const status = match?.status;
   const ownReady = side === 'host' ? match?.host_ready : match?.guest_ready;
-  const canAct = isAuthenticated && !!match && !busyAction && !loadError && !isLoading;
+  const canAct = !!match && !busyAction && !loadError && !isLoading;
   const canPlace = canAct && status === 'active' && match?.phase === 'placing' && !ownReady;
   const canFire = canAct && status === 'active' && match?.phase === 'battle' && match.active_side === side;
   const ships = draft.id === id ? draft.ships : [];
@@ -93,8 +101,9 @@ const Match = () => {
     (data: BattleshipMatch) => {
       if (
         !mounted.current ||
-        !currentViewer.current.authenticated ||
-        data[data.your_side]?.id !== currentViewer.current.userId
+        (data.guest_mode
+          ? currentViewer.current.authenticated || !isCurrentGuestGame(data)
+          : !currentViewer.current.authenticated || data[data.your_side]?.id !== currentViewer.current.userId)
       )
         return;
       const key = `${data.id}:${currentViewer.current.userId}`;
@@ -133,7 +142,7 @@ const Match = () => {
     actionLock.current = false;
     setBusyAction(null);
     setTarget(null);
-    if (!isAuthenticated) return undefined;
+    if (!isAuthenticated && !isGuestSession) return undefined;
     const controller = new AbortController();
     let polling = true;
     let timer: ReturnType<typeof setTimeout>;
@@ -165,7 +174,7 @@ const Match = () => {
       controller.abort();
       clearTimeout(timer);
     };
-  }, [id, isAuthenticated, receiveMatch, retryKey, self.id]);
+  }, [id, isAuthenticated, isGuestSession, receiveMatch, retryKey, self.id]);
 
   useEffect(() => {
     setDraft({id, ships: []});
@@ -192,7 +201,7 @@ const Match = () => {
     const isCurrent = () =>
       generation === actionGeneration.current &&
       mounted.current &&
-      currentViewer.current.authenticated &&
+      currentViewer.current.authenticated === isAuthenticated &&
       currentViewer.current.userId === viewerId &&
       currentViewer.current.id === id;
     actionLock.current = true;
@@ -202,7 +211,10 @@ const Match = () => {
       const updated = await performBattleshipAction(match, action, data);
       if (!isCurrent()) return;
       receiveMatch(updated);
-      if (['accept', 'cancel', 'decline', 'resign', 'rematch'].includes(action) || updated.status === 'finished') {
+      if (
+        isAuthenticated &&
+        (['accept', 'cancel', 'decline', 'resign', 'rematch'].includes(action) || updated.status === 'finished')
+      ) {
         dispatch(getAllUserWallets()).catch(() => undefined);
       }
       if (action === 'rematch') navigate(`/battleship/matches/${updated.id}`);
@@ -495,7 +507,7 @@ const Match = () => {
           {match.winner ? `${getPlayerName(match, match.winner)} wins the battle` : 'Match ended · stakes refunded'}
         </S.TitleSmall>
         <S.Detail>{RESULT_LABELS[match.result_reason] ?? 'Match complete'}</S.Detail>
-        {match.mode === 'computer' && <ComputerRewardNotice reward={match.computer_reward} />}
+        {match.mode === 'computer' && <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />}
         {match.prize_pool_total > 0 && (
           <strong>
             {match.winner
@@ -519,7 +531,7 @@ const Match = () => {
     );
   };
 
-  if (!isAuthenticated)
+  if (!isAuthenticated && !isGuestSession)
     return (
       <S.Container>
         <S.TextLink to="/battleship/home">← Battleship</S.TextLink>

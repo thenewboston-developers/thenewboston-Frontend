@@ -23,6 +23,16 @@ const PlayerInfo: SFC<PlayerInfoProps> = ({className, computerDifficulty, player
       </S.PlayerLabel>
     );
   if (!player) return null;
+  if (player.id === 0)
+    return (
+      <S.PlayerLabel className={className}>
+        <S.PlayerAvatar $variant={playerSide} size="44px" src={null} />
+        <S.PlayerLabelDetails>
+          <S.ComputerName>Guest · You</S.ComputerName>
+          <S.PlayerMeta>{playerSide === 'black' ? 'Black' : 'White'} · Free play</S.PlayerMeta>
+        </S.PlayerLabelDetails>
+      </S.PlayerLabel>
+    );
 
   const hasElo = typeof player.connect_five_elo === 'number';
   const profilePath = `/profile/${player.id}`;
