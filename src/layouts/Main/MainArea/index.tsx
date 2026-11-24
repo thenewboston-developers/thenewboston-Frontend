@@ -14,6 +14,7 @@ import {
   PATH_DOTS_AND_BOXES,
   PATH_EXCHANGE,
   PATH_GAMES,
+  PATH_HEX,
   PATH_HOME,
   PATH_LEGACY_FEED,
   PATH_MANCALA,
@@ -32,6 +33,7 @@ import DotsAndBoxes from 'pages/DotsAndBoxes';
 import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
 import Games from 'pages/Games';
+import Hex from 'pages/Hex';
 import Mancala from 'pages/Mancala';
 import Notifications from 'pages/Notifications';
 import PostDetail from 'pages/PostDetail';
@@ -55,6 +57,7 @@ const MainArea: SFC = ({className}) => {
         <Route element={<DotsAndBoxes />} path={PATH_DOTS_AND_BOXES} />
         <Route path={PATH_EXCHANGE} element={<Exchange />} />
         <Route element={<Games />} path={PATH_GAMES} />
+        <Route element={<Hex />} path={PATH_HEX} />
         <Route path={PATH_HOME} element={<Feed />} />
         <Route path={PATH_LEGACY_FEED} element={<Navigate to={PATH_HOME} replace />} />
         <Route element={<Mancala />} path={PATH_MANCALA} />

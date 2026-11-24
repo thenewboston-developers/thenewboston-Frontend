@@ -22,6 +22,9 @@ describe('isPathActive', () => {
     '/dots-and-boxes',
     '/dots-and-boxes/home',
     '/dots-and-boxes/matches/12',
+    '/hex',
+    '/hex/home',
+    '/hex/matches/12',
   ])('keeps Games active on %s', (pathname) => {
     expect(isPathActive(pathname, '/games')).toBe(true);
   });
@@ -34,6 +37,8 @@ describe('isPathActive', () => {
     '/reversi-extra',
     '/mancala-extra',
     '/dots-and-boxes-extra',
+    '/hex-extra',
+    '/hexagon',
     '/exchange',
     '/',
   ])('does not activate Games on %s', (pathname) => {

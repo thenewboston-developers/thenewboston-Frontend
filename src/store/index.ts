@@ -28,6 +28,7 @@ import exchangeOrdersReducer from 'store/exchangeOrders';
 import followersReducer from 'store/followers';
 import followingsReducer from 'store/followings';
 import frontendDeploymentsReducer from 'store/frontendDeployments';
+import hexReducer from 'store/hex';
 import invitationLimitsReducer from 'store/invitationLimits';
 import invitationsReducer from 'store/invitations';
 import managerReducer from 'store/manager';
@@ -61,6 +62,7 @@ const rootReducer = combineReducers({
   followers: followersReducer,
   followings: followingsReducer,
   frontendDeployments: frontendDeploymentsReducer,
+  hex: hexReducer,
   invitationLimits: invitationLimitsReducer,
   invitations: invitationsReducer,
   manager: managerReducer,
@@ -96,6 +98,7 @@ const persistConfig = {
     'checkers',
     'dotsAndBoxes',
     'frontendDeployments',
+    'hex',
     'mancala',
     'reversi',
   ],

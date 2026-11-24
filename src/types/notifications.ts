@@ -42,6 +42,15 @@ export interface ExchangeOrderFilledPayload {
   secondary_currency: CurrencyTinySerializer;
 }
 
+export interface HexChallengePayload {
+  board_size: number;
+  challenger: Pick<UserReadSerializer, 'id' | 'username' | 'avatar'>;
+  match_id: number;
+  notification_type: NotificationType.HEX_CHALLENGE;
+  stake_amount: number;
+  time_limit_seconds: number;
+}
+
 export interface MancalaChallengePayload {
   challenger: Pick<UserReadSerializer, 'id' | 'username' | 'avatar'>;
   match_id: number;
@@ -145,6 +154,7 @@ export type NotificationPayload =
   | ConnectFiveChallengePayload
   | DotsAndBoxesChallengePayload
   | ExchangeOrderFilledPayload
+  | HexChallengePayload
   | MancalaChallengePayload
   | PostCoinTransferPayload
   | PostCommentPayload

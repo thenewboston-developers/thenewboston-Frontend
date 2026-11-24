@@ -17,6 +17,7 @@ export const isPathActive = (pathname: string, rootPath: string): boolean => {
           '/reversi',
           '/mancala',
           '/dots-and-boxes',
+          '/hex',
         ]
       : [rootPath];
   return sectionPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
