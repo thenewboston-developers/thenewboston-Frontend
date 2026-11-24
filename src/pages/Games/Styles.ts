@@ -71,6 +71,20 @@ export const BackgammonArtwork = styled.div`
   }
 `;
 
+export const BattleshipArtwork = styled.div`
+  align-items: center;
+  background: linear-gradient(135deg, #173c51, #41788b);
+  display: flex;
+  padding: 60px 28px 32px;
+  position: relative;
+
+  svg {
+    border-radius: 22px;
+    box-shadow: 0 16px 32px #071e3c55;
+    transform: rotate(-4deg);
+  }
+`;
+
 export const CardSpacer = styled.div`
   height: 24px;
 `;
