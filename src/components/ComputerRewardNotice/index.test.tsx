@@ -67,6 +67,22 @@ it('keeps an ineligible result factual and does not show a deposit confirmation'
   act(() => root.unmount());
 });
 
+it('keeps embedded reward notices factual and preserves paid rewards', () => {
+  const container = document.createElement('div');
+  const root = createRoot(container);
+  act(() =>
+    root.render(<ComputerRewardNotice reward={{status: 'not_eligible', amount: 0, currency: 'TNB'}} subdued />),
+  );
+  expect(container).toHaveTextContent('No reward this round');
+  expect(container).toHaveTextContent('This result did not qualify for a computer-win reward.');
+  expect(container).not.toHaveTextContent('Payment confirmed');
+  act(() => root.render(<ComputerRewardNotice reward={{status: 'paid', amount: 10, currency: 'TNB'}} subdued />));
+  expect(container).toHaveTextContent('Payment confirmed');
+  expect(container).toHaveTextContent('+10 TNB game reward');
+  expect(container).not.toHaveTextContent('No reward this round');
+  act(() => root.unmount());
+});
+
 it('offers a guest future rewards when the fund is empty without claiming this game earned coins', () => {
   const container = document.createElement('div');
   const root = createRoot(container);

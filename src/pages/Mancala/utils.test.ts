@@ -109,3 +109,41 @@ describe('formatClock', () => {
     expect(formatClock(-5)).toBe('0:00');
   });
 });
+
+describe('stone flight paths', () => {
+  it('tracks each drop from the previous pit, including a skipped opponent store', () => {
+    const before = [1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 10, 0];
+    const frames = sowingFrames(before, move({pit: 5, side: 'guest', stones: 10}));
+    expect(frames.slice(1).map(({transfers}) => transfers)).toEqual([
+      [{from: 12, to: 13, stones: 1}],
+      [{from: 13, to: 0, stones: 1}],
+      [{from: 0, to: 1, stones: 1}],
+      [{from: 1, to: 2, stones: 1}],
+      [{from: 2, to: 3, stones: 1}],
+      [{from: 3, to: 4, stones: 1}],
+      [{from: 4, to: 5, stones: 1}],
+      [{from: 5, to: 7, stones: 1}],
+      [{from: 7, to: 8, stones: 1}],
+      [{from: 8, to: 9, stones: 1}],
+    ]);
+  });
+
+  it('carries both captured pits into the mover’s store with the correct counts', () => {
+    const before = [1, 0, 4, 4, 4, 4, 0, 4, 4, 4, 4, 7, 4, 0];
+    const frames = sowingFrames(before, move({captured: 8, last: 1, stones: 1}));
+    expect(frames[frames.length - 1].transfers).toEqual([
+      {from: 1, to: 6, stones: 1},
+      {from: 11, to: 6, stones: 7},
+    ]);
+  });
+
+  it('sweeps only nonempty pits into their own stores', () => {
+    const before = [0, 0, 0, 0, 0, 1, 26, 1, 2, 3, 0, 0, 0, 15];
+    const frames = sowingFrames(before, move({last: 6, pit: 5, stones: 1, swept: {guest: 6, host: 0}}));
+    expect(frames[frames.length - 1].transfers).toEqual([
+      {from: 7, to: 13, stones: 1},
+      {from: 8, to: 13, stones: 2},
+      {from: 9, to: 13, stones: 3},
+    ]);
+  });
+});

@@ -143,16 +143,11 @@ export const Stroke = styled.span`
   position: absolute;
 `;
 
-const lineInk = ({$owner, $preview}: {$owner?: DotsAndBoxesSide; $preview?: DotsAndBoxesSide}) => {
-  if ($owner) return sideColors[$owner].ink;
-  if ($preview) return sideColors[$preview].ink;
-  return '#d9deea';
-};
-
 export const Line = styled.button<{
   $owner?: DotsAndBoxesSide;
-  $preview?: DotsAndBoxesSide;
+  $pending: boolean;
   $recent: boolean;
+  $side: DotsAndBoxesSide;
   $vertical: boolean;
 }>`
   background: none;
@@ -162,6 +157,7 @@ export const Line = styled.button<{
   min-width: 0;
   padding: 0;
   position: relative;
+  touch-action: manipulation;
   z-index: 1;
 
   /* A wider target than the stroke itself, kept clear of the dots where lines meet. */
@@ -172,15 +168,15 @@ export const Line = styled.button<{
   }
 
   ${Stroke} {
-    background: ${lineInk};
+    background: ${({$owner, $pending, $side}) => ($owner || $pending ? sideColors[$owner ?? $side].ink : '#d9deea')};
     box-shadow: ${({$owner, $recent}) => ($owner && $recent ? `0 0 0 3px ${sideColors[$owner].soft}66` : 'none')};
     inset: ${({$vertical}) => ($vertical ? '7.7% 32%' : '32% 7.7%')};
-    ${({$owner, $preview}) => {
+    ${({$owner, $pending}) => {
       if ($owner)
         return css`
           animation: ${draw} 220ms ease-out;
         `;
-      if ($preview)
+      if ($pending)
         return css`
           animation: ${pulse} 700ms ease-in-out infinite alternate;
         `;
@@ -194,9 +190,16 @@ export const Line = styled.button<{
     cursor: default;
   }
 
-  &:hover:not(:disabled) ${Stroke} {
-    background: ${({$preview}) => ($preview ? sideColors[$preview].ink : '#9aa6c4')};
+  &:focus-visible ${Stroke} {
+    background: ${({$side}) => sideColors[$side].ink};
     opacity: 1;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) ${Stroke} {
+      background: ${({$side}) => sideColors[$side].ink};
+      opacity: 1;
+    }
   }
 
   &:focus-visible {

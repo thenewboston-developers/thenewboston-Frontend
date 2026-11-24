@@ -12,7 +12,7 @@ jest.mock('axios', () => ({isAxiosError: jest.fn(() => false)}));
 let container: HTMLDivElement;
 let root: Root;
 const names = {blue: 'Alice', red: 'Bob'};
-const onSelect = jest.fn();
+const onPlay = jest.fn();
 
 const emptyLines = (): DotsAndBoxesOwner[] => Array(24).fill(0);
 const emptyBoxes = (): DotsAndBoxesOwner[] => Array(9).fill(0);
@@ -21,15 +21,7 @@ const line = (label: string) => container.querySelector(`button[aria-label^="Lin
 const renderBoard = (props: Partial<Parameters<typeof Board>[0]> = {}) => {
   act(() => {
     root.render(
-      <Board
-        boxes={emptyBoxes()}
-        lines={emptyLines()}
-        names={names}
-        onSelect={onSelect}
-        side="blue"
-        size={3}
-        {...props}
-      />,
+      <Board boxes={emptyBoxes()} lines={emptyLines()} names={names} onPlay={onPlay} side="blue" size={3} {...props} />,
     );
   });
 };
@@ -64,7 +56,7 @@ it('reports the line number the server expects when a line is pressed', () => {
   act(() => line('C4 to D4').click());
   act(() => line('A1 to A2').click());
   act(() => line('D3 to D4').click());
-  expect(onSelect.mock.calls.map(([number]) => number)).toEqual([0, 11, 12, 23]);
+  expect(onPlay.mock.calls.map(([number]) => number)).toEqual([0, 11, 12, 23]);
 });
 
 it('names who drew a line and who claimed a box, and locks drawn lines', () => {
@@ -86,12 +78,14 @@ it('names who drew a line and who claimed a box, and locks drawn lines', () => {
   expect(container.querySelector('[aria-label^="Box B1"]')).toHaveAccessibleName('Box B1: unclaimed');
 });
 
-it('marks the previewed line and says how to draw it', () => {
-  renderBoard({selected: 4});
-  expect(line('B2 to C2')).toHaveAccessibleName('Line B2 to C2: selected, press again to draw');
-  expect(line('B2 to C2')).toHaveAttribute('aria-pressed', 'true');
-  expect(line('A1 to B1')).toHaveAttribute('aria-pressed', 'false');
-  expect(container).toHaveTextContent('press the line again to draw it');
+it('marks an in-flight line and locks the board until the server responds', () => {
+  renderBoard({pending: 4});
+  expect(line('B2 to C2')).toHaveAccessibleName('Line B2 to C2: drawing…');
+  expect(line('B2 to C2')).toHaveAttribute('aria-busy', 'true');
+  expect(line('A1 to B1')).toHaveAttribute('aria-busy', 'false');
+  expect(Array.from(container.querySelectorAll('button')).every((button) => button.disabled)).toBe(true);
+  act(() => line('A1 to B1').click());
+  expect(onPlay).not.toHaveBeenCalled();
 });
 
 it('locks every line when it is not the viewer’s turn', () => {

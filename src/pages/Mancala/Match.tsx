@@ -255,14 +255,17 @@ const Match = () => {
     if (frame) {
       title = frame.side === side ? 'Sowing your stones' : `${getPlayerName(match, frame.side)} is sowing`;
       description = frame.hand ? `${frame.hand} still in hand.` : 'Last stone down.';
-      if (frame.kind === 'capture') description = 'Capture! Both pits go to the store.';
+      if (frame.kind === 'capture') {
+        title = frame.side === side ? 'Nice capture!' : `${getPlayerName(match, frame.side)} captures`;
+        description = 'Both pits move into the store.';
+      }
       if (frame.kind === 'sweep') description = 'A row is empty. The stones left over go to their owner.';
     } else if (match.active_side) {
       const again = match.last_move?.extra_turn && match.last_move.side === match.active_side;
       const name = getPlayerName(match, match.active_side);
       if (isMyTurn) {
         title = again ? 'You play again' : 'Your turn';
-        description = 'Choose one of your pits to sow its stones.';
+        description = 'Choose a glowing pit. Your stones will travel around the board.';
       } else {
         title = again ? `${name} plays again` : `${name}’s turn`;
         description = isParticipant ? `Waiting for ${name} to move.` : 'The board updates as the game progresses.';
@@ -271,9 +274,10 @@ const Match = () => {
     }
     if (!title) return null;
     return (
-      <S.TurnBanner $yours={!frame && isMyTurn} aria-live="polite">
+      <S.TurnBanner $yours={!frame && isMyTurn}>
+        <S.TurnIndicator aria-hidden="true" />
         <div>
-          <strong>{title}</strong>
+          <strong aria-live="polite">{title}</strong>
           <S.Small>{description}</S.Small>
         </div>
         {busyAction && <span role="status">Updating the game…</span>}
@@ -287,18 +291,18 @@ const Match = () => {
     const title = match.winner ? `${getPlayerName(match, match.winner)} wins` : 'It’s a draw';
     return (
       <GameResultPanel
-        description={
-          <>
-            {RESULT_LABELS[match.result_reason] ?? 'Game complete'} · {match.board[STORE.host]}–
-            {match.board[STORE.guest]}
-          </>
-        }
+        description={RESULT_LABELS[match.result_reason] ?? 'Game complete'}
         game="Mancala"
         outcome={getGameResultOutcome(match.winner, side)}
+        scoreLabel="Stones stored"
+        scores={[
+          {label: getPlayerName(match, 'host'), value: match.board[STORE.host], winner: match.winner === 'host'},
+          {label: getPlayerName(match, 'guest'), value: match.board[STORE.guest], winner: match.winner === 'guest'},
+        ]}
         title={title}
       >
         {match.mode === 'computer' && isParticipant && (
-          <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
+          <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} subdued />
         )}
         {match.prize_pool_total > 0 && (
           <strong>
@@ -392,9 +396,12 @@ const Match = () => {
           )}
           {started && (
             <>
+              {renderTurn()}
               <Board
+                activeSide={match.status === 'active' ? match.active_side : null}
                 board={board}
                 canPlay={canMove}
+                clocks={{host: renderClock('host'), guest: renderClock('guest')}}
                 frame={presentation.frame}
                 lastMove={match.last_move}
                 names={names}
@@ -403,35 +410,15 @@ const Match = () => {
                 viewerSide={side}
               />
               <S.BoardCaption>
-                Stones travel counter-clockwise: left to right along the near row, into the store on the right, then
-                back along the far row.
+                Each clock runs only on that player’s turns. Stones move counter-clockwise around the board.
               </S.BoardCaption>
             </>
           )}
-          {renderTurn()}
           {renderResult()}
         </div>
         {/* A challenge that has not started has no board, clocks, or prize pool to report yet */}
         {started && (
           <S.Sidebar>
-            <S.Panel>
-              <S.Eyebrow>Stores</S.Eyebrow>
-              <S.List>
-                {(['host', 'guest'] as MancalaSide[]).map((playerSide) => (
-                  <S.Player $active={match.status === 'active' && match.active_side === playerSide} key={playerSide}>
-                    <S.PlayerIdentity>
-                      <S.PlayerName>
-                        {names[playerSide]}
-                        {side === playerSide ? ' (you)' : ''}
-                      </S.PlayerName>
-                      <S.Timer>{renderClock(playerSide)} remaining</S.Timer>
-                    </S.PlayerIdentity>
-                    <S.Score>{board[STORE[playerSide]]}</S.Score>
-                  </S.Player>
-                ))}
-              </S.List>
-              <S.Small>Each clock covers the whole match and runs only on that player’s turns.</S.Small>
-            </S.Panel>
             <S.Panel>
               <S.Eyebrow>On the table</S.Eyebrow>
               <S.Stat>

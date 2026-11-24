@@ -58,9 +58,9 @@ const Match = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [now, setNow] = useState(Date.now());
+  const [pendingLine, setPendingLine] = useState<number | null>(null);
   const [resigning, setResigning] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
-  const [selection, setSelection] = useState<{line: number; version: number} | null>(null);
   const [serverOffset, setServerOffset] = useState(0);
   const [shown, setShown] = useState<{count: number; id: number} | null>(null);
   const {matchId} = useParams();
@@ -104,7 +104,6 @@ const Match = () => {
   const position = match && replaying ? positionAfter(match, shownLines) : match;
   const canAct = !!match && !!side && !busyAction && !loadError && !isLoading;
   const canMove = canAct && status === 'active' && match.active_side === side && !replaying;
-  const selectedLine = match && selection?.version === match.version ? selection.line : null;
 
   const receiveMatch = useCallback(
     (data: DotsAndBoxesMatch, silent = false) => {
@@ -161,7 +160,7 @@ const Match = () => {
     actionGeneration.current += 1;
     actionLock.current = false;
     setBusyAction(null);
-    setSelection(null);
+    setPendingLine(null);
     const controller = new AbortController();
     let hydratePresentation = true;
     let polling = true;
@@ -298,6 +297,7 @@ const Match = () => {
       currentViewer.current.id === id;
     actionLock.current = true;
     setBusyAction(action);
+    if (action === 'move') setPendingLine(data.line ?? null);
     setActionError('');
     try {
       const updated = await performDotsAndBoxesAction(match, action, data);
@@ -312,7 +312,6 @@ const Match = () => {
       if (action === 'rematch') navigate(`/dots-and-boxes/matches/${updated.id}`);
       if (updated.mode === 'computer' && updated.status === 'active' && updated.active_side === 'red')
         pollSoon.current();
-      setSelection(null);
     } catch (error) {
       if (!isCurrent()) return;
       setActionError(getErrorMessage(error));
@@ -326,16 +325,15 @@ const Match = () => {
       if (generation === actionGeneration.current) actionLock.current = false;
       if (isCurrent()) {
         setBusyAction(null);
+        setPendingLine(null);
         setResigning(false);
       }
     }
   };
 
-  const handleSelect = (line: number) => {
-    if (!canMove || !match) return;
-    // The first press previews a line; pressing the same line again draws it.
-    if (selectedLine === line) handleAction('move', {line});
-    else setSelection({line, version: match.version});
+  const handlePlay = (line: number) => {
+    if (!canMove || !match || match.lines[line] !== 0) return;
+    handleAction('move', {line});
   };
 
   const renderBoard = () => {
@@ -351,9 +349,9 @@ const Match = () => {
           disabled={!canMove}
           lines={position.lines}
           names={names}
-          onSelect={handleSelect}
+          onPlay={handlePlay}
+          pending={pendingLine}
           recent={lastTurnLines(match, shownLines)}
-          selected={selectedLine}
           side={side ?? 'blue'}
           size={match.board_size}
         />
@@ -444,13 +442,25 @@ const Match = () => {
           : `${getPlayerName(match, match.winner)} wins the match`;
     return (
       <GameResultPanel
-        description={<>{RESULT_LABELS[match.result_reason] ?? 'Match complete'}</>}
+        description={
+          <>
+            {RESULT_LABELS[match.result_reason] ?? 'Match complete'}
+            {match.mode === 'computer' && side && match.winner && match.winner !== side
+              ? '. A fresh board is a fresh start.'
+              : ''}
+          </>
+        }
         game="Dots and Boxes"
         outcome={getGameResultOutcome(match.winner, side)}
+        scoreLabel="Boxes claimed"
+        scores={[
+          {label: getPlayerName(match, 'blue'), value: getScore(match, 'blue'), winner: match.winner === 'blue'},
+          {label: getPlayerName(match, 'red'), value: getScore(match, 'red'), winner: match.winner === 'red'},
+        ]}
         title={title}
       >
         {match.mode === 'computer' && side === 'blue' && (
-          <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
+          <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} subdued />
         )}
         {match.prize_pool_total > 0 && (
           <strong>
@@ -489,12 +499,12 @@ const Match = () => {
       const drawing = SIDES[match.lines[match.moves[shownLines]] - 1];
       heading = `${getPlayerName(match, drawing)} is drawing…`;
       detail = 'Watch the board: each new line is shown in turn.';
+    } else if (busyAction === 'move' && pendingLine !== null) {
+      heading = 'Drawing your line…';
+      detail = `Line ${lineLabel(match.board_size, pendingLine)} is being placed.`;
     } else if (isYourTurn) {
       heading = keptTurn ? 'Box claimed · draw again' : 'Your turn';
-      detail =
-        selectedLine === null
-          ? 'Pick an open line. Closing a box earns another turn.'
-          : `Line ${lineLabel(match.board_size, selectedLine)} is selected. Press it again, or Draw line, to play it.`;
+      detail = 'Click or tap an open line to draw it. Closing a box earns another turn.';
     }
     return (
       <S.MoveToolbar aria-live="polite">
@@ -502,22 +512,6 @@ const Match = () => {
           <strong>{heading}</strong>
           <S.Small>{detail}</S.Small>
         </div>
-        {side && status === 'active' && (
-          <S.Actions>
-            {selectedLine !== null && (
-              <S.Button $secondary disabled={!canMove} onClick={() => setSelection(null)} type="button">
-                Clear
-              </S.Button>
-            )}
-            <S.Button
-              disabled={!canMove || selectedLine === null}
-              onClick={() => selectedLine !== null && handleAction('move', {line: selectedLine})}
-              type="button"
-            >
-              {busyAction === 'move' ? 'Drawing…' : 'Draw line'}
-            </S.Button>
-          </S.Actions>
-        )}
       </S.MoveToolbar>
     );
   };

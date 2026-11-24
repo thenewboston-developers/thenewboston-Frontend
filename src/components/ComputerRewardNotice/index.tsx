@@ -8,7 +8,15 @@ import PaidRewardArtwork from './PaidRewardArtwork';
 import RewardArtwork from './RewardArtwork';
 import * as S from './Styles';
 
-const ComputerRewardNotice = ({guest, reward}: {guest?: boolean; reward?: ComputerReward | null}) => {
+const ComputerRewardNotice = ({
+  guest,
+  reward,
+  subdued = false,
+}: {
+  guest?: boolean;
+  reward?: ComputerReward | null;
+  subdued?: boolean;
+}) => {
   const exposure = useAnalyticsExposure<HTMLDivElement>(
     reward?.status === 'guest' ? `guest_reward:${window.location.pathname}` : null,
     () =>
@@ -80,7 +88,7 @@ const ComputerRewardNotice = ({guest, reward}: {guest?: boolean; reward?: Comput
     );
   if (reward.status === 'fund_empty')
     return (
-      <S.Notice role="status">
+      <S.Notice $subdued={subdued} role="status">
         <strong>No reward was available when this match ended.</strong>
         <span>Computer games remain free. Future wins can earn rewards when the fund is replenished.</span>
         {guest && (
@@ -94,7 +102,8 @@ const ComputerRewardNotice = ({guest, reward}: {guest?: boolean; reward?: Comput
       </S.Notice>
     );
   return (
-    <S.Notice role="status">
+    <S.Notice $subdued={subdued} role="status">
+      {subdued && <S.RewardLabel>No reward this round</S.RewardLabel>}
       <span>This result did not qualify for a computer-win reward.</span>
     </S.Notice>
   );

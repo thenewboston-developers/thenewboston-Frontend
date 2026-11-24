@@ -6,7 +6,7 @@ const Rules = () => (
     <ol>
       <li>
         The board is a grid of dots. Players take turns drawing one line between two neighboring dots, across or down.
-        Blue draws first.
+        Click or tap an open line to draw it immediately. Blue draws first.
       </li>
       <li>
         Draw the fourth side of a box to claim it. The box takes your color and you draw again. One line can finish two
