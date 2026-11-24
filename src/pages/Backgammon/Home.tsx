@@ -3,9 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createBackgammonMatch, getBackgammonMatches} from 'api/backgammon';
-import backgammonHero from 'assets/backgammon-hero.webp';
 import AuthButtons from 'components/AuthButtons';
-import GameIllustrationHero from 'components/GameIllustrationHero';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -16,6 +14,7 @@ import {AppDispatch, UserReadSerializer} from 'types';
 import {BackgammonDifficulty, BackgammonMatch, BackgammonMode} from 'types/backgammon';
 import {isCancellationError} from 'utils/errors';
 
+import Hero from './Hero';
 import Rules from './Rules';
 import * as S from './Styles';
 import {getErrorMessage, getPlayerName} from './utils';
@@ -217,17 +216,7 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Classic strategy · A fresh rivalry</S.Badge>
       </S.Navigation>
-      <GameIllustrationHero
-        artwork={backgammonHero}
-        artworkAlt="A complete walnut backgammon board with emerald felt, polished checkers, and ivory dice"
-        challengeHref="#backgammon-challenge"
-        description="Race your checkers home and find the right moment to double. Roll into a quick practice game or your next rivalry."
-        eyebrow="DICE & STRATEGY"
-        game="Backgammon"
-        playHref="#backgammon-computer"
-        tagline="A little luck. A lot of strategy."
-        theme="emerald"
-      />
+      <Hero />
       <>
         {createError && <S.Error role="alert">{createError}</S.Error>}
         <S.PanelGrid>

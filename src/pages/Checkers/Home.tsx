@@ -3,9 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {createCheckersMatch, getCheckersMatches} from 'api/checkers';
-import checkersHero from 'assets/checkers-hero.webp';
 import AuthButtons from 'components/AuthButtons';
-import GameIllustrationHero from 'components/GameIllustrationHero';
 import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
@@ -16,6 +14,7 @@ import {AppDispatch, UserReadSerializer} from 'types';
 import {CheckersDifficulty, CheckersMatch, CheckersMode} from 'types/checkers';
 import {isCancellationError} from 'utils/errors';
 
+import Hero from './Hero';
 import Rules from './Rules';
 import * as S from './Styles';
 import {getErrorMessage, getPlayerName} from './utils';
@@ -211,17 +210,7 @@ const Home = () => {
         <S.TextLink to="/games">← All games</S.TextLink>
         <S.Badge>Classic strategy · Think a move ahead</S.Badge>
       </S.Navigation>
-      <GameIllustrationHero
-        artwork={checkersHero}
-        artworkAlt="A complete walnut checkers board with polished black and ivory pieces and a stacked king"
-        challengeHref="#checkers-challenge"
-        description="Plan your jumps, find your opening, and crown your next king. A classic board with endless ways to outplay."
-        eyebrow="CLASSIC BOARD STRATEGY"
-        game="Checkers"
-        playHref="#checkers-computer"
-        tagline="Small moves. Big possibilities."
-        theme="amber"
-      />
+      <Hero />
       <>
         {createError && <S.Error role="alert">{createError}</S.Error>}
         <S.PanelGrid>
