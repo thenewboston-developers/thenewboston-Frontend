@@ -151,6 +151,14 @@ it("shows a member's last five finished games as stones, oldest first", async ()
   ]);
 });
 
+it('leaves the match history uncounted, since it only holds the first page of matches', async () => {
+  completedMatches = [finishedMatch(1, {winner_side: 'b'}), finishedMatch(2, {winner: 11, winner_side: 'a'})];
+  await render();
+  const history = container.querySelector('[aria-labelledby="match-history-heading"]')!;
+  expect(history.querySelector('#match-history-heading')!.parentElement).toHaveTextContent(/^Match history$/);
+  expect(history.querySelectorAll('[aria-label^="Open match"]')).toHaveLength(2);
+});
+
 it('invites visitors to create an account next to the computer panel', async () => {
   (useIsAuthenticated as jest.Mock).mockReturnValue(false);
   await render();
