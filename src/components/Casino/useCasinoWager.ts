@@ -40,6 +40,7 @@ const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelecti
   const [receipt, setReceipt] = useState<CasinoBet | null>(null);
   const [storageError, setStorageError] = useState(false);
   const [summary, setSummary] = useState<CasinoSummary | null>(null);
+  const [unfinishedGame, setUnfinishedGame] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useIsAuthenticated();
   const live = useRef(true);
@@ -79,6 +80,7 @@ const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelecti
       setReceipt(bet);
       setHistory((previous) => [bet, ...previous.filter((item) => item.request_id !== bet.request_id)].slice(0, 20));
       setError('');
+      setUnfinishedGame(false);
       dispatch(getAllUserWallets()).catch(() => undefined);
       refresh();
     },
@@ -170,6 +172,7 @@ const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelecti
       return bet.status === 'settled' ? bet : null;
     } catch (caught) {
       if (!live.current) return null;
+      setUnfinishedGame((caught as {response?: {data?: {code?: string}}}).response?.data?.code === 'game_in_progress');
       if (request && isDefiniteCasinoRejection(caught)) {
         clearPendingCasinoBet(userId, request.payload.request_id);
         setPending(null);
@@ -227,6 +230,7 @@ const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelecti
     storageError,
     summary,
     unavailableMessage,
+    unfinishedGame,
     validAmount,
     wallet,
   };

@@ -97,6 +97,7 @@ const SlotsGame = () => {
     stake,
     summary,
     unavailableMessage,
+    unfinishedGame,
     wallet,
   } = useCasinoWager({gameId: 'slots'});
   const animate = useMotion();
@@ -418,6 +419,12 @@ const SlotsGame = () => {
                 )}
                 {isAuthenticated && !wallet && <S.Notice>No TNB balance available</S.Notice>}
                 {error && <S.Alert role="alert">{error}</S.Alert>}
+                {(unfinishedGame || pending?.payload.game === 'blackjack') && (
+                  <S.Notice>
+                    <S.BackLink to="/blackjack/home">Resume your Blackjack hand</S.BackLink> before placing another
+                    wager.
+                  </S.Notice>
+                )}
                 {loadError && (
                   <P.GhostButton onClick={refresh} type="button">
                     Refresh casino status

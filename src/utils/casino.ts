@@ -70,6 +70,7 @@ export const isDefiniteCasinoRejection = (error: unknown) => {
       'funds_reserved',
       'fund_limit',
       'game_closed',
+      'game_in_progress',
       'insufficient_balance',
       'rules_changed',
       'wallet_unavailable',

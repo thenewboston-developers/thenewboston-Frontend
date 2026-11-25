@@ -7,6 +7,7 @@ import {
   PATH_AUTHENTICATION,
   PATH_BACKGAMMON,
   PATH_BATTLESHIP,
+  PATH_BLACKJACK,
   PATH_CASINO,
   PATH_CHECKERS,
   PATH_CONNECT_FIVE,
@@ -30,6 +31,7 @@ import {
 } from 'constants/paths';
 import Backgammon from 'pages/Backgammon';
 import Battleship from 'pages/Battleship';
+import Blackjack from 'pages/Blackjack';
 import Casino from 'pages/Casino';
 import Checkers from 'pages/Checkers';
 import ConnectFive from 'pages/ConnectFive';
@@ -59,6 +61,7 @@ const MainArea: SFC = ({className}) => {
         <Route path="*" element={<Navigate to={PATH_DEFAULT} replace />} />
         <Route element={<Backgammon />} path={PATH_BACKGAMMON} />
         <Route element={<Battleship />} path={PATH_BATTLESHIP} />
+        <Route element={<Blackjack />} path={PATH_BLACKJACK} />
         <Route element={<Casino />} path={PATH_CASINO} />
         <Route element={<Checkers />} path={PATH_CHECKERS} />
         <Route path={PATH_CONNECT_FIVE} element={<ConnectFive />} />

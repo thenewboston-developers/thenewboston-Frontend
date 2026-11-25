@@ -1,5 +1,6 @@
 import {ChangeEvent, useCallback, useEffect, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
+import {Link} from 'react-router-dom';
 import {mdiFlash, mdiFlashOff, mdiVolumeHigh, mdiVolumeOff} from '@mdi/js';
 import Icon from '@mdi/react';
 
@@ -114,6 +115,7 @@ const Table = () => {
     setAmount: setStake,
     storageError,
     summary,
+    unfinishedGame,
     wallet,
   } = useCasinoWager({
     gameId: 'roulette',
@@ -801,6 +803,11 @@ const Table = () => {
               <S.RailAction>{renderAction()}</S.RailAction>
             </S.Rail>
             {error && <S.Error role="alert">{error}</S.Error>}
+            {(unfinishedGame || pending?.payload.game === 'blackjack') && (
+              <S.SlipNote>
+                <Link to="/blackjack/home">Resume your Blackjack hand</Link> before placing another wager.
+              </S.SlipNote>
+            )}
             {loadError && (
               <S.GhostButton onClick={refresh} type="button">
                 Refresh casino status

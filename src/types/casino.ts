@@ -1,4 +1,26 @@
-export type CasinoGameId = 'slots' | 'roulette' | 'plinko';
+export type CasinoGameId = 'slots' | 'roulette' | 'blackjack' | 'plinko';
+
+export type BlackjackAction = 'hit' | 'stand' | 'double';
+
+export interface BlackjackResult {
+  actions?: BlackjackAction[];
+  available_actions: BlackjackAction[];
+  dealer_cards: (string | null)[];
+  dealer_total: number;
+  expires_at: string | null;
+  multiplier: number;
+  outcome: 'blackjack' | 'win' | 'loss' | 'push' | null;
+  phase: 'player_turn' | 'settled';
+  player_cards: string[];
+  player_total: number;
+  revision: number;
+}
+
+export interface BlackjackActionRequest {
+  action: BlackjackAction;
+  action_id: string;
+  expected_revision: number;
+}
 
 export interface CasinoFund {
   available: number;
@@ -26,7 +48,7 @@ export interface CasinoGame {
   available: boolean;
   bet_types?: {id: string; label: string; max_bet: number; multiplier: number}[];
   enabled: boolean;
-  house_edge: number;
+  house_edge: number | null;
   id: CasinoGameId;
   max_bet: number;
   max_multiplier: number;
@@ -80,7 +102,7 @@ export interface CasinoBet {
   request_id: string;
   // Roulette version 2 records the total `payout` of its bets and has no `multiplier`: read that only for the games
   // and versions that settle with one
-  result: {
+  result: Partial<BlackjackResult> & {
     color?: string;
     draw?: number;
     multiplier: number;
@@ -97,6 +119,8 @@ export interface CasinoBet {
   total_stake: number;
   wallet_balance: number;
 }
+
+export type BlackjackBet = CasinoBet & {result: BlackjackResult};
 
 export interface CasinoFundMovement {
   amount: number;

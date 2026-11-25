@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+  <defs><radialGradient id="felt"><stop stop-color="#28634d"/><stop offset="1" stop-color="#0b302b"/></radialGradient><linearGradient id="card" x2="1" y2="1"><stop stop-color="#fffdf5"/><stop offset="1" stop-color="#e6decb"/></linearGradient><filter id="shadow"><feDropShadow dx="0" dy="14" stdDeviation="12" flood-opacity=".3"/></filter></defs>
+  <rect width="900" height="600" fill="url(#felt)"/>
+  <ellipse cx="450" cy="260" rx="620" ry="390" fill="none" stroke="#a99257" stroke-width="3" opacity=".5"/>
+  <ellipse cx="450" cy="260" rx="600" ry="370" fill="none" stroke="#a99257" opacity=".25"/>
+  <g filter="url(#shadow)" transform="translate(280 105) rotate(-13 115 170)"><rect width="230" height="340" rx="18" fill="url(#card)" stroke="#fff9e5" stroke-width="4"/><g fill="#213730" font-family="Georgia,serif"><text x="22" y="47" font-size="40">A</text><text x="24" y="85" font-size="36">♠</text><text x="115" y="205" text-anchor="middle" font-size="120">♠</text></g></g>
+  <g filter="url(#shadow)" transform="translate(430 130) rotate(12 115 170)"><rect width="230" height="340" rx="18" fill="url(#card)" stroke="#fff9e5" stroke-width="4"/><g fill="#a63b40" font-family="Georgia,serif"><text x="22" y="47" font-size="40">K</text><text x="22" y="85" font-size="36">♥</text><path d="M68 160 90 185 115 135 140 185 162 160 150 225 80 225Z" fill="#bc9553"/><path d="M80 238h70" stroke="#bc9553" stroke-width="7"/><text x="115" y="298" text-anchor="middle" font-size="44">♥</text></g></g>
+  <g transform="translate(206 425)"><circle r="50" fill="#eee2bf" stroke="#a68548" stroke-width="10" stroke-dasharray="18 12"/><circle r="34" fill="none" stroke="#a68548"/><text y="8" text-anchor="middle" fill="#7e5e2e" font-size="22" font-family="Georgia,serif">21</text></g>
+  <text x="450" y="550" text-anchor="middle" fill="#d6c394" font-family="Georgia,serif" font-size="24" letter-spacing="6">BLACKJACK PAYS 3:2</text>
+</svg>

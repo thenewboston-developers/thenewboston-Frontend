@@ -41,6 +41,7 @@ const PlinkoGame = () => {
     stake,
     summary,
     unavailableMessage,
+    unfinishedGame,
     validAmount,
     wallet,
   } = useCasinoWager({gameId: 'plinko'});
@@ -251,6 +252,11 @@ const PlinkoGame = () => {
                 </S.Alert>
               )}
               {error && <S.Alert role="alert">{error}</S.Alert>}
+              {(unfinishedGame || pending?.payload.game === 'blackjack') && (
+                <S.Note>
+                  <S.BackLink to="/blackjack/home">Resume your Blackjack hand</S.BackLink> before placing another wager.
+                </S.Note>
+              )}
               {loadError && (
                 <S.Button onClick={refresh} type="button">
                   Refresh casino status

@@ -73,7 +73,7 @@ const ReceiptPanel = ({bet, onClose, userId}: ReceiptPanelProps) => {
       <S.Facts>
         <div>
           <dt>Stake</dt>
-          <dd>{bet.amount.toLocaleString()} TNB</dd>
+          <dd>{bet.total_stake.toLocaleString()} TNB</dd>
         </div>
         <div>
           <dt>Returned</dt>
