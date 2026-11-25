@@ -19,3 +19,14 @@ Color palette: dominant felt #0c6a45, brighter felt #18905f, deep felt #07442e a
 Style/medium: polished high-end photorealistic 3D product photography, exquisite tactile cardstock, fine felt and realistic chip materials, refined shadows and warm soft studio spotlight. Restrained, premium, believable.
 Constraints: no people, no hands, no floating objects, no dice, no roulette, no banknotes, no game title, no slogans, no logos, no watermarks. The only lettering is standard playing card ranks A and K. Do not add any other cards.
 ```
+
+## Composition refinement
+
+The final image was edited with the built-in image tool after checking the gallery at its smallest desktop card width. This keeps the existing badge clear of both card ranks.
+
+```text
+Use case: precise-object-edit.
+Edit target: the provided Blackjack thumbnail.
+Change ONLY the composition spacing: pull the camera back a little and move the complete two-card and chip arrangement into the lower two-thirds of the image. The top 32 percent of the 1536x1024 canvas must be quiet uninterrupted green felt with the subtle walnut/leather rail restricted to the extreme upper edge. Both top card rank corners A and K must sit BELOW y=360 pixels, so a website badge across the upper-left will not cover them. All cards and chips must remain fully inside the canvas with comfortable bottom and side margins. Cards should still be prominent, large and clear in the lower two-thirds.
+Preserve precisely the luxurious emerald-green felt, warm gold and walnut palette, realistic tactile photography, the ace of spades and king of hearts artwork, exactly two cards, two green-and-gold chip stacks and one loose chip, soft warm lighting. Do not add any objects, words, title, badge or logos. Landscape 3:2, 1536x1024.
+```
