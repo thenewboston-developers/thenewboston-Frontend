@@ -33,7 +33,7 @@ it('uses thumbnail cards and canonical game links in a separately labeled TNB wa
   const casino = container.querySelector('[aria-labelledby="casino-games-heading"]')!;
   expect(casino).toHaveTextContent('6 games · TNB wagers');
   const videoPoker = casino.querySelector('a[href="/video-poker/home"]')!;
-  expect(videoPoker.querySelector('img')).toHaveAttribute('src', 'video-poker-thumbnail.svg');
+  expect(videoPoker.querySelector('img')).toHaveAttribute('src', 'video-poker-thumbnail.webp');
   expect(videoPoker).toHaveTextContent('JACKS OR BETTER');
   expect(videoPoker).toHaveAttribute('data-ph-capture-attribute-click_target', 'video_poker');
   const letItRide = casino.querySelector('a[href="/let-it-ride/home"]')!;

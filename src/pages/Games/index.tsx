@@ -14,7 +14,7 @@ import plinkoThumbnail from 'assets/plinko-thumbnail.svg';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
 import rouletteThumbnail from 'assets/roulette-thumbnail.webp';
 import slotsThumbnail from 'assets/slots-thumbnail.webp';
-import videoPokerThumbnail from 'assets/video-poker-thumbnail.svg';
+import videoPokerThumbnail from 'assets/video-poker-thumbnail.webp';
 import GameFund from 'components/GameFund';
 import {SFC} from 'types';
 import {captureAnalyticsEvent} from 'utils/analytics';
@@ -141,7 +141,8 @@ const casinoGames = [
     badge: 'JACKS OR BETTER',
     category: 'Classic draw poker',
     description: 'Five cards. One draw. Hold the right ones and chase the royal flush.',
-    imageDescription: 'A royal flush in spades held on the blue screen of a classic video poker machine',
+    imageDescription:
+      'A royal flush in spades on a royal-blue video poker cabinet with a red marquee and yellow lights',
     name: 'Video Poker',
     path: 'video-poker',
   },
