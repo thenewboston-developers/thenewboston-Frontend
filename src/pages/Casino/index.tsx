@@ -7,11 +7,12 @@ const LegacyGameRedirect = ({to}: {to: string}) => {
   return <Navigate replace to={{pathname: to, search, hash}} />;
 };
 
-// Compatibility only: gameplay lives in the independent Slots and Roulette pages.
+// Compatibility only: gameplay lives in the independent game pages.
 const Casino = () => (
   <SentryRoutes>
     <Route element={<LegacyGameRedirect to="/slots/home" />} path="slots" />
     <Route element={<LegacyGameRedirect to="/roulette/home" />} path="roulette" />
+    <Route element={<LegacyGameRedirect to="/plinko/home" />} path="plinko" />
     <Route element={<LegacyGameRedirect to="/slots/home" />} path="*" />
   </SentryRoutes>
 );
