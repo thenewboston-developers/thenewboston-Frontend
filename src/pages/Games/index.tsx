@@ -10,7 +10,7 @@ import dotsAndBoxesThumbnail from 'assets/dots-and-boxes-thumbnail.webp';
 import hexThumbnail from 'assets/hex-thumbnail.webp';
 import letItRideThumbnail from 'assets/let-it-ride-thumbnail.webp';
 import mancalaThumbnail from 'assets/mancala-thumbnail.webp';
-import plinkoThumbnail from 'assets/plinko-thumbnail.svg';
+import plinkoThumbnail from 'assets/plinko-thumbnail.webp';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
 import rouletteThumbnail from 'assets/roulette-thumbnail.webp';
 import slotsThumbnail from 'assets/slots-thumbnail.webp';
@@ -151,7 +151,8 @@ const casinoGames = [
     badge: 'UP TO 50× TOTAL RETURN',
     category: 'Drop & discover',
     description: 'One ball. Twelve bounces. Follow the path to your payout.',
-    imageDescription: 'A glowing golden ball bouncing through a teal Plinko board into colorful payout pockets',
+    imageDescription:
+      'A golden ball bouncing between mint pegs on a deep teal Plinko board above coral, gold, and mint payout pockets',
     name: 'Plinko',
     path: 'plinko',
   },

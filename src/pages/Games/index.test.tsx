@@ -44,7 +44,7 @@ it('uses thumbnail cards and canonical game links in a separately labeled TNB wa
   expect(blackjack.querySelector('img')).toHaveAttribute('src', 'blackjack-thumbnail.svg');
   expect(blackjack).toHaveTextContent('BLACKJACK PAYS 3:2');
   const plinko = casino.querySelector('a[href="/plinko/home"]')!;
-  expect(plinko.querySelector('img')).toHaveAttribute('src', 'plinko-thumbnail.svg');
+  expect(plinko.querySelector('img')).toHaveAttribute('src', 'plinko-thumbnail.webp');
   expect(plinko).toHaveTextContent('UP TO 50× TOTAL RETURN');
   const slots = casino.querySelector('a[href="/slots/home"]')!;
   const roulette = casino.querySelector('a[href="/roulette/home"]')!;
