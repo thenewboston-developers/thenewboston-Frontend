@@ -192,13 +192,79 @@ export const Balance = styled.div`
   }
 `;
 
-export const Console = styled.section`
+// Every stack on the table as a small tag: tap one to edit it with the stepper, or take it off
+export const BetList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 66px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+`;
+
+export const BetPill = styled.span<{$active: boolean}>`
+  align-items: stretch;
+  background: ${({$active}) => ($active ? room.brassSoft : '#ffffff0d')};
+  border: 1px solid ${({$active}) => ($active ? room.brass : room.line)};
+  border-radius: 999px;
+  display: inline-flex;
+  overflow: hidden;
+
+  button {
+    background: transparent;
+    border: 0;
+    color: ${room.ivory};
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    min-height: 28px;
+    padding: 0 4px 0 10px;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  button:focus-visible {
+    outline: 2px solid ${room.brassLight};
+    outline-offset: -2px;
+  }
+
+  button:hover:not(:disabled) {
+    background: #ffffff14;
+  }
+
+  button:last-child {
+    color: ${room.mist};
+    font-size: 15px;
+    padding: 0 9px 0 5px;
+  }
+
+  strong {
+    color: ${room.brassLight};
+    margin-left: 3px;
+  }
+`;
+
+export const Console = styled.section<{$dragging: boolean}>`
   ${roomPanel};
   container-type: inline-size;
   margin-bottom: 24px;
   outline: none;
   padding: 22px 28px 28px;
   scroll-margin-top: 20px;
+
+  ${({$dragging}) =>
+    $dragging &&
+    css`
+      &,
+      & * {
+        cursor: grabbing !important;
+      }
+    `}
 
   @media (max-width: 600px) {
     border-radius: 16px;
@@ -258,6 +324,23 @@ export const FeltColumn = styled.div`
   display: grid;
   gap: 14px;
   min-width: 0;
+`;
+
+// The chips in the player's hand while dragging. It lives on the page body and follows the pointer.
+export const Ghost = styled.div<{$active: boolean}>`
+  filter: drop-shadow(0 14px 12px #00000080);
+  left: 0;
+  opacity: ${({$active}) => ($active ? 1 : 0)};
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  width: 50px;
+  will-change: transform;
+  z-index: 1000;
+
+  > span {
+    transform: rotate(-8deg) scale(1.08);
+  }
 `;
 
 export const GhostButton = styled.button`
@@ -362,12 +445,14 @@ export const RackChip = styled.button<{$selected: boolean}>`
   background: transparent;
   border: 0;
   border-radius: 50%;
-  cursor: pointer;
+  cursor: grab;
   padding: 0;
   position: relative;
+  touch-action: manipulation;
   transition:
     filter 0.18s ease,
     transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+  user-select: none;
   width: 46px;
 
   &::after {

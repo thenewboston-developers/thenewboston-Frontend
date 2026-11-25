@@ -12,7 +12,18 @@ const SLOT_LOSING_LINES = SLOT_SYMBOL_ORDER.flatMap((first) =>
 );
 // Immutable Plinko v1: 12 fair binary steps, with a whole-TNB return for every pocket.
 const PLINKO_MULTIPLIERS = [50, 18, 8, 3, 1, 0, 0, 0, 1, 3, 8, 18, 50];
-const SUPPORTED_RULES: Record<string, number[]> = {plinko: [1], roulette: [1], slots: [1, 2]};
+const ROULETTE_MULTIPLIERS: Record<string, number> = {
+  black: 2,
+  column: 3,
+  dozen: 3,
+  even: 2,
+  high: 2,
+  low: 2,
+  number: 36,
+  odd: 2,
+  red: 2,
+};
+const SUPPORTED_RULES: Record<string, number[]> = {plinko: [1], roulette: [1, 2], slots: [1, 2]};
 const SLOT_OUTCOMES = [
   {multiplier: 0, symbols: ['cherry', 'lemon', 'bar'], weight: 5885},
   {multiplier: 1, symbols: ['cherry', 'cherry', 'cherry'], weight: 1600},
@@ -69,6 +80,8 @@ export const verifyCasinoReceipt = async (bet: CasinoBet, observedHash?: string)
   }
   if (draw === null) throw new Error('Unable to derive the result.');
   let multiplier = 0;
+  // Set by a ruleset that records a total payout; the others pay their stake times one multiplier
+  let payout: number | null = null;
   if (bet.game === 'slots') {
     let boundary = 0;
     const outcome = SLOT_OUTCOMES.find((item) => {
@@ -100,28 +113,49 @@ export const verifyCasinoReceipt = async (bet: CasinoBet, observedHash?: string)
     if (draw === 0) color = 'green';
     if (bet.result.number !== draw || bet.result.color !== color)
       throw new Error('The roulette outcome does not match the committed result.');
-    const {type, value} = bet.selection || {};
-    const matches: Record<string, boolean> = {
-      black: color === 'black',
-      column: draw > 0 && ((draw - 1) % 3) + 1 === value,
-      dozen: draw > 0 && Math.ceil(draw / 12) === value,
-      even: draw > 0 && draw % 2 === 0,
-      high: draw >= 19,
-      low: draw > 0 && draw <= 18,
-      number: draw === value,
-      odd: draw % 2 === 1,
-      red: color === 'red',
-    };
-    if (!type || !(type in matches)) throw new Error('The receipt is missing its roulette selection.');
-    let winMultiplier = ['column', 'dozen'].includes(type) ? 3 : 2;
-    if (type === 'number') winMultiplier = 36;
-    multiplier = matches[type] ? winMultiplier : 0;
+    const wins = (type: string, value?: number): boolean =>
+      ({
+        black: color === 'black',
+        column: draw! > 0 && ((draw! - 1) % 3) + 1 === value,
+        dozen: draw! > 0 && Math.ceil(draw! / 12) === value,
+        even: draw! > 0 && draw! % 2 === 0,
+        high: draw! >= 19,
+        low: draw! > 0 && draw! <= 18,
+        number: draw === value,
+        odd: draw! % 2 === 1,
+        red: color === 'red',
+      })[type] ?? false;
+    if (bet.rules_version === 2) {
+      // One spin settles the chips on every spot: the payout is the sum of the bets that win on the number drawn
+      const bets = bet.selection?.bets;
+      if (
+        !Array.isArray(bets) ||
+        !bets.length ||
+        bets.some(
+          (item) => !(item.type in ROULETTE_MULTIPLIERS) || !Number.isSafeInteger(item.amount) || item.amount < 1,
+        )
+      ) {
+        throw new Error('The receipt is missing its roulette bets.');
+      }
+      const staked = bets.reduce((sum, item) => sum + item.amount, 0);
+      payout = bets.reduce(
+        (sum, item) => sum + (wins(item.type, item.value) ? item.amount * ROULETTE_MULTIPLIERS[item.type] : 0),
+        0,
+      );
+      if (staked !== bet.amount || bet.result.payout !== payout) {
+        throw new Error('The payout does not match the verified outcome.');
+      }
+    } else {
+      const {type, value} = bet.selection || {};
+      if (!type || !(type in ROULETTE_MULTIPLIERS)) throw new Error('The receipt is missing its roulette selection.');
+      multiplier = wins(type, value) ? ROULETTE_MULTIPLIERS[type] : 0;
+    }
   } else throw new Error('Unsupported game.');
-  if (
-    bet.result.multiplier !== multiplier ||
-    bet.payout !== bet.amount * multiplier ||
-    bet.profit !== bet.payout - bet.total_stake
-  ) {
+  if (payout === null) {
+    if (bet.result.multiplier !== multiplier) throw new Error('The payout does not match the verified outcome.');
+    payout = bet.amount * multiplier;
+  }
+  if (bet.payout !== payout || bet.profit !== bet.payout - bet.total_stake) {
     throw new Error('The payout does not match the verified outcome.');
   }
   return observedHash

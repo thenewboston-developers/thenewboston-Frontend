@@ -1,4 +1,7 @@
-import {CasinoBet, CasinoGame, RouletteSelection} from 'types/casino';
+import {CasinoBet, CasinoFund, CasinoGame, RouletteSelection} from 'types/casino';
+
+// The chips on the table: spot id to the amount stacked on it, in the order the spots were first used
+export type Bets = Record<string, number>;
 
 export type PocketColor = 'black' | 'green' | 'red';
 
@@ -19,6 +22,9 @@ export interface ChipStyle {
   text: string;
   value: number;
 }
+
+// The most the casino accepts as one wager, whatever the fund holds
+export const MAX_WAGER = 1000000000;
 
 export const POCKET_COUNT = 37;
 export const POCKET_ANGLE = 360 / POCKET_COUNT;
@@ -165,16 +171,102 @@ export const spotCovers = (spot: Spot, number: number): boolean => {
   }
 };
 
-export const spotSelection = (spot: Spot): RouletteSelection =>
+export const spotSelection = (spot: Spot): {type: string; value?: number} =>
   spot.value === undefined ? {type: spot.type} : {type: spot.type, value: spot.value};
+
+// A spot's name where space is tight: "No. 17", "1st 12", "Col 2", "Red"
+export const getShortName = (spot: Spot): string => {
+  if (spot.type === 'column') return `Col ${spot.value}`;
+  return spot.type === 'number' ? `No. ${spot.value}` : spot.label;
+};
 
 // "17 straight up", "Red", "2nd dozen (13–24)"
 export const describeSpot = (spot: Spot): string => (spot.type === 'number' ? `${spot.name} straight up` : spot.name);
 
-export const describeBet = (bet: CasinoBet): string => {
-  const spot = selectionSpot(bet.selection);
-  return spot ? describeSpot(spot) : 'Roulette';
+const NUMBERS = Array.from({length: POCKET_COUNT}, (_, number) => number);
+
+// What the table pays in total, stakes included, when the ball lands on a number
+export const getReturn = (bets: Bets, number: number): number =>
+  Object.entries(bets).reduce((sum, [id, amount]) => {
+    const spot = getSpot(id);
+    return spot && spotCovers(spot, number) ? sum + amount * spot.multiplier : sum;
+  }, 0);
+
+export const getBestReturn = (bets: Bets): number => Math.max(...NUMBERS.map((number) => getReturn(bets, number)));
+
+export const getTotal = (bets: Bets): number => Object.values(bets).reduce((sum, amount) => sum + amount, 0);
+
+// The most the table can cost the casino: its best number's return less everything staked. Bets that cannot win
+// together do not add up, and a table that covers itself risks nothing.
+export const getExposure = (bets: Bets): number => Math.max(0, getBestReturn(bets) - getTotal(bets));
+
+// What the casino lets one wager cost it: the fund's risk share of what is available, as the API computes it
+export const getRiskCapacity = (fund: CasinoFund | undefined): number => {
+  if (!fund) return 0;
+  const {available, risk_limit_bps: share} = fund;
+  // Split so the product stays exact for funds far larger than a browser integer times 10,000
+  return Math.floor(available / 10000) * share + Math.floor(((available % 10000) * share) / 10000);
 };
+
+// How many more chips a spot can take before some number would cost the casino more than `capacity`
+export const getRoom = (bets: Bets, spot: Spot, capacity: number): number => {
+  const total = getTotal(bets);
+  const room = NUMBERS.filter((number) => spotCovers(spot, number)).map((number) =>
+    Math.floor((capacity - (getReturn(bets, number) - total)) / (spot.multiplier - 1)),
+  );
+  return Math.max(0, Math.min(...room));
+};
+
+// How much of the stack on `from` can move to `target` before some number would cost the casino more than
+// `capacity`. The chips left behind still count, so a stack moved between spots that win together moves in part.
+export const getMovable = (bets: Bets, from: Spot, target: Spot, capacity: number): number => {
+  const amount = bets[from.id] ?? 0;
+  const others = Object.fromEntries(Object.entries(bets).filter(([id]) => id !== from.id));
+  const total = getTotal(bets);
+  const movable = NUMBERS.map((number) => {
+    const go = spotCovers(target, number) ? target.multiplier : 0;
+    const stay = spotCovers(from, number) ? from.multiplier : 0;
+    // Each chip that moves changes what this number pays by the difference between the two spots
+    if (go <= stay) return amount;
+    return Math.floor((capacity - (getReturn(others, number) - total + amount * stay)) / (go - stay));
+  });
+  return Math.max(0, Math.min(amount, ...movable));
+};
+
+// The selection the casino API takes: every stack on a table that settles several bets, otherwise the one spot
+export const betsSelection = (bets: Bets, multiple: boolean): RouletteSelection | undefined => {
+  const entries = Object.entries(bets).flatMap(([id, amount]) => {
+    const spot = getSpot(id);
+    return spot && amount > 0 ? [{...spotSelection(spot), amount}] : [];
+  });
+  if (!entries.length) return undefined;
+  if (multiple) return {bets: entries};
+  const {type, value} = entries[0];
+  return value === undefined ? {type} : {type, value};
+};
+
+// The chips a receipt was for: its list of bets, or the single spot of a rules version 1 bet
+export const selectionBets = (selection: RouletteSelection | null | undefined, amount: number): Bets => {
+  if (selection?.bets) {
+    return Object.fromEntries(
+      selection.bets.flatMap((bet) => {
+        const spot = selectionSpot(bet);
+        return spot && bet.amount > 0 ? [[spot.id, bet.amount]] : [];
+      }),
+    );
+  }
+  const spot = selectionSpot(selection);
+  return spot ? {[spot.id]: amount} : {};
+};
+
+// "Red", "17 straight up", or "4 bets" for a table with chips on several spots
+export const describeBets = (bets: Bets): string => {
+  const ids = Object.keys(bets);
+  if (ids.length === 1) return describeSpot(getSpot(ids[0])!);
+  return ids.length ? `${ids.length} bets` : 'Roulette';
+};
+
+export const describeBet = (bet: CasinoBet): string => describeBets(selectionBets(bet.selection, bet.amount));
 
 export const isRouletteResult = (bet: CasinoBet | null | undefined): bet is CasinoBet & {result: {number: number}} =>
   !!bet && bet.game === 'roulette' && bet.status === 'settled' && Number.isInteger(bet.result?.number);

@@ -6,6 +6,12 @@ export const prefersReducedMotion = (): boolean =>
   typeof window.matchMedia !== 'function' ||
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// A mouse or a pen can drag chips; a finger taps them into place
+export const hasFinePointer = (): boolean =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(any-pointer: fine)').matches;
+
 // Rolls a displayed number toward its new value, like a counter on the table rail. While `animate` is false the number
 // simply follows the value, for a figure that is still loading.
 export const useCountUp = (value: number, duration = 700, animate = true): number => {
