@@ -1,11 +1,13 @@
 import {mdiArrowRight, mdiMinus, mdiTrendingDown, mdiTrendingUp} from '@mdi/js';
 
-import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
 import GameResultPanel, {getGameResultOutcome} from 'components/GameResultPanel';
 import Icon from 'components/Icon';
 import {ConnectFiveMatch, SFC} from 'types';
+
+import {EmptyBoardArt, WonBoardArt} from '../../Stones';
+import * as MatchStyles from '../Styles';
 
 import * as S from './Styles';
 
@@ -102,14 +104,14 @@ const ResultModal: SFC<ResultModalProps> = ({
   if (rematchViewState === 'requestedByOpponent') {
     rematchButtons = (
       <>
-        <Button
+        <MatchStyles.Button
           color={ButtonColor.secondary}
           disabled={isRematchSubmitting}
           isSubmitting={rematchAction === 'decline'}
           onClick={onRematchDecline}
           text="Decline"
         />
-        <Button
+        <MatchStyles.Button
           disabled={isRematchSubmitting}
           isSubmitting={rematchAction === 'accept'}
           onClick={onRematchAccept}
@@ -119,7 +121,7 @@ const ResultModal: SFC<ResultModalProps> = ({
     );
   } else if (rematchViewState === 'requestedByMe') {
     rematchButtons = (
-      <Button
+      <MatchStyles.Button
         color={ButtonColor.secondary}
         disabled={isRematchSubmitting}
         isSubmitting={rematchAction === 'cancel'}
@@ -129,7 +131,7 @@ const ResultModal: SFC<ResultModalProps> = ({
     );
   } else if (rematchViewState === 'idle') {
     rematchButtons = (
-      <Button
+      <MatchStyles.Button
         disabled={isRematchSubmitting || !canRequestRematch}
         isSubmitting={rematchAction === 'request'}
         onClick={onRematchRequest}
@@ -162,6 +164,7 @@ const ResultModal: SFC<ResultModalProps> = ({
     <S.ResultModal close={onClose} header="Match Results">
       <S.ResultModalBody>
         <GameResultPanel
+          artwork={resultVariant === 'win' ? <WonBoardArt /> : <EmptyBoardArt />}
           description={resultDescriptions[match.status]}
           game="Connect Five"
           outcome={resultVariant}
@@ -195,7 +198,7 @@ const ResultModal: SFC<ResultModalProps> = ({
         </GameResultPanel>
       </S.ResultModalBody>
       <S.ResultModalFooter>
-        <Button color={ButtonColor.secondary} onClick={onClose} text="Close" />
+        <MatchStyles.Button color={ButtonColor.secondary} onClick={onClose} text="Close" />
         {rematchButtons}
       </S.ResultModalFooter>
     </S.ResultModal>

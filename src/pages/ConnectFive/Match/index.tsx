@@ -3,7 +3,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 
 import {getConnectFiveMatch} from 'api/connectFive';
-import Button from 'components/Button';
 import EmptyText from 'components/EmptyText';
 import Loader from 'components/Loader';
 import {useIsAuthenticated} from 'hooks';
@@ -64,7 +63,7 @@ const Match: SFC = ({className}) => {
           {error ? (
             <>
               <EmptyText>Unable to load this match.</EmptyText>
-              <Button onClick={() => setRetryKey((value) => value + 1)} text="Try again" />
+              <S.Button onClick={() => setRetryKey((value) => value + 1)} text="Try again" />
             </>
           ) : (
             <Loader />

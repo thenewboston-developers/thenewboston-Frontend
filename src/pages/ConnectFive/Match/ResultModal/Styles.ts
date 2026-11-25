@@ -1,8 +1,13 @@
 import styled, {keyframes} from 'styled-components';
 
 import UIcon from 'components/Icon';
+import {Wrapper as IconWrapper} from 'components/Icon/Styles';
 import UModal, {ModalBody as UModalBody, ModalFooter as UModalFooter} from 'components/Modal';
-import {colors, eyebrowStyle, fonts, radii} from 'styles';
+import {Header as ModalHeader} from 'components/Modal/Styles';
+import {eyebrowStyle, fonts, radii} from 'styles';
+
+import {classic} from '../../theme';
+import {resultPanel} from '../theme';
 
 const eloPop = keyframes`
   0% {
@@ -47,14 +52,14 @@ export const EloChange = styled.div`
 `;
 
 export const EloChangeArrow = styled(UIcon)`
-  color: #c0d3dd;
+  color: ${classic.textMuted};
   flex-shrink: 0;
   margin: 0 -4px;
 `;
 
 export const EloChangeLabel = styled.span`
   ${eyebrowStyle};
-  color: #c0d3dd;
+  color: ${classic.textMuted};
 `;
 
 export const EloChangeRow = styled.div`
@@ -67,9 +72,9 @@ export const EloChangeValue = styled.div<{$variant: 'down' | 'equal' | 'up'}>`
   align-items: center;
   animation: ${eloPop} 0.5s ease-out 0.3s both;
   color: ${({$variant}) => {
-    if ($variant === 'up') return '#a7edc6';
-    if ($variant === 'down') return '#ffb3b3';
-    return '#c0d3dd';
+    if ($variant === 'up') return classic.positive;
+    if ($variant === 'down') return classic.negative;
+    return classic.textMuted;
   }};
   display: flex;
   font-size: 18px;
@@ -83,7 +88,7 @@ export const EloChangeValue = styled.div<{$variant: 'down' | 'equal' | 'up'}>`
 `;
 
 export const EloNumber = styled.span`
-  color: #f5faff;
+  color: ${classic.text};
   font-size: 20px;
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.semiBold};
@@ -92,9 +97,9 @@ export const EloNumber = styled.span`
 
 export const RematchNotice = styled.div`
   animation: ${fadeInUp} 0.3s ease-out 0.2s both;
-  background: ${colors.palette.red[50]};
+  background: ${classic.negativeSoft};
   border-radius: ${radii.medium};
-  color: ${colors.palette.red[800]};
+  color: ${classic.negative};
   font-size: 13px;
   font-weight: ${fonts.weight.medium};
   line-height: 1.5;
@@ -109,9 +114,9 @@ export const RematchNotice = styled.div`
 
 export const RematchStateText = styled.div<{$variant: 'neutral' | 'warning'}>`
   animation: ${fadeInUp} 0.3s ease-out 0.2s both;
-  background: ${({$variant}) => ($variant === 'warning' ? colors.palette.red[50] : colors.palette.gray[100])};
+  background: ${({$variant}) => ($variant === 'warning' ? classic.negativeSoft : classic.surfaceRaised)};
   border-radius: ${radii.medium};
-  color: ${({$variant}) => ($variant === 'warning' ? colors.palette.red[800] : colors.secondary)};
+  color: ${({$variant}) => ($variant === 'warning' ? classic.negative : classic.textMuted)};
   font-size: 14px;
   font-weight: ${fonts.weight.medium};
   line-height: 1.5;
@@ -125,10 +130,21 @@ export const RematchStateText = styled.div<{$variant: 'neutral' | 'warning'}>`
 `;
 
 export const ResultModal = styled(UModal)`
+  background: ${classic.surface};
+  border: 1px solid ${classic.borderStrong};
+  color: ${classic.text};
   max-height: calc(100dvh - 32px);
   max-width: calc(100vw - 32px);
   overflow: hidden;
   width: 620px;
+
+  ${ModalHeader} {
+    border-color: ${classic.border};
+
+    ${IconWrapper}:hover {
+      background: ${classic.surfaceRaised};
+    }
+  }
 
   > div:first-child {
     flex-shrink: 0;
@@ -142,6 +158,7 @@ export const ResultModal = styled(UModal)`
 `;
 
 export const ResultModalBody = styled(UModalBody)`
+  ${resultPanel};
   min-height: 0;
   overflow-y: auto;
   padding: 12px;
@@ -152,7 +169,7 @@ export const ResultModalBody = styled(UModalBody)`
 `;
 
 export const ResultModalFooter = styled(UModalFooter)`
-  border-top: 1px solid ${colors.borderSubtle};
+  border-top: 1px solid ${classic.border};
   flex-shrink: 0;
   flex-wrap: wrap;
   padding: 12px 16px;
@@ -171,7 +188,7 @@ export const ResultTnbChange = styled.div`
 `;
 
 export const ResultTnbChangeValue = styled.span<{$variant: 'loss' | 'win'}>`
-  color: ${({$variant}) => ($variant === 'win' ? '#a7edc6' : '#ffb3b3')};
+  color: ${({$variant}) => ($variant === 'win' ? classic.positive : classic.negative)};
   font-size: 22px;
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.bold};

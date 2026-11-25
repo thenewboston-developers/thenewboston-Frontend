@@ -20,7 +20,7 @@ import {breakpoints, fonts, pagePadding} from 'styles';
 import {Stone} from '../Stones';
 import {
   boardPanel,
-  cosmos,
+  classic,
   eyebrow,
   fieldControl,
   fieldLabel,
@@ -29,14 +29,14 @@ import {
   paginationStyle,
 } from '../theme';
 
-export type BadgeTone = 'gold' | 'lavender' | 'mint' | 'muted' | 'rose';
+export type BadgeTone = 'gold' | 'active' | 'positive' | 'muted' | 'negative';
 
 const BADGE_TONES: Record<BadgeTone, {background: string; color: string}> = {
-  gold: {background: cosmos.goldSoft, color: cosmos.gold},
-  lavender: {background: cosmos.lavenderSoft, color: cosmos.lilac},
-  mint: {background: cosmos.mintSoft, color: cosmos.mint},
-  muted: {background: 'rgba(255, 255, 255, 0.06)', color: cosmos.mist},
-  rose: {background: cosmos.roseSoft, color: cosmos.rose},
+  gold: {background: classic.accentSoft, color: classic.accent},
+  active: {background: classic.focusSoft, color: classic.text},
+  positive: {background: classic.positiveSoft, color: classic.positive},
+  muted: {background: 'rgba(255, 255, 255, 0.06)', color: classic.textMuted},
+  negative: {background: classic.negativeSoft, color: classic.negative},
 };
 
 // Named containers: the lobby lays out by the width it really has, which the app's side navigation changes
@@ -44,8 +44,8 @@ const COMPUTER_FORM = 'connect-five-computer';
 const LOBBY = 'connect-five-lobby';
 
 const cardTile = css`
-  background: linear-gradient(180deg, rgba(36, 26, 76, 0.55), rgba(14, 9, 35, 0.75));
-  border: 1px solid ${cosmos.edge};
+  background: linear-gradient(180deg, rgba(48, 38, 31, 0.55), rgba(23, 18, 15, 0.75));
+  border: 1px solid ${classic.border};
   border-radius: 18px;
   display: flex;
   flex-direction: column;
@@ -93,21 +93,21 @@ export const AmountInput = styled(FormikField)<{$hasError: boolean}>`
   ${({$hasError}) =>
     $hasError &&
     css`
-      border-color: ${cosmos.rose};
+      border-color: ${classic.negative};
 
       &:hover {
-        border-color: ${cosmos.rose};
+        border-color: ${classic.negative};
       }
 
       &:focus {
-        border-color: ${cosmos.rose};
-        box-shadow: 0 0 0 3px rgba(255, 128, 156, 0.25);
+        border-color: ${classic.negative};
+        box-shadow: 0 0 0 3px rgba(255, 179, 176, 0.25);
       }
     `}
 `;
 
 export const AmountUnit = styled.span`
-  color: ${cosmos.gold};
+  color: ${classic.accent};
   font-size: 12px;
   font-weight: ${fonts.weight.bold};
   letter-spacing: 0.08em;
@@ -129,19 +129,19 @@ export const AuthButtons = styled(UAuthButtons)`
 
   button:first-child {
     background: transparent;
-    border-color: ${cosmos.edgeBright};
-    color: ${cosmos.lilac};
+    border-color: ${classic.borderStrong};
+    color: ${classic.text};
   }
 
   button:first-child:hover {
-    background: ${cosmos.lavenderSoft};
-    border-color: ${cosmos.lavender};
+    background: ${classic.focusSoft};
+    border-color: ${classic.focus};
   }
 
   button:last-child {
     background: linear-gradient(180deg, #ffe6ad, #f7c96c);
     border-color: #fff0cc;
-    color: ${cosmos.goldInk};
+    color: ${classic.accentInk};
   }
 
   button:last-child:hover {
@@ -150,7 +150,7 @@ export const AuthButtons = styled(UAuthButtons)`
   }
 
   button:focus-visible {
-    outline: 2px solid ${cosmos.gold};
+    outline: 2px solid ${classic.accent};
     outline-offset: 3px;
   }
 `;
@@ -165,7 +165,7 @@ export const AvatarRing = styled.span`
   padding: 3px;
 
   > div {
-    background: ${cosmos.night};
+    background: ${classic.surface};
     border-radius: 50%;
     padding: 3px;
   }
@@ -193,7 +193,7 @@ export const CardActions = styled.div`
 `;
 
 export const CardArrow = styled(UIcon)`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   flex-shrink: 0;
 `;
 
@@ -213,7 +213,7 @@ export const CardHeader = styled.div`
 `;
 
 export const CardMeta = styled.span`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   display: block;
   font-size: 12px;
   line-height: 1.4;
@@ -228,7 +228,7 @@ export const CardPlayer = styled.div`
 `;
 
 export const CardPlayerName = styled.strong`
-  color: ${cosmos.starlight};
+  color: ${classic.text};
   display: block;
   font-size: 15px;
   font-weight: ${fonts.weight.bold};
@@ -263,9 +263,9 @@ export const ChartBody = styled.div`
 
 export const ChartState = styled.div`
   align-items: center;
-  border: 1px dashed rgba(206, 181, 255, 0.22);
+  border: 1px dashed rgba(237, 197, 139, 0.22);
   border-radius: 16px;
-  color: ${cosmos.haze};
+  color: ${classic.textSecondary};
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -277,7 +277,7 @@ export const ChartState = styled.div`
   text-align: center;
 
   small {
-    color: ${cosmos.mist};
+    color: ${classic.textMuted};
     font-size: 13px;
     max-width: 320px;
   }
@@ -294,8 +294,8 @@ export const Choice = styled.label`
 // Next to each other the cards stack their stones above the level; alone in a narrow panel they put the stones first
 export const ChoiceCard = styled.span`
   align-items: center;
-  background: rgba(12, 8, 32, 0.6);
-  border: 1px solid ${cosmos.edge};
+  background: rgba(23, 18, 15, 0.6);
+  border: 1px solid ${classic.border};
   border-radius: 16px;
   column-gap: 14px;
   display: grid;
@@ -313,14 +313,14 @@ export const ChoiceCard = styled.span`
   }
 
   strong {
-    color: ${cosmos.starlight};
+    color: ${classic.text};
     font-size: 15px;
     font-weight: ${fonts.weight.bold};
     line-height: 1.3;
   }
 
   small {
-    color: ${cosmos.mist};
+    color: ${classic.textMuted};
     font-size: 12.5px;
     line-height: 1.4;
   }
@@ -338,17 +338,17 @@ export const ChoiceCard = styled.span`
   }
 
   &:hover {
-    border-color: ${cosmos.edgeBright};
+    border-color: ${classic.borderStrong};
   }
 
   input:checked + & {
-    background: linear-gradient(180deg, rgba(206, 181, 255, 0.16), rgba(206, 181, 255, 0.06));
-    border-color: ${cosmos.lavender};
-    box-shadow: 0 0 24px rgba(160, 120, 255, 0.18);
+    background: linear-gradient(180deg, rgba(237, 197, 139, 0.16), rgba(237, 197, 139, 0.06));
+    border-color: ${classic.focus};
+    box-shadow: 0 0 24px rgba(237, 197, 139, 0.18);
   }
 
   input:focus-visible + & {
-    outline: 2px solid ${cosmos.lavender};
+    outline: 2px solid ${classic.focus};
     outline-offset: 3px;
   }
 `;
@@ -390,10 +390,10 @@ export const Content = styled.div`
 `;
 
 export const Count = styled.span`
-  background: ${cosmos.goldSoft};
-  border: 1px solid rgba(255, 217, 144, 0.25);
+  background: ${classic.accentSoft};
+  border: 1px solid rgba(237, 197, 139, 0.25);
   border-radius: 999px;
-  color: ${cosmos.gold};
+  color: ${classic.accent};
   flex-shrink: 0;
   font-size: 12px;
   font-variant-numeric: tabular-nums;
@@ -420,7 +420,7 @@ export const Deck = styled.div`
 `;
 
 export const DetailLabel = styled.span`
-  color: ${cosmos.muted};
+  color: ${classic.muted};
   flex-shrink: 0;
   font-size: 10.5px;
   font-weight: ${fonts.weight.bold};
@@ -438,7 +438,7 @@ export const DetailRow = styled.div`
 `;
 
 export const DetailValue = styled.span`
-  color: ${cosmos.starlight};
+  color: ${classic.text};
   font-size: 14px;
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.semiBold};
@@ -450,7 +450,7 @@ export const DetailValue = styled.span`
 
 export const Details = styled.div`
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(206, 181, 255, 0.1);
+  border: 1px solid rgba(237, 197, 139, 0.1);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
@@ -475,8 +475,8 @@ export const EloHeader = styled.div`
 
 export const EmptyState = styled.div`
   align-items: center;
-  background: rgba(12, 8, 32, 0.45);
-  border: 1px dashed rgba(206, 181, 255, 0.22);
+  background: rgba(23, 18, 15, 0.45);
+  border: 1px dashed rgba(237, 197, 139, 0.22);
   border-radius: 18px;
   display: flex;
   flex-direction: column;
@@ -492,7 +492,7 @@ export const EmptyState = styled.div`
 `;
 
 export const EmptyText = styled.p`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   font-size: 15px;
   line-height: 1.6;
   margin: 0;
@@ -500,7 +500,7 @@ export const EmptyText = styled.p`
 `;
 
 export const EmptyTitle = styled.h3`
-  color: ${cosmos.starlight};
+  color: ${classic.text};
   font-size: 20px;
   font-weight: ${fonts.weight.bold};
   letter-spacing: -0.02em;
@@ -518,7 +518,7 @@ export const Field = styled.div`
 `;
 
 export const FieldError = styled.p`
-  color: ${cosmos.rose};
+  color: ${classic.negative};
   font-size: 12px;
   line-height: 1.4;
   margin: 6px 0 0;
@@ -561,8 +561,8 @@ export const GuestArt = styled.div`
 `;
 
 export const Kit = styled.div`
-  background: rgba(12, 8, 32, 0.35);
-  border: 1px dashed rgba(206, 181, 255, 0.22);
+  background: rgba(23, 18, 15, 0.35);
+  border: 1px dashed rgba(237, 197, 139, 0.22);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
@@ -573,9 +573,9 @@ export const Kit = styled.div`
 export const KitItem = styled.li`
   align-items: center;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid ${cosmos.edge};
+  border: 1px solid ${classic.border};
   border-radius: 999px;
-  color: ${cosmos.haze};
+  color: ${classic.textSecondary};
   display: inline-flex;
   font-size: 13px;
   font-weight: ${fonts.weight.semiBold};
@@ -594,7 +594,7 @@ export const KitList = styled.ul`
 `;
 
 export const KitNote = styled.p`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   font-size: 13px;
   line-height: 1.5;
   margin: 0;
@@ -606,7 +606,7 @@ export const KitTitle = styled.p`
 `;
 
 export const Lead = styled.p`
-  color: ${cosmos.haze};
+  color: ${classic.textSecondary};
   font-size: 15px;
   line-height: 1.6;
   margin: 0;
@@ -618,7 +618,7 @@ export const Legend = styled.legend`
 `;
 
 export const ListDescription = styled.p`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   font-size: 14px;
   line-height: 1.5;
   margin: 2px 0 0;
@@ -649,7 +649,7 @@ export const ListPanel = styled.section`
 `;
 
 export const ListTitle = styled.h2`
-  color: ${cosmos.starlight};
+  color: ${classic.text};
   font-size: 20px;
   font-weight: ${fonts.weight.bold};
   letter-spacing: -0.02em;
@@ -677,8 +677,8 @@ export const MatchCard = styled.button`
 
   @media (hover: hover) {
     &:hover {
-      border-color: ${cosmos.edgeBright};
-      box-shadow: 0 12px 28px rgba(8, 4, 24, 0.45);
+      border-color: ${classic.borderStrong};
+      box-shadow: 0 12px 28px rgba(23, 18, 15, 0.45);
     }
   }
 
@@ -690,17 +690,17 @@ export const MatchCard = styled.button`
 
   /* Declared after the hover rules so a hovered card keeps its ring */
   &:focus-visible {
-    border-color: ${cosmos.lavender};
-    box-shadow: 0 0 0 3px rgba(206, 181, 255, 0.3);
+    border-color: ${classic.focus};
+    box-shadow: 0 0 0 3px rgba(237, 197, 139, 0.3);
   }
 `;
 
-// The shared member search, dark like the rest of the panel, with its results opening as a midnight popover
+// The shared member search, dark like the rest of the panel, with its results opening as a walnut popover
 export const MemberSearch = styled(UUserSearchInput)`
   ${UserSearchClearButton} {
     align-items: center;
     border-radius: 50%;
-    color: ${cosmos.mist};
+    color: ${classic.textMuted};
     display: flex;
     height: 28px;
     justify-content: center;
@@ -709,19 +709,19 @@ export const MemberSearch = styled(UUserSearchInput)`
     width: 28px;
 
     &:focus-visible {
-      outline: 2px solid ${cosmos.lavender};
+      outline: 2px solid ${classic.focus};
     }
 
     &:hover {
-      color: ${cosmos.starlight};
+      color: ${classic.text};
     }
   }
 
   ${UserSearchDropdown} {
-    background: #1b1339;
-    border: 1px solid ${cosmos.edgeBright};
+    background: #30261f;
+    border: 1px solid ${classic.borderStrong};
     border-radius: 14px;
-    box-shadow: 0 18px 40px rgba(6, 3, 18, 0.55);
+    box-shadow: 0 18px 40px rgba(23, 18, 15, 0.55);
     margin-top: 6px;
     padding: 4px;
   }
@@ -732,7 +732,7 @@ export const MemberSearch = styled(UUserSearchInput)`
     transition: background 0.15s ease;
 
     &:hover {
-      background: ${cosmos.raised};
+      background: ${classic.surfaceRaised};
     }
 
     &:not(:last-child) {
@@ -747,7 +747,7 @@ export const MemberSearch = styled(UUserSearchInput)`
   }
 
   ${UserSearchErrorMessage} {
-    color: ${cosmos.rose};
+    color: ${classic.negative};
     margin-top: 6px;
   }
 
@@ -756,15 +756,15 @@ export const MemberSearch = styled(UUserSearchInput)`
   }
 
   ${UserSearchNoResultsMessage} {
-    color: ${cosmos.mist};
+    color: ${classic.textMuted};
   }
 
   ${UserLabelDescription} {
-    color: ${cosmos.mist};
+    color: ${classic.textMuted};
   }
 
   ${UserLabelUsername} {
-    color: ${cosmos.starlight};
+    color: ${classic.text};
   }
 `;
 
@@ -795,7 +795,7 @@ export const PanelHeader = styled.div`
 `;
 
 export const PanelTitle = styled.h2`
-  color: ${cosmos.starlight};
+  color: ${classic.text};
   font-size: 24px;
   font-weight: ${fonts.weight.extraBold};
   letter-spacing: -0.025em;
@@ -805,7 +805,7 @@ export const PanelTitle = styled.h2`
 
   &:focus-visible {
     border-radius: 6px;
-    outline: 2px solid ${cosmos.lavender};
+    outline: 2px solid ${classic.focus};
     outline-offset: 4px;
   }
 
@@ -833,7 +833,7 @@ export const PlayerIdentity = styled.div`
 `;
 
 export const PlayerName = styled.h2`
-  color: ${cosmos.starlight};
+  color: ${classic.text};
   font-size: 28px;
   font-weight: ${fonts.weight.extraBold};
   letter-spacing: -0.025em;
@@ -885,7 +885,7 @@ export const RecentHeader = styled.div`
 `;
 
 export const RecentLegend = styled.span`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   display: inline-flex;
   font-size: 12px;
   gap: 14px;
@@ -905,8 +905,8 @@ export const RecentStone = styled.span`
 // Five intersections on one board line, filled with the results of the last five games
 export const RecentStones = styled.span`
   align-items: center;
-  background: rgba(12, 8, 32, 0.5);
-  border: 1px solid ${cosmos.edge};
+  background: rgba(23, 18, 15, 0.5);
+  border: 1px solid ${classic.border};
   border-radius: 999px;
   display: flex;
   justify-content: space-between;
@@ -914,7 +914,7 @@ export const RecentStones = styled.span`
   position: relative;
 
   &::before {
-    background: rgba(206, 181, 255, 0.3);
+    background: rgba(237, 197, 139, 0.3);
     content: '';
     height: 1px;
     left: 18px;
@@ -924,14 +924,14 @@ export const RecentStones = styled.span`
 `;
 
 export const SectionNote = styled.p`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   font-size: 14px;
   line-height: 1.5;
   margin: 0;
 `;
 
 export const SectionTitle = styled.h3`
-  color: ${cosmos.starlight};
+  color: ${classic.text};
   font-size: 18px;
   font-weight: ${fonts.weight.bold};
   letter-spacing: -0.015em;
@@ -947,7 +947,7 @@ export const Segment = styled.label`
 
   span {
     border-radius: 10px;
-    color: ${cosmos.mist};
+    color: ${classic.textMuted};
     display: block;
     font-size: 13px;
     font-variant-numeric: tabular-nums;
@@ -961,24 +961,24 @@ export const Segment = styled.label`
   }
 
   &:hover span {
-    color: ${cosmos.starlight};
+    color: ${classic.text};
   }
 
   input:checked + span {
-    background: linear-gradient(180deg, rgba(206, 181, 255, 0.24), rgba(206, 181, 255, 0.12));
-    box-shadow: inset 0 0 0 1px rgba(206, 181, 255, 0.55);
-    color: ${cosmos.starlight};
+    background: linear-gradient(180deg, rgba(237, 197, 139, 0.24), rgba(237, 197, 139, 0.12));
+    box-shadow: inset 0 0 0 1px rgba(237, 197, 139, 0.55);
+    color: ${classic.text};
   }
 
   input:focus-visible + span {
-    outline: 2px solid ${cosmos.lavender};
+    outline: 2px solid ${classic.focus};
     outline-offset: 2px;
   }
 `;
 
 export const Segmented = styled.div`
-  background: rgba(12, 8, 32, 0.6);
-  border: 1px solid ${cosmos.edge};
+  background: rgba(23, 18, 15, 0.6);
+  border: 1px solid ${classic.border};
   border-radius: 14px;
   display: grid;
   gap: 4px;
@@ -987,7 +987,7 @@ export const Segmented = styled.div`
 `;
 
 export const SideStone = styled(Stone)`
-  border: 2px solid ${cosmos.night};
+  border: 2px solid ${classic.surface};
   bottom: -2px;
   position: absolute;
   right: -3px;
@@ -1001,8 +1001,8 @@ export const SmallGoldButton = styled.button`
 `;
 
 export const Stat = styled.div`
-  background: rgba(12, 8, 32, 0.55);
-  border: 1px solid ${cosmos.edge};
+  background: rgba(23, 18, 15, 0.55);
+  border: 1px solid ${classic.border};
   border-radius: 16px;
   display: flex;
   flex-direction: column;
@@ -1032,7 +1032,7 @@ export const StatLabel = styled.span`
 `;
 
 export const StatValue = styled.strong<{$isGold?: boolean}>`
-  color: ${({$isGold}) => ($isGold ? cosmos.gold : cosmos.starlight)};
+  color: ${({$isGold}) => ($isGold ? classic.accent : classic.text)};
   font-size: 20px;
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.extraBold};
@@ -1051,7 +1051,7 @@ export const Step = styled.li`
 
   /* A board line joins the numbered stones of the steps */
   &:not(:last-child)::before {
-    background: rgba(206, 181, 255, 0.3);
+    background: rgba(237, 197, 139, 0.3);
     bottom: -18px;
     content: '';
     left: 14.5px;
@@ -1063,7 +1063,7 @@ export const Step = styled.li`
 
 export const StepStone = styled(Stone)`
   align-items: center;
-  color: ${({$tone}) => ($tone === 'obsidian' ? cosmos.lilac : cosmos.goldInk)};
+  color: ${({$tone}) => ($tone === 'obsidian' ? classic.text : classic.accentInk)};
   display: inline-flex;
   font-size: 13px;
   font-weight: ${fonts.weight.extraBold};
@@ -1071,14 +1071,14 @@ export const StepStone = styled(Stone)`
 `;
 
 export const StepText = styled.p`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   font-size: 14px;
   line-height: 1.55;
   margin: 2px 0 0;
 `;
 
 export const StepTitle = styled.h3`
-  color: ${cosmos.starlight};
+  color: ${classic.text};
   font-size: 15px;
   font-weight: ${fonts.weight.bold};
   line-height: 1.4;
@@ -1105,7 +1105,7 @@ export const Term = styled.div`
 export const TermGrid = styled.div`
   align-items: end;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(206, 181, 255, 0.1);
+  border: 1px solid rgba(237, 197, 139, 0.1);
   border-radius: 12px;
   display: grid;
   gap: 8px;
@@ -1114,7 +1114,7 @@ export const TermGrid = styled.div`
 `;
 
 export const TermLabel = styled.span`
-  color: ${cosmos.muted};
+  color: ${classic.muted};
   font-size: 10.5px;
   font-weight: ${fonts.weight.bold};
   letter-spacing: 0.06em;
@@ -1122,7 +1122,7 @@ export const TermLabel = styled.span`
 `;
 
 export const TermValue = styled.span`
-  color: ${cosmos.starlight};
+  color: ${classic.text};
   font-size: 14px;
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.semiBold};
@@ -1131,10 +1131,10 @@ export const TermValue = styled.span`
 
 // Sits right above the send button: any room the taller computer panel leaves goes above the terms instead
 export const Terms = styled.p`
-  background: rgba(255, 217, 144, 0.06);
-  border-left: 2px solid ${cosmos.gold};
+  background: rgba(237, 197, 139, 0.06);
+  border-left: 2px solid ${classic.accent};
   border-radius: 0 12px 12px 0;
-  color: ${cosmos.haze};
+  color: ${classic.textSecondary};
   font-size: 13px;
   line-height: 1.6;
   margin: auto 0 0;
@@ -1154,7 +1154,7 @@ export const Versus = styled.div`
 `;
 
 export const VersusMark = styled.span`
-  color: ${cosmos.muted};
+  color: ${classic.muted};
   font-size: 11px;
   font-weight: ${fonts.weight.bold};
   letter-spacing: 0.1em;
@@ -1162,7 +1162,7 @@ export const VersusMark = styled.span`
 `;
 
 export const VersusName = styled.span`
-  color: ${cosmos.starlight};
+  color: ${classic.text};
   font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
   line-height: 1.3;

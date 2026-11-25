@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import {fonts} from 'styles';
 
+import {classic, ghostButton, goldButton} from '../../theme';
+
 export const Actions = styled.div`
   align-items: center;
   display: flex;
@@ -21,12 +23,14 @@ export const Artwork = styled.div`
   mask-image: linear-gradient(90deg, transparent, #000000 35%);
   pointer-events: none;
   position: absolute;
-  right: -1%;
+  right: 0;
   top: 0;
-  width: 78%;
+  width: 82%;
 
   &::after {
-    background: linear-gradient(0deg, #100b26, transparent 22%), linear-gradient(180deg, #100b2666, transparent 18%);
+    background:
+      linear-gradient(0deg, ${classic.surface}, transparent 22%),
+      linear-gradient(180deg, rgba(33, 26, 22, 0.4), transparent 18%);
     content: '';
     inset: 0;
     position: absolute;
@@ -63,7 +67,7 @@ export const Content = styled.div`
 `;
 
 export const Description = styled.p`
-  color: #dfd5f3;
+  color: ${classic.textSecondary};
   font-size: 1.125rem;
   font-weight: ${fonts.weight.medium};
   letter-spacing: -0.02em;
@@ -77,7 +81,7 @@ export const Description = styled.p`
 
 export const Eyebrow = styled.p`
   align-items: center;
-  color: #ceb5ff;
+  color: ${classic.accent};
   display: flex;
   flex-wrap: wrap;
   font-size: 0.6875rem;
@@ -94,7 +98,7 @@ export const Eyebrow = styled.p`
 `;
 
 export const Facts = styled.ul`
-  color: #bbacd3;
+  color: ${classic.textMuted};
   display: flex;
   flex-wrap: wrap;
   font-size: 0.75rem;
@@ -105,7 +109,7 @@ export const Facts = styled.ul`
   padding: 0;
 
   li + li {
-    border-left: 1px solid #685482;
+    border-left: 1px solid ${classic.borderStrong};
     padding-left: 16px;
   }
 
@@ -116,11 +120,11 @@ export const Facts = styled.ul`
 
 export const Hero = styled.section`
   align-items: center;
-  background: radial-gradient(ellipse at 14% 15%, #30154a80, transparent 50%), #100b26;
-  border: 1px solid #41305b;
+  background: radial-gradient(ellipse at 14% 15%, rgba(170, 117, 56, 0.16), transparent 50%), ${classic.surface};
+  border: 1px solid ${classic.border};
   border-radius: 28px;
-  box-shadow: 0 18px 48px #28104120;
-  color: #fbf8ff;
+  box-shadow: 0 18px 48px rgba(33, 26, 22, 0.16);
+  color: ${classic.text};
   display: flex;
   isolation: isolate;
   min-height: 510px;
@@ -152,63 +156,17 @@ export const Image = styled.img`
 `;
 
 export const LeaderboardLink = styled(ULink)`
-  align-items: center;
-  border: 1px solid #8f79ab;
-  border-radius: 999px;
-  color: #f4eaff;
-  display: inline-flex;
-  font-size: 0.875rem;
-  font-weight: ${fonts.weight.semiBold};
-  gap: 8px;
-  justify-content: center;
+  ${ghostButton};
   min-height: 48px;
-  padding: 0 18px;
   text-decoration: none;
 
   &:hover {
-    background: #49306080;
-    border-color: #e3ccff;
     text-decoration: none;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #e8ceff;
-    outline-offset: 5px;
   }
 `;
 
 export const PrimaryButton = styled.button`
-  align-items: center;
-  background: #e5d0ff;
-  border: 1px solid #f2e6ff;
-  border-radius: 999px;
-  box-shadow: 0 4px 28px #b883ff26;
-  color: #24113e;
-  cursor: pointer;
-  display: inline-flex;
-  font-family: inherit;
-  font-size: 0.9375rem;
-  font-weight: ${fonts.weight.bold};
-  gap: 8px;
-  justify-content: center;
-  min-height: 48px;
-  padding: 0 22px;
-  text-decoration: none;
-
-  &:hover {
-    background: #f5edff;
-    text-decoration: none;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #e8ceff;
-    outline-offset: 5px;
-  }
-
-  &:disabled {
-    cursor: wait;
-    opacity: 0.7;
-  }
+  ${goldButton};
 `;
 
 export const Title = styled.h1`
@@ -220,7 +178,7 @@ export const Title = styled.h1`
   text-transform: uppercase;
 
   span {
-    color: #ffd990;
+    color: ${classic.accent};
     display: block;
     font-size: 1.25em;
     margin-top: 3px;
@@ -243,7 +201,7 @@ export const WinningLine = styled.span`
   position: relative;
 
   &::before {
-    background: #ffd990;
+    background: ${classic.accent};
     content: '';
     height: 1px;
     left: 0;
@@ -252,7 +210,7 @@ export const WinningLine = styled.span`
   }
 
   span {
-    background: #ffd990;
+    background: ${classic.accent};
     border-radius: 50%;
     box-shadow: 0 0 6px #ffce6c50;
     height: 6px;

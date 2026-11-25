@@ -2,7 +2,6 @@ import {ChangeEvent, KeyboardEvent, useEffect, useRef, useState} from 'react';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
 import {createConnectFiveChatMessage, getConnectFiveChatMessages} from 'api/connectFive';
-import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
 import {SocketDataType} from 'enums';
 import {useIsAuthenticated, useRequireAuthentication} from 'hooks';
@@ -261,7 +260,7 @@ const ConnectFiveChat: SFC<ConnectFiveChatProps> = ({className, matchId}) => {
           type="text"
           value={chatInput}
         />
-        <Button
+        <MatchStyles.Button
           color={ButtonColor.primary}
           disabled={sendDisabled}
           isSubmitting={isSendingMessage}

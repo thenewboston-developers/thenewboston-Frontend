@@ -8,7 +8,7 @@ import {
   resignConnectFiveMatch,
   submitConnectFiveMove,
 } from 'api/connectFive';
-import Button, {ButtonColor} from 'components/Button';
+import {ButtonColor} from 'components/Button';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
 import GameResultPanel, {GameResultActions, getGameResultOutcome} from 'components/GameResultPanel';
 import GameSoundToggle from 'components/GameSoundToggle';
@@ -17,6 +17,8 @@ import {ConnectFiveMatchStatus, ConnectFiveMoveType, ConnectFiveSpecialType} fro
 import {upsertMatch} from 'store/connectFive';
 import {AppDispatch, ConnectFiveMatch, ConnectFiveMatchPlayer, SFC} from 'types';
 import {isOlderConnectFiveMatch} from 'utils/connectFive';
+
+import {EmptyBoardArt, WonBoardArt} from '../Stones';
 
 import * as SidebarStyles from './Sidebar/Styles';
 import Board from './Board';
@@ -235,16 +237,23 @@ const ComputerMatch: SFC<{match: ConnectFiveMatch}> = ({className, match}) => {
   if (match.winner_side === 'a') outcome = 'You beat the computer!';
   if (match.winner_side === 'b') outcome = 'Computer wins';
   const turnLabel = myTurn ? 'Your turn. Place a piece or use a special.' : 'The computer is thinking…';
+  let turnStatus = 'Match complete';
+  if (active) turnStatus = myTurn ? 'Your turn · Black stones' : 'Computer’s turn · White stones';
 
   return (
     <S.Container className={className}>
       <S.SoundControls>
+        <S.MatchHeading>
+          <S.BackLink to="/connect-five/home">← Back to lobby</S.BackLink>
+          <S.Heading>Connect Five</S.Heading>
+          <S.TurnStatus aria-live="polite">{turnStatus}</S.TurnStatus>
+        </S.MatchHeading>
         <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
       </S.SoundControls>
       {connectionError && (
         <S.MatchInfo role="alert">
           {connectionError}
-          <Button color={ButtonColor.secondary} onClick={() => setRetryKey((value) => value + 1)} text="Reconnect" />
+          <S.Button color={ButtonColor.secondary} onClick={() => setRetryKey((value) => value + 1)} text="Reconnect" />
         </S.MatchInfo>
       )}
       {error && <S.MatchInfo role="alert">{error}</S.MatchInfo>}
@@ -303,7 +312,7 @@ const ComputerMatch: SFC<{match: ConnectFiveMatch}> = ({className, match}) => {
               <p>
                 Both players begin with two of each special. Connect five in a row to win. Paid purchases are disabled.
               </p>
-              <Button
+              <S.Button
                 color={ButtonColor.danger}
                 disabled={!canAct}
                 onClick={() => setResignOpen(true)}
@@ -312,6 +321,7 @@ const ComputerMatch: SFC<{match: ConnectFiveMatch}> = ({className, match}) => {
             </S.MatchInfo>
           ) : (
             <GameResultPanel
+              artwork={match.winner_side === 'a' ? <WonBoardArt /> : <EmptyBoardArt />}
               description={`${match.difficulty} difficulty · Free play · ELO unchanged`}
               game="Connect Five"
               outcome={match.status === 'cancelled' ? 'complete' : getGameResultOutcome(match.winner_side, 'a')}
@@ -319,7 +329,7 @@ const ComputerMatch: SFC<{match: ConnectFiveMatch}> = ({className, match}) => {
             >
               <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
               <GameResultActions>
-                <Button
+                <S.Button
                   disabled={!canAct}
                   isSubmitting={pending === 'rematch'}
                   onClick={handleRematch}

@@ -1,5 +1,6 @@
-import ConfirmationModal from 'modals/ConfirmationModal';
 import {SFC} from 'types';
+
+import * as S from './Styles';
 
 interface ResignModalProps {
   isOpen: boolean;
@@ -13,7 +14,7 @@ const ResignModal: SFC<ResignModalProps> = ({isOpen, isResigning, isSpectator, o
   if (!isOpen || isSpectator) return null;
 
   return (
-    <ConfirmationModal
+    <S.ConfirmationModal
       close={onClose}
       confirmText={isResigning ? 'Resigning...' : 'Resign'}
       header="Resign match"

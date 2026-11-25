@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {breakpoints, fonts, pagePadding} from 'styles';
 
 import {PHONE} from '../Standings/Styles';
-import {cosmos} from '../theme';
+import {classic} from '../theme';
 
 export const Container = styled.div`
   ${pagePadding};
@@ -16,7 +16,7 @@ export const Content = styled.div`
 `;
 
 export const Elo = styled.div<{$inLine: boolean}>`
-  color: ${({$inLine}) => ($inLine ? cosmos.gold : cosmos.starlight)};
+  color: ${({$inLine}) => ($inLine ? classic.accent : classic.text)};
   font-size: 17px;
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.extraBold};
@@ -45,7 +45,7 @@ export const EloHead = styled.th`
 `;
 
 export const RecordCell = styled.td`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   font-size: 14px;
   font-variant-numeric: tabular-nums;
   font-weight: ${fonts.weight.semiBold};
@@ -67,7 +67,7 @@ export const RecordHead = styled.th`
 
 // Only rendered on phones, where the record column is hidden
 export const StackedRecord = styled.div`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   display: none;
   font-size: 12px;
   font-variant-numeric: tabular-nums;

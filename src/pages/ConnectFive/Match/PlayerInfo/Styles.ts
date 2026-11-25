@@ -3,15 +3,16 @@ import styled from 'styled-components';
 
 import UAvatar from 'components/Avatar';
 import {Img as AvatarImg} from 'components/Avatar/Styles';
-import {colors, fonts} from 'styles';
+import {fonts} from 'styles';
 
-import {COMPACT_PLAYER_ROW_QUERY, linkFocusStyle} from '../../mixins';
+import {COMPACT_PLAYER_ROW_QUERY} from '../../mixins';
+import {classic} from '../../theme';
 
 const COMPACT_AVATAR_SIZE = 36;
 
 // The ring in the color of the page separates the piece from the avatar, the inset line keeps a white piece visible
 export const ComputerName = styled.strong`
-  color: ${colors.primary};
+  color: ${classic.text};
   font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
 `;
@@ -21,11 +22,12 @@ export const PlayerAvatar = styled(UAvatar)<{$variant: 'black' | 'white'}>`
   position: relative;
 
   &::after {
-    background: ${({$variant}) => ($variant === 'black' ? colors.black : colors.white)};
-    border: 2px solid ${colors.background};
+    background: ${({$variant}) => ($variant === 'black' ? classic.blackStone : classic.whiteStone)};
+    border: 2px solid ${classic.surfaceInset};
     border-radius: 50%;
     bottom: -3px;
-    box-shadow: ${({$variant}) => ($variant === 'white' ? `inset 0 0 0 1px ${colors.borderDarker}` : 'none')};
+    box-shadow: ${({$variant}) =>
+      $variant === 'white' ? `inset 0 0 0 1px ${classic.boardRim}` : `inset 0 0 0 1px ${classic.muted}`};
     content: '';
     height: 16px;
     position: absolute;
@@ -74,7 +76,7 @@ export const PlayerLabelDetails = styled.div`
 
 export const PlayerMeta = styled.div`
   align-items: center;
-  color: ${colors.secondary};
+  color: ${classic.textMuted};
   display: flex;
   font-size: 12px;
   gap: 6px;
@@ -84,8 +86,8 @@ export const PlayerMeta = styled.div`
 `;
 
 export const PlayerName = styled(ULink)`
-  ${linkFocusStyle};
-  color: ${colors.primary};
+  border-radius: 4px;
+  color: ${classic.text};
   font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
   line-height: 1.3;
@@ -93,6 +95,11 @@ export const PlayerName = styled(ULink)`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  &:focus-visible {
+    outline: 2px solid ${classic.focus};
+    outline-offset: 3px;
+  }
 `;
 
 export const PlayerSideText = styled.span`

@@ -1,7 +1,7 @@
 import {mdiPlay, mdiTrophyOutline} from '@mdi/js';
 import Icon from '@mdi/react';
 
-import connectFiveCosmos from 'assets/connect-five-cosmos.webp';
+import connectFiveHero from 'assets/connect-five-classic-hero.webp';
 import {analyticsTarget} from 'utils/analyticsAttributes';
 
 import * as S from './Styles';
@@ -15,10 +15,10 @@ const Hero = ({isCreating, onPlay}: Props) => (
   <S.Hero aria-label="Connect Five overview">
     <S.Artwork>
       <S.Image
-        alt="A cosmic violet strategy board with exactly five golden stones connected in a winning line"
+        alt="Black and ivory stones on a honey-wood Connect Five board"
         fetchPriority="high"
         height={960}
-        src={connectFiveCosmos}
+        src={connectFiveHero}
         width={1440}
       />
     </S.Artwork>

@@ -1,46 +1,16 @@
+import {Link as ULink} from 'react-router-dom';
 import styled, {css, keyframes} from 'styled-components';
 
 import UBadge from 'components/Badge';
-import {breakpoints, colors, fonts, pagePadding, radii, shadows} from 'styles';
+import UButton from 'components/Button';
+import {Container as EmptyTextContainer} from 'components/EmptyText/Styles';
+import {Button as SoundButton} from 'components/GameSoundToggle/Styles';
+import {breakpoints, fonts, pagePadding, radii} from 'styles';
 
-import {
-  COMPACT_PLAYER_ROW_QUERY,
-  detailsLabelStyle,
-  detailsRowStyle,
-  detailsValueStyle,
-  panelStyle,
-  panelSubtitleStyle,
-  panelTitleStyle,
-  statusBadgeStyle,
-} from '../mixins';
+import {COMPACT_PLAYER_ROW_QUERY, detailsRowStyle} from '../mixins';
+import {boardPanel, classic} from '../theme';
 
-// Mirrors the max-width of the board (see Board/Styles), so the player rows line up with its edges. The floor keeps the
-// player, the pieces and the clock on one line when a short viewport shrinks the board
-const PLAYER_ROW_MAX_WIDTH = 'max(560px, calc(100vh - 360px))';
-
-const cloudSwirl = keyframes`
-  0% {
-    transform: translate(-12%, -8%) rotate(0deg) scale(1);
-  }
-  50% {
-    transform: translate(10%, 12%) rotate(180deg) scale(1.08);
-  }
-  100% {
-    transform: translate(-12%, -8%) rotate(360deg) scale(1);
-  }
-`;
-
-const cloudSwirlReverse = keyframes`
-  0% {
-    transform: translate(8%, -10%) rotate(0deg) scale(1);
-  }
-  50% {
-    transform: translate(-10%, 8%) rotate(-180deg) scale(1.12);
-  }
-  100% {
-    transform: translate(8%, -10%) rotate(-360deg) scale(1);
-  }
-`;
+import {matchButton, matchPanel, matchStatus, resultPanel} from './theme';
 
 const float = keyframes`
   0%, 100% {
@@ -98,24 +68,44 @@ const shimmer = keyframes`
   }
 `;
 
+export const BackLink = styled(ULink)`
+  color: ${classic.accent};
+  font-size: 12px;
+  font-weight: ${fonts.weight.semiBold};
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: 2px solid ${classic.focus};
+    outline-offset: 4px;
+  }
+
+  &:hover {
+    color: ${classic.text};
+  }
+`;
+
 export const Badge = styled(UBadge)`
-  ${statusBadgeStyle};
+  ${matchStatus};
 `;
 
 export const BoardSection = styled.section`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-width: 0;
+  ${matchPanel};
+  align-self: start;
+  gap: 18px;
+  padding: 20px;
 `;
 
-// The running clock is the dark one, the dot repeats the state for readers who cannot tell the fills apart
+// The running clock is amber; its dot also identifies the active player without relying on color.
+export const Button = styled(UButton)`
+  ${matchButton};
+`;
+
 export const Clock = styled.div<{$isActive: boolean}>`
   align-items: center;
-  background: ${({$isActive}) => ($isActive ? colors.primary : colors.white)};
-  border: 1px solid ${({$isActive}) => ($isActive ? colors.primary : colors.borderSubtle)};
+  background: ${({$isActive}) => ($isActive ? classic.accent : classic.surfaceInset)};
+  border: 1px solid ${({$isActive}) => ($isActive ? classic.accent : classic.border)};
   border-radius: ${radii.pill};
-  color: ${({$isActive}) => ($isActive ? colors.white : colors.secondary)};
+  color: ${({$isActive}) => ($isActive ? classic.accentInk : classic.textMuted)};
   display: flex;
   flex-shrink: 0;
   font-size: 16px;
@@ -137,7 +127,7 @@ export const Clock = styled.div<{$isActive: boolean}>`
     $isActive &&
     css`
       &::before {
-        background: ${colors.palette.green[400]};
+        background: ${classic.accentInk};
         border-radius: 50%;
         content: '';
         flex-shrink: 0;
@@ -157,13 +147,32 @@ export const Clock = styled.div<{$isActive: boolean}>`
 
 export const Container = styled.div`
   ${pagePadding};
+  ${resultPanel};
+  color: ${classic.accentInk};
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  ${EmptyTextContainer} {
+    color: ${classic.boardGrid};
+  }
+`;
+
+export const Heading = styled.h1`
+  color: ${classic.text};
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: ${fonts.weight.extraBold};
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  margin: 0;
 `;
 
 export const InfoLabel = styled.span`
-  ${detailsLabelStyle};
+  color: ${classic.textMuted};
+  font-size: 11px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 `;
 
 export const InfoRow = styled.div`
@@ -171,7 +180,12 @@ export const InfoRow = styled.div`
 `;
 
 export const InfoValue = styled.span`
-  ${detailsValueStyle};
+  color: ${classic.text};
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.semiBold};
+  overflow-wrap: anywhere;
+  text-align: right;
 `;
 
 export const LoadingContainer = styled.div`
@@ -182,15 +196,28 @@ export const LoadingContainer = styled.div`
   width: 100%;
 `;
 
+export const MatchHeading = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
 export const MatchInfo = styled.div`
-  ${panelStyle};
+  ${matchPanel};
   gap: 12px;
+
+  > p {
+    color: ${classic.textSecondary};
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+  }
 `;
 
 export const MatchLayout = styled.div`
   display: grid;
   gap: 24px;
-  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
   margin: 0 auto;
   max-width: 1400px;
   width: 100%;
@@ -207,15 +234,22 @@ export const PanelHeader = styled.div`
 `;
 
 export const PanelSubtitle = styled.span`
-  ${panelSubtitleStyle};
+  color: ${classic.textMuted};
+  font-size: 13px;
+  line-height: 1.6;
 `;
 
 export const PanelTitle = styled.h3`
-  ${panelTitleStyle};
+  color: ${classic.text};
+  font-size: 16px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 0;
 `;
 
 export const PendingChallengerName = styled.span`
-  color: ${colors.accent};
+  color: ${classic.accent};
   font-weight: ${fonts.weight.semiBold};
 `;
 
@@ -230,7 +264,7 @@ export const PendingContent = styled.div`
 export const PendingDot = styled.span<{$delay: number; $variant?: 'challenger' | 'opponent'}>`
   animation: ${pulse} 1.4s ease-in-out infinite;
   animation-delay: ${({$delay}) => $delay}s;
-  background: ${({$variant}) => ($variant === 'opponent' ? colors.palette.red[600] : colors.palette.darkGray[600])};
+  background: ${classic.accent};
   border-radius: 50%;
   height: 12px;
   width: 12px;
@@ -283,8 +317,8 @@ export const PendingIconInner = styled.div<{$variant?: 'challenger' | 'opponent'
 
   &::before {
     animation: ${pieceClashLeft} 2.6s ease-in-out infinite;
-    background: ${colors.palette.darkGray[900]};
-    border: 1px solid ${colors.palette.darkGray[700]};
+    background: ${classic.blackStone};
+    border: 1px solid ${classic.borderStrong};
     box-shadow:
       inset 0 -3px 4px rgba(0, 0, 0, 0.4),
       0 6px 12px rgba(0, 0, 0, 0.45),
@@ -294,8 +328,8 @@ export const PendingIconInner = styled.div<{$variant?: 'challenger' | 'opponent'
   &::after {
     animation: ${pieceClashRight} 2.6s ease-in-out infinite;
     animation-delay: 0.1s;
-    background: ${colors.white};
-    border: 1px solid ${colors.palette.darkGray[600]};
+    background: ${classic.whiteStone};
+    border: 1px solid ${classic.boardRim};
     box-shadow:
       inset 0 -2px 3px rgba(0, 0, 0, 0.18),
       0 6px 12px rgba(0, 0, 0, 0.25);
@@ -319,16 +353,11 @@ export const PendingIconInner = styled.div<{$variant?: 'challenger' | 'opponent'
 
 export const PendingShimmer = styled.div<{$variant?: 'challenger' | 'opponent'}>`
   animation: ${shimmer} 2s linear infinite;
-  background: ${({$variant}) =>
-    $variant === 'opponent'
-      ? `linear-gradient(90deg, transparent 0%, rgba(220, 13, 22, 0.18) 50%, transparent 100%)`
-      : `linear-gradient(90deg, transparent 0%, rgba(15, 20, 25, 0.12) 50%, transparent 100%)`};
+  background: linear-gradient(90deg, transparent, ${classic.accentSoft}, transparent);
   background-size: 200% 100%;
   border-radius: ${radii.pill};
   height: 4px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 8px;
+  margin: 16px auto 0;
   max-width: 100%;
   width: 200px;
 
@@ -338,74 +367,19 @@ export const PendingShimmer = styled.div<{$variant?: 'challenger' | 'opponent'}>
 `;
 
 export const PendingState = styled.div<{$variant?: 'challenger' | 'opponent'}>`
+  ${matchPanel};
   align-items: center;
-  background: ${({$variant}) =>
-    $variant === 'opponent'
-      ? `radial-gradient(circle at 12% 14%, rgba(220, 13, 22, 0.09) 0%, rgba(255, 255, 255, 0) 58%),
-        radial-gradient(circle at 86% 18%, rgba(123, 170, 214, 0.2) 0%, rgba(255, 255, 255, 0) 55%),
-        radial-gradient(circle at 24% 86%, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0) 55%),
-        linear-gradient(145deg, ${colors.white} 0%, ${colors.palette.red[50]} 34%, ${colors.palette.blue[50]} 68%, ${colors.white} 100%)`
-      : `radial-gradient(circle at 12% 14%, rgba(123, 170, 214, 0.2) 0%, rgba(255, 255, 255, 0) 55%),
-        radial-gradient(circle at 86% 18%, rgba(220, 13, 22, 0.09) 0%, rgba(255, 255, 255, 0) 58%),
-        radial-gradient(circle at 24% 86%, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0) 55%),
-        linear-gradient(145deg, ${colors.white} 0%, ${colors.palette.blue[50]} 34%, ${colors.palette.red[50]} 68%, ${colors.white} 100%)`};
-  border: 1px solid ${({$variant}) => ($variant === 'opponent' ? colors.palette.red[50] : colors.borderSubtle)};
-  border-radius: ${radii.large};
-  box-shadow: ${shadows.card};
-  display: flex;
-  flex-direction: column;
   gap: 24px;
   overflow: hidden;
   padding: 48px 32px;
-  position: relative;
-
-  &::before,
-  &::after {
-    content: '';
-    inset: -40%;
-    opacity: 0.55;
-    position: absolute;
-    z-index: 0;
-  }
-
-  &::before {
-    animation: ${cloudSwirl} 28s ease-in-out infinite;
-    background:
-      radial-gradient(circle at 18% 30%, rgba(220, 13, 22, 0.16) 0%, rgba(220, 13, 22, 0) 64%),
-      radial-gradient(circle at 70% 25%, rgba(123, 170, 214, 0.2) 0%, rgba(123, 170, 214, 0) 62%),
-      radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 64%);
-    filter: blur(16px);
-  }
-
-  &::after {
-    animation: ${cloudSwirlReverse} 36s ease-in-out infinite;
-    background:
-      radial-gradient(circle at 25% 70%, rgba(123, 170, 214, 0.18) 0%, rgba(123, 170, 214, 0) 64%),
-      radial-gradient(circle at 78% 65%, rgba(220, 13, 22, 0.15) 0%, rgba(220, 13, 22, 0) 64%),
-      radial-gradient(circle at 52% 35%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 64%);
-    filter: blur(20px);
-    opacity: 0.28;
-  }
-
-  & > * {
-    position: relative;
-    z-index: 1;
-  }
 
   @media (max-width: ${breakpoints.mini}) {
     padding: 40px 20px;
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    &::before,
-    &::after {
-      animation: none;
-    }
-  }
 `;
 
 export const PendingText = styled.p`
-  color: ${colors.secondary};
+  color: ${classic.textMuted};
   font-size: 15px;
   line-height: 1.5;
   margin: 8px auto 0;
@@ -413,13 +387,7 @@ export const PendingText = styled.p`
 `;
 
 export const PendingTitle = styled.h2<{$variant?: 'challenger' | 'opponent'}>`
-  -webkit-background-clip: text;
-  background: ${({$variant}) =>
-    $variant === 'opponent'
-      ? `linear-gradient(135deg, ${colors.palette.darkGray[900]} 0%, ${colors.palette.red[500]} 100%)`
-      : `linear-gradient(135deg, ${colors.palette.darkGray[900]} 0%, ${colors.palette.darkGray[500]} 100%)`};
-  background-clip: text;
-  color: transparent;
+  color: ${classic.text};
   font-size: 24px;
   font-weight: ${fonts.weight.bold};
   letter-spacing: -0.01em;
@@ -432,18 +400,22 @@ export const PendingTitle = styled.h2<{$variant?: 'challenger' | 'opponent'}>`
 // side of the row that faces the board
 export const PlayerRow = styled.div`
   align-items: center;
+  background: ${classic.surfaceInset};
+  border: 1px solid ${classic.border};
+  border-radius: 16px;
   display: flex;
   gap: 12px;
   margin: 0 auto;
-  max-width: ${PLAYER_ROW_MAX_WIDTH};
+  max-width: 680px;
   min-width: 0;
+  padding: 12px;
   width: 100%;
 
   @media ${COMPACT_PLAYER_ROW_QUERY} {
     gap: 8px;
   }
 
-  @media (max-width: ${breakpoints.mini}) {
+  @media (max-width: 1160px) {
     display: grid;
     gap: 8px 12px;
     grid-template-areas:
@@ -460,9 +432,35 @@ export const PlayerRow = styled.div`
 `;
 
 export const SoundControls = styled.div`
+  ${boardPanel};
+  align-items: center;
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
   margin: 0 auto;
   max-width: 1400px;
   width: 100%;
+
+  padding: 24px;
+
+  @media (max-width: ${breakpoints.mini}) {
+    padding: 18px;
+  }
+
+  ${SoundButton} {
+    background: ${classic.surfaceRaised};
+    border-color: ${classic.border};
+    color: ${classic.textMuted};
+
+    &:focus-visible {
+      outline-color: ${classic.focus};
+    }
+  }
+`;
+
+export const TurnStatus = styled.span`
+  color: ${classic.textMuted};
+  font-size: 13px;
+  line-height: 1.5;
 `;

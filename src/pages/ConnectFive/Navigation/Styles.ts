@@ -1,12 +1,15 @@
 import {Link as ULink} from 'react-router-dom';
 import styled from 'styled-components';
 
-import {breakpoints, colors, fonts, shadows, toolbarStyle} from 'styles';
+import UToolbarMenuLink from 'components/ToolbarMenuLink';
+import {breakpoints, fonts, toolbarStyle} from 'styles';
+
+import {classic} from '../theme';
 
 export const BackLink = styled(ULink)`
   align-items: center;
   border-radius: 8px;
-  color: ${colors.secondary};
+  color: #6b5847;
   display: inline-flex;
   font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
@@ -17,18 +20,20 @@ export const BackLink = styled(ULink)`
   white-space: nowrap;
 
   &:focus-visible {
-    box-shadow: ${shadows.focusRing};
+    box-shadow: 0 0 0 2px ${classic.boardRim};
     outline: none;
   }
 
   &:hover {
-    background: ${colors.whiteHover};
-    color: ${colors.primary};
+    background: #eee4d6;
+    color: ${classic.accentInk};
   }
 `;
 
 export const Container = styled.nav`
   ${toolbarStyle};
+  background: #fffaf2;
+  border-bottom-color: #e4d7c6;
   display: grid;
   flex-shrink: 0;
   gap: 8px;
@@ -48,6 +53,23 @@ export const MenuItems = styled.div`
   @media (max-width: ${breakpoints.mobile}) {
     gap: 0;
     justify-content: flex-end;
+  }
+`;
+
+export const MenuLink = styled(UToolbarMenuLink)`
+  color: #6b5847;
+
+  &[aria-current='page'],
+  &:hover {
+    color: ${classic.accentInk};
+  }
+
+  &::after {
+    background: ${classic.boardRim};
+  }
+
+  &:focus-visible::before {
+    box-shadow: inset 0 0 0 2px ${classic.boardRim};
   }
 `;
 

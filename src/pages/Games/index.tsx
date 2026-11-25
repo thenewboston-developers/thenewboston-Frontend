@@ -4,7 +4,7 @@ import Icon from '@mdi/react';
 import backgammonThumbnail from 'assets/backgammon-thumbnail.webp';
 import battleshipThumbnail from 'assets/battleship-thumbnail.webp';
 import checkersThumbnail from 'assets/checkers-thumbnail.webp';
-import connectFiveThumbnail from 'assets/connect-five-thumbnail.webp';
+import connectFiveThumbnail from 'assets/connect-five-classic-thumbnail.webp';
 import dotsAndBoxesThumbnail from 'assets/dots-and-boxes-thumbnail.webp';
 import hexThumbnail from 'assets/hex-thumbnail.webp';
 import mancalaThumbnail from 'assets/mancala-thumbnail.webp';
@@ -45,7 +45,7 @@ const games = [
     badge: 'ONE MORE ROUND',
     category: 'Five-in-a-row strategy',
     description: 'Simple rules. Brilliant rivalries. Find your winning line.',
-    imageDescription: 'Black and ivory stones with a glowing five-stone winning line in a violet arena',
+    imageDescription: 'Black and ivory stones on a honey-wood Connect Five board',
     name: 'Connect Five',
     path: 'connect-five',
     target: 'connect_five',

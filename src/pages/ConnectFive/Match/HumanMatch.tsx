@@ -856,9 +856,20 @@ const ConnectFiveMatch: SFC = ({className}) => {
     );
   }
 
+  let turnStatus = 'Match complete';
+  if (isMatchActive) {
+    turnStatus = match.active_player?.id === selfId ? 'Your turn' : 'Opponent’s turn';
+    if (isSpectator) turnStatus = 'Watching a live match';
+  }
+
   return (
     <S.Container className={className}>
       <S.SoundControls>
+        <S.MatchHeading>
+          <S.BackLink to="/connect-five/home">← Back to lobby</S.BackLink>
+          <S.Heading>Connect Five</S.Heading>
+          <S.TurnStatus aria-live="polite">{turnStatus}</S.TurnStatus>
+        </S.MatchHeading>
         <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
       </S.SoundControls>
       <S.MatchLayout>
