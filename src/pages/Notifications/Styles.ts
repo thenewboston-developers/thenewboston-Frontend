@@ -3,8 +3,12 @@ import styled from 'styled-components';
 import UButton from 'components/Button';
 import USectionHeading from 'components/SectionHeading';
 import {Contents} from 'components/SectionHeading/Styles';
-import {colors, fonts, hiddenScroll, pagePadding} from 'styles';
+import USkeleton from 'components/Skeleton';
+import {cardStyle, colors, fonts, hiddenScroll, pagePadding} from 'styles';
 import {analyticsScrollRoot} from 'utils/analyticsAttributes';
+
+// The 680px column of posts plus the horizontal page padding, so notifications line up with the post they open
+const CONTENT_MAX_WIDTH = '744px';
 
 export const Container = styled.div`
   display: flex;
@@ -18,7 +22,7 @@ export const Content = styled.div.attrs(analyticsScrollRoot)`
   ${hiddenScroll};
   height: 100%;
   margin: 0 auto;
-  max-width: 800px;
+  max-width: ${CONTENT_MAX_WIDTH};
   overflow-y: auto;
   width: 100%;
 `;
@@ -54,11 +58,26 @@ export const MarkAllButton = styled(UButton)`
 export const NotificationContainer = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 12px;
 `;
 
-export const NotificationSkeletonContainer = styled.div`
-  margin-bottom: 8px;
-  padding: 0 4px;
+export const NotificationSkeleton = styled.div`
+  ${cardStyle};
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+`;
+
+export const NotificationSkeletonBody = styled(USkeleton)`
+  margin-top: 6px;
+`;
+
+export const NotificationSkeletonLines = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 `;
 
 export const SectionHeading = styled(USectionHeading)`
@@ -72,4 +91,5 @@ export const SectionHeading = styled(USectionHeading)`
 export const SkeletonContainer = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 12px;
 `;

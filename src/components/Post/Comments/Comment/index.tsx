@@ -1,3 +1,4 @@
+import {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {mdiDotsVertical} from '@mdi/js';
 
@@ -17,15 +18,57 @@ import * as S from './Styles';
 export interface CommentProps {
   comment: TComment;
   isFirst: boolean;
+  // The comment a notification points to: it is scrolled into view and stays highlighted
+  isHighlighted?: boolean;
 }
 
-const Comment: SFC<CommentProps> = ({className, comment, isFirst = false}) => {
+// Longest wait for images above the comment, which push it out of view when they finish loading after the scroll
+const IMAGE_WAIT_MS = 1500;
+
+const waitForImagesAbove = (element: HTMLElement) => {
+  const pendingImages = Array.from(document.images).filter(
+    (image) => !image.complete && element.compareDocumentPosition(image) === Node.DOCUMENT_POSITION_PRECEDING,
+  );
+  const imagesLoaded = pendingImages.map(
+    (image) =>
+      new Promise((resolve) => {
+        image.addEventListener('error', resolve, {once: true});
+        image.addEventListener('load', resolve, {once: true});
+      }),
+  );
+  const timeout = new Promise((resolve) => {
+    setTimeout(resolve, IMAGE_WAIT_MS);
+  });
+
+  return Promise.race([Promise.all(imagesLoaded), timeout]);
+};
+
+const Comment: SFC<CommentProps> = ({className, comment, isFirst = false, isHighlighted = false}) => {
   const [commentEditModalIsOpen, toggleCommentEditModal] = useToggle(false);
+  const [hasScrolledIntoView, setHasScrolledIntoView] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const self = useSelector(getSelf);
 
   const {content, created_date, id, mentioned_users, owner, price_amount, price_currency} = comment;
   const profilePath = `/profile/${owner.id}`;
+
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!isHighlighted || !element) return undefined;
+
+    let isCancelled = false;
+    waitForImagesAbove(element).then(() => {
+      if (isCancelled) return;
+
+      element.scrollIntoView({behavior: 'smooth', block: 'center'});
+      setHasScrolledIntoView(true);
+    });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [isHighlighted]);
 
   const handleDelete = async () => {
     try {
@@ -74,13 +117,13 @@ const Comment: SFC<CommentProps> = ({className, comment, isFirst = false}) => {
 
   return (
     <>
-      <S.Container $isFirst={isFirst} className={className}>
+      <S.Container $isFirst={isFirst} className={className} ref={containerRef}>
         <S.AvatarLink aria-hidden="true" tabIndex={-1} to={profilePath}>
           <Avatar size="32px" src={owner.avatar} />
         </S.AvatarLink>
         <S.Main>
           <S.BubbleRow>
-            <S.Bubble>
+            <S.Bubble $isHighlighted={isHighlighted} $showsRing={hasScrolledIntoView}>
               <S.Username to={profilePath}>{owner.username}</S.Username>
               <S.Content>
                 <ContentWithMentions content={content} mentionedUsers={mentioned_users || []} />

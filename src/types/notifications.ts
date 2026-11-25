@@ -65,7 +65,7 @@ export interface PostCoinTransferPayload {
   owner: UserReadSerializer;
   post_created: string;
   post_id: number;
-  post_image_thumbnail?: string;
+  post_image_thumbnail?: string | null;
   post_preview: string;
   price_amount: number;
   price_currency_id: string;
@@ -80,7 +80,9 @@ export interface CommentMentionPayload {
   notification_type: NotificationType.COMMENT_MENTION;
   post_created: string;
   post_id: number;
-  post_image_thumbnail?: string;
+  post_image_thumbnail?: string | null;
+  // Missing only from notifications that predate it and whose post was deleted before it was filled in
+  post_owner?: Pick<UserReadSerializer, 'id' | 'username'>;
   post_preview: string;
 }
 
@@ -95,24 +97,26 @@ export interface ConnectFiveChallengePayload {
   time_limit_seconds: number;
 }
 
+// Notifications created before January 2026 hold only the text of the comment, and the ones created before July 2025
+// have no previews
 export interface PostCommentPayload {
-  comment: CommentReadSerializer;
-  comment_preview: string;
+  comment: CommentReadSerializer | string;
+  comment_preview?: string;
   commenter: UserReadSerializer;
   notification_type: NotificationType.POST_COMMENT;
-  post_created: string;
+  post_created?: string;
   post_id: number;
-  post_image_thumbnail?: string;
-  post_preview: string;
+  post_image_thumbnail?: string | null;
+  post_preview?: string;
 }
 
 export interface PostLikePayload {
   liker: UserReadSerializer;
   notification_type: NotificationType.POST_LIKE;
-  post_created: string;
+  post_created?: string;
   post_id: number;
-  post_image_thumbnail?: string;
-  post_preview: string;
+  post_image_thumbnail?: string | null;
+  post_preview?: string;
 }
 
 export interface PostMentionPayload {
@@ -120,7 +124,7 @@ export interface PostMentionPayload {
   notification_type: NotificationType.POST_MENTION;
   post_created: string;
   post_id: number;
-  post_image_thumbnail?: string;
+  post_image_thumbnail?: string | null;
   post_preview: string;
 }
 

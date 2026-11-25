@@ -50,9 +50,14 @@ const Notifications: SFC = ({className}) => {
 
   const getNotificationSkeleton = (n: number) => {
     const skeletons = Array.from({length: n}, (_, i) => (
-      <S.NotificationSkeletonContainer key={i}>
-        <Skeleton width="100%" height="80px" />
-      </S.NotificationSkeletonContainer>
+      <S.NotificationSkeleton key={i}>
+        <Skeleton circle height={44} width={44} />
+        <S.NotificationSkeletonLines>
+          <Skeleton height={16} width="55%" />
+          <Skeleton height={12} width="20%" />
+          <S.NotificationSkeletonBody borderRadius={12} height={40} />
+        </S.NotificationSkeletonLines>
+      </S.NotificationSkeleton>
     ));
     return <S.SkeletonContainer>{skeletons}</S.SkeletonContainer>;
   };
@@ -95,7 +100,13 @@ const Notifications: SFC = ({className}) => {
       );
     }
 
-    return <EmptyPage bottomText="Create a post or something." graphic={LeavesEmptyState} topText="Nothing here!" />;
+    return (
+      <EmptyPage
+        bottomText="Likes, comments, mentions and game challenges will show up here."
+        graphic={LeavesEmptyState}
+        topText="No notifications yet"
+      />
+    );
   };
 
   const renderSectionHeading = () => {

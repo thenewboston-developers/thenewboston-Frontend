@@ -20,10 +20,13 @@ import Comment from './Comment';
 import * as S from './Styles';
 
 export interface CommentsProps {
+  highlightedCommentId?: number | null;
   postId: number;
 }
 
-const Comments: SFC<CommentsProps> = ({className, postId}) => {
+const COMMENTS_PER_PAGE = 4;
+
+const Comments: SFC<CommentsProps> = ({className, highlightedCommentId, postId}) => {
   const [commentDetails, setCommentDetails] = useState<TComment[]>([]);
   const [currencySelectModalIsOpen, toggleCurrencySelectModal] = useToggle(false);
   const [mentionedUsers, setMentionedUsers] = useState<UserReadSerializer[]>([]);
@@ -46,6 +49,10 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
     return _comments.filter(({post}) => post === postId);
   }, [comments, postId]);
 
+  const highlightedCommentIndex = useMemo(() => {
+    return commentList.findIndex(({id}) => id === highlightedCommentId);
+  }, [commentList, highlightedCommentId]);
+
   const validationSchema = useMemo(() => {
     return yup.object().shape({
       content: yup.string().required('Content is required'),
@@ -53,7 +60,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   }, []);
 
   const handleComment = useCallback(() => {
-    const nextIndex = startIndex + 4;
+    const nextIndex = startIndex + COMMENTS_PER_PAGE;
     if (nextIndex < commentList.length) {
       setStartIndex(nextIndex);
       setCommentDetails((prevDetails) => {
@@ -64,9 +71,14 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   }, [commentList, startIndex]);
 
   useEffect(() => {
-    const arr = commentList.slice(0, startIndex + 4);
+    const arr = commentList.slice(0, startIndex + COMMENTS_PER_PAGE);
     setCommentDetails(arr);
   }, [commentList, startIndex]);
+
+  // Shows enough comments to include the one a notification points to
+  useEffect(() => {
+    setStartIndex((current) => Math.max(current, highlightedCommentIndex - COMMENTS_PER_PAGE + 1));
+  }, [highlightedCommentIndex]);
 
   const handleSubmit = async (values: FormValues, {resetForm}: FormikHelpers<FormValues>): Promise<void> => {
     try {
@@ -116,7 +128,14 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
   };
 
   const renderComments = () => {
-    return commentDetails.map((comment, index) => <Comment comment={comment} isFirst={index === 0} key={index} />);
+    return commentDetails.map((comment, index) => (
+      <Comment
+        comment={comment}
+        isFirst={index === 0}
+        isHighlighted={comment.id === highlightedCommentId}
+        key={index}
+      />
+    ));
   };
 
   const renderTipCurrencyControl = (errors: {[field: string]: string}, touched: {[field: string]: boolean}) => {
@@ -195,7 +214,7 @@ const Comments: SFC<CommentsProps> = ({className, postId}) => {
             <S.Divider />
             <OutlineButton
               onClick={handleComment}
-              text={`Show ${Math.min(4, commentList.length - commentDetails.length)} more comments`}
+              text={`Show ${Math.min(COMMENTS_PER_PAGE, commentList.length - commentDetails.length)} more comments`}
             />
             <S.Divider />
           </S.Content>
