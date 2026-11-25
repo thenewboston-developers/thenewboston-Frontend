@@ -8,6 +8,13 @@ export const isCancellationError = (error: any): boolean => {
 };
 
 /**
+ * Checks if the API answered that the requested object does not exist, for example a post that was deleted.
+ */
+export const isNotFoundError = (error: any): boolean => {
+  return error?.response?.status === 404;
+};
+
+/**
  * Checks if the API rejected a request for lacking valid authentication.
  * For a signed-in member this means that the session has expired, which utils/session reports and handles.
  */
