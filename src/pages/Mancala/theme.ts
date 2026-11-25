@@ -96,6 +96,26 @@ export const glassStone = (tone: StoneTone) => css`
     0 2px 3px #0a0402a6;
 `;
 
+// The honey wood of the hero's board, for the match board, the small illustrated boards and emblem tiles
+export const honeyWood = css`
+  background:
+    ${WOOD_GRAIN}, radial-gradient(ellipse 70% 60% at 25% 0%, #ffe1ad59, transparent 70%),
+    linear-gradient(160deg, #eaa75f, #cf8a45 52%, #b56f31);
+  box-shadow:
+    inset 0 2px 1px #ffe2b399,
+    inset 0 -3px 2px #7a3f1666,
+    0 4px 0 #6b3412,
+    0 10px 18px #1a0a0240;
+`;
+
+// Light from the top left leaves the upper rim of a carved bowl in shadow, like the pits of the hero's board
+export const HONEY_HOLLOW_SHADOW = 'inset 2px 5px 7px #5e2a0bb3, inset -1px -2px 3px #ffdcaa66, 0 1px 0 #ffe7bf80';
+
+export const honeyHollow = css`
+  background: radial-gradient(ellipse 110% 100% at 60% 72%, #eba862 0%, #cd8642 50%, #9e5b24 100%);
+  box-shadow: ${HONEY_HOLLOW_SHADOW};
+`;
+
 export const label = css`
   color: ${mancala.sand};
   font-size: 11px;

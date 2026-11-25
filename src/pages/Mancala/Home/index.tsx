@@ -25,6 +25,7 @@ import {
 } from '../Emblems';
 import Hero from '../Hero';
 import Leaderboard from '../Leaderboard';
+import Rules from '../Rules';
 import {getErrorMessage, getPlayerName, STORE} from '../utils';
 
 import * as S from './Styles';
@@ -444,7 +445,7 @@ const Home = () => {
         <MatchList id="mancala-history-title" matches={history} selfId={self.id} title="Your recent matches" />
       )}
       <Leaderboard />
-      <S.Rules />
+      <Rules />
     </S.Container>
   );
 };

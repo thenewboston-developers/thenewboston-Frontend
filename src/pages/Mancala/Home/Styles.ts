@@ -1,27 +1,13 @@
 import {Link} from 'react-router-dom';
 import styled, {css, keyframes} from 'styled-components';
 
-import UAuthButtons from 'components/AuthButtons';
 import UUserSearchInput from 'components/UserSearchInput';
 import {fonts} from 'styles';
 
 import {Pit} from '../Emblems/Styles';
-import URules from '../Rules';
-import {
-  amberButton,
-  carved,
-  engravedBoard,
-  eyebrow,
-  focusRing,
-  ghostButton,
-  glassStone,
-  label,
-  mancala,
-  STONES,
-  woodPanel,
-} from '../theme';
+import {amberButton, carved, engravedBoard, eyebrow, focusRing, ghostButton, label, mancala, woodPanel} from '../theme';
 
-export {Badge, Container, Navigation, TextLink} from '../Styles';
+export {Error as Alert, AuthButtons, Badge, Container, Navigation, Status, TextLink} from '../Styles';
 
 export type MatchTone = 'closed' | 'incoming' | 'turn' | 'watch' | 'waiting';
 
@@ -80,61 +66,6 @@ export const Actions = styled.div`
   flex-direction: column;
   gap: 10px;
   margin-top: auto;
-`;
-
-export const Alert = styled.div`
-  align-items: center;
-  background: linear-gradient(90deg, #5a1d10, #45230f);
-  border: 1px solid #ec7a5f80;
-  border-radius: 18px;
-  color: #ffe0d4;
-  display: flex;
-  flex-wrap: wrap;
-  font-size: 14px;
-  gap: 12px 16px;
-  justify-content: space-between;
-  line-height: 1.6;
-  margin: 20px 0;
-  padding: 14px 18px;
-`;
-
-export const AuthButtons = styled(UAuthButtons)`
-  button {
-    border-radius: 999px;
-    font-weight: ${fonts.weight.bold};
-    height: 46px;
-    padding: 0 22px;
-  }
-
-  button:first-child,
-  button:first-child:hover {
-    background: transparent;
-    border: 1px solid ${mancala.lineBright};
-    color: ${mancala.cream};
-  }
-
-  button:first-child:hover {
-    background: #ffe7c414;
-    border-color: ${mancala.sand};
-  }
-
-  button:last-child,
-  button:last-child:hover {
-    background: linear-gradient(180deg, ${mancala.amberLight}, ${mancala.amber} 50%, #e8912c);
-    border: 0;
-    box-shadow:
-      inset 0 1px 0 #fff3d0,
-      0 3px 0 ${mancala.amberDeep};
-    color: ${mancala.ink};
-  }
-
-  button:last-child:hover {
-    filter: brightness(1.06);
-  }
-
-  button:focus-visible {
-    ${focusRing};
-  }
 `;
 
 export const Choice = styled.label`
@@ -512,106 +443,6 @@ export const Retry = styled.button`
   ${ghostButton};
   min-height: 38px;
   padding: 0 16px;
-`;
-
-export const Rules = styled(URules)`
-  && {
-    ${woodPanel};
-    border-radius: 24px;
-    color: ${mancala.sand};
-    margin-top: 32px;
-    padding: 0;
-  }
-
-  && summary {
-    align-items: center;
-    border-radius: 24px;
-    color: ${mancala.cream};
-    cursor: pointer;
-    display: flex;
-    font-size: 15px;
-    font-weight: ${fonts.weight.semiBold};
-    gap: 12px;
-    list-style: none;
-    padding: 18px 24px;
-  }
-
-  && summary::-webkit-details-marker {
-    display: none;
-  }
-
-  && summary::before {
-    ${glassStone(STONES.amber)};
-    content: '';
-    flex: 0 0 auto;
-    height: 16px;
-    transform: rotate(-14deg);
-    width: 20px;
-  }
-
-  && summary::after {
-    border-bottom: 2px solid ${mancala.sand};
-    border-right: 2px solid ${mancala.sand};
-    content: '';
-    height: 8px;
-    margin-left: auto;
-    transform: translateY(-2px) rotate(45deg);
-    width: 8px;
-  }
-
-  &&[open] summary::after {
-    transform: translateY(2px) rotate(225deg);
-  }
-
-  && summary:focus-visible {
-    ${focusRing};
-    outline-offset: -3px;
-  }
-
-  && ol {
-    counter-reset: rule;
-    display: grid;
-    gap: 12px;
-    list-style: none;
-    margin: 0;
-    padding: 4px 24px 24px;
-  }
-
-  && li {
-    counter-increment: rule;
-    display: grid;
-    font-size: 14px;
-    gap: 14px;
-    grid-template-columns: 28px minmax(0, 1fr);
-    line-height: 1.65;
-    margin: 0;
-  }
-
-  && li::before {
-    ${carved};
-    align-items: center;
-    border-radius: 50%;
-    color: ${mancala.amberLight};
-    content: counter(rule);
-    display: flex;
-    font-size: 12px;
-    font-weight: ${fonts.weight.bold};
-    height: 28px;
-    justify-content: center;
-    width: 28px;
-  }
-`;
-
-export const Status = styled.div`
-  ${woodPanel};
-  align-items: center;
-  border-radius: 20px;
-  color: ${mancala.sand};
-  display: flex;
-  font-size: 14px;
-  gap: 14px;
-  margin: 24px 0 0;
-  padding: 18px 22px;
 `;
 
 export const Tray = styled.section`
