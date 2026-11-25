@@ -105,6 +105,7 @@ export interface CasinoBet {
   status: 'open' | 'settled';
   total_stake: number;
   wallet_balance: number;
+  wallet_modified_date?: string;
 }
 
 export type BlackjackBet = CasinoBet & {result: BlackjackResult};

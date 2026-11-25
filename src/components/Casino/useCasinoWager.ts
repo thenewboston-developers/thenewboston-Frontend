@@ -5,6 +5,7 @@ import {createCasinoCommitment, getCasino, getCasinoBet, getCasinoBets, placeCas
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
 import {getSelf, getWallets} from 'selectors/state';
+import {setWallet} from 'store/wallets';
 import {AppDispatch} from 'types';
 import {CasinoBet, CasinoFundMovement, CasinoGameId, CasinoSummary, RouletteSelection} from 'types/casino';
 import {
@@ -41,6 +42,8 @@ const useCasinoWager = ({gameId, selection, validSelection = true}: CasinoWagerO
   const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useIsAuthenticated();
   const live = useRef(true);
+  const refreshGeneration = useRef(0);
+  const requestGeneration = useRef(0);
   const requestLock = useRef(false);
   const self = useSelector(getSelf);
   const wallets = useSelector(getWallets);
@@ -50,20 +53,24 @@ const useCasinoWager = ({gameId, selection, validSelection = true}: CasinoWagerO
   const minBet = game?.min_bet ?? 1;
   const stake = Number(amount);
   const wallet = Object.values(wallets).find((item) => item.currency.ticker === 'TNB' && item.owner === self.id);
+  const walletRef = useRef(wallet);
+  walletRef.current = wallet;
   const validAmount = Number.isSafeInteger(stake) && stake >= minBet && stake <= maxBet;
   const available = !!summary?.fund.enabled && !!game?.enabled && maxBet >= minBet && !loadError;
   const canPlace =
     available && validAmount && validSelection && !isSubmitting && !storageError && !!wallet && stake <= wallet.balance;
 
   const refresh = useCallback(async () => {
+    refreshGeneration.current += 1;
+    const generation = refreshGeneration.current;
     try {
       const data = await getCasino();
-      if (live.current) {
+      if (live.current && generation === refreshGeneration.current) {
         setSummary(data);
         setLoadError(false);
       }
     } catch {
-      if (live.current) setLoadError(true);
+      if (live.current && generation === refreshGeneration.current) setLoadError(true);
     }
   }, []);
 
@@ -72,6 +79,12 @@ const useCasinoWager = ({gameId, selection, validSelection = true}: CasinoWagerO
       if (bet.status !== 'settled') return;
       clearPendingCasinoBet(userId, bet.request_id);
       if (!live.current) return;
+      const currentWallet = walletRef.current;
+      if (currentWallet?.owner === userId && bet.wallet_modified_date) {
+        // Apply the balance and revision together. Redux rejects delayed snapshots, including updates
+        // within the same millisecond, so fast consecutive wagers need not wait for a wallet fetch.
+        dispatch(setWallet({...currentWallet, balance: bet.wallet_balance, modified_date: bet.wallet_modified_date}));
+      }
       setPending(null);
       setReceipt(bet);
       setHistory((previous) => [bet, ...previous.filter((item) => item.request_id !== bet.request_id)].slice(0, 20));
@@ -106,12 +119,15 @@ const useCasinoWager = ({gameId, selection, validSelection = true}: CasinoWagerO
       try {
         const saved = readPendingCasinoBet(userId);
         if (saved) {
+          const generation = requestGeneration.current;
           setPending(saved);
           setError('Checking your previous bet. New bets are paused until its result is confirmed.');
           getCasinoBet(saved.payload.request_id)
-            .then((bet) => acceptReceipt(bet, userId))
+            .then((bet) => {
+              if (generation === requestGeneration.current) acceptReceipt(bet, userId);
+            })
             .catch(() => {
-              if (live.current)
+              if (live.current && generation === requestGeneration.current)
                 setError(
                   'Your previous bet is not confirmed yet. Retry the same bet to safely complete or recover it.',
                 );
@@ -124,6 +140,7 @@ const useCasinoWager = ({gameId, selection, validSelection = true}: CasinoWagerO
     }
     return () => {
       live.current = false;
+      requestGeneration.current += 1;
       clearInterval(timer);
     };
   }, [acceptReceipt, dispatch, isAuthenticated, refresh, self.id]);
@@ -137,8 +154,11 @@ const useCasinoWager = ({gameId, selection, validSelection = true}: CasinoWagerO
   // Resolves with the settled bet, or null when nothing was confirmed (the error explains what happens next).
   const place = async (): Promise<CasinoBet | null> => {
     if (!self.id || !isAuthenticated || requestLock.current || storageError) return null;
-    if (!pending && (!available || !validAmount || !validSelection || !game)) return null;
+    if (!pending && (!available || !validAmount || !validSelection || !game || !wallet || stake > wallet.balance))
+      return null;
     const userId = self.id;
+    // A manual retry supersedes automatic recovery. Its delayed response must not clear a later pending bet.
+    requestGeneration.current += 1;
     requestLock.current = true;
     setIsSubmitting(true);
     setError('');

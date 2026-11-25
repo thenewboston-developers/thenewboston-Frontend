@@ -1,5 +1,5 @@
 import {FormEvent, useCallback, useEffect, useRef, useState} from 'react';
-import {ArrowDown, ShieldCheck} from 'lucide-react';
+import {ArrowDown, ShieldCheck, Volume2, VolumeX} from 'lucide-react';
 
 import FundControls from 'components/Casino/FundControls';
 import CasinoSession from 'components/Casino/Session';
@@ -10,15 +10,13 @@ import {CasinoBet} from 'types/casino';
 import Board from './Board';
 import History from './History';
 import * as S from './Styles';
-import {isPlinkoResult, MULTIPLIERS, POCKET_WEIGHTS} from './utils';
+import usePlinkoSounds from './usePlinkoSounds';
+import {isPlinkoResult, MAX_BALLS, MULTIPLIERS, POCKET_WEIGHTS} from './utils';
 
 const PlinkoGame = () => {
-  const [activeBet, setActiveBet] = useState<CasinoBet | null>(null);
+  const [activeBets, setActiveBets] = useState<CasinoBet[]>([]);
   const [busy, setBusy] = useState(false);
-  const [dropping, setDropping] = useState(false);
-  const [heldBalance, setHeldBalance] = useState<number | null>(null);
   const [revealed, setRevealed] = useState<CasinoBet | null>(null);
-  const [visibleIds, setVisibleIds] = useState<string[] | null>(null);
   const {
     amount,
     availability,
@@ -45,9 +43,12 @@ const PlinkoGame = () => {
     validAmount,
     wallet,
   } = useCasinoWager({gameId: 'plinko'});
+  const activeBetsRef = useRef<CasinoBet[]>([]);
   const animate = useMotion();
   const inFlight = useRef(false);
   const live = useRef(true);
+  const processedRequests = useRef(new Set<string>());
+  const {playDrop, playLanding, playPeg, soundEnabled, toggleSound, unlockSound} = usePlinkoSounds();
   const supportedRules =
     game?.rules_version === 1 &&
     game.rows === 12 &&
@@ -56,21 +57,24 @@ const PlinkoGame = () => {
       (item, slot) =>
         item.slot === slot && item.multiplier === MULTIPLIERS[slot] && item.probability === POCKET_WEIGHTS[slot] / 4096,
     );
-  const displayedBalance = heldBalance ?? wallet?.balance;
+  const displayedBalance = wallet?.balance;
+  const atCapacity = activeBets.length >= MAX_BALLS;
   const lastResult = isPlinkoResult(revealed) ? revealed : null;
   const recentBets = history.filter(
-    (bet) => bet.game === 'plinko' && (!visibleIds || visibleIds.includes(bet.request_id)),
+    (bet) => bet.game === 'plinko' && !activeBets.some((active) => active.request_id === bet.request_id),
   );
   const validStake = Number.isSafeInteger(stake) && stake > 0;
 
-  const handleComplete = useCallback(() => {
-    inFlight.current = false;
-    setDropping(false);
-    setBusy(false);
-    setHeldBalance(null);
-    setVisibleIds(null);
-    setRevealed(activeBet);
-  }, [activeBet]);
+  const handleComplete = useCallback(
+    (bet: CasinoBet) => {
+      if (!activeBetsRef.current.some((active) => active.request_id === bet.request_id)) return;
+      activeBetsRef.current = activeBetsRef.current.filter((active) => active.request_id !== bet.request_id);
+      setActiveBets(activeBetsRef.current);
+      setRevealed(bet);
+      playLanding(bet.result.multiplier);
+    },
+    [playLanding],
+  );
 
   useEffect(() => {
     live.current = true;
@@ -80,32 +84,32 @@ const PlinkoGame = () => {
   }, []);
 
   useEffect(() => {
-    if (!receipt || inFlight.current) return;
+    if (!receipt || inFlight.current || processedRequests.current.has(receipt.request_id)) return;
+    // Recovery is a receipt, not a new drop: do not replay animation or sounds after a reload.
+    processedRequests.current.add(receipt.request_id);
     setRevealed(receipt);
-    setActiveBet(isPlinkoResult(receipt) ? receipt : null);
   }, [receipt]);
 
   const handleDrop = async (event?: FormEvent) => {
     event?.preventDefault();
-    if (inFlight.current || (!pending && (!canPlace || !supportedRules))) return;
+    if (inFlight.current || activeBetsRef.current.length >= MAX_BALLS || (!pending && (!canPlace || !supportedRules)))
+      return;
     inFlight.current = true;
     setBusy(true);
-    setRevealed(null);
-    setActiveBet(null);
-    setVisibleIds(history.map((bet) => bet.request_id));
-    if (wallet) setHeldBalance(pending ? wallet.balance : wallet.balance - stake);
+    unlockSound();
     const bet = await place();
     if (!live.current) return;
-    if (isPlinkoResult(bet)) {
-      setActiveBet(bet);
-      setDropping(true);
-      return;
-    }
     inFlight.current = false;
     setBusy(false);
-    setHeldBalance(null);
-    setVisibleIds(null);
-    setRevealed(bet);
+    if (!bet || processedRequests.current.has(bet.request_id)) return;
+    processedRequests.current.add(bet.request_id);
+    if (isPlinkoResult(bet)) {
+      activeBetsRef.current = [...activeBetsRef.current, bet];
+      setActiveBets(activeBetsRef.current);
+      playDrop();
+    } else {
+      setRevealed(bet);
+    }
   };
 
   const handleQuickBet = (value: number) => {
@@ -114,14 +118,17 @@ const PlinkoGame = () => {
 
   let resultTitle = 'One ball. Twelve bounces.';
   let resultDetail = 'Choose your wager and let it drop.';
-  if (busy) {
-    resultTitle = dropping ? 'Finding its way…' : 'Confirming your wager…';
-    resultDetail = dropping ? 'Follow the ball to its pocket.' : 'Your result will appear here.';
-  } else if (revealed) {
+  if (revealed) {
     resultTitle = `${revealed.payout.toLocaleString()} TNB returned`;
     resultDetail = lastResult
       ? `Pocket ${lastResult.result.slot + 1} · ${lastResult.result.multiplier}× · Net ${lastResult.profit > 0 ? '+' : ''}${lastResult.profit.toLocaleString()} TNB`
       : `Your ${revealed.game} bet was confirmed.`;
+  } else if (activeBets.length) {
+    resultTitle = 'Finding their way…';
+    resultDetail = 'Each ball has its own wager and result.';
+  } else if (busy) {
+    resultTitle = 'Confirming your wager…';
+    resultDetail = 'Your ball drops when its wager is confirmed.';
   }
 
   return (
@@ -160,7 +167,7 @@ const PlinkoGame = () => {
                   A {pending.payload.amount.toLocaleString()} TNB {pending.payload.game} bet is awaiting confirmation.
                   Retry the same wager to safely recover its result.
                 </S.Note>
-                <S.DropButton disabled={busy} onClick={() => handleDrop()} type="button">
+                <S.DropButton disabled={busy || atCapacity} onClick={() => handleDrop()} type="button">
                   {busy ? 'Checking your bet…' : 'Retry same bet'}
                 </S.DropButton>
               </div>
@@ -216,13 +223,25 @@ const PlinkoGame = () => {
                       : 'Loading bet limits…'}
                   </S.Note>
                 </S.Field>
-                <S.DropButton disabled={busy || !canPlace || !supportedRules} type="submit">
+                <S.DropButton disabled={busy || atCapacity || !canPlace || !supportedRules} type="submit">
                   <ArrowDown aria-hidden size={18} />
-                  {busy ? 'Dropping…' : 'Drop ball'}
+                  {busy ? 'Confirming…' : 'Drop ball'}
+                  {!busy && validStake && <span>{stake.toLocaleString()} TNB</span>}
                 </S.DropButton>
+                <S.Note>
+                  Each click places one separate wager. Drop again as soon as it is confirmed, while other balls are
+                  still bouncing.
+                </S.Note>
               </>
             )}
             <S.Stats>
+              <S.Stat aria-live="polite">
+                <span>Balls in play</span>
+                <strong>
+                  {activeBets.length} / {MAX_BALLS}
+                </strong>
+              </S.Stat>
+              {atCapacity && <S.Note>Eight balls are in play. Wait for one to land before dropping another.</S.Note>}
               <S.Stat>
                 <span>Rows</span>
                 <strong>12</strong>
@@ -271,7 +290,16 @@ const PlinkoGame = () => {
                 <ShieldCheck aria-hidden size={14} /> Provably fair
               </span>
             </S.BoardHeader>
-            <Board animate={animate} bet={activeBet} dropping={dropping} onComplete={handleComplete} />
+            <S.BoardToolbar>
+              <span>
+                {activeBets.length} {activeBets.length === 1 ? 'ball' : 'balls'} in play
+              </span>
+              <S.SoundButton aria-label="Plinko sound" aria-pressed={soundEnabled} onClick={toggleSound} type="button">
+                {soundEnabled ? <Volume2 aria-hidden size={16} /> : <VolumeX aria-hidden size={16} />}
+                Sound {soundEnabled ? 'on' : 'off'}
+              </S.SoundButton>
+            </S.BoardToolbar>
+            <Board animate={animate} bets={activeBets} lastBet={revealed} onComplete={handleComplete} onPeg={playPeg} />
             <S.Result aria-label="Plinko result" data-won={!!lastResult && lastResult.profit > 0} role="status">
               <strong>{resultTitle}</strong>
               <span>{resultDetail}</span>

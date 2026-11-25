@@ -8,7 +8,29 @@ import {CasinoBet, CasinoSummary} from 'types/casino';
 import {readPendingCasinoBet, savePendingCasinoBet} from 'utils/casino';
 
 import Plinko from './index';
-import {MULTIPLIERS, POCKET_WEIGHTS} from './utils';
+import {DROP_DURATION, MAX_BALLS, MULTIPLIERS, POCKET_WEIGHTS} from './utils';
+
+const mockPlayDrop = jest.fn();
+const mockPlayLanding = jest.fn();
+const mockPlayPeg = jest.fn();
+const mockUnlockSound = jest.fn();
+jest.mock('./usePlinkoSounds', () => {
+  const {useState} = jest.requireActual('react');
+  return {
+    __esModule: true,
+    default: function useMockPlinkoSounds() {
+      const [soundEnabled, setSoundEnabled] = useState(false);
+      return {
+        playDrop: mockPlayDrop,
+        playLanding: mockPlayLanding,
+        playPeg: mockPlayPeg,
+        soundEnabled,
+        toggleSound: () => setSoundEnabled((value: boolean) => !value),
+        unlockSound: mockUnlockSound,
+      };
+    },
+  };
+});
 
 jest.mock('api/casino', () => ({
   createCasinoCommitment: jest.fn(),
@@ -134,6 +156,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   localStorage.clear();
   mockDispatch.mockResolvedValue(undefined);
+  Object.defineProperty(window, 'matchMedia', {configurable: true, value: undefined});
   Object.defineProperty(globalThis, 'crypto', {
     configurable: true,
     value: {randomUUID: jest.fn().mockReturnValue('request-id')},
@@ -150,6 +173,7 @@ beforeEach(() => {
 afterEach(() => {
   act(() => root.unmount());
   container.remove();
+  jest.restoreAllMocks();
 });
 
 it('shows the board, full rules and funded wager limits', async () => {
@@ -270,6 +294,9 @@ it('recovers a settled loss without placing another wager', async () => {
   expect(container.querySelector('[aria-label="Plinko result"]')).toHaveTextContent('0 TNB returned');
   expect(container.querySelector('[aria-label="Plinko result"]')).toHaveTextContent('Pocket 7 · 0× · Net -1 TNB');
   expect(placeCasinoBet).not.toHaveBeenCalled();
+  expect(mockPlayDrop).not.toHaveBeenCalled();
+  expect(mockPlayLanding).not.toHaveBeenCalled();
+  expect(mockPlayPeg).not.toHaveBeenCalled();
 });
 
 it('requires authentication and keeps admin controls hidden', async () => {
@@ -307,4 +334,135 @@ it('clears a definite rejection and refreshes the fund limits', async () => {
   expect(readPendingCasinoBet(7)).toBeNull();
   expect(container).toHaveTextContent('The wager exceeds the current limit.');
   expect(getCasino).toHaveBeenCalledTimes(2);
+});
+
+const enableAnimation = () => {
+  const frames = new Map<number, FrameRequestCallback>();
+  let frameId = 0;
+  Object.defineProperty(window, 'matchMedia', {
+    configurable: true,
+    value: () => ({matches: false, addEventListener: jest.fn(), removeEventListener: jest.fn()}),
+  });
+  jest.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+    frameId += 1;
+    frames.set(frameId, callback);
+    return frameId;
+  });
+  jest.spyOn(window, 'cancelAnimationFrame').mockImplementation((id) => {
+    frames.delete(id);
+  });
+  return (time: number) => {
+    const current = [...frames.values()];
+    frames.clear();
+    act(() => current.forEach((callback) => callback(time)));
+  };
+};
+
+it('accepts a second wager while the first ball is bouncing and reveals each receipt on its own landing', async () => {
+  const advance = enableAnimation();
+  (crypto.randomUUID as jest.Mock)
+    .mockReturnValueOnce('first-client')
+    .mockReturnValueOnce('request-id')
+    .mockReturnValueOnce('second-client')
+    .mockReturnValueOnce('second');
+  const second = {
+    ...settled,
+    request_id: 'second',
+    payout: 50,
+    profit: 49,
+    result: {draw: 4095, multiplier: 50, path: Array(12).fill(1), slot: 12},
+  };
+  (placeCasinoBet as jest.Mock).mockResolvedValueOnce(settled).mockResolvedValueOnce(second);
+  await render();
+  await act(async () => button('Drop ball').click());
+  advance(0);
+  advance(400);
+  expect(button('Drop ball')).toBeEnabled();
+  const firstBall = container.querySelector('[data-ball-id="request-id"] circle')!;
+  const firstHeight = firstBall.getAttribute('cy');
+  await act(async () => button('Drop ball').click());
+  expect(firstBall).toHaveAttribute('cy', firstHeight);
+  expect(container.querySelectorAll('[data-ball-id]')).toHaveLength(2);
+  expect(container).toHaveTextContent('2 balls in play');
+  expect(container.querySelector('[aria-labelledby="plinko-history-heading"] tbody')).toBeNull();
+  advance(500);
+  advance(DROP_DURATION);
+  expect(container.querySelectorAll('[data-ball-id]')).toHaveLength(1);
+  expect(container.querySelector('[aria-label="Plinko result"]')).toHaveTextContent('3 TNB returned');
+  expect(container.querySelectorAll('[aria-labelledby="plinko-history-heading"] tbody tr')).toHaveLength(1);
+  advance(DROP_DURATION + 500);
+  expect(container.querySelectorAll('[data-ball-id]')).toHaveLength(0);
+  expect(container.querySelector('[aria-label="Plinko result"]')).toHaveTextContent('50 TNB returned');
+  expect(container.querySelectorAll('[aria-labelledby="plinko-history-heading"] tbody tr')).toHaveLength(2);
+  expect(mockPlayDrop).toHaveBeenCalledTimes(2);
+  expect(mockPlayLanding).toHaveBeenNthCalledWith(1, 3);
+  expect(mockPlayLanding).toHaveBeenNthCalledWith(2, 50);
+});
+
+it('caps simultaneous balls at eight and allows another only after a landing', async () => {
+  const advance = enableAnimation();
+  let sequence = 0;
+  (crypto.randomUUID as jest.Mock).mockImplementation(() => {
+    sequence += 1;
+    return `ball-${sequence}`;
+  });
+  (placeCasinoBet as jest.Mock).mockImplementation(async (payload) => ({...settled, request_id: payload.request_id}));
+  await render();
+  for (let index = 0; index < MAX_BALLS; index += 1) {
+    // Each wager awaits server confirmation before the next manual click.
+    // eslint-disable-next-line no-await-in-loop
+    await act(async () => button('Drop ball').click());
+    advance(index * 100);
+  }
+  expect(container.querySelectorAll('[data-ball-id]')).toHaveLength(8);
+  expect(button('Drop ball')).toBeDisabled();
+  await act(async () => button('Drop ball').click());
+  expect(placeCasinoBet).toHaveBeenCalledTimes(8);
+  advance(DROP_DURATION);
+  expect(container.querySelectorAll('[data-ball-id]')).toHaveLength(7);
+  expect(button('Drop ball')).toBeEnabled();
+  await act(async () => button('Drop ball').click());
+  expect(placeCasinoBet).toHaveBeenCalledTimes(9);
+  expect(container.querySelectorAll('[data-ball-id]')).toHaveLength(8);
+});
+
+it('pauses new wagers after an uncertain response while earlier balls keep moving', async () => {
+  const advance = enableAnimation();
+  (crypto.randomUUID as jest.Mock)
+    .mockReturnValueOnce('first-client')
+    .mockReturnValueOnce('request-id')
+    .mockReturnValueOnce('second-client')
+    .mockReturnValueOnce('second');
+  (placeCasinoBet as jest.Mock).mockResolvedValueOnce(settled).mockRejectedValueOnce(new Error('Network'));
+  await render();
+  await act(async () => button('Drop ball').click());
+  advance(0);
+  await act(async () => button('Drop ball').click());
+  expect(button('Drop ball')).toBeUndefined();
+  expect(button('Retry same bet')).toBeEnabled();
+  expect(container.querySelectorAll('[data-ball-id]')).toHaveLength(1);
+  advance(DROP_DURATION);
+  expect(container.querySelectorAll('[data-ball-id]')).toHaveLength(0);
+  expect(button('Retry same bet')).toBeEnabled();
+  expect(readPendingCasinoBet(7)).not.toBeNull();
+});
+
+it('does not replay a duplicate receipt and keeps mute toggles independent of running balls', async () => {
+  const advance = enableAnimation();
+  await render();
+  expect(button('Sound off')).toHaveAttribute('aria-pressed', 'false');
+  await act(async () => button('Sound off').click());
+  expect(button('Sound on')).toHaveAttribute('aria-pressed', 'true');
+  await act(async () => button('Drop ball').click());
+  advance(0);
+  advance(400);
+  const firstBall = container.querySelector('[data-ball-id] circle')!;
+  const firstHeight = firstBall.getAttribute('cy');
+  await act(async () => button('Sound on').click());
+  expect(firstBall).toHaveAttribute('cy', firstHeight);
+  await act(async () => button('Drop ball').click());
+  expect(container.querySelectorAll('[data-ball-id]')).toHaveLength(1);
+  expect(mockPlayDrop).toHaveBeenCalledTimes(1);
+  advance(DROP_DURATION);
+  expect(mockPlayLanding).toHaveBeenCalledTimes(1);
 });

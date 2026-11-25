@@ -4,6 +4,7 @@ export const ROWS = 12;
 export const MULTIPLIERS = [50, 18, 8, 3, 1, 0, 0, 0, 1, 3, 8, 18, 50];
 export const POCKET_WEIGHTS = [1, 12, 66, 220, 495, 792, 924, 792, 495, 220, 66, 12, 1];
 export const DROP_DURATION = 2400;
+export const MAX_BALLS = 8;
 
 export interface Point {
   x: number;
