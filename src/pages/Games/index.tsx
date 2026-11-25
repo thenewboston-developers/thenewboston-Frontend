@@ -9,6 +9,7 @@ import dotsAndBoxesThumbnail from 'assets/dots-and-boxes-thumbnail.webp';
 import hexThumbnail from 'assets/hex-thumbnail.webp';
 import mancalaThumbnail from 'assets/mancala-thumbnail.webp';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
+import CasinoPreview from 'components/CasinoPreview';
 import GameFund from 'components/GameFund';
 import {SFC} from 'types';
 import {captureAnalyticsEvent} from 'utils/analytics';
@@ -164,6 +165,7 @@ const Games: SFC = ({className}) => (
         </S.GameGrid>
       </section>
       <GameFund />
+      <CasinoPreview />
       <S.About aria-label="The games experience">
         <S.AboutItem>
           <S.AboutIcon aria-hidden="true" path={mdiGamepadVariantOutline} size="24px" />
