@@ -43,8 +43,9 @@ beforeEach(() => {
   process.env = {
     ...originalEnvironment,
     NODE_ENV: 'production',
-    REACT_APP_POSTHOG_HOST: 'https://us.i.posthog.com',
+    REACT_APP_POSTHOG_HOST: 'https://e.thenewboston.net',
     REACT_APP_POSTHOG_KEY: 'phc_public-project-token',
+    REACT_APP_POSTHOG_UI_HOST: 'https://us.posthog.com',
   };
   jest.isolateModules(() => {
     // Each test gets fresh initialization and identity state, as on a new page load.
@@ -99,28 +100,35 @@ describe('API analytics identity headers', () => {
 });
 
 describe('analytics initialization and identity', () => {
-  it('initializes once with the public project token and disables automatic pageviews', () => {
+  it('initializes once with separate proxy and UI hosts and disables automatic pageviews', () => {
     analytics.initializeAnalytics();
     analytics.initializeAnalytics();
 
     expect(posthog.init).toHaveBeenCalledTimes(1);
     expect(posthog.init).toHaveBeenCalledWith(
       'phc_public-project-token',
-      expect.objectContaining({api_host: 'https://us.i.posthog.com', capture_pageview: false}),
+      expect.objectContaining({
+        api_host: 'https://e.thenewboston.net',
+        capture_pageview: false,
+        ui_host: 'https://us.posthog.com',
+      }),
     );
   });
 
-  it.each(['REACT_APP_POSTHOG_HOST', 'REACT_APP_POSTHOG_KEY'])('does nothing when %s is missing', (variable) => {
-    delete process.env[variable];
-    analytics.initializeAnalytics();
-    analytics.captureAnalyticsEvent('post_create');
-    analytics.syncAnalyticsIdentity('42');
+  it.each(['REACT_APP_POSTHOG_HOST', 'REACT_APP_POSTHOG_KEY', 'REACT_APP_POSTHOG_UI_HOST'])(
+    'does nothing when %s is missing',
+    (variable) => {
+      delete process.env[variable];
+      analytics.initializeAnalytics();
+      analytics.captureAnalyticsEvent('post_create');
+      analytics.syncAnalyticsIdentity('42');
 
-    expect(posthog.init).not.toHaveBeenCalled();
-    expect(posthog.capture).not.toHaveBeenCalled();
-    expect(posthog.identify).not.toHaveBeenCalled();
-    expect(posthog.reset).not.toHaveBeenCalled();
-  });
+      expect(posthog.init).not.toHaveBeenCalled();
+      expect(posthog.capture).not.toHaveBeenCalled();
+      expect(posthog.identify).not.toHaveBeenCalled();
+      expect(posthog.reset).not.toHaveBeenCalled();
+    },
+  );
 
   it.each<'development' | 'test'>(['development', 'test'])('does not initialize in %s', (environment) => {
     process.env = {...process.env, NODE_ENV: environment};
