@@ -34,12 +34,12 @@ const PlinkoGame = () => {
     place,
     receipt,
     refresh,
+    resumeGame,
     self,
     setAmount,
     stake,
     summary,
     unavailableMessage,
-    unfinishedGame,
     validAmount,
     wallet,
   } = useCasinoWager({gameId: 'plinko'});
@@ -164,8 +164,8 @@ const PlinkoGame = () => {
             {isAuthenticated && pending && (
               <div>
                 <S.Note>
-                  A {pending.payload.amount.toLocaleString()} TNB {pending.payload.game} bet is awaiting confirmation.
-                  Retry the same wager to safely recover its result.
+                  A {pending.payload.amount.toLocaleString()} TNB {pending.payload.game.replace(/_/g, ' ')} bet is
+                  awaiting confirmation. Retry the same wager to safely recover its result.
                 </S.Note>
                 <S.DropButton disabled={busy || atCapacity} onClick={() => handleDrop()} type="button">
                   {busy ? 'Checking your bet…' : 'Retry same bet'}
@@ -271,9 +271,10 @@ const PlinkoGame = () => {
                 </S.Alert>
               )}
               {error && <S.Alert role="alert">{error}</S.Alert>}
-              {(unfinishedGame || pending?.payload.game === 'blackjack') && (
+              {resumeGame && (
                 <S.Note>
-                  <S.BackLink to="/blackjack/home">Resume your Blackjack hand</S.BackLink> before placing another wager.
+                  <S.BackLink to={resumeGame.path}>Resume your {resumeGame.name} hand</S.BackLink> before placing
+                  another wager.
                 </S.Note>
               )}
               {loadError && (

@@ -4,6 +4,7 @@ import {MemoryRouter, Route, Routes, useLocation, useNavigationType} from 'react
 
 import {
   createCasinoCommitment,
+  getActiveCasinoBet,
   getCasino,
   getCasinoBet,
   getCasinoBets,
@@ -18,6 +19,7 @@ import {readPendingCasinoBet, savePendingCasinoBet} from 'utils/casino';
 
 jest.mock('api/casino', () => ({
   createCasinoCommitment: jest.fn(),
+  getActiveCasinoBet: jest.fn(),
   getCasino: jest.fn(),
   getCasinoBet: jest.fn(),
   getCasinoBets: jest.fn(),
@@ -274,6 +276,7 @@ it('rejects a new spin while Blackjack is active without trapping a pending wage
   (placeCasinoBet as jest.Mock).mockRejectedValueOnce({
     response: {status: 409, data: {code: 'game_in_progress', detail: 'Finish the existing casino game first.'}},
   });
+  (getActiveCasinoBet as jest.Mock).mockResolvedValueOnce({game: 'blackjack', status: 'open'});
   await render();
   await act(async () => button('Spin 1 TNB').click());
   expect(readPendingCasinoBet(7)).toBeNull();
@@ -281,6 +284,24 @@ it('rejects a new spin while Blackjack is active without trapping a pending wage
   expect(button('Retry same bet')).toBeUndefined();
   await act(async () => button('Spin 1 TNB').click());
   expect(container.querySelector('a[href="/blackjack/home"]')).toBeNull();
+});
+
+it('links to whichever game has the unfinished hand, and to none when that cannot be told', async () => {
+  const inProgress = {
+    response: {status: 409, data: {code: 'game_in_progress', detail: 'Finish the existing casino game first.'}},
+  };
+  (placeCasinoBet as jest.Mock).mockRejectedValueOnce(inProgress).mockRejectedValueOnce(inProgress);
+  (getActiveCasinoBet as jest.Mock)
+    .mockResolvedValueOnce({game: 'let_it_ride', status: 'open'})
+    .mockRejectedValueOnce(new Error('Network'));
+  await render();
+  await act(async () => button('Spin 1 TNB').click());
+  expect(container.querySelector('a[href="/let-it-ride/home"]')).toHaveTextContent('Resume your Let It Ride hand');
+  expect(container.querySelector('a[href="/blackjack/home"]')).toBeNull();
+  expect(readPendingCasinoBet(7)).toBeNull();
+  await act(async () => button('Spin 1 TNB').click());
+  expect(container.querySelector('a[href="/let-it-ride/home"]')).toBeNull();
+  expect(container).toHaveTextContent('Finish the existing casino game first.');
 });
 
 it('recovers an uncertain admin deposit after reload using the identical request ID', async () => {

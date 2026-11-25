@@ -14,6 +14,7 @@ const Casino = () => (
     <Route element={<LegacyGameRedirect to="/roulette/home" />} path="roulette" />
     <Route element={<LegacyGameRedirect to="/blackjack/home" />} path="blackjack" />
     <Route element={<LegacyGameRedirect to="/plinko/home" />} path="plinko" />
+    <Route element={<LegacyGameRedirect to="/let-it-ride/home" />} path="let-it-ride" />
     <Route element={<LegacyGameRedirect to="/slots/home" />} path="*" />
   </SentryRoutes>
 );

@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+  <defs>
+    <radialGradient id="felt" cx="50%" cy="42%" r="75%"><stop stop-color="#2a5cbe"/><stop offset=".55" stop-color="#17377c"/><stop offset="1" stop-color="#0a1a40"/></radialGradient>
+    <linearGradient id="card" x2="1" y2="1"><stop stop-color="#fffdf6"/><stop offset="1" stop-color="#e9dfc6"/></linearGradient>
+    <linearGradient id="chip" x2="0" y2="1"><stop stop-color="#fbe9b0"/><stop offset="1" stop-color="#e9c669"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="12" stdDeviation="11" flood-color="#030a1f" flood-opacity=".45"/></filter>
+    <filter id="chipShadow" x="-40%" y="-40%" width="180%" height="200%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#030a1f" flood-opacity=".55"/></filter>
+  </defs>
+  <rect width="900" height="600" fill="url(#felt)"/>
+  <ellipse cx="450" cy="170" rx="640" ry="470" fill="none" stroke="#e0b459" stroke-width="3" stroke-opacity=".38"/>
+  <ellipse cx="450" cy="170" rx="618" ry="448" fill="none" stroke="#e0b459" stroke-opacity=".2"/>
+  <g fill="#17203a" font-family="Georgia, 'Times New Roman', serif">
+  <g transform="translate(450 566) rotate(-26) translate(-78 -478)" filter="url(#shadow)">
+    <rect width="156" height="220" rx="13" fill="url(#card)" stroke="#ffffff" stroke-width="2"/>
+    <rect x="7" y="7" width="142" height="206" rx="8" fill="none" stroke="#17203a" stroke-opacity=".1"/>
+    <text x="24" y="38" text-anchor="middle" font-size="27" font-weight="700">10</text>
+    <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(24 56) scale(.26)"/>
+    <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(78 112) scale(1.05)"/>
+    <g transform="rotate(180 78 110)">
+      <text x="24" y="38" text-anchor="middle" font-size="27" font-weight="700">10</text>
+      <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(24 56) scale(.26)"/>
+    </g>
+  </g>
+  <g transform="translate(450 566) rotate(-13) translate(-78 -478)" filter="url(#shadow)">
+    <rect width="156" height="220" rx="13" fill="url(#card)" stroke="#ffffff" stroke-width="2"/>
+    <rect x="7" y="7" width="142" height="206" rx="8" fill="none" stroke="#17203a" stroke-opacity=".1"/>
+    <text x="24" y="38" text-anchor="middle" font-size="30" font-weight="700">J</text>
+    <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(24 56) scale(.26)"/>
+    <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(78 112) scale(1.05)"/>
+    <g transform="rotate(180 78 110)">
+      <text x="24" y="38" text-anchor="middle" font-size="30" font-weight="700">J</text>
+      <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(24 56) scale(.26)"/>
+    </g>
+  </g>
+  <g transform="translate(450 566) rotate(0) translate(-78 -478)" filter="url(#shadow)">
+    <rect width="156" height="220" rx="13" fill="url(#card)" stroke="#ffffff" stroke-width="2"/>
+    <rect x="7" y="7" width="142" height="206" rx="8" fill="none" stroke="#17203a" stroke-opacity=".1"/>
+    <text x="24" y="38" text-anchor="middle" font-size="30" font-weight="700">Q</text>
+    <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(24 56) scale(.26)"/>
+    <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(78 112) scale(1.05)"/>
+    <g transform="rotate(180 78 110)">
+      <text x="24" y="38" text-anchor="middle" font-size="30" font-weight="700">Q</text>
+      <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(24 56) scale(.26)"/>
+    </g>
+  </g>
+  <g transform="translate(450 566) rotate(13) translate(-78 -478)" filter="url(#shadow)">
+    <rect width="156" height="220" rx="13" fill="url(#card)" stroke="#ffffff" stroke-width="2"/>
+    <rect x="7" y="7" width="142" height="206" rx="8" fill="none" stroke="#17203a" stroke-opacity=".1"/>
+    <text x="24" y="38" text-anchor="middle" font-size="30" font-weight="700">K</text>
+    <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(24 56) scale(.26)"/>
+    <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(78 112) scale(1.05)"/>
+    <g transform="rotate(180 78 110)">
+      <text x="24" y="38" text-anchor="middle" font-size="30" font-weight="700">K</text>
+      <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(24 56) scale(.26)"/>
+    </g>
+  </g>
+  <g transform="translate(450 566) rotate(26) translate(-78 -478)" filter="url(#shadow)">
+    <rect width="156" height="220" rx="13" fill="url(#card)" stroke="#ffffff" stroke-width="2"/>
+    <rect x="7" y="7" width="142" height="206" rx="8" fill="none" stroke="#17203a" stroke-opacity=".1"/>
+    <text x="24" y="38" text-anchor="middle" font-size="30" font-weight="700">A</text>
+    <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(24 56) scale(.26)"/>
+    <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(78 112) scale(1.05)"/>
+    <g transform="rotate(180 78 110)">
+      <text x="24" y="38" text-anchor="middle" font-size="30" font-weight="700">A</text>
+      <path d="M0 -42 C-14 -22 -40 -8 -40 14 C-40 30 -26 38 -14 34 C-9 32 -5 28 -2 24 C-3 34 -8 44 -16 50 L16 50 C8 44 3 34 2 24 C5 28 9 32 14 34 C26 38 40 30 40 14 C40 -8 14 -22 0 -42 Z" transform="translate(24 56) scale(.26)"/>
+    </g>
+  </g>
+  </g>
+  <text x="450" y="412" text-anchor="middle" fill="#f8e2a4" fill-opacity=".9" font-family="Georgia, 'Times New Roman', serif" font-size="25" font-style="italic" letter-spacing="9">LET IT RIDE</text>
+  <g font-family="Georgia, 'Times New Roman', serif">
+  <g transform="translate(330 500)">
+    <circle r="47" fill="#0a1a40" fill-opacity=".35" stroke="#e0b459" stroke-width="2.5" stroke-opacity=".8"/>
+    <text y="-58" text-anchor="middle" font-size="19" font-weight="700" fill="#e0b459" fill-opacity=".85">1</text>
+    <g filter="url(#chipShadow)">
+      <circle r="34" fill="#b88a34"/>
+      <circle r="29" fill="none" stroke="#fdf3d2" stroke-width="9" stroke-dasharray="11.4 11.4"/>
+      <circle r="22.5" fill="url(#chip)" stroke="#a57a2c" stroke-width="1.2"/>
+      <path d="M-27 -6a28 28 0 0 1 54 0a52 52 0 0 0-54 0Z" fill="#ffffff" fill-opacity=".2"/>
+    </g>
+  </g>
+  <g transform="translate(450 500)">
+    <circle r="47" fill="#0a1a40" fill-opacity=".35" stroke="#e0b459" stroke-width="2.5" stroke-opacity=".8"/>
+    <text y="-58" text-anchor="middle" font-size="19" font-weight="700" fill="#e0b459" fill-opacity=".85">2</text>
+    <g filter="url(#chipShadow)">
+      <circle r="34" fill="#b88a34"/>
+      <circle r="29" fill="none" stroke="#fdf3d2" stroke-width="9" stroke-dasharray="11.4 11.4"/>
+      <circle r="22.5" fill="url(#chip)" stroke="#a57a2c" stroke-width="1.2"/>
+      <path d="M-27 -6a28 28 0 0 1 54 0a52 52 0 0 0-54 0Z" fill="#ffffff" fill-opacity=".2"/>
+    </g>
+  </g>
+  <g transform="translate(570 500)">
+    <circle r="47" fill="#0a1a40" fill-opacity=".35" stroke="#e0b459" stroke-width="2.5" stroke-opacity=".8"/>
+    <text y="-58" text-anchor="middle" font-size="19" font-weight="700" fill="#e0b459" fill-opacity=".85">$</text>
+    <g filter="url(#chipShadow)">
+      <circle r="34" fill="#b88a34"/>
+      <circle r="29" fill="none" stroke="#fdf3d2" stroke-width="9" stroke-dasharray="11.4 11.4"/>
+      <circle r="22.5" fill="url(#chip)" stroke="#a57a2c" stroke-width="1.2"/>
+      <path d="M-27 -6a28 28 0 0 1 54 0a52 52 0 0 0-54 0Z" fill="#ffffff" fill-opacity=".2"/>
+    </g>
+  </g>
+  </g>
+</svg>

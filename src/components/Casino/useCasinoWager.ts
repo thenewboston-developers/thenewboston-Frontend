@@ -1,7 +1,14 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {createCasinoCommitment, getCasino, getCasinoBet, getCasinoBets, placeCasinoBet} from 'api/casino';
+import {
+  createCasinoCommitment,
+  getActiveCasinoBet,
+  getCasino,
+  getCasinoBet,
+  getCasinoBets,
+  placeCasinoBet,
+} from 'api/casino';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
 import {getSelf, getWallets} from 'selectors/state';
@@ -10,7 +17,9 @@ import {AppDispatch} from 'types';
 import {CasinoBet, CasinoFundMovement, CasinoGameId, CasinoSummary, RouletteSelection} from 'types/casino';
 import {
   casinoErrorMessage,
+  CasinoGameLink,
   clearPendingCasinoBet,
+  getCasinoGameLink,
   isDefiniteCasinoRejection,
   PendingCasinoBet,
   readPendingCasinoBet,
@@ -41,7 +50,8 @@ const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelecti
   const [receipt, setReceipt] = useState<CasinoBet | null>(null);
   const [storageError, setStorageError] = useState(false);
   const [summary, setSummary] = useState<CasinoSummary | null>(null);
-  const [unfinishedGame, setUnfinishedGame] = useState(false);
+  // The interactive game (Blackjack, Let It Ride) whose open hand is holding up new wagers
+  const [unfinishedGame, setUnfinishedGame] = useState<CasinoGameLink | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useIsAuthenticated();
   const live = useRef(true);
@@ -93,7 +103,7 @@ const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelecti
       setReceipt(bet);
       setHistory((previous) => [bet, ...previous.filter((item) => item.request_id !== bet.request_id)].slice(0, 20));
       setError('');
-      setUnfinishedGame(false);
+      setUnfinishedGame(null);
       dispatch(getAllUserWallets()).catch(() => undefined);
       refresh();
     },
@@ -192,7 +202,15 @@ const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelecti
       return bet.status === 'settled' ? bet : null;
     } catch (caught) {
       if (!live.current) return null;
-      setUnfinishedGame((caught as {response?: {data?: {code?: string}}}).response?.data?.code === 'game_in_progress');
+      setUnfinishedGame(null);
+      if ((caught as {response?: {data?: {code?: string}}}).response?.data?.code === 'game_in_progress') {
+        // The rejection does not say which game is open: ask, so the page can link straight to it
+        Promise.resolve(getActiveCasinoBet())
+          .then((active) => {
+            if (live.current && active?.status === 'open') setUnfinishedGame(getCasinoGameLink(active.game));
+          })
+          .catch(() => undefined);
+      }
       if (request && isDefiniteCasinoRejection(caught)) {
         clearPendingCasinoBet(userId, request.payload.request_id);
         setPending(null);
@@ -225,6 +243,11 @@ const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelecti
   if (!summary?.fund.enabled) unavailableMessage = 'The casino is closed to new wagers.';
   if (loadError) unavailableMessage = 'Refresh the casino status before placing a bet.';
 
+  const pendingGame = pending?.payload.game;
+  const resumeGame =
+    unfinishedGame ??
+    (pendingGame === 'blackjack' || pendingGame === 'let_it_ride' ? getCasinoGameLink(pendingGame) : null);
+
   return {
     amount,
     availability,
@@ -243,6 +266,7 @@ const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelecti
     place,
     receipt,
     refresh,
+    resumeGame,
     self,
     setAmount,
     setReceipt,
@@ -250,7 +274,6 @@ const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelecti
     storageError,
     summary,
     unavailableMessage,
-    unfinishedGame,
     validAmount,
     wallet,
   };

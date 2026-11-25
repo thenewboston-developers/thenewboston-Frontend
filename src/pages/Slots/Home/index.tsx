@@ -92,12 +92,12 @@ const SlotsGame = () => {
     place,
     receipt,
     refresh,
+    resumeGame,
     self,
     setAmount,
     stake,
     summary,
     unavailableMessage,
-    unfinishedGame,
     wallet,
   } = useCasinoWager({gameId: 'slots'});
   const animate = useMotion();
@@ -307,8 +307,8 @@ const SlotsGame = () => {
               {isAuthenticated && pending && (
                 <S.Pending>
                   <p>
-                    A {pending.payload.amount.toLocaleString()} TNB {pending.payload.game} bet is awaiting confirmation.
-                    Retrying uses the same wager, even after refreshing this page.
+                    A {pending.payload.amount.toLocaleString()} TNB {pending.payload.game.replace(/_/g, ' ')} bet is
+                    awaiting confirmation. Retrying uses the same wager, even after refreshing this page.
                   </p>
                   <S.RetryButton disabled={spinning} onClick={() => handleSpin()} type="button">
                     {spinning ? 'Checking your bet…' : 'Retry same bet'}
@@ -419,10 +419,10 @@ const SlotsGame = () => {
                 )}
                 {isAuthenticated && !wallet && <S.Notice>No TNB balance available</S.Notice>}
                 {error && <S.Alert role="alert">{error}</S.Alert>}
-                {(unfinishedGame || pending?.payload.game === 'blackjack') && (
+                {resumeGame && (
                   <S.Notice>
-                    <S.BackLink to="/blackjack/home">Resume your Blackjack hand</S.BackLink> before placing another
-                    wager.
+                    <S.BackLink to={resumeGame.path}>Resume your {resumeGame.name} hand</S.BackLink> before placing
+                    another wager.
                   </S.Notice>
                 )}
                 {loadError && (
