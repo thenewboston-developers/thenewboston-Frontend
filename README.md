@@ -68,6 +68,12 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
+## Casino game pages
+
+Slots and Roulette have independent page modules at `src/pages/Slots` and `src/pages/Roulette`, with canonical routes `/slots/home` and `/roulette/home`. Each game owns its stage, rules presentation, and game-specific controls. The Games catalog uses their thumbnails alongside the existing card conventions, with a separate section labeled for TNB wagers.
+
+Shared wallet handling, wager requests and recovery, fund controls, receipt verification, and history remain in `src/components/Casino`, `src/api/casino.ts`, and the casino utilities/types. The `/api/casino` contract and user-scoped pending-request storage keys are unchanged. Legacy `/casino/slots` and `/casino/roulette` links redirect to the canonical game pages while preserving query strings and hashes.
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).

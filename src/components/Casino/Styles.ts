@@ -159,29 +159,6 @@ export const Receipt = styled.pre`
   white-space: pre-wrap;
   word-break: break-all;
 `;
-export const Reel = styled.span`
-  align-items: center;
-  background: linear-gradient(#f4eee0, #ffffff, #e7dfcd);
-  border: 2px solid #d8b776;
-  border-radius: 12px;
-  box-shadow: inset 0 7px 18px #1b292319;
-  color: #2b4336;
-  display: flex;
-  font-size: clamp(22px, 4vw, 42px);
-  font-weight: 800;
-  height: 112px;
-  justify-content: center;
-  min-width: 0;
-  text-transform: uppercase;
-`;
-export const Reels = styled.div`
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin: 30px auto;
-  max-width: 420px;
-  width: 100%;
-`;
 export const Result = styled.div`
   background: #f2f7f3;
   border: 1px solid #d8e6dc;
@@ -193,23 +170,6 @@ export const Result = styled.div`
   strong {
     font-size: 21px;
   }
-`;
-export const RouletteBall = styled.div<{$color: string}>`
-  align-items: center;
-  background: ${({$color}) => ({red: '#b93d40', green: '#237353'})[$color] || '#192821'};
-  border: 12px solid #d8b776;
-  border-radius: 50%;
-  box-shadow:
-    0 0 0 8px #ffffff12,
-    0 0 0 26px #ffffff05;
-  color: #ffffff;
-  display: flex;
-  font-size: 64px;
-  font-weight: 600;
-  height: 170px;
-  justify-content: center;
-  margin: 30px auto;
-  width: 170px;
 `;
 export const SecondaryButton = styled(Button)`
   background: transparent;

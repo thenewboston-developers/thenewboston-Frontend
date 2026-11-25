@@ -9,7 +9,8 @@ import dotsAndBoxesThumbnail from 'assets/dots-and-boxes-thumbnail.webp';
 import hexThumbnail from 'assets/hex-thumbnail.webp';
 import mancalaThumbnail from 'assets/mancala-thumbnail.webp';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
-import CasinoPreview from 'components/CasinoPreview';
+import rouletteThumbnail from 'assets/roulette-thumbnail.webp';
+import slotsThumbnail from 'assets/slots-thumbnail.webp';
 import GameFund from 'components/GameFund';
 import {SFC} from 'types';
 import {captureAnalyticsEvent} from 'utils/analytics';
@@ -109,6 +110,29 @@ const games = [
   },
 ];
 
+const casinoGames = [
+  {
+    accent: '#9f6433',
+    art: slotsThumbnail,
+    badge: 'UP TO 100× TOTAL RETURN',
+    category: 'Classic casino reels',
+    description: 'Choose your wager. Spin the reels. See your result in a moment.',
+    imageDescription: 'A cream, walnut, and brass slot machine against a rich burgundy backdrop',
+    name: 'Slots',
+    path: 'slots',
+  },
+  {
+    accent: '#27654a',
+    art: rouletteThumbnail,
+    badge: 'SINGLE-ZERO WHEEL',
+    category: 'Classic casino wheel',
+    description: 'Pick a number, color, or group. Let the wheel decide.',
+    imageDescription: 'A polished walnut and brass roulette wheel on an emerald green table',
+    name: 'Roulette',
+    path: 'roulette',
+  },
+];
+
 const Games: SFC = ({className}) => (
   <S.Container {...analyticsArea('games')} className={className}>
     <S.Content>
@@ -165,7 +189,47 @@ const Games: SFC = ({className}) => (
         </S.GameGrid>
       </section>
       <GameFund />
-      <CasinoPreview />
+      <section aria-labelledby="casino-games-heading">
+        <S.SectionHeader>
+          <div>
+            <S.SectionTitle id="casino-games-heading">Casino games</S.SectionTitle>
+            <S.SectionDescription>TNB wagers. Every accepted bet has its payout covered.</S.SectionDescription>
+          </div>
+          <S.GameCount>{casinoGames.length} games · TNB wagers</S.GameCount>
+        </S.SectionHeader>
+        <S.GameGrid>
+          {casinoGames.map((game) => (
+            <S.GameCard
+              {...analyticsTarget(game.path)}
+              $accent={game.accent}
+              aria-label={`${game.name} — play with TNB`}
+              key={game.path}
+              onClick={() => captureAnalyticsEvent('game_selected', {game: game.path, source: 'games_hub'})}
+              to={`/${game.path}/home`}
+            >
+              <S.Artwork>
+                <S.Cover alt={game.imageDescription} height={600} src={game.art} width={900} />
+                <S.FeaturedBadge>{game.badge}</S.FeaturedBadge>
+              </S.Artwork>
+              <S.GameDetails>
+                <S.Category>{game.category}</S.Category>
+                <S.GameTitle>{game.name}</S.GameTitle>
+                <S.Description>{game.description}</S.Description>
+                <S.Tags>
+                  <span>Single player</span>
+                  <span>Verifiable results</span>
+                </S.Tags>
+                <S.CardFooter>
+                  <S.FreeLabel>
+                    TNB wagers<S.FreeNote>Sign in to play</S.FreeNote>
+                  </S.FreeLabel>
+                  <S.PlayLabel>Play now</S.PlayLabel>
+                </S.CardFooter>
+              </S.GameDetails>
+            </S.GameCard>
+          ))}
+        </S.GameGrid>
+      </section>
       <S.About aria-label="The games experience">
         <S.AboutItem>
           <S.AboutIcon aria-hidden="true" path={mdiGamepadVariantOutline} size="24px" />

@@ -18,6 +18,9 @@ export const isPathActive = (pathname: string, rootPath: string): boolean => {
           '/mancala',
           '/dots-and-boxes',
           '/hex',
+          '/slots',
+          '/roulette',
+          '/casino',
         ]
       : [rootPath];
   return sectionPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
