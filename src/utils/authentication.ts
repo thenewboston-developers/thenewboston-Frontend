@@ -28,6 +28,17 @@ export const authorizationHeaders = () => {
   };
 };
 
+export const ACCESS_TOKEN_PROTOCOL = 'access_token';
+
+/**
+ * The subprotocols a WebSocket offers to authenticate: a marker followed by the access token. Browsers cannot set
+ * headers on a WebSocket, and a token in the query string would be written to server and proxy access logs. The API
+ * answers by selecting the marker.
+ */
+export const authorizationProtocols = (accessToken: string): string[] => {
+  return [ACCESS_TOKEN_PROTOCOL, accessToken];
+};
+
 /**
  * Builds the path of a sign in or create account page that returns the visitor to nextPath once they are
  * authenticated. The home page is left out, it is where a visitor ends up without being asked to.
