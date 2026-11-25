@@ -45,7 +45,7 @@ const games = [
     badge: 'ONE MORE ROUND',
     category: 'Five-in-a-row strategy',
     description: 'Simple rules. Brilliant rivalries. Find your winning line.',
-    imageDescription: 'Black and ivory stones with a glowing five-stone winning line in a violet arena',
+    imageDescription: 'Black and ivory stones on a honey-wood Connect Five board',
     name: 'Connect Five',
     path: 'connect-five',
     target: 'connect_five',
