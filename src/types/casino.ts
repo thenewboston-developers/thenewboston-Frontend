@@ -1,4 +1,4 @@
-export type CasinoGameId = 'slots' | 'roulette' | 'blackjack' | 'plinko' | 'let_it_ride';
+export type CasinoGameId = 'slots' | 'roulette' | 'blackjack' | 'plinko' | 'let_it_ride' | 'video_poker';
 
 export type BlackjackAction = 'hit' | 'stand' | 'double';
 
@@ -56,6 +56,39 @@ export interface LetItRideActionRequest {
   expected_revision: number;
 }
 
+export type VideoPokerCategory =
+  | 'royal_flush'
+  | 'straight_flush'
+  | 'four_of_a_kind'
+  | 'full_house'
+  | 'flush'
+  | 'straight'
+  | 'three_of_a_kind'
+  | 'two_pair'
+  | 'jacks_or_better'
+  | 'nothing';
+
+export interface VideoPokerResult {
+  // One entry once drawn: `draw:10110` holds the first, third and fourth dealt cards.
+  actions?: string[];
+  available_actions: string[];
+  category: VideoPokerCategory;
+  dealt: string[];
+  expires_at: string | null;
+  // The five cards on screen: the dealt ones until the draw, the final ones after it
+  hand: string[];
+  held: boolean[] | null;
+  phase: 'draw' | 'settled';
+  revision: number;
+}
+
+// What any interactive game sends to the actions endpoint; each game narrows `action`
+export interface CasinoActionRequest {
+  action: string;
+  action_id: string;
+  expected_revision: number;
+}
+
 // The fields every interactive game's result has; each game narrows them
 interface InteractiveResult {
   available_actions: string[];
@@ -63,6 +96,9 @@ interface InteractiveResult {
   phase: string;
   revision: number;
 }
+
+// Result fields that several games use for different things; the shared shape only says what they may hold
+type SharedResultKey = keyof InteractiveResult | 'actions' | 'hand';
 
 export interface CasinoFund {
   available: number;
@@ -101,6 +137,9 @@ export interface CasinoGame {
   // Roulette rules version 2: one spin settles chips on several spots
   multiple_bets?: boolean;
   name: string;
+  // Video Poker: the return of perfect play, and total returns (wager included) for each paying hand
+  optimal_return?: number;
+  pay_table?: {hand: VideoPokerCategory; multiplier: number; name: string}[];
   payout_table?: {multiplier: number; probability: number; slot?: number}[];
   paytable?: {hand: string; odds: number}[];
   rows?: number;
@@ -149,11 +188,15 @@ export interface CasinoBet {
   request_id: string;
   // Roulette version 2 records the total `payout` of its bets and has no `multiplier`: read that only for the games
   // and versions that settle with one
-  result: Partial<Omit<BlackjackResult, keyof InteractiveResult>> &
-    Partial<Omit<LetItRideResult, keyof InteractiveResult>> &
+  result: Partial<Omit<BlackjackResult, SharedResultKey>> &
+    Partial<Omit<LetItRideResult, SharedResultKey>> &
+    Partial<Omit<VideoPokerResult, SharedResultKey>> &
     Partial<InteractiveResult> & {
+      actions?: string[];
       color?: string;
       draw?: number;
+      // Let It Ride names the final poker hand here; Video Poker lists its five cards
+      hand?: LetItRideHand | string[] | null;
       multiplier: number;
       number?: number;
       path?: number[];
@@ -174,6 +217,8 @@ export interface CasinoBet {
 export type BlackjackBet = CasinoBet & {result: BlackjackResult};
 
 export type LetItRideBet = CasinoBet & {result: LetItRideResult};
+
+export type VideoPokerBet = CasinoBet & {result: VideoPokerResult};
 
 export interface CasinoFundMovement {
   amount: number;

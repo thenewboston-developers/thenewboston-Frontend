@@ -1,12 +1,11 @@
 import axios from 'axios';
 
 import {
-  BlackjackActionRequest,
+  CasinoActionRequest,
   CasinoBet,
   CasinoCommitment,
   CasinoFundMovement,
   CasinoSummary,
-  LetItRideActionRequest,
   PlaceCasinoBet,
 } from 'types/casino';
 import {authorizationHeaders} from 'utils/authentication';
@@ -44,10 +43,7 @@ export const getActiveCasinoBet = async (): Promise<CasinoBet | null> => {
   return response.data;
 };
 
-export const actOnCasinoBet = async (
-  requestId: string,
-  data: BlackjackActionRequest | LetItRideActionRequest,
-): Promise<CasinoBet> => {
+export const actOnCasinoBet = async (requestId: string, data: CasinoActionRequest): Promise<CasinoBet> => {
   const response = await axios.post<CasinoBet>(
     `${BASE_URL}/bets/${encodeURIComponent(requestId)}/actions`,
     data,

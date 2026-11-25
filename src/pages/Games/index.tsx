@@ -14,6 +14,7 @@ import plinkoThumbnail from 'assets/plinko-thumbnail.svg';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
 import rouletteThumbnail from 'assets/roulette-thumbnail.webp';
 import slotsThumbnail from 'assets/slots-thumbnail.webp';
+import videoPokerThumbnail from 'assets/video-poker-thumbnail.svg';
 import GameFund from 'components/GameFund';
 import {SFC} from 'types';
 import {captureAnalyticsEvent} from 'utils/analytics';
@@ -133,6 +134,16 @@ const casinoGames = [
     imageDescription: 'A royal flush in spades fanned over three gold chips on a midnight-blue card table',
     name: 'Let It Ride',
     path: 'let-it-ride',
+  },
+  {
+    accent: '#2438b8',
+    art: videoPokerThumbnail,
+    badge: 'JACKS OR BETTER',
+    category: 'Classic draw poker',
+    description: 'Five cards. One draw. Hold the right ones and chase the royal flush.',
+    imageDescription: 'A royal flush in spades held on the blue screen of a classic video poker machine',
+    name: 'Video Poker',
+    path: 'video-poker',
   },
   {
     accent: '#278b80',

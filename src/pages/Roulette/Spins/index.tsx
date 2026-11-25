@@ -1,7 +1,7 @@
 import {Fragment, useEffect, useState} from 'react';
 
 import {CasinoBet} from 'types/casino';
-import {getObservedCasinoCommitment} from 'utils/casino';
+import {getCasinoGameLink, getObservedCasinoCommitment} from 'utils/casino';
 import {verifyCasinoReceipt} from 'utils/casinoFairness';
 
 import * as P from '../Styles';
@@ -130,7 +130,7 @@ const Spins = ({bets, focusId, isAuthenticated, userId}: SpinsProps) => {
                   {isRouletteResult(bet) ? (
                     <S.Pocket $color={getPocketColor(bet.result.number)}>{bet.result.number}</S.Pocket>
                   ) : (
-                    <S.Game>{bet.game}</S.Game>
+                    <S.Game>{getCasinoGameLink(bet.game).name}</S.Game>
                   )}
                 </td>
                 <td>{bet.game === 'roulette' ? describeBet(bet) : 'Another casino game'}</td>

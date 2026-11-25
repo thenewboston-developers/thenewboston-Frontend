@@ -28,6 +28,7 @@ import {
   PATH_REVERSI,
   PATH_ROULETTE,
   PATH_SLOTS,
+  PATH_VIDEO_POKER,
   PATH_WALLETS,
 } from 'constants/paths';
 import Backgammon from 'pages/Backgammon';
@@ -51,6 +52,7 @@ import Profile from 'pages/Profile';
 import Reversi from 'pages/Reversi';
 import Roulette from 'pages/Roulette';
 import Slots from 'pages/Slots';
+import VideoPoker from 'pages/VideoPoker';
 import Wallets from 'pages/Wallets';
 import {SFC} from 'types';
 
@@ -90,6 +92,7 @@ const MainArea: SFC = ({className}) => {
         <Route element={<Reversi />} path={PATH_REVERSI} />
         <Route element={<Roulette />} path={PATH_ROULETTE} />
         <Route element={<Slots />} path={PATH_SLOTS} />
+        <Route element={<VideoPoker />} path={PATH_VIDEO_POKER} />
         <Route path={PATH_AUTHENTICATION.LOGOUT} element={<Logout />} />
         <Route path={PATH_WALLETS} element={<Wallets />} />
       </SentryRoutes>

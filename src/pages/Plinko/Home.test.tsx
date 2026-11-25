@@ -256,6 +256,23 @@ it('links back to an active Blackjack hand without trapping an unaccepted Plinko
   expect(button('Retry same bet')).toBeUndefined();
 });
 
+it('links back to an unconfirmed Video Poker deal saved on this device', async () => {
+  savePendingCasinoBet(7, {
+    payload: {
+      amount: 1,
+      client_seed: 'client',
+      commitment_id: 'commitment-id',
+      game: 'video_poker',
+      request_id: 'video-poker-request',
+      rules_version: 1,
+    },
+    serverSeedHash: 'observed',
+  });
+  await render();
+  expect(container.querySelector('a[href="/video-poker/home"]')).toHaveTextContent('Resume your Video Poker hand');
+  expect(container).toHaveTextContent('1 TNB video poker bet is awaiting confirmation');
+});
+
 it('recovers a pending different-game bet without animating a false Plinko outcome', async () => {
   const payload = {
     amount: 1,

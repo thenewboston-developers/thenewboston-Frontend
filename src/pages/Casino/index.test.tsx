@@ -286,6 +286,18 @@ it('rejects a new spin while Blackjack is active without trapping a pending wage
   expect(container.querySelector('a[href="/blackjack/home"]')).toBeNull();
 });
 
+it('links a rejected spin to an unfinished Video Poker hand', async () => {
+  (placeCasinoBet as jest.Mock).mockRejectedValueOnce({
+    response: {status: 409, data: {code: 'game_in_progress', detail: 'Finish the existing casino game first.'}},
+  });
+  (getActiveCasinoBet as jest.Mock).mockResolvedValueOnce({game: 'video_poker', status: 'open'});
+  await render();
+  await act(async () => button('Spin 1 TNB').click());
+  expect(container.querySelector('a[href="/video-poker/home"]')).toHaveTextContent('Resume your Video Poker hand');
+  expect(container.querySelector('a[href="/blackjack/home"]')).toBeNull();
+  expect(readPendingCasinoBet(7)).toBeNull();
+});
+
 it('links to whichever game has the unfinished hand, and to none when that cannot be told', async () => {
   const inProgress = {
     response: {status: 409, data: {code: 'game_in_progress', detail: 'Finish the existing casino game first.'}},
