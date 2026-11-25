@@ -34,7 +34,7 @@ import * as S from './Styles';
 export const QUICK_SPIN_STORAGE_KEY = 'thenewboston.roulette.quickSpin';
 
 const FLASH_DURATION = 5200;
-const GAME_NAMES: Record<string, string> = {roulette: 'Roulette', slots: 'Slots'};
+const GAME_NAMES: Record<string, string> = {plinko: 'Plinko', roulette: 'Roulette', slots: 'Slots'};
 const RECENT_COUNT = 12;
 const SPIN_DURATION = {calm: 1200, full: 6400, quick: 2800};
 

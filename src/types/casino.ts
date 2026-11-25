@@ -1,4 +1,4 @@
-export type CasinoGameId = 'slots' | 'roulette' | 'blackjack';
+export type CasinoGameId = 'slots' | 'roulette' | 'blackjack' | 'plinko';
 
 export type BlackjackAction = 'hit' | 'stand' | 'double';
 
@@ -46,7 +46,8 @@ export interface CasinoGame {
   max_multiplier: number;
   min_bet: number;
   name: string;
-  payout_table?: {multiplier: number; probability: number}[];
+  payout_table?: {multiplier: number; probability: number; slot?: number}[];
+  rows?: number;
   rules_version: number;
 }
 
@@ -94,6 +95,8 @@ export interface CasinoBet {
     draw?: number;
     multiplier: number;
     number?: number;
+    path?: number[];
+    slot?: number;
     symbols?: string[];
   };
   rules_version: number;

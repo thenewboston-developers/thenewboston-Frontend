@@ -9,6 +9,7 @@ import connectFiveThumbnail from 'assets/connect-five-classic-thumbnail.webp';
 import dotsAndBoxesThumbnail from 'assets/dots-and-boxes-thumbnail.webp';
 import hexThumbnail from 'assets/hex-thumbnail.webp';
 import mancalaThumbnail from 'assets/mancala-thumbnail.webp';
+import plinkoThumbnail from 'assets/plinko-thumbnail.svg';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
 import rouletteThumbnail from 'assets/roulette-thumbnail.webp';
 import slotsThumbnail from 'assets/slots-thumbnail.webp';
@@ -121,6 +122,16 @@ const casinoGames = [
     imageDescription: 'An ace of spades and king of hearts on a green Blackjack table',
     name: 'Blackjack',
     path: 'blackjack',
+  },
+  {
+    accent: '#278b80',
+    art: plinkoThumbnail,
+    badge: 'UP TO 50× TOTAL RETURN',
+    category: 'Drop & discover',
+    description: 'One ball. Twelve bounces. Follow the path to your payout.',
+    imageDescription: 'A glowing golden ball bouncing through a teal Plinko board into colorful payout pockets',
+    name: 'Plinko',
+    path: 'plinko',
   },
   {
     accent: '#9f6433',

@@ -10,7 +10,9 @@ const SLOT_LOSING_LINES = SLOT_SYMBOL_ORDER.flatMap((first) =>
     SLOT_SYMBOL_ORDER.filter((third) => third !== first && third !== second).map((third) => [first, second, third]),
   ),
 );
-const SUPPORTED_RULES: Record<string, number[]> = {roulette: [1], slots: [1, 2]};
+// Immutable Plinko v1: 12 fair binary steps, with a whole-TNB return for every pocket.
+const PLINKO_MULTIPLIERS = [50, 18, 8, 3, 1, 0, 0, 0, 1, 3, 8, 18, 50];
+const SUPPORTED_RULES: Record<string, number[]> = {plinko: [1], roulette: [1], slots: [1, 2]};
 const SLOT_OUTCOMES = [
   {multiplier: 0, symbols: ['cherry', 'lemon', 'bar'], weight: 5885},
   {multiplier: 1, symbols: ['cherry', 'cherry', 'cherry'], weight: 1600},
@@ -41,7 +43,8 @@ export const verifyCasinoReceipt = async (bet: CasinoBet, observedHash?: string)
   }
   const keyBytes = new Uint8Array(bet.fairness.server_seed.match(/../g)!.map((byte) => parseInt(byte, 16)));
   const key = await crypto.subtle.importKey('raw', keyBytes, {name: 'HMAC', hash: 'SHA-256'}, false, ['sign']);
-  const bound = BigInt(bet.game === 'slots' ? 10000 : 37);
+  const bounds = {plinko: 4096, roulette: 37, slots: 10000};
+  const bound = BigInt(bounds[bet.game]);
   const range = BigInt(2) ** BigInt(64);
   const threshold = range - (range % bound);
   let draw: number | null = null;
@@ -79,6 +82,18 @@ export const verifyCasinoReceipt = async (bet: CasinoBet, observedHash?: string)
         : outcome.symbols;
     if (bet.result.draw !== draw || JSON.stringify(bet.result.symbols) !== JSON.stringify(symbols)) {
       throw new Error('The slot outcome does not match the committed result.');
+    }
+  } else if (bet.game === 'plinko') {
+    const path = Array.from({length: 12}, (_, index) => Math.floor(draw! / 2 ** (11 - index)) % 2);
+    const slot = path.reduce((sum, direction) => sum + direction, 0);
+    multiplier = PLINKO_MULTIPLIERS[slot];
+    if (
+      bet.result.draw !== draw ||
+      bet.result.slot !== slot ||
+      JSON.stringify(bet.result.path) !== JSON.stringify(path) ||
+      (bet.selection && Object.keys(bet.selection).length > 0)
+    ) {
+      throw new Error('The Plinko outcome does not match the committed result.');
     }
   } else if (bet.game === 'roulette') {
     let color = RED_NUMBERS.includes(draw) ? 'red' : 'black';

@@ -60,6 +60,7 @@ export const describeBet = (bet: CasinoBet) => {
   if (bet.game === 'roulette')
     return ['Roulette', bet.result.number, bet.result.color].filter((part) => part !== undefined).join(' ');
   if (bet.game === 'blackjack') return `Blackjack · ${bet.result.outcome ?? 'hand'}`;
+  if (bet.game === 'plinko') return `Plinko · pocket ${(bet.result.slot ?? 0) + 1} · ${bet.result.multiplier}×`;
   return 'Slots spin';
 };
 
