@@ -8,7 +8,7 @@ import checkersThumbnail from 'assets/checkers-thumbnail.webp';
 import connectFiveThumbnail from 'assets/connect-five-classic-thumbnail.webp';
 import dotsAndBoxesThumbnail from 'assets/dots-and-boxes-thumbnail.webp';
 import hexThumbnail from 'assets/hex-thumbnail.webp';
-import letItRideThumbnail from 'assets/let-it-ride-thumbnail.svg';
+import letItRideThumbnail from 'assets/let-it-ride-thumbnail.webp';
 import mancalaThumbnail from 'assets/mancala-thumbnail.webp';
 import plinkoThumbnail from 'assets/plinko-thumbnail.svg';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
@@ -131,7 +131,7 @@ const casinoGames = [
     badge: 'UP TO 100 TO 1',
     category: 'Casino poker',
     description: 'Three bets on five cards. Pull two back, or let them ride.',
-    imageDescription: 'A royal flush in spades fanned over three gold chips on a midnight-blue card table',
+    imageDescription: 'A royal flush in spades above three blue-and-gold chip stacks on midnight-blue felt',
     name: 'Let It Ride',
     path: 'let-it-ride',
   },
