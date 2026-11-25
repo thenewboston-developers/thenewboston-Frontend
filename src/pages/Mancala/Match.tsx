@@ -3,11 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 
 import {getMancalaMatch, performMancalaAction} from 'api/mancala';
-import AuthButtons from 'components/AuthButtons';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
 import GameResultPanel, {GameResultActions, GameResultNote, getGameResultOutcome} from 'components/GameResultPanel';
 import GameSoundToggle from 'components/GameSoundToggle';
-import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
 import useArcadeSounds from 'hooks/useArcadeSounds';
@@ -19,6 +17,7 @@ import {isCancellationError} from 'utils/errors';
 import {hasGuestGameSession, isCurrentGuestGame} from 'utils/guestGames';
 
 import Board from './Board';
+import {EmptyBoard, ResultStores, SowingLoader} from './Emblems';
 import Rules from './Rules';
 import * as S from './Styles';
 import usePresentation from './usePresentation';
@@ -206,13 +205,18 @@ const Match = () => {
           : 'Accepting locks your stake until this match ends. The winner receives both stakes and a draw returns them. An expired, declined, or cancelled challenge refunds the challenger.';
     return (
       <S.Panel>
-        <S.TitleSmall>
-          {side === 'guest' ? `A challenge from ${match.host.username}` : 'Waiting for your opponent'}
-        </S.TitleSmall>
-        <S.Detail>
-          {getPlayerName(match, 'host')} challenged {getPlayerName(match, 'guest')} to a game of Mancala,{' '}
-          {Math.round(match.time_limit_seconds / 60)} minutes per player. Who moves first is picked at random.
-        </S.Detail>
+        <S.PendingHeader>
+          <div>
+            <S.TitleSmall>
+              {side === 'guest' ? `A challenge from ${match.host.username}` : 'Waiting for your opponent'}
+            </S.TitleSmall>
+            <S.Detail>
+              {getPlayerName(match, 'host')} challenged {getPlayerName(match, 'guest')} to a game of Mancala,{' '}
+              {Math.round(match.time_limit_seconds / 60)} minutes per player. Who moves first is picked at random.
+            </S.Detail>
+          </div>
+          <EmptyBoard />
+        </S.PendingHeader>
         <S.Stat>
           <span>Stake per player</span>
           <strong>{match.stake_amount.toLocaleString()} TNB</strong>
@@ -275,7 +279,7 @@ const Match = () => {
     if (!title) return null;
     return (
       <S.TurnBanner $yours={!frame && isMyTurn}>
-        <S.TurnIndicator aria-hidden="true" />
+        <S.TurnIndicator $yours={!frame && isMyTurn} aria-hidden="true" />
         <div>
           <strong aria-live="polite">{title}</strong>
           <S.Small>{description}</S.Small>
@@ -290,39 +294,46 @@ const Match = () => {
     const rematchLabel = match.mode === 'computer' ? 'Play again' : 'Offer rematch';
     const title = match.winner ? `${getPlayerName(match, match.winner)} wins` : 'It’s a draw';
     return (
-      <GameResultPanel
-        description={RESULT_LABELS[match.result_reason] ?? 'Game complete'}
-        game="Mancala"
-        outcome={getGameResultOutcome(match.winner, side)}
-        scoreLabel="Stones stored"
-        scores={[
-          {label: getPlayerName(match, 'host'), value: match.board[STORE.host], winner: match.winner === 'host'},
-          {label: getPlayerName(match, 'guest'), value: match.board[STORE.guest], winner: match.winner === 'guest'},
-        ]}
-        title={title}
-      >
-        {match.mode === 'computer' && isParticipant && (
-          <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} subdued />
-        )}
-        {match.prize_pool_total > 0 && (
-          <strong>
-            {match.winner
-              ? `${match.prize_pool_total.toLocaleString()} TNB prize paid to ${getPlayerName(match, match.winner)}.`
-              : `Both stakes of ${match.stake_amount.toLocaleString()} TNB were returned.`}
-          </strong>
-        )}
-        {isParticipant && (
-          <GameResultActions>
-            <S.Button disabled={!canAct} onClick={() => handleAction('rematch')} type="button">
-              {busyAction === 'rematch' ? 'Creating…' : rematchLabel}
-            </S.Button>
-            <S.TextLink to="/mancala/home">Back to the table</S.TextLink>
-          </GameResultActions>
-        )}
-        {match.mode === 'human' && isParticipant && (
-          <GameResultNote>A rematch uses the same clock and stake. Both players must agree again.</GameResultNote>
-        )}
-      </GameResultPanel>
+      <S.ResultCard>
+        <GameResultPanel
+          artwork={
+            <S.ResultArtwork>
+              <ResultStores guest={match.board[STORE.guest]} host={match.board[STORE.host]} winner={match.winner} />
+            </S.ResultArtwork>
+          }
+          description={RESULT_LABELS[match.result_reason] ?? 'Game complete'}
+          game="Mancala"
+          outcome={getGameResultOutcome(match.winner, side)}
+          scoreLabel="Stones stored"
+          scores={[
+            {label: getPlayerName(match, 'host'), value: match.board[STORE.host], winner: match.winner === 'host'},
+            {label: getPlayerName(match, 'guest'), value: match.board[STORE.guest], winner: match.winner === 'guest'},
+          ]}
+          title={title}
+        >
+          {match.mode === 'computer' && isParticipant && (
+            <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} subdued />
+          )}
+          {match.prize_pool_total > 0 && (
+            <strong>
+              {match.winner
+                ? `${match.prize_pool_total.toLocaleString()} TNB prize paid to ${getPlayerName(match, match.winner)}.`
+                : `Both stakes of ${match.stake_amount.toLocaleString()} TNB were returned.`}
+            </strong>
+          )}
+          {isParticipant && (
+            <GameResultActions>
+              <S.Button disabled={!canAct} onClick={() => handleAction('rematch')} type="button">
+                {busyAction === 'rematch' ? 'Creating…' : rematchLabel}
+              </S.Button>
+              <S.TextLink to="/mancala/home">Back to the table</S.TextLink>
+            </GameResultActions>
+          )}
+          {match.mode === 'human' && isParticipant && (
+            <GameResultNote>A rematch uses the same clock and stake. Both players must agree again.</GameResultNote>
+          )}
+        </GameResultPanel>
+      </S.ResultCard>
     );
   };
 
@@ -330,7 +341,7 @@ const Match = () => {
     return (
       <S.Container>
         <S.Status role="status">
-          <Loader />
+          <SowingLoader />
           <S.Detail>Setting the board…</S.Detail>
         </S.Status>
       </S.Container>
@@ -364,12 +375,12 @@ const Match = () => {
         </S.Actions>
       </S.Navigation>
       <S.MatchTitle>
-        {names.host} vs. {names.guest}
+        {names.host} <span>vs.</span> {names.guest}
       </S.MatchTitle>
-      <S.Detail>
+      <S.Subtitle>
         {Math.round(match.time_limit_seconds / 60)} minutes per player
         {match.status === 'pending' && ' · Challenge pending'}
-      </S.Detail>
+      </S.Subtitle>
       {loadError && (
         <S.Error role="alert">
           Connection interrupted. {loadError} Controls will return when the board reconnects.
@@ -379,7 +390,7 @@ const Match = () => {
       {!isAuthenticated && !isParticipant && (
         <S.Status>
           <S.Detail>You’re watching this match. Sign in to start your own.</S.Detail>
-          <AuthButtons />
+          <S.AuthButtons />
         </S.Status>
       )}
       <S.MatchGrid>

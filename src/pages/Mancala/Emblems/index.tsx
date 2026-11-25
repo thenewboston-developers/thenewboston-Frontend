@@ -1,5 +1,7 @@
 import {CSSProperties, Fragment} from 'react';
 
+import {MancalaSide} from 'types/mancala';
+
 import {STONE_CYCLE, STONES, StoneTone} from '../theme';
 
 import {
@@ -195,6 +197,32 @@ export const RivalryEmblem = () => (
       <PitStones count={2} honey size={20} tone={STONES.turquoise} />
     </S.EmblemRows>
   </S.EmblemTile>
+);
+
+// Stones resting at the bottom of a tall store, three abreast, in percent of the store
+const storedStone = (stone: number): CSSProperties =>
+  ({
+    '--tilt': `${tilt(stone * 7 + 3)}deg`,
+    left: `${24 + (stone % 3) * 26 + (Math.floor(stone / 3) % 2) * 3}%`,
+    top: `${91 - Math.floor(stone / 3) * 8.5}%`,
+    width: '27%',
+  }) as CSSProperties;
+
+/** The two stores at the end of a match, the host's first. The winner's store glows, even after a resignation or a timeout. */
+export const ResultStores = ({guest, host, winner}: {guest: number; host: number; winner: MancalaSide | null}) => (
+  <S.ResultBoard aria-hidden="true">
+    {[host, guest].map((stored, store) => (
+      <S.ResultStore $leading={winner === (store ? 'guest' : 'host')} key={store}>
+        {Array.from({length: Math.min(30, Math.round(stored / 1.6))}, (_, stone) => (
+          <S.PitStone
+            $tone={STONE_CYCLE[(stone + store) % STONE_CYCLE.length]}
+            key={stone}
+            style={storedStone(stone)}
+          />
+        ))}
+      </S.ResultStore>
+    ))}
+  </S.ResultBoard>
 );
 
 /** A match that has not started yet: the board is set, four stones a pit. */

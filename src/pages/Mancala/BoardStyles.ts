@@ -1,5 +1,19 @@
 import styled, {css, keyframes} from 'styled-components';
 
+import {fonts} from 'styles';
+
+import {STONE_RATIO} from './Emblems/geometry';
+import {carved, focusRing, glassStone, honeyWood, mancala, STONES, StoneTone, woodPanel} from './theme';
+
+// Ink burnt into the honey board, for the direction lane and store labels
+const INK = '#4a2410';
+const INK_SOFT = '#8a4a18';
+
+// A bowl carved into the honey board, lit from the top left like the pits of the hero's board
+const BOWL_SHADOW = 'inset 3px 7px 12px #5e2a0bb3, inset -1px -3px 4px #ffdcaa66, 0 1px 0 #ffe7bf80';
+const MARKED_SHADOW = `${BOWL_SHADOW}, 0 0 0 2px #fff0c8, 0 0 20px #ffd27abf`;
+const PLAYABLE_SHADOW = `${BOWL_SHADOW}, 0 0 0 2px #7fe6d0d9, 0 0 16px #7fe6d059`;
+
 const countArrival = keyframes`
   0% { transform: scale(1); }
   45% { transform: scale(1.18); }
@@ -7,39 +21,42 @@ const countArrival = keyframes`
 `;
 
 const stoneFlight = keyframes`
-  0% { opacity: 0; transform: translate(var(--from-x), var(--from-y)) translate(-50%, -50%) scale(0.8); }
+  0% { opacity: 0; transform: translate(var(--from-x), var(--from-y)) translate(-50%, -50%) rotate(0deg) scale(0.8); }
   12% { opacity: 1; }
-  50% { opacity: 1; transform: translate(var(--arc-x), var(--arc-y)) translate(-50%, -50%) scale(1.2); }
+  50% { opacity: 1; transform: translate(var(--arc-x), var(--arc-y)) translate(-50%, -50%) rotate(90deg) scale(1.2); }
   94% { opacity: 1; }
-  100% { opacity: 0; transform: translate(var(--to-x), var(--to-y)) translate(-50%, -50%) scale(0.85); }
+  100% { opacity: 0; transform: translate(var(--to-x), var(--to-y)) translate(-50%, -50%) rotate(180deg) scale(0.85); }
 `;
 
 const stoneLanding = keyframes`
-  0%, 65% { opacity: 0; transform: translate(-50%, -100%) scale(0.65); }
-  85% { opacity: 1; transform: translate(-50%, -45%) scale(1.08, 0.92); }
-  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  0%, 65% { opacity: 0; transform: translate(-50%, -100%) rotate(var(--tilt, 0deg)) scale(0.65); }
+  85% { opacity: 1; transform: translate(-50%, -45%) rotate(var(--tilt, 0deg)) scale(1.08, 0.92); }
+  100% { opacity: 1; transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(1); }
 `;
 
-const hollow = css`
-  background: radial-gradient(ellipse at 50% 70%, #513b28 0%, #332519 63%, #241a13 100%);
-  border: 1px solid #d6ae7440;
-  box-shadow:
-    inset 0 6px 12px #110c0aa6,
-    inset 0 -2px 3px #e7c38a26,
-    0 1px 0 #fce0a73b;
+const bowl = css`
+  background: radial-gradient(ellipse 110% 100% at 60% 72%, #eba862 0%, #cd8642 50%, #9e5b24 100%);
+  border: 1px solid #7a3d1433;
+  box-shadow: ${BOWL_SHADOW};
 `;
 
+const pit = css`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(7px, 1.2vw, 12px);
+  min-width: 0;
+`;
+
+// The honey board of the hero's art, sitting on the walnut table
 export const Board = styled.div`
-  background:
-    repeating-linear-gradient(4deg, transparent 0 7px, #deb27f08 8px, transparent 9px 16px),
-    linear-gradient(155deg, #a27b50, #785637 48%, #8a6642 100%);
-  border: 1px solid #e2bd814f;
+  ${honeyWood};
   border-radius: clamp(22px, 4vw, 44px);
   box-shadow:
-    inset 0 2px 1px #ffe0aa66,
-    inset 0 -5px 2px #34241666,
-    0 8px 0 #131f1c,
-    0 18px 26px #00000040;
+    inset 0 2px 1px #ffe2b399,
+    inset 0 -5px 2px #7a3f1666,
+    0 8px 0 #6b3412,
+    0 18px 28px #1a0a0273;
   display: grid;
   gap: clamp(6px, 1.2vw, 14px);
   grid-template-columns: minmax(0, 1fr) minmax(0, 6.9fr) minmax(0, 1fr);
@@ -49,27 +66,34 @@ export const Board = styled.div`
 `;
 
 export const Clock = styled.span`
-  color: #d6e3de;
-  font-size: clamp(12px, 1.6vw, 17px);
+  ${carved};
+  border-radius: 999px;
+  color: ${mancala.cream};
+  font-size: clamp(12px, 1.6vw, 16px);
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
+  font-weight: ${fonts.weight.bold};
   letter-spacing: 0.035em;
   margin-left: auto;
+  padding: 5px 12px;
   white-space: nowrap;
+
+  @media (max-width: 480px) {
+    padding: 4px 8px;
+  }
 `;
 
+// The stone count under a pit: a dark carved tally, legible on the light wood
 export const Count = styled.span<{$changed: boolean}>`
-  background: #33251957;
-  border: 1px solid #edcc9730;
+  ${carved};
   border-radius: 999px;
-  color: #fff1d3;
+  color: ${mancala.cream};
   display: inline-grid;
-  font-size: clamp(11px, 1.6vw, 16px);
+  font-size: clamp(11px, 1.5vw, 15px);
   font-variant-numeric: tabular-nums;
-  font-weight: 700;
+  font-weight: ${fonts.weight.bold};
   line-height: 1;
-  min-width: 24px;
-  padding: 4px 7px;
+  min-width: 26px;
+  padding: 4px 8px;
   place-items: center;
 
   @media (prefers-reduced-motion: no-preference) {
@@ -84,7 +108,7 @@ export const Count = styled.span<{$changed: boolean}>`
 
 export const DirectionLane = styled.div`
   align-items: center;
-  color: #f4d9af6b;
+  color: ${INK_SOFT}b3;
   display: flex;
   gap: 8px;
   justify-content: space-between;
@@ -103,7 +127,7 @@ export const DirectionLane = styled.div`
 `;
 
 export const EmptyPit = styled.span`
-  background: #d1b28c30;
+  background: #7a3d1459;
   border-radius: 50%;
   height: 4px;
   left: 50%;
@@ -114,16 +138,12 @@ export const EmptyPit = styled.span`
 `;
 
 export const FlyingStone = styled.span`
+  ${glassStone(STONES.turquoise)};
   animation: ${stoneFlight} 240ms cubic-bezier(0.35, 0, 0.55, 1) both;
-  aspect-ratio: 1;
-  background:
-    radial-gradient(circle at 30% 24%, #f1fff5 0%, #e1fff280 12%, transparent 35%),
-    radial-gradient(circle at 65% 80%, #125d4e, transparent 70%), #80dec0;
-  border: 1px solid #d5ffec80;
-  border-radius: 47% 53% 49% 51%;
+  aspect-ratio: ${STONE_RATIO} / 1;
   box-shadow:
-    0 3px 7px #00000070,
-    0 0 8px #adf5d43b;
+    inset 0 -2px 3px #0a5b5580,
+    0 5px 9px #1a0a0280;
   left: 0;
   pointer-events: none;
   position: absolute;
@@ -136,11 +156,11 @@ export const FlyingStone = styled.span`
 `;
 
 export const Hollow = styled.span<{$marked: boolean; $playable: boolean; $source: boolean}>`
-  ${hollow};
+  ${bowl};
   aspect-ratio: 1;
   border-radius: 50%;
   display: block;
-  outline: ${({$source}) => ($source ? '1px dashed #f5d6a0b3' : '1px solid transparent')};
+  outline: ${({$source}) => ($source ? `2px dashed ${INK_SOFT}` : '2px solid transparent')};
   outline-offset: 3px;
   position: relative;
   transition:
@@ -151,22 +171,15 @@ export const Hollow = styled.span<{$marked: boolean; $playable: boolean; $source
   ${({$playable}) =>
     $playable &&
     css`
-      border-color: #a2ead2c2;
-      box-shadow:
-        inset 0 6px 12px #110c0aa6,
-        inset 0 -3px 6px #b2f0d52b,
-        0 0 0 1px #a2ead259,
-        0 0 14px #92e9c41a;
+      border-color: #7fe6d0;
+      box-shadow: ${PLAYABLE_SHADOW};
     `}
 
   ${({$marked}) =>
     $marked &&
     css`
-      border-color: #ffe2a3;
-      box-shadow:
-        inset 0 6px 12px #110c0aa6,
-        0 0 0 2px #f0d49bb3,
-        0 0 18px #f4c7793d;
+      border-color: #fff0c8;
+      box-shadow: ${MARKED_SHADOW};
     `}
 
   @media (prefers-reduced-motion: reduce) {
@@ -175,20 +188,13 @@ export const Hollow = styled.span<{$marked: boolean; $playable: boolean; $source
 `;
 
 export const MovementLabel = styled.span<{$moving: boolean}>`
-  color: ${({$moving}) => ($moving ? '#fff4d9' : '#e9cda375')};
+  color: ${({$moving}) => ($moving ? INK : `${INK_SOFT}b3`)};
   font-size: clamp(8px, 1.15vw, 11px);
-  font-weight: 700;
+  font-weight: ${fonts.weight.extraBold};
   letter-spacing: ${({$moving}) => ($moving ? '0.03em' : '0.24em')};
   line-height: 1.2;
   text-align: center;
-`;
-
-const pit = css`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(7px, 1.2vw, 12px);
-  min-width: 0;
+  text-shadow: 0 1px 0 #ffd9a073;
 `;
 
 export const Pit = styled.div`
@@ -199,7 +205,7 @@ export const PitButton = styled.button`
   ${pit};
   background: none;
   border: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
   font: inherit;
   padding: 0;
@@ -214,17 +220,17 @@ export const PitButton = styled.button`
   }
 
   &:focus-visible {
-    outline: 3px solid #c3ffe8;
+    ${focusRing};
     outline-offset: 4px;
   }
 
   @media (hover: hover) {
     &:hover:not(:disabled) ${Hollow} {
-      border-color: #c5ffe8;
+      border-color: #c5fff0;
       box-shadow:
-        inset 0 6px 12px #110c0aa6,
-        0 0 0 3px #a5efd18c,
-        0 0 20px #a5efd140;
+        ${BOWL_SHADOW},
+        0 0 0 3px #a5f2dd,
+        0 0 24px #7fe6d08c;
     }
   }
 
@@ -237,17 +243,21 @@ export const PitButton = styled.button`
   }
 `;
 
+// A small honey tile with the player's initial, like the lobby's emblems
 export const PlayerAvatar = styled.span`
+  ${honeyWood};
   align-items: center;
-  background: linear-gradient(145deg, #b9d8bd, #528979);
-  border: 1px solid #c5e5d54d;
   border-radius: 12px;
-  color: #123f32;
+  box-shadow:
+    inset 0 1px 0 #ffe2b399,
+    inset 0 -2px 0 #7a3f1666,
+    0 2px 0 #6b3412;
+  color: ${INK};
   display: flex;
-  flex: 0 0 36px;
+  flex: 0 0 38px;
   font-size: 16px;
-  font-weight: 800;
-  height: 36px;
+  font-weight: ${fonts.weight.extraBold};
+  height: 38px;
   justify-content: center;
 
   @media (max-width: 480px) {
@@ -263,29 +273,41 @@ export const PlayerIdentity = styled.div`
 `;
 
 export const PlayerMeta = styled.span`
-  color: #9bb8ad;
+  color: ${mancala.dust};
   display: block;
-  font-size: 10px;
-  letter-spacing: 0.025em;
+  font-size: 11px;
+  letter-spacing: 0.02em;
   margin-top: 3px;
 `;
 
 export const PlayerName = styled.strong`
-  color: #f4f6ed;
+  color: ${mancala.cream};
   display: block;
-  font-size: clamp(12px, 1.5vw, 15px);
+  font-size: clamp(13px, 1.5vw, 16px);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
 
+// The player to move gets a jade edge and a jade clock, like a playable pit
 export const PlayerRail = styled.div<{$active: boolean}>`
   align-items: center;
-  border-left: 2px solid ${({$active}) => ($active ? '#a5e6c5' : '#ffffff14')};
+  border-left: 3px solid ${({$active}) => ($active ? mancala.jade : '#f3c88f26')};
   display: flex;
   gap: 12px;
   margin: 0 4px;
-  padding: 1px 0 1px 12px;
+  padding: 2px 0 2px 12px;
+
+  ${({$active}) =>
+    $active &&
+    css`
+      ${Clock} {
+        box-shadow:
+          inset 0 5px 10px #0d0603b3,
+          0 0 0 1px #7fe6d080;
+        color: ${mancala.jade};
+      }
+    `}
 
   @media (max-width: 480px) {
     gap: 8px;
@@ -295,21 +317,21 @@ export const PlayerRail = styled.div<{$active: boolean}>`
 `;
 
 export const RailScore = styled.strong`
-  color: #f5ddb1;
+  color: ${mancala.amberLight};
   display: grid;
   font-size: clamp(20px, 2.4vw, 27px);
   font-variant-numeric: tabular-nums;
   line-height: 1;
-  margin-left: auto;
   min-width: 42px;
   text-align: right;
 
   small {
-    color: #9bb8ad;
+    color: ${mancala.dust};
     font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
+    font-weight: ${fonts.weight.semiBold};
+    letter-spacing: 0.08em;
     margin-top: 4px;
+    text-transform: uppercase;
   }
 `;
 
@@ -325,19 +347,13 @@ export const Rows = styled.div`
   grid-template-rows: 1fr auto 1fr;
 `;
 
-export const Stone = styled.span<{$color: string; $landing: number; $store: boolean}>`
-  aspect-ratio: 1;
-  background:
-    radial-gradient(circle at 32% 25%, #ffffffe6 0 4%, #ffffff3d 13%, transparent 40%),
-    radial-gradient(circle at 65% 78%, #142e2470, transparent 66%), ${({$color}) => $color};
-  border: 1px solid #ffffff35;
-  border-radius: 46% 54% 49% 51%;
-  box-shadow:
-    inset 0 -2px 2px #163b3a33,
-    1px 3px 3px #100c0b8c;
+// An oval glass stone like the hero's, turned a little so no pile looks stacked by hand
+export const Stone = styled.span<{$landing: number; $store: boolean; $tone: StoneTone}>`
+  ${({$tone}) => glassStone($tone)};
+  aspect-ratio: ${STONE_RATIO} / 1;
   position: absolute;
-  transform: translate(-50%, -50%);
-  width: ${({$store}) => ($store ? '24%' : '22%')};
+  transform: translate(-50%, -50%) rotate(var(--tilt, 0deg));
+  width: ${({$store}) => ($store ? '27%' : '25%')};
 
   @media (prefers-reduced-motion: no-preference) {
     animation: ${({$landing}) => ($landing ? stoneLanding : 'none')} ${({$landing}) => $landing}ms ease-out both;
@@ -345,8 +361,8 @@ export const Stone = styled.span<{$color: string; $landing: number; $store: bool
 `;
 
 export const Store = styled.div<{$marked: boolean; $near: boolean}>`
-  ${hollow};
-  border-color: ${({$near}) => ($near ? '#a6e2c65c' : '#e2c39140')};
+  ${bowl};
+  border-color: ${({$near}) => ($near ? '#7fe6d066' : '#7a3d1433')};
   border-radius: 999px;
   min-width: 0;
   position: relative;
@@ -354,25 +370,33 @@ export const Store = styled.div<{$marked: boolean; $near: boolean}>`
   ${({$marked}) =>
     $marked &&
     css`
-      border-color: #ffe2a3;
-      box-shadow:
-        inset 0 6px 12px #110c0aa6,
-        0 0 0 2px #f0d49bb3,
-        0 0 22px #f4c7794d;
+      border-color: #fff0c8;
+      box-shadow: ${MARKED_SHADOW};
     `}
 `;
 
-export const StoreCount = styled.span<{$changed: boolean}>`
-  color: #fff1d3;
-  font-size: clamp(18px, 3vw, 32px);
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
-  left: 0;
-  line-height: 1;
+// The store's tally, carved dark like the pit counts so it reads over the wood and the stones
+export const StoreBadge = styled.span`
+  ${carved};
+  align-items: center;
+  border-radius: 999px;
+  display: flex;
+  flex-direction: column;
+  left: 50%;
+  min-width: 64%;
+  padding: clamp(4px, 0.8vw, 8px) clamp(3px, 0.6vw, 6px);
   position: absolute;
-  right: 0;
-  text-align: center;
-  top: 9%;
+  top: 6%;
+  transform: translateX(-50%);
+  z-index: 1;
+`;
+
+export const StoreCount = styled.span<{$changed: boolean}>`
+  color: ${mancala.cream};
+  font-size: clamp(15px, 2.6vw, 28px);
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.extraBold};
+  line-height: 1;
 
   @media (prefers-reduced-motion: no-preference) {
     animation: ${({$changed}) => ($changed ? countArrival : 'none')} 380ms ease-out;
@@ -380,23 +404,17 @@ export const StoreCount = styled.span<{$changed: boolean}>`
 `;
 
 export const StoreLabel = styled.span`
-  color: #d4b994;
+  color: ${mancala.dust};
   font-size: clamp(6px, 0.8vw, 8px);
-  left: 0;
-  letter-spacing: 0.1em;
-  position: absolute;
-  right: 0;
-  text-align: center;
-  top: 24%;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: 0.12em;
+  margin-top: 3px;
 `;
 
+// The walnut table the honey board sits on
 export const Table = styled.div`
-  background: radial-gradient(ellipse at 15% 0, #53877724, transparent 60%), linear-gradient(135deg, #163a34, #102924);
-  border: 1px solid #c9b98b33;
-  border-radius: 24px;
-  box-shadow:
-    0 16px 36px #18352d1f,
-    inset 0 1px 0 #ffffff12;
+  ${woodPanel};
+  border-radius: 28px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -404,28 +422,28 @@ export const Table = styled.div`
   padding: clamp(14px, 2.3vw, 28px);
 
   @media (max-width: 480px) {
-    border-radius: 18px;
+    border-radius: 20px;
     gap: 18px;
     padding: 12px 8px;
   }
 `;
 
 export const TableHint = styled.p`
-  color: #a8c7b9;
-  font-size: 11px;
+  color: ${mancala.sand};
+  font-size: 12px;
   line-height: 1.5;
   margin: -8px 0 0;
   text-align: center;
 `;
 
 export const TurnPill = styled.span`
-  background: #9ee1c31a;
-  border: 1px solid #a5e6c529;
+  background: #7fe6d01f;
+  border: 1px solid #7fe6d066;
   border-radius: 999px;
-  color: #b2e9d1;
+  color: #b8f7e8;
   flex-shrink: 0;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: ${fonts.weight.bold};
   padding: 5px 9px;
 
   @media (max-width: 480px) {

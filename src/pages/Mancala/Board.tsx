@@ -2,7 +2,9 @@ import {CSSProperties, useLayoutEffect, useRef, useState} from 'react';
 
 import {MancalaBoard, MancalaMove, MancalaSide} from 'types/mancala';
 
+import {tilt} from './Emblems/geometry';
 import * as S from './BoardStyles';
+import {STONE_CYCLE} from './theme';
 import {opponent, pitIndex, PITS, SowingFrame, STORE} from './utils';
 
 interface Props {
@@ -28,7 +30,6 @@ interface Flight {
 
 const PIT_STONES = 14;
 const STORE_STONES = 27;
-const STONE_COLORS = ['#70d6be', '#c8eadc', '#e5ba76', '#9ec3c7', '#fbdfaa', '#519b8e'];
 
 // A sunflower spiral keeps any number of stones evenly spread inside a round pit.
 const pitPosition = (stone: number) => {
@@ -62,12 +63,17 @@ const Stones = ({
         const landing = !!frame && received > 0 && stone >= count - received;
         return (
           <S.Stone
-            $color={STONE_COLORS[(stone + index * 2) % STONE_COLORS.length]}
             $landing={landing ? frame.duration : 0}
             $store={store}
+            $tone={STONE_CYCLE[(stone + index * 2) % STONE_CYCLE.length]}
             aria-hidden="true"
             key={landing ? `${frame.version}-${frame.hand}-${stone}` : stone}
-            style={store ? storePosition(stone) : pitPosition(stone)}
+            style={
+              {
+                ...(store ? storePosition(stone) : pitPosition(stone)),
+                '--tilt': `${tilt(index * 31 + stone)}deg`,
+              } as CSSProperties
+            }
           />
         );
       })}
@@ -224,10 +230,12 @@ const Board = ({
         role="img"
       >
         <Stones count={board[index]} frame={frame} index={index} store />
-        <S.StoreCount $changed={receiving} aria-hidden="true" key={board[index]}>
-          {board[index]}
-        </S.StoreCount>
-        <S.StoreLabel aria-hidden="true">STORE</S.StoreLabel>
+        <S.StoreBadge aria-hidden="true">
+          <S.StoreCount $changed={receiving} key={board[index]}>
+            {board[index]}
+          </S.StoreCount>
+          <S.StoreLabel>STORE</S.StoreLabel>
+        </S.StoreBadge>
       </S.Store>
     );
   };

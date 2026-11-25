@@ -2,7 +2,7 @@ import styled, {css, keyframes} from 'styled-components';
 
 import {fonts} from 'styles';
 
-import {carved, glassStone, mancala, STONES, StoneTone, WOOD_GRAIN} from '../theme';
+import {carved, glassStone, HONEY_HOLLOW_SHADOW, honeyHollow, honeyWood, mancala, STONES, StoneTone} from '../theme';
 
 import {
   BOARD_HEIGHT,
@@ -20,26 +20,6 @@ import {
 // One loop of the demonstration: cue the pit, lift the stones, sow them one by one, celebrate, reset
 const CYCLE = '7.2s';
 const LIFT = -5;
-
-// The honey wood of the hero's board, for the small illustrated boards and emblem tiles
-const honeyWood = css`
-  background:
-    ${WOOD_GRAIN}, radial-gradient(ellipse 70% 60% at 25% 0%, #ffe1ad59, transparent 70%),
-    linear-gradient(160deg, #eaa75f, #cf8a45 52%, #b56f31);
-  box-shadow:
-    inset 0 2px 1px #ffe2b399,
-    inset 0 -3px 2px #7a3f1666,
-    0 4px 0 #6b3412,
-    0 10px 18px #1a0a0240;
-`;
-
-// Light from the top left leaves the upper rim of a carved bowl in shadow, like the pits of the hero's board
-const HONEY_HOLLOW_SHADOW = 'inset 2px 5px 7px #5e2a0bb3, inset -1px -2px 3px #ffdcaa66, 0 1px 0 #ffe7bf80';
-
-const honeyHollow = css`
-  background: radial-gradient(ellipse 110% 100% at 60% 72%, #eba862 0%, #cd8642 50%, #9e5b24 100%);
-  box-shadow: ${HONEY_HOLLOW_SHADOW};
-`;
 
 // A move in board units, as a transform of a stone (whose own size the percentages refer to), then its turn
 const shift = (x: number, y: number, turn: number, scale = 1) =>
@@ -355,6 +335,32 @@ export const PodiumStoneShadow = styled.span`
   @media (prefers-reduced-motion: no-preference) {
     animation: ${shadowBob} 2.8s ease-in-out infinite;
   }
+`;
+
+// Two stores side by side on a honey board, for the result panel
+export const ResultBoard = styled.div`
+  ${honeyWood};
+  border-radius: 34px;
+  display: grid;
+  gap: 9%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0 auto;
+  padding: 9%;
+  width: min(200px, 100%);
+`;
+
+export const ResultStore = styled.span<{$leading: boolean}>`
+  ${honeyHollow};
+  aspect-ratio: 7 / 15;
+  border-radius: 999px;
+  display: block;
+  position: relative;
+
+  ${({$leading}) =>
+    $leading &&
+    css`
+      box-shadow: ${STORE_GLOW};
+    `}
 `;
 
 export const ScoreStore = styled.span<{$leading: boolean}>`
