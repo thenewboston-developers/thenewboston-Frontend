@@ -162,3 +162,13 @@ it('animates the true opening computer roll even when it completed before the ne
   expect(presentation.animateDice).toBe(true);
   expect(playSound.mock.calls).toEqual([['dice']]);
 });
+
+it('says whose dice are on show: the roll being played, or the last roll that was played', () => {
+  render(createMatch());
+  expect(presentation.diceSide).toBeNull();
+  render(createMatch({active_side: 'black', dice: [6, 2], phase: 'moving', version: 2}));
+  expect(presentation.diceSide).toBe('black');
+  render(createMatch({last_turn: {version: 3, side: 'black', dice: [6, 2], moves: []}, version: 3}));
+  expect(presentation.diceSide).toBe('black');
+  expect(presentation.diceLabel).toBe('Computer’s last roll');
+});

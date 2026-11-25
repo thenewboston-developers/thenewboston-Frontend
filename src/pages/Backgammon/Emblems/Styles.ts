@@ -147,6 +147,13 @@ export const PointStack = styled.svg`
   width: 26px;
 `;
 
+export const ResultArtwork = styled.svg`
+  display: block;
+  height: auto;
+  overflow: visible;
+  width: 100%;
+`;
+
 export const RollingDice = styled.span`
   --die-size: 22px;
 

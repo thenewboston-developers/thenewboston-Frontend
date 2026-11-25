@@ -1,5 +1,7 @@
 import styled, {css, keyframes} from 'styled-components';
 
+import {backgammon} from '../theme';
+
 const tumble = keyframes`
   0% { transform: translateY(-5px) rotate(-18deg) scale(0.88); }
   24% { transform: translateY(-12px) rotate(24deg) scale(1.06); }
@@ -8,33 +10,46 @@ const tumble = keyframes`
   100% { transform: translateY(0) rotate(0) scale(1); }
 `;
 
+// Gives way to the dice when the board is narrow, ending in an ellipsis
 export const Caption = styled.span`
-  color: #667d68;
-  font-size: 11px;
+  color: ${backgammon.mist};
+  flex: 0 1 auto;
+  font-size: 12px;
+  font-weight: 600;
   line-height: 1.4;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 export const Dice = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-shrink: 0;
+  gap: calc(var(--die-size, 42px) * 0.24);
 `;
 
+// Sized by --die-size so the dice can grow and shrink with the board they are rolled on
 export const Die = styled.div<{$animate: boolean; $index: number; $rolling: boolean; $used: boolean}>`
+  --size: var(--die-size, 42px);
+
   align-items: center;
-  background: #fffdf6;
-  border: 1px solid #ddd6bf;
-  border-radius: 10px;
-  box-shadow: 0 2px 0 #d6d0bd;
+  background: linear-gradient(145deg, #fffaf0, #eadcbc);
+  border-radius: calc(var(--size) * 0.22);
+  box-shadow:
+    inset 0 -2px 0 #cdbb92,
+    inset 0 1px 0 #ffffff,
+    0 2px 0 #9e8a60,
+    0 5px 10px #00000052;
   display: grid;
-  gap: 3px;
+  gap: calc(var(--size) * 0.07);
   grid-template-columns: repeat(3, 1fr);
-  height: 42px;
+  height: var(--size);
   opacity: ${({$used}) => ($used ? 0.35 : 1)};
-  padding: 8px;
+  padding: calc(var(--size) * 0.18);
   transform-origin: center;
   transition: opacity 140ms;
-  width: 42px;
+  width: var(--size);
 
   @media (prefers-reduced-motion: no-preference) {
     ${({$animate, $index, $rolling}) =>
@@ -52,14 +67,13 @@ export const Die = styled.div<{$animate: boolean; $index: number; $rolling: bool
 
 export const Dot = styled.span<{$visible: boolean}>`
   aspect-ratio: 1;
-  background: ${({$visible}) => ($visible ? '#244d3c' : 'transparent')};
+  background: ${({$visible}) => ($visible ? 'radial-gradient(circle at 38% 32%, #4a5852, #121b18)' : 'transparent')};
   border-radius: 50%;
 `;
 
 export const Group = styled.div`
-  align-items: flex-end;
+  align-items: center;
   display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  gap: 7px;
+  gap: 12px;
+  max-width: 100%;
 `;

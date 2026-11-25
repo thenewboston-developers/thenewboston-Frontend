@@ -137,4 +137,46 @@ describe('backgammon board controls', () => {
     const off = container.querySelector('[aria-label="black borne off: 14 of 15"]')!;
     expect(off.querySelector('rect')).toHaveAttribute('y', '348');
   });
+  it('keeps the cube on the bar, at the end nearest its owner, showing the value on offer during a double', () => {
+    act(() => {
+      root.render(<Board board={board} cube={{owner: null, value: 1}} />);
+    });
+    const cube = () => container.querySelector('[data-cube-owner]')!;
+    expect(cube()).toHaveAttribute('data-cube-value', '64');
+    expect(cube()).toHaveStyle({transform: 'translate(446px, 320px)'});
+    act(() => {
+      root.render(<Board board={board} cube={{owner: 'white', value: 2}} perspective="black" />);
+    });
+    expect(cube()).toHaveAttribute('data-cube-value', '2');
+    expect(cube()).toHaveStyle({transform: 'translate(446px, 84px)'});
+    act(() => {
+      root.render(<Board board={board} cube={{offered: true, owner: 'black', value: 2}} perspective="black" />);
+    });
+    expect(cube()).toHaveAttribute('data-cube-value', '4');
+    expect(cube()).toHaveStyle({transform: 'translate(446px, 556px)'});
+  });
+
+  it('rings the slot where the selected checker will land, including on a blot it would hit', () => {
+    const position: BackgammonBoard = {...board, points: Array(24).fill(0), off: {white: 0, black: 0}};
+    position.points[12] = 2;
+    position.points[7] = 2;
+    position.points[9] = -1;
+    act(() => {
+      root.render(
+        <Board
+          board={position}
+          nextMoves={[
+            {from: 12, to: 7, die: 5},
+            {from: 12, to: 9, die: 3},
+          ]}
+          onSelect={jest.fn()}
+          selected={12}
+        />,
+      );
+    });
+    const rings = Array.from(container.querySelectorAll('[data-destination]'));
+    expect(rings.map((ring) => ring.getAttribute('data-destination'))).toEqual(['7', '9']);
+    expect(rings[0]).toHaveAttribute('cy', '467');
+    expect(rings[1]).toHaveAttribute('cy', '559');
+  });
 });

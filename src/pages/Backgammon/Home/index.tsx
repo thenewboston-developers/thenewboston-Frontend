@@ -18,6 +18,7 @@ import {isCancellationError} from 'utils/errors';
 import {DicePair, Die, PointStack, RollingDice} from '../Emblems';
 import Hero from '../Hero';
 import Leaderboard from '../Leaderboard';
+import Rules from '../Rules';
 import {getErrorMessage, getPlayerName, getPlayerSide, INITIAL_BOARD} from '../utils';
 
 import * as S from './Styles';
@@ -488,7 +489,7 @@ const Home = () => {
         </S.Section>
       )}
       <Leaderboard />
-      <S.LobbyRules />
+      <Rules />
     </S.Container>
   );
 };

@@ -112,7 +112,7 @@ afterEach(() => {
 });
 
 describe('backgammon match interaction', () => {
-  it('keeps the actual winning computer roll visible in the result', async () => {
+  it('keeps the actual winning computer roll on the computer’s side of the board', async () => {
     match.status = 'finished';
     match.phase = 'finished';
     match.winner = 'black';
@@ -120,9 +120,38 @@ describe('backgammon match interaction', () => {
     match.dice = [];
     match.last_turn = {version: 4, side: 'black', dice: [4, 2], moves: []};
     await renderMatch();
-    expect(container.textContent).toContain('Computer’s last roll');
-    expect(container.querySelector('[aria-label="Die 4"]')).toBeInTheDocument();
-    expect(container.querySelector('[aria-label="Die 2"]')).toBeInTheDocument();
+    const dice = container.querySelector('[data-side]');
+    expect(dice).toHaveAttribute('data-side', 'left');
+    expect(dice).toHaveTextContent('Computer’s last roll');
+    expect(dice?.querySelector('[aria-label="Die 4"]')).toBeInTheDocument();
+    expect(dice?.querySelector('[aria-label="Die 2"]')).toBeInTheDocument();
+  });
+
+  it('rolls the dice into the half of the board on the roller’s right', async () => {
+    await renderMatch();
+    expect(container.querySelector('[data-side]')).toHaveAttribute('data-side', 'right');
+    act(() => root.unmount());
+    root = createRoot(container);
+    selfId = 12;
+    await renderMatch();
+    expect(container.querySelector('[data-side]')).toHaveAttribute('data-side', 'left');
+  });
+
+  it('turns the cube on the bar to the value on offer while a double waits for an answer', async () => {
+    await renderMatch();
+    expect(container.querySelector('[data-cube-owner]')).toHaveAttribute('data-cube-value', '64');
+    act(() => root.unmount());
+    root = createRoot(container);
+    match.phase = 'doubling';
+    match.active_side = 'black';
+    match.double_offered_by = 'black';
+    match.dice = [];
+    match.legal_turns = [];
+    await renderMatch();
+    const cube = container.querySelector('[data-cube-owner]');
+    expect(cube).toHaveAttribute('data-cube-owner', 'center');
+    expect(cube).toHaveAttribute('data-cube-value', '2');
+    expect(button('Accept double')).toBeEnabled();
   });
   it('stops polling after a terminal match result', async () => {
     jest.useFakeTimers();
@@ -254,5 +283,5 @@ it('uses the current game winner between games and keeps the next-game action', 
   const result = container.querySelector('[data-outcome]');
   expect(result).toHaveAttribute('data-outcome', 'win');
   expect(result).toHaveTextContent('Alice wins the game');
-  expect(button('Next game →')).toBeEnabled();
+  expect(button('Next game')).toBeEnabled();
 });
