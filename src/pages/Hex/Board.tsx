@@ -6,6 +6,8 @@ import * as S from './BoardStyles';
 import {cellLabel, getBoardLayout, getHexPoints, HEX_RADIUS, SIDE_NAMES, stepCell} from './utils';
 
 interface Props {
+  // The side whose edges stay lit: the side to move, or the winner. The other side's edges dim.
+  activeSide?: HexSide | null;
   board: HexStone[];
   disabled?: boolean;
   lastMove?: number | null;
@@ -21,6 +23,7 @@ const STONE_RADIUS = HEX_RADIUS * 0.62;
 const STONES: Record<HexSide, HexStone> = {blue: 2, red: 1};
 
 const Board = ({
+  activeSide = null,
   board,
   disabled = false,
   lastMove = null,
@@ -98,6 +101,7 @@ const Board = ({
     return (
       <g key={cell}>
         <S.Stone
+          $fresh={lastMove === cell && !isPreview}
           $preview={isPreview}
           cx={centre.x}
           cy={centre.y}
@@ -132,11 +136,17 @@ const Board = ({
           </radialGradient>
         </defs>
         {layout.edges.map((edge) => (
-          <S.EdgeBand $side={edge.side} key={edge.points} points={edge.points} />
+          <S.EdgeBand
+            $dim={!!activeSide && edge.side !== activeSide}
+            $side={edge.side}
+            key={edge.points}
+            points={edge.points}
+          />
         ))}
         {layout.cells.map((_, cell) => renderCell(cell))}
         {winningPath && winningPath.length > 1 && (
           <S.WinningLine
+            pathLength={1}
             points={winningPath.map((cell) => `${layout.cells[cell].x},${layout.cells[cell].y}`).join(' ')}
           />
         )}
@@ -149,15 +159,25 @@ const Board = ({
       </S.BoardSvg>
       <S.Legend>
         <span>
-          <S.LegendDot $side="red" />
+          <S.LegendStone $side="red" aria-hidden="true" />
           Red joins the two red edges
         </span>
         <span>
-          <S.LegendDot $side="blue" />
+          <S.LegendStone $side="blue" aria-hidden="true" />
           Blue joins the two blue edges
         </span>
-        {preview && <span>Dashed outline: your {SIDE_NAMES[preview.side].toLowerCase()} stone, not placed yet</span>}
-        {winningPath && <span>Gold line: the winning chain</span>}
+        {preview && (
+          <span>
+            <S.LegendPreview $side={preview.side} aria-hidden="true" />
+            Dashed outline: your {SIDE_NAMES[preview.side].toLowerCase()} stone, not placed yet
+          </span>
+        )}
+        {winningPath && (
+          <span>
+            <S.LegendChain aria-hidden="true" />
+            Gold line: the winning chain
+          </span>
+        )}
       </S.Legend>
     </S.BoardFrame>
   );

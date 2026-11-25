@@ -1,18 +1,45 @@
-import styled, {css} from 'styled-components';
+import styled, {css, keyframes} from 'styled-components';
 
 import {HexSide} from 'types/hex';
 
+import {glassStone, hex, honeycombPanel, sideAccent} from './theme';
+
 export const SIDE_COLORS: Record<HexSide, string> = {blue: '#2c6fd6', red: '#d9463c'};
 
+const appear = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const draw = keyframes`
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+`;
+
+const settle = keyframes`
+  from { opacity: 0; transform: scale(1.45); }
+  to { opacity: 1; transform: scale(1); }
+`;
+
+const stillForReducedMotion = css`
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+`;
+
 export const BoardFrame = styled.div<{$upright: boolean}>`
-  background: #1d2640;
-  border: 1px solid #323e68;
-  border-radius: 22px;
-  box-shadow: 0 16px 32px #1d26401f;
+  ${honeycombPanel};
   margin: 0 auto;
   max-width: 980px;
   padding: 18px;
   width: 100%;
+
+  /* The honeycomb shows in the two corners the slanted board leaves empty */
+  &::before {
+    mask-image:
+      radial-gradient(55% 75% at 100% 0%, #000000, transparent),
+      radial-gradient(55% 75% at 0% 100%, #000000, transparent);
+  }
 
   @media (min-width: 1000px) and (min-height: 600px) {
     max-width: min(980px, calc((100dvh - 330px) * var(--board-aspect)));
@@ -59,8 +86,11 @@ export const Cell = styled.g<{$interactive: boolean; $side: HexSide}>`
   }
 `;
 
-export const EdgeBand = styled.polygon<{$side: HexSide}>`
+// The edges of the side to move, or of the winner, stay lit while the other side's dim
+export const EdgeBand = styled.polygon<{$dim: boolean; $side: HexSide}>`
   fill: ${({$side}) => SIDE_COLORS[$side]};
+  opacity: ${({$dim}) => ($dim ? 0.6 : 1)};
+  transition: opacity 0.35s ease;
 `;
 
 export const EdgeLabel = styled.text`
@@ -82,14 +112,16 @@ export const FocusRing = styled.polygon`
   stroke-width: 3;
 `;
 
+// Shows once the newest stone has settled
 export const LastMoveMark = styled.circle`
+  animation: ${appear} 0.2s ease 0.25s both;
   fill: #ffffff;
-  opacity: 0.95;
   pointer-events: none;
+  ${stillForReducedMotion};
 `;
 
 export const Legend = styled.div`
-  color: #d5dbee;
+  color: ${hex.mist};
   display: flex;
   flex-wrap: wrap;
   font-size: 12px;
@@ -97,19 +129,39 @@ export const Legend = styled.div`
   line-height: 1.5;
   padding: 12px 4px 0;
 
+  > span {
+    align-items: center;
+    display: inline-flex;
+    gap: 8px;
+  }
+
   @media (max-width: 700px) {
     padding: 10px 6px 4px;
   }
 `;
 
-export const LegendDot = styled.span<{$side: HexSide}>`
-  background: ${({$side}) => SIDE_COLORS[$side]};
-  border: 1px solid #ffffff66;
+export const LegendChain = styled.span`
+  background: ${hex.gold};
+  border-radius: 2px;
+  flex-shrink: 0;
+  height: 4px;
+  width: 18px;
+`;
+
+export const LegendPreview = styled.span<{$side: HexSide}>`
+  border: 1.5px dashed ${({$side}) => SIDE_COLORS[$side]};
   border-radius: 50%;
-  display: inline-block;
-  height: 10px;
-  margin-right: 6px;
-  width: 10px;
+  flex-shrink: 0;
+  height: 12px;
+  width: 12px;
+`;
+
+export const LegendStone = styled.span<{$side: HexSide}>`
+  ${({$side}) => sideAccent($side)};
+  ${glassStone};
+  flex-shrink: 0;
+  height: 12px;
+  width: 12px;
 `;
 
 export const PreviewRing = styled.polygon<{$side: HexSide}>`
@@ -120,25 +172,42 @@ export const PreviewRing = styled.polygon<{$side: HexSide}>`
   stroke-width: 2.4;
 `;
 
-export const Stone = styled.circle<{$preview?: boolean}>`
+// The newest stone settles into its cell
+export const Stone = styled.circle<{$fresh: boolean; $preview: boolean}>`
   filter: drop-shadow(0 1.5px 1.5px #10182f73);
   opacity: ${({$preview}) => ($preview ? 0.6 : 1)};
   pointer-events: none;
+
+  ${({$fresh}) =>
+    $fresh &&
+    css`
+      animation: ${settle} 0.32s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+      transform-box: fill-box;
+      transform-origin: center;
+      ${stillForReducedMotion};
+    `}
 `;
 
+// Draws itself from one edge to the other
 export const WinningLine = styled.polyline`
+  animation: ${draw} 0.9s ease-in-out 0.2s both;
   fill: none;
   pointer-events: none;
-  stroke: #ffd666;
+  stroke: ${hex.gold};
+  stroke-dasharray: 1;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-opacity: 0.95;
   stroke-width: 7;
+  ${stillForReducedMotion};
 `;
 
+// Rings the chain's stones once the line has reached the far edge
 export const WinningRing = styled.circle`
+  animation: ${appear} 0.4s ease 1s both;
   fill: none;
   pointer-events: none;
-  stroke: #ffd666;
+  stroke: ${hex.gold};
   stroke-width: 2.6;
+  ${stillForReducedMotion};
 `;

@@ -191,6 +191,101 @@ export const DemoBoard = () => {
   );
 };
 
+const SEAL_CENTRE = {x: 24, y: 26};
+
+// A porcelain cell holding a stone in the side color of the element around it, with an optional ring around the cell
+export const SideSeal = ({ring = 'none'}: {ring?: S.SealRing}) => {
+  const gradient = useSvgId('seal');
+  return (
+    <S.Seal $ring={ring} aria-hidden="true" viewBox="0 0 48 52">
+      <defs>
+        <radialGradient cx="35%" cy="30%" id={gradient} r="75%">
+          <stop className="stone-light" offset="0%" />
+          <stop className="stone-strong" offset="55%" />
+          <stop className="stone-dark" offset="100%" />
+        </radialGradient>
+      </defs>
+      {ring !== 'none' && <polygon className="ring" pathLength={1} points={getHexPoints(SEAL_CENTRE, false, 24)} />}
+      <S.PorcelainCell points={getHexPoints(SEAL_CENTRE, false, 19)} />
+      <S.GlassStone cx={SEAL_CENTRE.x} cy={SEAL_CENTRE.y} fill={`url(#${gradient})`} r={11.5} />
+    </S.Seal>
+  );
+};
+
+// The final position of a short game for each winner: Red's chain runs from the top edge to the bottom one, Blue's
+// from the left edge to the right one. The other side's stones never got through.
+const RESULT_GAMES: Record<HexSide, {chain: number[]; others: number[]}> = {
+  blue: {chain: [10, 11, 7, 8, 4], others: [2, 6, 12, 18]},
+  red: {chain: DEMO_PATH, others: [3, 8, 17, 21]},
+};
+const SPARKLES = [
+  {size: 9, x: 252, y: 12},
+  {size: 6, x: 276, y: 50},
+  {size: 7, x: -14, y: 150},
+];
+
+// The final position on a small board, the winner's chain ringed in gold and the loser's edges dimmed. A win on time
+// or by resignation never finished its chain, so one of its cells stays empty.
+export const ResultArtwork = ({connected, side}: {connected: boolean; side: HexSide}) => {
+  const gradients = useSvgId('result');
+  const layout = getBoardLayout(DEMO_SIZE);
+  const {chain, others} = RESULT_GAMES[side];
+  const stones = connected ? chain : chain.filter((_, index) => index !== 2);
+  const loser = side === 'red' ? 'blue' : 'red';
+  return (
+    <S.ResultArt aria-hidden="true" focusable="false" viewBox={layout.viewBox}>
+      <StoneGradients id={gradients} />
+      <defs>
+        <radialGradient id={`${gradients}-halo`}>
+          <stop className="halo" offset="0%" stopOpacity="0.32" />
+          <stop className="halo" offset="100%" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <ellipse cx={121} cy={80} fill={`url(#${gradients}-halo)`} rx={175} ry={115} />
+      {layout.edges.map((edge) => (
+        <S.EdgeBand $dim={edge.side !== side} $side={edge.side} key={edge.points} points={edge.points} />
+      ))}
+      <S.DemoCells d={getCellPath(DEMO_SIZE)} />
+      {others.map((cell) => (
+        <S.GlassStone
+          cx={layout.cells[cell].x}
+          cy={layout.cells[cell].y}
+          fill={`url(#${gradients}-${loser})`}
+          key={cell}
+          r={STONE_RADIUS}
+        />
+      ))}
+      {connected && (
+        <S.ResultChain
+          pathLength={1}
+          points={chain.map((cell) => `${layout.cells[cell].x},${layout.cells[cell].y}`).join(' ')}
+        />
+      )}
+      {stones.map((cell) => (
+        <S.GlassStone
+          cx={layout.cells[cell].x}
+          cy={layout.cells[cell].y}
+          fill={`url(#${gradients}-${side})`}
+          key={cell}
+          r={STONE_RADIUS}
+        />
+      ))}
+      {connected &&
+        chain.map((cell) => (
+          <S.ResultRing cx={layout.cells[cell].x} cy={layout.cells[cell].y} key={cell} r={STONE_RADIUS + 1.6} />
+        ))}
+      {SPARKLES.map(({size, x, y}) => (
+        <path
+          className="result-sparkle"
+          d={`M${x} ${y - size}Q${x} ${y} ${x + size} ${y}Q${x} ${y} ${x} ${y + size}Q${x} ${y} ${x - size} ${y}Q${x} ${y} ${x} ${y - size}Z`}
+          fill="#ffe7a3"
+          key={x}
+        />
+      ))}
+    </S.ResultArt>
+  );
+};
+
 // A hexagon drawing itself, for loading states
 export const HexSpinner = () => (
   <S.Spinner aria-hidden="true" viewBox="0 0 40 44">

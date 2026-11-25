@@ -120,6 +120,20 @@ describe('Hex board', () => {
     expect(onSelect).toHaveBeenCalledTimes(2);
   });
 
+  it('keeps the edges of the side to move lit and dims the other side', () => {
+    const opacities = () =>
+      Array.from(container.querySelectorAll('svg[aria-label^="Hex board"] > polygon')).map(
+        (band) => getComputedStyle(band).opacity,
+      );
+    renderBoard();
+    expect(opacities()).toEqual(['1', '1', '1', '1']);
+    renderBoard({activeSide: 'blue'});
+    // The red edges are drawn first, then the blue ones.
+    expect(opacities()).toEqual(['0.6', '0.6', '1', '1']);
+    renderBoard({activeSide: 'red'});
+    expect(opacities()).toEqual(['1', '1', '0.6', '0.6']);
+  });
+
   it('stands the board upright on narrow screens without changing the cells', () => {
     renderBoard();
     const [, , wideWidth, wideHeight] = container.querySelector('svg')!.getAttribute('viewBox')!.split(' ').map(Number);

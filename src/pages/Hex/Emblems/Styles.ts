@@ -5,6 +5,10 @@ import {HexSide} from 'types/hex';
 import {SIDE_COLORS} from '../BoardStyles';
 import {hex} from '../theme';
 
+// The side seal's ring: lit for the player to move, pulsing on your own turn, running round while the other side
+// thinks
+export type SealRing = 'none' | 'pulse' | 'still' | 'trace';
+
 // The demo game repeats every 11 seconds: a stone every 0.75 seconds, then the winning chain, a pause and a fade
 const DEMO_LOOP = 11;
 const DEMO_FADE = 10.1;
@@ -39,6 +43,16 @@ const ringGlow = keyframes`
   0%, ${at(7.6)} { opacity: 0; transform: scale(0.6); }
   ${at(7.95)}, ${at(DEMO_FADE)} { opacity: 1; transform: scale(1); }
   ${at(DEMO_GONE)}, 100% { opacity: 0; transform: scale(1); }
+`;
+
+const appear = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const pulse = keyframes`
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
 `;
 
 const trace = keyframes`
@@ -106,8 +120,9 @@ export const DemoStone = styled.circle<{$move: number}>`
   ${stillForReducedMotion};
 `;
 
-export const EdgeBand = styled.polygon<{$side: HexSide}>`
+export const EdgeBand = styled.polygon<{$dim?: boolean; $side: HexSide}>`
   fill: ${({$side}) => SIDE_COLORS[$side]};
+  opacity: ${({$dim}) => ($dim ? 0.6 : 1)};
 `;
 
 export const Emblem = styled.span`
@@ -212,6 +227,83 @@ export const PreviewRing = styled.polygon`
   stroke: ${hex.ruby};
   stroke-dasharray: 5 3;
   stroke-width: 2.4;
+`;
+
+export const ResultArt = styled.svg`
+  .halo {
+    stop-color: var(--accent-strong);
+  }
+`;
+
+// Drawn from one edge to the other once the picture has arrived
+export const ResultChain = styled.polyline`
+  animation: ${trace} 0.9s ease-in-out 0.45s both;
+  fill: none;
+  stroke: ${hex.gold};
+  stroke-dasharray: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-opacity: 0.95;
+  stroke-width: 7;
+  ${stillForReducedMotion};
+`;
+
+// Rings the chain's stones once the line has reached the far edge
+export const ResultRing = styled.circle`
+  animation: ${appear} 0.4s ease 1.3s both;
+  fill: none;
+  stroke: ${hex.gold};
+  stroke-width: 2.6;
+  ${stillForReducedMotion};
+`;
+
+export const Seal = styled.svg<{$ring: SealRing}>`
+  display: block;
+  filter: drop-shadow(0 6px 10px #02081766);
+  height: auto;
+  overflow: visible;
+  width: 100%;
+
+  .stone-dark {
+    stop-color: var(--stone-dark);
+  }
+
+  .stone-light {
+    stop-color: var(--stone-light);
+  }
+
+  .stone-strong {
+    stop-color: var(--accent-strong);
+  }
+
+  .ring {
+    fill: none;
+    stroke: var(--accent);
+    stroke-linejoin: round;
+    stroke-width: 2.4;
+
+    ${({$ring}) =>
+      $ring === 'pulse' &&
+      css`
+        animation: ${pulse} 1.6s ease-in-out infinite;
+      `}
+
+    ${({$ring}) =>
+      $ring === 'still' &&
+      css`
+        opacity: 0.85;
+      `}
+
+    ${({$ring}) =>
+      $ring === 'trace' &&
+      css`
+        animation: ${trace} 1.4s linear infinite;
+        stroke-dasharray: 0.3 0.7;
+        stroke-linecap: round;
+      `}
+
+    ${stillForReducedMotion};
+  }
 `;
 
 export const Spinner = styled.svg`
