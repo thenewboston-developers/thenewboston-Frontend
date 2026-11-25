@@ -1,32 +1,12 @@
-import {FormEvent, ReactNode, useCallback, useEffect, useRef, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {FormEvent, ReactNode} from 'react';
 
-import {createCasinoCommitment, getCasino, getCasinoBet, getCasinoBets, placeCasinoBet} from 'api/casino';
 import AuthButtons from 'components/AuthButtons';
-import {getAllUserWallets} from 'dispatchers/wallets';
-import {useIsAuthenticated} from 'hooks';
-import {getSelf, getWallets} from 'selectors/state';
-import {AppDispatch} from 'types';
-import {
-  CasinoBet,
-  CasinoFundMovement,
-  CasinoGame as CasinoGameConfig,
-  CasinoGameId,
-  CasinoSummary,
-  RouletteSelection,
-} from 'types/casino';
-import {
-  casinoErrorMessage,
-  clearPendingCasinoBet,
-  isDefiniteCasinoRejection,
-  PendingCasinoBet,
-  readPendingCasinoBet,
-  savePendingCasinoBet,
-} from 'utils/casino';
+import {CasinoBet, CasinoGame as CasinoGameConfig, CasinoGameId, RouletteSelection} from 'types/casino';
 
 import FundControls from './FundControls';
 import Receipt from './Receipt';
 import * as S from './Styles';
+import useCasinoWager from './useCasinoWager';
 
 interface CasinoGameProps {
   gameId: CasinoGameId;
@@ -51,171 +31,39 @@ const CasinoGame = ({
   validSelection = true,
   verb,
 }: CasinoGameProps) => {
-  const [amount, setAmount] = useState('1');
-  const [error, setError] = useState('');
-  const [history, setHistory] = useState<CasinoBet[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loadError, setLoadError] = useState(false);
-  const [pending, setPending] = useState<PendingCasinoBet | null>(null);
-  const [receipt, setReceipt] = useState<CasinoBet | null>(null);
-  const [storageError, setStorageError] = useState(false);
-  const [summary, setSummary] = useState<CasinoSummary | null>(null);
-  const dispatch = useDispatch<AppDispatch>();
-  const isAuthenticated = useIsAuthenticated();
-  const live = useRef(true);
-  const requestLock = useRef(false);
-  const self = useSelector(getSelf);
-  const wallets = useSelector(getWallets);
-  const game = summary?.games.find((item) => item.id === gameId);
-  const betType = game?.bet_types?.find((item) => item.id === selection?.type);
-  const maxBet = selection ? (betType?.max_bet ?? 0) : (game?.max_bet ?? 0);
-  const minBet = game?.min_bet ?? 1;
-  const stake = Number(amount);
-  const wallet = Object.values(wallets).find((item) => item.currency.ticker === 'TNB' && item.owner === self.id);
-  const validAmount = Number.isSafeInteger(stake) && stake >= minBet && stake <= maxBet;
-  const available = !!summary?.fund.enabled && !!game?.enabled && maxBet >= minBet && !loadError;
-
-  const refresh = useCallback(async () => {
-    try {
-      const data = await getCasino();
-      if (live.current) {
-        setSummary(data);
-        setLoadError(false);
-      }
-    } catch {
-      if (live.current) setLoadError(true);
-    }
-  }, []);
-
-  const acceptReceipt = useCallback(
-    (bet: CasinoBet, userId: number) => {
-      if (bet.status !== 'settled') return;
-      clearPendingCasinoBet(userId, bet.request_id);
-      if (!live.current) return;
-      setPending(null);
-      setReceipt(bet);
-      setHistory((previous) => [bet, ...previous.filter((item) => item.request_id !== bet.request_id)].slice(0, 20));
-      setError('');
-      dispatch(getAllUserWallets()).catch(() => undefined);
-      refresh();
-    },
-    [dispatch, refresh],
-  );
-
-  useEffect(() => {
-    live.current = true;
-    refresh();
-    const timer = setInterval(refresh, 15000);
-    if (isAuthenticated && self.id) {
-      const userId = self.id;
-      dispatch(getAllUserWallets()).catch(() => undefined);
-      getCasinoBets()
-        .then((bets) => {
-          if (live.current)
-            setHistory((previous) =>
-              [
-                ...previous,
-                ...bets.filter(
-                  (bet) => bet.status === 'settled' && !previous.some((item) => item.request_id === bet.request_id),
-                ),
-              ].slice(0, 20),
-            );
-        })
-        .catch(() => undefined);
-      try {
-        const saved = readPendingCasinoBet(userId);
-        if (saved) {
-          setPending(saved);
-          setError('Checking your previous bet. New bets are paused until its result is confirmed.');
-          getCasinoBet(saved.payload.request_id)
-            .then((bet) => acceptReceipt(bet, userId))
-            .catch(() => {
-              if (live.current)
-                setError(
-                  'Your previous bet is not confirmed yet. Retry the same bet to safely complete or recover it.',
-                );
-            });
-        }
-      } catch {
-        setStorageError(true);
-        setError('Saved bet recovery is unavailable. Check your bet history before placing another wager.');
-      }
-    }
-    return () => {
-      live.current = false;
-      clearInterval(timer);
-    };
-  }, [acceptReceipt, dispatch, isAuthenticated, refresh, self.id]);
-
-  const handleFundSuccess = (result: CasinoFundMovement) => {
-    setSummary((previous) => (previous ? {...previous, fund: result.fund} : previous));
-    dispatch(getAllUserWallets()).catch(() => undefined);
-    refresh();
-  };
+  const {
+    amount,
+    availability,
+    available,
+    canPlace,
+    error,
+    game,
+    handleFundSuccess,
+    history,
+    isAuthenticated,
+    isSubmitting,
+    loadError,
+    maxBet,
+    minBet,
+    pending,
+    place,
+    receipt,
+    refresh,
+    self,
+    setAmount,
+    setReceipt,
+    stake,
+    summary,
+    unavailableMessage,
+    wallet,
+  } = useCasinoWager({gameId, selection, validSelection});
 
   const handlePlace = async (event?: FormEvent) => {
     event?.preventDefault();
-    if (!self.id || !isAuthenticated || requestLock.current || storageError) return;
-    if (!pending && (!available || !validAmount || !validSelection || !game)) return;
-    const userId = self.id;
-    requestLock.current = true;
-    setIsSubmitting(true);
-    setError('');
-    let request = pending;
-    try {
-      request = readPendingCasinoBet(userId) || request;
-      if (!request) {
-        const commitment = await createCasinoCommitment();
-        if (!live.current) return;
-        request = {
-          payload: {
-            amount: stake,
-            client_seed: crypto.randomUUID(),
-            commitment_id: commitment.id,
-            game: gameId,
-            request_id: crypto.randomUUID(),
-            rules_version: game!.rules_version,
-            ...(selection ? {selection} : {}),
-          },
-          serverSeedHash: commitment.server_seed_hash,
-        };
-        savePendingCasinoBet(userId, request);
-      }
-      setPending(request);
-      const bet = await placeCasinoBet(request.payload);
-      acceptReceipt(bet, userId);
-    } catch (caught) {
-      if (!live.current) return;
-      if (request && isDefiniteCasinoRejection(caught)) {
-        clearPendingCasinoBet(userId, request.payload.request_id);
-        setPending(null);
-        refresh();
-      }
-      setError(
-        casinoErrorMessage(
-          caught,
-          request
-            ? 'We could not confirm your bet. Retry the same bet without paying twice.'
-            : 'Unable to prepare this bet. No coins were charged. Please try again.',
-        ),
-      );
-    } finally {
-      requestLock.current = false;
-      if (live.current) setIsSubmitting(false);
-    }
+    await place();
   };
 
   const displayedReceipt = receipt?.game === gameId ? receipt : null;
-  let availability = 'Checking availability…';
-  if (loadError) availability = 'Casino status unavailable';
-  else if (summary && !summary.fund.enabled) availability = 'Casino closed';
-  else if (game && (!game.enabled || maxBet < minBet)) availability = 'Wagering temporarily unavailable';
-  else if (game) availability = 'Wagering available';
-  let unavailableMessage =
-    'The casino fund cannot cover the minimum wager for this selection. Please check back later.';
-  if (!game?.enabled) unavailableMessage = 'This game is currently closed.';
-  if (!summary?.fund.enabled) unavailableMessage = 'The casino is closed to new wagers.';
-  if (loadError) unavailableMessage = 'Refresh the casino status before placing a bet.';
 
   return (
     <S.Container>
@@ -345,18 +193,7 @@ const CasinoGame = ({
                     {wallet && stake > wallet.balance && (
                       <S.Note>Your TNB wallet does not have enough coins for this wager.</S.Note>
                     )}
-                    <S.Button
-                      disabled={
-                        !available ||
-                        !validAmount ||
-                        !validSelection ||
-                        isSubmitting ||
-                        storageError ||
-                        !wallet ||
-                        stake > wallet.balance
-                      }
-                      type="submit"
-                    >
+                    <S.Button disabled={!canPlace} type="submit">
                       {isSubmitting
                         ? 'Checking your bet…'
                         : `${verb} ${Number.isSafeInteger(stake) && stake > 0 ? stake.toLocaleString() : '—'} TNB`}

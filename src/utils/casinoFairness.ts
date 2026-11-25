@@ -1,6 +1,15 @@
 import {CasinoBet} from 'types/casino';
 
 const RED_NUMBERS = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
+const SLOT_SYMBOL_ORDER = ['cherry', 'lemon', 'bell', 'bar', 'diamond', 'seven'];
+// Slots rules v2 show a losing draw d as line d % 120 of every ordered line of three different symbols, enumerated
+// like Python's itertools.permutations(SLOT_SYMBOL_ORDER, 3).
+const SLOT_LOSING_LINES = SLOT_SYMBOL_ORDER.flatMap((first) =>
+  SLOT_SYMBOL_ORDER.filter((second) => second !== first).flatMap((second) =>
+    SLOT_SYMBOL_ORDER.filter((third) => third !== first && third !== second).map((third) => [first, second, third]),
+  ),
+);
+const SUPPORTED_RULES: Record<string, number[]> = {roulette: [1], slots: [1, 2]};
 const SLOT_OUTCOMES = [
   {multiplier: 0, symbols: ['cherry', 'lemon', 'bar'], weight: 5885},
   {multiplier: 1, symbols: ['cherry', 'cherry', 'cherry'], weight: 1600},
@@ -15,7 +24,11 @@ const hex = (buffer: ArrayBuffer) =>
   Array.from(new Uint8Array(buffer), (byte) => byte.toString(16).padStart(2, '0')).join('');
 
 export const verifyCasinoReceipt = async (bet: CasinoBet, observedHash?: string) => {
-  if (bet.rules_version !== 1 || bet.fairness.algorithm !== 'hmac-sha256-v1' || bet.status !== 'settled') {
+  if (
+    !SUPPORTED_RULES[bet.game]?.includes(bet.rules_version) ||
+    bet.fairness.algorithm !== 'hmac-sha256-v1' ||
+    bet.status !== 'settled'
+  ) {
     throw new Error('This receipt uses an unsupported rules version or is not settled.');
   }
   if (!/^[0-9a-f]{64}$/.test(bet.fairness.server_seed)) throw new Error('Invalid server seed.');
@@ -58,7 +71,11 @@ export const verifyCasinoReceipt = async (bet: CasinoBet, observedHash?: string)
       return draw! < boundary;
     })!;
     multiplier = outcome.multiplier;
-    if (bet.result.draw !== draw || JSON.stringify(bet.result.symbols) !== JSON.stringify(outcome.symbols)) {
+    const symbols =
+      bet.rules_version === 2 && multiplier === 0
+        ? SLOT_LOSING_LINES[draw % SLOT_LOSING_LINES.length]
+        : outcome.symbols;
+    if (bet.result.draw !== draw || JSON.stringify(bet.result.symbols) !== JSON.stringify(symbols)) {
       throw new Error('The slot outcome does not match the committed result.');
     }
   } else if (bet.game === 'roulette') {
