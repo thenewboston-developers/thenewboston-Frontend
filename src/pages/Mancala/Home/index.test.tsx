@@ -6,13 +6,21 @@ import {MemoryRouter} from 'react-router-dom';
 import {createMancalaMatch, getMancalaMatches} from 'api/mancala';
 import {useIsAuthenticated} from 'hooks';
 
-import Home from './Home';
+import Home from '.';
 
 jest.mock('axios', () => ({isAxiosError: jest.fn(() => false)}));
 jest.mock('api/mancala', () => ({createMancalaMatch: jest.fn(), getMancalaMatches: jest.fn()}));
-jest.mock('components/GameEarningsLeaderboard', () => () => <div>Top earners</div>);
+jest.mock('../Leaderboard', () => () => <div>Fullest stores</div>);
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
-jest.mock('components/UserSearchInput', () => () => <div>Find a member</div>);
+jest.mock(
+  'components/UserSearchInput',
+  () =>
+    ({onChange}: {onChange: (user: {id: number; username: string}) => void}) => (
+      <button onClick={() => onChange({id: 12, username: 'Bob'})} type="button">
+        Find a member
+      </button>
+    ),
+);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: jest.fn()}));
 jest.mock('hooks', () => ({useIsAuthenticated: jest.fn()}));
 jest.mock('react-redux', () => ({useDispatch: jest.fn(), useSelector: jest.fn()}));
@@ -136,6 +144,7 @@ describe('the mancala lobby', () => {
     await renderHome();
     expect(container.textContent).toContain('No account needed');
     expect(container.textContent).toContain('Sign in to play');
+    expect(container.querySelector('#mancala-challenge figcaption')).toHaveTextContent('so you play again');
     expect(container.querySelectorAll('form')).toHaveLength(1);
     expect(container.querySelector('a[href="/mancala/matches/1"]')).toHaveTextContent('Open board');
     // Only the public list is read: a guest has no account matches to load
@@ -147,6 +156,63 @@ describe('the mancala lobby', () => {
     await submit();
     expect(createMancalaMatch).toHaveBeenCalledTimes(1);
     expect(createMancalaMatch).toHaveBeenCalledWith(expect.objectContaining({mode: 'computer', stake_amount: 0}));
+  });
+
+  it('says whose move it is on active boards', async () => {
+    const active = {...baseMatch, active_side: 'guest', board: [4, 4, 0, 5, 5, 5, 1, 4, 4, 4, 4, 4, 4, 0]};
+    (getMancalaMatches as jest.Mock).mockImplementation((params) => {
+      if (params.mine === 'true' && params.status === 'pending,active') {
+        return Promise.resolve({
+          ...emptyPage,
+          results: [
+            {...active, id: 2, status: 'active', your_side: 'guest'},
+            {...active, active_side: 'host', id: 3, status: 'active', your_side: 'guest'},
+          ],
+        });
+      }
+      if (params.mine === 'exclude') {
+        return Promise.resolve({...emptyPage, results: [{...active, id: 4, status: 'active', your_side: null}]});
+      }
+      return Promise.resolve(emptyPage);
+    });
+    await renderHome();
+    expect(container.querySelector('a[href="/mancala/matches/2"]')).toHaveTextContent('Your move');
+    expect(container.querySelector('a[href="/mancala/matches/3"]')).toHaveTextContent('Their move');
+    expect(container.querySelector('a[href="/mancala/matches/4"]')).toHaveTextContent('Alice to move');
+    // The stores are drawn for sighted players and spoken from the hidden score
+    expect(container.querySelector('a[href="/mancala/matches/4"]')).toHaveTextContent('1–0 · Free play');
+  });
+
+  it('sends the difficulty and clock picked on the computer board', async () => {
+    (createMancalaMatch as jest.Mock).mockResolvedValue({id: 42, version: 1});
+    await renderHome();
+    expect(container.querySelector('#computer-difficulty-normal')).toBeChecked();
+    expect(container.querySelector('#computer-time-600')).toBeChecked();
+    await act(async () => {
+      (container.querySelector('#computer-difficulty-easy') as HTMLInputElement).click();
+      (container.querySelector('#computer-time-1800') as HTMLInputElement).click();
+    });
+    await submit();
+    expect(createMancalaMatch).toHaveBeenCalledWith(
+      expect.objectContaining({difficulty: 'easy', mode: 'computer', time_limit_seconds: 1800}),
+    );
+    expect(mockNavigate).toHaveBeenCalledWith('/mancala/matches/42');
+  });
+
+  it('sends a challenge with the clock picked in its own trough', async () => {
+    (createMancalaMatch as jest.Mock).mockResolvedValue({id: 43, version: 1});
+    await renderHome();
+    await act(async () => {
+      (container.querySelector('#mancala-challenge button[type="button"]') as HTMLButtonElement).click();
+      (container.querySelector('#human-time-900') as HTMLInputElement).click();
+    });
+    expect(container.querySelector('#computer-time-600')).toBeChecked();
+    await act(async () => {
+      container.querySelectorAll('form')[1].dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
+    });
+    expect(createMancalaMatch).toHaveBeenCalledWith(
+      expect.objectContaining({mode: 'human', opponent_id: 12, stake_amount: 0, time_limit_seconds: 900}),
+    );
   });
 
   it('reuses the same request ID after an ambiguous network failure', async () => {
@@ -171,7 +237,7 @@ describe('the mancala lobby', () => {
     (createMancalaMatch as jest.Mock).mockRejectedValue(new Error('Connection lost'));
     await renderHome();
     await submit();
-    (container.querySelector('#computer-difficulty') as HTMLSelectElement).value = 'hard';
+    await act(async () => (container.querySelector('#computer-difficulty-hard') as HTMLInputElement).click());
     await submit();
     expect((createMancalaMatch as jest.Mock).mock.calls.map(([data]) => data.request_id)).toEqual([firstId, secondId]);
     expect((createMancalaMatch as jest.Mock).mock.calls[1][0].difficulty).toBe('hard');
@@ -206,8 +272,10 @@ it.each([false, true])('starts the default game directly from the hero (authenti
   );
   (createMancalaMatch as jest.Mock).mockResolvedValue({id: 42, version: 1, guest_mode: !authenticated});
   await renderHome();
-  (container.querySelector('#computer-time') as HTMLSelectElement).value = '300';
-  (container.querySelector('#computer-difficulty') as HTMLSelectElement).value = 'hard';
+  await act(async () => {
+    (container.querySelector('#computer-time-300') as HTMLInputElement).click();
+    (container.querySelector('#computer-difficulty-hard') as HTMLInputElement).click();
+  });
   const heroButton = container.querySelector('[aria-label="Mancala overview"] button') as HTMLButtonElement;
   await act(async () => heroButton.click());
   expect(createMancalaMatch).toHaveBeenCalledWith({
@@ -216,7 +284,6 @@ it.each([false, true])('starts the default game directly from the hero (authenti
     opponent_id: undefined,
     request_id: firstId,
     stake_amount: 0,
-
     time_limit_seconds: 600,
   });
   expect(mockNavigate).toHaveBeenCalledWith('/mancala/matches/42');

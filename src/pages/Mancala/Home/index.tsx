@@ -1,12 +1,10 @@
 import {FormEvent, useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import {mdiPlay} from '@mdi/js';
+import Icon from '@mdi/react';
 
 import {createMancalaMatch, getMancalaMatches} from 'api/mancala';
-import AuthButtons from 'components/AuthButtons';
-import GameEarningsLeaderboard from 'components/GameEarningsLeaderboard';
-import Loader from 'components/Loader';
-import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
 import {getSelf} from 'selectors/state';
@@ -15,26 +13,77 @@ import {AppDispatch, UserReadSerializer} from 'types';
 import {MancalaDifficulty, MancalaMatch, MancalaMode} from 'types/mancala';
 import {isCancellationError} from 'utils/errors';
 
-import Hero from './Hero';
-import Rules from './Rules';
-import * as S from './Styles';
-import {getErrorMessage, getPlayerName, STORE} from './utils';
+import {
+  ComputerEmblem,
+  EmptyBoard,
+  PitStones,
+  RivalryEmblem,
+  SetBoard,
+  SowingDemo,
+  SowingLoader,
+  StoreScore,
+} from '../Emblems';
+import Hero from '../Hero';
+import Leaderboard from '../Leaderboard';
+import {getErrorMessage, getPlayerName, STORE} from '../utils';
 
-const TimeOption = ({prefix}: {prefix: string}) => (
-  <S.Field htmlFor={`${prefix}-time`}>
-    Time per player, whole match
-    <S.Select defaultValue="600" id={`${prefix}-time`} name="time_limit_seconds">
-      <option value="300">5 minutes</option>
-      <option value="600">10 minutes</option>
-      <option value="900">15 minutes</option>
-      <option value="1800">30 minutes</option>
-    </S.Select>
-  </S.Field>
+import * as S from './Styles';
+
+// The harder the computer plays, the fuller its pit
+const DIFFICULTIES: {description: string; label: string; stones: number; value: MancalaDifficulty}[] = [
+  {description: 'Get comfortable', label: 'Easy', stones: 2, value: 'easy'},
+  {description: 'Think ahead', label: 'Normal', stones: 4, value: 'normal'},
+  {description: 'Take the challenge', label: 'Hard', stones: 7, value: 'hard'},
+];
+
+const TIME_LIMITS = [
+  {label: '5 min', value: 300},
+  {label: '10 min', value: 600},
+  {label: '15 min', value: 900},
+  {label: '30 min', value: 1800},
+];
+
+const getMatchTone = (match: MancalaMatch, selfId?: number | null): S.MatchTone => {
+  if (match.status === 'pending') return match.guest?.id === selfId ? 'incoming' : 'waiting';
+  if (match.status === 'active') return match.your_side && match.active_side === match.your_side ? 'turn' : 'watch';
+  return 'closed';
+};
+
+const getTurnLabel = (match: MancalaMatch): string | null => {
+  if (match.status !== 'active' || !match.active_side) return null;
+  if (match.your_side) return match.active_side === match.your_side ? 'Your move' : 'Their move';
+  return `${getPlayerName(match, match.active_side)} to move`;
+};
+
+const DifficultyOptions = () => (
+  <S.Fieldset>
+    <S.Legend>Difficulty</S.Legend>
+    <S.ChoiceGrid>
+      {DIFFICULTIES.map(({description, label, stones, value}) => (
+        <S.Choice key={value}>
+          <input
+            defaultChecked={value === 'normal'}
+            id={`computer-difficulty-${value}`}
+            name="difficulty"
+            type="radio"
+            value={value}
+          />
+          <S.ChoiceCard>
+            <PitStones count={stones} size={46} />
+            <strong>{label}</strong>
+            <small>{description}</small>
+          </S.ChoiceCard>
+        </S.Choice>
+      ))}
+    </S.ChoiceGrid>
+  </S.Fieldset>
 );
 
 const MatchRow = ({match, selfId}: {match: MancalaMatch; selfId?: number | null}) => {
   const isIncoming = match.status === 'pending' && match.guest?.id === selfId;
   const isOutgoing = match.status === 'pending' && match.host.id === selfId;
+  const tone = getMatchTone(match, selfId);
+  const turn = getTurnLabel(match);
   let label = match.status === 'finished' ? 'View result' : 'Open board';
   if (isIncoming) label = 'Review challenge';
   if (isOutgoing) label = 'Awaiting reply';
@@ -42,22 +91,78 @@ const MatchRow = ({match, selfId}: {match: MancalaMatch; selfId?: number | null}
   if (match.status === 'finished') outcome = match.winner ? ` · ${getPlayerName(match, match.winner)} won` : ' · Draw';
   return (
     <S.MatchLink to={`/mancala/matches/${match.id}`}>
-      <div>
-        <S.PlayerName>
-          {getPlayerName(match, 'host')} <span aria-label="versus">vs.</span> {getPlayerName(match, 'guest')}
-        </S.PlayerName>
-        <S.Small>
-          {match.status === 'pending'
-            ? `${Math.round(match.time_limit_seconds / 60)} min per player`
-            : `${match.board[STORE.host]}–${match.board[STORE.guest]}`}{' '}
-          · {match.stake_amount ? `${match.stake_amount.toLocaleString()} TNB each` : 'Free play'}
+      {match.status === 'pending' ? (
+        <SetBoard />
+      ) : (
+        <StoreScore guest={match.board[STORE.guest]} host={match.board[STORE.host]} />
+      )}
+      <S.MatchInfo>
+        <S.Players>
+          <span>
+            {getPlayerName(match, 'host')} <S.Versus aria-label="versus">vs.</S.Versus> {getPlayerName(match, 'guest')}
+          </span>
+          {turn && <S.Turn $yours={tone === 'turn'}>{turn}</S.Turn>}
+        </S.Players>
+        <S.MatchMeta>
+          {match.status === 'pending' ? (
+            `${Math.round(match.time_limit_seconds / 60)} min per player · `
+          ) : (
+            <S.VisuallyHidden>{`${match.board[STORE.host]}–${match.board[STORE.guest]} · `}</S.VisuallyHidden>
+          )}
+          {match.stake_amount ? `${match.stake_amount.toLocaleString()} TNB each` : 'Free play'}
           {outcome}
-        </S.Small>
-      </div>
-      <S.Badge>{label} →</S.Badge>
+        </S.MatchMeta>
+      </S.MatchInfo>
+      <S.MatchAction $tone={tone}>{label} →</S.MatchAction>
     </S.MatchLink>
   );
 };
+
+const MatchList = ({
+  count = false,
+  id,
+  matches,
+  selfId,
+  title,
+}: {
+  count?: boolean;
+  id: string;
+  matches: MancalaMatch[];
+  selfId?: number | null;
+  title: string;
+}) => (
+  <S.Tray aria-labelledby={id}>
+    <S.TrayHeader>
+      <S.TrayTitle id={id}>{title}</S.TrayTitle>
+      {count && <S.Count>{matches.length}</S.Count>}
+    </S.TrayHeader>
+    <S.MatchRows>
+      {matches.map((match) => (
+        <MatchRow key={match.id} match={match} selfId={selfId} />
+      ))}
+    </S.MatchRows>
+  </S.Tray>
+);
+
+const TimeOptions = ({prefix}: {prefix: string}) => (
+  <S.Fieldset>
+    <S.Legend>Time per player, whole match</S.Legend>
+    <S.Trough>
+      {TIME_LIMITS.map(({label, value}) => (
+        <S.TroughOption key={value}>
+          <input
+            defaultChecked={value === 600}
+            id={`${prefix}-time-${value}`}
+            name="time_limit_seconds"
+            type="radio"
+            value={value}
+          />
+          <span>{label}</span>
+        </S.TroughOption>
+      ))}
+    </S.Trough>
+  </S.Fieldset>
+);
 
 const Home = () => {
   const [createError, setCreateError] = useState('');
@@ -212,47 +317,48 @@ const Home = () => {
         <S.Badge>Sow · Capture · Count</S.Badge>
       </S.Navigation>
       <Hero isCreating={!!creatingMode} onPlay={() => handleCreate(null, 'computer')} />
-      {createError && <S.Error role="alert">{createError}</S.Error>}
+      {createError && <S.Alert role="alert">{createError}</S.Alert>}
       <S.PanelGrid>
-        <S.Panel id="mancala-computer" tabIndex={-1}>
-          <S.Eyebrow>Find your rhythm</S.Eyebrow>
-          <S.TitleSmall>Play the computer</S.TitleSmall>
+        <S.Panel aria-labelledby="mancala-computer-title" id="mancala-computer" tabIndex={-1}>
+          <S.PanelHeader>
+            <ComputerEmblem />
+            <div>
+              <S.Eyebrow>Find your rhythm</S.Eyebrow>
+              <S.PanelTitle id="mancala-computer-title">Play the computer</S.PanelTitle>
+            </div>
+          </S.PanelHeader>
           <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
             <S.Detail>
               Always free. No account needed. Signed-in players can earn TNB for a win while the community game fund has
               coins.
             </S.Detail>
-            <S.FieldGrid>
-              <S.Field htmlFor="computer-difficulty">
-                Difficulty
-                <S.Select defaultValue="normal" id="computer-difficulty" name="difficulty">
-                  <option value="easy">Easy · Get comfortable</option>
-                  <option value="normal">Normal · Think ahead</option>
-                  <option value="hard">Hard · Take the challenge</option>
-                </S.Select>
-              </S.Field>
-              <TimeOption prefix="computer" />
-            </S.FieldGrid>
+            <DifficultyOptions />
+            <TimeOptions prefix="computer" />
             <S.Actions>
-              <S.Button disabled={!!creatingMode} type="submit">
-                {creatingMode === 'computer' ? 'Setting the board…' : 'Play free →'}
-              </S.Button>
+              <S.PlayButton disabled={!!creatingMode} type="submit">
+                <Icon aria-hidden path={mdiPlay} size={0.85} />
+                {creatingMode === 'computer' ? 'Setting the board…' : 'Play free'}
+              </S.PlayButton>
             </S.Actions>
           </S.Form>
         </S.Panel>
-        <S.Panel id="mancala-challenge" tabIndex={-1}>
-          <S.Eyebrow>Make it a rivalry</S.Eyebrow>
-          <S.TitleSmall>Challenge a player</S.TitleSmall>
+        <S.Panel aria-labelledby="mancala-challenge-title" id="mancala-challenge" tabIndex={-1}>
+          <S.PanelHeader>
+            <RivalryEmblem />
+            <div>
+              <S.Eyebrow>Make it a rivalry</S.Eyebrow>
+              <S.PanelTitle id="mancala-challenge-title">Challenge a player</S.PanelTitle>
+            </div>
+          </S.PanelHeader>
           {!isAuthenticated ? (
-            <>
+            <S.GuestBody>
               <S.Detail>Create an account to challenge friends and earn TNB from computer wins.</S.Detail>
-              <S.GuestActions>
-                <AuthButtons />
-              </S.GuestActions>
-            </>
+              <S.AuthButtons />
+              <SowingDemo />
+            </S.GuestBody>
           ) : (
             <S.Form onSubmit={(event) => handleCreate(event, 'human')}>
-              <UserSearchInput
+              <S.MemberSearch
                 errors={{}}
                 label="Find a member"
                 name="opponent"
@@ -261,96 +367,84 @@ const Home = () => {
                 touched={{}}
                 value={opponent}
               />
-              <S.FieldGrid>
-                <TimeOption prefix="human" />
-                <S.Field htmlFor="human-stake">
-                  Stake per player (TNB)
-                  <S.Input
-                    id="human-stake"
-                    inputMode="numeric"
-                    max={1000000000}
-                    min={0}
-                    name="stake_amount"
-                    onChange={(event) => setStake(event.target.value)}
-                    required
-                    step={1}
-                    type="number"
-                    value={stake}
-                  />
-                </S.Field>
-              </S.FieldGrid>
+              <TimeOptions prefix="human" />
+              <S.Field htmlFor="human-stake">
+                Stake per player (TNB)
+                <S.Input
+                  id="human-stake"
+                  inputMode="numeric"
+                  max={1000000000}
+                  min={0}
+                  name="stake_amount"
+                  onChange={(event) => setStake(event.target.value)}
+                  required
+                  step={1}
+                  type="number"
+                  value={stake}
+                />
+              </S.Field>
               <S.Detail>
                 {Number(stake) > 0
                   ? `${Number(stake).toLocaleString()} TNB locks when you send the challenge. The winner takes both stakes; a draw returns them.`
                   : 'Set the stake to 0 for a free match. Both players agree to the terms before the game starts.'}
               </S.Detail>
               <S.Actions>
-                <S.Button disabled={!!creatingMode} type="submit">
+                <S.PlayButton disabled={!!creatingMode} type="submit">
                   {creatingMode === 'human' ? 'Sending…' : 'Send challenge →'}
-                </S.Button>
+                </S.PlayButton>
               </S.Actions>
             </S.Form>
           )}
         </S.Panel>
       </S.PanelGrid>
       {error && (
-        <S.Error role="alert">
-          {error}{' '}
-          <S.Button $secondary onClick={() => setRetryKey((key) => key + 1)} type="button">
+        <S.Alert role="alert">
+          {error}
+          <S.Retry onClick={() => setRetryKey((key) => key + 1)} type="button">
             Retry
-          </S.Button>
-        </S.Error>
+          </S.Retry>
+        </S.Alert>
       )}
       {isLoading && (
         <S.Status role="status">
-          <Loader />
-          <S.Detail>Finding your next match…</S.Detail>
+          <SowingLoader />
+          Finding your next match…
         </S.Status>
       )}
       {challenges.length > 0 && (
-        <S.Section>
-          <S.TitleSmall>Challenges</S.TitleSmall>
-          <S.List>
-            {challenges.map((match) => (
-              <MatchRow key={match.id} match={match} selfId={self.id} />
-            ))}
-          </S.List>
-        </S.Section>
+        <MatchList count id="mancala-challenges-title" matches={challenges} selfId={self.id} title="Challenges" />
       )}
       {activeMatches.length > 0 && (
-        <S.Section>
-          <S.TitleSmall>Your boards</S.TitleSmall>
-          <S.List>
-            {activeMatches.map((match) => (
-              <MatchRow key={match.id} match={match} selfId={self.id} />
-            ))}
-          </S.List>
-        </S.Section>
+        <MatchList count id="mancala-boards-title" matches={activeMatches} selfId={self.id} title="Your boards" />
       )}
-      <S.Section>
-        <S.TitleSmall>Watch live</S.TitleSmall>
-        {publicMatches.length ? (
-          <S.List>
-            {publicMatches.map((match) => (
-              <MatchRow key={match.id} match={match} />
-            ))}
-          </S.List>
-        ) : (
-          !isLoading && <S.Empty>No other matches are underway. Start a game and make the first move.</S.Empty>
-        )}
-      </S.Section>
+      {(!isLoading || publicMatches.length > 0) && (
+        <S.Tray aria-labelledby="mancala-live-title">
+          <S.TrayHeader>
+            {publicMatches.length > 0 && <S.LiveDot aria-hidden="true" />}
+            <S.TrayTitle id="mancala-live-title">Watch live</S.TrayTitle>
+          </S.TrayHeader>
+          {publicMatches.length ? (
+            <S.MatchRows>
+              {publicMatches.map((match) => (
+                <MatchRow key={match.id} match={match} />
+              ))}
+            </S.MatchRows>
+          ) : (
+            <S.Empty>
+              <EmptyBoard />
+              <div>
+                <strong>No other matches are underway.</strong>
+                <p>Start a game and make the first move.</p>
+              </div>
+            </S.Empty>
+          )}
+        </S.Tray>
+      )}
       {history.length > 0 && (
-        <S.Section>
-          <S.TitleSmall>Your recent matches</S.TitleSmall>
-          <S.List>
-            {history.map((match) => (
-              <MatchRow key={match.id} match={match} selfId={self.id} />
-            ))}
-          </S.List>
-        </S.Section>
+        <MatchList id="mancala-history-title" matches={history} selfId={self.id} title="Your recent matches" />
       )}
-      <GameEarningsLeaderboard game="mancala" />
-      <Rules />
+      <Leaderboard />
+      <S.Rules />
     </S.Container>
   );
 };

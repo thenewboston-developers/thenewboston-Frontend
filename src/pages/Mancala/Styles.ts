@@ -82,15 +82,6 @@ export const Detail = styled.p`
   margin: 0;
 `;
 
-export const Empty = styled.div`
-  background: #fbf7f0;
-  border: 1px dashed #e0d0b8;
-  border-radius: 16px;
-  color: ${colors.secondary};
-  line-height: 1.7;
-  padding: 24px;
-`;
-
 export const Error = styled.div`
   background: #fff0ec;
   border: 1px solid #eac8bb;
@@ -108,58 +99,6 @@ export const Eyebrow = styled.p`
   letter-spacing: 0.16em;
   margin: 0 0 12px;
   text-transform: uppercase;
-`;
-
-export const Field = styled.label`
-  color: #5b3d24;
-  display: flex;
-  flex-direction: column;
-  font-size: 13px;
-  font-weight: 600;
-  gap: 8px;
-`;
-
-export const FieldGrid = styled.div`
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  @media (max-width: 450px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-export const GuestActions = styled.div`
-  margin: 24px 0 8px;
-`;
-
-export const Input = styled.input`
-  background: #ffffff;
-  border: 1px solid #dccbb2;
-  border-radius: 10px;
-  color: ${colors.primary};
-  font-family: inherit;
-  font-size: 15px;
-  min-height: 44px;
-  min-width: 0;
-  padding: 10px 12px;
-  width: 100%;
-
-  &:focus-visible {
-    outline: 2px solid #b07a3a;
-    outline-offset: 2px;
-  }
-`;
-
-export const List = styled.div`
-  display: grid;
-  gap: 10px;
 `;
 
 export const Log = styled.ol`
@@ -190,28 +129,6 @@ export const MatchGrid = styled.div`
   }
 `;
 
-export const MatchLink = styled(Link)`
-  align-items: center;
-  background: #ffffff;
-  border: 1px solid #ecdfcb;
-  border-radius: 14px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: space-between;
-  padding: 18px 20px;
-
-  &:hover {
-    border-color: #c39a68;
-    text-decoration: none;
-  }
-
-  &:focus-visible {
-    outline: 3px solid #c98a2b;
-    outline-offset: 2px;
-  }
-`;
-
 export const MatchTitle = styled.h1`
   color: ${INK};
   font-size: clamp(24px, 3vw, 34px);
@@ -235,23 +152,6 @@ export const Panel = styled.section`
   min-width: 0;
   padding: 24px;
   scroll-margin-top: 24px;
-`;
-
-export const PanelGrid = styled.div`
-  align-items: start;
-  display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  @media (max-width: 1000px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-export const PlayerName = styled.strong`
-  display: block;
-  font-size: 14px;
-  overflow-wrap: anywhere;
 `;
 
 export const Result = styled.div`
@@ -282,28 +182,6 @@ export const Rules = styled.details`
 
   li {
     margin-top: 8px;
-  }
-`;
-
-export const Section = styled.section`
-  margin-top: 32px;
-`;
-
-export const Select = styled.select`
-  background: #ffffff;
-  border: 1px solid #dccbb2;
-  border-radius: 10px;
-  color: ${colors.primary};
-  font-family: inherit;
-  font-size: 14px;
-  min-height: 44px;
-  min-width: 0;
-  padding: 10px 12px;
-  width: 100%;
-
-  &:focus-visible {
-    outline: 2px solid #b07a3a;
-    outline-offset: 2px;
   }
 `;
 
