@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom';
 import styled, {css, keyframes} from 'styled-components';
 
 import * as GameResult from 'components/GameResultPanel/Styles';
-import {fonts, pagePadding} from 'styles';
+import {colors, fonts, pagePadding} from 'styles';
 
 import {BLACK_DISK, boardPanel, caption, reversi, WHITE_DISK} from './theme';
 
@@ -129,7 +129,7 @@ export const BoardLabels = styled.div<{$direction: 'column' | 'row'}>`
 
 export const BoardLegend = styled.div`
   align-items: center;
-  color: ${reversi.mist};
+  color: ${colors.secondary};
   display: flex;
   flex-wrap: wrap;
   font-size: 12px;
@@ -145,7 +145,7 @@ export const BoardLegendItem = styled.span<{$last?: boolean}>`
 
   &::before {
     background: ${({$last}) => ($last ? reversi.gold : 'transparent')};
-    border: 2px solid ${reversi.gold};
+    border: 2px solid ${reversi.feltDark};
     border-radius: ${({$last}) => ($last ? '2px' : '50%')};
     content: '';
     height: 10px;
@@ -200,14 +200,18 @@ export const Button = styled.button<{$danger?: boolean; $secondary?: boolean}>`
 
 export const Container = styled.div`
   ${pagePadding};
-  background: radial-gradient(ellipse at 50% 0, #1b3b294d, transparent 65%), ${reversi.night};
-  color: ${reversi.text};
-  color-scheme: dark;
+  background: ${colors.background};
+  color: ${reversi.ink};
+  color-scheme: light;
   margin: 0 auto;
   max-width: 1500px;
   min-height: 100%;
   padding-bottom: 48px;
   padding-top: 28px;
+
+  > ${Button}:focus-visible {
+    outline-color: ${reversi.feltDark};
+  }
 `;
 
 export const Detail = styled.p`
@@ -371,12 +375,20 @@ export const MatchGrid = styled.div`
 
 export const MatchHeader = styled.header`
   align-items: center;
-  border-bottom: 1px solid ${reversi.edge};
+  border-bottom: 1px solid ${colors.borderDarker};
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: space-between;
   padding-bottom: 24px;
+
+  ${Detail} {
+    color: ${colors.secondary};
+  }
+
+  ${Eyebrow} {
+    color: ${reversi.feltDark};
+  }
 
   > div:first-child {
     flex: 1;
@@ -420,7 +432,7 @@ export const MatchMain = styled.div`
 `;
 
 export const MatchTitle = styled.h1`
-  color: ${reversi.text};
+  color: ${reversi.ink};
   font-size: clamp(24px, 3vw, 34px);
   letter-spacing: -0.035em;
   margin: 0 0 10px;
@@ -434,6 +446,10 @@ export const Navigation = styled.nav`
   gap: 18px;
   justify-content: space-between;
   margin-bottom: 24px;
+
+  > ${Badge} {
+    background: ${reversi.panel};
+  }
 `;
 
 export const Panel = styled.section`
@@ -499,6 +515,7 @@ export const Result = styled.div`
   background: ${reversi.panel};
   border: 1px solid ${reversi.edgeBright};
   border-radius: 16px;
+  color: ${reversi.text};
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -628,7 +645,7 @@ export const SoundControls = styled.div`
   }
 
   > button:focus-visible {
-    outline-color: ${reversi.gold};
+    outline-color: ${reversi.feltDark};
   }
 `;
 
@@ -702,6 +719,19 @@ export const TextLink = styled(Link)`
     border-radius: 4px;
     outline: 2px solid ${reversi.gold};
     outline-offset: 4px;
+  }
+
+  ${Container} > &,
+  ${Navigation} & {
+    color: ${reversi.feltDark};
+
+    &:hover {
+      color: ${reversi.ink};
+    }
+
+    &:focus-visible {
+      outline-color: ${reversi.feltDark};
+    }
   }
 `;
 

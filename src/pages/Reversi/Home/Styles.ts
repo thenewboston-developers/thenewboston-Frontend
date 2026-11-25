@@ -847,9 +847,19 @@ export const Terms = styled.p`
 `;
 
 export const TextLink = styled(Link)`
-  color: ${reversi.mint};
+  color: ${reversi.feltDark};
   font-size: 13px;
   font-weight: ${fonts.weight.semiBold};
+
+  &:hover {
+    color: ${reversi.ink};
+  }
+
+  &:focus-visible {
+    border-radius: 4px;
+    outline: 2px solid ${reversi.feltDark};
+    outline-offset: 4px;
+  }
 `;
 
 export const Title = styled.h2`
