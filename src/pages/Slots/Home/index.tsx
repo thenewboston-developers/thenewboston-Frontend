@@ -35,8 +35,6 @@ import {
 import * as S from './Styles';
 
 const BULBS = Array.from({length: 22}, (_, index) => index);
-const ROULETTE_PATH = '/roulette/home';
-const SLOTS_PATH = '/slots/home';
 
 const WIN_SOUNDS: Partial<Record<WinTier, SlotSound>> = {
   big: 'big',
@@ -241,10 +239,6 @@ const SlotsGame = () => {
           <S.Title>Slots</S.Title>
         </div>
         <S.HeaderSide>
-          <S.Tabs aria-label="Casino games">
-            <S.Tab to={SLOTS_PATH}>Slots</S.Tab>
-            <S.Tab to={ROULETTE_PATH}>Roulette</S.Tab>
-          </S.Tabs>
           <S.Status data-available={available || undefined} role="status">
             {availability}
           </S.Status>
