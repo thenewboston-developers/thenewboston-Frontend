@@ -23,8 +23,8 @@ const Bank = ({game, summary}: BankProps) => (
     <P.PanelEyebrow>The casino fund</P.PanelEyebrow>
     <P.PanelHeading id="roulette-bank-heading">Every wager is covered.</P.PanelHeading>
     <P.PanelLead>
-      Separate from the board-game reward pool. The full payout of a bet is set aside before the ball is thrown, so the
-      table limits rise and fall with the funds available.
+      Separate from the board-game reward pool. The most your chips can win together is set aside before the ball is
+      thrown, so the table limits rise and fall with the funds available.
     </P.PanelLead>
     <S.Figures>
       <div>
@@ -46,7 +46,7 @@ const Bank = ({game, summary}: BankProps) => (
         </dd>
       </div>
     </S.Figures>
-    <S.LimitsTitle>Table limits right now</S.LimitsTitle>
+    <S.LimitsTitle>Limit for a single bet right now</S.LimitsTitle>
     <S.Limits>
       {LIMITS.map(({label, type}) => {
         const betType = game?.bet_types?.find((item) => item.id === type);

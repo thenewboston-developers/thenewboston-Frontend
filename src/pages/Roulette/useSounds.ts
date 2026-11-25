@@ -138,10 +138,9 @@ const useSounds = () => {
         audio.roll.gain.gain.setTargetAtTime(Math.max(0, Math.min(1, level)) * 0.2, context.currentTime, 0.06);
       },
       spin: () => click(520, 0.22, 0.22),
-      // A rising chime; larger returns ring longer and higher
-      win: (multiplier: number) => {
-        const notes =
-          multiplier >= 36 ? [...WIN_NOTES, 1318.5, 1568, 2093] : WIN_NOTES.slice(0, multiplier >= 3 ? 4 : 3);
+      // A rising chime; the more times the wager came back, the longer and higher it rings
+      win: (times: number) => {
+        const notes = times >= 18 ? [...WIN_NOTES, 1318.5, 1568, 2093] : WIN_NOTES.slice(0, times >= 3 ? 4 : 3);
         notes.forEach((frequency, index) => {
           note(frequency, 0.5, 0.2, index * 0.085);
           note(frequency * 2, 0.3, 0.05, index * 0.085, 'sine');

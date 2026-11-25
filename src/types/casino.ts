@@ -31,8 +31,16 @@ export interface CasinoFund {
   risk_limit_bps: number;
 }
 
-export interface RouletteSelection {
+export interface RouletteBetSelection {
+  amount: number;
   type: string;
+  value?: number;
+}
+
+// Rules version 1 sends one spot (`type`, `value`); version 2 sends the chips on every spot (`bets`)
+export interface RouletteSelection {
+  bets?: RouletteBetSelection[];
+  type?: string;
   value?: number;
 }
 
@@ -45,6 +53,8 @@ export interface CasinoGame {
   max_bet: number;
   max_multiplier: number;
   min_bet: number;
+  // Roulette rules version 2: one spin settles chips on several spots
+  multiple_bets?: boolean;
   name: string;
   payout_table?: {multiplier: number; probability: number; slot?: number}[];
   rows?: number;
@@ -90,12 +100,15 @@ export interface CasinoBet {
   payout: number;
   profit: number;
   request_id: string;
+  // Roulette version 2 records the total `payout` of its bets and has no `multiplier`: read that only for the games
+  // and versions that settle with one
   result: Partial<BlackjackResult> & {
     color?: string;
     draw?: number;
     multiplier: number;
     number?: number;
     path?: number[];
+    payout?: number;
     slot?: number;
     symbols?: string[];
   };
