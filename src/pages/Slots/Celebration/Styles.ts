@@ -33,12 +33,12 @@ const flare = keyframes`
   0%, 100% {
     text-shadow:
       0 0 18px rgba(255, 215, 106, 0.45),
-      0 3px 0 rgba(36, 16, 63, 0.9);
+      0 3px 0 rgba(${slotsTheme.shadowRgb}, 0.9);
   }
   50% {
     text-shadow:
       0 0 34px rgba(255, 215, 106, 0.9),
-      0 3px 0 rgba(36, 16, 63, 0.9);
+      0 3px 0 rgba(${slotsTheme.shadowRgb}, 0.9);
   }
 `;
 
@@ -103,11 +103,11 @@ export const Banner = styled.div`
   &[data-tier='jackpot'] ${BannerLabel} {
     background: linear-gradient(
       100deg,
-      ${slotsTheme.magenta} 0%,
+      ${slotsTheme.redLight} 0%,
       ${slotsTheme.gold} 25%,
       #ffffff 45%,
-      ${slotsTheme.cyan} 65%,
-      ${slotsTheme.magenta} 100%
+      ${slotsTheme.goldLight} 65%,
+      ${slotsTheme.redLight} 100%
     );
     background-clip: text;
     -webkit-background-clip: text;

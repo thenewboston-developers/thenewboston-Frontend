@@ -18,11 +18,11 @@ export const Badge = styled.span`
 
 export const Card = styled.section`
   backdrop-filter: blur(10px);
-  background: linear-gradient(180deg, rgba(34, 24, 80, 0.72), rgba(16, 11, 46, 0.78));
+  background: ${slotsTheme.panel};
   border: 1px solid ${slotsTheme.panelBorder};
   border-radius: 20px;
   box-shadow:
-    0 18px 40px rgba(4, 2, 16, 0.35),
+    0 18px 40px rgba(16, 7, 8, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
   color: ${slotsTheme.text};
   min-width: 0;

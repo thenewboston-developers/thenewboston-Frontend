@@ -6,7 +6,7 @@ import {breakpoints, colors, pagePadding} from 'styles';
 
 import slotsTheme from '../theme';
 
-const CHIP_TONES = ['#8b5cf6', '#22d3ee', '#ff2e93'];
+const CHIP_TONES = [slotsTheme.red, slotsTheme.green, slotsTheme.gold];
 
 const turn = keyframes`
   to {
@@ -38,13 +38,13 @@ const breathe = keyframes`
   0%, 100% {
     box-shadow:
       0 0 0 4px rgba(255, 215, 106, 0.85),
-      0 0 20px rgba(255, 46, 147, 0.4),
+      0 0 20px rgba(${slotsTheme.accentRgb}, 0.4),
       0 14px 28px rgba(0, 0, 0, 0.5);
   }
   50% {
     box-shadow:
       0 0 0 4px rgba(255, 233, 168, 1),
-      0 0 40px rgba(255, 46, 147, 0.7),
+      0 0 40px rgba(${slotsTheme.accentRgb}, 0.7),
       0 14px 28px rgba(0, 0, 0, 0.5);
   }
 `;
@@ -90,10 +90,10 @@ export const Admin = styled.div`
 `;
 
 export const Alert = styled.p`
-  background: rgba(255, 46, 147, 0.12);
-  border: 1px solid rgba(255, 46, 147, 0.4);
+  background: rgba(${slotsTheme.accentRgb}, 0.12);
+  border: 1px solid rgba(${slotsTheme.accentRgb}, 0.4);
   border-radius: 12px;
-  color: #ffd1e5;
+  color: ${slotsTheme.negative};
   font-size: 13px;
   line-height: 1.5;
   margin: 0;
@@ -154,7 +154,7 @@ export const BetHeader = styled.div`
 
 export const BetInput = styled.input`
   appearance: textfield;
-  background: #07051a;
+  background: ${slotsTheme.ink};
   border: 1px solid rgba(255, 233, 168, 0.28);
   border-radius: 12px;
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
@@ -192,15 +192,15 @@ export const Bulb = styled.span`
   border-radius: 50%;
   box-shadow:
     0 0 8px rgba(255, 215, 106, 0.85),
-    0 0 16px rgba(255, 46, 147, 0.35);
+    0 0 16px rgba(${slotsTheme.accentRgb}, 0.35);
   height: 8px;
   width: 8px;
 
   &:nth-child(2n) {
-    background: radial-gradient(circle at 35% 35%, #ffe4f1 0%, #ff5aa8 45%, #9d174d 100%);
+    background: radial-gradient(circle at 35% 35%, #ffe4ce 0%, #e97058 45%, #8f1520 100%);
     box-shadow:
-      0 0 8px rgba(255, 90, 168, 0.85),
-      0 0 16px rgba(139, 92, 246, 0.35);
+      0 0 8px rgba(${slotsTheme.accentRgb}, 0.85),
+      0 0 16px rgba(246, 196, 83, 0.35);
   }
 
   @container slots-cabinet (max-width: 480px) {
@@ -225,10 +225,10 @@ export const Cabinet = styled.div`
   --bulb-speed: 2.6s;
   --bulb-step: 0.12s;
 
-  background: linear-gradient(180deg, #2e2068 0%, #1c1347 40%, #120c30 100%);
+  background: ${slotsTheme.cabinet};
   border-radius: 32px;
   box-shadow:
-    0 40px 70px rgba(3, 1, 12, 0.55),
+    0 40px 70px rgba(16, 7, 8, 0.55),
     inset 0 0 0 1px rgba(255, 255, 255, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
   container: slots-cabinet / inline-size;
@@ -287,8 +287,8 @@ export const CabinetFooter = styled.div`
 
 export const Chip = styled.button<{$tone: number}>`
   background:
-    radial-gradient(circle, #241a58 0 50%, transparent 52%),
-    repeating-conic-gradient(${({$tone}) => CHIP_TONES[$tone % 3]} 0 18deg, #f7f3ff 18deg 30deg);
+    radial-gradient(circle, ${slotsTheme.ink} 0 50%, transparent 52%),
+    repeating-conic-gradient(${({$tone}) => CHIP_TONES[$tone % 3]} 0 18deg, ${slotsTheme.text} 18deg 30deg);
   border: 2px solid rgba(0, 0, 0, 0.35);
   border-radius: 50%;
   box-shadow:
@@ -351,12 +351,11 @@ export const Eyebrow = styled.p`
 
 export const Floor = styled.div`
   background:
-    radial-gradient(900px 420px at 38% -6%, rgba(139, 92, 246, 0.45), transparent 65%),
-    radial-gradient(700px 380px at -6% 104%, rgba(255, 46, 147, 0.22), transparent 62%),
-    radial-gradient(700px 380px at 106% 104%, rgba(34, 211, 238, 0.16), transparent 62%),
-    linear-gradient(180deg, #150f3a 0%, #0b0824 55%, ${slotsTheme.ink} 100%);
+    radial-gradient(900px 420px at 38% -6%, rgba(${slotsTheme.accentRgb}, 0.24), transparent 65%),
+    radial-gradient(700px 380px at -6% 104%, rgba(${slotsTheme.accentRgb}, 0.22), transparent 62%),
+    radial-gradient(700px 380px at 106% 104%, rgba(246, 196, 83, 0.08), transparent 62%), ${slotsTheme.floor};
   border-radius: 28px;
-  box-shadow: 0 30px 70px rgba(12, 8, 40, 0.28);
+  box-shadow: 0 30px 70px rgba(30, 12, 14, 0.28);
   color: ${slotsTheme.text};
   container: slots-floor / inline-size;
   isolation: isolate;
@@ -617,7 +616,7 @@ export const Messages = styled.div`
 `;
 
 export const Meter = styled.div`
-  background: linear-gradient(180deg, #07051a, #0e0a28);
+  background: ${slotsTheme.display};
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
@@ -710,13 +709,13 @@ export const Pending = styled.div`
 `;
 
 export const ReelsFrame = styled.div`
-  background: linear-gradient(180deg, #0d0926 0%, #05030f 100%);
+  background: ${slotsTheme.frame};
   border-radius: 24px;
   box-shadow:
     inset 0 3px 14px rgba(0, 0, 0, 0.85),
-    0 0 0 2px #3b2b80,
+    0 0 0 2px ${slotsTheme.frameEdge},
     0 0 0 4px rgba(246, 196, 83, 0.78),
-    0 0 0 6px #241a58,
+    0 0 0 6px ${slotsTheme.ink},
     0 22px 44px rgba(0, 0, 0, 0.45);
   margin-top: 14px;
   overflow: hidden;
@@ -769,7 +768,7 @@ export const Result = styled.div`
   &[data-tier='big'],
   &[data-tier='huge'],
   &[data-tier='jackpot'] {
-    background: linear-gradient(90deg, rgba(255, 215, 106, 0.16), rgba(255, 46, 147, 0.08));
+    background: linear-gradient(90deg, rgba(255, 215, 106, 0.16), rgba(${slotsTheme.accentRgb}, 0.08));
     border-color: rgba(255, 215, 106, 0.5);
 
     strong {
@@ -857,7 +856,7 @@ export const SpinAmount = styled.span`
 
 export const SpinButton = styled.button`
   animation: ${breathe} 2.4s ease-in-out infinite;
-  background: radial-gradient(circle at 50% 28%, #ff7a9a 0%, #f0174f 38%, #b5103d 70%, #5c0420 100%);
+  background: ${slotsTheme.spin};
   border: 0;
   border-radius: 50%;
   color: #ffffff;
@@ -946,7 +945,7 @@ export const SpinLabel = styled.span`
   letter-spacing: 0.12em;
   line-height: 1;
   padding-left: 0.12em;
-  text-shadow: 0 2px 0 rgba(92, 4, 32, 0.8);
+  text-shadow: 0 2px 0 rgba(74, 11, 18, 0.8);
   text-transform: uppercase;
 
   &[data-small] {
@@ -1082,7 +1081,7 @@ export const Sunburst = styled.div`
   ${Floor}[data-state='jackpot'] & {
     background: repeating-conic-gradient(
       from 0deg,
-      rgba(255, 46, 147, 0.16) 0deg 6deg,
+      rgba(${slotsTheme.accentRgb}, 0.16) 0deg 6deg,
       transparent 6deg 12deg,
       rgba(255, 233, 168, 0.16) 12deg 18deg,
       transparent 18deg 24deg

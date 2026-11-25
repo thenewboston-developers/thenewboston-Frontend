@@ -1,6 +1,6 @@
 import {SlotSymbolId, SYMBOL_DETAILS} from '../utils';
 
-const OUTLINE = '#24103f';
+const OUTLINE = '#261613';
 const SEVEN = 'M17 12 H 85 V 29 C 70 43, 60 62, 57 88 H 33 C 36 65, 46 46, 60 31 H 17 Z';
 const BELL =
   'M50 18 C 31 18, 26 33, 26 49 C 26 61, 22 67, 14 73 C 11 75, 12 79, 16 79 L 84 79 C 88 79, 89 75, 86 73 C 78 67, 74 61, 74 49 C 74 33, 69 18, 50 18 Z';
@@ -22,7 +22,7 @@ export const SymbolDefs = () => (
   >
     <defs>
       <filter height="140%" id="tnbs-shadow" width="140%" x="-20%" y="-20%">
-        <feDropShadow dx="0" dy="3" floodColor="#12062a" floodOpacity="0.45" stdDeviation="2.4" />
+        <feDropShadow dx="0" dy="3" floodColor="#1a0c0c" floodOpacity="0.45" stdDeviation="2.4" />
       </filter>
       <filter height="190%" id="tnbs-motion" width="120%" x="-10%" y="-45%">
         <feGaussianBlur stdDeviation="0 7" />
@@ -63,9 +63,9 @@ export const SymbolDefs = () => (
         <stop offset="1" stopColor="#b7791f" />
       </linearGradient>
       <linearGradient id="tnbs-bar-plate" x1="0" x2="0" y1="0" y2="1">
-        <stop offset="0" stopColor="#4c3a8f" />
-        <stop offset="0.5" stopColor="#241a52" />
-        <stop offset="1" stopColor="#120c2e" />
+        <stop offset="0" stopColor="#51413a" />
+        <stop offset="0.5" stopColor="#2b2220" />
+        <stop offset="1" stopColor="#120e0d" />
       </linearGradient>
       <linearGradient id="tnbs-bar-text" x1="0" x2="0" y1="0" y2="1">
         <stop offset="0" stopColor="#ffffff" />
