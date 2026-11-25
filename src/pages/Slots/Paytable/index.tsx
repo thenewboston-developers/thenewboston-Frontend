@@ -18,7 +18,7 @@ const Paytable = ({game, lit, stake}: PaytableProps) => {
     .filter((row) => row.multiplier > 0)
     .sort((first, second) => second.multiplier - first.multiplier);
   const lose = game?.payout_table?.find((row) => row.multiplier === 0);
-  const rtp = game ? Math.round((1 - game.house_edge) * 10000) / 100 : null;
+  const rtp = game?.house_edge != null ? Math.round((1 - game.house_edge) * 10000) / 100 : null;
 
   return (
     <P.Card aria-labelledby="slots-paytable-heading">

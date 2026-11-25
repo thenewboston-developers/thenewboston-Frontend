@@ -1,4 +1,5 @@
 import {CasinoBet} from 'types/casino';
+import {verifyBlackjackReceipt} from 'utils/blackjackFairness';
 
 const RED_NUMBERS = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
 const SLOT_SYMBOL_ORDER = ['cherry', 'lemon', 'bell', 'bar', 'diamond', 'seven'];
@@ -26,6 +27,7 @@ const hex = (buffer: ArrayBuffer) =>
   Array.from(new Uint8Array(buffer), (byte) => byte.toString(16).padStart(2, '0')).join('');
 
 export const verifyCasinoReceipt = async (bet: CasinoBet, observedHash?: string) => {
+  if (bet.game === 'blackjack') return verifyBlackjackReceipt(bet, observedHash);
   if (
     !SUPPORTED_RULES[bet.game]?.includes(bet.rules_version) ||
     bet.fairness.algorithm !== 'hmac-sha256-v1' ||

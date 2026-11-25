@@ -270,6 +270,19 @@ it('shows admin funding controls but never automatically deposits the prefilled 
   expect(moveCasinoFunds).not.toHaveBeenCalled();
 });
 
+it('rejects a new spin while Blackjack is active without trapping a pending wager', async () => {
+  (placeCasinoBet as jest.Mock).mockRejectedValueOnce({
+    response: {status: 409, data: {code: 'game_in_progress', detail: 'Finish the existing casino game first.'}},
+  });
+  await render();
+  await act(async () => button('Spin 1 TNB').click());
+  expect(readPendingCasinoBet(7)).toBeNull();
+  expect(container.querySelector('a[href="/blackjack/home"]')).toHaveTextContent('Resume your Blackjack hand');
+  expect(button('Retry same bet')).toBeUndefined();
+  await act(async () => button('Spin 1 TNB').click());
+  expect(container.querySelector('a[href="/blackjack/home"]')).toBeNull();
+});
+
 it('recovers an uncertain admin deposit after reload using the identical request ID', async () => {
   (getCasino as jest.Mock).mockResolvedValue({...summary, can_manage: true});
   (moveCasinoFunds as jest.Mock)

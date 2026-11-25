@@ -111,7 +111,7 @@ const Spins = ({bets, focusId, isAuthenticated, userId}: SpinsProps) => {
                   )}
                 </td>
                 <td>{bet.game === 'roulette' ? describeBet(bet) : 'Another casino game'}</td>
-                <td>{bet.amount.toLocaleString()}</td>
+                <td>{bet.total_stake.toLocaleString()}</td>
                 <S.Returned $won={bet.payout > 0}>{bet.payout > 0 ? bet.payout.toLocaleString() : '—'}</S.Returned>
                 <td>
                   <S.ReceiptButton

@@ -212,6 +212,17 @@ it('retries an uncertain wager with its exact persisted identity after reload', 
   expect(readPendingCasinoBet(7)).toBeNull();
 });
 
+it('links back to an active Blackjack hand without trapping an unaccepted Plinko wager', async () => {
+  (placeCasinoBet as jest.Mock).mockRejectedValueOnce({
+    response: {status: 409, data: {code: 'game_in_progress', detail: 'Finish the existing casino game first.'}},
+  });
+  await render();
+  await act(async () => button('Drop ball').click());
+  expect(readPendingCasinoBet(7)).toBeNull();
+  expect(container.querySelector('a[href="/blackjack/home"]')).toHaveTextContent('Resume your Blackjack hand');
+  expect(button('Retry same bet')).toBeUndefined();
+});
+
 it('recovers a pending different-game bet without animating a false Plinko outcome', async () => {
   const payload = {
     amount: 1,
