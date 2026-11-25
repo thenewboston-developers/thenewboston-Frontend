@@ -1,7 +1,8 @@
 import styled, {css, keyframes} from 'styled-components';
 
 import UIcon from 'components/Icon';
-import {colors} from 'styles';
+
+import {classic} from '../../theme';
 
 const bombFlash = keyframes`
   0% {
@@ -156,31 +157,28 @@ export const Board = styled.div`
   --board-grid-inset: calc(100% / 30);
 
   aspect-ratio: 1 / 1;
-  background-color: #d7b07a;
-  background-image:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 55%),
-    radial-gradient(circle at 18% 28%, rgba(120, 82, 46, 0.2), transparent 55%),
-    radial-gradient(circle at 76% 72%, rgba(120, 82, 46, 0.12), transparent 60%),
-    linear-gradient(90deg, rgba(145, 100, 59, 0.16) 0%, rgba(117, 80, 44, 0.08) 100%);
-  border: 2px solid #b48353;
-  border-radius: 16px;
+  background-color: ${classic.board};
+  background-image: linear-gradient(125deg, rgba(255, 248, 231, 0.18), transparent 65%);
+  border: 2px solid ${classic.boardRim};
+  border-radius: 12px;
   box-shadow:
-    inset 0 0 0 1px rgba(73, 46, 19, 0.35),
-    0 12px 22px rgba(36, 22, 9, 0.2);
+    inset 0 0 0 1px rgba(255, 248, 231, 0.4),
+    0 8px 0 #4e3522,
+    0 16px 30px rgba(0, 0, 0, 0.28);
   display: grid;
   gap: 0;
   grid-template-columns: repeat(15, minmax(0, 1fr));
   grid-template-rows: repeat(15, minmax(0, 1fr));
   margin: 0 auto;
-  max-width: calc(100vh - 360px);
+  max-width: 680px;
   overflow: hidden;
   position: relative;
   width: 100%;
 
   &::before {
     background-image:
-      linear-gradient(to right, rgba(76, 52, 24, 0.55) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(76, 52, 24, 0.55) 1px, transparent 1px);
+      linear-gradient(to right, ${classic.boardGrid} 1px, transparent 1px),
+      linear-gradient(to bottom, ${classic.boardGrid} 1px, transparent 1px);
     background-position: 0 0;
     background-size: calc((100% - 1px) / 14) calc((100% - 1px) / 14);
     content: '';
@@ -191,7 +189,7 @@ export const Board = styled.div`
   }
 
   &::after {
-    background-color: rgba(76, 52, 24, 0.55);
+    background-color: ${classic.boardGrid};
     border-radius: 50%;
     content: '';
     height: 7px;
@@ -217,7 +215,7 @@ export const BombBlast = styled.span`
 
 export const BombBlastPiece = styled.span<{$variant: 'black' | 'white'}>`
   animation: ${bombPiece} 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  background: ${({$variant}) => ($variant === 'black' ? '#141414' : '#f8f5ef')};
+  background: ${({$variant}) => ($variant === 'black' ? classic.blackStone : classic.whiteStone)};
   border: 1px solid ${({$variant}) => ($variant === 'black' ? '#0a0a0a' : '#2b2b2b')};
   border-radius: 50%;
   box-shadow: ${({$variant}) =>
@@ -344,6 +342,13 @@ export const Cell = styled.button<{$isPreview: boolean; $isPreviewInvalid: boole
   position: relative;
   z-index: 1;
 
+  &:focus-visible {
+    border-radius: 4px;
+    outline: 2px solid ${classic.accentInk};
+    outline-offset: -2px;
+    z-index: 5;
+  }
+
   ${({$isPreviewInvalid}) =>
     $isPreviewInvalid &&
     css`
@@ -403,24 +408,22 @@ export const ImpactRing = styled.span<{$variant: 'black' | 'white'}>`
 `;
 
 export const Piece = styled.div<{$isLastMove: boolean; $isWinning: boolean; $variant: 'black' | 'white'}>`
-  background: ${({$variant}) => ($variant === 'black' ? '#141414' : '#f8f5ef')};
+  background: ${({$variant}) => ($variant === 'black' ? classic.blackStone : classic.whiteStone)};
   border: 1px solid ${({$variant}) => ($variant === 'black' ? '#0a0a0a' : '#2b2b2b')};
   border-radius: 50%;
   box-shadow: ${({$isWinning, $variant}) => {
     const baseShadow =
       $variant === 'black'
-        ? '0 6px 10px rgba(0, 0, 0, 0.35)'
-        : '0 6px 10px rgba(0, 0, 0, 0.25), inset 0 -2px 3px rgba(0, 0, 0, 0.18)';
-    const winningShadow = $isWinning
-      ? `, 0 0 0 3px ${colors.palette.orange[400]}, 0 0 14px rgba(255, 152, 0, 0.45)`
-      : '';
+        ? 'inset 0 2px 2px rgba(255,255,255,.15), 0 3px 5px rgba(0,0,0,.4)'
+        : 'inset 0 -2px 3px rgba(117,82,49,.18), 0 3px 5px rgba(0,0,0,.3)';
+    const winningShadow = $isWinning ? `, 0 0 0 2px ${classic.accent}, 0 0 0 4px ${classic.accentInk}` : '';
 
     return `${baseShadow}${winningShadow}`;
   }};
-  height: 75%;
+  height: 79%;
   position: relative;
   transform-origin: center;
-  width: 75%;
+  width: 79%;
   z-index: 2;
 
   &::after {
@@ -484,11 +487,29 @@ export const Preview = styled.div<{$isInvalid: boolean; $variant: 'black' | 'whi
 
 export const WinningStar = styled(UIcon)`
   animation: ${starTwinkle} 1.4s ease-in-out infinite;
-  color: ${colors.palette.orange[400]};
+  color: ${classic.accent};
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
   left: 50%;
   pointer-events: none;
   position: absolute;
   top: 50%;
   z-index: 4;
+`;
+
+export const ReducedMotion = styled.div`
+  display: contents;
+
+  @media (prefers-reduced-motion: reduce) {
+    ${BombBlast}, ${ImpactRing} {
+      display: none;
+    }
+
+    ${Piece}, ${WinningStar} {
+      animation: none;
+    }
+
+    ${WinningStar} {
+      transform: translate(-50%, -50%);
+    }
+  }
 `;

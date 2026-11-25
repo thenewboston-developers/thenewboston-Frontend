@@ -2,7 +2,7 @@ import styled, {css, keyframes, RuleSet} from 'styled-components';
 
 import {fonts} from 'styles';
 
-import {cosmos} from '../theme';
+import {classic} from '../theme';
 
 export type StoneTone = 'empty' | 'gold' | 'ivory' | 'obsidian';
 
@@ -49,7 +49,7 @@ const ringPulse = keyframes`
 const toneStyles: Record<StoneTone, RuleSet> = {
   empty: css`
     background: transparent;
-    border: 1px dashed rgba(206, 181, 255, 0.5);
+    border: 1px dashed rgba(237, 197, 139, 0.5);
   `,
   gold: css`
     background: radial-gradient(circle at 34% 30%, #fff8e3 0%, #ffd990 38%, #eba941 78%, #b9741a 100%);
@@ -64,10 +64,10 @@ const toneStyles: Record<StoneTone, RuleSet> = {
       inset 0 -1px 2px rgba(80, 64, 40, 0.25);
   `,
   obsidian: css`
-    background: radial-gradient(circle at 34% 30%, #6b6474 0%, #26222d 42%, #08070b 100%);
+    background: radial-gradient(circle at 34% 30%, #59564f 0%, #20201e 42%, #11110f 100%);
     box-shadow:
       0 2px 4px rgba(0, 0, 0, 0.55),
-      0 0 0 1px rgba(206, 181, 255, 0.24);
+      0 0 0 1px rgba(237, 197, 139, 0.24);
   `,
 };
 
@@ -92,14 +92,15 @@ export const Stone = styled.span<{$size: number; $tone: StoneTone}>`
 
 export const BoardArt = styled.span<{$columns: number; $rows: number}>`
   background:
-    linear-gradient(rgba(206, 181, 255, 0.16) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(206, 181, 255, 0.16) 1px, transparent 1px), linear-gradient(160deg, #1d1440, #0c0820);
+    linear-gradient(${classic.boardGrid} 1px, transparent 1px),
+    linear-gradient(90deg, ${classic.boardGrid} 1px, transparent 1px),
+    linear-gradient(160deg, #e6c893, ${classic.board});
   background-position:
     ${`${EMBLEM_CELL}px ${EMBLEM_CELL}px`},
     ${`${EMBLEM_CELL}px ${EMBLEM_CELL}px`},
     0 0;
   background-size: ${`${BOARD_CELL}px ${BOARD_CELL}px`}, ${`${BOARD_CELL}px ${BOARD_CELL}px`}, auto;
-  border: 1px solid ${cosmos.edge};
+  border: 1px solid ${classic.boardRim};
   border-radius: 18px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   display: block;
@@ -113,7 +114,7 @@ export const BoardArt = styled.span<{$columns: number; $rows: number}>`
 
 // The gold line through the stones of a winning line, drawn from the center of its first stone to its last
 export const BoardArtLine = styled.span<{$from: [number, number]; $to: [number, number]}>`
-  background: ${cosmos.gold};
+  background: ${classic.accent};
   box-shadow: 0 0 8px rgba(255, 200, 96, 0.75);
   height: 2px;
   left: ${({$from}) => `${boardPoint($from[0])}px`};
@@ -134,7 +135,7 @@ export const BoardArtStone = styled(Stone)<{$x: number; $y: number}>`
 export const EmblemGhost = styled(Stone)<{$x: number; $y: number}>`
   ${placedStone};
   animation: ${ghostPulse} 2.4s ease-in-out infinite;
-  border-color: ${cosmos.gold};
+  border-color: ${classic.accent};
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
@@ -142,7 +143,7 @@ export const EmblemGhost = styled(Stone)<{$x: number; $y: number}>`
 `;
 
 export const EmblemLine = styled.span`
-  background: ${cosmos.gold};
+  background: ${classic.accent};
   box-shadow: 0 0 6px rgba(255, 200, 96, 0.7);
   height: 2px;
   left: 50%;
@@ -155,7 +156,7 @@ export const EmblemLine = styled.span`
 export const EmblemRing = styled.span<{$x: number; $y: number}>`
   ${placedStone};
   animation: ${ringPulse} 2s ease-out infinite;
-  border: 2px solid ${cosmos.lavender};
+  border: 2px solid ${classic.focus};
   border-radius: 50%;
   height: 18px;
   width: 18px;
@@ -167,7 +168,7 @@ export const EmblemRing = styled.span<{$x: number; $y: number}>`
 `;
 
 export const EmblemSpark = styled.span`
-  background: ${cosmos.gold};
+  background: ${classic.accent};
   box-shadow: 0 0 10px rgba(255, 200, 96, 0.9);
   height: 7px;
   left: 50%;
@@ -183,18 +184,19 @@ export const EmblemStone = styled(Stone)<{$x: number; $y: number}>`
 
 export const EmblemTile = styled.span`
   background:
-    linear-gradient(rgba(206, 181, 255, 0.16) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(206, 181, 255, 0.16) 1px, transparent 1px), linear-gradient(160deg, #241a4b, #0e0923);
+    linear-gradient(${classic.boardGrid} 1px, transparent 1px),
+    linear-gradient(90deg, ${classic.boardGrid} 1px, transparent 1px),
+    linear-gradient(160deg, #e6c893, ${classic.board});
   background-position:
     ${`${EMBLEM_CELL}px ${EMBLEM_CELL}px`},
     ${`${EMBLEM_CELL}px ${EMBLEM_CELL}px`},
     0 0;
   background-size: ${`${EMBLEM_CELL}px ${EMBLEM_CELL}px`}, ${`${EMBLEM_CELL}px ${EMBLEM_CELL}px`}, auto;
-  border: 1px solid ${cosmos.edgeBright};
+  border: 1px solid ${classic.boardRim};
   border-radius: 16px;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 8px 20px rgba(8, 4, 24, 0.35);
+    0 8px 20px rgba(23, 18, 15, 0.35);
   display: block;
   flex-shrink: 0;
   height: ${`${EMBLEM_CELL * 6}px`};
@@ -205,7 +207,7 @@ export const EmblemTile = styled.span`
 
 export const Ghost = styled(BoardArtStone)`
   animation: ${ghostPulse} 2.4s ease-in-out infinite;
-  border-color: ${cosmos.gold};
+  border-color: ${classic.accent};
   box-shadow: 0 0 14px rgba(255, 200, 96, 0.35);
 
   @media (prefers-reduced-motion: reduce) {
@@ -214,7 +216,7 @@ export const Ghost = styled(BoardArtStone)`
 `;
 
 export const KitFuse = styled.span`
-  background: ${cosmos.gold};
+  background: ${classic.accent};
   border-radius: 1px;
   box-shadow: 0 0 6px rgba(255, 200, 96, 0.9);
   height: 4px;
@@ -242,7 +244,7 @@ export const Loader = styled.span`
   position: relative;
 
   &::before {
-    background: rgba(206, 181, 255, 0.25);
+    background: rgba(237, 197, 139, 0.25);
     content: '';
     height: 1px;
     left: 0;
@@ -271,7 +273,7 @@ export const Loader = styled.span`
 
 export const RankStone = styled(Stone)`
   align-items: center;
-  color: ${({$tone}) => ($tone === 'gold' ? cosmos.goldInk : cosmos.lilac)};
+  color: ${({$tone}) => ($tone === 'gold' ? classic.accentInk : classic.text)};
   display: inline-flex;
   font-size: 13px;
   font-variant-numeric: tabular-nums;
@@ -290,7 +292,7 @@ export const StoneRow = styled.span<{$gap: number}>`
   position: relative;
 
   &::before {
-    background: rgba(206, 181, 255, 0.28);
+    background: rgba(237, 197, 139, 0.28);
     content: '';
     height: 1px;
     left: -4px;
@@ -307,7 +309,7 @@ export const WinningLine = styled.span`
   position: relative;
 
   &::before {
-    background: ${cosmos.gold};
+    background: ${classic.accent};
     content: '';
     height: 1px;
     left: 0;
@@ -316,7 +318,7 @@ export const WinningLine = styled.span`
   }
 
   span {
-    background: ${cosmos.gold};
+    background: ${classic.accent};
     border-radius: 50%;
     box-shadow: 0 0 6px rgba(255, 206, 108, 0.5);
     height: 6px;
@@ -331,7 +333,7 @@ export const winningLineCell = css<{$lineAbove: boolean; $lineBelow: boolean}>`
 
   &::before,
   &::after {
-    background: ${cosmos.gold};
+    background: ${classic.accent};
     box-shadow: 0 0 8px rgba(255, 200, 96, 0.55);
     content: '';
     left: calc(50% - 1px);

@@ -7,33 +7,34 @@ import {
   Text as PrizePoolText,
   TotalRow as PrizePoolTotalRow,
 } from 'components/PrizePoolBreakdown/Styles';
-import {colors, fonts, radii} from 'styles';
+import {fonts, radii} from 'styles';
 
-import {panelStyle, WHITE_PIECE_OUTLINE} from '../../mixins';
+import {classic} from '../../theme';
+import {matchPanel} from '../theme';
 
 export const PrizePoolBreakdown = styled(UPrizePoolBreakdown)`
   gap: 8px;
 
   ${PrizePoolRow} {
-    color: ${colors.secondary};
+    color: ${classic.textMuted};
     font-size: 13px;
     line-height: 1.5;
   }
 
   ${PrizePoolRows} {
-    border-bottom-color: ${colors.borderSubtle};
+    border-bottom-color: ${classic.border};
     gap: 6px;
     padding-bottom: 8px;
   }
 
   ${PrizePoolText} {
-    color: ${colors.primary};
+    color: ${classic.text};
     font-variant-numeric: tabular-nums;
     font-weight: ${fonts.weight.medium};
   }
 
   ${PrizePoolTotalRow} {
-    color: ${colors.primary};
+    color: ${classic.text};
     font-size: 14px;
     font-weight: ${fonts.weight.semiBold};
     line-height: 1.5;
@@ -46,7 +47,7 @@ export const PrizePoolBreakdown = styled(UPrizePoolBreakdown)`
 `;
 
 export const PrizePoolPanel = styled.div`
-  ${panelStyle};
+  ${matchPanel};
 `;
 
 export const PurchaseInfo = styled.div`
@@ -70,21 +71,21 @@ export const PurchaseList = styled.div`
 `;
 
 export const PurchaseMeta = styled.span`
-  color: ${colors.secondary};
+  color: ${classic.textMuted};
   font-size: 12px;
   font-variant-numeric: tabular-nums;
   line-height: 1.4;
 `;
 
 export const PurchaseName = styled.span`
-  color: ${colors.primary};
+  color: ${classic.text};
   font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
   line-height: 1.3;
 `;
 
 export const PurchasePanel = styled.div`
-  ${panelStyle};
+  ${matchPanel};
 `;
 
 export const PurchaseRow = styled.div`
@@ -101,11 +102,11 @@ export const Sidebar = styled.aside`
   min-width: 0;
 `;
 
-// The white pieces get an outline on all sides, so they stay visible on top of the white panel
+// A fine outline separates either stone color from the walnut panel.
 export const SpecialIcon = styled.svg<{$variant: 'black' | 'white'}>`
-  color: ${({$variant}) => ($variant === 'black' ? colors.black : colors.white)};
+  color: ${({$variant}) => ($variant === 'black' ? classic.blackStone : classic.whiteStone)};
   display: block;
-  filter: ${({$variant}) => ($variant === 'white' ? WHITE_PIECE_OUTLINE : 'none')};
+  filter: drop-shadow(0 0 1px ${classic.textMuted});
   flex-shrink: 0;
   height: 24px;
   width: 24px;
@@ -118,11 +119,11 @@ export const SpendList = styled.div`
 `;
 
 export const SpendPanel = styled.div`
-  ${panelStyle};
+  ${matchPanel};
 `;
 
 export const SpendProgressBar = styled.div`
-  background-color: ${colors.palette.gray[100]};
+  background-color: ${classic.surfaceRaised};
   border-radius: ${radii.pill};
   height: 6px;
   overflow: hidden;
@@ -130,7 +131,7 @@ export const SpendProgressBar = styled.div`
 `;
 
 export const SpendProgressFill = styled.div<{$percentage: number}>`
-  background-color: ${colors.palette.blue[500]};
+  background-color: ${classic.accent};
   border-radius: ${radii.pill};
   height: 100%;
   transition: width 0.3s ease;
@@ -152,7 +153,7 @@ export const SpendRowHeader = styled.div`
 `;
 
 export const SpendRowName = styled.span`
-  color: ${colors.primary};
+  color: ${classic.text};
   font-size: 13px;
   font-weight: ${fonts.weight.semiBold};
   line-height: 1.4;
@@ -163,7 +164,7 @@ export const SpendRowName = styled.span`
 `;
 
 export const SpendRowValue = styled.span`
-  color: ${colors.secondary};
+  color: ${classic.textMuted};
   flex-shrink: 0;
   font-size: 12px;
   font-variant-numeric: tabular-nums;

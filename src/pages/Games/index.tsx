@@ -4,7 +4,7 @@ import Icon from '@mdi/react';
 import backgammonThumbnail from 'assets/backgammon-thumbnail.webp';
 import battleshipThumbnail from 'assets/battleship-thumbnail.webp';
 import checkersThumbnail from 'assets/checkers-thumbnail.webp';
-import connectFiveThumbnail from 'assets/connect-five-thumbnail.webp';
+import connectFiveThumbnail from 'assets/connect-five-classic-thumbnail.webp';
 import dotsAndBoxesThumbnail from 'assets/dots-and-boxes-thumbnail.webp';
 import hexThumbnail from 'assets/hex-thumbnail.webp';
 import mancalaThumbnail from 'assets/mancala-thumbnail.webp';

@@ -81,78 +81,81 @@ const Board: SFC<BoardProps> = ({
   winningKeys,
 }) => {
   return (
-    <S.Board className={className}>
-      {boardState.map((row, y) =>
-        row.map((value, x) => {
-          const cellKey = `${x}-${y}`;
-          const isBombBlast = bombBlastKeys.has(cellKey);
-          const isPreview = previewKeys.has(cellKey);
-          const isInvalid = isPreview && !previewState.isValid;
-          const isLastMove = lastMoveKeys.has(cellKey);
-          const isWinningCell = winningKeys.has(cellKey);
-          const bombPieceVariant = bombBlastPieces[cellKey];
-          const pieceVariant = value === 1 ? 'black' : 'white';
-          let cellLabel = 'empty';
-          if (value === 1) cellLabel = 'black';
-          if (value === 2) cellLabel = 'white';
-          const shouldEnableClick = !isSpectator && (directSelection || (previewState.isValid && isPreview));
+    <S.ReducedMotion>
+      <S.Board aria-label="Connect Five board, 15 rows by 15 columns" className={className} role="group">
+        {boardState.map((row, y) =>
+          row.map((value, x) => {
+            const cellKey = `${x}-${y}`;
+            const isBombBlast = bombBlastKeys.has(cellKey);
+            const isPreview = previewKeys.has(cellKey);
+            const isInvalid = isPreview && !previewState.isValid;
+            const isLastMove = lastMoveKeys.has(cellKey);
+            const isWinningCell = winningKeys.has(cellKey);
+            const bombPieceVariant = bombBlastPieces[cellKey];
+            const pieceVariant = value === 1 ? 'black' : 'white';
+            let cellLabel = 'empty';
+            if (value === 1) cellLabel = 'black';
+            if (value === 2) cellLabel = 'white';
+            const shouldEnableClick = !isSpectator && (directSelection || (previewState.isValid && isPreview));
 
-          return (
-            <S.Cell
-              $isPreview={isPreview}
-              $isPreviewInvalid={isInvalid}
-              aria-label={`Row ${y + 1}, column ${x + 1}: ${cellLabel}`}
-              key={cellKey}
-              onClick={() => {
-                if (!shouldEnableClick) return;
-                onCellClick(x, y);
-              }}
-              onFocus={() => onCellHover(x, y)}
-              onMouseEnter={() => onCellHover(x, y)}
-              onMouseLeave={onCellLeave}
-              type="button"
-            >
-              {isLastMove && value !== 0 && (
-                <S.ImpactRing $variant={pieceVariant} key={`impact-${lastMoveSequence}-${cellKey}`} />
-              )}
-              {isBombBlast && (
-                <S.BombBlast aria-hidden key={`bomb-${bombBlastSequence}-${cellKey}`}>
-                  <S.BombFlash />
-                  <S.BombRing />
-                  <S.BombSmoke />
-                  {bombPieceVariant &&
-                    BOMB_FRAGMENT_CONFIG.map((fragment, index) => (
-                      <S.BombFragment
-                        $delay={fragment.delay}
-                        $offsetX={fragment.offsetX}
-                        $offsetY={fragment.offsetY}
-                        $rotation={fragment.rotation}
-                        $size={fragment.size}
-                        $variant={bombPieceVariant}
-                        key={`bomb-fragment-${bombBlastSequence}-${cellKey}-${index}`}
+            return (
+              <S.Cell
+                $isPreview={isPreview}
+                $isPreviewInvalid={isInvalid}
+                aria-label={`Row ${y + 1}, column ${x + 1}: ${cellLabel}`}
+                key={cellKey}
+                onClick={() => {
+                  if (!shouldEnableClick) return;
+                  onCellClick(x, y);
+                }}
+                onBlur={onCellLeave}
+                onFocus={() => onCellHover(x, y)}
+                onMouseEnter={() => onCellHover(x, y)}
+                onMouseLeave={onCellLeave}
+                type="button"
+              >
+                {isLastMove && value !== 0 && (
+                  <S.ImpactRing $variant={pieceVariant} key={`impact-${lastMoveSequence}-${cellKey}`} />
+                )}
+                {isBombBlast && (
+                  <S.BombBlast aria-hidden key={`bomb-${bombBlastSequence}-${cellKey}`}>
+                    <S.BombFlash />
+                    <S.BombRing />
+                    <S.BombSmoke />
+                    {bombPieceVariant &&
+                      BOMB_FRAGMENT_CONFIG.map((fragment, index) => (
+                        <S.BombFragment
+                          $delay={fragment.delay}
+                          $offsetX={fragment.offsetX}
+                          $offsetY={fragment.offsetY}
+                          $rotation={fragment.rotation}
+                          $size={fragment.size}
+                          $variant={bombPieceVariant}
+                          key={`bomb-fragment-${bombBlastSequence}-${cellKey}-${index}`}
+                        />
+                      ))}
+                    {BOMB_SHARD_CONFIG.map((shard, index) => (
+                      <S.BombShard
+                        $delay={shard.delay}
+                        $offsetX={shard.offsetX}
+                        $offsetY={shard.offsetY}
+                        $size={shard.size}
+                        key={`bomb-shard-${bombBlastSequence}-${cellKey}-${index}`}
                       />
                     ))}
-                  {BOMB_SHARD_CONFIG.map((shard, index) => (
-                    <S.BombShard
-                      $delay={shard.delay}
-                      $offsetX={shard.offsetX}
-                      $offsetY={shard.offsetY}
-                      $size={shard.size}
-                      key={`bomb-shard-${bombBlastSequence}-${cellKey}-${index}`}
-                    />
-                  ))}
-                  {bombPieceVariant && <S.BombBlastPiece $variant={bombPieceVariant} />}
-                </S.BombBlast>
-              )}
-              {value === 1 && <S.Piece $isLastMove={isLastMove} $isWinning={isWinningCell} $variant="black" />}
-              {value === 2 && <S.Piece $isLastMove={isLastMove} $isWinning={isWinningCell} $variant="white" />}
-              {isWinningCell && <S.WinningStar aria-hidden icon={mdiStar} size={16} totalSize="unset" />}
-              {isPreview && <S.Preview $isInvalid={isInvalid} $variant={previewVariant} />}
-            </S.Cell>
-          );
-        }),
-      )}
-    </S.Board>
+                    {bombPieceVariant && <S.BombBlastPiece $variant={bombPieceVariant} />}
+                  </S.BombBlast>
+                )}
+                {value === 1 && <S.Piece $isLastMove={isLastMove} $isWinning={isWinningCell} $variant="black" />}
+                {value === 2 && <S.Piece $isLastMove={isLastMove} $isWinning={isWinningCell} $variant="white" />}
+                {isWinningCell && <S.WinningStar aria-hidden icon={mdiStar} size={16} totalSize="unset" />}
+                {isPreview && <S.Preview $isInvalid={isInvalid} $variant={previewVariant} />}
+              </S.Cell>
+            );
+          }),
+        )}
+      </S.Board>
+    </S.ReducedMotion>
   );
 };
 

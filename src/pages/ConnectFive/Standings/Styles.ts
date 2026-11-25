@@ -7,15 +7,15 @@ import UPagination from 'components/Pagination';
 import {fonts} from 'styles';
 
 import {winningLineCell} from '../Stones';
-import {boardPanel, cosmos, eyebrow, ghostButton, paginationStyle} from '../theme';
+import {boardPanel, classic, eyebrow, ghostButton, paginationStyle} from '../theme';
 
 export const PHONE = '600px';
 
 export const Avatar = styled(UAvatar)<{$inLine: boolean}>`
   border-radius: 50%;
   box-shadow:
-    0 0 0 2px ${cosmos.night},
-    0 0 0 3px ${({$inLine}) => ($inLine ? 'rgba(255, 217, 144, 0.8)' : cosmos.edgeBright)};
+    0 0 0 2px ${classic.surface},
+    0 0 0 3px ${({$inLine}) => ($inLine ? 'rgba(237, 197, 139, 0.8)' : classic.borderStrong)};
 `;
 
 // The username link next to the avatar leads to the same profile, so the avatar stays out of the tab order
@@ -31,7 +31,7 @@ export const Board = styled.section`
 `;
 
 export const Description = styled.p`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   font-size: 14px;
   line-height: 1.6;
   margin: 6px 0 0;
@@ -47,13 +47,13 @@ export const Empty = styled.div`
   text-align: center;
 
   strong {
-    color: ${cosmos.starlight};
+    color: ${classic.text};
     font-size: 18px;
     margin-top: 6px;
   }
 
   p {
-    color: ${cosmos.mist};
+    color: ${classic.textMuted};
     font-size: 14px;
     line-height: 1.6;
     margin: 0;
@@ -68,8 +68,8 @@ export const Eyebrow = styled.p`
 
 export const Footer = styled.div`
   align-items: center;
-  background: rgba(12, 8, 32, 0.35);
-  border-top: 1px solid rgba(206, 181, 255, 0.1);
+  background: rgba(23, 18, 15, 0.35);
+  border-top: 1px solid rgba(237, 197, 139, 0.1);
   display: flex;
   flex-wrap: wrap;
   gap: 14px 18px;
@@ -105,7 +105,7 @@ export const Identity = styled.div`
 
 export const Message = styled.div`
   align-items: center;
-  color: ${cosmos.haze};
+  color: ${classic.textSecondary};
   display: flex;
   flex-direction: column;
   font-size: 14px;
@@ -122,7 +122,7 @@ export const NameRow = styled.div`
 `;
 
 export const Note = styled.p`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   font-size: 13px;
   line-height: 1.5;
   margin: 0;
@@ -133,9 +133,9 @@ export const Pagination = styled(UPagination)`
 `;
 
 export const Period = styled.span`
-  border: 1px solid ${cosmos.edgeBright};
+  border: 1px solid ${classic.borderStrong};
   border-radius: 999px;
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   flex-shrink: 0;
   font-size: 11px;
   font-weight: ${fonts.weight.bold};
@@ -165,7 +165,7 @@ export const Player = styled.div`
 `;
 
 export const PlayerNote = styled.span`
-  color: ${cosmos.mist};
+  color: ${classic.textMuted};
   display: block;
   font-size: 12px;
   line-height: 1.4;
@@ -180,20 +180,20 @@ export const Retry = styled.button`
   ${ghostButton};
 `;
 
-// A row of the winning line gets a gold wash, the viewer's own row a lavender one
+// A row of the winning line gets a gold wash, the viewer's own row an amber one
 export const Row = styled.tr<{$inLine: boolean; $isSelf?: boolean}>`
   transition: background-color 0.15s ease;
 
   ${({$inLine}) =>
     $inLine &&
     css`
-      background-image: linear-gradient(90deg, rgba(255, 217, 144, 0.08), transparent 65%);
+      background-image: linear-gradient(90deg, rgba(237, 197, 139, 0.08), transparent 65%);
     `}
 
   ${({$isSelf}) =>
     $isSelf &&
     css`
-      background-image: linear-gradient(90deg, rgba(206, 181, 255, 0.18), rgba(206, 181, 255, 0.04));
+      background-image: linear-gradient(90deg, rgba(237, 197, 139, 0.18), rgba(237, 197, 139, 0.04));
     `}
 
   @media (hover: hover) {
@@ -204,9 +204,9 @@ export const Row = styled.tr<{$inLine: boolean; $isSelf?: boolean}>`
 `;
 
 export const SelfChip = styled.span`
-  background: ${cosmos.lavenderSoft};
+  background: ${classic.focusSoft};
   border-radius: 999px;
-  color: ${cosmos.lilac};
+  color: ${classic.text};
   flex-shrink: 0;
   font-size: 11px;
   font-weight: ${fonts.weight.bold};
@@ -231,10 +231,10 @@ export const Table = styled.table`
   }
 
   th {
-    background: rgba(12, 8, 32, 0.45);
-    border-bottom: 1px solid rgba(206, 181, 255, 0.1);
-    border-top: 1px solid rgba(206, 181, 255, 0.1);
-    color: ${cosmos.muted};
+    background: rgba(23, 18, 15, 0.45);
+    border-bottom: 1px solid rgba(237, 197, 139, 0.1);
+    border-top: 1px solid rgba(237, 197, 139, 0.1);
+    color: ${classic.muted};
     font-size: 10.5px;
     font-weight: ${fonts.weight.bold};
     letter-spacing: 0.1em;
@@ -250,7 +250,7 @@ export const Table = styled.table`
   }
 
   tbody tr + tr td {
-    border-top: 1px solid rgba(206, 181, 255, 0.08);
+    border-top: 1px solid rgba(237, 197, 139, 0.08);
   }
 
   th:first-child,
@@ -287,7 +287,7 @@ export const Table = styled.table`
 `;
 
 export const Title = styled.h2`
-  color: ${cosmos.starlight};
+  color: ${classic.text};
   font-size: 26px;
   font-weight: ${fonts.weight.extraBold};
   letter-spacing: -0.03em;
@@ -301,7 +301,7 @@ export const Title = styled.h2`
 
 export const Username = styled(Link)`
   border-radius: 4px;
-  color: ${cosmos.starlight};
+  color: ${classic.text};
   display: block;
   font-size: 15px;
   font-weight: ${fonts.weight.bold};
@@ -313,12 +313,12 @@ export const Username = styled(Link)`
   white-space: nowrap;
 
   &:hover {
-    color: ${cosmos.gold};
+    color: ${classic.accent};
     text-decoration: underline;
   }
 
   &:focus-visible {
-    outline: 2px solid ${cosmos.lavender};
+    outline: 2px solid ${classic.focus};
     outline-offset: 2px;
   }
 `;

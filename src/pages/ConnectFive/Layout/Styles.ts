@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {analyticsScrollRoot} from 'utils/analyticsAttributes';
 
 export const Container = styled.div`
+  background: #f5f0e8;
   display: flex;
   flex-direction: column;
   height: 100%;

@@ -53,7 +53,7 @@ import yup from 'utils/yup';
 
 import {EmptyBoardArt, LiveEmblem, RivalryEmblem, Stone, StoneLoader, StoneTone, WonBoardArt} from '../Stones';
 import {WINNING_LINE_LENGTH} from '../Stones/utils';
-import {cosmos} from '../theme';
+import {classic} from '../theme';
 
 import ComputerSetup from './ComputerSetup';
 import Hero from './Hero';
@@ -88,10 +88,10 @@ type MatchOutcome = 'active' | 'cancelled' | 'finished' | 'lost' | 'won';
 type PlayerSide = 'a' | 'b';
 
 const MATCH_BADGES: Record<MatchOutcome, {label: string; tone: S.BadgeTone}> = {
-  active: {label: 'In progress', tone: 'lavender'},
+  active: {label: 'In progress', tone: 'active'},
   cancelled: {label: 'Cancelled', tone: 'muted'},
   finished: {label: 'Finished', tone: 'muted'},
-  lost: {label: 'You lost', tone: 'rose'},
+  lost: {label: 'You lost', tone: 'negative'},
   won: {label: 'You won!', tone: 'gold'},
 };
 
@@ -110,10 +110,10 @@ const SIDE_STONES: Record<PlayerSide, StoneTone> = {a: 'obsidian', b: 'ivory'};
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
 const getChallengeStatusBadge = (status: string): {label: string; tone: S.BadgeTone} => {
-  if (status === ConnectFiveChallengeStatus.PENDING) return {label: 'Pending', tone: 'lavender'};
-  if (status === ConnectFiveChallengeStatus.ACCEPTED) return {label: 'Accepted', tone: 'mint'};
+  if (status === ConnectFiveChallengeStatus.PENDING) return {label: 'Pending', tone: 'active'};
+  if (status === ConnectFiveChallengeStatus.ACCEPTED) return {label: 'Accepted', tone: 'positive'};
   if (status === ConnectFiveChallengeStatus.CANCELLED) return {label: 'Cancelled', tone: 'muted'};
-  if (status === ConnectFiveChallengeStatus.EXPIRED) return {label: 'Expired', tone: 'rose'};
+  if (status === ConnectFiveChallengeStatus.EXPIRED) return {label: 'Expired', tone: 'negative'};
   return {label: capitalize(status.replace('_', ' ')), tone: 'muted'};
 };
 
@@ -781,16 +781,16 @@ const ConnectFiveHome: SFC = ({className}) => {
           <AreaChart data={eloChartData} margin={{bottom: 0, left: 0, right: 8, top: 8}}>
             <defs>
               <linearGradient id={ELO_FILL_ID} x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stopColor={cosmos.gold} stopOpacity={0.3} />
-                <stop offset="100%" stopColor={cosmos.gold} stopOpacity={0} />
+                <stop offset="0%" stopColor={classic.accent} stopOpacity={0.3} />
+                <stop offset="100%" stopColor={classic.accent} stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid stroke="rgba(206, 181, 255, 0.12)" vertical={false} />
+            <CartesianGrid stroke="rgba(237, 197, 139, 0.12)" vertical={false} />
             <XAxis
-              axisLine={{stroke: 'rgba(206, 181, 255, 0.25)'}}
+              axisLine={{stroke: 'rgba(237, 197, 139, 0.25)'}}
               dataKey="date"
               minTickGap={24}
-              tick={{fill: cosmos.mist, fontSize: 12}}
+              tick={{fill: classic.textMuted, fontSize: 12}}
               tickFormatter={formatEloDateLabel}
               tickLine={false}
               tickMargin={8}
@@ -799,31 +799,31 @@ const ConnectFiveHome: SFC = ({className}) => {
               allowDecimals={false}
               axisLine={false}
               domain={['dataMin - 40', 'dataMax + 40']}
-              tick={{fill: cosmos.mist, fontSize: 12}}
+              tick={{fill: classic.textMuted, fontSize: 12}}
               tickFormatter={formatEloValue}
               tickLine={false}
               width={48}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1b1339',
-                border: `1px solid ${cosmos.edgeBright}`,
+                backgroundColor: '#30261f',
+                border: `1px solid ${classic.borderStrong}`,
                 borderRadius: 12,
-                boxShadow: '0 12px 28px rgba(8, 4, 24, 0.5)',
+                boxShadow: '0 12px 28px rgba(23, 18, 15, 0.5)',
                 fontSize: 13,
               }}
-              cursor={{stroke: 'rgba(255, 217, 144, 0.45)'}}
+              cursor={{stroke: 'rgba(237, 197, 139, 0.45)'}}
               formatter={(value) => formatEloValue(Number(value))}
-              itemStyle={{color: cosmos.gold}}
+              itemStyle={{color: classic.accent}}
               labelFormatter={formatEloTooltipLabel}
-              labelStyle={{color: cosmos.mist}}
+              labelStyle={{color: classic.textMuted}}
             />
             <Area
-              activeDot={{fill: cosmos.gold, r: 5, stroke: cosmos.night, strokeWidth: 2}}
+              activeDot={{fill: classic.accent, r: 5, stroke: classic.surface, strokeWidth: 2}}
               dataKey="elo"
               fill={`url(#${ELO_FILL_ID})`}
               name="ELO"
-              stroke={cosmos.gold}
+              stroke={classic.accent}
               strokeWidth={2.5}
               type="monotone"
             />

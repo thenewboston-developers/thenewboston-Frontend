@@ -1,4 +1,3 @@
-import ToolbarMenuLink from 'components/ToolbarMenuLink';
 import {PATH_GAMES} from 'constants/paths';
 import {SFC} from 'types';
 
@@ -9,8 +8,8 @@ const ConnectFiveNavigation: SFC = ({className}) => {
     <S.Container aria-label="Connect Five" className={className}>
       <S.BackLink to={PATH_GAMES}>All games</S.BackLink>
       <S.MenuItems>
-        <ToolbarMenuLink text="Lobby" to="/connect-five/home" />
-        <ToolbarMenuLink text="ELO leaderboard" to="/connect-five/leaderboard" />
+        <S.MenuLink text="Lobby" to="/connect-five/home" />
+        <S.MenuLink text="ELO leaderboard" to="/connect-five/leaderboard" />
       </S.MenuItems>
       <S.Right />
     </S.Container>

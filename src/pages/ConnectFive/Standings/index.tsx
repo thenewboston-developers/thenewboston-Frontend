@@ -15,7 +15,7 @@ interface BoardProps {
   titleId: string;
 }
 
-// The midnight frame shared by the Connect Five leaderboards: the winning line emblem, a heading and the standings
+// The walnut frame shared by the Connect Five leaderboards: the winning line emblem, a heading and the standings
 export const StandingsBoard = ({
   children,
   description,

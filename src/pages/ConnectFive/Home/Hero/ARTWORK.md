@@ -1,26 +1,21 @@
-# Connect Five cosmos artwork
+# Connect Five classic artwork
 
-Created using the built-in imagegen tool with `transparent_background: false`. The expansive scene blends into the page hero using CSS gradients; a smaller export provides the matching Games thumbnail.
+Generated using the built-in imagegen tool with an opaque background. The hero and Games thumbnail use the same honey wood, charcoal, ivory, and walnut palette as the UI. The hero leaves dark space for the HTML headline; the thumbnail uses a closer overhead view.
 
-| Asset                                    | Dimensions |   Bytes | Encoding        |
-| ---------------------------------------- | ---------- | ------: | --------------- |
-| `src/assets/connect-five-cosmos.webp`    | 1440 × 960 | 126,666 | WebP quality 85 |
-| `src/assets/connect-five-thumbnail.webp` | 900 × 600  |  67,458 | WebP quality 85 |
+| Asset                                            | Dimensions |  Bytes | Encoding        |
+| ------------------------------------------------ | ---------- | -----: | --------------- |
+| `src/assets/connect-five-classic-hero.webp`      | 1440 × 960 | 82,734 | WebP quality 85 |
+| `src/assets/connect-five-classic-thumbnail.webp` | 900 × 600  | 55,098 | WebP quality 85 |
 
-Selected source: `exec-3dae991d-17ea-410f-987a-2e2bb810e8de.png` (1536 × 1024), preserved outside the repository. Both exports use `cwebp -q 85 -resize`; no compositing or painted changes were made outside imagegen.
+Exports use `cwebp -q 85 -resize`; no compositing or painted changes were made outside imagegen.
 
 ## Exact prompts
 
-```text
-Use case: stylized-concept / premium game key art.
-Asset type: landscape 3:2 cinematic hero artwork and game thumbnail for a Connect Five browser game. Generate 1536x1024.
-Primary scene: an extraordinary modern cosmic strategy arena. One substantial square board of polished deep violet black glass, with a perfectly regular fine square grid (roughly 15 lines in each direction) made of luminous subtle lavender lines. Camera elevated at a readable three-quarter perspective. Whole main board visible, prominently fills about 80 percent image width. This is a grid-intersection stone placement game, not chess or Reversi.
-Game pieces: polished black and ivory smooth low rounded stones seated at grid intersections in a believable midgame. The hero feature is ONE unmistakable straight diagonal winning row of EXACTLY FIVE luminous warm ivory-gold stones, equally spaced at FIVE CONSECUTIVE GRID INTERSECTIONS. Count carefully: one, two, three, four, five. Only these five stones have warm golden light and they are connected by a fine glowing gold line traveling straight through their centers. The glowing line stops at the center of the first and fifth stone. No sixth glowing stone. Place a few ordinary black and plain ivory stones elsewhere, none extending the winning row. Keep that five-stone row open and clearly readable.
-Setting: elevated midnight-violet arena amidst a subtle cosmic atmosphere, restrained violet nebula haze, deep indigo infinity, delicate sparse stars. A few elegant thin orbital light arcs curve in the distance behind the board, never obscure the five winning stones. Reflections of lavender and gold on the polished board edge and glass surface. No planets, no spaceships, no giant glowing sphere. Scene is tactile premium 3D game product art, not a flat illustration.
-Composition: landscape 1536x1024, subject centered slightly right, a dark purple quiet region along the left edge suitable for CSS blending behind website copy. Board occupies scene boldly without large empty margins. All key game pieces and full winning line visible. Dynamic yet polished, mesmerizing and sophisticated.
-Lighting: gorgeous cinematic violet and ultraviolet rim light, radiant warm gold around the five-stone winning row, clean white highlights, luxurious depth and dark contrast. Image edges naturally blend toward dark midnight purple #100b26. No wooden board.
-Constraints: EXACTLY FIVE golden connected stones in one straight diagonal row on consecutive intersections; many other board intersections remain empty. No writing, letters, numbers, logos, captions, UI, watermark, extra boards, hands, cartoon styling or checkerboard squares.
-
-Precise-object edit to enforce exactly five winning stones:
-Make exactly ONE precise correction to this Connect Five key art. The diagonal winning line currently contains SIX golden stones. REMOVE the LOWEST LEFTMOST golden stone, located near x=700,y=590 in this 1536x1024 image, along with its gold glow/reflection and the gold line segment connecting it to the next stone. Restore the underlying purple board and regular lavender grid at that removed stone's position. Keep the OTHER FIVE golden stones in their exact positions, connected by the remaining straight gold line that now begins at the stone near x=782,y=536 and ends near x=1089,y=343. Final winning row MUST have exactly FIVE gold stones: 1 at 782,536; 2 at 863,484; 3 at 940,435; 4 at 1013,386; 5 at 1089,343. Preserve all other black/ivory stones, whole board, cosmic setting, lighting, frame, perspective, colors and composition exactly. Do not add any stones. No lettering.
+```json
+{
+  "tool": "built-in imagegen",
+  "transparent_background": false,
+  "hero": "Use case: product-mockup.\nAsset type: 3:2 landscape premium hero artwork for a Connect Five (Gomoku) online game.\nCreate a quiet, beautifully crafted honey-wood 15-by-15 line Gomoku board on a dark walnut tabletop. Precisely regular fine dark brown grid; each stone sits centered at a grid intersection, not in a square. Smooth charcoal-black and warm ivory low-domed stones in a believable sparse midgame. One short straight line of five black stones is the focal detail; several ivory stones nearby. The board itself is honey wood #d8b47a with grid #755231 and walnut rim #8a6038; stones #20201e and #fff8e7.\nComposition: wide landscape 1536x1024. Board centered in the right-hand two thirds of the frame, comfortably visible, viewed from an elevated three-quarter angle, enough depth to show its crafted edge. The left third is a quiet dark walnut background #211a16 with usable negative space for real website headline overlay. Generous breathing space, crisp board and stones, subdued wood grain so the game remains easy to read. Soft warm amber #edc58b studio light, gentle natural shadows, restrained premium editorial product photography / physically realistic 3D.\nConstraints: Only the board and seated stones; no text, lettering, numbers, logos, watermarks, graphic overlays, glowing lines, neon, purple, cosmic scenery, particles, floating stones, chess squares, people, hands, bowls or clutter. Stones remain black and ivory; no gold-colored stones.",
+  "thumbnail": "Use case: product-mockup. Make a premium Connect Five / Gomoku game thumbnail, landscape 3:2 at 1536x1024. A clean overhead / nearly straight-down photograph of ONE honey-wood board (#d8b47a), fine regular dark brown grid (#755231), crafted walnut rim and dark walnut tabletop (#211a16). Board fills the frame, with subtle tactile wood grain, a restrained warm light and soft natural shadows.\n\nThe board has exactly FIFTEEN horizontal and FIFTEEN vertical thin grid lines. Horizontal grid lines stay horizontal in the image. One precise horizontal row of EXACTLY FIVE charcoal-black stones (#20201e), on five neighboring grid intersections, close to center of image. Count exactly 1, 2, 3, 4, 5; all on the SAME HORIZONTAL GRID LINE. Four ivory stones (#fff8e7) on separate nearby grid intersections, two above the row and two below. No additional black stones. Each stone's center rests at an intersection, as in Gomoku or Go. Stones are glossy low-domed circular disks. Subject readable, quiet, well-balanced, sophisticated product photography.\n\nNo text, numbers, letters, logos, neon, purple, cosmic effects, colored pieces, glow, floating stones, hands, bowls, props, checkerboard squares. Accurate geometry: five black stones evenly spaced, along one existing straight horizontal grid line, not placed arbitrarily."
+}
 ```

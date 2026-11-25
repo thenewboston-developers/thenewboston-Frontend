@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import {fonts} from 'styles';
 
 import {PHONE} from '../../Standings/Styles';
-import {cosmos} from '../../theme';
+import {classic} from '../../theme';
 
 export const Amount = styled.strong`
   align-items: baseline;
-  color: ${cosmos.gold};
+  color: ${classic.accent};
   display: flex;
   flex-wrap: wrap;
   font-size: 18px;
@@ -18,7 +18,7 @@ export const Amount = styled.strong`
   overflow-wrap: anywhere;
 
   small {
-    color: ${cosmos.mist};
+    color: ${classic.textMuted};
     font-size: 11px;
     font-weight: ${fonts.weight.bold};
     letter-spacing: 0.08em;

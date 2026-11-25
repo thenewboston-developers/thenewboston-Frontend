@@ -1,7 +1,6 @@
 import {ComponentType, SVGProps} from 'react';
 
 import {BadgeStyle} from 'components/Badge';
-import Button from 'components/Button';
 import {ButtonColor} from 'components/Button/types';
 import {ConnectFiveMatchStatus, ConnectFiveSpecialType} from 'enums';
 import {ConnectFiveMatch, ConnectFiveMatchPlayer, SFC} from 'types';
@@ -187,7 +186,7 @@ const MatchSidebar: SFC<MatchSidebarProps> = ({
                 </S.PurchaseInfo>
               </S.PurchaseLeft>
               {canPurchase && (
-                <Button
+                <MatchStyles.Button
                   disabled={(selfMatchPlayer?.remaining_spend ?? 0) < SPECIAL_PRICES[specialType]}
                   isSubmitting={purchasingSpecials.has(specialType)}
                   onClick={() => onPurchase(specialType)}
@@ -210,7 +209,12 @@ const MatchSidebar: SFC<MatchSidebarProps> = ({
           <MatchStyles.PanelTitle>Resign</MatchStyles.PanelTitle>
           <MatchStyles.PanelSubtitle>Resigning ends the match immediately.</MatchStyles.PanelSubtitle>
         </MatchStyles.PanelHeader>
-        <Button color={ButtonColor.danger} isSubmitting={isResigning} onClick={onResignClick} text="Resign match" />
+        <MatchStyles.Button
+          color={ButtonColor.danger}
+          isSubmitting={isResigning}
+          onClick={onResignClick}
+          text="Resign match"
+        />
       </S.PurchasePanel>
     );
   };
