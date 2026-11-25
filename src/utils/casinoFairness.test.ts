@@ -54,3 +54,20 @@ it('rejects altered outcomes and distinguishes receipts without a locally observ
   await expect(verifyCasinoReceipt({...bet, result: {...bet.result, draw: 9000}}, hash)).rejects.toThrow('outcome');
   await expect(verifyCasinoReceipt(bet)).resolves.toContain('not saved on this device');
 });
+
+it('reproduces independent backend slot vectors for rules v2, including its varied losing line', async () => {
+  const loss = {...bet, rules_version: 2, result: {draw: 1640, multiplier: 0, symbols: ['diamond', 'cherry', 'lemon']}};
+  await expect(verifyCasinoReceipt(loss, hash)).resolves.toContain('Verified:');
+  await expect(
+    verifyCasinoReceipt({...loss, result: {...loss.result, symbols: ['cherry', 'lemon', 'bar']}}, hash),
+  ).rejects.toThrow('outcome');
+  const win = {
+    ...loss,
+    fairness: {...loss.fairness, client_seed: 'v2-b'},
+    payout: 20,
+    profit: 10,
+    result: {draw: 8368, multiplier: 2, symbols: ['lemon', 'lemon', 'lemon']},
+  };
+  await expect(verifyCasinoReceipt(win, hash)).resolves.toContain('Verified:');
+  await expect(verifyCasinoReceipt({...win, rules_version: 3}, hash)).rejects.toThrow('unsupported rules version');
+});
