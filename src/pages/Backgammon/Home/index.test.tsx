@@ -226,3 +226,36 @@ it('shows whose turn it is on your boards, and a double on offer is for the othe
   expect(turns[2]).toHaveTextContent('Your turn');
   expect(turns[0]).toHaveTextContent('Alice vs. Rival');
 });
+
+it('shows no turn on matches between other players, including their computer games', async () => {
+  (getBackgammonMatches as jest.Mock).mockImplementation((params) =>
+    Promise.resolve({
+      count: 1,
+      next: null,
+      previous: null,
+      results:
+        params.mine === 'exclude'
+          ? [
+              {
+                active_side: 'black',
+                black: null,
+                board: {bar: {black: 0, white: 0}, off: {black: 0, white: 0}, points: Array(24).fill(0)},
+                dice: [3, 1],
+                double_offered_by: null,
+                id: 7,
+                scores: {black: 0, white: 0},
+                stake_amount: 0,
+                status: 'active',
+                target_score: 3,
+                white: {id: 13, username: 'Someone else'},
+                winner: null,
+              },
+            ]
+          : [],
+    }),
+  );
+  await renderHome();
+  const row = container.querySelector('a[href="/backgammon/matches/7"]');
+  expect(row).toHaveTextContent('Someone else vs. Computer');
+  expect(row).not.toHaveTextContent('turn');
+});

@@ -100,7 +100,8 @@ const MatchLengthOptions = ({prefix}: {prefix: string}) => (
 const MatchRow = ({match, selfId}: {match: BackgammonMatch; selfId?: number | null}) => {
   const isIncoming = match.status === 'pending' && match.black?.id === selfId;
   const isOutgoing = match.status === 'pending' && match.white.id === selfId;
-  const side = getPlayerSide(match, selfId);
+  // Rows under Watch live have no viewer; a computer match has no black player id to match against
+  const side = selfId ? getPlayerSide(match, selfId) : null;
   let label = match.status === 'finished' ? 'View result' : 'Open board';
   if (isIncoming) label = 'Review challenge';
   if (isOutgoing) label = 'Awaiting reply';
