@@ -2,11 +2,23 @@ import {KeyboardEvent, useId, useLayoutEffect, useState} from 'react';
 
 import {BackgammonBoard, BackgammonMove, BackgammonSide} from 'types/backgammon';
 
+import {backgammon, FELT_GRAIN_IMAGE, WOOD_GRAIN_IMAGE} from '../theme';
+
 import {boardSignature, checkerPosition, reconcileCheckers} from './checkers';
 import * as S from './Styles';
 
+export interface BoardCube {
+  // Crawford game: nobody may double
+  disabled?: boolean;
+  // A double is waiting for an answer, so the cube shows the value on offer
+  offered?: boolean;
+  owner: BackgammonSide | null;
+  value: number;
+}
+
 interface BoardProps {
   board: BackgammonBoard;
+  cube?: BoardCube;
   decorative?: boolean;
   nextMoves?: BackgammonMove[];
   onSelect?: (point: number | 'bar' | 'off') => void;
@@ -14,8 +26,15 @@ interface BoardProps {
   selected?: number | 'bar' | null;
 }
 
+// The two halves of the playing surface on either side of the bar, which is the walnut frame showing through
+const FELT_HALVES = [
+  {width: 392, x: 28},
+  {width: 394, x: 472},
+];
+
 const Board = ({
   board,
+  cube,
   decorative = false,
   nextMoves = [],
   onSelect,
@@ -57,6 +76,7 @@ const Board = ({
     const canSelect = !!onSelect && side === perspective && sources.has('bar');
     const count = board.bar[side];
     const y = bottom ? 413 : 227;
+    const plateY = bottom ? 506 : 131;
     return (
       <g
         aria-label={decorative ? undefined : `${side} bar: ${count} checkers`}
@@ -69,17 +89,34 @@ const Board = ({
       >
         <rect
           className="point-focus"
-          fill={selected === 'bar' && side === perspective ? '#e9c76a' : 'transparent'}
-          fillOpacity={0.2}
+          fill={selected === 'bar' && side === perspective ? '#f8d57b' : 'transparent'}
+          fillOpacity={0.22}
           height={150}
           rx={12}
-          stroke={canSelect ? '#e9c76a' : 'none'}
+          stroke={canSelect ? '#f8d57b' : 'none'}
           strokeWidth={2}
           width={54}
           x={419}
           y={y - 75}
         />
-        <text fill="#b8c9b9" fontSize={12} letterSpacing={2} textAnchor="middle" x={446} y={bottom ? 510 : 135}>
+        <rect
+          fill={`url(#${gradientId}-brass)`}
+          height={22}
+          rx={3}
+          stroke={backgammon.brassDeep}
+          width={40}
+          x={426}
+          y={plateY - 11}
+        />
+        <text
+          fill="#3a2410"
+          fontSize={11}
+          fontWeight={700}
+          letterSpacing={1.5}
+          textAnchor="middle"
+          x={447}
+          y={plateY + 4}
+        >
           BAR
         </text>
       </g>
@@ -88,16 +125,24 @@ const Board = ({
 
   const renderChecker = (side: BackgammonSide) => (
     <>
-      <ellipse cx={0} cy={4} fill="#082920" opacity="0.4" rx={25} ry={25} />
+      <circle cx={0} cy={4} fill="#021a17" opacity={0.45} r={25} />
       <circle
         cx={0}
         cy={0}
         fill={`url(#${gradientId}-${side})`}
         r={24}
-        stroke={side === 'white' ? '#d0c1a1' : '#122a27'}
+        stroke={side === 'white' ? '#bfae86' : '#0c231f'}
         strokeWidth={2}
       />
-      <circle cx={0} cy={0} fill="none" opacity="0.45" r={17} stroke={side === 'white' ? '#c1b494' : '#6c8b7d'} />
+      <circle
+        cx={0}
+        cy={0}
+        fill="none"
+        opacity={0.55}
+        r={16}
+        stroke={side === 'white' ? '#bcae8a' : '#6f8f80'}
+        strokeWidth={2}
+      />
     </>
   );
 
@@ -144,6 +189,89 @@ const Board = ({
     </text>
   );
 
+  // The cube waits on the middle of the bar and moves to the end of the bar nearest the player who owns it
+  const renderCube = () => {
+    if (!cube) return null;
+    let y = 320;
+    if (cube.owner) y = cube.owner === perspective ? 556 : 84;
+    let value = cube.offered ? cube.value * 2 : cube.value;
+    // A real cube has no face for 1, so a centered cube shows 64
+    if (value === 1 && !cube.owner) value = 64;
+    return (
+      <S.BoardCube
+        $animate={!decorative}
+        $disabled={!!cube.disabled}
+        $offered={!!cube.offered}
+        aria-hidden="true"
+        data-cube-owner={cube.owner ?? 'center'}
+        data-cube-value={value}
+        style={{transform: `translate(446px, ${y}px)`}}
+      >
+        <rect
+          className="cube-offer"
+          fill="none"
+          height={52}
+          rx={12}
+          stroke="#f8d57b"
+          strokeWidth={3}
+          width={52}
+          x={-26}
+          y={-26}
+        />
+        <rect fill="#140b05" height={40} opacity={0.5} rx={8} width={40} x={-18} y={-16} />
+        <rect
+          fill={`url(#${gradientId}-cube)`}
+          height={40}
+          rx={8}
+          stroke="#a8946a"
+          strokeWidth={2}
+          width={40}
+          x={-20}
+          y={-20}
+        />
+        <text
+          className="serif"
+          dominantBaseline="central"
+          fill="#173b31"
+          fontSize={value > 9 ? 19 : 24}
+          fontWeight={700}
+          textAnchor="middle"
+          x={0}
+          y={1}
+        >
+          {value}
+        </text>
+      </S.BoardCube>
+    );
+  };
+
+  // A ring where the checker will land. It is drawn above the checkers, so a blot about to be hit still shows it, and
+  // away from the middle of the board, where the dice are rolled.
+  const renderDestinations = () => (
+    <g aria-hidden="true" pointerEvents="none">
+      {Array.from(destinations).map((point) => {
+        if (point === 'off') return null;
+        const value = board.points[point];
+        const own = perspective === 'white' ? value : -value;
+        const {x, y} = checkerPosition(perspective, point, Math.max(0, Math.min(own, 4)), perspective);
+        return (
+          <circle
+            cx={x}
+            cy={y}
+            data-destination={point}
+            fill="#f8d57b"
+            fillOpacity={0.18}
+            key={point}
+            r={23}
+            stroke="#f8d57b"
+            strokeDasharray="7 5"
+            strokeWidth={3}
+          />
+        );
+      })}
+    </g>
+  );
+
   const renderOff = (side: BackgammonSide, bottom: boolean) => {
     const canSelect = !!onSelect && side === perspective && destinations.has('off');
     const y = bottom ? 348 : 52;
@@ -160,23 +288,41 @@ const Board = ({
       >
         <rect
           className="point-focus"
-          fill={canSelect ? '#4d6650' : '#173f35'}
+          fill={canSelect ? '#0f5a4e' : '#032a25'}
           height={240}
           rx={12}
-          stroke={canSelect ? '#f8d57b' : '#476659'}
-          strokeWidth={canSelect ? 3 : 1}
+          stroke={canSelect ? '#f8d57b' : backgammon.brass}
+          strokeOpacity={canSelect ? 1 : 0.55}
+          strokeWidth={canSelect ? 3 : 2}
           width={83}
           x={887}
           y={y}
         />
-        <text fill="#c2d1bf" fontSize={13} letterSpacing={2} textAnchor="middle" x={929} y={y + 28}>
+        <rect fill={`url(#${gradientId}-grain)`} height={240} pointerEvents="none" rx={12} width={83} x={887} y={y} />
+        <text
+          fill={backgammon.brassText}
+          fontSize={12}
+          fontWeight={700}
+          letterSpacing={3}
+          textAnchor="middle"
+          x={930}
+          y={y + 28}
+        >
           OFF
         </text>
-        <circle cx={929} cy={y + 94} fill="none" r={24} stroke="#6a8471" strokeDasharray="3 5" />
-        <text fill="#f3e8cb" fontSize={34} fontWeight={700} textAnchor="middle" x={929} y={y + 165}>
+        <circle
+          cx={929}
+          cy={y + 94}
+          fill="#00000033"
+          r={25}
+          stroke={backgammon.brass}
+          strokeDasharray="3 5"
+          strokeOpacity={0.7}
+        />
+        <text fill={backgammon.ink} fontSize={34} fontWeight={700} textAnchor="middle" x={929} y={y + 166}>
           {board.off[side]}
         </text>
-        <text fill="#b8c9b9" fontSize={14} textAnchor="middle" x={929} y={y + 190}>
+        <text fill={backgammon.mist} fontSize={13} letterSpacing={1} textAnchor="middle" x={929} y={y + 192}>
           of 15
         </text>
       </g>
@@ -189,8 +335,10 @@ const Board = ({
     const count = Math.abs(value);
     const side = value > 0 ? 'white' : 'black';
     const canSelect = !!onSelect && (sources.has(index) || destinations.has(index));
+    const color = index % 2 === 0 ? 'coral' : 'ivory';
     const isSelected = selected === index;
     const isDestination = destinations.has(index);
+    const isSource = sources.has(index) && !!onSelect;
     const accessibleLabel = `Point ${index + 1}: ${count ? `${count} ${side} checker${count === 1 ? '' : 's'}` : 'empty'}${isDestination ? ', move here' : ''}`;
 
     return (
@@ -205,8 +353,9 @@ const Board = ({
       >
         <path
           d={top ? `M${x},52 h58 L${x + 29},286 Z` : `M${x},588 h58 L${x + 29},354 Z`}
-          fill={index % 2 === 0 ? '#bb765b' : '#ddcdaa'}
-          opacity={0.95}
+          fill={`url(#${gradientId}-${color}-${top ? 'down' : 'up'})`}
+          stroke={color === 'coral' ? '#7f4734' : '#9f8d65'}
+          strokeOpacity={0.55}
         />
         <rect
           className="point-focus"
@@ -220,13 +369,17 @@ const Board = ({
           x={x - 1}
           y={top ? 50 : 348}
         />
-        <text fill="#c0d0be" fontSize={15} fontWeight={600} textAnchor="middle" x={x + 29} y={top ? 31 : 618}>
+        <text
+          fill={isSource ? '#ffe3a2' : backgammon.brassText}
+          fontSize={15}
+          fontWeight={isSource ? 800 : 600}
+          textAnchor="middle"
+          x={x + 29}
+          y={top ? 31 : 620}
+        >
           {index + 1}
         </text>
-        {isDestination && <circle cx={x + 29} cy={top ? 303 : 337} fill="#f8d57b" r={9} />}
-        {sources.has(index) && !isSelected && !!onSelect && (
-          <circle cx={x + 29} cy={top ? 42 : 598} fill="#f8d57b" r={4} />
-        )}
+        {isSource && !isSelected && <circle cx={x + 29} cy={top ? 46.5 : 593.5} fill="#f8d57b" r={3.5} />}
       </g>
     );
   };
@@ -239,31 +392,94 @@ const Board = ({
       viewBox="0 0 1000 640"
     >
       <defs>
-        <linearGradient id={`${gradientId}-white`} x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#fffaf0" />
-          <stop offset="100%" stopColor="#d9cfb0" />
+        <linearGradient id={`${gradientId}-walnut`} x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stopColor={backgammon.walnutLight} />
+          <stop offset="0.45" stopColor={backgammon.walnut} />
+          <stop offset="1" stopColor={backgammon.walnutDeep} />
         </linearGradient>
-        <linearGradient id={`${gradientId}-black`} x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#48685b" />
-          <stop offset="100%" stopColor="#102c27" />
+        <pattern height={160} id={`${gradientId}-wood`} patternUnits="userSpaceOnUse" width={720}>
+          <image height={160} href={WOOD_GRAIN_IMAGE} width={720} />
+        </pattern>
+        <linearGradient id={`${gradientId}-felt`} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#0f5a4e" />
+          <stop offset="1" stopColor="#084239" />
         </linearGradient>
-        <linearGradient id={`${gradientId}-felt`} x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#315c4c" />
-          <stop offset="100%" stopColor="#204b3d" />
+        <radialGradient cx={760} cy={20} gradientUnits="userSpaceOnUse" id={`${gradientId}-sheen`} r={640}>
+          <stop offset="0" stopColor={backgammon.feltLight} stopOpacity={0.7} />
+          <stop offset="1" stopColor={backgammon.feltLight} stopOpacity={0} />
+        </radialGradient>
+        <pattern height={160} id={`${gradientId}-grain`} patternUnits="userSpaceOnUse" width={160}>
+          <image height={160} href={FELT_GRAIN_IMAGE} width={160} />
+        </pattern>
+        <linearGradient id={`${gradientId}-brass`} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor={backgammon.brassBright} />
+          <stop offset="0.55" stopColor={backgammon.brass} />
+          <stop offset="1" stopColor={backgammon.brassDeep} />
+        </linearGradient>
+        <linearGradient id={`${gradientId}-coral-down`} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#c8836a" />
+          <stop offset="1" stopColor="#a5624a" />
+        </linearGradient>
+        <linearGradient id={`${gradientId}-coral-up`} x1="0" x2="0" y1="1" y2="0">
+          <stop offset="0" stopColor="#c8836a" />
+          <stop offset="1" stopColor="#a5624a" />
+        </linearGradient>
+        <linearGradient id={`${gradientId}-ivory-down`} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#e8dabb" />
+          <stop offset="1" stopColor="#cbb991" />
+        </linearGradient>
+        <linearGradient id={`${gradientId}-ivory-up`} x1="0" x2="0" y1="1" y2="0">
+          <stop offset="0" stopColor="#e8dabb" />
+          <stop offset="1" stopColor="#cbb991" />
+        </linearGradient>
+        <radialGradient cx="0.34" cy="0.28" id={`${gradientId}-white`} r="0.8">
+          <stop offset="0" stopColor="#fffaf0" />
+          <stop offset="0.55" stopColor="#ebe0c5" />
+          <stop offset="1" stopColor="#cdbf9c" />
+        </radialGradient>
+        <radialGradient cx="0.34" cy="0.28" id={`${gradientId}-black`} r="0.8">
+          <stop offset="0" stopColor="#5f8071" />
+          <stop offset="0.55" stopColor={backgammon.forest} />
+          <stop offset="1" stopColor="#102c27" />
+        </radialGradient>
+        <linearGradient id={`${gradientId}-cube`} x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stopColor="#fffaf0" />
+          <stop offset="1" stopColor="#e2d4b0" />
         </linearGradient>
       </defs>
-      <rect fill="#163c32" height={640} rx={24} width={1000} />
+      <rect fill={`url(#${gradientId}-walnut)`} height={640} rx={24} width={1000} />
+      <rect fill={`url(#${gradientId}-wood)`} height={640} rx={24} width={1000} />
       <rect
-        fill={`url(#${gradientId}-felt)`}
-        height={558}
-        rx={12}
-        stroke="#698372"
-        strokeWidth={1}
-        width={838}
-        x={28}
-        y={41}
+        fill="none"
+        height={638}
+        rx={23}
+        stroke="#ffffff"
+        strokeOpacity={0.09}
+        strokeWidth={2}
+        width={998}
+        x={1}
+        y={1}
       />
-      <path d="M420 42 h52 v556 h-52Z" fill="#163c32" />
+      {FELT_HALVES.map(({width, x}) => (
+        <g key={x}>
+          <rect fill="#0d0603" fillOpacity={0.55} height={564} rx={13} width={width + 6} x={x - 3} y={38} />
+          <rect fill={`url(#${gradientId}-felt)`} height={558} rx={10} width={width} x={x} y={41} />
+          <rect fill={`url(#${gradientId}-sheen)`} height={558} rx={10} width={width} x={x} y={41} />
+          <rect fill={`url(#${gradientId}-grain)`} height={558} rx={10} width={width} x={x} y={41} />
+          <rect
+            fill="none"
+            height={558}
+            rx={10}
+            stroke={backgammon.brass}
+            strokeOpacity={0.75}
+            strokeWidth={3}
+            width={width}
+            x={x}
+            y={41}
+          />
+        </g>
+      ))}
+      <path d="M446 41v558" stroke="#0d0603" strokeOpacity={0.45} strokeWidth={2} />
       {Array.from({length: 12}, (_, column) =>
         renderPoint(perspective === 'white' ? 12 + column : 11 - column, column, true),
       )}
@@ -274,13 +490,9 @@ const Board = ({
       {renderBar(perspective, true)}
       {renderOff(opponent, false)}
       {renderOff(perspective, true)}
-      <text fill="#9bb5a4" fontSize={11} letterSpacing={3} textAnchor="middle" x={225} y={325}>
-        THENEWBOSTON
-      </text>
-      <text fill="#9bb5a4" fontSize={11} letterSpacing={3} textAnchor="middle" x={673} y={325}>
-        BACKGAMMON
-      </text>
+      {renderCube()}
       {renderCheckers()}
+      {renderDestinations()}
     </S.Canvas>
   );
 };

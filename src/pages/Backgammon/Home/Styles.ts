@@ -6,10 +6,21 @@ import {fonts} from 'styles';
 
 import {DoublingCube as UDoublingCube, HitScene as UHitScene, MiniBoard as UMiniBoard} from '../Emblems';
 import * as Emblem from '../Emblems/Styles';
-import URules from '../Rules';
-import {backgammon, boardPanel, caption, checker, FOREST_CHECKER, IVORY_CHECKER, serif} from '../theme';
+import {backgammon, boardPanel, brassButton, caption, checker, FOREST_CHECKER, IVORY_CHECKER, serif} from '../theme';
 
-export {Container, Navigation, TextLink} from '../Styles';
+export {
+  Badge,
+  Container,
+  Detail,
+  Error,
+  Eyebrow,
+  GuestActions,
+  Navigation,
+  Small,
+  Status,
+  TextLink,
+  TitleSmall,
+} from '../Styles';
 
 const brassField = css`
   background: #021f1c99;
@@ -60,21 +71,6 @@ const pill = css`
   font-size: 10px;
   gap: 8px;
   white-space: nowrap;
-`;
-
-export const Badge = styled.span`
-  --die-size: 16px;
-
-  align-items: center;
-  background: ${backgammon.feltDeep};
-  border: 1px solid ${backgammon.brass}66;
-  border-radius: 999px;
-  color: ${backgammon.brassBright};
-  display: inline-flex;
-  font-size: 12px;
-  font-weight: ${fonts.weight.semiBold};
-  gap: 8px;
-  padding: 6px 13px 6px 7px;
 `;
 
 export const Choice = styled.label`
@@ -266,13 +262,6 @@ export const Count = styled.span<{$live?: boolean}>`
     `}
 `;
 
-export const Detail = styled.p`
-  color: ${backgammon.mist};
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0;
-`;
-
 export const Empty = styled.div`
   align-items: center;
   background: #ffffff06;
@@ -298,29 +287,6 @@ export const Empty = styled.div`
   }
 `;
 
-export const Error = styled.div`
-  align-items: center;
-  background: #fbefe8;
-  border: 1px solid #e3bfae;
-  border-left: 4px solid ${backgammon.coral};
-  border-radius: 10px;
-  color: #7a3a26;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 14px;
-  line-height: 1.6;
-  margin: 16px 0;
-  padding: 14px 18px;
-`;
-
-export const Eyebrow = styled.p`
-  ${caption};
-  color: ${backgammon.brassText};
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  margin: 0 0 8px;
-`;
-
 export const Fieldset = styled.fieldset`
   border: 0;
   margin: 0;
@@ -333,39 +299,6 @@ export const Form = styled.form`
   flex: 1;
   flex-direction: column;
   gap: 20px;
-`;
-
-export const GuestActions = styled.div`
-  button {
-    border-radius: 8px;
-    min-height: 44px;
-  }
-
-  button:first-child {
-    background: transparent;
-    border: 1px solid ${backgammon.ivory}80;
-    color: ${backgammon.ink};
-
-    &:hover {
-      background: #ffffff12;
-    }
-  }
-
-  button:last-child {
-    background: linear-gradient(180deg, #f8e6bd, #e8c98a);
-    border: 1px solid #fff0c9;
-    box-shadow: 0 2px 0 ${backgammon.brassDeep};
-    color: #173b31;
-
-    &:hover {
-      background: linear-gradient(180deg, #fff1d1, #efd59f);
-    }
-  }
-
-  button:focus-visible {
-    outline: 2px solid ${backgammon.brassBright};
-    outline-offset: 3px;
-  }
 `;
 
 export const GuestScene = styled(UHitScene)`
@@ -390,73 +323,6 @@ export const Legend = styled.legend`
 export const List = styled.div`
   display: grid;
   gap: 10px;
-`;
-
-export const LobbyRules = styled(URules)`
-  ${boardPanel({frame: 8, points: false})};
-  color: ${backgammon.mist};
-  margin-top: 28px;
-  padding: 18px 24px;
-
-  summary {
-    ${serif};
-    align-items: center;
-    color: ${backgammon.ink};
-    cursor: pointer;
-    display: flex;
-    font-size: 21px;
-    gap: 12px;
-    list-style: none;
-
-    &::-webkit-details-marker {
-      display: none;
-    }
-
-    &::after {
-      border-bottom: 2px solid ${backgammon.brassText};
-      border-right: 2px solid ${backgammon.brassText};
-      content: '';
-      height: 9px;
-      margin: 0 6px 4px auto;
-      transform: rotate(45deg);
-      transition: transform 0.2s ease;
-      width: 9px;
-    }
-
-    &:focus-visible {
-      border-radius: 4px;
-      outline: 2px solid ${backgammon.brassBright};
-      outline-offset: 6px;
-    }
-  }
-
-  &[open] summary::after {
-    margin-bottom: -4px;
-    transform: rotate(-135deg);
-  }
-
-  ol {
-    margin: 18px 0 0;
-    padding-left: 22px;
-  }
-
-  li {
-    margin-top: 10px;
-  }
-
-  li::marker {
-    color: ${backgammon.brassText};
-    font-weight: ${fonts.weight.bold};
-  }
-
-  strong {
-    color: ${backgammon.ink};
-  }
-
-  @media (max-width: 600px) {
-    border-width: 6px;
-    padding: 16px 16px 18px;
-  }
 `;
 
 export const MatchAction = styled.span<{$highlight?: boolean}>`
@@ -610,45 +476,13 @@ export const PanelTitle = styled.h2`
 `;
 
 export const PlayButton = styled.button`
-  align-items: center;
-  background: linear-gradient(180deg, #f8e6bd, #e8c98a);
-  border: 1px solid #fff0c9;
-  border-radius: 8px;
-  box-shadow:
-    0 3px 0 ${backgammon.brassDeep},
-    0 10px 20px #0000004d;
-  color: #173b31;
-  cursor: pointer;
+  ${brassButton};
   display: flex;
-  font-family: inherit;
   font-size: 15px;
-  font-weight: ${fonts.weight.bold};
-  gap: 8px;
-  justify-content: center;
   margin-top: auto;
   min-height: 50px;
   padding: 0 20px;
-  transition:
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.15s ease;
   width: 100%;
-
-  &:hover:not(:disabled) {
-    background: linear-gradient(180deg, #fff1d1, #efd59f);
-  }
-
-  &:active:not(:disabled) {
-    box-shadow:
-      0 1px 0 ${backgammon.brassDeep},
-      0 4px 10px #0000004d;
-    transform: translateY(2px);
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${backgammon.brassBright};
-    outline-offset: 4px;
-  }
 
   &:disabled {
     cursor: wait;
@@ -726,13 +560,6 @@ export const SideChecker = styled.span<{$side: 'black' | 'white'}>`
   width: 16px;
 `;
 
-export const Small = styled.p`
-  color: ${backgammon.mist};
-  font-size: 12.5px;
-  line-height: 1.5;
-  margin: 5px 0 0;
-`;
-
 export const StakeControl = styled.span`
   display: block;
   position: relative;
@@ -769,28 +596,8 @@ export const StakeField = styled.label`
   flex-direction: column;
 `;
 
-export const Status = styled.div`
-  ${boardPanel({frame: 6, points: false})};
-  align-items: center;
-  color: ${backgammon.mist};
-  display: flex;
-  font-size: 14px;
-  gap: 14px;
-  margin-top: 24px;
-  padding: 14px 18px;
-`;
-
 export const Thumbnail = styled(UMiniBoard)`
   filter: drop-shadow(0 4px 8px #00000066);
-`;
-
-export const TitleSmall = styled.h2`
-  ${serif};
-  color: ${backgammon.ink};
-  font-size: 26px;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  margin: 0;
 `;
 
 export const Turn = styled.span<{$yours: boolean}>`

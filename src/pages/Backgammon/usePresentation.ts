@@ -79,6 +79,8 @@ const usePresentation = (
     animateDice: !!rollKey && animatedRollKey === rollKey,
     dice: currentRoll ? (match?.dice ?? []) : (lastTurn?.dice ?? []),
     diceLabel: !currentRoll && lastTurn && match ? `${getPlayerName(match, lastTurn.side)}’s last roll` : 'Dice',
+    // Who rolled the dice on show, so they land on that player's side of the board
+    diceSide: (currentRoll ? match?.active_side : lastTurn?.side) ?? null,
     rollKey,
   };
 };
