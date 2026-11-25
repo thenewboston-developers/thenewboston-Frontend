@@ -1,6 +1,7 @@
 import {Link} from 'react-router-dom';
 import styled, {css, keyframes} from 'styled-components';
 
+import UAuthButtons from 'components/AuthButtons';
 import {pagePadding} from 'styles';
 
 // The palette of a classic Jacks or Better cabinet: a royal blue screen, yellow pay table and a red bet column.
@@ -685,6 +686,20 @@ export const Service = styled.div`
   }
   [role='alert'] {
     color: #ffb0a8;
+  }
+`;
+// The site's secondary button is drawn for light pages: on the dark cabinet Sign In takes the machine's yellow outline
+export const AuthButtons = styled(UAuthButtons)`
+  justify-content: center;
+
+  button:first-child {
+    background: transparent;
+    border-color: ${YELLOW};
+    color: #ffffff;
+  }
+
+  button:first-child:hover {
+    background: #ffffff14;
   }
 `;
 export const ServiceActions = styled.div`
