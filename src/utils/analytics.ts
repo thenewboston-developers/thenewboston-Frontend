@@ -13,6 +13,9 @@ let identifiedUserId: string | null = null;
 
 // The router replaces these paths with a real page straight away, and that page records its own pageview
 const redirectRoutes = [
+  '/casino',
+  '/casino/slots',
+  '/casino/roulette',
   '/checkers',
   '/hex',
   '/battleship',
@@ -24,12 +27,16 @@ const redirectRoutes = [
   '/feed',
   '/mancala',
   '/reversi',
+  '/roulette',
+  '/slots',
   '/wallets',
 ];
 
 const routes = [
   '/',
   '/games',
+  '/slots/home',
+  '/roulette/home',
   '/create-account',
   '/sign-in',
   '/logout',

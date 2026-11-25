@@ -1,6 +1,6 @@
 import {act} from 'react';
 import {createRoot, Root} from 'react-dom/client';
-import {MemoryRouter, Route, Routes} from 'react-router-dom';
+import {MemoryRouter, Route, Routes, useLocation, useNavigationType} from 'react-router-dom';
 
 import {
   createCasinoCommitment,
@@ -10,10 +10,11 @@ import {
   moveCasinoFunds,
   placeCasinoBet,
 } from 'api/casino';
+import Casino from 'pages/Casino';
+import Roulette from 'pages/Roulette';
+import Slots from 'pages/Slots';
 import {CasinoBet, CasinoSummary} from 'types/casino';
 import {readPendingCasinoBet, savePendingCasinoBet} from 'utils/casino';
-
-import Casino from './index';
 
 jest.mock('api/casino', () => ({
   createCasinoCommitment: jest.fn(),
@@ -114,11 +115,26 @@ const settled: CasinoBet = {
 
 const button = (label: string) =>
   Array.from(container.querySelectorAll('button')).find((element) => element.textContent?.includes(label))!;
-const render = async (path = '/casino/slots') => {
+const LocationProbe = () => {
+  const {hash, pathname, search} = useLocation();
+  const navigationType = useNavigationType();
+  return (
+    <output aria-label="Current location" data-navigation-type={navigationType}>
+      {pathname}
+      {search}
+      {hash}
+    </output>
+  );
+};
+
+const render = async (path = '/slots/home') => {
   await act(async () =>
     root.render(
       <MemoryRouter future={{v7_relativeSplatPath: true, v7_startTransition: true}} initialEntries={[path]}>
+        <LocationProbe />
         <Routes>
+          <Route element={<Slots />} path="/slots/*" />
+          <Route element={<Roulette />} path="/roulette/*" />
           <Route element={<Casino />} path="/casino/*" />
         </Routes>
       </MemoryRouter>,
@@ -169,7 +185,7 @@ it('shows the 100x slots cap and the 10 TNB limit supported by a 100,000 TNB fun
 });
 
 it('uses the selection-specific roulette limit and submits an integer selection', async () => {
-  await render('/casino/roulette');
+  await render('/roulette/home');
   expect(container).toHaveTextContent('Maximum 1,000 TNB');
   act(() => change('#roulette-selection', 'number'));
   expect(container).toHaveTextContent('Maximum 28 TNB');
@@ -308,4 +324,72 @@ it('does not render an unfinished history receipt as a settled payout', async ()
   ]);
   await render();
   expect(container).toHaveTextContent('Your settled bets will appear here.');
+});
+
+it.each([
+  ['/slots/home', 'Slots', 'Spin 1 TNB'],
+  ['/roulette/home', 'Roulette', 'Bet 1 TNB'],
+])('renders the independent game page at %s', async (path, title, action) => {
+  await render(path);
+  expect(container.querySelector('h1')).toHaveTextContent(title);
+  expect(button(action)).toBeEnabled();
+  expect(container.querySelector('nav a[href="/slots/home"]')).not.toBeNull();
+  expect(container.querySelector('nav a[href="/roulette/home"]')).not.toBeNull();
+});
+
+it.each([
+  ['/casino/slots?source=bookmark#receipt', '/slots/home?source=bookmark#receipt', 'Slots'],
+  ['/casino/roulette?source=bookmark#receipt', '/roulette/home?source=bookmark#receipt', 'Roulette'],
+  ['/casino?source=bookmark#receipt', '/slots/home?source=bookmark#receipt', 'Slots'],
+  ['/slots?source=bookmark#receipt', '/slots/home?source=bookmark#receipt', 'Slots'],
+  ['/roulette?source=bookmark#receipt', '/roulette/home?source=bookmark#receipt', 'Roulette'],
+])('replaces %s with its canonical page without losing URL context', async (from, to, title) => {
+  await render(from);
+  const location = container.querySelector('output');
+  expect(location).toHaveTextContent(to);
+  expect(location).toHaveAttribute('data-navigation-type', 'REPLACE');
+  expect(container.querySelector('h1')).toHaveTextContent(title);
+  expect(placeCasinoBet).not.toHaveBeenCalled();
+  expect(createCasinoCommitment).not.toHaveBeenCalled();
+});
+
+it('recovers a pending Slots wager from the new Roulette page without changing its game or request ID', async () => {
+  const original = {
+    amount: 1,
+    client_seed: 'client',
+    commitment_id: 'commitment-id',
+    game: 'slots' as const,
+    request_id: 'request-id',
+    rules_version: 1,
+  };
+  savePendingCasinoBet(7, {payload: original, serverSeedHash: commitment.server_seed_hash});
+  await render('/roulette/home');
+  expect(container.querySelector('h1')).toHaveTextContent('Roulette');
+  expect(container).toHaveTextContent('1 TNB slots bet is awaiting confirmation');
+  await act(async () => button('Retry same bet').click());
+  expect(placeCasinoBet).toHaveBeenCalledWith(original);
+  expect(createCasinoCommitment).not.toHaveBeenCalled();
+  expect(readPendingCasinoBet(7)).toBeNull();
+  expect(container.querySelector('[aria-label="Roulette result"]')).toHaveTextContent('?');
+  expect(container).toHaveTextContent('Bet receipt & fairness');
+});
+
+it('recovers an already settled bet after following a legacy route without placing a new wager', async () => {
+  savePendingCasinoBet(7, {
+    payload: {
+      amount: 1,
+      client_seed: 'client',
+      commitment_id: 'commitment-id',
+      game: 'slots',
+      request_id: 'request-id',
+      rules_version: 1,
+    },
+    serverSeedHash: commitment.server_seed_hash,
+  });
+  (getCasinoBet as jest.Mock).mockResolvedValueOnce(settled);
+  await render('/casino/slots');
+  expect(container.querySelector('output')).toHaveTextContent('/slots/home');
+  expect(container).toHaveTextContent('2 TNB returned');
+  expect(placeCasinoBet).not.toHaveBeenCalled();
+  expect(readPendingCasinoBet(7)).toBeNull();
 });

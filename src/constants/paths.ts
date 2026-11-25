@@ -25,6 +25,8 @@ export const PATH_POST_DETAIL = '/posts/:postId';
 export const POST_DETAIL_COMMENT_PARAM = 'comment';
 export const PATH_PROFILE = `/profile/:id/${WILDCARD}`;
 export const PATH_REVERSI = `/reversi/${WILDCARD}`;
+export const PATH_ROULETTE = `/roulette/${WILDCARD}`;
+export const PATH_SLOTS = `/slots/${WILDCARD}`;
 export const PATH_WALLETS = `/wallets/${WILDCARD}`;
 
 // Default redirect path

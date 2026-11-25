@@ -24,6 +24,12 @@ describe('isPathActive', () => {
     '/dots-and-boxes/matches/12',
     '/hex',
     '/hex/home',
+    '/slots',
+    '/slots/home',
+    '/roulette',
+    '/roulette/home',
+    '/casino/slots',
+    '/casino/roulette',
     '/hex/matches/12',
   ])('keeps Games active on %s', (pathname) => {
     expect(isPathActive(pathname, '/games')).toBe(true);
@@ -39,6 +45,9 @@ describe('isPathActive', () => {
     '/dots-and-boxes-extra',
     '/hex-extra',
     '/hexagon',
+    '/slots-extra',
+    '/roulette-extra',
+    '/casino-extra',
     '/exchange',
     '/',
   ])('does not activate Games on %s', (pathname) => {
