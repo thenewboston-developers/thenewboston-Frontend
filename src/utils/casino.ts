@@ -64,7 +64,9 @@ export const getCasinoGameLink = (game: string): CasinoGameLink => ({
 });
 
 export const casinoErrorMessage = (error: unknown, fallback: string) => {
-  const data = (error as {response?: {data?: Record<string, unknown>}})?.response?.data;
+  const body = (error as {response?: {data?: unknown}})?.response?.data;
+  // A gateway or server failure answers with a page of HTML, not with the casino's own error: say the fallback
+  const data = body && typeof body === 'object' && !Array.isArray(body) ? (body as Record<string, unknown>) : undefined;
   if (typeof data?.detail === 'string') return data.detail;
   if (typeof data?.message === 'string') return data.message;
   if (typeof (data?.detail as {message?: string})?.message === 'string')
