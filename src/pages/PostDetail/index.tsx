@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useNavigate, useParams, useSearchParams} from 'react-router-dom';
 import {mdiArrowLeft} from '@mdi/js';
 
 import Icon from 'components/Icon';
 import Post from 'components/Post';
 import PostSkeleton from 'components/Post/PostSkeleton';
-import {PATH_HOME, PATH_NOTIFICATIONS} from 'constants/paths';
+import {PATH_HOME, PATH_NOTIFICATIONS, POST_DETAIL_COMMENT_PARAM} from 'constants/paths';
 import {getPost} from 'dispatchers/posts';
 import {useIsAuthenticated} from 'hooks';
 import {getPosts} from 'selectors/state';
@@ -17,7 +17,9 @@ import * as S from './Styles';
 
 const PostDetail: SFC = ({className}) => {
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
   const dispatch = useDispatch<AppDispatch>();
+  const highlightedCommentId = Number(searchParams.get(POST_DETAIL_COMMENT_PARAM)) || null;
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const {postId} = useParams<{postId: string}>();
@@ -57,7 +59,13 @@ const PostDetail: SFC = ({className}) => {
         </S.BackButton>
       </S.Header>
       <S.ScrollableContent>
-        <S.Content>{loading ? <PostSkeleton dataLength={1} /> : post && <Post post={post} />}</S.Content>
+        <S.Content>
+          {loading ? (
+            <PostSkeleton dataLength={1} />
+          ) : (
+            post && <Post highlightedCommentId={highlightedCommentId} post={post} />
+          )}
+        </S.Content>
       </S.ScrollableContent>
     </S.Container>
   );

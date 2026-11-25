@@ -21,6 +21,8 @@ import * as S from './Styles';
 import TransferInfo from './TransferInfo';
 
 export interface PostProps {
+  // The comment a notification points to, which is scrolled into view and highlighted
+  highlightedCommentId?: number | null;
   post: TPost;
 }
 
@@ -68,7 +70,7 @@ const extractYouTubeVideoId = (text: string): string | null => {
   return null;
 };
 
-const Post: SFC<PostProps> = ({className, post}) => {
+const Post: SFC<PostProps> = ({className, highlightedCommentId, post}) => {
   const [animateLike, setAnimateLike] = useState(false);
   const [isOpenCommentBox, setIsOpenCommentBox] = useState(true);
   const [likesModalIsOpen, toggleLikesModal] = useToggle(false);
@@ -270,7 +272,7 @@ const Post: SFC<PostProps> = ({className, post}) => {
             <S.TipAmounts tipAmounts={coin_transfer_amounts} />
           )}
         </S.ActionsContainer>
-        {isOpenCommentBox && <Comments postId={post.id} />}
+        {isOpenCommentBox && <Comments highlightedCommentId={highlightedCommentId} postId={post.id} />}
       </S.Container>
       {likesModalIsOpen ? <PostLikesModal close={toggleLikesModal} postId={post.id} /> : null}
       {postModalIsOpen ? <PostModal close={togglePostModal} post={post} /> : null}

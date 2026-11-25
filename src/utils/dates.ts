@@ -10,12 +10,13 @@ const getPluralizedTime = (value: number, singularNoun: string, pluralNoun: stri
   return `${value} ${value === 1 ? singularNoun : pluralNoun}`;
 };
 
+// Anything under a minute old is "Just now", which also covers a server clock running a little ahead of this one
 export const getTimeAgo = (date: Date | number | string): string => {
   const _date = new Date(date);
   const now = new Date();
 
   const seconds = Math.floor((now.getTime() - _date.getTime()) / 1000);
-  if (seconds < 60) return getPluralizedTime(seconds, 'second', 'seconds') + ' ago';
+  if (seconds < 60) return 'Just now';
 
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return getPluralizedTime(minutes, 'minute', 'minutes') + ' ago';

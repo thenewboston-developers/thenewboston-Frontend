@@ -1,578 +1,352 @@
-import {ReactNode} from 'react';
-import {useDispatch} from 'react-redux';
-import {Link, useNavigate} from 'react-router-dom';
+import {ReactNode, useId} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   mdiAccountPlus,
   mdiAt,
-  mdiContentCopy,
-  mdiGamepadVariantOutline,
+  mdiCommentText,
+  mdiGamepadVariant,
+  mdiHandCoin,
   mdiHeart,
   mdiSwapHorizontal,
-  mdiWalletBifoldOutline,
 } from '@mdi/js';
+import MdiIcon from '@mdi/react';
 
 import Avatar from 'components/Avatar';
 import CurrencyLogo from 'components/CurrencyLogo';
 import {updateNotification} from 'dispatchers/notifications';
 import {ExchangeOrderSide, NotificationType} from 'enums';
-import {AppDispatch, Notification as TNotification, SFC} from 'types';
-import {longDate} from 'utils/dates';
+import {getSelf} from 'selectors/state';
+import {
+  AppDispatch,
+  CommentReadSerializer,
+  CurrencyTinySerializer,
+  Notification as TNotification,
+  SFC,
+  UserReadSerializer,
+} from 'types';
+import {NotificationPayload} from 'types/notifications';
+import {getTimeAgo, longDate} from 'utils/dates';
+import {getNotificationPath} from 'utils/notifications';
+import {splitMentions} from 'utils/strings';
 import {displayErrorToast} from 'utils/toasts';
 
 import * as S from './Styles';
+
+interface CommentSnapshot {
+  content: string;
+  mentionedUsernames?: string[];
+  tip: {amount: number; currency: CurrencyTinySerializer} | null;
+}
 
 export interface NotificationProps {
   notification: TNotification;
 }
 
+interface NotificationView {
+  actor?: Pick<UserReadSerializer, 'avatar' | 'id' | 'username'>;
+  badge: {icon: string; kind: S.BadgeKind};
+  body?: ReactNode;
+  // Shown instead of the avatar of the actor
+  leading?: ReactNode;
+  summary: ReactNode;
+}
+
+interface PostPreview {
+  // Names the post when it is the context of what happened rather than what happened
+  label?: string;
+  preview?: string;
+  thumbnail?: string | null;
+}
+
+const CHALLENGE_GAME_NAMES: {[type: string]: string} = {
+  [NotificationType.BACKGAMMON_CHALLENGE]: 'Backgammon',
+  [NotificationType.BATTLESHIP_CHALLENGE]: 'Battleship',
+  [NotificationType.CHECKERS_CHALLENGE]: 'Checkers',
+  [NotificationType.CONNECT_FIVE_CHALLENGE]: 'Connect Five',
+  [NotificationType.DOTS_AND_BOXES_CHALLENGE]: 'Dots and Boxes',
+  [NotificationType.HEX_CHALLENGE]: 'Hex',
+  [NotificationType.MANCALA_CHALLENGE]: 'Mancala',
+  [NotificationType.REVERSI_CHALLENGE]: 'Reversi',
+};
+
+const formatMinutesPerPlayer = (seconds: number) => `${Math.round(seconds / 60)} min per player`;
+
+const formatStake = (stakeAmount: number) => (stakeAmount ? `Stake ${stakeAmount.toLocaleString()} TNB` : 'Free match');
+
+const getChallengeDetails = (payload: NotificationPayload): string[] => {
+  switch (payload.notification_type) {
+    case NotificationType.BACKGAMMON_CHALLENGE:
+      return [
+        formatStake(payload.stake_amount),
+        `First to ${payload.target_score} ${payload.target_score === 1 ? 'point' : 'points'}`,
+        formatMinutesPerPlayer(payload.time_limit_seconds),
+      ];
+    case NotificationType.CONNECT_FIVE_CHALLENGE:
+      return [
+        formatStake(payload.stake_amount),
+        ...(payload.max_spend_amount ? [`Max spend ${payload.max_spend_amount.toLocaleString()} TNB`] : []),
+        formatMinutesPerPlayer(payload.time_limit_seconds),
+      ];
+    case NotificationType.DOTS_AND_BOXES_CHALLENGE:
+    case NotificationType.HEX_CHALLENGE:
+      return [
+        formatStake(payload.stake_amount),
+        `${payload.board_size} × ${payload.board_size} board`,
+        formatMinutesPerPlayer(payload.time_limit_seconds),
+      ];
+    case NotificationType.BATTLESHIP_CHALLENGE:
+    case NotificationType.CHECKERS_CHALLENGE:
+    case NotificationType.MANCALA_CHALLENGE:
+    case NotificationType.REVERSI_CHALLENGE:
+      return [formatStake(payload.stake_amount), formatMinutesPerPlayer(payload.time_limit_seconds)];
+    default:
+      return [];
+  }
+};
+
+// Notifications created before January 2026 hold only the text of the comment, the oldest ones not even that
+const getCommentSnapshot = (comment: CommentReadSerializer | string | undefined, preview?: string): CommentSnapshot => {
+  if (comment && typeof comment === 'object') {
+    const {content, mentioned_users, price_amount, price_currency} = comment;
+    return {
+      content,
+      mentionedUsernames: mentioned_users?.map(({username}) => username),
+      tip: price_amount && price_currency ? {amount: price_amount, currency: price_currency} : null,
+    };
+  }
+
+  return {content: typeof comment === 'string' ? comment : preview || '', tip: null};
+};
+
 const Notification: SFC<NotificationProps> = ({className, notification}) => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
+  const self = useSelector(getSelf);
+  const summaryId = useId();
+  const {created_date, id, is_read, payload} = notification;
+  const path = getNotificationPath(payload);
 
-  const handleContainerClick = async () => {
-    if (!notification.is_read) {
-      try {
-        await dispatch(updateNotification(notification.id));
-      } catch (error) {
-        displayErrorToast('Failed to mark notification as read');
+  const getView = (): NotificationView | null => {
+    switch (payload.notification_type) {
+      case NotificationType.BACKGAMMON_CHALLENGE:
+      case NotificationType.BATTLESHIP_CHALLENGE:
+      case NotificationType.CHECKERS_CHALLENGE:
+      case NotificationType.CONNECT_FIVE_CHALLENGE:
+      case NotificationType.DOTS_AND_BOXES_CHALLENGE:
+      case NotificationType.HEX_CHALLENGE:
+      case NotificationType.MANCALA_CHALLENGE:
+      case NotificationType.REVERSI_CHALLENGE:
+        return {
+          actor: payload.challenger,
+          badge: {icon: mdiGamepadVariant, kind: 'neutral'},
+          body: renderDetails(getChallengeDetails(payload)),
+          summary: `challenged you to ${CHALLENGE_GAME_NAMES[payload.notification_type]}`,
+        };
+      case NotificationType.COMMENT_MENTION: {
+        const {comment, comment_preview, mentioner, post_image_thumbnail, post_owner, post_preview} = payload;
+        const postIsOwn = !!post_owner && post_owner.id === self.id;
+        let postLabel = 'Post';
+        if (postIsOwn) postLabel = 'Your post';
+        else if (post_owner) postLabel = `${post_owner.username}'s post`;
+
+        return {
+          actor: mentioner,
+          badge: {icon: mdiAt, kind: 'mention'},
+          body: (
+            <>
+              {renderComment(getCommentSnapshot(comment, comment_preview), postIsOwn)}
+              {renderPost({label: postLabel, preview: post_preview, thumbnail: post_image_thumbnail})}
+            </>
+          ),
+          summary: 'mentioned you in a comment',
+        };
       }
-    }
+      case NotificationType.EXCHANGE_ORDER_FILLED: {
+        const {primary_currency, price, quantity, secondary_currency, side} = payload;
+        const isBuy = side === ExchangeOrderSide.BUY;
+        const received = isBuy ? quantity : quantity * price;
+        const receivedTicker = isBuy ? primary_currency.ticker : secondary_currency.ticker;
 
-    const notificationType = notification.payload.notification_type;
-    if (notification.payload.notification_type === NotificationType.CHECKERS_CHALLENGE) {
-      navigate(`/checkers/matches/${notification.payload.match_id}`);
-      return;
-    }
-    if (notification.payload.notification_type === NotificationType.BATTLESHIP_CHALLENGE) {
-      navigate(`/battleship/matches/${notification.payload.match_id}`);
-      return;
-    }
-    if (notification.payload.notification_type === NotificationType.BACKGAMMON_CHALLENGE) {
-      navigate(`/backgammon/matches/${notification.payload.match_id}`);
-      return;
-    }
-    if (notification.payload.notification_type === NotificationType.DOTS_AND_BOXES_CHALLENGE) {
-      navigate(`/dots-and-boxes/matches/${notification.payload.match_id}`);
-      return;
-    }
-    if (notification.payload.notification_type === NotificationType.HEX_CHALLENGE) {
-      navigate(`/hex/matches/${notification.payload.match_id}`);
-      return;
-    }
-    if (notification.payload.notification_type === NotificationType.MANCALA_CHALLENGE) {
-      navigate(`/mancala/matches/${notification.payload.match_id}`);
-      return;
-    }
-    if (notification.payload.notification_type === NotificationType.REVERSI_CHALLENGE) {
-      navigate(`/reversi/matches/${notification.payload.match_id}`);
-      return;
-    }
-    if (
-      notificationType === NotificationType.COMMENT_MENTION ||
-      notificationType === NotificationType.CONNECT_FIVE_CHALLENGE ||
-      notificationType === NotificationType.POST_COMMENT ||
-      notificationType === NotificationType.POST_COIN_TRANSFER ||
-      notificationType === NotificationType.POST_LIKE ||
-      notificationType === NotificationType.POST_MENTION
-    ) {
-      const {payload} = notification;
-      if (notificationType === NotificationType.CONNECT_FIVE_CHALLENGE && 'challenge_id' in payload) {
-        navigate('/connect-five/home');
-        return;
+        return {
+          badge: {icon: mdiSwapHorizontal, kind: 'neutral'},
+          body: (
+            <S.Secondary>
+              You received {received.toLocaleString()} {receivedTicker}
+            </S.Secondary>
+          ),
+          leading: <CurrencyLogo logo={primary_currency.logo} width="44px" />,
+          summary: `Your order to ${isBuy ? 'buy' : 'sell'} ${quantity.toLocaleString()} ${
+            primary_currency.ticker
+          } was filled`,
+        };
       }
-      if ('post_id' in payload) {
-        navigate(`/posts/${payload.post_id}`);
+      case NotificationType.POST_COIN_TRANSFER: {
+        const {owner, post_image_thumbnail, post_preview, price_amount, price_currency_ticker} = payload;
+
+        return {
+          actor: owner,
+          badge: {icon: mdiHandCoin, kind: 'money'},
+          body: renderPost({preview: post_preview, thumbnail: post_image_thumbnail}),
+          summary: (
+            <>
+              sent you{' '}
+              <strong>
+                {price_amount.toLocaleString()} {price_currency_ticker}
+              </strong>{' '}
+              with a post
+            </>
+          ),
+        };
       }
+      case NotificationType.POST_COMMENT: {
+        const {comment, comment_preview, commenter, post_image_thumbnail, post_preview} = payload;
+
+        return {
+          actor: commenter,
+          badge: {icon: mdiCommentText, kind: 'comment'},
+          body: (
+            <>
+              {renderComment(getCommentSnapshot(comment, comment_preview), true)}
+              {renderPost({label: 'Your post', preview: post_preview, thumbnail: post_image_thumbnail})}
+            </>
+          ),
+          summary: 'commented on your post',
+        };
+      }
+      case NotificationType.POST_LIKE:
+        return {
+          actor: payload.liker,
+          badge: {icon: mdiHeart, kind: 'like'},
+          body: renderPost({
+            label: 'Your post',
+            preview: payload.post_preview,
+            thumbnail: payload.post_image_thumbnail,
+          }),
+          summary: 'liked your post',
+        };
+      case NotificationType.POST_MENTION:
+        return {
+          actor: payload.mentioner,
+          badge: {icon: mdiAt, kind: 'mention'},
+          body: renderPost({preview: payload.post_preview, thumbnail: payload.post_image_thumbnail}),
+          summary: 'mentioned you in a post',
+        };
+      case NotificationType.PROFILE_FOLLOW:
+        return {
+          actor: payload.follower,
+          badge: {icon: mdiAccountPlus, kind: 'neutral'},
+          summary: 'started following you',
+        };
+      default:
+        return null;
     }
   };
 
-  const renderBackgammonChallengeNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.BACKGAMMON_CHALLENGE) return null;
+  const handleClick = async () => {
+    if (is_read) return;
 
-    const {challenger, match_id, stake_amount, target_score, time_limit_seconds} = notification.payload;
+    try {
+      await dispatch(updateNotification(id));
+    } catch (error) {
+      displayErrorToast('Failed to mark notification as read');
+    }
+  };
+
+  const renderComment = ({content, mentionedUsernames, tip}: CommentSnapshot, tipIsForSelf: boolean) => {
+    return (
+      <>
+        {content ? (
+          <S.CommentBubble>
+            <S.CommentText>{renderText(content, mentionedUsernames)}</S.CommentText>
+          </S.CommentBubble>
+        ) : null}
+        {tip && tipIsForSelf ? (
+          <S.Tip>
+            <S.TipLogo alt="" src={tip.currency.logo} />
+            Tipped you {tip.amount.toLocaleString()} {tip.currency.ticker}
+          </S.Tip>
+        ) : null}
+      </>
+    );
+  };
+
+  const renderDetails = (details: string[]) => {
+    if (!details.length) return null;
 
     return (
-      <S.NotificationContainer>
-        <Link to={`/backgammon/matches/${match_id}`}>
-          <S.AvatarContainer>
-            <Avatar size="45px" src={challenger.avatar} />
-            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
-              {challenger.username}
-            </S.Link>{' '}
-            challenged you to Backgammon
-          </S.MainText>
-          <S.PostPreviewText>
-            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} · First to{' '}
-            {target_score} {target_score === 1 ? 'point' : 'points'} · {time_limit_seconds / 60} min per player
-          </S.PostPreviewText>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
-        </S.TextContainer>
-        {renderRedDot()}
-      </S.NotificationContainer>
+      <S.Details>
+        {details.map((detail) => (
+          <S.Detail key={detail}>{detail}</S.Detail>
+        ))}
+      </S.Details>
     );
   };
 
-  const renderBattleshipChallengeNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.BATTLESHIP_CHALLENGE) return null;
-
-    const {challenger, match_id, stake_amount, time_limit_seconds} = notification.payload;
+  // The oldest notifications have neither a preview nor an image of the post, then the summary says enough
+  const renderPost = ({label, preview, thumbnail}: PostPreview) => {
+    if (!preview && !thumbnail) return null;
 
     return (
-      <S.NotificationContainer>
-        <Link to={`/battleship/matches/${match_id}`}>
-          <S.AvatarContainer>
-            <Avatar size="45px" src={challenger.avatar} />
-            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
-              {challenger.username}
-            </S.Link>{' '}
-            challenged you to Battleship
-          </S.MainText>
-          <S.PostPreviewText>
-            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} ·{' '}
-            {time_limit_seconds / 60} min per player
-          </S.PostPreviewText>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
-        </S.TextContainer>
-        {renderRedDot()}
-      </S.NotificationContainer>
+      <S.PostCard>
+        <S.PostCardTextContainer>
+          {label ? <S.PostCardLabel>{label}</S.PostCardLabel> : null}
+          <S.PostCardText $isContext={!!label}>
+            {preview ? renderText(preview) : <S.PostCardWithoutText>Photo</S.PostCardWithoutText>}
+          </S.PostCardText>
+        </S.PostCardTextContainer>
+        {thumbnail ? <S.PostCardThumbnail alt="" src={thumbnail} /> : null}
+      </S.PostCard>
     );
   };
 
-  const renderCheckersChallengeNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.CHECKERS_CHALLENGE) return null;
-
-    const {challenger, match_id, stake_amount, time_limit_seconds} = notification.payload;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/checkers/matches/${match_id}`}>
-          <S.AvatarContainer>
-            <Avatar size="45px" src={challenger.avatar} />
-            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
-              {challenger.username}
-            </S.Link>{' '}
-            challenged you to Checkers
-          </S.MainText>
-          <S.PostPreviewText>
-            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} ·{' '}
-            {time_limit_seconds / 60} min per player
-          </S.PostPreviewText>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
-        </S.TextContainer>
-        {renderRedDot()}
-      </S.NotificationContainer>
+  const renderText = (text: string, usernames?: string[]) => {
+    return splitMentions(text, usernames).map((part, index) =>
+      part.isMention ? <S.Mention key={index}>{part.text}</S.Mention> : part.text,
     );
   };
 
-  const renderHexChallengeNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.HEX_CHALLENGE) return null;
+  const view = getView();
+  if (!view) return null;
 
-    const {board_size, challenger, match_id, stake_amount, time_limit_seconds} = notification.payload;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/hex/matches/${match_id}`}>
-          <S.AvatarContainer>
-            <Avatar size="45px" src={challenger.avatar} />
-            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
-              {challenger.username}
-            </S.Link>{' '}
-            challenged you to Hex
-          </S.MainText>
-          <S.PostPreviewText>
-            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} · {board_size} ×{' '}
-            {board_size} board · {time_limit_seconds / 60} min per player
-          </S.PostPreviewText>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
-        </S.TextContainer>
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
-  const renderMancalaChallengeNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.MANCALA_CHALLENGE) return null;
-
-    const {challenger, match_id, stake_amount, time_limit_seconds} = notification.payload;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/mancala/matches/${match_id}`}>
-          <S.AvatarContainer>
-            <Avatar size="45px" src={challenger.avatar} />
-            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
-              {challenger.username}
-            </S.Link>{' '}
-            challenged you to Mancala
-          </S.MainText>
-          <S.PostPreviewText>
-            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} ·{' '}
-            {time_limit_seconds / 60} min per player
-          </S.PostPreviewText>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
-        </S.TextContainer>
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
-  const renderContent = () => {
-    const notificationTypes: {[key in NotificationType]: () => ReactNode} = {
-      [NotificationType.BACKGAMMON_CHALLENGE]: renderBackgammonChallengeNotification,
-      [NotificationType.BATTLESHIP_CHALLENGE]: renderBattleshipChallengeNotification,
-      [NotificationType.CHECKERS_CHALLENGE]: renderCheckersChallengeNotification,
-      [NotificationType.COMMENT_MENTION]: renderCommentMentionNotification,
-      [NotificationType.CONNECT_FIVE_CHALLENGE]: renderConnectFiveChallengeNotification,
-      [NotificationType.DOTS_AND_BOXES_CHALLENGE]: renderDotsAndBoxesChallengeNotification,
-      [NotificationType.EXCHANGE_ORDER_FILLED]: renderExchangeOrderFilledNotification,
-      [NotificationType.HEX_CHALLENGE]: renderHexChallengeNotification,
-      [NotificationType.MANCALA_CHALLENGE]: renderMancalaChallengeNotification,
-      [NotificationType.POST_COIN_TRANSFER]: renderPostCoinTransferNotification,
-      [NotificationType.POST_COMMENT]: renderPostCommentNotification,
-      [NotificationType.POST_LIKE]: renderPostLikeNotification,
-      [NotificationType.POST_MENTION]: renderPostMentionNotification,
-      [NotificationType.PROFILE_FOLLOW]: renderProfileFollowNotification,
-      [NotificationType.REVERSI_CHALLENGE]: renderReversiChallengeNotification,
-    };
-
-    const renderFunction = notificationTypes[notification.payload.notification_type as NotificationType];
-    return renderFunction ? renderFunction() : null;
-  };
-
-  const renderDotsAndBoxesChallengeNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.DOTS_AND_BOXES_CHALLENGE) return null;
-
-    const {board_size, challenger, match_id, stake_amount, time_limit_seconds} = notification.payload;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/dots-and-boxes/matches/${match_id}`}>
-          <S.AvatarContainer>
-            <Avatar size="45px" src={challenger.avatar} />
-            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
-              {challenger.username}
-            </S.Link>{' '}
-            challenged you to Dots and Boxes
-          </S.MainText>
-          <S.PostPreviewText>
-            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} · {board_size} ×{' '}
-            {board_size} board · {time_limit_seconds / 60} min per player
-          </S.PostPreviewText>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
-        </S.TextContainer>
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
-  const renderExchangeOrderFilledNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.EXCHANGE_ORDER_FILLED) return null;
-
-    const {side, price, primary_currency, quantity, secondary_currency} = notification.payload;
-    const action = side === ExchangeOrderSide.BUY ? 'buy' : 'sell';
-
-    const totalReceived = side === ExchangeOrderSide.BUY ? quantity : quantity * price;
-    const receivedTicker = side === ExchangeOrderSide.BUY ? primary_currency.ticker : secondary_currency.ticker;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/currencies/${primary_currency.id}`}>
-          <S.CurrencyLogoContainer>
-            <CurrencyLogo logo={primary_currency.logo} width="45px" />
-            <S.ExchangeIcon path={mdiSwapHorizontal} size="23px" />
-          </S.CurrencyLogoContainer>
-        </Link>
-        <S.TextContainer>
-          <div>
-            Your order to {action} {quantity.toLocaleString()} {primary_currency.ticker} was filled. You received a
-            total of {totalReceived.toLocaleString()} {receivedTicker}.
-          </div>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
-        </S.TextContainer>
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
-  const renderPostCoinTransferNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.POST_COIN_TRANSFER) return null;
-
-    const {owner, post_created, post_image_thumbnail, post_preview, price_amount, price_currency_ticker} =
-      notification.payload;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/profile/${owner.id}`} onClick={(e) => e.stopPropagation()}>
-          <S.AvatarContainer>
-            <Avatar src={owner.avatar} size="45px" />
-            <S.AvatarIcon path={mdiWalletBifoldOutline} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link to={`/profile/${owner.id}`} onClick={(e) => e.stopPropagation()}>
-              {owner.username}
-            </S.Link>{' '}
-            sent you {price_amount.toLocaleString()} {price_currency_ticker} via a post:
-          </S.MainText>
-          <S.PostPreviewText>{post_preview}</S.PostPreviewText>
-          <S.TimeStamp>{longDate(post_created)}</S.TimeStamp>
-        </S.TextContainer>
-        {post_image_thumbnail && <S.PostThumbnail alt="Post thumbnail" src={post_image_thumbnail} />}
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
-  const renderPostCommentNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.POST_COMMENT) return null;
-
-    const {comment_preview, commenter, post_created, post_image_thumbnail, post_preview} = notification.payload;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/profile/${commenter.id}`} onClick={(e) => e.stopPropagation()}>
-          <S.AvatarContainer>
-            <Avatar src={commenter.avatar} size="45px" />
-            <S.AvatarIcon path={mdiContentCopy} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link to={`/profile/${commenter.id}`} onClick={(e) => e.stopPropagation()}>
-              {commenter.username}
-            </S.Link>{' '}
-            commented on your post
-          </S.MainText>
-          <S.PostPreviewText>{post_preview}</S.PostPreviewText>
-          <S.CommentText>{comment_preview}</S.CommentText>
-          <S.TimeStamp>{longDate(post_created)}</S.TimeStamp>
-        </S.TextContainer>
-        {post_image_thumbnail && <S.PostThumbnail alt="Post thumbnail" src={post_image_thumbnail} />}
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
-  const renderPostLikeNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.POST_LIKE) return null;
-
-    const {liker, post_created, post_image_thumbnail, post_preview} = notification.payload;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/profile/${liker.id}`} onClick={(e) => e.stopPropagation()}>
-          <S.AvatarContainer>
-            <Avatar src={liker.avatar} size="45px" />
-            <S.AvatarIcon path={mdiHeart} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link to={`/profile/${liker.id}`} onClick={(e) => e.stopPropagation()}>
-              {liker.username}
-            </S.Link>{' '}
-            liked your post:
-          </S.MainText>
-          <S.PostPreviewText>{post_preview}</S.PostPreviewText>
-          <S.TimeStamp>{longDate(post_created)}</S.TimeStamp>
-        </S.TextContainer>
-        {post_image_thumbnail && <S.PostThumbnail alt="Post thumbnail" src={post_image_thumbnail} />}
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
-  const renderCommentMentionNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.COMMENT_MENTION) return null;
-
-    const {comment_preview, mentioner, post_created, post_image_thumbnail, post_preview} = notification.payload;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/profile/${mentioner.id}`} onClick={(e) => e.stopPropagation()}>
-          <S.AvatarContainer>
-            <Avatar src={mentioner.avatar} size="45px" />
-            <S.AvatarIcon path={mdiAt} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link to={`/profile/${mentioner.id}`} onClick={(e) => e.stopPropagation()}>
-              {mentioner.username}
-            </S.Link>{' '}
-            mentioned you in a comment:
-          </S.MainText>
-          <S.PostPreviewText>{post_preview}</S.PostPreviewText>
-          <S.CommentText>{comment_preview}</S.CommentText>
-          <S.TimeStamp>{longDate(post_created)}</S.TimeStamp>
-        </S.TextContainer>
-        {post_image_thumbnail && <S.PostThumbnail alt="Post thumbnail" src={post_image_thumbnail} />}
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
-  const renderPostMentionNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.POST_MENTION) return null;
-
-    const {mentioner, post_created, post_image_thumbnail, post_preview} = notification.payload;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/profile/${mentioner.id}`} onClick={(e) => e.stopPropagation()}>
-          <S.AvatarContainer>
-            <Avatar src={mentioner.avatar} size="45px" />
-            <S.AvatarIcon path={mdiAt} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link to={`/profile/${mentioner.id}`} onClick={(e) => e.stopPropagation()}>
-              {mentioner.username}
-            </S.Link>{' '}
-            mentioned you in a post:
-          </S.MainText>
-          <S.PostPreviewText>{post_preview}</S.PostPreviewText>
-          <S.TimeStamp>{longDate(post_created)}</S.TimeStamp>
-        </S.TextContainer>
-        {post_image_thumbnail && <S.PostThumbnail alt="Post thumbnail" src={post_image_thumbnail} />}
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
-  const renderProfileFollowNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.PROFILE_FOLLOW) return null;
-
-    const {follower} = notification.payload;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/profile/${follower.id}`} onClick={(e) => e.stopPropagation()}>
-          <S.AvatarContainer>
-            <Avatar src={follower.avatar} size="45px" />
-            <S.AvatarIcon path={mdiAccountPlus} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link to={`/profile/${follower.id}`} onClick={(e) => e.stopPropagation()}>
-              {follower.username}
-            </S.Link>{' '}
-            followed you
-          </S.MainText>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
-        </S.TextContainer>
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
-  const renderConnectFiveChallengeNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.CONNECT_FIVE_CHALLENGE) return null;
-
-    const {challenger, max_spend_amount, stake_amount, time_limit_seconds} = notification.payload;
-    const minutes = Math.round(time_limit_seconds / 60);
-
-    return (
-      <S.NotificationContainer>
-        <Link to="/connect-five/home">
-          <S.AvatarContainer>
-            <Avatar src={challenger.avatar} size="45px" />
-            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link to={`/profile/${challenger.id}`} onClick={(e) => e.stopPropagation()}>
-              {challenger.username}
-            </S.Link>{' '}
-            challenged you to Connect 5
-          </S.MainText>
-          <S.PostPreviewText>
-            Stake: {stake_amount.toLocaleString()} TNB · Max spend: {max_spend_amount.toLocaleString()} TNB · Time:{' '}
-            {minutes} min
-          </S.PostPreviewText>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
-        </S.TextContainer>
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
-
-  const renderRedDot = () => {
-    return notification.is_read ? null : (
-      <S.DotContainer>
-        <S.Dot />
-      </S.DotContainer>
-    );
-  };
-
-  const renderReversiChallengeNotification = () => {
-    if (notification.payload.notification_type !== NotificationType.REVERSI_CHALLENGE) return null;
-
-    const {challenger, match_id, stake_amount, time_limit_seconds} = notification.payload;
-
-    return (
-      <S.NotificationContainer>
-        <Link to={`/reversi/matches/${match_id}`}>
-          <S.AvatarContainer>
-            <Avatar size="45px" src={challenger.avatar} />
-            <S.AvatarIcon path={mdiGamepadVariantOutline} size="23px" />
-          </S.AvatarContainer>
-        </Link>
-        <S.TextContainer>
-          <S.MainText>
-            <S.Link onClick={(event) => event.stopPropagation()} to={`/profile/${challenger.id}`}>
-              {challenger.username}
-            </S.Link>{' '}
-            challenged you to Reversi
-          </S.MainText>
-          <S.PostPreviewText>
-            {stake_amount ? `Fixed stake: ${stake_amount.toLocaleString()} TNB` : 'Free match'} ·{' '}
-            {time_limit_seconds / 60} min per player
-          </S.PostPreviewText>
-          <S.TimeStamp>{longDate(notification.created_date)}</S.TimeStamp>
-        </S.TextContainer>
-        {renderRedDot()}
-      </S.NotificationContainer>
-    );
-  };
+  const {actor, badge, body, leading, summary} = view;
+  const profilePath = actor ? `/profile/${actor.id}` : '';
 
   return (
-    <S.Container $isRead={notification.is_read} className={className} onClick={handleContainerClick}>
-      {renderContent()}
+    <S.Container $isRead={is_read} className={className} onClick={handleClick}>
+      {path ? <S.CardLink aria-labelledby={summaryId} to={path} /> : null}
+      <S.Leading>
+        {leading ??
+          (actor ? (
+            <S.AvatarLink aria-hidden="true" tabIndex={-1} to={profilePath}>
+              <Avatar size="44px" src={actor.avatar} />
+            </S.AvatarLink>
+          ) : null)}
+        <S.Badge $kind={badge.kind} aria-hidden="true">
+          <MdiIcon path={badge.icon} size="12px" />
+        </S.Badge>
+      </S.Leading>
+      <S.Main>
+        <S.Header>
+          <S.SummaryContainer>
+            <S.Summary id={summaryId}>
+              {actor ? (
+                <>
+                  <S.ActorLink to={profilePath}>{actor.username}</S.ActorLink>{' '}
+                </>
+              ) : null}
+              {summary}
+            </S.Summary>
+            <S.Time dateTime={new Date(created_date).toISOString()} title={longDate(created_date)}>
+              {getTimeAgo(created_date)}
+            </S.Time>
+          </S.SummaryContainer>
+          {is_read ? null : (
+            <S.UnreadDot>
+              <S.VisuallyHidden>Unread</S.VisuallyHidden>
+            </S.UnreadDot>
+          )}
+        </S.Header>
+        {body ? <S.Body>{body}</S.Body> : null}
+      </S.Main>
     </S.Container>
   );
 };

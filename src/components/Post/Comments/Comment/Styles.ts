@@ -1,5 +1,5 @@
 import {Link as ULink} from 'react-router-dom';
-import styled from 'styled-components';
+import styled, {css, keyframes} from 'styled-components';
 
 import UDropdownMenu from 'components/DropdownMenu';
 import UPriceMini from 'components/PriceMini';
@@ -7,6 +7,16 @@ import {colors, fonts, radii, shadows} from 'styles';
 
 const AVATAR_SIZE = '32px';
 const BUBBLE_RADIUS = '16px';
+
+const highlightRing = keyframes`
+  from {
+    box-shadow: 0 0 0 2px ${colors.palette.blue[300]};
+  }
+
+  to {
+    box-shadow: 0 0 0 2px transparent;
+  }
+`;
 
 export const AvatarLink = styled(ULink)`
   border-radius: 50%;
@@ -16,11 +26,24 @@ export const AvatarLink = styled(ULink)`
   width: ${AVATAR_SIZE};
 `;
 
-export const Bubble = styled.div`
-  background: ${colors.palette.gray[100]};
+// A highlighted comment keeps a light tint, so it can be found again after scrolling, and shows a ring that fades once
+// it has been scrolled into view
+export const Bubble = styled.div<{$isHighlighted: boolean; $showsRing: boolean}>`
+  background: ${({$isHighlighted}) => ($isHighlighted ? colors.palette.blue[50] : colors.palette.gray[100])};
   border-radius: ${BUBBLE_RADIUS};
   min-width: 0;
   padding: 8px 12px;
+
+  ${({$isHighlighted, $showsRing}) =>
+    $isHighlighted &&
+    $showsRing &&
+    css`
+      animation: ${highlightRing} 2.4s ease-out 0.5s both;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    `}
 `;
 
 export const BubbleRow = styled.div`
