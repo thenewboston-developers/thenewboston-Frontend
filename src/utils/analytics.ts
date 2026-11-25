@@ -19,6 +19,7 @@ const redirectRoutes = [
   '/casino/blackjack',
   '/casino/let-it-ride',
   '/casino/plinko',
+  '/casino/video-poker',
   '/checkers',
   '/hex',
   '/battleship',
@@ -35,6 +36,7 @@ const redirectRoutes = [
   '/plinko',
   '/roulette',
   '/slots',
+  '/video-poker',
   '/wallets',
 ];
 
@@ -45,6 +47,7 @@ const routes = [
   '/plinko/home',
   '/roulette/home',
   '/blackjack/home',
+  '/video-poker/home',
   '/let-it-ride/home',
   '/create-account',
   '/sign-in',

@@ -20,6 +20,7 @@ import {
   CasinoGameLink,
   clearPendingCasinoBet,
   getCasinoGameLink,
+  INTERACTIVE_CASINO_GAMES,
   isDefiniteCasinoRejection,
   PendingCasinoBet,
   readPendingCasinoBet,
@@ -50,7 +51,7 @@ const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelecti
   const [receipt, setReceipt] = useState<CasinoBet | null>(null);
   const [storageError, setStorageError] = useState(false);
   const [summary, setSummary] = useState<CasinoSummary | null>(null);
-  // The interactive game (Blackjack, Let It Ride) whose open hand is holding up new wagers
+  // The interactive game (Blackjack, Let It Ride, Video Poker) whose open hand is holding up new wagers
   const [unfinishedGame, setUnfinishedGame] = useState<CasinoGameLink | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useIsAuthenticated();
@@ -246,7 +247,7 @@ const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelecti
   const pendingGame = pending?.payload.game;
   const resumeGame =
     unfinishedGame ??
-    (pendingGame === 'blackjack' || pendingGame === 'let_it_ride' ? getCasinoGameLink(pendingGame) : null);
+    (pendingGame && INTERACTIVE_CASINO_GAMES.includes(pendingGame) ? getCasinoGameLink(pendingGame) : null);
 
   return {
     amount,

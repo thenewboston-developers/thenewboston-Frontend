@@ -6,7 +6,11 @@ const GAME_NAMES: Record<string, string> = {
   plinko: 'Plinko',
   roulette: 'Roulette',
   slots: 'Slots',
+  video_poker: 'Video Poker',
 };
+
+// Games whose hand stays open between requests: no other wager is accepted until that hand is finished
+export const INTERACTIVE_CASINO_GAMES: string[] = ['blackjack', 'let_it_ride', 'video_poker'];
 
 export interface CasinoGameLink {
   name: string;
