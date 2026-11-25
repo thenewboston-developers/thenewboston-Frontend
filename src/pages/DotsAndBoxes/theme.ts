@@ -1,12 +1,17 @@
 import {css} from 'styled-components';
 
 import {fonts} from 'styles';
+import {DotsAndBoxesSide} from 'types/dotsAndBoxes';
 
-import {sideColors} from './BoardStyles';
+// The colours of each player's lines and boxes on the board
+export const sideColors: Record<DotsAndBoxesSide, {fill: string; ink: string; soft: string}> = {
+  blue: {fill: '#dbe7ff', ink: '#2457d6', soft: '#8fb0f5'},
+  red: {fill: '#ffe0da', ink: '#d2412f', soft: '#f2a093'},
+};
 
-// The lobby's look: a sheet of dot-grid paper, navy ink dots, the blue and red lines of the board and the hero's
-// ultramarine. Every choice is a box on the sheet, and picking one claims it in blue, the colour of the player who
-// sets up the game.
+// The look of the lobby and the match page: a sheet of dot-grid paper, navy ink dots, the blue and red lines of the
+// board and the hero's ultramarine. Every choice is a box on the sheet, and picking one claims it in blue, the colour
+// of the player who sets up the game.
 export const dots = {
   blue: sideColors.blue.ink,
   blueFill: '#e6eeff',
@@ -49,6 +54,38 @@ export const cornerDots = (color: string, size: number, border: number) => css`
 // The dot grid printed on the paper
 export const dotGrid = (color: string = dots.grid, spacing = 24) =>
   `radial-gradient(circle, ${color} 1.3px, transparent 1.8px) ${spacing / 2}px ${spacing / 2}px / ${spacing}px ${spacing}px`;
+
+// A label with a row of dots running to the end of the line, like the grid it sits on
+export const dottedLeader = css`
+  align-items: center;
+  display: flex;
+  gap: 12px;
+
+  &::after {
+    background: radial-gradient(circle, ${dots.pencilDark} 1.2px, transparent 1.7px) left center / 10px 6px repeat-x;
+    content: '';
+    flex: 1;
+    height: 6px;
+    min-width: 24px;
+  }
+`;
+
+// A white button drawn in ink, for the second choice beside an ink button. Use it after `inkButton`.
+export const ghostButton = css`
+  background: #ffffff;
+  border-color: ${dots.ink};
+  box-shadow: 2px 2px 0 ${dots.ink};
+  color: ${dots.ink};
+
+  &:hover:not(:disabled) {
+    background: ${dots.blueFill};
+    box-shadow: 4px 4px 0 ${dots.ink};
+  }
+
+  &:active:not(:disabled) {
+    box-shadow: 1px 1px 0 ${dots.ink};
+  }
+`;
 
 // Native radios stay focusable and clickable through their label; the box next to them is what players see
 export const hiddenInput = css`
@@ -115,6 +152,17 @@ export const label = css`
   letter-spacing: 0.14em;
   line-height: 1.4;
   text-transform: uppercase;
+`;
+
+// The faint pencil a board sketch is drawn in until it is picked or played on
+export const pencilSketch = css`
+  --sketch-blue: #98a2bb;
+  --sketch-blue-fill: #eceef4;
+  --sketch-dot: #98a2bb;
+  --sketch-free: #c9cfdd;
+  --sketch-open: #e6e9f0;
+  --sketch-red: #b6bccd;
+  --sketch-red-fill: #f1f2f6;
 `;
 
 // A sheet of dot-grid paper drawn as one big box: an ink border with a dot on every corner

@@ -6,7 +6,6 @@ import {getDotsAndBoxesMatch, performDotsAndBoxesAction} from 'api/dotsAndBoxes'
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
 import GameResultPanel, {GameResultActions, GameResultNote, getGameResultOutcome} from 'components/GameResultPanel';
 import GameSoundToggle from 'components/GameSoundToggle';
-import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
 import useArcadeSounds from 'hooks/useArcadeSounds';
@@ -24,6 +23,7 @@ import {isCancellationError} from 'utils/errors';
 import {isCurrentGuestGame} from 'utils/guestGames';
 
 import Board from './Board';
+import {BoardSketch, BoxSpinner, RivalryEmblem} from './Emblems';
 import Rules from './Rules';
 import * as S from './Styles';
 import {
@@ -356,9 +356,9 @@ const Match = () => {
           size={match.board_size}
         />
         {lastLine !== null && lastSide && (
-          <S.Small aria-live="polite">
+          <S.LastLine $side={lastSide} aria-live="polite">
             Last line: {names[lastSide]} · {lineLabel(match.board_size, lastLine)}
-          </S.Small>
+          </S.LastLine>
         )}
       </>
     );
@@ -381,35 +381,46 @@ const Match = () => {
       : 'Accept free match';
     return (
       <S.Panel>
-        <S.TitleSmall>
-          {side === 'red' ? `A challenge from ${match.blue.username}` : 'Waiting for your opponent'}
-        </S.TitleSmall>
+        <S.PanelHeader>
+          <RivalryEmblem />
+          <div>
+            <S.Eyebrow $side={side}>{side === 'red' ? 'New challenge' : 'Challenge sent'}</S.Eyebrow>
+            <S.TitleSmall>
+              {side === 'red' ? `A challenge from ${match.blue.username}` : 'Waiting for your opponent'}
+            </S.TitleSmall>
+          </div>
+        </S.PanelHeader>
         <S.Detail>
           {getPlayerName(match, 'blue')} challenged {getPlayerName(match, 'red')} to Dots and Boxes on a{' '}
           {match.board_size} × {match.board_size} board. Each player has {match.time_limit_seconds / 60} minutes of
           thinking time for the whole match. {getPlayerName(match, 'blue')} draws first.
         </S.Detail>
-        <S.Stat>
-          <span>Stake per player</span>
-          <strong>{match.stake_amount.toLocaleString()} TNB</strong>
-        </S.Stat>
-        <S.Stat>
-          <span>Prize when accepted</span>
-          <strong>{(match.stake_amount * 2).toLocaleString()} TNB</strong>
-        </S.Stat>
-        <S.Stat>
-          <span>Invitation expires in</span>
-          <strong>{formatClock(Date.parse(match.expires_at!) - now - serverOffset)}</strong>
-        </S.Stat>
-        <S.Small>
-          {match.stake_amount
-            ? 'Accepting locks your stake until the match ends. The winner receives both stakes. An expired, declined, or canceled invitation refunds the challenger.'
-            : 'This is a free match. No coins will be taken.'}
-        </S.Small>
-        <S.Small>
-          Draws refund both stakes. Your clock begins when it is your turn, so be ready when the invitation is accepted.
-        </S.Small>
-        <S.Actions style={{marginTop: 20}}>
+        <div>
+          <S.Stat>
+            <span>Stake per player</span>
+            <strong>{match.stake_amount.toLocaleString()} TNB</strong>
+          </S.Stat>
+          <S.Stat>
+            <span>Prize when accepted</span>
+            <strong>{(match.stake_amount * 2).toLocaleString()} TNB</strong>
+          </S.Stat>
+          <S.Stat>
+            <span>Invitation expires in</span>
+            <strong>{formatClock(Date.parse(match.expires_at!) - now - serverOffset)}</strong>
+          </S.Stat>
+        </div>
+        <S.Notes>
+          <p>
+            {match.stake_amount
+              ? 'Accepting locks your stake until the match ends. The winner receives both stakes. An expired, declined, or canceled invitation refunds the challenger.'
+              : 'This is a free match. No coins will be taken.'}
+          </p>
+          <p>
+            Draws refund both stakes. Your clock begins when it is your turn, so be ready when the invitation is
+            accepted.
+          </p>
+        </S.Notes>
+        <S.Actions>
           {side === 'red' ? (
             <>
               <S.Button disabled={!canAct} onClick={() => handleAction('accept')} type="button">
@@ -441,49 +452,58 @@ const Match = () => {
           ? `${getPlayerName(match, match.winner)} wins ${score}`
           : `${getPlayerName(match, match.winner)} wins the match`;
     return (
-      <GameResultPanel
-        description={
-          <>
-            {RESULT_LABELS[match.result_reason] ?? 'Match complete'}
-            {match.mode === 'computer' && side && match.winner && match.winner !== side
-              ? '. A fresh board is a fresh start.'
-              : ''}
-          </>
-        }
-        game="Dots and Boxes"
-        outcome={getGameResultOutcome(match.winner, side)}
-        scoreLabel="Boxes claimed"
-        scores={[
-          {label: getPlayerName(match, 'blue'), value: getScore(match, 'blue'), winner: match.winner === 'blue'},
-          {label: getPlayerName(match, 'red'), value: getScore(match, 'red'), winner: match.winner === 'red'},
-        ]}
-        title={title}
-      >
-        {match.mode === 'computer' && side === 'blue' && (
-          <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} subdued />
-        )}
-        {match.prize_pool_total > 0 && (
-          <strong>
-            {match.winner
-              ? `${match.prize_pool_total.toLocaleString()} TNB prize paid to ${getPlayerName(match, match.winner)}.`
-              : 'Both players’ stakes have been refunded.'}
-          </strong>
-        )}
-        <GameResultActions>
-          {side && (
-            <S.Button disabled={!canAct} onClick={() => handleAction('rematch')} type="button">
-              {busyAction === 'rematch' ? 'Creating…' : rematchLabel}
-            </S.Button>
+      <S.Result>
+        <GameResultPanel
+          artwork={
+            <S.ResultBoard>
+              <BoardSketch boxes={match.boxes} lines={match.lines} size={match.board_size} />
+            </S.ResultBoard>
+          }
+          description={
+            <>
+              {RESULT_LABELS[match.result_reason] ?? 'Match complete'}
+              {match.mode === 'computer' && side && match.winner && match.winner !== side
+                ? '. A fresh board is a fresh start.'
+                : ''}
+            </>
+          }
+          game="Dots and Boxes"
+          outcome={getGameResultOutcome(match.winner, side)}
+          scoreLabel="Boxes claimed"
+          scores={[
+            {label: getPlayerName(match, 'blue'), value: getScore(match, 'blue'), winner: match.winner === 'blue'},
+            {label: getPlayerName(match, 'red'), value: getScore(match, 'red'), winner: match.winner === 'red'},
+          ]}
+          title={title}
+        >
+          {match.mode === 'computer' && side === 'blue' && match.computer_reward && (
+            <S.Reward $status={match.computer_reward.status}>
+              <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} subdued />
+            </S.Reward>
           )}
-          <S.TextLink to="/dots-and-boxes/home">Back to Dots and Boxes</S.TextLink>
-        </GameResultActions>
-        {match.mode === 'human' && side && (
-          <GameResultNote>
-            A rematch uses the same board, stake and time limit. Your stake locks when you offer it; your opponent must
-            accept again.
-          </GameResultNote>
-        )}
-      </GameResultPanel>
+          {match.prize_pool_total > 0 && (
+            <strong>
+              {match.winner
+                ? `${match.prize_pool_total.toLocaleString()} TNB prize paid to ${getPlayerName(match, match.winner)}.`
+                : 'Both players’ stakes have been refunded.'}
+            </strong>
+          )}
+          <GameResultActions>
+            {side && (
+              <S.Button disabled={!canAct} onClick={() => handleAction('rematch')} type="button">
+                {busyAction === 'rematch' ? 'Creating…' : rematchLabel}
+              </S.Button>
+            )}
+            <S.TextLink to="/dots-and-boxes/home">Back to Dots and Boxes</S.TextLink>
+          </GameResultActions>
+          {match.mode === 'human' && side && (
+            <GameResultNote>
+              A rematch uses the same board, stake and time limit. Your stake locks when you offer it; your opponent
+              must accept again.
+            </GameResultNote>
+          )}
+        </GameResultPanel>
+      </S.Result>
     );
   };
 
@@ -494,6 +514,7 @@ const Match = () => {
     const keptTurn = isYourTurn && lastLine !== null && !!side && match.lines[lastLine] === SIDE_NUMBERS[side];
     let heading = `${getPlayerName(match, match.active_side)}’s turn`;
     let detail = match.mode === 'computer' ? 'The computer is choosing a line…' : 'Waiting for your opponent to draw.';
+    let turnSide: DotsAndBoxesSide | null = null;
     if (!side) detail = 'You are watching this match.';
     if (replaying) {
       const drawing = SIDES[match.lines[match.moves[shownLines]] - 1];
@@ -505,12 +526,14 @@ const Match = () => {
     } else if (isYourTurn) {
       heading = keptTurn ? 'Box claimed · draw again' : 'Your turn';
       detail = 'Click or tap an open line to draw it. Closing a box earns another turn.';
+      turnSide = side;
     }
     return (
-      <S.MoveToolbar aria-live="polite">
+      <S.MoveToolbar $side={turnSide} aria-live="polite">
+        {turnSide ? <S.PenMark $side={turnSide} aria-hidden="true" /> : <BoxSpinner />}
         <div>
           <strong>{heading}</strong>
-          <S.Small>{detail}</S.Small>
+          <p>{detail}</p>
         </div>
       </S.MoveToolbar>
     );
@@ -526,95 +549,103 @@ const Match = () => {
         </S.Actions>
       </S.MatchNavigation>
       {loadError && (
-        <S.Error role="alert">
-          {loadError}{' '}
-          <S.Button $secondary onClick={() => setRetryKey((value) => value + 1)} type="button">
+        <S.Alert role="alert">
+          <div>
+            {loadError}
+            <p>Moves are paused until the connection is restored. Match clocks continue to run.</p>
+          </div>
+          <S.GhostButton onClick={() => setRetryKey((value) => value + 1)} type="button">
             Reconnect
-          </S.Button>
-          <S.Small>Moves are paused until the connection is restored. Match clocks continue to run.</S.Small>
-        </S.Error>
+          </S.GhostButton>
+        </S.Alert>
       )}
-      {actionError && <S.Error role="alert">{actionError}</S.Error>}
+      {actionError && <S.Alert role="alert">{actionError}</S.Alert>}
       {isLoading && (
         <S.Status role="status">
-          <Loader />
+          <BoxSpinner />
           <span>Opening your match…</span>
         </S.Status>
       )}
       {match && (
-        <>
-          <S.PlayerGrid>
+        <S.Arena>
+          {renderResult()}
+          <S.Scorecard>
             {SIDES.map((playerSide) => {
-              const name = getPlayerName(match, playerSide);
+              const active = status === 'active' && !replaying && match.active_side === playerSide;
               const boxes = getScore(position ?? match, playerSide);
+              const name = getPlayerName(match, playerSide);
               return (
-                <S.MatchPlayer
-                  $active={status === 'active' && !replaying && match.active_side === playerSide}
-                  key={playerSide}
-                >
-                  <div>
-                    <strong>
+                <S.MatchPlayer $active={active} $side={playerSide} key={playerSide}>
+                  <S.PlayerIdentity>
+                    <S.PlayerName>
                       <S.PlayerColor $side={playerSide} aria-hidden="true" />
-                      {name}
-                      {side === playerSide ? ' (you)' : ''}
-                    </strong>
-                    <S.Small>
+                      <span>
+                        {name}
+                        {side === playerSide ? ' (you)' : ''}
+                      </span>
+                    </S.PlayerName>
+                    <S.PlayerRole $active={active} $side={playerSide}>
                       {match.mode === 'computer' && playerSide === 'red'
                         ? `Red · ${match.difficulty} computer`
                         : SIDE_LABELS[playerSide]}
-                    </S.Small>
-                  </div>
-                  <S.Scoreboard>
-                    <S.Score $side={playerSide} aria-label={`${name}: ${boxes} ${boxes === 1 ? 'box' : 'boxes'}`}>
-                      {boxes}
-                    </S.Score>
-                    <S.Timer aria-label={`${name} clock`}>{renderClock(playerSide)}</S.Timer>
-                  </S.Scoreboard>
+                    </S.PlayerRole>
+                  </S.PlayerIdentity>
+                  <S.Score $side={playerSide} aria-label={`${name}: ${boxes} ${boxes === 1 ? 'box' : 'boxes'}`}>
+                    {boxes}
+                  </S.Score>
+                  <S.Clock>
+                    <S.Timer $running={active} aria-label={`${name} clock`}>
+                      {renderClock(playerSide)}
+                    </S.Timer>
+                  </S.Clock>
+                  {active && <S.ToMove $side={playerSide}>To move</S.ToMove>}
                 </S.MatchPlayer>
               );
             })}
-          </S.PlayerGrid>
-          <S.Actions style={{margin: '10px 0'}}>
-            <S.Badge>
-              {match.board_size} × {match.board_size} boxes
-            </S.Badge>
-            <S.Badge>
-              {match.stake_amount ? `${match.stake_amount.toLocaleString()} TNB per player` : 'Free play'}
-            </S.Badge>
-            {match.stake_amount > 0 && <S.Badge>{match.prize_pool_total.toLocaleString()} TNB in prize pool</S.Badge>}
-          </S.Actions>
+            <S.Terms>
+              <span>
+                {match.board_size} × {match.board_size} boxes
+              </span>
+              <span>{match.stake_amount ? `${match.stake_amount.toLocaleString()} TNB per player` : 'Free play'}</span>
+              {match.stake_amount > 0 && <span>{match.prize_pool_total.toLocaleString()} TNB in prize pool</span>}
+            </S.Terms>
+          </S.Scorecard>
           {renderPending()}
-          {renderResult()}
           {renderBoard()}
           {['cancelled', 'declined', 'expired'].includes(match.status) && (
             <S.Empty>
-              This challenge was {match.status}.{' '}
-              {match.stake_amount ? 'The challenger’s stake has been refunded.' : 'No coins were taken.'}{' '}
-              <S.TextLink to="/dots-and-boxes/home">Find your next match →</S.TextLink>
+              <S.EmptyBoard>
+                <BoardSketch size={match.board_size} />
+              </S.EmptyBoard>
+              <p>
+                This challenge was {match.status}.{' '}
+                {match.stake_amount ? 'The challenger’s stake has been refunded.' : 'No coins were taken.'}{' '}
+                <S.TextLink to="/dots-and-boxes/home">Find your next match →</S.TextLink>
+              </p>
             </S.Empty>
           )}
           {status === 'active' && side && (
-            <S.Section>
-              <S.Actions>
-                {resigning ? (
-                  <>
-                    <S.Detail>Resign and concede this match{match.stake_amount ? ' and your stake' : ''}?</S.Detail>
+            <S.Resign $confirming={resigning}>
+              {resigning ? (
+                <>
+                  <S.Detail>Resign and concede this match{match.stake_amount ? ' and your stake' : ''}?</S.Detail>
+                  <S.Actions>
                     <S.Button $danger disabled={!canAct} onClick={() => handleAction('resign')} type="button">
                       Confirm resignation
                     </S.Button>
                     <S.Button $secondary disabled={!canAct} onClick={() => setResigning(false)} type="button">
                       Keep playing
                     </S.Button>
-                  </>
-                ) : (
-                  <S.Button $secondary disabled={!canAct} onClick={() => setResigning(true)} type="button">
-                    Resign match
-                  </S.Button>
-                )}
-              </S.Actions>
-            </S.Section>
+                  </S.Actions>
+                </>
+              ) : (
+                <S.Button $secondary disabled={!canAct} onClick={() => setResigning(true)} type="button">
+                  Resign match
+                </S.Button>
+              )}
+            </S.Resign>
           )}
-        </>
+        </S.Arena>
       )}
       <Rules />
     </S.MatchContainer>
