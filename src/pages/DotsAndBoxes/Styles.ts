@@ -89,72 +89,8 @@ export const Error = styled.div`
   padding: 14px 18px;
 `;
 
-export const Eyebrow = styled.p`
-  color: #4a61a6;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  margin: 0 0 12px;
-  text-transform: uppercase;
-`;
-
-export const Field = styled.label`
-  color: #30437c;
-  display: flex;
-  flex-direction: column;
-  font-size: 13px;
-  font-weight: 600;
-  gap: 8px;
-`;
-
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-export const GuestActions = styled.div`
-  margin: 24px 0 8px;
-`;
-
-export const Input = styled.input`
-  background: #ffffff;
-  border: 1px solid #c9d3ea;
-  border-radius: 10px;
-  color: ${colors.primary};
-  font: inherit;
-  min-height: 44px;
-  padding: 10px 12px;
-  width: 100%;
-`;
-
-export const List = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
 export const MatchContainer = styled(Container)`
   padding-top: 16px;
-`;
-
-export const MatchLink = styled(Link)`
-  align-items: center;
-  background: #ffffff;
-  border: 1px solid #d9e0f1;
-  border-radius: 14px;
-  color: ${colors.primary};
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: space-between;
-  padding: 18px 20px;
-  text-decoration: none;
-
-  &:hover {
-    background: #f2f5fc;
-    text-decoration: none;
-  }
 `;
 
 export const Navigation = styled.nav`
@@ -177,17 +113,6 @@ export const Panel = styled.section`
   min-width: 0;
   padding: 24px;
   scroll-margin-top: 24px;
-`;
-
-export const PanelGrid = styled.div`
-  align-items: start;
-  display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  @media (max-width: 1000px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 export const Player = styled.div<{$active: boolean}>`
@@ -266,17 +191,6 @@ export const Scoreboard = styled.div`
 
 export const Section = styled.section`
   margin-top: 28px;
-`;
-
-export const Select = styled.select`
-  background: #ffffff;
-  border: 1px solid #c9d3ea;
-  border-radius: 10px;
-  color: ${colors.primary};
-  font: inherit;
-  min-height: 44px;
-  padding: 10px 12px;
-  width: 100%;
 `;
 
 export const Small = styled.p`
