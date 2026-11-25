@@ -1,28 +1,28 @@
 import {Link as ULink} from 'react-router-dom';
-import UIcon from '@mdi/react';
 import styled, {css} from 'styled-components';
 
 import {navFocusVisible, visuallyHidden} from 'layouts/Main/mixins';
-import {breakpoints, colors, fonts, radii} from 'styles';
+import {breakpoints, colors, fonts} from 'styles';
 
-const ACTIVE_INDICATOR_HEIGHT = 20;
-const ITEM_SIZE = 44;
+export const ICON_SIZE = 20;
+const ITEM_SIZE = 40;
 
 const menuItemStyle = css<{$isActive: boolean}>`
   align-items: center;
   background: ${({$isActive}) => ($isActive ? colors.nav.active : 'transparent')};
   border: none;
-  border-radius: ${radii.medium};
+  border-radius: 10px;
   color: ${({$isActive}) => ($isActive ? colors.nav.textActive : colors.nav.text)};
   cursor: pointer;
   display: flex;
   flex-shrink: 0;
-  font-family: ${fonts.family.default};
-  font-size: 15px;
+  font-family: ${fonts.family.navigation};
+  font-size: 14px;
   font-weight: ${({$isActive}) => ($isActive ? fonts.weight.semiBold : fonts.weight.medium)};
-  gap: 14px;
+  gap: 12px;
   height: ${ITEM_SIZE}px;
-  padding: 0 12px;
+  letter-spacing: -0.006em;
+  padding: 0 10px;
   position: relative;
   text-align: left;
   transition:
@@ -30,24 +30,9 @@ const menuItemStyle = css<{$isActive: boolean}>`
     color 0.15s ease;
   width: 100%;
 
-  &::before {
-    background: ${colors.accent};
-    border-radius: ${radii.pill};
-    content: '';
-    height: ${ACTIVE_INDICATOR_HEIGHT}px;
-    left: 0;
-    opacity: ${({$isActive}) => ($isActive ? 1 : 0)};
-    position: absolute;
-    top: calc(50% - ${ACTIVE_INDICATOR_HEIGHT / 2}px);
-    transform: scaleY(${({$isActive}) => ($isActive ? 1 : 0.4)});
-    transition: opacity 0.15s ease;
-    width: 3px;
-
-    @media (prefers-reduced-motion: no-preference) {
-      transition:
-        opacity 0.15s ease,
-        transform 0.15s ease;
-    }
+  svg {
+    color: ${({$isActive}) => ($isActive ? colors.nav.iconActive : 'currentColor')};
+    flex-shrink: 0;
   }
 
   &:hover {
@@ -70,10 +55,6 @@ const menuItemStyle = css<{$isActive: boolean}>`
     padding: 0;
     width: ${ITEM_SIZE}px;
   }
-`;
-
-export const Icon = styled(UIcon)`
-  flex-shrink: 0;
 `;
 
 export const MenuButton = styled.button<{$isActive: boolean}>`

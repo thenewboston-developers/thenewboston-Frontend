@@ -1,3 +1,5 @@
+import {LucideIcon} from 'lucide-react';
+
 import {SFC} from 'types';
 import {analyticsTarget} from 'utils/analyticsAttributes';
 
@@ -6,12 +8,12 @@ import useIsRail from '../useIsRail';
 import * as S from './Styles';
 
 export interface MenuButtonProps {
-  icon: string;
+  icon: LucideIcon;
   onClick?: () => void;
   text: string;
 }
 
-const MenuButton: SFC<MenuButtonProps> = ({className, icon, onClick, text}) => {
+const MenuButton: SFC<MenuButtonProps> = ({className, icon: Icon, onClick, text}) => {
   const isRail = useIsRail();
 
   return (
@@ -23,7 +25,7 @@ const MenuButton: SFC<MenuButtonProps> = ({className, icon, onClick, text}) => {
       title={isRail ? text : undefined}
       type="button"
     >
-      <S.Icon path={icon} size="22px" />
+      <Icon aria-hidden size={S.ICON_SIZE} strokeWidth={1.75} />
       <S.Text>{text}</S.Text>
     </S.MenuButton>
   );

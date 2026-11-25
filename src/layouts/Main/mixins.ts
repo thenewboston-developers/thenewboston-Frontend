@@ -3,7 +3,7 @@ import {css} from 'styled-components';
 import {breakpoints, colors, fonts, radii} from 'styles';
 
 const BOTTOM_NAV_INDICATOR_WIDTH = 24;
-const NAV_CALL_TO_ACTION_HEIGHT = 44;
+const NAV_CALL_TO_ACTION_HEIGHT = 40;
 
 // shadows.focusRing is tuned for light surfaces, so the dark navigation uses a translucent outline instead
 const NAV_FOCUS_OUTLINE_COLOR = `color-mix(in srgb, ${colors.nav.textActive} 55%, transparent)`;
@@ -15,27 +15,33 @@ export const navFocusVisible = css`
   }
 `;
 
-// The accent call to action of the left navigation ("Post" for members, "Create account" for visitors)
+// The accent call to action of the left navigation ("New post" for members, "Create account" for visitors)
 export const navCallToActionStyle = css`
   align-items: center;
   background: ${colors.accent};
   border: none;
-  border-radius: ${radii.medium};
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
   color: ${colors.white};
   cursor: pointer;
   display: flex;
   flex-shrink: 0;
-  font-family: ${fonts.family.default};
-  font-size: 15px;
+  font-family: ${fonts.family.navigation};
+  font-size: 14px;
   font-weight: ${fonts.weight.semiBold};
   gap: 8px;
   height: ${NAV_CALL_TO_ACTION_HEIGHT}px;
   justify-content: center;
-  margin-top: 16px;
+  letter-spacing: -0.006em;
+  margin-top: 20px;
   padding: 0 16px;
   position: relative;
   transition: background 0.15s ease;
   width: 100%;
+
+  svg {
+    flex-shrink: 0;
+  }
 
   /* Touch devices keep :hover applied after a tap, so the hover background is limited to real pointers */
   @media (hover: hover) {

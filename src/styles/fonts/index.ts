@@ -3,6 +3,7 @@
 const fonts = {
   family: {
     default: 'OpenSans, sans-serif',
+    navigation: "'Inter Variable', OpenSans, sans-serif",
   },
   weight: {
     light: '300',
