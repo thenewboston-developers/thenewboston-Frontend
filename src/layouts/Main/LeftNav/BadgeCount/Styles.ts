@@ -11,24 +11,25 @@ export const BadgeCount = styled.span`
   flex-shrink: 0;
   font-size: 11px;
   font-variant-numeric: tabular-nums;
-  font-weight: ${fonts.weight.bold};
-  height: 20px;
+  font-weight: ${fonts.weight.semiBold};
+  height: 18px;
   justify-content: center;
+  letter-spacing: 0;
   line-height: 1;
   margin-left: auto;
-  min-width: 20px;
+  min-width: 18px;
   padding: 0 6px;
   white-space: nowrap;
 
   @media (max-width: ${breakpoints.tablet}) {
     box-shadow: 0 0 0 2px ${colors.nav.background};
     font-size: 10px;
-    height: 18px;
-    left: 24px;
+    height: 16px;
+    left: 22px;
     margin-left: 0;
-    min-width: 18px;
-    padding: 0 5px;
+    min-width: 16px;
+    padding: 0 4px;
     position: absolute;
-    top: 2px;
+    top: 3px;
   }
 `;

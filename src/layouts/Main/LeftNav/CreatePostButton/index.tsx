@@ -1,4 +1,4 @@
-import {mdiPlus} from '@mdi/js';
+import {SquarePen} from 'lucide-react';
 
 import {useToggle} from 'hooks';
 import PostModal from 'modals/PostModal';
@@ -8,6 +8,8 @@ import {analyticsTarget} from 'utils/analyticsAttributes';
 import useIsRail from '../useIsRail';
 
 import * as S from './Styles';
+
+const TEXT = 'New post';
 
 const CreatePostButton: SFC = ({className}) => {
   const [postModalIsOpen, togglePostModal] = useToggle(false);
@@ -19,11 +21,11 @@ const CreatePostButton: SFC = ({className}) => {
         {...analyticsTarget('create_post')}
         className={className}
         onClick={togglePostModal}
-        title={isRail ? 'Post' : undefined}
+        title={isRail ? TEXT : undefined}
         type="button"
       >
-        <S.Icon path={mdiPlus} size="20px" />
-        <S.Text>Post</S.Text>
+        <SquarePen aria-hidden size={18} strokeWidth={2} />
+        <S.Text>{TEXT}</S.Text>
       </S.Button>
       {postModalIsOpen ? <PostModal close={togglePostModal} /> : null}
     </>

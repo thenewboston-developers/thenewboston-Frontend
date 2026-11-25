@@ -1,5 +1,6 @@
 import {ReactNode} from 'react';
 import {useLocation} from 'react-router-dom';
+import {LucideIcon} from 'lucide-react';
 
 import {isPathActive} from 'layouts/Main/utils';
 import {SFC} from 'types';
@@ -10,15 +11,14 @@ import useIsRail from '../useIsRail';
 import * as S from './Styles';
 
 export interface MenuLinkProps {
-  activeIcon?: string;
   children?: ReactNode;
-  icon: string;
+  icon: LucideIcon;
   rootPath: string;
   text: string;
   to: string;
 }
 
-const MenuLink: SFC<MenuLinkProps> = ({activeIcon, children, className, icon, rootPath, text, to}) => {
+const MenuLink: SFC<MenuLinkProps> = ({children, className, icon: Icon, rootPath, text, to}) => {
   const isRail = useIsRail();
   const location = useLocation();
 
@@ -33,7 +33,7 @@ const MenuLink: SFC<MenuLinkProps> = ({activeIcon, children, className, icon, ro
       title={isRail ? text : undefined}
       to={to}
     >
-      <S.Icon path={isActive && activeIcon ? activeIcon : icon} size="22px" />
+      <Icon aria-hidden size={S.ICON_SIZE} strokeWidth={isActive ? 2 : 1.75} />
       {text && <S.Text>{text}</S.Text>}
       {children}
     </S.MenuLink>

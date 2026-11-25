@@ -24,6 +24,7 @@ const colors = {
     background: '#0d1117',
     border: 'rgba(240, 246, 252, 0.08)',
     hover: 'rgba(177, 186, 196, 0.08)',
+    iconActive: '#f2414a',
     text: '#9aa7b4',
     textActive: '#ffffff',
     textMuted: '#6e7b88',

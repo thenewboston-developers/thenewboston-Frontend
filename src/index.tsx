@@ -19,6 +19,7 @@ import ToastifyStyle from 'styles/components/ToastifyStyle';
 import {registerApiAnalytics} from 'utils/apiAnalytics';
 import {registerExpiredSessionHandler} from 'utils/session';
 
+import '@fontsource-variable/inter/wght.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'styles/fonts.css';
 
