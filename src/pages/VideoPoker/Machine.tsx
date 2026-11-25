@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom';
 import {mdiVolumeHigh, mdiVolumeOff} from '@mdi/js';
 import Icon from '@mdi/react';
 
-import AuthButtons from 'components/AuthButtons';
 import FundControls from 'components/Casino/FundControls';
 import {getCasinoGameLink} from 'utils/casino';
 
@@ -280,7 +279,7 @@ const Machine = () => {
         <>
           <p>Sign in to drop your coins and play with TNB.</p>
           <S.ServiceActions>
-            <AuthButtons />
+            <S.AuthButtons />
           </S.ServiceActions>
         </>
       );
