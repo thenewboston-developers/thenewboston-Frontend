@@ -37,7 +37,7 @@ it('uses thumbnail cards and canonical game links in a separately labeled TNB wa
   expect(videoPoker).toHaveTextContent('JACKS OR BETTER');
   expect(videoPoker).toHaveAttribute('data-ph-capture-attribute-click_target', 'video_poker');
   const letItRide = casino.querySelector('a[href="/let-it-ride/home"]')!;
-  expect(letItRide.querySelector('img')).toHaveAttribute('src', 'let-it-ride-thumbnail.svg');
+  expect(letItRide.querySelector('img')).toHaveAttribute('src', 'let-it-ride-thumbnail.webp');
   expect(letItRide).toHaveTextContent('UP TO 100 TO 1');
   expect(letItRide).toHaveAttribute('data-ph-capture-attribute-click_target', 'let_it_ride');
   const blackjack = casino.querySelector('a[href="/blackjack/home"]')!;

@@ -2,12 +2,13 @@
 
 Created with the built-in image generation tool for the Games gallery. The images match the existing board-game thumbnails: studio product scenes, tactile materials, a clear central subject, and a 3:2 frame. They are decorative card artwork, not gameplay diagrams.
 
-Both assets are exported at 900 × 600 pixels as WebP at quality 85. Generated PNG originals remain outside the repository.
+All assets are exported at 900 × 600 pixels as WebP: Slots and Roulette at quality 85, Let It Ride at quality 86. Generated PNG originals remain outside the repository.
 
-| Game     | Asset                                |
-| -------- | ------------------------------------ |
-| Slots    | `src/assets/slots-thumbnail.webp`    |
-| Roulette | `src/assets/roulette-thumbnail.webp` |
+| Game        | Asset                                   |
+| ----------- | --------------------------------------- |
+| Slots       | `src/assets/slots-thumbnail.webp`       |
+| Roulette    | `src/assets/roulette-thumbnail.webp`    |
+| Let It Ride | `src/assets/let-it-ride-thumbnail.webp` |
 
 ## Slots palette
 
@@ -29,4 +30,20 @@ Use case: product-mockup. Asset type: landscape 3:2 game-gallery thumbnail for t
 
 ## Let It Ride
 
-`src/assets/let-it-ride-thumbnail.svg` (900 × 600) was drawn by hand as SVG, like the Blackjack and Plinko thumbnails: a royal flush in spades fanned over the three bet spots of a Let It Ride layout (1, 2 and $), on midnight-blue felt with gold trim. The same file is the hero image of the game page. Its palette is defined in `src/pages/LetItRide/theme.ts`.
+`src/assets/let-it-ride-thumbnail.webp` is the Games list thumbnail: a royal flush in spades and three blue-and-gold chip stacks on midnight-blue felt. It was created with the built-in image generation tool at 1536 × 1024 and exported to 900 × 600 with `cwebp -q 86 -m 6 -resize 900 600` (105,590 bytes). The palette follows `src/pages/LetItRide/theme.ts`: felt `#17377c` / `#0d2251`, brighter blue `#2250a8`, night `#081430`, gold `#e0b459` / `#f8e2a4`, and ivory `#f7f2e4`.
+
+The existing hand-drawn `src/assets/let-it-ride-thumbnail.svg` remains the game-page hero artwork.
+
+### Let It Ride prompt
+
+```text
+Use case: ads-marketing
+Asset type: premium casino game thumbnail for the thenewboston Games list, landscape 3:2.
+Primary request: Create a beautiful, polished cinematic still life for the game Let It Ride, matching its existing midnight-blue, gold and ivory playing area.
+Scene: a rich midnight-blue felt casino poker table, deep navy background, subtle curved gold table markings and a dark blue padded rail near the distant edge. Five ivory playing cards form a graceful, clearly readable royal-flush fan across the middle: 10, J, Q, K, A, all spades. Each card is a coherent standard playing card with its correct rank and black spade symbol; sophisticated traditional face-card illustrations on J, Q, K, an elegant large spade on the ace. In front of the cards, exactly three short stacks of substantial blue-and-gold casino chips sit in three delicate gold circular wager outlines. Keep these three betting spots distinct and arranged in a gentle arc.
+Style: high-end tactile 3D product photography, finely textured felt, crisp ivory cardstock, intricate restrained brass detailing, believable shadows, elegant and dramatic rather than flashy.
+Palette: dominant felt #17377c and #0d2251, brighter blue #2250a8, deep shadows #081430, warm gold #e0b459 with #f8e2a4 highlights, ivory #f7f2e4. No green felt, purple neon or red scene lighting.
+Composition: landscape 3:2, close three-quarter overhead camera; cards and chips large enough to read at a 300-pixel-wide thumbnail, all key objects comfortably inside the frame. Quiet blue negative space in the top-left corner for the site's small badge overlay. Balanced composition with cards centered and chips in the lower third. Full-bleed scene, no border.
+Lighting: soft warm spotlight grazing the cards and gold chips against luminous blue felt, subtle rim lighting, rich contrast, refined depth of field while keeping all five rank corners sharp.
+Constraints: no people, no hands, no dice, no roulette, no money, no game title, no slogans, no watermark. The only visible lettering should be standard card ranks. Create one final image at 1536 by 1024 pixels.
+```
