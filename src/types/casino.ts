@@ -7,6 +7,7 @@ export interface BlackjackResult {
   available_actions: BlackjackAction[];
   dealer_cards: (string | null)[];
   dealer_total: number;
+  doubled?: boolean;
   expires_at: string | null;
   multiplier: number;
   outcome: 'blackjack' | 'win' | 'loss' | 'push' | null;

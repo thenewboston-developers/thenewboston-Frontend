@@ -13,6 +13,7 @@ import {
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
 import {getSelf, getWallets} from 'selectors/state';
+import {setWallet} from 'store/wallets';
 import {AppDispatch} from 'types';
 import {BlackjackAction, BlackjackBet, CasinoBet, CasinoSummary} from 'types/casino';
 import {
@@ -27,15 +28,18 @@ import {
 import {
   clearPendingBlackjackAction,
   PendingBlackjackAction,
+  readLastWager,
   readPendingBlackjackAction,
+  saveLastWager,
   savePendingBlackjackAction,
 } from './storage';
+import {DEFAULT_WAGER} from './utils';
 
 export const isBlackjackBet = (bet: CasinoBet | null): bet is BlackjackBet =>
   bet?.game === 'blackjack' && Array.isArray(bet.result.player_cards) && Number.isInteger(bet.result.revision);
 
 const useBlackjack = () => {
-  const [amount, setAmount] = useState('10');
+  const [amount, setAmount] = useState(() => String(readLastWager(DEFAULT_WAGER)));
   const [error, setError] = useState('');
   const [history, setHistory] = useState<BlackjackBet[]>([]);
   const [isBusy, setIsBusy] = useState(false);
@@ -59,6 +63,8 @@ const useBlackjack = () => {
   const minBet = Math.max(2, Math.ceil((game?.min_bet ?? 2) / 2) * 2);
   const stake = Number(amount);
   const wallet = Object.values(wallets).find((item) => item.currency.ticker === 'TNB' && item.owner === self.id);
+  const walletRef = useRef(wallet);
+  walletRef.current = wallet;
   const available = !!summary?.fund.enabled && !!game?.enabled && maxBet >= minBet && !loadError;
   const validAmount = Number.isSafeInteger(stake) && stake % 2 === 0 && stake >= minBet && stake <= maxBet;
   const canDeal =
@@ -105,6 +111,10 @@ const useBlackjack = () => {
         return;
       current.current = bet;
       setReceipt(bet);
+      const currentWallet = walletRef.current;
+      // The receipt carries the balance and its revision, so the table need not wait for a wallet fetch
+      if (currentWallet?.owner === self.id && bet.wallet_modified_date)
+        dispatch(setWallet({...currentWallet, balance: bet.wallet_balance, modified_date: bet.wallet_modified_date}));
       dispatch(getAllUserWallets()).catch(() => undefined);
     },
     [dispatch, self.id],
@@ -287,6 +297,7 @@ const useBlackjack = () => {
       setPendingBet(saved);
       const bet = await placeCasinoBet(saved.payload);
       if (epoch.current !== version) return;
+      saveLastWager(saved.payload.amount);
       accept(bet);
       refresh();
     } catch (caught) {

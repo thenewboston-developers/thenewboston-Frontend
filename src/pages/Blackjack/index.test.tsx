@@ -13,6 +13,7 @@ import {
 } from 'api/casino';
 import Casino from 'pages/Casino';
 import {BlackjackBet, CasinoSummary} from 'types/casino';
+import {verifyBlackjackReceipt} from 'utils/blackjackFairness';
 import {readPendingCasinoBet, savePendingCasinoBet} from 'utils/casino';
 
 import Blackjack from './index';
@@ -29,7 +30,8 @@ jest.mock('api/casino', () => ({
 }));
 jest.mock('components/AuthButtons', () => () => <div>Sign in to play</div>);
 jest.mock('dispatchers/wallets', () => ({getAllUserWallets: () => ({type: 'refresh-wallets'})}));
-jest.mock('utils/blackjackFairness', () => ({verifyBlackjackReceipt: jest.fn().mockResolvedValue('Verified hand')}));
+jest.mock('store/wallets', () => ({setWallet: (wallet: unknown) => ({payload: wallet, type: 'set-wallet'})}));
+jest.mock('utils/blackjackFairness', () => ({verifyBlackjackReceipt: jest.fn()}));
 let mockAuthenticated = true;
 let mockUserId = 7;
 const mockDispatch = jest.fn(() => Promise.resolve());
@@ -200,6 +202,7 @@ beforeEach(() => {
   (createCasinoCommitment as jest.Mock).mockResolvedValue(commitment);
   (placeCasinoBet as jest.Mock).mockResolvedValue(openHand);
   (actOnCasinoBet as jest.Mock).mockResolvedValue(settled);
+  (verifyBlackjackReceipt as jest.Mock).mockResolvedValue('Verified hand');
 });
 afterEach(() => {
   act(() => root.unmount());
@@ -210,7 +213,7 @@ afterEach(() => {
 it('offers even TNB wagers and disables invalid or uncovered amounts before sending', async () => {
   await render();
   expect(button('Deal 10 TNB')).toBeEnabled();
-  expect(container).toHaveTextContent('Minimum 2 · Maximum 500 TNB');
+  expect(container).toHaveTextContent('Table limits 2 – 500 TNB');
   act(() => changeAmount('3'));
   expect(button('Deal 3 TNB')).toBeDisabled();
   act(() => changeAmount('502'));
@@ -232,7 +235,9 @@ it('resumes an active hand with a hidden dealer card after loading the page', as
   expect(button('Hit')).toBeEnabled();
   expect(button('Stand')).toBeEnabled();
   expect(container.querySelectorAll('[aria-label="Face-down card"]')).toHaveLength(1);
-  expect(container).toHaveTextContent('3 showing');
+  expect(container.querySelector('[aria-label="Dealer shows 3"]')).toHaveTextContent('3');
+  expect(container.querySelector('[aria-label="You have 16"]')).toHaveTextContent('16');
+  expect(container.querySelector('h2')).toHaveTextContent('Your move');
   expect(placeCasinoBet).not.toHaveBeenCalled();
 });
 
@@ -247,8 +252,8 @@ it('persists a move before sending and prevents duplicate submissions in the sam
   );
   await render();
   act(() => {
-    button('Double down').click();
-    button('Double down').click();
+    button('Double').click();
+    button('Double').click();
   });
   expect(actOnCasinoBet).toHaveBeenCalledTimes(1);
   const saved = readPendingBlackjackAction(7)!;
@@ -363,3 +368,67 @@ it.each(['/casino/blackjack?from=bookmark#receipt', '/blackjack?from=bookmark#re
     expect(container.querySelector('h1')).toHaveTextContent('Blackjack');
   },
 );
+
+it('builds the wager from chips, and takes changes back with undo and clear', async () => {
+  await render();
+  const chip = (amount: number) =>
+    container.querySelector(`[aria-label="Add ${amount} TNB to your bet"]`) as HTMLButtonElement;
+  act(() => chip(50).click());
+  act(() => chip(2).click());
+  expect(button('Deal 62 TNB')).toBeEnabled();
+  expect(container.querySelector('#blackjack-wager')).toHaveValue(62);
+  act(() => button('Undo').click());
+  expect(button('Deal 60 TNB')).toBeEnabled();
+  act(() => button('Max').click());
+  expect(button('Deal 500 TNB')).toBeEnabled();
+  expect(chip(2)).toBeDisabled();
+  act(() => button('Clear').click());
+  expect(button('Deal 0 TNB')).toBeDisabled();
+  expect(placeCasinoBet).not.toHaveBeenCalled();
+});
+
+it('remembers the last dealt wager for the next visit', async () => {
+  (placeCasinoBet as jest.Mock).mockImplementation(async (data) => ({...settled, request_id: data.request_id}));
+  await render();
+  act(() => changeAmount('40'));
+  await act(async () => button('Deal 40 TNB').click());
+  expect(placeCasinoBet).toHaveBeenCalledWith(expect.objectContaining({amount: 40}));
+  await remount();
+  expect(container.querySelector('#blackjack-wager')).toHaveValue(40);
+  expect(button('Deal 40 TNB')).toBeEnabled();
+});
+
+it('plays a move from the keyboard, but not while typing or with a modifier held', async () => {
+  (getActiveCasinoBet as jest.Mock).mockResolvedValue(openHand);
+  await render();
+  const press = (init: KeyboardEventInit, target: EventTarget = document.body) =>
+    target.dispatchEvent(new KeyboardEvent('keydown', {bubbles: true, ...init}));
+  const field = document.createElement('input');
+  document.body.appendChild(field);
+  await act(async () => {
+    press({key: 's'}, field);
+    press({ctrlKey: true, key: 's'});
+  });
+  field.remove();
+  expect(actOnCasinoBet).not.toHaveBeenCalled();
+  await act(async () => {
+    press({key: 'S'});
+  });
+  expect(actOnCasinoBet).toHaveBeenCalledWith('request-id', expect.objectContaining({action: 'stand'}));
+});
+
+it('shows the result on the table and in the history once the hand is over', async () => {
+  (getActiveCasinoBet as jest.Mock).mockResolvedValue(openHand);
+  await render();
+  expect(container).toHaveTextContent('Your finished Blackjack hands will appear here.');
+  await act(async () => button('Stand').click());
+  expect(container.querySelector('h2')).toHaveTextContent('You win');
+  expect(container.querySelector('[aria-label="Dealer has 23"]')).toHaveTextContent('23');
+  expect(container.querySelectorAll('[aria-label="Face-down card"]')).toHaveLength(0);
+  expect(container).toHaveTextContent('Dealer busts with 23');
+  expect(container).toHaveTextContent('1 hand');
+  expect(container).not.toHaveTextContent('Your finished Blackjack hands will appear here.');
+  await act(async () => button('Receipt').click());
+  await act(async () => button('Verify this hand').click());
+  expect(container).toHaveTextContent('Verified hand');
+});
