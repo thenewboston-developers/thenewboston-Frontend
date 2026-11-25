@@ -1,7 +1,6 @@
-import UIcon from '@mdi/react';
 import styled from 'styled-components';
 
-import {bottomNavTextStyle} from 'layouts/Main/mixins';
+import {bottomNavIconStyle, bottomNavTextStyle} from 'layouts/Main/mixins';
 import {colors} from 'styles';
 
 export const Container = styled.nav`
@@ -13,13 +12,8 @@ export const Container = styled.nav`
   padding: 0 4px env(safe-area-inset-bottom, 0);
 `;
 
-export const Icon = styled(UIcon)`
-  flex-shrink: 0;
-`;
-
-export const IconWrapper = styled.span`
-  display: flex;
-  position: relative;
+export const IconWrapper = styled.span<{$isActive: boolean}>`
+  ${bottomNavIconStyle};
 `;
 
 export const Text = styled.span`

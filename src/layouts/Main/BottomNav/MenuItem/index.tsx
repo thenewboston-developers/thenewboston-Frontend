@@ -1,6 +1,8 @@
 import {ReactNode} from 'react';
 import {useLocation} from 'react-router-dom';
+import {LucideIcon} from 'lucide-react';
 
+import {BOTTOM_NAV_ICON_SIZE} from 'layouts/Main/mixins';
 import {isPathActive} from 'layouts/Main/utils';
 import {SFC} from 'types';
 import {analyticsTarget} from 'utils/analyticsAttributes';
@@ -8,15 +10,14 @@ import {analyticsTarget} from 'utils/analyticsAttributes';
 import * as S from './Styles';
 
 export interface MenuItemProps {
-  activeIcon?: string;
   children?: ReactNode;
-  icon: string;
+  icon: LucideIcon;
   rootPath: string;
   text: string;
   to: string;
 }
 
-const MenuItem: SFC<MenuItemProps> = ({activeIcon, children, className, icon, rootPath, text, to}) => {
+const MenuItem: SFC<MenuItemProps> = ({children, className, icon: Icon, rootPath, text, to}) => {
   const location = useLocation();
 
   const isActive = isPathActive(location.pathname, rootPath);
@@ -29,8 +30,8 @@ const MenuItem: SFC<MenuItemProps> = ({activeIcon, children, className, icon, ro
       className={className}
       to={to}
     >
-      <S.IconWrapper>
-        <S.Icon path={isActive && activeIcon ? activeIcon : icon} size="24px" />
+      <S.IconWrapper $isActive={isActive}>
+        <Icon aria-hidden size={BOTTOM_NAV_ICON_SIZE} strokeWidth={isActive ? 2 : 1.75} />
         {children}
       </S.IconWrapper>
       <S.Text>{text}</S.Text>

@@ -5,6 +5,7 @@ import {Bell, ChartCandlestick, Gamepad2, House, LogIn, LogOut, UserRound, Walle
 import logo from 'assets/logo192.png';
 import {PATH_AUTHENTICATION, PATH_GAMES, PATH_HOME} from 'constants/paths';
 import {useIsAuthenticated} from 'hooks';
+import {Coins} from 'layouts/Main/icons';
 import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
 import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
@@ -14,7 +15,6 @@ import MenuLink from './MenuItem/MenuLink';
 import BadgeCount from './BadgeCount';
 import CreateAccountLink from './CreateAccountLink';
 import CreatePostButton from './CreatePostButton';
-import {Coins} from './icons';
 import * as S from './Styles';
 import useIsRail from './useIsRail';
 

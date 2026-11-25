@@ -1,5 +1,6 @@
 import {CSSProperties, MouseEvent, ReactNode, useCallback, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
+import {LucideIcon} from 'lucide-react';
 
 import {useEventListener, useToggle} from 'hooks';
 import {GenericVoidFunction, SFC} from 'types';
@@ -8,8 +9,7 @@ import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
 import * as S from './Styles';
 
 export interface PopupMenuOption {
-  activeIcon?: string;
-  icon: string;
+  icon: LucideIcon;
   isActive?: boolean;
   label: ReactNode;
   onClick: GenericVoidFunction;
@@ -60,7 +60,7 @@ const PopupMenu: SFC<PopupMenuProps> = ({children, className, isActive = false, 
 
   const renderMenu = () => (
     <S.Menu {...analyticsArea('navigation')} style={menuPosition}>
-      {options.map(({activeIcon, icon, isActive: optionIsActive = false, label, onClick: optionOnClick}, index) => (
+      {options.map(({icon: Icon, isActive: optionIsActive = false, label, onClick: optionOnClick}, index) => (
         <S.MenuOption
           {...(typeof label === 'string' ? analyticsTarget(label) : {})}
           $isActive={optionIsActive}
@@ -68,7 +68,7 @@ const PopupMenu: SFC<PopupMenuProps> = ({children, className, isActive = false, 
           onClick={handleOptionClick(optionOnClick)}
           type="button"
         >
-          <S.MenuIcon path={optionIsActive && activeIcon ? activeIcon : icon} size="20px" />
+          <Icon aria-hidden size={20} strokeWidth={optionIsActive ? 2 : 1.75} />
           <S.OptionLabel>{label}</S.OptionLabel>
         </S.MenuOption>
       ))}
