@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import {BOTTOM_NAV_ICON_PADDING_X} from 'layouts/Main/mixins';
 import {colors, fonts, radii} from 'styles';
 
 export const BadgeCount = styled.span`
@@ -11,15 +12,15 @@ export const BadgeCount = styled.span`
   display: inline-flex;
   font-size: 10px;
   font-variant-numeric: tabular-nums;
-  font-weight: ${fonts.weight.bold};
+  font-weight: ${fonts.weight.semiBold};
   height: 16px;
   justify-content: center;
-  left: 13px;
+  /* Sits over the top right of the icon, which starts after the pill's side padding */
+  left: ${BOTTOM_NAV_ICON_PADDING_X + 12}px;
   line-height: 1;
   min-width: 16px;
   padding: 0 4px;
   position: absolute;
-  /* The icon sits 8px below the top of the tab, so the 2px ring starts at 4px and clears the 3px active bar */
-  top: -2px;
+  top: 0;
   white-space: nowrap;
 `;

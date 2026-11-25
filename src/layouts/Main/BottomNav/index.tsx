@@ -1,27 +1,11 @@
 import {useSelector} from 'react-redux';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {
-  mdiAccount,
-  mdiAccountOutline,
-  mdiBell,
-  mdiBellOutline,
-  mdiCircleMultiple,
-  mdiCircleMultipleOutline,
-  mdiDotsHorizontal,
-  mdiExitToApp,
-  mdiGamepadVariant,
-  mdiGamepadVariantOutline,
-  mdiHome,
-  mdiHomeOutline,
-  mdiLogin,
-  mdiSwapHorizontalCircle,
-  mdiSwapHorizontalCircleOutline,
-  mdiWalletBifold,
-  mdiWalletBifoldOutline,
-} from '@mdi/js';
+import {Bell, ChartCandlestick, Ellipsis, Gamepad2, House, LogIn, LogOut, UserRound, Wallet} from 'lucide-react';
 
 import {PATH_AUTHENTICATION, PATH_GAMES, PATH_HOME} from 'constants/paths';
 import {useIsAuthenticated} from 'hooks';
+import {Coins} from 'layouts/Main/icons';
+import {BOTTOM_NAV_ICON_SIZE} from 'layouts/Main/mixins';
 import {isPathActive} from 'layouts/Main/utils';
 import {getSelf} from 'selectors/state';
 import {SFC} from 'types';
@@ -41,28 +25,25 @@ const BottomNav: SFC = ({className}) => {
 
   const popupOptions: PopupMenuOption[] = [
     {
-      activeIcon: mdiCircleMultiple,
-      icon: mdiCircleMultipleOutline,
+      icon: Coins,
       isActive: isPathActive(location.pathname, '/currencies'),
       label: 'Currencies',
       onClick: () => navigate('/currencies'),
     },
     {
-      activeIcon: mdiGamepadVariant,
-      icon: mdiGamepadVariantOutline,
+      icon: Gamepad2,
       isActive: isPathActive(location.pathname, PATH_GAMES),
       label: 'Games',
       onClick: () => navigate(PATH_GAMES),
     },
     {
-      activeIcon: mdiWalletBifold,
-      icon: mdiWalletBifoldOutline,
+      icon: Wallet,
       isActive: isPathActive(location.pathname, '/wallets'),
       label: 'Wallets',
       onClick: () => navigate('/wallets'),
     },
     {
-      icon: mdiExitToApp,
+      icon: LogOut,
       label: 'Log out',
       onClick: () => navigate(PATH_AUTHENTICATION.LOGOUT),
     },
@@ -74,30 +55,12 @@ const BottomNav: SFC = ({className}) => {
   if (!isAuthenticated) {
     return (
       <S.Container {...analyticsArea('navigation')} aria-label="Main" className={className}>
-        <MenuItem activeIcon={mdiHome} icon={mdiHomeOutline} rootPath={PATH_HOME} text="Home" to={PATH_HOME} />
+        <MenuItem icon={House} rootPath={PATH_HOME} text="Home" to={PATH_HOME} />
+        <MenuItem icon={ChartCandlestick} rootPath="/exchange" text="Exchange" to="/exchange" />
+        <MenuItem icon={Coins} rootPath="/currencies" text="Currencies" to="/currencies" />
+        <MenuItem icon={Gamepad2} rootPath={PATH_GAMES} text="Games" to={PATH_GAMES} />
         <MenuItem
-          activeIcon={mdiSwapHorizontalCircle}
-          icon={mdiSwapHorizontalCircleOutline}
-          rootPath="/exchange"
-          text="Exchange"
-          to="/exchange"
-        />
-        <MenuItem
-          activeIcon={mdiCircleMultiple}
-          icon={mdiCircleMultipleOutline}
-          rootPath="/currencies"
-          text="Currencies"
-          to="/currencies"
-        />
-        <MenuItem
-          activeIcon={mdiGamepadVariant}
-          icon={mdiGamepadVariantOutline}
-          rootPath={PATH_GAMES}
-          text="Games"
-          to={PATH_GAMES}
-        />
-        <MenuItem
-          icon={mdiLogin}
+          icon={LogIn}
           rootPath={PATH_AUTHENTICATION.SIGN_IN}
           text="Sign in"
           to={getAuthenticationPath(PATH_AUTHENTICATION.SIGN_IN, getLocationPath(location))}
@@ -108,33 +71,15 @@ const BottomNav: SFC = ({className}) => {
 
   return (
     <S.Container {...analyticsArea('navigation')} aria-label="Main" className={className}>
-      <MenuItem activeIcon={mdiHome} icon={mdiHomeOutline} rootPath={PATH_HOME} text="Home" to={PATH_HOME} />
-      <MenuItem
-        activeIcon={mdiSwapHorizontalCircle}
-        icon={mdiSwapHorizontalCircleOutline}
-        rootPath="/exchange"
-        text="Exchange"
-        to="/exchange"
-      />
-      <MenuItem
-        activeIcon={mdiBell}
-        icon={mdiBellOutline}
-        rootPath="/notifications"
-        text="Notifications"
-        to="/notifications"
-      >
+      <MenuItem icon={House} rootPath={PATH_HOME} text="Home" to={PATH_HOME} />
+      <MenuItem icon={ChartCandlestick} rootPath="/exchange" text="Exchange" to="/exchange" />
+      <MenuItem icon={Bell} rootPath="/notifications" text="Notifications" to="/notifications">
         <BadgeCount />
       </MenuItem>
-      <MenuItem
-        activeIcon={mdiAccount}
-        icon={mdiAccountOutline}
-        rootPath={`/profile/${self.id}`}
-        text="Profile"
-        to={`/profile/${self.id}`}
-      />
+      <MenuItem icon={UserRound} rootPath={`/profile/${self.id}`} text="Profile" to={`/profile/${self.id}`} />
       <PopupMenu isActive={isMoreActive} options={popupOptions}>
-        <S.IconWrapper>
-          <S.Icon path={mdiDotsHorizontal} size="24px" />
+        <S.IconWrapper $isActive={isMoreActive}>
+          <Ellipsis aria-hidden size={BOTTOM_NAV_ICON_SIZE} strokeWidth={isMoreActive ? 2 : 1.75} />
         </S.IconWrapper>
         <S.Text>More</S.Text>
       </PopupMenu>

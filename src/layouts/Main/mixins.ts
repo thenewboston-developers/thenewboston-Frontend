@@ -2,7 +2,8 @@ import {css} from 'styled-components';
 
 import {breakpoints, colors, fonts, radii} from 'styles';
 
-const BOTTOM_NAV_INDICATOR_WIDTH = 24;
+export const BOTTOM_NAV_ICON_PADDING_X = 14;
+export const BOTTOM_NAV_ICON_SIZE = 22;
 const NAV_CALL_TO_ACTION_HEIGHT = 40;
 
 // shadows.focusRing is tuned for light surfaces, so the dark navigation uses a translucent outline instead
@@ -80,27 +81,14 @@ export const bottomNavItemStyle = css<{$isActive: boolean}>`
   display: flex;
   flex: 0 1 auto;
   flex-direction: column;
-  font-family: ${fonts.family.default};
+  font-family: ${fonts.family.navigation};
   font-weight: ${({$isActive}) => ($isActive ? fonts.weight.semiBold : fonts.weight.medium)};
-  gap: 2px;
+  gap: 4px;
   min-width: 48px;
-  padding: 8px 6px;
+  padding: 6px 4px;
   position: relative;
   text-decoration: none;
   transition: color 0.15s ease;
-
-  &::before {
-    background: ${colors.accent};
-    border-radius: 0 0 ${radii.small} ${radii.small};
-    content: '';
-    height: 3px;
-    left: calc(50% - ${BOTTOM_NAV_INDICATOR_WIDTH / 2}px);
-    opacity: ${({$isActive}) => ($isActive ? 1 : 0)};
-    position: absolute;
-    top: 0;
-    transition: opacity 0.15s ease;
-    width: ${BOTTOM_NAV_INDICATOR_WIDTH}px;
-  }
 
   &:hover {
     text-decoration: none;
@@ -120,8 +108,24 @@ export const bottomNavItemStyle = css<{$isActive: boolean}>`
   }
 `;
 
+// The soft pill behind a bottom navigation icon, the phone version of the highlighted row in the left navigation
+export const bottomNavIconStyle = css<{$isActive: boolean}>`
+  background: ${({$isActive}) => ($isActive ? colors.nav.active : 'transparent')};
+  border-radius: ${radii.pill};
+  display: flex;
+  padding: 4px ${BOTTOM_NAV_ICON_PADDING_X}px;
+  position: relative;
+  transition: background 0.15s ease;
+
+  svg {
+    color: ${({$isActive}) => ($isActive ? colors.nav.iconActive : 'currentColor')};
+    flex-shrink: 0;
+  }
+`;
+
 export const bottomNavTextStyle = css`
   font-size: 11px;
+  letter-spacing: -0.006em;
   line-height: 1.3;
   max-width: 100%;
   overflow: hidden;

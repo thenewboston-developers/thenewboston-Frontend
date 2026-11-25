@@ -1,16 +1,10 @@
 import {Link as ULink} from 'react-router-dom';
-import UIcon from '@mdi/react';
 import styled from 'styled-components';
 
-import {bottomNavItemStyle, bottomNavTextStyle} from 'layouts/Main/mixins';
+import {bottomNavIconStyle, bottomNavItemStyle, bottomNavTextStyle} from 'layouts/Main/mixins';
 
-export const Icon = styled(UIcon)`
-  flex-shrink: 0;
-`;
-
-export const IconWrapper = styled.span`
-  display: flex;
-  position: relative;
+export const IconWrapper = styled.span<{$isActive: boolean}>`
+  ${bottomNavIconStyle};
 `;
 
 export const MenuItem = styled(ULink)<{$isActive: boolean}>`

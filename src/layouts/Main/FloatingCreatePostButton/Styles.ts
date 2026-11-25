@@ -1,7 +1,6 @@
-import UIcon from '@mdi/react';
 import styled from 'styled-components';
 
-import {colors, radii, shadows} from 'styles';
+import {colors, shadows} from 'styles';
 
 const SIZE = 56;
 
@@ -10,10 +9,13 @@ export const Button = styled.button`
   align-items: center;
   background: ${colors.accent};
   border: none;
-  border-radius: ${radii.pill};
+  /* A rounded square like the "New post" button of the left navigation */
+  border-radius: 18px;
   /* The unit on the env() fallback is required inside calc() */
-  bottom: calc(72px + env(safe-area-inset-bottom, 0px));
-  box-shadow: ${shadows.popover};
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    ${shadows.popover};
   color: ${colors.white};
   cursor: pointer;
   display: flex;
@@ -54,8 +56,4 @@ export const Button = styled.button`
       transform: scale(0.96);
     }
   }
-`;
-
-export const Icon = styled(UIcon)`
-  flex-shrink: 0;
 `;

@@ -1,4 +1,4 @@
-import {mdiPlus} from '@mdi/js';
+import {SquarePen} from 'lucide-react';
 
 import {useToggle} from 'hooks';
 import PostModal from 'modals/PostModal';
@@ -14,12 +14,12 @@ const FloatingCreatePostButton: SFC = ({className}) => {
     <>
       <S.Button
         {...analyticsTarget('create_post')}
-        aria-label="Create post"
+        aria-label="New post"
         className={className}
         onClick={togglePostModal}
         type="button"
       >
-        <S.Icon path={mdiPlus} size="28px" />
+        <SquarePen aria-hidden size={24} strokeWidth={2} />
       </S.Button>
       {postModalIsOpen ? <PostModal close={togglePostModal} /> : null}
     </>
