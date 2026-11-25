@@ -1,4 +1,4 @@
-import {Link, NavLink} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import styled, {css, keyframes} from 'styled-components';
 
 import UAuthButtons from 'components/AuthButtons';
@@ -1092,35 +1092,6 @@ export const Sunburst = styled.div`
   @media (prefers-reduced-motion: reduce) {
     animation: none;
   }
-`;
-
-export const Tab = styled(NavLink)`
-  border-radius: 999px;
-  color: ${colors.secondary};
-  font-size: 14px;
-  font-weight: 600;
-  padding: 8px 18px;
-  text-decoration: none;
-
-  &:hover {
-    color: ${colors.primary};
-    text-decoration: none;
-  }
-  &.active,
-  &.active:hover {
-    background: ${slotsTheme.night};
-    box-shadow: 0 6px 14px rgba(16, 11, 46, 0.25);
-    color: #ffffff;
-  }
-`;
-
-export const Tabs = styled.nav`
-  background: ${colors.white};
-  border: 1px solid ${colors.borderSubtle};
-  border-radius: 999px;
-  display: inline-flex;
-  gap: 4px;
-  padding: 4px;
 `;
 
 export const Title = styled.h1`

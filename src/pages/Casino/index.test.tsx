@@ -184,18 +184,6 @@ it('shows the 100x slots cap and the 10 TNB limit supported by a 100,000 TNB fun
   expect(placeCasinoBet).not.toHaveBeenCalled();
 });
 
-it('uses the selection-specific roulette limit and submits an integer selection', async () => {
-  await render('/roulette/home');
-  expect(container).toHaveTextContent('Maximum 1,000 TNB');
-  act(() => change('#roulette-selection', 'number'));
-  expect(container).toHaveTextContent('Maximum 28 TNB');
-  act(() => change('#roulette-value', '0'));
-  await act(async () => button('Bet 1 TNB').click());
-  expect(placeCasinoBet).toHaveBeenCalledWith(
-    expect.objectContaining({game: 'roulette', selection: {type: 'number', value: 0}}),
-  );
-});
-
 it('blocks unfunded or paused betting, and never offers practice play', async () => {
   (getCasino as jest.Mock).mockResolvedValue({...summary, games: summary.games.map((game) => ({...game, max_bet: 0}))});
   await render();
@@ -327,14 +315,13 @@ it('does not render an unfinished history receipt as a settled payout', async ()
 });
 
 it.each([
-  ['/slots/home', 'Slots', 'Spin 1 TNB'],
-  ['/roulette/home', 'Roulette', 'Bet 1 TNB'],
-])('renders the independent game page at %s', async (path, title, action) => {
+  ['/slots/home', 'Slots'],
+  ['/roulette/home', 'Roulette'],
+])('renders the independent game page at %s without tabs to the other game', async (path, title) => {
   await render(path);
   expect(container.querySelector('h1')).toHaveTextContent(title);
-  expect(button(action)).toBeEnabled();
-  expect(container.querySelector('nav a[href="/slots/home"]')).not.toBeNull();
-  expect(container.querySelector('nav a[href="/roulette/home"]')).not.toBeNull();
+  expect(container.querySelector('a[href="/slots/home"]')).toBeNull();
+  expect(container.querySelector('a[href="/roulette/home"]')).toBeNull();
 });
 
 it.each([
