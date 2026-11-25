@@ -37,7 +37,7 @@ const History = ({bets, isAuthenticated, onSelect, selectedId}: HistoryProps) =>
               <S.Summary>
                 <strong>{describeBet(bet)}</strong>
                 <span>
-                  Stake {bet.amount.toLocaleString()} · {time(bet.settled_at || bet.created_at)}
+                  Stake {bet.total_stake.toLocaleString()} · {time(bet.settled_at || bet.created_at)}
                 </span>
               </S.Summary>
               <S.Amount data-sign={signOf(bet.profit)}>

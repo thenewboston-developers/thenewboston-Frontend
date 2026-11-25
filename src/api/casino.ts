@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-import {CasinoBet, CasinoCommitment, CasinoFundMovement, CasinoSummary, PlaceCasinoBet} from 'types/casino';
+import {
+  BlackjackActionRequest,
+  CasinoBet,
+  CasinoCommitment,
+  CasinoFundMovement,
+  CasinoSummary,
+  PlaceCasinoBet,
+} from 'types/casino';
 import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/casino`;
@@ -28,6 +35,20 @@ export const getCasinoBet = async (requestId: string): Promise<CasinoBet> => {
 
 export const getCasinoBets = async (): Promise<CasinoBet[]> => {
   const response = await axios.get<CasinoBet[]>(`${BASE_URL}/bets`, config());
+  return response.data;
+};
+
+export const getActiveCasinoBet = async (): Promise<CasinoBet | null> => {
+  const response = await axios.get<CasinoBet | null>(`${BASE_URL}/bets/active`, config());
+  return response.data;
+};
+
+export const actOnCasinoBet = async (requestId: string, data: BlackjackActionRequest): Promise<CasinoBet> => {
+  const response = await axios.post<CasinoBet>(
+    `${BASE_URL}/bets/${encodeURIComponent(requestId)}/actions`,
+    data,
+    config(),
+  );
   return response.data;
 };
 

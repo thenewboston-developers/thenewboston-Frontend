@@ -59,6 +59,7 @@ export const describeBet = (bet: CasinoBet) => {
   if (line) return describeLine(line, bet.result.multiplier);
   if (bet.game === 'roulette')
     return ['Roulette', bet.result.number, bet.result.color].filter((part) => part !== undefined).join(' ');
+  if (bet.game === 'blackjack') return `Blackjack · ${bet.result.outcome ?? 'hand'}`;
   return 'Slots spin';
 };
 

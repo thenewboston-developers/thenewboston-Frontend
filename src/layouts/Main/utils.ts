@@ -20,6 +20,7 @@ export const isPathActive = (pathname: string, rootPath: string): boolean => {
           '/hex',
           '/slots',
           '/roulette',
+          '/blackjack',
           '/casino',
         ]
       : [rootPath];

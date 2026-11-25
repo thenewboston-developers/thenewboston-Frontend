@@ -3,6 +3,7 @@ import Icon from '@mdi/react';
 
 import backgammonThumbnail from 'assets/backgammon-thumbnail.webp';
 import battleshipThumbnail from 'assets/battleship-thumbnail.webp';
+import blackjackThumbnail from 'assets/blackjack-thumbnail.svg';
 import checkersThumbnail from 'assets/checkers-thumbnail.webp';
 import connectFiveThumbnail from 'assets/connect-five-classic-thumbnail.webp';
 import dotsAndBoxesThumbnail from 'assets/dots-and-boxes-thumbnail.webp';
@@ -111,6 +112,16 @@ const games = [
 ];
 
 const casinoGames = [
+  {
+    accent: '#8f713d',
+    art: blackjackThumbnail,
+    badge: 'BLACKJACK PAYS 3:2',
+    category: 'Classic casino cards',
+    description: 'Get closer to 21. Take another card, hold, or double down.',
+    imageDescription: 'An ace of spades and king of hearts on a green Blackjack table',
+    name: 'Blackjack',
+    path: 'blackjack',
+  },
   {
     accent: '#9f6433',
     art: slotsThumbnail,

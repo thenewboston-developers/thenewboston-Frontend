@@ -8,6 +8,7 @@ export const PATH_AUTHENTICATION = {
 export const PATH_CHECKERS = `/checkers/${WILDCARD}`;
 export const PATH_CASINO = `/casino/${WILDCARD}`;
 export const PATH_BATTLESHIP = `/battleship/${WILDCARD}`;
+export const PATH_BLACKJACK = `/blackjack/${WILDCARD}`;
 export const PATH_BACKGAMMON = `/backgammon/${WILDCARD}`;
 export const PATH_CONNECT_FIVE = `/connect-five/${WILDCARD}`;
 export const PATH_CURRENCIES = `/currencies/${WILDCARD}`;
