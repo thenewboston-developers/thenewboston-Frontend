@@ -19,6 +19,7 @@ import {
   PATH_HEX,
   PATH_HOME,
   PATH_LEGACY_FEED,
+  PATH_LET_IT_RIDE,
   PATH_MANCALA,
   PATH_NOTIFICATIONS,
   PATH_PLINKO,
@@ -41,6 +42,7 @@ import Exchange from 'pages/Exchange';
 import Feed from 'pages/Feed';
 import Games from 'pages/Games';
 import Hex from 'pages/Hex';
+import LetItRide from 'pages/LetItRide';
 import Mancala from 'pages/Mancala';
 import Notifications from 'pages/Notifications';
 import Plinko from 'pages/Plinko';
@@ -72,6 +74,7 @@ const MainArea: SFC = ({className}) => {
         <Route element={<Hex />} path={PATH_HEX} />
         <Route path={PATH_HOME} element={<Feed />} />
         <Route path={PATH_LEGACY_FEED} element={<Navigate to={PATH_HOME} replace />} />
+        <Route element={<LetItRide />} path={PATH_LET_IT_RIDE} />
         <Route element={<Mancala />} path={PATH_MANCALA} />
         <Route
           path={PATH_NOTIFICATIONS}

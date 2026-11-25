@@ -1,5 +1,18 @@
 import {PlaceCasinoBet} from 'types/casino';
 
+const GAME_NAMES: Record<string, string> = {
+  blackjack: 'Blackjack',
+  let_it_ride: 'Let It Ride',
+  plinko: 'Plinko',
+  roulette: 'Roulette',
+  slots: 'Slots',
+};
+
+export interface CasinoGameLink {
+  name: string;
+  path: string;
+}
+
 export interface PendingCasinoBet {
   payload: PlaceCasinoBet;
   serverSeedHash: string;
@@ -39,6 +52,12 @@ export const savePendingCasinoBet = (userId: number, pending: PendingCasinoBet) 
   recent[pending.payload.request_id] = pending.serverSeedHash;
   localStorage.setItem(commitmentKey(userId), JSON.stringify(recent));
 };
+
+// The display name of a casino game and the page it is played on
+export const getCasinoGameLink = (game: string): CasinoGameLink => ({
+  name: GAME_NAMES[game] ?? game,
+  path: `/${game.replace(/_/g, '-')}/home`,
+});
 
 export const casinoErrorMessage = (error: unknown, fallback: string) => {
   const data = (error as {response?: {data?: Record<string, unknown>}})?.response?.data;

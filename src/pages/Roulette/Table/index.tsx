@@ -7,6 +7,7 @@ import Icon from '@mdi/react';
 import FundControls from 'components/Casino/FundControls';
 import useCasinoWager from 'components/Casino/useCasinoWager';
 import {CasinoBet} from 'types/casino';
+import {getCasinoGameLink} from 'utils/casino';
 
 import Bank from '../Bank';
 import Celebration, {Burst} from '../Celebration';
@@ -47,7 +48,6 @@ import * as S from './Styles';
 export const QUICK_SPIN_STORAGE_KEY = 'thenewboston.roulette.quickSpin';
 
 const FLASH_DURATION = 5200;
-const GAME_NAMES: Record<string, string> = {plinko: 'Plinko', roulette: 'Roulette', slots: 'Slots'};
 const RECENT_COUNT = 12;
 const SPIN_DURATION = {calm: 1200, full: 6400, quick: 2800};
 const UNDO_DEPTH = 50;
@@ -111,11 +111,11 @@ const Table = () => {
     place,
     receipt,
     refresh,
+    resumeGame,
     self,
     setAmount: setStake,
     storageError,
     summary,
-    unfinishedGame,
     wallet,
   } = useCasinoWager({
     gameId: 'roulette',
@@ -279,7 +279,7 @@ const Table = () => {
   // A wager from another casino game that was waiting for confirmation: there is no spin to show, only its receipt
   const showForeignBet = (bet: CasinoBet) => {
     setForeignBet(bet);
-    setNotice(`Your ${GAME_NAMES[bet.game] ?? bet.game} bet was confirmed: ${formatTnb(bet.payout)} returned.`);
+    setNotice(`Your ${getCasinoGameLink(bet.game).name} bet was confirmed: ${formatTnb(bet.payout)} returned.`);
   };
 
   const showOutcome = useCallback(
@@ -510,8 +510,8 @@ const Table = () => {
       return (
         <S.Action>
           <S.ActionNote>
-            A {formatTnb(pending.payload.amount)} {pending.payload.game} bet is awaiting confirmation. Retrying uses the
-            same wager, even after refreshing this page.
+            A {formatTnb(pending.payload.amount)} {pending.payload.game.replace(/_/g, ' ')} bet is awaiting
+            confirmation. Retrying uses the same wager, even after refreshing this page.
           </S.ActionNote>
           <S.SpinButton disabled={isSubmitting} onClick={handleRetry} type="button">
             {isSubmitting ? 'Checking your bet…' : 'Retry same bet'}
@@ -803,9 +803,9 @@ const Table = () => {
               <S.RailAction>{renderAction()}</S.RailAction>
             </S.Rail>
             {error && <S.Error role="alert">{error}</S.Error>}
-            {(unfinishedGame || pending?.payload.game === 'blackjack') && (
+            {resumeGame && (
               <S.SlipNote>
-                <Link to="/blackjack/home">Resume your Blackjack hand</Link> before placing another wager.
+                <Link to={resumeGame.path}>Resume your {resumeGame.name} hand</Link> before placing another wager.
               </S.SlipNote>
             )}
             {loadError && (

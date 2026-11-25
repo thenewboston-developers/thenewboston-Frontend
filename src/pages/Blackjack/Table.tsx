@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 
 import AuthButtons from 'components/AuthButtons';
 import FundControls from 'components/Casino/FundControls';
+import {getCasinoGameLink} from 'utils/casino';
 
 import Receipt from './Receipt';
 import * as S from './Styles';
@@ -96,8 +97,8 @@ const Table = () => {
       return (
         <>
           <S.Note>
-            Your {game.pendingBet.payload.amount.toLocaleString()} TNB {game.pendingBet.payload.game} wager is awaiting
-            confirmation.
+            Your {game.pendingBet.payload.amount.toLocaleString()} TNB {game.pendingBet.payload.game.replace(/_/g, ' ')}{' '}
+            wager is awaiting confirmation.
           </S.Note>
           <S.Button $primary disabled={game.isBusy || game.storageError} onClick={game.deal} type="button">
             {game.isBusy ? 'Confirming…' : 'Retry same bet'}
@@ -145,8 +146,14 @@ const Table = () => {
           </S.Note>
         </>
       );
-    if (game.receipt?.status === 'open')
-      return <S.Note>Finish your active {game.receipt.game} game before placing another wager.</S.Note>;
+    if (game.receipt?.status === 'open') {
+      const other = getCasinoGameLink(game.receipt.game);
+      return (
+        <S.Note>
+          <S.TextLink to={other.path}>Finish your {other.name} hand</S.TextLink> before placing another wager.
+        </S.Note>
+      );
+    }
     return (
       <>
         <S.Label htmlFor="blackjack-wager">
@@ -282,9 +289,12 @@ const Table = () => {
           {renderControls()}
           {game.receipt && !hand && game.receipt.status === 'settled' && (
             <S.Note>
-              Your previous {game.receipt.game} wager was confirmed: {game.receipt.payout.toLocaleString()} TNB
-              returned. Its receipt is available on the{' '}
-              <S.TextLink to={`/${game.receipt.game}/home`}>{game.receipt.game} table</S.TextLink>.
+              Your previous {getCasinoGameLink(game.receipt.game).name} wager was confirmed:{' '}
+              {game.receipt.payout.toLocaleString()} TNB returned. Its receipt is available on the{' '}
+              <S.TextLink to={getCasinoGameLink(game.receipt.game).path}>
+                {getCasinoGameLink(game.receipt.game).name} table
+              </S.TextLink>
+              .
             </S.Note>
           )}
           {game.error && <S.Error role="alert">{game.error}</S.Error>}

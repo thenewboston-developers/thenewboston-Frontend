@@ -8,6 +8,7 @@ import checkersThumbnail from 'assets/checkers-thumbnail.webp';
 import connectFiveThumbnail from 'assets/connect-five-classic-thumbnail.webp';
 import dotsAndBoxesThumbnail from 'assets/dots-and-boxes-thumbnail.webp';
 import hexThumbnail from 'assets/hex-thumbnail.webp';
+import letItRideThumbnail from 'assets/let-it-ride-thumbnail.svg';
 import mancalaThumbnail from 'assets/mancala-thumbnail.webp';
 import plinkoThumbnail from 'assets/plinko-thumbnail.svg';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
@@ -124,6 +125,16 @@ const casinoGames = [
     path: 'blackjack',
   },
   {
+    accent: '#2b55b3',
+    art: letItRideThumbnail,
+    badge: 'UP TO 100 TO 1',
+    category: 'Casino poker',
+    description: 'Three bets on five cards. Pull two back, or let them ride.',
+    imageDescription: 'A royal flush in spades fanned over three gold chips on a midnight-blue card table',
+    name: 'Let It Ride',
+    path: 'let-it-ride',
+  },
+  {
     accent: '#278b80',
     art: plinkoThumbnail,
     badge: 'UP TO 50× TOTAL RETURN',
@@ -226,7 +237,9 @@ const Games: SFC = ({className}) => (
               $accent={game.accent}
               aria-label={`${game.name} — play with TNB`}
               key={game.path}
-              onClick={() => captureAnalyticsEvent('game_selected', {game: game.path, source: 'games_hub'})}
+              onClick={() =>
+                captureAnalyticsEvent('game_selected', {game: game.path.replace(/-/g, '_'), source: 'games_hub'})
+              }
               to={`/${game.path}/home`}
             >
               <S.Artwork>

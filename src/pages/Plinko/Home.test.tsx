@@ -2,7 +2,14 @@ import {act} from 'react';
 import {createRoot, Root} from 'react-dom/client';
 import {MemoryRouter, Route, Routes, useLocation} from 'react-router-dom';
 
-import {createCasinoCommitment, getCasino, getCasinoBet, getCasinoBets, placeCasinoBet} from 'api/casino';
+import {
+  createCasinoCommitment,
+  getActiveCasinoBet,
+  getCasino,
+  getCasinoBet,
+  getCasinoBets,
+  placeCasinoBet,
+} from 'api/casino';
 import Casino from 'pages/Casino';
 import {CasinoBet, CasinoSummary} from 'types/casino';
 import {readPendingCasinoBet, savePendingCasinoBet} from 'utils/casino';
@@ -34,6 +41,7 @@ jest.mock('./usePlinkoSounds', () => {
 
 jest.mock('api/casino', () => ({
   createCasinoCommitment: jest.fn(),
+  getActiveCasinoBet: jest.fn(),
   getCasino: jest.fn(),
   getCasinoBet: jest.fn(),
   getCasinoBets: jest.fn(),
@@ -240,6 +248,7 @@ it('links back to an active Blackjack hand without trapping an unaccepted Plinko
   (placeCasinoBet as jest.Mock).mockRejectedValueOnce({
     response: {status: 409, data: {code: 'game_in_progress', detail: 'Finish the existing casino game first.'}},
   });
+  (getActiveCasinoBet as jest.Mock).mockResolvedValueOnce({game: 'blackjack', status: 'open'});
   await render();
   await act(async () => button('Drop ball').click());
   expect(readPendingCasinoBet(7)).toBeNull();

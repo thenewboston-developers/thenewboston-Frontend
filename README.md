@@ -80,6 +80,10 @@ Plinko v1 has 12 rows and 13 pockets, with whole-TNB multipliers `[50,18,8,3,1,0
 
 Plinko allows up to eight balls to animate at once. Each manual click places one wager at the displayed per-ball amount; another drop is available after the previous server request is confirmed, without waiting for its animation. Only one request can remain unresolved, and uncertain responses pause new wagers until the same saved request is recovered. Every ball has its own receipt and animation clock. Optional drop, peg, and landing sounds default to off, persist per browser, and stop immediately on mute, hidden tabs, or navigation. Restored receipts never replay sounds.
 
+Let It Ride v1 is an interactive game at `/let-it-ride/home` (`src/pages/LetItRide`): three equal bets on a five-card poker hand, two of which can be pulled back, one after seeing three cards and one after the first community card. Its rules, paytable and best-play strategy live in `src/utils/letItRide.ts`; `src/utils/letItRide.test.ts` solves every possible deal to prove that the strategy shown by the Hints toggle is the best play and that it loses exactly 7,979 / 249,900 of one bet. The page deals and decides through the shared interactive endpoints (`/api/casino/bets/active` and `/api/casino/bets/{request_id}/actions`), saves each deal and decision before sending it so a retry can never bet or decide twice, and never shows what a hand paid before its last card has turned. A table whose rules version or paytable differs from the page's own disables new deals until the page is refreshed. `src/utils/letItRideFairness.ts` re-deals the five cards from the revealed seed and recomputes the payout.
+
+When a wager is refused because another game's hand is unfinished, Slots, Roulette and Plinko ask the casino which game it is and link to that page.
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
