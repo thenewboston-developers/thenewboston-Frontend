@@ -222,9 +222,10 @@ export const getAnalyticsHeaders = (): Record<string, string> => {
 export const initializeAnalytics = (): void => {
   const apiHost = process.env.REACT_APP_POSTHOG_HOST;
   const projectToken = process.env.REACT_APP_POSTHOG_KEY;
-  if (initialized || process.env.NODE_ENV !== 'production' || !apiHost || !projectToken) return;
+  const uiHost = process.env.REACT_APP_POSTHOG_UI_HOST;
+  if (initialized || process.env.NODE_ENV !== 'production' || !apiHost || !projectToken || !uiHost) return;
   try {
-    posthog.init(projectToken, {...analyticsConfig, api_host: apiHost});
+    posthog.init(projectToken, {...analyticsConfig, api_host: apiHost, ui_host: uiHost});
     initialized = true;
   } catch {
     // The app remains usable if analytics is unavailable.

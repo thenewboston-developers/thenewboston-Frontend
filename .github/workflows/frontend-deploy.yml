@@ -10,11 +10,12 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      # These should be added as repo Secrets in GitHub:
+      # Configure the production repository secrets and variables in GitHub.
       REACT_APP_API_URL: ${{ secrets.PROD_API_URL }}
       REACT_APP_WS_URL: ${{ secrets.PROD_WS_URL }}
       REACT_APP_POSTHOG_HOST: ${{ secrets.PROD_POSTHOG_HOST }}
       REACT_APP_POSTHOG_KEY: ${{ secrets.PROD_POSTHOG_KEY }}
+      REACT_APP_POSTHOG_UI_HOST: ${{ vars.PROD_POSTHOG_UI_HOST }}
 
     steps:
       # 1. Checkout your code
@@ -31,11 +32,15 @@ jobs:
         run: |
           test -n "$REACT_APP_POSTHOG_HOST" || { echo "Missing PROD_POSTHOG_HOST"; exit 1; }
           test -n "$REACT_APP_POSTHOG_KEY" || { echo "Missing PROD_POSTHOG_KEY"; exit 1; }
+          test -n "$REACT_APP_POSTHOG_UI_HOST" || { echo "Missing PROD_POSTHOG_UI_HOST"; exit 1; }
           npm ci --legacy-peer-deps
           npm run typecheck
           CI=true npm test -- --watchAll=false --runInBand
           npm run build
         # REACT_APP_* vars are injected above, so the build picks up your prod URLs
+
+      - name: Verify PostHog proxy before deployment
+        run: python3 .github/scripts/verify_posthog_proxy.py
 
       # 4. Configure AWS CLI
       - name: Configure AWS credentials
