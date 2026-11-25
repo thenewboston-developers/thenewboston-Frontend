@@ -96,6 +96,16 @@ export const BoardHeader = styled.div`
   }
 `;
 
+export const BoardToolbar = styled.div`
+  align-items: center;
+  color: #a2bcc3;
+  display: flex;
+  font-size: 12px;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 14px 18px 0;
+`;
+
 export const Button = styled.button`
   background: #18343f;
   border: 1px solid #36545c;
@@ -195,6 +205,11 @@ export const DropButton = styled.button`
   padding: 16px;
   transition: filter 0.15s ease;
   width: 100%;
+
+  span {
+    font-size: 12px;
+    font-weight: 600;
+  }
 
   &:hover:not(:disabled) {
     filter: brightness(1.08);
@@ -354,6 +369,29 @@ export const Result = styled.div`
       color: #ffe0a1;
     }
   }
+`;
+
+export const SoundButton = styled.button`
+  align-items: center;
+  background: #18343f;
+  border: 1px solid #36545c;
+  border-radius: 999px;
+  color: #d7e8eb;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 12px;
+  gap: 6px;
+  padding: 8px 12px;
+
+  &[aria-pressed='true'] {
+    border-color: #6ce0c4;
+    color: #8aeac8;
+  }
+
+  &:hover {
+    background: #244752;
+  }
+  ${focus}
 `;
 
 export const Stat = styled.div`

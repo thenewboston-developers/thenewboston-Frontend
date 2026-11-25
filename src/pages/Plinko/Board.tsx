@@ -21,9 +21,10 @@ import {
 
 interface BoardProps {
   animate: boolean;
-  bet: CasinoBet | null;
-  dropping: boolean;
-  onComplete(): void;
+  bets: CasinoBet[];
+  lastBet: CasinoBet | null;
+  onComplete(bet: CasinoBet): void;
+  onPeg(row: number): void;
 }
 
 const PEGS = Array.from({length: ROWS}, (_, row) =>
@@ -33,21 +34,35 @@ const PEGS = Array.from({length: ROWS}, (_, row) =>
   })),
 ).flat();
 
-const Board = ({animate, bet, dropping, onComplete}: BoardProps) => {
+interface BallProps {
+  animate: boolean;
+  bet: CasinoBet;
+  onComplete(bet: CasinoBet): void;
+  onPeg(row: number): void;
+}
+
+// Each accepted wager owns its animation clock. Adding a ball or toggling sound never restarts another drop.
+const Ball = ({animate, bet, onComplete, onPeg}: BallProps) => {
   const ball = useRef<SVGCircleElement>(null);
+  const callbacks = useRef({onComplete, onPeg});
+  const completed = useRef(false);
   const trail = useRef<SVGPolylineElement>(null);
-  const validBet = isPlinkoResult(bet) ? bet : null;
-  const points = validBet ? pathPoints(validBet.result.path) : null;
-  const landing = points?.[points.length - 1] ?? {x: CENTER, y: TOP - 34};
+  callbacks.current = {onComplete, onPeg};
 
   useEffect(() => {
-    if (!dropping || !validBet) return undefined;
+    if (completed.current || !isPlinkoResult(bet)) return undefined;
+    const finish = () => {
+      if (completed.current) return;
+      completed.current = true;
+      callbacks.current.onComplete(bet);
+    };
     if (!animate) {
-      onComplete();
+      finish();
       return undefined;
     }
-    const route = pathPoints(validBet.result.path);
+    const route = pathPoints(bet.result.path);
     let frame: number;
+    let lastPeg = 0;
     let started: number | null = null;
     const tick = (now: number) => {
       if (started === null) started = now;
@@ -55,17 +70,52 @@ const Board = ({animate, bet, dropping, onComplete}: BoardProps) => {
       const position = ballPosition(route, progress);
       ball.current?.setAttribute('cx', String(position.x));
       ball.current?.setAttribute('cy', String(position.y));
-      const passed = route.slice(0, Math.floor(progress * (route.length - 1)) + 1);
+      const step = Math.floor(progress * (route.length - 1));
+      const passed = route.slice(0, step + 1);
       trail.current?.setAttribute('points', [...passed, position].map(({x, y}) => `${x},${y}`).join(' '));
+      // Skip missed ticks after a hidden tab resumes instead of playing a backlog of peg sounds.
+      const peg = Math.min(ROWS, step);
+      if (peg > lastPeg && progress < 1) callbacks.current.onPeg(peg - 1);
+      lastPeg = peg;
       if (progress < 1) frame = requestAnimationFrame(tick);
-      else onComplete();
+      else finish();
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [animate, dropping, onComplete, validBet]);
+  }, [animate, bet]);
 
   return (
-    <S.Board aria-busy={dropping} aria-label="Plinko board">
+    <g data-ball-id={bet.request_id}>
+      <polyline
+        fill="none"
+        opacity="0.18"
+        ref={trail}
+        stroke="#ffe1a0"
+        strokeDasharray="2 6"
+        strokeLinecap="round"
+        strokeWidth="3"
+      />
+      <circle
+        cx={CENTER}
+        cy={TOP - 34}
+        fill="url(#plinko-ball)"
+        r="7.5"
+        ref={ball}
+        stroke="#fff0bb"
+        strokeWidth="1"
+        style={{filter: 'drop-shadow(0 0 7px rgba(255, 197, 122, 0.6))'}}
+      />
+    </g>
+  );
+};
+
+const Board = ({animate, bets, lastBet, onComplete, onPeg}: BoardProps) => {
+  const validBet = isPlinkoResult(lastBet) ? lastBet : null;
+  const points = validBet ? pathPoints(validBet.result.path) : null;
+  const landing = points?.[points.length - 1] ?? {x: CENTER, y: TOP - 34};
+
+  return (
+    <S.Board aria-busy={bets.length > 0} aria-label="Plinko board">
       <svg aria-label="Twelve rows of pegs above thirteen payout pockets" role="img" viewBox="0 0 700 510">
         <defs>
           <radialGradient cx="30%" cy="25%" id="plinko-ball">
@@ -93,8 +143,7 @@ const Board = ({animate, bet, dropping, onComplete}: BoardProps) => {
         <polyline
           fill="none"
           opacity="0.3"
-          points={!dropping && points ? points.map(({x, y}) => `${x},${y}`).join(' ') : ''}
-          ref={trail}
+          points={points ? points.map(({x, y}) => `${x},${y}`).join(' ') : ''}
           stroke="#ffe1a0"
           strokeDasharray="2 6"
           strokeLinecap="round"
@@ -102,7 +151,7 @@ const Board = ({animate, bet, dropping, onComplete}: BoardProps) => {
         />
         {MULTIPLIERS.map((multiplier, slot) => {
           const x = CENTER + (slot - ROWS / 2) * SPACING;
-          const selected = !dropping && validBet?.result.slot === slot;
+          const selected = validBet?.result.slot === slot;
           return (
             <g data-selected={selected || undefined} key={slot}>
               <title>{`Pocket ${slot + 1}: ${multiplier}× total return, ${((POCKET_WEIGHTS[slot] / 4096) * 100).toFixed(3)}% chance`}</title>
@@ -140,16 +189,20 @@ const Board = ({animate, bet, dropping, onComplete}: BoardProps) => {
             </g>
           );
         })}
-        <circle
-          cx={dropping ? CENTER : landing.x}
-          cy={dropping ? TOP - 34 : landing.y}
-          fill="url(#plinko-ball)"
-          r="7.5"
-          ref={ball}
-          stroke="#fff0bb"
-          strokeWidth="1"
-          style={{filter: 'drop-shadow(0 0 7px rgba(255, 197, 122, 0.6))'}}
-        />
+        {(validBet || !bets.length) && (
+          <circle
+            cx={landing.x}
+            cy={landing.y}
+            fill="url(#plinko-ball)"
+            r="7.5"
+            stroke="#fff0bb"
+            strokeWidth="1"
+            style={{filter: 'drop-shadow(0 0 7px rgba(255, 197, 122, 0.6))'}}
+          />
+        )}
+        {bets.filter(isPlinkoResult).map((bet) => (
+          <Ball animate={animate} bet={bet} key={bet.request_id} onComplete={onComplete} onPeg={onPeg} />
+        ))}
         <text fill="#7b9ea6" fontSize="11" letterSpacing="2" textAnchor="middle" x={CENTER} y="495">
           TOTAL RETURN · INCLUDES YOUR STAKE
         </text>
