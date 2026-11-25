@@ -79,8 +79,24 @@ export const Advice = styled.p`
   margin: 0;
 `;
 
+// The site's secondary button is drawn for light pages: on the dark rail Sign In takes the table's own outline
 export const AuthButtons = styled(UAuthButtons)`
   justify-content: flex-start;
+
+  button {
+    height: 44px;
+    padding: 0 20px;
+  }
+
+  button:first-child {
+    background: transparent;
+    border-color: ${table.rimBright};
+    color: ${table.ivory};
+  }
+
+  button:first-child:hover {
+    background: #ffffff14;
+  }
 `;
 
 export const Balance = styled.div`
