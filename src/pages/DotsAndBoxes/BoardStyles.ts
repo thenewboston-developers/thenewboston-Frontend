@@ -1,11 +1,9 @@
 import styled, {css, keyframes} from 'styled-components';
 
+import {fonts} from 'styles';
 import {DotsAndBoxesSide} from 'types/dotsAndBoxes';
 
-export const sideColors: Record<DotsAndBoxesSide, {fill: string; ink: string; soft: string}> = {
-  blue: {fill: '#dbe7ff', ink: '#2457d6', soft: '#8fb0f5'},
-  red: {fill: '#ffe0da', ink: '#d2412f', soft: '#f2a093'},
-};
+import {dots, dottedLeader, label, sheet, sideColors} from './theme';
 
 const claim = keyframes`
   from {
@@ -41,14 +39,13 @@ const pulse = keyframes`
   }
 `;
 
+// The board is a sheet of dot-grid paper like the lobby's panels, with the game drawn on a clean page in the middle
 export const BoardFrame = styled.div`
-  background: #1f2a44;
-  border: 1px solid #34436a;
-  border-radius: 22px;
-  box-shadow: 0 16px 32px #1f2a441c;
+  ${sheet};
+  isolation: isolate;
   margin: 0 auto;
   max-width: 600px;
-  padding: 20px;
+  padding: 16px 20px 14px;
   width: 100%;
 
   @media (min-width: 1000px) and (min-height: 600px) {
@@ -56,8 +53,7 @@ export const BoardFrame = styled.div`
   }
 
   @media (max-width: 550px) {
-    border-radius: 14px;
-    padding: 10px;
+    padding: 12px 12px 10px;
   }
 `;
 
@@ -68,14 +64,22 @@ export const BoardGrid = styled.div<{$size: number}>`
   grid-template-rows: ${({$size}) => `repeat(${$size}, minmax(0, 1fr) minmax(0, 4.5fr)) minmax(0, 1fr)`};
 `;
 
+// The board's name with a row of dots running to its size
 export const BoardTitle = styled.div`
-  color: #e9eefc;
+  align-items: center;
+  color: ${dots.inkSoft};
   display: flex;
-  flex-wrap: wrap;
   font-size: 13px;
+  font-weight: ${fonts.weight.semiBold};
   gap: 12px;
-  justify-content: space-between;
-  padding: 0 0 14px;
+  padding: 0 0 12px;
+
+  strong {
+    ${label};
+    ${dottedLeader};
+    color: ${dots.ink};
+    flex: 1;
+  }
 `;
 
 export const Box = styled.div<{$owner?: DotsAndBoxesSide}>`
@@ -104,7 +108,7 @@ export const Box = styled.div<{$owner?: DotsAndBoxesSide}>`
 `;
 
 export const Dot = styled.span`
-  background: #1f2a44;
+  background: ${dots.dot};
   border-radius: 50%;
   box-shadow: 0 1px 0 #ffffff;
   margin: 12%;
@@ -114,26 +118,34 @@ export const Dot = styled.span`
 
 export const Legend = styled.div`
   align-items: center;
-  color: #cdd6ee;
+  color: ${dots.inkSoft};
   display: flex;
   flex-wrap: wrap;
   font-size: 12px;
-  gap: 16px;
+  font-weight: ${fonts.weight.semiBold};
+  gap: 8px 18px;
   line-height: 1.5;
-  padding-top: 14px;
+  padding-top: 12px;
 `;
 
+// Each player's name after a line drawn between two dots in their colour
 export const LegendItem = styled.span<{$side: DotsAndBoxesSide}>`
   align-items: center;
+  color: ${dots.ink};
   display: inline-flex;
   gap: 8px;
+  overflow-wrap: anywhere;
 
   &::before {
-    background: ${({$side}) => sideColors[$side].soft};
-    border-radius: 3px;
+    background:
+      radial-gradient(circle closest-side, ${dots.dot} 86%, transparent) left center / 7px 7px no-repeat,
+      radial-gradient(circle closest-side, ${dots.dot} 86%, transparent) right center / 7px 7px no-repeat,
+      linear-gradient(${({$side}) => `${sideColors[$side].ink}, ${sideColors[$side].ink}`}) center / calc(100% - 6px)
+        4px no-repeat;
     content: '';
-    height: 6px;
-    width: 22px;
+    flex-shrink: 0;
+    height: 7px;
+    width: 26px;
   }
 `;
 
@@ -203,7 +215,7 @@ export const Line = styled.button<{
   }
 
   &:focus-visible {
-    outline: 3px solid #f2b63d;
+    outline: 3px solid ${dots.gold};
     outline-offset: 1px;
     z-index: 3;
   }
@@ -215,9 +227,11 @@ export const Line = styled.button<{
   }
 `;
 
+// A clean page with no printed grid, so the only dots on it are the game's
 export const Paper = styled.div`
-  background: #fbfaf6;
-  border: 3px solid #141c30;
-  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid ${dots.rule};
+  border-radius: 3px;
+  box-shadow: 0 16px 26px -18px #17387873;
   padding: clamp(10px, 3.5%, 22px);
 `;

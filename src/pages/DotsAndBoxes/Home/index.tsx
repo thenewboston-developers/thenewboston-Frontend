@@ -30,6 +30,7 @@ import {
 } from '../Emblems';
 import Hero from '../Hero';
 import Leaderboard from '../Leaderboard';
+import Rules from '../Rules';
 import {getErrorMessage, getPlayerName, getScoreLine} from '../utils';
 
 import * as S from './Styles';
@@ -491,7 +492,7 @@ const Home = () => {
       )}
       {history.length > 0 && <MatchList matches={history} selfId={self.id} title="Your recent matches" />}
       <Leaderboard />
-      <S.Rules />
+      <Rules />
     </S.Container>
   );
 };

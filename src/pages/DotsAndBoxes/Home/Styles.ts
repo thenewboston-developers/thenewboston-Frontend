@@ -6,10 +6,9 @@ import UUserSearchInput from 'components/UserSearchInput';
 import {fonts} from 'styles';
 import {DotsAndBoxesSide} from 'types/dotsAndBoxes';
 
-import URules from '../Rules';
-import {cornerDots, dotGrid, dots, hiddenInput, inkButton, label, sheet} from '../theme';
+import {cornerDots, dotGrid, dots, dottedLeader, hiddenInput, inkButton, label, pencilSketch, sheet} from '../theme';
 
-export {Badge, Container, Navigation, TextLink} from '../Styles';
+export {Alert, Badge, Container, GhostButton, Navigation, Status, TextLink} from '../Styles';
 
 export type MatchTone = 'closed' | 'draw' | 'incoming' | 'lost' | 'turn' | 'waiting' | 'won';
 
@@ -26,17 +25,7 @@ const TONES: Record<MatchTone, [string, string, string]> = {
 
 const SIDE_INK: Record<DotsAndBoxesSide, string> = {blue: dots.blue, red: dots.red};
 
-// The faint pencil a choice is drawn in until it is picked, and the ink it takes once it is
-const pencilSketch = css`
-  --sketch-blue: #98a2bb;
-  --sketch-blue-fill: #eceef4;
-  --sketch-dot: #98a2bb;
-  --sketch-free: #c9cfdd;
-  --sketch-open: #e6e9f0;
-  --sketch-red: #b6bccd;
-  --sketch-red-fill: #f1f2f6;
-`;
-
+// The ink a choice's picture takes once it is picked; until then it is drawn in pencil
 const inkSketch = css`
   --sketch-blue: ${dots.blue};
   --sketch-blue-fill: ${dots.blueFill};
@@ -136,18 +125,8 @@ const choiceBox = css`
 // A label with a row of dots running to the end of the line, like the grid it sits on
 const dottedLabel = css`
   ${label};
-  align-items: center;
+  ${dottedLeader};
   color: ${dots.ink};
-  display: flex;
-  gap: 12px;
-
-  &::after {
-    background: radial-gradient(circle, ${dots.pencilDark} 1.2px, transparent 1.7px) left center / 10px 6px repeat-x;
-    content: '';
-    flex: 1;
-    height: 6px;
-    min-width: 24px;
-  }
 `;
 
 const fieldControl = css`
@@ -172,22 +151,6 @@ export const Actions = styled.div`
   flex-wrap: wrap;
   gap: 12px 18px;
   margin-top: 4px;
-`;
-
-export const Alert = styled.div`
-  align-items: center;
-  background: #fff3f0;
-  border: 2px solid #ecaa9c;
-  border-radius: 4px;
-  color: #872d1e;
-  display: flex;
-  flex-wrap: wrap;
-  font-size: 14px;
-  gap: 12px 16px;
-  justify-content: space-between;
-  line-height: 1.6;
-  margin: 18px 0;
-  padding: 12px 16px;
 `;
 
 export const AuthButtons = styled(UAuthButtons)`
@@ -379,31 +342,6 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 22px;
-`;
-
-export const GhostButton = styled.button`
-  align-items: center;
-  background: #ffffff;
-  border: 2px solid ${dots.ink};
-  border-radius: 6px;
-  box-shadow: 2px 2px 0 ${dots.ink};
-  color: ${dots.ink};
-  cursor: pointer;
-  display: inline-flex;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: ${fonts.weight.bold};
-  min-height: 38px;
-  padding: 0 14px;
-
-  &:hover {
-    background: ${dots.blueFill};
-  }
-
-  &:focus-visible {
-    outline: 3px solid ${dots.gold};
-    outline-offset: 3px;
-  }
 `;
 
 export const LaunchButton = styled.button`
@@ -670,107 +608,6 @@ export const Panels = styled.div`
   }
 `;
 
-export const Rules = styled(URules)`
-  ${sheet};
-  margin-top: 28px;
-  padding: 0;
-
-  summary {
-    align-items: center;
-    color: ${dots.ink};
-    cursor: pointer;
-    display: flex;
-    font-size: 15px;
-    font-weight: ${fonts.weight.bold};
-    gap: 12px;
-    list-style: none;
-    padding: 18px 24px;
-  }
-
-  summary::-webkit-details-marker {
-    display: none;
-  }
-
-  summary::before {
-    border: 2px solid ${dots.blue};
-    content: '';
-    flex-shrink: 0;
-    height: 13px;
-    transform: rotate(-8deg);
-    transition: background-color 0.2s ease;
-    width: 13px;
-  }
-
-  summary::after {
-    border-bottom: 2px solid ${dots.ink};
-    border-right: 2px solid ${dots.ink};
-    content: '';
-    height: 8px;
-    margin: -4px 4px 0 auto;
-    transform: rotate(45deg);
-    transition: transform 0.2s ease;
-    width: 8px;
-  }
-
-  summary:focus-visible {
-    outline: 3px solid ${dots.gold};
-    outline-offset: -3px;
-  }
-
-  &[open] summary::before {
-    background: ${dots.blueFill};
-  }
-
-  &[open] summary::after {
-    margin-top: 4px;
-    transform: rotate(-135deg);
-  }
-
-  ol {
-    color: ${dots.inkSoft};
-    counter-reset: rule;
-    font-size: 14px;
-    line-height: 1.7;
-    list-style: none;
-    margin: 0;
-    padding: 0 24px 22px;
-  }
-
-  li {
-    counter-increment: rule;
-    padding-left: 42px;
-    position: relative;
-  }
-
-  li + li {
-    margin-top: 12px;
-  }
-
-  li::before {
-    align-items: center;
-    background: #ffffff;
-    border: 2px solid ${dots.pencil};
-    color: ${dots.ink};
-    content: counter(rule);
-    display: flex;
-    font-size: 12px;
-    font-weight: ${fonts.weight.extraBold};
-    height: 26px;
-    justify-content: center;
-    left: 0;
-    position: absolute;
-    top: -1px;
-    width: 26px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    summary::before,
-    summary::after {
-      transition: none;
-    }
-  }
-`;
-
 export const Showcase = styled.div`
   align-items: center;
   display: flex;
@@ -855,19 +692,6 @@ export const StakeUnit = styled.span`
   color: ${dots.inkSoft};
   display: flex;
   padding: 0 16px;
-`;
-
-export const Status = styled.div`
-  align-items: center;
-  background: ${dots.paper};
-  border: 2px dashed ${dots.pencil};
-  border-radius: 4px;
-  color: ${dots.inkSoft};
-  display: flex;
-  font-size: 14px;
-  gap: 14px;
-  margin: 24px 0;
-  padding: 16px 20px;
 `;
 
 export const Terms = styled.p`
