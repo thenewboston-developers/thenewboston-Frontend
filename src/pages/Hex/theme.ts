@@ -61,8 +61,63 @@ const ACCENTS = {
   `,
 };
 
+const EDGE_BANDS: Record<HexSide, string> = {
+  blue: [
+    `linear-gradient(180deg, transparent 8%, ${hex.cobalt} 32% 68%, transparent 92%) left / 2px 100% no-repeat`,
+    `linear-gradient(180deg, transparent 8%, ${hex.cobalt} 32% 68%, transparent 92%) right / 2px 100% no-repeat`,
+  ].join(', '),
+  red: [
+    `linear-gradient(90deg, transparent 6%, ${hex.ruby} 30% 70%, transparent 94%) top / 100% 2px no-repeat`,
+    `linear-gradient(90deg, transparent 6%, ${hex.ruby} 30% 70%, transparent 94%) bottom / 100% 2px no-repeat`,
+  ].join(', '),
+};
+
+// Background layers that draw a side's two edges along the border of a box, as on the board: red along the top and
+// bottom, blue along the sides
+export const edgeBands = (side: HexSide) => EDGE_BANDS[side];
+
 // Sets the custom properties that color a container's accents, buttons and stones after one of the two sides
 export const sideAccent = (side: HexSide) => ACCENTS[side];
+
+// A raised glass button in the side color of its container, pressed down when clicked like the hero's
+export const glassButton = css`
+  align-items: center;
+  background: linear-gradient(180deg, var(--button-top), var(--button-bottom));
+  border: 0;
+  border-radius: 12px;
+  box-shadow:
+    0 4px 0 var(--accent-deep),
+    0 14px 26px var(--accent-glow),
+    inset 0 1px 0 #ffffff40;
+  color: #ffffff;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: ${fonts.weight.bold};
+  gap: 10px;
+  justify-content: center;
+  text-shadow: 0 1px 1px #00000040;
+  transition:
+    box-shadow 0.12s ease,
+    filter 0.15s ease,
+    transform 0.12s ease;
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.07);
+  }
+
+  &:active:not(:disabled) {
+    box-shadow:
+      0 1px 0 var(--accent-deep),
+      0 8px 18px var(--accent-glow),
+      inset 0 1px 0 #ffffff40;
+    transform: translateY(3px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+`;
 
 // A glass stone like the ones on the board, in the side color of its container
 export const glassStone = css`
@@ -87,10 +142,9 @@ export const label = css`
   text-transform: uppercase;
 `;
 
-// A midnight board: a honeycomb fading out of one corner, and edge bands like the board's own, red along the top and
-// bottom and blue along the sides. Content needs no extra stacking: the honeycomb sits behind it and the bands stay
-// inside the padding.
-export const boardPanel = css`
+// A midnight panel with a honeycomb fading out of one corner. Content needs no extra stacking: the honeycomb sits
+// behind it.
+export const honeycombPanel = css`
   background:
     radial-gradient(90% 70% at 100% 0%, var(--panel-glow, #2456b42e), transparent 70%),
     linear-gradient(165deg, ${hex.navy}, ${hex.midnight} 75%);
@@ -115,13 +169,15 @@ export const boardPanel = css`
     position: absolute;
     z-index: -1;
   }
+`;
+
+// A midnight board: the honeycomb panel with edge bands like the board's own, red along the top and bottom and blue
+// along the sides. The bands stay inside the padding.
+export const boardPanel = css`
+  ${honeycombPanel};
 
   &::after {
-    background:
-      linear-gradient(90deg, transparent 6%, ${hex.ruby} 30% 70%, transparent 94%) top / 100% 2px no-repeat,
-      linear-gradient(90deg, transparent 6%, ${hex.ruby} 30% 70%, transparent 94%) bottom / 100% 2px no-repeat,
-      linear-gradient(180deg, transparent 8%, ${hex.cobalt} 32% 68%, transparent 92%) left / 2px 100% no-repeat,
-      linear-gradient(180deg, transparent 8%, ${hex.cobalt} 32% 68%, transparent 92%) right / 2px 100% no-repeat;
+    background: ${edgeBands('red')}, ${edgeBands('blue')};
     border-radius: inherit;
     content: '';
     inset: 0;

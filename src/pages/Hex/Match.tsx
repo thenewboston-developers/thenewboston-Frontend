@@ -1,12 +1,13 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
+import {mdiFlagOutline, mdiSwapHorizontal} from '@mdi/js';
+import Icon from '@mdi/react';
 
 import {getHexMatch, performHexAction} from 'api/hex';
 import ComputerRewardNotice from 'components/ComputerRewardNotice';
 import GameResultPanel, {GameResultActions, GameResultNote, getGameResultOutcome} from 'components/GameResultPanel';
 import GameSoundToggle from 'components/GameSoundToggle';
-import Loader from 'components/Loader';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated, useWindowSize} from 'hooks';
 import useArcadeSounds, {ArcadeSound} from 'hooks/useArcadeSounds';
@@ -19,6 +20,7 @@ import {isCancellationError} from 'utils/errors';
 import {isCurrentGuestGame} from 'utils/guestGames';
 
 import Board from './Board';
+import {HexSpinner, MiniBoard, ResultArtwork, RivalryEmblem, SideSeal} from './Emblems';
 import Rules from './Rules';
 import * as S from './Styles';
 import {cellLabel, formatClock, getErrorMessage, getPlayerName, mirrorCell, SIDE_NAMES} from './utils';
@@ -193,6 +195,16 @@ const Match = () => {
     }
   }, [dispatch, id, isAuthenticated, side, status]);
 
+  const getTimeLeft = (playerSide: HexSide) => {
+    if (!match) return 0;
+    const stored = playerSide === 'red' ? match.clock_red_ms : match.clock_blue_ms;
+    const elapsed =
+      match.status === 'active' && match.active_side === playerSide && match.turn_started_at
+        ? Math.max(0, now + serverOffset - Date.parse(match.turn_started_at))
+        : 0;
+    return Math.max(0, stored - elapsed);
+  };
+
   const handleAction = async (action: HexAction, data: HexActionData = {}) => {
     if (!match || !canAct || actionLock.current) return;
     unlockSound();
@@ -253,10 +265,251 @@ const Match = () => {
 
   const renderBoard = () => {
     if (!match || !['active', 'finished'].includes(match.status)) return null;
+    return (
+      <Board
+        activeSide={match.status === 'active' ? match.active_side : match.winner}
+        board={match.board}
+        disabled={!canMove}
+        key={match.id}
+        lastMove={match.last_move?.cell ?? null}
+        onSelect={handleBoardSelect}
+        portrait={width <= UPRIGHT_BOARD_WIDTH && height >= width}
+        preview={preview}
+        side={side ?? 'red'}
+        size={match.board_size}
+        winningPath={match.winning_path}
+      />
+    );
+  };
+
+  const renderClosed = () => {
+    if (!match || !['cancelled', 'declined', 'expired'].includes(match.status)) return null;
+    return (
+      <S.Empty>
+        <S.EmptyBoard>
+          <MiniBoard size={match.board_size} />
+        </S.EmptyBoard>
+        <p>
+          This challenge was {match.status}.{' '}
+          {match.stake_amount ? 'The challenger’s stake has been refunded.' : 'No coins were taken.'}{' '}
+          <S.TextLink to="/hex/home">Find your next match →</S.TextLink>
+        </p>
+      </S.Empty>
+    );
+  };
+
+  const renderDetails = () => {
+    if (!match) return null;
+    const lastMove = ['active', 'finished'].includes(match.status) ? match.last_move : null;
+    const size = match.board_size;
+    return (
+      <S.Details>
+        {lastMove && (
+          <S.LastMove aria-live="polite">
+            <S.Stone $side={lastMove.side} aria-hidden="true" />
+            {lastMove.swap
+              ? `${getPlayerName(match, lastMove.side)} swapped the opening: the stone on ${cellLabel(
+                  lastMove.from ?? lastMove.cell,
+                  size,
+                )} is now Blue’s, on ${cellLabel(lastMove.cell, size)}.`
+              : `Last move: ${getPlayerName(match, lastMove.side)} · ${cellLabel(lastMove.cell, size)} · move ${
+                  match.move_count
+                }`}
+          </S.LastMove>
+        )}
+        <S.Terms aria-label="Match terms">
+          <li>
+            {size} × {size} board
+          </li>
+          <li>{match.stake_amount ? `${match.stake_amount.toLocaleString()} TNB per player` : 'Free play'}</li>
+          {match.stake_amount > 0 && <li>{match.prize_pool_total.toLocaleString()} TNB in prize pool</li>}
+        </S.Terms>
+        {status === 'active' && side && (
+          <S.Resign>
+            {resigning ? (
+              <>
+                <S.ResignQuestion>
+                  Resign and concede this match{match.stake_amount ? ' and your stake' : ''}?
+                </S.ResignQuestion>
+                <S.Actions>
+                  <S.Button $danger disabled={!canAct} onClick={() => handleAction('resign')} type="button">
+                    Confirm resignation
+                  </S.Button>
+                  <S.Button $secondary disabled={!canAct} onClick={() => setResigning(false)} type="button">
+                    Keep playing
+                  </S.Button>
+                </S.Actions>
+              </>
+            ) : (
+              <S.Button $secondary disabled={!canAct} onClick={() => setResigning(true)} type="button">
+                <Icon aria-hidden path={mdiFlagOutline} size="18px" />
+                Resign match
+              </S.Button>
+            )}
+          </S.Resign>
+        )}
+      </S.Details>
+    );
+  };
+
+  const renderPending = () => {
+    if (!match || !side || status !== 'pending') return null;
+    const acceptLabel = match.stake_amount
+      ? `Accept · ${match.stake_amount.toLocaleString()} TNB`
+      : 'Accept free match';
+    return (
+      <S.Pending $side={side}>
+        <S.PendingLayout>
+          <S.PendingCopy>
+            <S.PendingHeader>
+              <RivalryEmblem />
+              <div>
+                <S.Eyebrow>{side === 'blue' ? 'Challenge received' : 'Challenge sent'}</S.Eyebrow>
+                <S.Title>
+                  {side === 'blue' ? `A challenge from ${match.red.username}` : 'Waiting for your opponent'}
+                </S.Title>
+              </div>
+            </S.PendingHeader>
+            <S.Detail>
+              {getPlayerName(match, 'red')} challenged {getPlayerName(match, 'blue')} to Hex on a {match.board_size} ×{' '}
+              {match.board_size} board. Each player has {match.time_limit_seconds / 60} minutes of thinking time for the
+              whole match. {getPlayerName(match, 'red')} is Red and moves first; {getPlayerName(match, 'blue')} is Blue
+              and may swap the opening stone.
+            </S.Detail>
+            <S.Stats>
+              <S.Stat>
+                <dt>Stake per player</dt>
+                <dd>{match.stake_amount.toLocaleString()} TNB</dd>
+              </S.Stat>
+              <S.Stat>
+                <dt>Prize when accepted</dt>
+                <dd>{(match.stake_amount * 2).toLocaleString()} TNB</dd>
+              </S.Stat>
+              <S.Stat>
+                <dt>Invitation expires in</dt>
+                <dd>{formatClock(Date.parse(match.expires_at!) - now - serverOffset)}</dd>
+              </S.Stat>
+            </S.Stats>
+            <S.Notes>
+              <S.Small>
+                {match.stake_amount
+                  ? 'Accepting locks your stake until the match ends. The winner receives both stakes. An expired, declined, or canceled invitation refunds the challenger.'
+                  : 'This is a free match. No coins will be taken.'}
+              </S.Small>
+              <S.Small>
+                Hex cannot end in a draw. Your clock begins when it is your turn, so be ready when the invitation is
+                accepted.
+              </S.Small>
+            </S.Notes>
+            <S.Actions>
+              {side === 'blue' ? (
+                <>
+                  <S.Button disabled={!canAct} onClick={() => handleAction('accept')} type="button">
+                    {busyAction === 'accept' ? 'Accepting…' : acceptLabel}
+                  </S.Button>
+                  <S.Button $secondary disabled={!canAct} onClick={() => handleAction('decline')} type="button">
+                    Decline
+                  </S.Button>
+                </>
+              ) : (
+                <S.Button $secondary disabled={!canAct} onClick={() => handleAction('cancel')} type="button">
+                  Cancel challenge
+                </S.Button>
+              )}
+            </S.Actions>
+          </S.PendingCopy>
+          <S.PendingBoard>
+            <MiniBoard size={match.board_size} />
+          </S.PendingBoard>
+        </S.PendingLayout>
+      </S.Pending>
+    );
+  };
+
+  const renderPlayers = () => {
+    if (!match) return null;
+    const timeLimit = match.time_limit_seconds * 1000;
+    return (
+      <S.Players>
+        {(['red', 'blue'] as const).map((playerSide) => {
+          const active = status === 'active' && match.active_side === playerSide;
+          const name = getPlayerName(match, playerSide);
+          const timeLeft = getTimeLeft(playerSide);
+          return (
+            <S.MatchPlayer $active={active} $side={playerSide} key={playerSide}>
+              <S.PlayerBody>
+                <S.PlayerSeal>
+                  <SideSeal ring={active ? 'still' : 'none'} />
+                </S.PlayerSeal>
+                <S.PlayerName>
+                  {name}
+                  {side === playerSide ? ' (you)' : ''}
+                </S.PlayerName>
+                <S.PlayerRole $active={active}>
+                  {match.mode === 'computer' && playerSide === 'blue'
+                    ? `Blue · ${match.difficulty} computer`
+                    : `${SIDE_NAMES[playerSide]} · ${playerSide === 'red' ? 'moves first' : 'moves second'}`}
+                </S.PlayerRole>
+                <S.Timer $active={active} aria-label={`${name} clock`}>
+                  {formatClock(timeLeft)}
+                </S.Timer>
+              </S.PlayerBody>
+              <S.TimeLeft aria-hidden="true">
+                <span style={{width: `${timeLimit ? Math.min(100, (timeLeft / timeLimit) * 100) : 0}%`}} />
+              </S.TimeLeft>
+            </S.MatchPlayer>
+          );
+        })}
+      </S.Players>
+    );
+  };
+
+  const renderResult = () => {
+    if (!match || status !== 'finished' || !match.winner) return null;
+    const rematchLabel = match.mode === 'computer' ? 'Play again' : 'Offer rematch';
+    return (
+      <S.Result $side={match.winner}>
+        <GameResultPanel
+          artwork={<ResultArtwork connected={match.result_reason === 'connection'} side={match.winner} />}
+          description={RESULT_LABELS[match.result_reason] ?? 'Match complete'}
+          game="Hex"
+          outcome={getGameResultOutcome(match.winner, side)}
+          title={`${getPlayerName(match, match.winner)} wins the match`}
+        >
+          {match.mode === 'computer' && side === 'red' && (
+            <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} subdued />
+          )}
+          {match.prize_pool_total > 0 && (
+            <S.Prize>
+              {match.prize_pool_total.toLocaleString()} TNB prize paid to {getPlayerName(match, match.winner)}.
+            </S.Prize>
+          )}
+          <GameResultActions>
+            {side && (
+              <S.Button disabled={!canAct} onClick={() => handleAction('rematch')} type="button">
+                {busyAction === 'rematch' ? 'Creating…' : rematchLabel}
+              </S.Button>
+            )}
+            <S.TextLink to="/hex/home">Back to Hex</S.TextLink>
+          </GameResultActions>
+          {match.mode === 'human' && side && (
+            <GameResultNote>
+              A rematch uses the same board, stake, and time limit, and the player who offers it moves first. Your stake
+              locks when you offer it; your opponent must accept again.
+            </GameResultNote>
+          )}
+        </GameResultPanel>
+      </S.Result>
+    );
+  };
+
+  const renderTurn = () => {
+    if (!match || status !== 'active' || !match.active_side) return null;
+    const activeSide = match.active_side;
     const size = match.board_size;
     const lastMove = match.last_move;
     const opening = lastMove && !lastMove.swap && match.move_count === 1 ? lastMove.cell : null;
-    const isOwnTurn = !!side && match.active_side === side;
+    const isOwnTurn = !!side && activeSide === side;
     const ownSide = side ?? 'red';
     const otherSide = opposite(ownSide);
     let instruction = `Choose any empty cell. Join the two ${ownSide} edges before ${getPlayerName(
@@ -268,202 +521,80 @@ const Match = () => {
     let waitingLabel =
       match.mode === 'computer' ? 'The computer is choosing its cell…' : 'Waiting for your opponent to move.';
     if (!side) waitingLabel = 'You are watching this match.';
+    let ring: 'pulse' | 'still' | 'trace' = 'still';
+    if (isOwnTurn) ring = 'pulse';
+    else if (side) ring = 'trace';
     return (
-      <>
-        {status === 'active' && (
-          <S.MoveToolbar aria-live="polite">
-            <div>
-              <strong>
-                {isOwnTurn
-                  ? `Your turn · ${SIDE_NAMES[ownSide]}`
-                  : `${getPlayerName(match, match.active_side!)}’s turn`}
-              </strong>
-              <S.Small>{isOwnTurn ? instruction : waitingLabel}</S.Small>
-              {canSwap && opening !== null && (
-                <S.Small>
-                  Swap rule: instead of placing a stone you may take over the opening stone on{' '}
-                  {cellLabel(opening, size)}. It becomes your blue stone on {cellLabel(mirrorCell(opening, size), size)}
-                  , and {getPlayerName(match, 'red')} moves next.
-                </S.Small>
-              )}
-            </div>
-            {side && (
-              <S.Actions>
-                {swapping && (canSwap || busyAction === 'swap') ? (
-                  <>
-                    <S.Button
-                      $secondary
-                      disabled={!canSwap}
-                      onClick={() => setSwapping(false)}
-                      style={SWAP_BUTTON_STYLE}
-                      type="button"
-                    >
-                      Cancel
-                    </S.Button>
-                    <S.Button disabled={!canSwap} onClick={() => handleAction('swap')} type="button">
-                      {busyAction === 'swap' ? 'Swapping…' : 'Confirm swap'}
-                    </S.Button>
-                  </>
-                ) : (
-                  <>
-                    {canSwap && (
-                      <S.Button
-                        $secondary
-                        onClick={() => {
-                          setSelection(null);
-                          setSwapping(true);
-                        }}
-                        style={SWAP_BUTTON_STYLE}
-                        type="button"
-                      >
-                        Swap the opening
-                      </S.Button>
-                    )}
-                    {selected !== null && (
-                      <S.Button $secondary disabled={!canMove} onClick={() => setSelection(null)} type="button">
-                        Reset
-                      </S.Button>
-                    )}
-                    <S.Button
-                      disabled={!canMove || selected === null}
-                      onClick={() => selected !== null && handleAction('move', {cell: selected})}
-                      type="button"
-                    >
-                      {busyAction === 'move' ? 'Placing…' : 'Confirm move'}
-                    </S.Button>
-                  </>
-                )}
-              </S.Actions>
-            )}
-          </S.MoveToolbar>
-        )}
-        <Board
-          board={match.board}
-          disabled={!canMove}
-          key={match.id}
-          lastMove={lastMove?.cell ?? null}
-          onSelect={handleBoardSelect}
-          portrait={width <= UPRIGHT_BOARD_WIDTH && height >= width}
-          preview={preview}
-          side={ownSide}
-          size={size}
-          winningPath={match.winning_path}
-        />
-        {lastMove && (
-          <S.Small aria-live="polite">
-            {lastMove.swap
-              ? `${getPlayerName(match, lastMove.side)} swapped the opening: the stone on ${cellLabel(
-                  lastMove.from ?? lastMove.cell,
-                  size,
-                )} is now Blue’s, on ${cellLabel(lastMove.cell, size)}.`
-              : `Last move: ${getPlayerName(match, lastMove.side)} · ${cellLabel(lastMove.cell, size)} · move ${
-                  match.move_count
-                }`}
-          </S.Small>
-        )}
-      </>
-    );
-  };
-
-  const renderClock = (playerSide: HexSide) => {
-    if (!match) return '';
-    const stored = playerSide === 'red' ? match.clock_red_ms : match.clock_blue_ms;
-    const elapsed =
-      match.status === 'active' && match.active_side === playerSide && match.turn_started_at
-        ? Math.max(0, now + serverOffset - Date.parse(match.turn_started_at))
-        : 0;
-    return formatClock(stored - elapsed);
-  };
-
-  const renderPending = () => {
-    if (!match || !side || status !== 'pending') return null;
-    const acceptLabel = match.stake_amount
-      ? `Accept · ${match.stake_amount.toLocaleString()} TNB`
-      : 'Accept free match';
-    return (
-      <S.Panel>
-        <S.TitleSmall>
-          {side === 'blue' ? `A challenge from ${match.red.username}` : 'Waiting for your opponent'}
-        </S.TitleSmall>
-        <S.Detail>
-          {getPlayerName(match, 'red')} challenged {getPlayerName(match, 'blue')} to Hex on a {match.board_size} ×{' '}
-          {match.board_size} board. Each player has {match.time_limit_seconds / 60} minutes of thinking time for the
-          whole match. {getPlayerName(match, 'red')} is Red and moves first; {getPlayerName(match, 'blue')} is Blue and
-          may swap the opening stone.
-        </S.Detail>
-        <S.Stat>
-          <span>Stake per player</span>
-          <strong>{match.stake_amount.toLocaleString()} TNB</strong>
-        </S.Stat>
-        <S.Stat>
-          <span>Prize when accepted</span>
-          <strong>{(match.stake_amount * 2).toLocaleString()} TNB</strong>
-        </S.Stat>
-        <S.Stat>
-          <span>Invitation expires in</span>
-          <strong>{formatClock(Date.parse(match.expires_at!) - now - serverOffset)}</strong>
-        </S.Stat>
-        <S.Small>
-          {match.stake_amount
-            ? 'Accepting locks your stake until the match ends. The winner receives both stakes. An expired, declined, or canceled invitation refunds the challenger.'
-            : 'This is a free match. No coins will be taken.'}
-        </S.Small>
-        <S.Small>
-          Hex cannot end in a draw. Your clock begins when it is your turn, so be ready when the invitation is accepted.
-        </S.Small>
-        <S.Actions style={{marginTop: 20}}>
-          {side === 'blue' ? (
-            <>
-              <S.Button disabled={!canAct} onClick={() => handleAction('accept')} type="button">
-                {busyAction === 'accept' ? 'Accepting…' : acceptLabel}
-              </S.Button>
-              <S.Button $secondary disabled={!canAct} onClick={() => handleAction('decline')} type="button">
-                Decline
-              </S.Button>
-            </>
-          ) : (
-            <S.Button $secondary disabled={!canAct} onClick={() => handleAction('cancel')} type="button">
-              Cancel challenge
-            </S.Button>
-          )}
-        </S.Actions>
-      </S.Panel>
-    );
-  };
-
-  const renderResult = () => {
-    if (!match || status !== 'finished' || !match.winner) return null;
-    const rematchLabel = match.mode === 'computer' ? 'Play again' : 'Offer rematch';
-    return (
-      <GameResultPanel
-        description={RESULT_LABELS[match.result_reason] ?? 'Match complete'}
-        game="Hex"
-        outcome={getGameResultOutcome(match.winner, side)}
-        title={`${getPlayerName(match, match.winner)} wins the match`}
-      >
-        {match.mode === 'computer' && side === 'red' && (
-          <ComputerRewardNotice guest={match.guest_mode} reward={match.computer_reward} />
-        )}
-        {match.prize_pool_total > 0 && (
+      <S.TurnBar $side={activeSide} aria-live="polite">
+        <S.TurnMarker>
+          <SideSeal ring={ring} />
+        </S.TurnMarker>
+        <S.TurnCopy>
           <strong>
-            {match.prize_pool_total.toLocaleString()} TNB prize paid to {getPlayerName(match, match.winner)}.
+            {isOwnTurn ? `Your turn · ${SIDE_NAMES[ownSide]}` : `${getPlayerName(match, activeSide)}’s turn`}
           </strong>
+          <S.TurnText>{isOwnTurn ? instruction : waitingLabel}</S.TurnText>
+        </S.TurnCopy>
+        {canSwap && opening !== null && (
+          <S.SwapNote>
+            <Icon aria-hidden path={mdiSwapHorizontal} size="18px" />
+            <span>
+              Swap rule: instead of placing a stone you may take over the opening stone on {cellLabel(opening, size)}.
+              It becomes your blue stone on {cellLabel(mirrorCell(opening, size), size)}, and{' '}
+              {getPlayerName(match, 'red')} moves next.
+            </span>
+          </S.SwapNote>
         )}
-        <GameResultActions>
-          {side && (
-            <S.Button disabled={!canAct} onClick={() => handleAction('rematch')} type="button">
-              {busyAction === 'rematch' ? 'Creating…' : rematchLabel}
-            </S.Button>
-          )}
-          <S.TextLink to="/hex/home">Back to Hex</S.TextLink>
-        </GameResultActions>
-        {match.mode === 'human' && side && (
-          <GameResultNote>
-            A rematch uses the same board, stake, and time limit, and the player who offers it moves first. Your stake
-            locks when you offer it; your opponent must accept again.
-          </GameResultNote>
+        {side && (
+          <S.TurnActions>
+            {swapping && (canSwap || busyAction === 'swap') ? (
+              <>
+                <S.Button
+                  $secondary
+                  disabled={!canSwap}
+                  onClick={() => setSwapping(false)}
+                  style={SWAP_BUTTON_STYLE}
+                  type="button"
+                >
+                  Cancel
+                </S.Button>
+                <S.Button disabled={!canSwap} onClick={() => handleAction('swap')} type="button">
+                  {busyAction === 'swap' ? 'Swapping…' : 'Confirm swap'}
+                </S.Button>
+              </>
+            ) : (
+              <>
+                {canSwap && (
+                  <S.Button
+                    $secondary
+                    onClick={() => {
+                      setSelection(null);
+                      setSwapping(true);
+                    }}
+                    style={SWAP_BUTTON_STYLE}
+                    type="button"
+                  >
+                    <Icon aria-hidden path={mdiSwapHorizontal} size="18px" />
+                    Swap the opening
+                  </S.Button>
+                )}
+                {selected !== null && (
+                  <S.Button $secondary disabled={!canMove} onClick={() => setSelection(null)} type="button">
+                    Reset
+                  </S.Button>
+                )}
+                <S.Button
+                  disabled={!canMove || selected === null}
+                  onClick={() => selected !== null && handleAction('move', {cell: selected})}
+                  type="button"
+                >
+                  {busyAction === 'move' ? 'Placing…' : 'Confirm move'}
+                </S.Button>
+              </>
+            )}
+          </S.TurnActions>
         )}
-      </GameResultPanel>
+      </S.TurnBar>
     );
   };
 
@@ -471,91 +602,41 @@ const Match = () => {
     <S.MatchContainer>
       <S.MatchNavigation>
         <S.TextLink to="/hex/home">← Back to Hex</S.TextLink>
-        <S.Badge>Hex {Number.isSafeInteger(id) ? `· Match ${id}` : ''}</S.Badge>
-        <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+        <S.Actions>
+          <S.MatchBadge>Hex {Number.isSafeInteger(id) ? `· Match ${id}` : ''}</S.MatchBadge>
+          <GameSoundToggle onToggle={toggleSound} soundEnabled={soundEnabled} />
+        </S.Actions>
       </S.MatchNavigation>
       {loadError && (
-        <S.Error role="alert">
-          {loadError}{' '}
-          <S.Button $secondary onClick={() => setRetryKey((value) => value + 1)} type="button">
+        <S.Alert role="alert">
+          <div>
+            {loadError}
+            <S.AlertNote>Moves are paused until the connection is restored. Match clocks continue to run.</S.AlertNote>
+          </div>
+          <S.GhostButton onClick={() => setRetryKey((value) => value + 1)} type="button">
             Reconnect
-          </S.Button>
-          <S.Small>Moves are paused until the connection is restored. Match clocks continue to run.</S.Small>
-        </S.Error>
+          </S.GhostButton>
+        </S.Alert>
       )}
-      {actionError && <S.Error role="alert">{actionError}</S.Error>}
+      {actionError && <S.Alert role="alert">{actionError}</S.Alert>}
       {isLoading && (
         <S.Status role="status">
-          <Loader />
+          <HexSpinner />
           <span>Opening your match…</span>
         </S.Status>
       )}
       {match && (
-        <>
-          <S.PlayerGrid>
-            {(['red', 'blue'] as const).map((playerSide) => (
-              <S.MatchPlayer
-                $active={status === 'active' && match.active_side === playerSide}
-                $side={playerSide}
-                key={playerSide}
-              >
-                <div>
-                  <strong>
-                    <S.SideDot $side={playerSide} aria-hidden="true" />
-                    {getPlayerName(match, playerSide)}
-                    {side === playerSide ? ' (you)' : ''}
-                  </strong>
-                  <S.Small>
-                    {match.mode === 'computer' && playerSide === 'blue'
-                      ? `Blue · ${match.difficulty} computer`
-                      : `${SIDE_NAMES[playerSide]} · ${playerSide === 'red' ? 'moves first' : 'moves second'}`}
-                  </S.Small>
-                </div>
-                <S.Timer aria-label={`${getPlayerName(match, playerSide)} clock`}>{renderClock(playerSide)}</S.Timer>
-              </S.MatchPlayer>
-            ))}
-          </S.PlayerGrid>
-          <S.Actions style={{margin: '10px 0'}}>
-            <S.Badge>
-              {match.board_size} × {match.board_size} board
-            </S.Badge>
-            <S.Badge>
-              {match.stake_amount ? `${match.stake_amount.toLocaleString()} TNB per player` : 'Free play'}
-            </S.Badge>
-            {match.stake_amount > 0 && <S.Badge>{match.prize_pool_total.toLocaleString()} TNB in prize pool</S.Badge>}
-          </S.Actions>
-          {renderPending()}
+        <S.Arena $side={side ?? 'red'}>
           {renderResult()}
-          {renderBoard()}
-          {['cancelled', 'declined', 'expired'].includes(match.status) && (
-            <S.Empty>
-              This challenge was {match.status}.{' '}
-              {match.stake_amount ? 'The challenger’s stake has been refunded.' : 'No coins were taken.'}{' '}
-              <S.TextLink to="/hex/home">Find your next match →</S.TextLink>
-            </S.Empty>
-          )}
-          {status === 'active' && side && (
-            <S.Section>
-              <S.Actions>
-                {resigning ? (
-                  <>
-                    <S.Detail>Resign and concede this match{match.stake_amount ? ' and your stake' : ''}?</S.Detail>
-                    <S.Button $danger disabled={!canAct} onClick={() => handleAction('resign')} type="button">
-                      Confirm resignation
-                    </S.Button>
-                    <S.Button $secondary disabled={!canAct} onClick={() => setResigning(false)} type="button">
-                      Keep playing
-                    </S.Button>
-                  </>
-                ) : (
-                  <S.Button $secondary disabled={!canAct} onClick={() => setResigning(true)} type="button">
-                    Resign match
-                  </S.Button>
-                )}
-              </S.Actions>
-            </S.Section>
-          )}
-        </>
+          {renderPlayers()}
+          {renderTurn()}
+          <S.Main>
+            {renderPending()}
+            {renderBoard()}
+            {renderClosed()}
+            {renderDetails()}
+          </S.Main>
+        </S.Arena>
       )}
       <Rules />
     </S.MatchContainer>

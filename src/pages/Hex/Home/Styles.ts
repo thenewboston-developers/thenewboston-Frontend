@@ -6,10 +6,9 @@ import UUserSearchInput from 'components/UserSearchInput';
 import {fonts} from 'styles';
 import {HexSide} from 'types/hex';
 
-import URules from '../Rules';
-import {boardPanel, glassStone, hex, HEXAGON, label, sideAccent} from '../theme';
+import {boardPanel, glassButton, glassStone, hex, HEXAGON, label, sideAccent} from '../theme';
 
-export {Badge, Container, Navigation, TextLink} from '../Styles';
+export {Alert, Badge, Container, GhostButton, Navigation, Status, Stone, TextLink} from '../Styles';
 
 export type MatchTone = 'active' | 'closed' | 'incoming' | 'lost' | 'waiting' | 'won';
 
@@ -131,22 +130,6 @@ export const Actions = styled.div`
   flex-direction: column;
   gap: 10px;
   margin-top: auto;
-`;
-
-export const Alert = styled.div`
-  align-items: center;
-  background: linear-gradient(90deg, #3a1517, #161a33);
-  border: 1px solid #e0483c66;
-  border-radius: 14px;
-  color: #ffd9d3;
-  display: flex;
-  flex-wrap: wrap;
-  font-size: 14px;
-  gap: 12px 16px;
-  justify-content: space-between;
-  line-height: 1.6;
-  margin: 20px 0;
-  padding: 14px 18px;
 `;
 
 export const AuthButtons = styled(UAuthButtons)`
@@ -334,69 +317,15 @@ export const Form = styled.form`
   gap: 22px;
 `;
 
-export const GhostButton = styled.button`
-  ${label};
-  background: transparent;
-  border: 1px solid currentColor;
-  border-radius: 999px;
-  color: inherit;
-  cursor: pointer;
-  padding: 8px 16px;
-
-  &:hover {
-    background: #ffffff14;
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${hex.gold};
-    outline-offset: 3px;
-  }
-`;
-
 // A raised glass button in the panel's color, pressed down when clicked like the hero's
 export const LaunchButton = styled.button`
-  align-items: center;
-  background: linear-gradient(180deg, var(--button-top), var(--button-bottom));
-  border: 0;
-  border-radius: 12px;
-  box-shadow:
-    0 4px 0 var(--accent-deep),
-    0 14px 26px var(--accent-glow),
-    inset 0 1px 0 #ffffff40;
-  color: #ffffff;
-  cursor: pointer;
+  ${glassButton};
   display: flex;
-  font-family: inherit;
   font-size: 15px;
-  font-weight: ${fonts.weight.bold};
-  gap: 10px;
-  justify-content: center;
   margin-bottom: 4px;
   min-height: 50px;
   padding: 0 22px;
-  text-shadow: 0 1px 1px #00000040;
-  transition:
-    box-shadow 0.12s ease,
-    filter 0.15s ease,
-    transform 0.12s ease;
   width: 100%;
-
-  &:hover:not(:disabled) {
-    filter: brightness(1.07);
-  }
-
-  &:active:not(:disabled) {
-    box-shadow:
-      0 1px 0 var(--accent-deep),
-      0 8px 18px var(--accent-glow),
-      inset 0 1px 0 #ffffff40;
-    transform: translateY(3px);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 4px;
-  }
 
   &:disabled {
     cursor: wait;
@@ -625,99 +554,6 @@ export const Panels = styled.div`
   }
 `;
 
-export const Rules = styled(URules)`
-  ${boardPanel};
-  color: ${hex.mist};
-  margin-top: 24px;
-  padding: 20px 28px;
-
-  summary {
-    align-items: center;
-    color: ${hex.ice};
-    display: flex;
-    gap: 14px;
-    list-style: none;
-    min-height: 32px;
-  }
-
-  summary::-webkit-details-marker {
-    display: none;
-  }
-
-  /* A cell split between the two sides */
-  summary::before {
-    background: linear-gradient(135deg, ${hex.ruby} 50%, ${hex.cobalt} 50%);
-    clip-path: ${HEXAGON};
-    content: '';
-    flex-shrink: 0;
-    height: 26px;
-    width: 23px;
-  }
-
-  summary::after {
-    border-bottom: 2px solid ${hex.mist};
-    border-right: 2px solid ${hex.mist};
-    content: '';
-    height: 8px;
-    margin: -4px 4px 0 auto;
-    transform: rotate(45deg);
-    transition: transform 0.2s ease;
-    width: 8px;
-  }
-
-  &[open] summary::after {
-    margin-top: 4px;
-    transform: rotate(-135deg);
-  }
-
-  summary:focus-visible {
-    border-radius: 6px;
-    outline: 2px solid ${hex.gold};
-    outline-offset: 4px;
-  }
-
-  ol {
-    counter-reset: order;
-    display: grid;
-    gap: 14px;
-    list-style: none;
-    margin: 20px 0 8px;
-    padding: 0;
-  }
-
-  li {
-    counter-increment: order;
-    display: grid;
-    gap: 14px;
-    grid-template-columns: 32px minmax(0, 1fr);
-    margin: 0;
-  }
-
-  /* Numbers on cells that take turns between red and blue, as the players do */
-  li::before {
-    align-items: center;
-    background: #e0483c38;
-    clip-path: ${HEXAGON};
-    color: ${hex.rubyLight};
-    content: counter(order);
-    display: flex;
-    font-size: 12px;
-    font-weight: ${fonts.weight.extraBold};
-    height: 30px;
-    justify-content: center;
-    width: 26px;
-  }
-
-  li:nth-child(even)::before {
-    background: #2f72da3d;
-    color: ${hex.cobaltLight};
-  }
-
-  @media (max-width: 600px) {
-    padding: 18px 20px;
-  }
-`;
-
 export const Segment = styled.label`
   cursor: pointer;
   display: flex;
@@ -871,31 +707,6 @@ export const StakeUnit = styled.span`
   right: 16px;
   top: 50%;
   transform: translateY(-50%);
-`;
-
-export const Status = styled.div`
-  align-items: center;
-  background: ${hex.midnight};
-  border: 1px solid ${hex.line};
-  border-radius: 14px;
-  color: ${hex.mist};
-  display: flex;
-  font-size: 14px;
-  gap: 12px;
-  margin-top: 24px;
-  padding: 16px 20px;
-`;
-
-// A glass stone of either side, sized for running text
-export const Stone = styled.span<{$side: HexSide}>`
-  ${({$side}) => sideAccent($side)};
-  ${glassStone};
-  display: inline-block;
-  flex-shrink: 0;
-  height: 10px;
-  margin-right: 7px;
-  vertical-align: -1px;
-  width: 10px;
 `;
 
 // The stake terms, set off by the panel's color

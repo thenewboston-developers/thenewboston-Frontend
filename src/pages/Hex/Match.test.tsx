@@ -443,6 +443,52 @@ describe('Hex match interaction', () => {
     expect(container.querySelectorAll('[data-cell][tabindex="0"]')).toHaveLength(1);
   });
 
+  it('shows how much of each player’s thinking time is left', async () => {
+    jest.useFakeTimers();
+    match.clock_red_ms = 450000;
+    match.turn_started_at = new Date().toISOString();
+    // Every poll brings the server's time, which the clocks are counted from
+    (getHexMatch as jest.Mock).mockImplementation(() =>
+      Promise.resolve({...match, server_time: new Date().toISOString()}),
+    );
+    await renderMatch();
+    const share = (name: string) =>
+      (
+        container.querySelector(`[aria-label="${name} clock"]`)!.closest('div')!.nextElementSibling!
+          .firstElementChild as HTMLElement
+      ).style.width;
+    expect(share('Alice')).toBe('50%');
+    expect(share('Bob')).toBe('100%');
+    // Red's clock is running, so its share of the time shrinks. The second step lets a poll arrive on time.
+    await act(async () => jest.advanceTimersByTime(88000));
+    await act(async () => jest.advanceTimersByTime(2000));
+    expect(container.querySelector('[aria-label="Alice clock"]')).toHaveTextContent('6:00');
+    expect(share('Alice')).toBe('40%');
+    expect(share('Bob')).toBe('100%');
+  });
+
+  it('draws the winner’s chain in the result only when the winner joined both edges', async () => {
+    match.status = 'finished';
+    match.winner = 'blue';
+    match.result_reason = 'timeout';
+    match.last_move = {side: 'blue', cell: CENTRE + 1, swap: false};
+    await renderMatch();
+    const result = container.querySelector('[data-outcome]')!;
+    expect(result.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+    expect(container.querySelectorAll('polyline')).toHaveLength(0);
+    match = {
+      ...match,
+      id: 2,
+      result_reason: 'connection',
+      winning_path: Array.from({length: SIZE}, (_, column) => 4 * SIZE + column),
+    };
+    mockMatchId = '2';
+    await renderMatch();
+    // One chain on the board and one in the result's picture of the final position
+    expect(container.querySelectorAll('polyline')).toHaveLength(2);
+    expect(container.querySelector('[data-outcome] polyline')).not.toBeNull();
+  });
+
   it('numbers the last move and does not call a swap a stone', async () => {
     await renderMatch();
     expect(container).toHaveTextContent('Last move: Bob · g6 · move 2');

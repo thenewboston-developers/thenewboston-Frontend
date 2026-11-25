@@ -16,6 +16,7 @@ import {isCancellationError} from 'utils/errors';
 import {DemoBoard, HexSpinner, MiniBoard, PracticeEmblem, RivalryEmblem, StoneChain} from '../Emblems';
 import Hero from '../Hero';
 import Leaderboard from '../Leaderboard';
+import Rules from '../Rules';
 import {BOARD_SIZES, getErrorMessage, getPlayerName} from '../utils';
 
 import * as S from './Styles';
@@ -459,7 +460,7 @@ const Home = () => {
       )}
       {history.length > 0 && <MatchList matches={history} selfId={self.id} title="Your recent matches" />}
       <Leaderboard />
-      <S.Rules />
+      <Rules />
     </S.Container>
   );
 };
