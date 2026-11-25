@@ -6,7 +6,8 @@ import * as S from './Styles';
 
 export interface Burst {
   id: number;
-  multiplier: number;
+  // How many times the whole wager came back
+  times: number;
 }
 
 interface CelebrationProps {
@@ -31,12 +32,12 @@ interface Particle {
 const COLORS = ['#f6e0a0', '#d9b25f', '#f6f0df', '#c9303f', '#17935a'];
 const GRAVITY = 980;
 
-const getCount = (multiplier: number) => {
-  if (multiplier >= 36) return 190;
-  return multiplier >= 3 ? 80 : 46;
+const getCount = (times: number) => {
+  if (times >= 18) return 190;
+  return times >= 3 ? 80 : 46;
 };
 
-// A burst of gold over the table when a bet wins; a straight-up win gets the full shower
+// A burst of gold over the table when the spin pays; the bigger the return, the fuller the shower
 const Celebration = ({anchor, burst}: CelebrationProps) => {
   const canvas = useRef<HTMLCanvasElement>(null);
 
@@ -54,8 +55,8 @@ const Celebration = ({anchor, burst}: CelebrationProps) => {
     context.scale(ratio, ratio);
     const centerX = origin.left - bounds.left + origin.width / 2;
     const centerY = origin.top - bounds.top + origin.height / 2;
-    const power = burst.multiplier >= 36 ? 1.35 : 1;
-    const particles: Particle[] = Array.from({length: getCount(burst.multiplier)}, (_, index) => {
+    const power = burst.times >= 18 ? 1.35 : 1;
+    const particles: Particle[] = Array.from({length: getCount(burst.times)}, (_, index) => {
       const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.5;
       const speed = (260 + Math.random() * 520) * power;
       return {

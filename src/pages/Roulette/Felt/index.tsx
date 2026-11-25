@@ -1,7 +1,8 @@
-import {CSSProperties, MouseEvent, useState} from 'react';
+import {CSSProperties, MouseEvent, PointerEvent, useState} from 'react';
 
 import Chip from '../Chip';
 import {
+  Bets,
   COLUMN_SPOTS,
   describeSpot,
   DOZEN_SPOTS,
@@ -15,18 +16,19 @@ import {
 
 import * as S from './Styles';
 
-export type FeltFlash = 'lost' | 'won' | null;
-
 interface FeltProps {
-  amount: number;
+  // The spot the chip rail is editing
+  activeId: string | null;
+  bets: Bets;
   disabled: boolean;
-  // Set for a few seconds after a result, while the table shows what won and what happened to the player's chips
-  flash: FeltFlash;
+  // The spot whose stack is being dragged away, and the spot a dragged chip is over
+  dragFromId: string | null;
+  dropId: string | null;
   onPlace(spot: Spot): void;
   onRemove(spot: Spot): void;
-  // What the bet paid, shown rising off the chips while the win is flashing
-  payout: number;
-  spotId: string | null;
+  // A press on a stack: the start of a drag, if the pointer travels
+  onStackPress(event: PointerEvent<HTMLElement>, spot: Spot): void;
+  // Set for a few seconds after a result, while the table shows what won and what happened to each stack
   winning: number | null;
 }
 
@@ -78,34 +80,39 @@ const getTone = (spot: Spot): S.SpotTone => {
  * The betting layout. Every place a chip can go is a real button, so the table works with a keyboard and a screen
  * reader; the wide and tall arrangements are the same buttons placed by CSS grid.
  */
-const Felt = ({amount, disabled, flash, onPlace, onRemove, payout, spotId, winning}: FeltProps) => {
+const Felt = ({activeId, bets, disabled, dragFromId, dropId, onPlace, onRemove, onStackPress, winning}: FeltProps) => {
   const [hovered, setHovered] = useState<Spot | null>(null);
 
   const handleContextMenu = (event: MouseEvent, spot: Spot) => {
     event.preventDefault();
-    if (!disabled && spot.id === spotId) onRemove(spot);
+    if (!disabled && bets[spot.id]) onRemove(spot);
   };
 
   const renderSpot = (spot: Spot, index: number) => {
+    const amount = bets[spot.id] ?? 0;
+    const hasChips = amount > 0;
     const isNumber = spot.type === 'number';
-    const isSelected = spot.id === spotId && amount > 0;
-    const isWinner = winning !== null && (isNumber ? spot.value === winning : spotCovers(spot, winning));
+    const isWinner = winning !== null && spotCovers(spot, winning);
     const isCovered = !!hovered && hovered.type !== 'number' && isNumber && spotCovers(hovered, spot.value!);
     const isVertical = spot.type === 'dozen' || EVEN_MONEY_SPOTS.includes(spot);
+    let flash: S.SeatFlash = null;
+    if (winning !== null && hasChips) flash = isWinner ? 'won' : 'lost';
     let lift: S.LabelLift = null;
-    if (isSelected) lift = isNumber ? 'corner' : 'up';
+    if (hasChips) lift = isNumber ? 'corner' : 'up';
     let state: S.SpotState = 'idle';
     if (winning !== null) state = isWinner ? 'won' : 'dimmed';
     return (
       <S.Spot
+        $active={spot.id === activeId && hasChips}
         $compact={spot.type === 'column'}
         $covered={isCovered}
-        $selected={isSelected}
+        $drop={spot.id === dropId}
+        $selected={hasChips}
         $state={state}
         $tone={getTone(spot)}
         $vertical={isVertical}
-        aria-label={`${describeSpot(spot)}, returns ${spot.multiplier}×${isSelected ? `, ${formatTnb(amount)} placed` : ''}`}
-        aria-pressed={isSelected}
+        aria-label={`${describeSpot(spot)}, returns ${spot.multiplier}×${hasChips ? `, ${formatTnb(amount)} placed` : ''}`}
+        aria-pressed={hasChips}
         data-spot={spot.id}
         disabled={disabled}
         key={spot.id}
@@ -115,6 +122,7 @@ const Felt = ({amount, disabled, flash, onPlace, onRemove, payout, spotId, winni
         onFocus={() => setHovered(spot)}
         onMouseEnter={() => setHovered(spot)}
         onMouseLeave={() => setHovered(null)}
+        onPointerDown={(event) => hasChips && onStackPress(event, spot)}
         style={getPlacementStyle(spot, index)}
         type="button"
       >
@@ -122,13 +130,17 @@ const Felt = ({amount, disabled, flash, onPlace, onRemove, payout, spotId, winni
           {(spot.type === 'red' || spot.type === 'black') && <S.Gem $color={spot.type} aria-hidden="true" />}
           {spot.label}
         </S.SpotLabel>
-        {!isNumber && !isSelected && <S.Pays aria-hidden="true">{spot.multiplier}×</S.Pays>}
+        {!isNumber && !hasChips && <S.Pays aria-hidden="true">{spot.multiplier}×</S.Pays>}
         {isWinner && isNumber && <S.Dolly aria-hidden="true" />}
-        {isSelected && flash === 'won' && payout > 0 && (
-          <S.Payout aria-hidden="true">+{payout.toLocaleString()}</S.Payout>
-        )}
-        {isSelected && (
-          <S.Seat $flash={flash} $outside={!isNumber} $vertical={isVertical} key={`${amount}-${flash ?? 'set'}`}>
+        {flash === 'won' && <S.Payout aria-hidden="true">+{(amount * spot.multiplier).toLocaleString()}</S.Payout>}
+        {hasChips && (
+          <S.Seat
+            $flash={flash}
+            $lifted={spot.id === dragFromId}
+            $outside={!isNumber}
+            $vertical={isVertical}
+            key={`${amount}-${flash ?? 'set'}`}
+          >
             <Chip amount={amount} stacked />
           </S.Seat>
         )}

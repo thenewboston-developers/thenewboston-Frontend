@@ -7,6 +7,7 @@ import {PocketColor} from '../utils';
 
 // Where a spot's label goes once a chip sits on it: a number becomes a corner index, an outside bet moves up
 export type LabelLift = 'corner' | 'up' | null;
+export type SeatFlash = 'lost' | 'won' | null;
 export type SpotState = 'dimmed' | 'idle' | 'won';
 export type SpotTone = PocketColor | 'outside';
 
@@ -101,6 +102,8 @@ export const Frame = styled.div`
     inset 0 0 46px #00000052;
   container-type: inline-size;
   padding: 16px;
+  touch-action: manipulation;
+  user-select: none;
 
   @media (max-width: 600px) {
     border-radius: 14px;
@@ -156,7 +159,7 @@ export const Pays = styled.small`
   opacity: 0.75;
 `;
 
-export const Seat = styled.span<{$flash: 'lost' | 'won' | null; $outside: boolean; $vertical: boolean}>`
+export const Seat = styled.span<{$flash: SeatFlash; $lifted: boolean; $outside: boolean; $vertical: boolean}>`
   animation: ${chipDrop} 0.26s cubic-bezier(0.25, 0.9, 0.35, 1.2) both;
   left: ${({$outside}) => ($outside ? '50%' : '64%')};
   pointer-events: none;
@@ -178,6 +181,14 @@ export const Seat = styled.span<{$flash: 'lost' | 'won' | null; $outside: boolea
       animation: ${chipSwept} 0.7s cubic-bezier(0.5, 0, 0.9, 0.5) 0.35s both;
     `}
 
+  /* The stack being dragged is in the player's hand: only its outline stays on the spot */
+  ${({$lifted}) =>
+    $lifted &&
+    css`
+      animation: none;
+      opacity: 0.28;
+    `}
+
   @container (max-width: 520px) {
     ${({$vertical}) =>
       $vertical &&
@@ -193,8 +204,10 @@ export const Seat = styled.span<{$flash: 'lost' | 'won' | null; $outside: boolea
 `;
 
 export const Spot = styled.button<{
+  $active: boolean;
   $compact: boolean;
   $covered: boolean;
+  $drop: boolean;
   $selected: boolean;
   $state: SpotState;
   $tone: SpotTone;
@@ -263,6 +276,26 @@ export const Spot = styled.button<{
       box-shadow:
         0 0 0 1px ${room.brassLight},
         0 0 14px ${room.brass}80;
+    `}
+
+  ${({$active}) =>
+    $active &&
+    css`
+      box-shadow:
+        0 0 0 2px ${room.brassLight},
+        0 0 16px ${room.brass}b3;
+    `}
+
+  ${({$drop}) =>
+    $drop &&
+    css`
+      border-color: ${room.brassLight};
+      box-shadow:
+        0 0 0 3px ${room.brassLight},
+        0 0 22px ${room.brassLight}b3;
+      filter: brightness(1.35);
+      transform: scale(1.06);
+      z-index: 3;
     `}
 
   ${({$state}) =>

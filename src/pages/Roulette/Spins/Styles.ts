@@ -11,6 +11,38 @@ const POCKETS: Record<PocketColor, string> = {
   red: `linear-gradient(160deg, #e64f5f, ${room.redDeep} 62%)`,
 };
 
+export const BetLine = styled.li<{$won: boolean}>`
+  align-items: baseline;
+  border-bottom: 1px solid ${room.line};
+  color: ${room.mist};
+  display: grid;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  gap: 4px 12px;
+  grid-template-columns: minmax(0, 1fr) auto minmax(96px, auto);
+  padding: 7px 0;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  span:first-child {
+    color: ${room.ivory};
+  }
+
+  strong {
+    color: ${({$won}) => ($won ? room.brassLight : room.mist)};
+    font-weight: ${({$won}) => ($won ? fonts.weight.bold : fonts.weight.regular)};
+    text-align: right;
+  }
+`;
+
+export const Bets = styled.ul`
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+`;
+
 export const Empty = styled.p`
   border: 1px dashed ${room.line};
   border-radius: 12px;

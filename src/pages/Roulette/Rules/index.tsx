@@ -11,8 +11,12 @@ const Rules = () => (
     <summary>How Roulette works</summary>
     <ol>
       <li>
-        Pick a chip, then tap the table to place it. Tap the same spot again to add more chips. One bet rides on each
-        spin, so tapping a different spot moves your chips there.
+        Pick a chip, then tap the table to place it, or drag the chip onto a spot. Cover as many spots as you like: one
+        spin settles them all. Tap a spot again to add chips.
+      </li>
+      <li>
+        Drag a stack to move it to another spot, or off the table to take it back. Right-click a spot to take one chip
+        off, and use Undo to step back.
       </li>
       <li>
         Press Spin. Your stake leaves your TNB wallet and the wager settles at once; the wheel then shows you where the

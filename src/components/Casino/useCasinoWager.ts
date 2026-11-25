@@ -18,7 +18,10 @@ import {
 
 interface CasinoWagerOptions {
   gameId: CasinoGameId;
-  // Roulette passes its selection; its bet type sets the wager limit.
+  // For a selection whose limit is not one bet type's: a roulette table with chips on several spots works out what
+  // the casino can cover itself, reports it through `validSelection`, and passes the most a wager may ever be here.
+  maxBet?: number;
+  // Roulette passes its selection; a single spot's bet type sets the wager limit.
   selection?: RouletteSelection;
   validSelection?: boolean;
 }
@@ -27,7 +30,7 @@ interface CasinoWagerOptions {
  * Wager state and the safe placement flow shared by every casino game: a full request is persisted before it is
  * sent, so an uncertain response is retried with the same request ID instead of creating a second wager.
  */
-const useCasinoWager = ({gameId, selection, validSelection = true}: CasinoWagerOptions) => {
+const useCasinoWager = ({gameId, maxBet: maxBetOverride, selection, validSelection = true}: CasinoWagerOptions) => {
   const [amount, setAmount] = useState('1');
   const [error, setError] = useState('');
   const [history, setHistory] = useState<CasinoBet[]>([]);
@@ -45,7 +48,8 @@ const useCasinoWager = ({gameId, selection, validSelection = true}: CasinoWagerO
   const wallets = useSelector(getWallets);
   const game = summary?.games.find((item) => item.id === gameId);
   const betType = selection ? game?.bet_types?.find((item) => item.id === selection.type) : undefined;
-  const maxBet = selection ? (betType?.max_bet ?? 0) : (game?.max_bet ?? 0);
+  const typeMaxBet = selection ? (betType?.max_bet ?? 0) : (game?.max_bet ?? 0);
+  const maxBet = maxBetOverride ?? typeMaxBet;
   const minBet = game?.min_bet ?? 1;
   const stake = Number(amount);
   const wallet = Object.values(wallets).find((item) => item.currency.ticker === 'TNB' && item.owner === self.id);

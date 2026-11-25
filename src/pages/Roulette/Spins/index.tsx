@@ -5,7 +5,15 @@ import {getObservedCasinoCommitment} from 'utils/casino';
 import {verifyCasinoReceipt} from 'utils/casinoFairness';
 
 import * as P from '../Styles';
-import {describeBet, getPocketColor, isRouletteResult} from '../utils';
+import {
+  describeBet,
+  describeSpot,
+  getPocketColor,
+  getSpot,
+  isRouletteResult,
+  selectionBets,
+  spotCovers,
+} from '../utils';
 
 import * as S from './Styles';
 
@@ -45,6 +53,21 @@ const Receipt = ({bet, userId}: {bet: CasinoBet; userId: number}) => {
         The casino committed to a hidden seed before this bet and revealed it once the bet settled. Your browser can
         recompute the winning number and the payout from that seed.
       </S.ReceiptNote>
+      {isRouletteResult(bet) && (
+        <S.Bets aria-label="Bets on this spin">
+          {Object.entries(selectionBets(bet.selection, bet.amount)).map(([id, amount]) => {
+            const spot = getSpot(id)!;
+            const won = spotCovers(spot, bet.result.number);
+            return (
+              <S.BetLine $won={won} key={id}>
+                <span>{describeSpot(spot)}</span>
+                <span>{amount.toLocaleString()} TNB</span>
+                <strong>{won ? `returned ${(amount * spot.multiplier).toLocaleString()}` : 'lost'}</strong>
+              </S.BetLine>
+            );
+          })}
+        </S.Bets>
+      )}
       <S.Seeds>
         <div>
           <dt>Committed hash</dt>

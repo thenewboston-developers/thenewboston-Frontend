@@ -138,3 +138,42 @@ it('rejects unsupported Plinko rules and substituted pre-bet commitments', async
   await expect(verifyCasinoReceipt({...plinko, rules_version: 2}, hash)).rejects.toThrow('unsupported rules version');
   await expect(verifyCasinoReceipt(plinko, 'ff'.repeat(32))).rejects.toThrow('committed hash');
 });
+
+it('reproduces independent backend roulette vectors for rules v2, where one spin settles several bets', async () => {
+  const bets = [
+    {amount: 4, type: 'red'},
+    {amount: 3, type: 'black'},
+    {amount: 2, type: 'dozen', value: 2},
+    {amount: 1, type: 'number', value: 17},
+  ];
+  // 17 is black and in the second dozen: 3 x 2 + 2 x 3 + 1 x 36
+  const table = {
+    ...bet,
+    game: 'roulette' as const,
+    payout: 48,
+    profit: 38,
+    result: {color: 'black', number: 17, payout: 48} as CasinoBet['result'],
+    rules_version: 2,
+    selection: {bets},
+  };
+  await expect(verifyCasinoReceipt(table, hash)).resolves.toContain('Verified:');
+  await expect(verifyCasinoReceipt({...table, payout: 84, profit: 74}, hash)).rejects.toThrow('payout');
+  await expect(
+    verifyCasinoReceipt({...table, result: {...table.result, payout: 12}, payout: 12, profit: 2}, hash),
+  ).rejects.toThrow('payout');
+  // Bets that do not add up to the wager, or a bet the table never had, cannot verify
+  await expect(verifyCasinoReceipt({...table, selection: {bets: bets.slice(0, 3)}}, hash)).rejects.toThrow('payout');
+  await expect(verifyCasinoReceipt({...table, selection: {bets: [{amount: 10, type: 'split'}]}}, hash)).rejects.toThrow(
+    'roulette bets',
+  );
+  await expect(verifyCasinoReceipt({...table, selection: {type: 'black'}}, hash)).rejects.toThrow('roulette bets');
+  // Only black wins on 4
+  const small = {
+    ...table,
+    fairness: {...table.fairness, client_seed: 'v2-b'},
+    payout: 6,
+    profit: -4,
+    result: {color: 'black', number: 4, payout: 6} as CasinoBet['result'],
+  };
+  await expect(verifyCasinoReceipt(small, hash)).resolves.toContain('Verified:');
+});
