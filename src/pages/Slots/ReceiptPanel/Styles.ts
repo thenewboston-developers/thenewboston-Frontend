@@ -69,9 +69,9 @@ export const Failed = styled.p`
 `;
 
 export const Line = styled.div`
-  background: linear-gradient(180deg, #ece8f4, #fdfcff 50%, #ece8f4);
+  background: linear-gradient(180deg, ${slotsTheme.reelShade}, ${slotsTheme.reel} 50%, ${slotsTheme.reelShade});
   border-radius: 14px;
-  box-shadow: inset 0 0 0 1px rgba(36, 16, 63, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(${slotsTheme.shadowRgb}, 0.3);
   display: grid;
   gap: 6px;
   grid-template-columns: repeat(3, minmax(0, 1fr));

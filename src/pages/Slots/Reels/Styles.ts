@@ -84,12 +84,19 @@ export const Reel = styled.div`
       rgba(255, 255, 255, 0.55) 66.6%,
       rgba(255, 255, 255, 0) 70%
     ),
-    linear-gradient(180deg, #b9b2cf 0%, #ece8f4 16%, #fdfcff 50%, #ece8f4 84%, #b9b2cf 100%);
+    linear-gradient(
+      180deg,
+      ${slotsTheme.reelEdge} 0%,
+      ${slotsTheme.reelShade} 16%,
+      ${slotsTheme.reel} 50%,
+      ${slotsTheme.reelShade} 84%,
+      ${slotsTheme.reelEdge} 100%
+    );
   border-radius: 14px;
   box-shadow:
-    inset 0 0 0 1px rgba(36, 16, 63, 0.35),
-    inset 0 10px 18px rgba(36, 16, 63, 0.18),
-    inset 0 -10px 18px rgba(36, 16, 63, 0.18);
+    inset 0 0 0 1px rgba(${slotsTheme.shadowRgb}, 0.35),
+    inset 0 10px 18px rgba(${slotsTheme.shadowRgb}, 0.18),
+    inset 0 -10px 18px rgba(${slotsTheme.shadowRgb}, 0.18);
   height: var(--slots-reel-height);
   min-width: 0;
   overflow: hidden;
@@ -99,12 +106,12 @@ export const Reel = styled.div`
   &::after {
     background: linear-gradient(
       180deg,
-      rgba(16, 9, 42, 0.62) 0%,
-      rgba(16, 9, 42, 0.12) 22%,
-      rgba(16, 9, 42, 0) 34%,
-      rgba(16, 9, 42, 0) 66%,
-      rgba(16, 9, 42, 0.12) 78%,
-      rgba(16, 9, 42, 0.62) 100%
+      rgba(${slotsTheme.shadowRgb}, 0.62) 0%,
+      rgba(${slotsTheme.shadowRgb}, 0.12) 22%,
+      rgba(${slotsTheme.shadowRgb}, 0) 34%,
+      rgba(${slotsTheme.shadowRgb}, 0) 66%,
+      rgba(${slotsTheme.shadowRgb}, 0.12) 78%,
+      rgba(${slotsTheme.shadowRgb}, 0.62) 100%
     );
     content: '';
     inset: 0;
@@ -135,7 +142,7 @@ export const Window = styled.div`
     background-size: 200% 100%;
     box-shadow:
       0 0 12px rgba(255, 215, 106, 0.9),
-      0 0 28px rgba(255, 46, 147, 0.45);
+      0 0 28px rgba(${slotsTheme.accentRgb}, 0.45);
     height: 4px;
     opacity: 1;
   }
@@ -144,7 +151,7 @@ export const Window = styled.div`
     box-shadow:
       inset 0 0 0 2px ${slotsTheme.gold},
       0 0 26px rgba(255, 215, 106, 0.75),
-      0 0 60px rgba(255, 46, 147, 0.45);
+      0 0 60px rgba(${slotsTheme.accentRgb}, 0.45);
   }
 
   @media (prefers-reduced-motion: reduce) {

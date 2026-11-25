@@ -1,3 +1,4 @@
+import slotsTheme from '../theme';
 import {WinTier} from '../utils';
 
 type ParticleKind = 'coin' | 'confetti' | 'spark';
@@ -24,7 +25,7 @@ interface Shower {
 }
 
 const GRAVITY = 1500;
-const CONFETTI_COLORS = ['#ff2e93', '#22d3ee', '#f6c453', '#8b5cf6', '#ffffff', '#5eead4'];
+const CONFETTI_COLORS = [slotsTheme.red, slotsTheme.gold, slotsTheme.goldLight, slotsTheme.text, slotsTheme.green];
 
 export const BURSTS: Record<WinTier, {coins: number; confetti: number; shower: Shower | null; sparks: number}> = {
   big: {coins: 70, confetti: 0, shower: {for: 0.9, rate: 50}, sparks: 26},

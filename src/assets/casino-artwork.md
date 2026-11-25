@@ -9,6 +9,12 @@ Both assets are exported at 900 × 600 pixels as WebP at quality 85. Generated P
 | Slots    | `src/assets/slots-thumbnail.webp`    |
 | Roulette | `src/assets/roulette-thumbnail.webp` |
 
+## Slots palette
+
+The Slots UI uses burgundy and charcoal surfaces, brass/gold trim, ivory reels, and red controls. This follows the classic fruit-machine look seen in [Play’n GO’s Fire Joker](https://www.playngo.com/games/fire-joker) and [Pragmatic Play’s Fire Strike](https://www.pragmaticplay.com/en/news/pragmatic-play-unveils-latest-hit-fire-strike/). These are visual references, not an industry-wide color-frequency survey; themed slots use many different palettes.
+
+The existing Slots thumbnail already shares the burgundy backdrop, brass trim, ivory reels, and red sevens, so it is retained. The UI palette is defined in `src/pages/Slots/theme.ts`.
+
 ## Slots prompt
 
 ```text
