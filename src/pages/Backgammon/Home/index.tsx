@@ -1,58 +1,126 @@
 import {FormEvent, useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import {mdiPlay} from '@mdi/js';
+import Icon from '@mdi/react';
 
 import {createBackgammonMatch, getBackgammonMatches} from 'api/backgammon';
 import AuthButtons from 'components/AuthButtons';
-import GameEarningsLeaderboard from 'components/GameEarningsLeaderboard';
-import Loader from 'components/Loader';
 import UserSearchInput from 'components/UserSearchInput';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {useIsAuthenticated} from 'hooks';
 import {getSelf} from 'selectors/state';
 import {upsertBackgammonMatch} from 'store/backgammon';
 import {AppDispatch, UserReadSerializer} from 'types';
-import {BackgammonDifficulty, BackgammonMatch, BackgammonMode} from 'types/backgammon';
+import {BackgammonDifficulty, BackgammonMatch, BackgammonMode, BackgammonSide} from 'types/backgammon';
 import {isCancellationError} from 'utils/errors';
 
-import Hero from './Hero';
-import * as S from './HomeStyles';
-import LobbyMark from './LobbyMark';
-import {getErrorMessage, getPlayerName} from './utils';
+import {DicePair, Die, PointStack, RollingDice} from '../Emblems';
+import Hero from '../Hero';
+import Leaderboard from '../Leaderboard';
+import {getErrorMessage, getPlayerName, getPlayerSide, INITIAL_BOARD} from '../utils';
 
-const MatchOptions = ({prefix}: {prefix: string}) => (
-  <S.FieldGrid>
-    <S.Field htmlFor={`${prefix}-target`}>
-      Match length
-      <S.Select defaultValue="3" id={`${prefix}-target`} name="target_score">
-        <option value="1">First to 1 point</option>
-        <option value="3">First to 3 points</option>
-        <option value="5">First to 5 points</option>
-      </S.Select>
-    </S.Field>
-    <S.Field htmlFor={`${prefix}-time`}>
-      Time per player, whole match
-      <S.Select defaultValue="900" id={`${prefix}-time`} name="time_limit_seconds">
-        <option value="300">5 minutes</option>
-        <option value="600">10 minutes</option>
-        <option value="900">15 minutes</option>
-        <option value="1800">30 minutes</option>
-      </S.Select>
-    </S.Field>
-  </S.FieldGrid>
+import * as S from './Styles';
+
+const DIFFICULTIES: {description: string; die: number; label: string; value: BackgammonDifficulty}[] = [
+  {description: 'Get comfortable', die: 1, label: 'Easy', value: 'easy'},
+  {description: 'Think ahead', die: 3, label: 'Normal', value: 'normal'},
+  {description: 'Take the challenge', die: 6, label: 'Hard', value: 'hard'},
+];
+
+const MATCH_LENGTHS = [
+  {description: 'One game decides it', value: 1},
+  {description: 'A classic short match', value: 3},
+  {description: 'Room for a comeback', value: 5},
+];
+
+const TIME_LIMITS = [
+  {minutes: 5, value: 300},
+  {minutes: 10, value: 600},
+  {minutes: 15, value: 900},
+  {minutes: 30, value: 1800},
+];
+
+// While a double is on offer, the other player has to answer it
+const getActingSide = (match: BackgammonMatch): BackgammonSide => {
+  if (!match.double_offered_by) return match.active_side;
+  return match.double_offered_by === 'white' ? 'black' : 'white';
+};
+
+const DifficultyOptions = () => (
+  <S.Fieldset>
+    <S.Legend>Difficulty</S.Legend>
+    <S.ChoiceGrid>
+      {DIFFICULTIES.map(({description, die, label, value}) => (
+        <S.Choice key={value}>
+          <input
+            defaultChecked={value === 'normal'}
+            id={`computer-difficulty-${value}`}
+            name="difficulty"
+            type="radio"
+            value={value}
+          />
+          <S.ChoiceCard>
+            <Die value={die} />
+            <S.ChoiceText>
+              <strong>{label}</strong> <small>{description}</small>
+            </S.ChoiceText>
+          </S.ChoiceCard>
+        </S.Choice>
+      ))}
+    </S.ChoiceGrid>
+  </S.Fieldset>
+);
+
+const MatchLengthOptions = ({prefix}: {prefix: string}) => (
+  <S.Fieldset>
+    <S.Legend>Match length</S.Legend>
+    <S.ChoiceGrid>
+      {MATCH_LENGTHS.map(({description, value}) => (
+        <S.Choice key={value}>
+          <input
+            defaultChecked={value === 3}
+            id={`${prefix}-target-${value}`}
+            name="target_score"
+            type="radio"
+            value={value}
+          />
+          <S.ChoiceCard>
+            <PointStack count={value} />
+            <S.ChoiceText>
+              <strong>First to {value}</strong> <small>{description}</small>
+            </S.ChoiceText>
+          </S.ChoiceCard>
+        </S.Choice>
+      ))}
+    </S.ChoiceGrid>
+  </S.Fieldset>
 );
 
 const MatchRow = ({match, selfId}: {match: BackgammonMatch; selfId?: number | null}) => {
   const isIncoming = match.status === 'pending' && match.black?.id === selfId;
   const isOutgoing = match.status === 'pending' && match.white.id === selfId;
+  // Rows under Watch live have no viewer; a computer match has no black player id to match against
+  const side = selfId ? getPlayerSide(match, selfId) : null;
   let label = match.status === 'finished' ? 'View result' : 'Open board';
   if (isIncoming) label = 'Review challenge';
   if (isOutgoing) label = 'Awaiting reply';
+  let turn = '';
+  if (match.status === 'active' && side) turn = getActingSide(match) === side ? 'Your turn' : 'Their turn';
   return (
     <S.MatchLink to={`/backgammon/matches/${match.id}`}>
-      <div>
+      <S.Thumbnail board={match.board ?? INITIAL_BOARD} dice={match.status === 'active' ? match.dice : []} />
+      <S.MatchInfo>
         <S.PlayerName>
-          {getPlayerName(match, 'white')} <span aria-label="versus">vs.</span> {getPlayerName(match, 'black')}
+          <S.Side>
+            <S.SideChecker $side="white" aria-hidden="true" />
+            {getPlayerName(match, 'white')}
+          </S.Side>{' '}
+          <S.Versus aria-label="versus">vs.</S.Versus>{' '}
+          <S.Side>
+            <S.SideChecker $side="black" aria-hidden="true" />
+            {getPlayerName(match, 'black')}
+          </S.Side>
         </S.PlayerName>
         <S.Small>
           {match.status === 'pending'
@@ -61,11 +129,36 @@ const MatchRow = ({match, selfId}: {match: BackgammonMatch; selfId?: number | nu
           · {match.stake_amount ? `${match.stake_amount.toLocaleString()} TNB each` : 'Free play'}
           {match.winner ? ` · ${getPlayerName(match, match.winner)} won` : ''}
         </S.Small>
-      </div>
-      <S.Badge>{label} →</S.Badge>
+      </S.MatchInfo>
+      <S.MatchStatus>
+        {turn && <S.Turn $yours={turn === 'Your turn'}>{turn}</S.Turn>}
+        <S.MatchAction $highlight={isIncoming}>{label} →</S.MatchAction>
+      </S.MatchStatus>
     </S.MatchLink>
   );
 };
+
+const TimeOptions = ({prefix}: {prefix: string}) => (
+  <S.Fieldset>
+    <S.Legend>Time per player, whole match</S.Legend>
+    <S.Clocks>
+      {TIME_LIMITS.map(({minutes, value}) => (
+        <S.ClockChoice key={value}>
+          <input
+            defaultChecked={value === 900}
+            id={`${prefix}-time-${value}`}
+            name="time_limit_seconds"
+            type="radio"
+            value={value}
+          />
+          <S.ClockChecker>
+            <b>{minutes}</b> <small>min</small>
+          </S.ClockChecker>
+        </S.ClockChoice>
+      ))}
+    </S.Clocks>
+  </S.Fieldset>
+);
 
 const Home = () => {
   const [createError, setCreateError] = useState('');
@@ -215,120 +308,118 @@ const Home = () => {
     <S.Container>
       <S.Navigation>
         <S.TextLink to="/games">← All games</S.TextLink>
-        <S.Badge>Classic strategy · A fresh rivalry</S.Badge>
+        <S.Badge>
+          <Die value={5} />
+          Classic strategy · A fresh rivalry
+        </S.Badge>
       </S.Navigation>
       <Hero isCreating={!!creatingMode} onPlay={() => handleCreate(null, 'computer')} />
-      <>
-        {createError && <S.Error role="alert">{createError}</S.Error>}
-        <S.PanelGrid>
-          <S.Panel aria-labelledby="computer-title" id="backgammon-computer" tabIndex={-1}>
-            <S.PanelHeader>
-              <div>
-                <S.Eyebrow>Find your rhythm</S.Eyebrow>
-                <S.PanelTitle id="computer-title">Play the computer</S.PanelTitle>
-              </div>
-              <LobbyMark />
-            </S.PanelHeader>
-            <S.PanelBody>
-              <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
-                <S.Detail>Always free. No account needed. Learn the board or sharpen your next move.</S.Detail>
-                <S.Field htmlFor="computer-difficulty">
-                  Difficulty
-                  <S.Select defaultValue="normal" id="computer-difficulty" name="difficulty">
-                    <option value="easy">Easy · Get comfortable</option>
-                    <option value="normal">Normal · Think ahead</option>
-                    <option value="hard">Hard · Take the challenge</option>
-                  </S.Select>
-                </S.Field>
-                <MatchOptions prefix="computer" />
-                <S.Actions>
-                  <S.Button disabled={!!creatingMode} type="submit">
-                    {creatingMode === 'computer' ? 'Setting the board…' : 'Play free →'}
-                  </S.Button>
-                </S.Actions>
-              </S.Form>
-            </S.PanelBody>
-          </S.Panel>
-          <S.Panel aria-labelledby="challenge-title" id="backgammon-challenge" tabIndex={-1}>
-            <S.PanelHeader>
-              <div>
-                <S.Eyebrow>Make it a rivalry</S.Eyebrow>
-                <S.PanelTitle id="challenge-title">Challenge a player</S.PanelTitle>
-              </div>
-              <LobbyMark reversed />
-            </S.PanelHeader>
-            <S.PanelBody>
-              {!isAuthenticated ? (
-                <>
-                  <S.Detail>Create an account to challenge friends and earn TNB from eligible computer wins.</S.Detail>
-                  <S.GuestActions>
-                    <AuthButtons />
-                  </S.GuestActions>
-                </>
-              ) : (
-                <S.Form onSubmit={(event) => handleCreate(event, 'human')}>
-                  <UserSearchInput
-                    errors={{}}
-                    label="Find a member"
-                    name="opponent"
-                    onChange={setOpponent}
-                    placeholder="Search by username"
-                    touched={{}}
-                    value={opponent}
+      {createError && <S.Error role="alert">{createError}</S.Error>}
+      <S.PanelGrid>
+        <S.Panel aria-labelledby="computer-title" id="backgammon-computer" tabIndex={-1}>
+          <S.PanelHeader>
+            <div>
+              <S.Eyebrow>Find your rhythm</S.Eyebrow>
+              <S.PanelTitle id="computer-title">Play the computer</S.PanelTitle>
+            </div>
+            <DicePair values={[6, 5]} />
+          </S.PanelHeader>
+          <S.Detail>Always free. No account needed. Learn the board or sharpen your next move.</S.Detail>
+          <S.Form onSubmit={(event) => handleCreate(event, 'computer')}>
+            <DifficultyOptions />
+            <MatchLengthOptions prefix="computer" />
+            <TimeOptions prefix="computer" />
+            <S.PlayButton disabled={!!creatingMode} type="submit">
+              <Icon aria-hidden path={mdiPlay} size={0.8} />
+              {creatingMode === 'computer' ? 'Setting the board…' : 'Play free'}
+            </S.PlayButton>
+          </S.Form>
+        </S.Panel>
+        <S.Panel aria-labelledby="challenge-title" id="backgammon-challenge" tabIndex={-1}>
+          <S.PanelHeader>
+            <div>
+              <S.Eyebrow>Make it a rivalry</S.Eyebrow>
+              <S.PanelTitle id="challenge-title">Challenge a player</S.PanelTitle>
+            </div>
+            <S.PanelCube value={2} />
+          </S.PanelHeader>
+          {!isAuthenticated ? (
+            <>
+              <S.Detail>Create an account to challenge friends and earn TNB from eligible computer wins.</S.Detail>
+              <S.GuestActions>
+                <AuthButtons />
+              </S.GuestActions>
+              <S.GuestScene />
+            </>
+          ) : (
+            <S.Form onSubmit={(event) => handleCreate(event, 'human')}>
+              <S.MemberSearch>
+                <UserSearchInput
+                  errors={{}}
+                  label="Find a member"
+                  name="opponent"
+                  onChange={setOpponent}
+                  placeholder="Search by username"
+                  touched={{}}
+                  value={opponent}
+                />
+              </S.MemberSearch>
+              <MatchLengthOptions prefix="human" />
+              <TimeOptions prefix="human" />
+              <S.StakeField htmlFor="human-stake">
+                <S.Legend as="span">Stake per player</S.Legend>
+                <S.StakeControl>
+                  <input
+                    id="human-stake"
+                    inputMode="numeric"
+                    max={1000000000}
+                    min={0}
+                    name="stake_amount"
+                    onChange={(event) => setStake(event.target.value)}
+                    required
+                    step={1}
+                    type="number"
+                    value={stake}
                   />
-                  <MatchOptions prefix="human" />
-                  <S.Field htmlFor="human-stake">
-                    Stake per player (TNB)
-                    <S.Input
-                      id="human-stake"
-                      inputMode="numeric"
-                      max={1000000000}
-                      min={0}
-                      name="stake_amount"
-                      onChange={(event) => setStake(event.target.value)}
-                      required
-                      step={1}
-                      type="number"
-                      value={stake}
-                    />
-                  </S.Field>
-                  <S.Detail>
-                    {Number(stake) > 0
-                      ? `${Number(stake).toLocaleString()} TNB locks when you send the challenge. Both stakes form the match prize; the cube never increases it.`
-                      : 'Set the stake to 0 for a free match. Both players agree to the terms before the game starts.'}
-                  </S.Detail>
-                  <S.Actions>
-                    <S.Button disabled={!!creatingMode} type="submit">
-                      {creatingMode === 'human' ? 'Sending…' : 'Send challenge →'}
-                    </S.Button>
-                  </S.Actions>
-                </S.Form>
-              )}
-            </S.PanelBody>
-          </S.Panel>
-        </S.PanelGrid>
-      </>
+                  <span>TNB</span>
+                </S.StakeControl>
+              </S.StakeField>
+              <S.Detail>
+                {Number(stake) > 0
+                  ? `${Number(stake).toLocaleString()} TNB locks when you send the challenge. Both stakes form the match prize; the cube never increases it.`
+                  : 'Set the stake to 0 for a free match. Both players agree to the terms before the game starts.'}
+              </S.Detail>
+              <S.PlayButton disabled={!!creatingMode} type="submit">
+                {creatingMode === 'human' ? 'Sending…' : 'Send challenge →'}
+              </S.PlayButton>
+            </S.Form>
+          )}
+        </S.Panel>
+      </S.PanelGrid>
       {error && (
         <S.Error role="alert">
           {error}{' '}
-          <S.Button $secondary onClick={() => setRetryKey((key) => key + 1)} type="button">
+          <S.RetryButton onClick={() => setRetryKey((key) => key + 1)} type="button">
             Retry
-          </S.Button>
+          </S.RetryButton>
         </S.Error>
       )}
       {isLoading && (
         <S.Status role="status">
-          <Loader />
-          <S.Detail>Finding your next match…</S.Detail>
+          <RollingDice />
+          <span>Finding your next match…</span>
         </S.Status>
       )}
       {challenges.length > 0 && (
         <S.Section>
           <S.SectionHeader>
-            <S.TitleSmall>Challenges</S.TitleSmall>
-            <S.Badge>
+            <div>
+              <S.Eyebrow>Waiting on an answer</S.Eyebrow>
+              <S.TitleSmall>Challenges</S.TitleSmall>
+            </div>
+            <S.Count>
               {challenges.length} {challenges.length === 1 ? 'invitation' : 'invitations'}
-            </S.Badge>
+            </S.Count>
           </S.SectionHeader>
           <S.List>
             {challenges.map((match) => (
@@ -340,8 +431,11 @@ const Home = () => {
       {activeMatches.length > 0 && (
         <S.Section>
           <S.SectionHeader>
-            <S.TitleSmall>Your boards</S.TitleSmall>
-            <S.Badge>{activeMatches.length} in play</S.Badge>
+            <div>
+              <S.Eyebrow>Your move or theirs</S.Eyebrow>
+              <S.TitleSmall>Your boards</S.TitleSmall>
+            </div>
+            <S.Count>{activeMatches.length} in play</S.Count>
           </S.SectionHeader>
           <S.List>
             {activeMatches.map((match) => (
@@ -356,7 +450,9 @@ const Home = () => {
             <S.Eyebrow>At the tables</S.Eyebrow>
             <S.TitleSmall>Watch live</S.TitleSmall>
           </div>
-          <S.Badge>{publicMatches.length ? `${publicMatches.length} live` : 'The next roll awaits'}</S.Badge>
+          <S.Count $live={!!publicMatches.length}>
+            {publicMatches.length ? `${publicMatches.length} live` : 'The next roll awaits'}
+          </S.Count>
         </S.SectionHeader>
         {publicMatches.length ? (
           <S.List>
@@ -367,7 +463,7 @@ const Home = () => {
         ) : (
           !isLoading && (
             <S.Empty>
-              <LobbyMark />
+              <DicePair values={[3, 1]} />
               <div>
                 <strong>The tables are open.</strong>
                 <S.Detail>No other matches are underway. Start a game and make the first move.</S.Detail>
@@ -391,7 +487,7 @@ const Home = () => {
           </S.List>
         </S.Section>
       )}
-      <GameEarningsLeaderboard game="backgammon" variant="backgammon" />
+      <Leaderboard />
       <S.LobbyRules />
     </S.Container>
   );

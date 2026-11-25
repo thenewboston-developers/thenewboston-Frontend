@@ -5,25 +5,22 @@ import Pagination from 'components/Pagination';
 import UserLabel from 'components/UserLabel';
 import {RewardGame} from 'types/gameEarnings';
 
-import * as Backgammon from './BackgammonStyles';
 import * as S from './Styles';
 import useGameEarnings from './useGameEarnings';
 
-type LeaderboardProps = {game: RewardGame; variant?: 'backgammon'};
+type LeaderboardProps = {game: RewardGame};
 
-const Leaderboard = ({game, variant}: LeaderboardProps) => {
+const Leaderboard = ({game}: LeaderboardProps) => {
   const {data, error, loading, page, retry, setPage, totalPages} = useGameEarnings(game);
-  const Card = variant === 'backgammon' ? Backgammon.Card : S.Card;
-  const Rank = variant === 'backgammon' ? Backgammon.Rank : S.Rank;
 
   return (
-    <Card aria-labelledby={`${game}-earners-title`} id="top-earners">
+    <S.Card aria-labelledby={`${game}-earners-title`} id="top-earners">
       <S.Header>
         <S.Trophy aria-hidden="true">
           <Icon path={mdiTrophyOutline} size="28px" />
         </S.Trophy>
         <div>
-          <S.Eyebrow>{variant === 'backgammon' ? 'THE BACKGAMMON HONORS BOARD' : 'THE REWARDS LEADERBOARD'}</S.Eyebrow>
+          <S.Eyebrow>THE REWARDS LEADERBOARD</S.Eyebrow>
           <S.Heading id={`${game}-earners-title`}>Top earners</S.Heading>
           <S.Description>
             Real wins. Real rewards. All-time TNB paid from the community game fund in this game.
@@ -61,7 +58,7 @@ const Leaderboard = ({game, variant}: LeaderboardProps) => {
               {data.results.map((entry) => (
                 <tr key={entry.user.id}>
                   <td>
-                    <Rank $podium={entry.rank <= 3}>#{entry.rank}</Rank>
+                    <S.Rank $podium={entry.rank <= 3}>#{entry.rank}</S.Rank>
                   </td>
                   <td>
                     <UserLabel
@@ -88,12 +85,10 @@ const Leaderboard = ({game, variant}: LeaderboardProps) => {
           </S.Footer>
         </>
       )}
-    </Card>
+    </S.Card>
   );
 };
 
-const GameEarningsLeaderboard = ({game, variant}: LeaderboardProps) => (
-  <Leaderboard game={game} key={game} variant={variant} />
-);
+const GameEarningsLeaderboard = ({game}: LeaderboardProps) => <Leaderboard game={game} key={game} />;
 
 export default GameEarningsLeaderboard;
