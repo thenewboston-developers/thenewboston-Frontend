@@ -46,6 +46,7 @@ import usersReducer from 'store/users';
 import userStatsReducer from 'store/userStats';
 import walletsReducer from 'store/wallets';
 import wiresReducer from 'store/wires';
+import {hideTokens} from 'utils/sentry';
 
 const rootReducer = combineReducers({
   assetPairs: assetPairsReducer,
@@ -107,11 +108,8 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, appReducer);
 
 const sentryReduxEnhancer = Sentry.createReduxEnhancer({
-  // Optional: Configure what state is sent to Sentry
-  stateTransformer: (state) => {
-    // You can filter out sensitive data here
-    return state;
-  },
+  actionTransformer: hideTokens,
+  stateTransformer: (state) => hideTokens(state),
 });
 
 export const store = configureStore({

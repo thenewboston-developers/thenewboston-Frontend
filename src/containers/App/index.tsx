@@ -11,13 +11,14 @@ import {useDeploymentPolling, useIsAuthenticated} from 'hooks';
 import Main from 'layouts/Main';
 import Unauthenticated from 'layouts/Unauthenticated';
 import AuthPromptModal from 'modals/AuthPromptModal';
-import {getSelf} from 'selectors/state';
+import {getAuthentication, getSelf} from 'selectors/state';
 
 import 'react-toastify/dist/ReactToastify.css';
 
 const AUTHENTICATION_PAGE_PATHS = [PATH_AUTHENTICATION.CREATE_ACCOUNT, PATH_AUTHENTICATION.SIGN_IN];
 
 const App = () => {
+  const {accessToken} = useSelector(getAuthentication);
   const isAuthenticated = useIsAuthenticated();
   const location = useLocation();
   const self = useSelector(getSelf);
@@ -35,13 +36,14 @@ const App = () => {
   };
 
   const renderWebSockets = () => {
-    if (!isAuthenticated) return null;
+    // The second check only tells TypeScript what isAuthenticated already implies
+    if (!isAuthenticated || !accessToken) return null;
     return (
       <>
         <FrontendDeploymentWebSocket />
-        <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/connect-five/${self.id}`} />
-        <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/notifications/${self.id}`} />
-        <WebSocket url={`${process.env.REACT_APP_WS_URL}/ws/wallet/${self.id}`} />
+        <WebSocket accessToken={accessToken} url={`${process.env.REACT_APP_WS_URL}/ws/connect-five/${self.id}`} />
+        <WebSocket accessToken={accessToken} url={`${process.env.REACT_APP_WS_URL}/ws/notifications/${self.id}`} />
+        <WebSocket accessToken={accessToken} url={`${process.env.REACT_APP_WS_URL}/ws/wallet/${self.id}`} />
       </>
     );
   };

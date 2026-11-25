@@ -4,6 +4,7 @@ import {store} from 'store';
 import {
   authorizationFormHeaders,
   authorizationHeaders,
+  authorizationProtocols,
   getAuthenticationPath,
   getLocationPath,
   getNextPath,
@@ -32,6 +33,12 @@ describe('authorization headers', () => {
 
     expect(authorizationHeaders()).toEqual({headers: {}});
     expect(authorizationFormHeaders()).toEqual({headers: {'Content-Type': 'multipart/form-data'}});
+  });
+});
+
+describe('authorizationProtocols', () => {
+  it('offers the marker the API selects, followed by the access token', () => {
+    expect(authorizationProtocols('local-test-token')).toEqual(['access_token', 'local-test-token']);
   });
 });
 

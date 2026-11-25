@@ -2,7 +2,9 @@ import {useEffect} from 'react';
 import {createRoutesFromChildren, matchRoutes, useLocation, useNavigationType} from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 
-Sentry.init({
+import {hideTokens} from 'utils/sentry';
+
+export const sentryOptions: Sentry.BrowserOptions = {
   dsn: 'https://c48af4261d1993547a24e785a6bbf566@o455400.ingest.us.sentry.io/4507120966959104',
 
   // Environment - this helps filter issues in Sentry
@@ -23,7 +25,7 @@ Sentry.init({
       useLocation,
       useNavigationType,
     }),
-    Sentry.replayIntegration(),
+    Sentry.replayIntegration({beforeAddRecordingEvent: hideTokens}),
   ],
 
   // Capture Replay for 10% of all sessions,
@@ -39,9 +41,20 @@ Sentry.init({
   // This sets the sample rate to be 100%. You may want to change this in production.
   sampleRate: 1.0,
 
-  // Filter out local development errors if needed
-  beforeSend(event) {
-    // You can filter or modify events here
-    return event;
+  // Whatever else ends up in an event, an access or refresh token must not leave with it
+  beforeSend(event, hint) {
+    // Redux state attachments are JSON text. Omit opaque binary attachments, whose encoding cannot be scrubbed
+    // reliably, rather than allowing them to bypass the event redactor.
+    hint.attachments = hint.attachments
+      ?.filter((attachment) => typeof attachment.data === 'string')
+      .map((attachment) => ({
+        ...attachment,
+        filename: hideTokens(attachment.filename),
+        data: hideTokens(attachment.data),
+      }));
+    return hideTokens(event);
   },
-});
+  beforeSendTransaction: hideTokens,
+};
+
+Sentry.init(sentryOptions);
