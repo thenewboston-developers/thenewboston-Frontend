@@ -72,9 +72,11 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 ## Casino game pages
 
-Slots and Roulette have independent page modules at `src/pages/Slots` and `src/pages/Roulette`, with canonical routes `/slots/home` and `/roulette/home`. Each game owns its stage, rules presentation, and game-specific controls. The Games catalog uses their thumbnails alongside the existing card conventions, with a separate section labeled for TNB wagers.
+Slots, Roulette, and Plinko have independent page modules at `src/pages/Slots`, `src/pages/Roulette`, and `src/pages/Plinko`, with canonical routes `/slots/home`, `/roulette/home`, and `/plinko/home`. Each game owns its stage, rules presentation, and game-specific controls. The Games catalog uses their thumbnails alongside the existing card conventions, with a separate section labeled for TNB wagers.
 
-Shared wallet handling, wager requests and recovery, fund controls, receipt verification, and history remain in `src/components/Casino`, `src/api/casino.ts`, and the casino utilities/types. The `/api/casino` contract and user-scoped pending-request storage keys are unchanged. Legacy `/casino/slots` and `/casino/roulette` links redirect to the canonical game pages while preserving query strings and hashes.
+Shared wallet handling, wager requests and recovery, fund controls, receipt verification, and history remain in `src/components/Casino`, `src/api/casino.ts`, and the casino utilities/types. The `/api/casino` contract and user-scoped pending-request storage keys are unchanged. Legacy `/casino/slots`, `/casino/roulette`, and `/casino/plinko` links redirect to the canonical game pages while preserving query strings and hashes.
+
+Plinko v1 has 12 rows and 13 pockets, with whole-TNB multipliers `[50,18,8,3,1,0,0,0,1,3,8,18,50]`. A single fairness draw below 4,096 becomes 12 bits from most to least significant (0 left, 1 right); the sum selects the payout pocket. Its theoretical return is 3,898 / 4,096. The SVG animation follows the settled receipt, supports reduced motion, and holds the result until landing. Unknown rules, rows, or payout tables disable new wagers until the client is updated. The browser verifier independently recomputes the commitment, path, pocket, and payout.
 
 ## Learn More
 

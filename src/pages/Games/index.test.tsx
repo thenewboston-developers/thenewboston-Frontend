@@ -31,7 +31,10 @@ afterEach(() => {
 
 it('uses thumbnail cards and canonical game links in a separately labeled TNB wager section', () => {
   const casino = container.querySelector('[aria-labelledby="casino-games-heading"]')!;
-  expect(casino).toHaveTextContent('2 games · TNB wagers');
+  expect(casino).toHaveTextContent('3 games · TNB wagers');
+  const plinko = casino.querySelector('a[href="/plinko/home"]')!;
+  expect(plinko.querySelector('img')).toHaveAttribute('src', 'plinko-thumbnail.svg');
+  expect(plinko).toHaveTextContent('UP TO 50× TOTAL RETURN');
   const slots = casino.querySelector('a[href="/slots/home"]')!;
   const roulette = casino.querySelector('a[href="/roulette/home"]')!;
   expect(slots.querySelector('img')).toHaveAttribute('src', 'slots-thumbnail.webp');

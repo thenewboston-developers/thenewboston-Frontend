@@ -20,6 +20,7 @@ export const PATH_HOME = '/';
 export const PATH_LEGACY_FEED = '/feed';
 export const PATH_MANCALA = `/mancala/${WILDCARD}`;
 export const PATH_NOTIFICATIONS = '/notifications';
+export const PATH_PLINKO = `/plinko/${WILDCARD}`;
 export const PATH_POST_DETAIL = '/posts/:postId';
 // Search parameter of the post detail page that names the comment to scroll to and highlight
 export const POST_DETAIL_COMMENT_PARAM = 'comment';

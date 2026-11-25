@@ -18,6 +18,7 @@ export const isPathActive = (pathname: string, rootPath: string): boolean => {
           '/mancala',
           '/dots-and-boxes',
           '/hex',
+          '/plinko',
           '/slots',
           '/roulette',
           '/casino',

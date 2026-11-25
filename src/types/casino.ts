@@ -1,4 +1,4 @@
-export type CasinoGameId = 'slots' | 'roulette';
+export type CasinoGameId = 'slots' | 'roulette' | 'plinko';
 
 export interface CasinoFund {
   available: number;
@@ -24,7 +24,8 @@ export interface CasinoGame {
   max_multiplier: number;
   min_bet: number;
   name: string;
-  payout_table?: {multiplier: number; probability: number}[];
+  payout_table?: {multiplier: number; probability: number; slot?: number}[];
+  rows?: number;
   rules_version: number;
 }
 
@@ -67,7 +68,15 @@ export interface CasinoBet {
   payout: number;
   profit: number;
   request_id: string;
-  result: {color?: string; draw?: number; multiplier: number; number?: number; symbols?: string[]};
+  result: {
+    color?: string;
+    draw?: number;
+    multiplier: number;
+    number?: number;
+    path?: number[];
+    slot?: number;
+    symbols?: string[];
+  };
   rules_version: number;
   selection?: RouletteSelection;
   settled_at: string;

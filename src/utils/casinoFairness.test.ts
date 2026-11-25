@@ -71,3 +71,70 @@ it('reproduces independent backend slot vectors for rules v2, including its vari
   await expect(verifyCasinoReceipt(win, hash)).resolves.toContain('Verified:');
   await expect(verifyCasinoReceipt({...win, rules_version: 3}, hash)).rejects.toThrow('unsupported rules version');
 });
+
+const plinko = {
+  ...bet,
+  game: 'plinko' as const,
+  result: {draw: 366, path: [0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0], slot: 6, multiplier: 0},
+};
+
+it('reproduces the independent backend Plinko vector, including every bounce in order', async () => {
+  await expect(verifyCasinoReceipt(plinko, hash)).resolves.toContain(
+    'pre-bet commitment, result, and payout all match',
+  );
+  await expect(verifyCasinoReceipt(plinko)).resolves.toContain('not saved on this device');
+});
+
+// Generated separately with Python's hmac/hashlib over the published compact-JSON message, without game code.
+it.each([
+  {
+    clientSeed: 'plinko-vector-30',
+    draw: 1041,
+    multiplier: 3,
+    path: [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    slot: 3,
+  },
+  {
+    clientSeed: 'plinko-vector-3052',
+    draw: 0,
+    multiplier: 50,
+    path: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    slot: 0,
+  },
+  {
+    clientSeed: 'plinko-vector-5646',
+    draw: 4095,
+    multiplier: 50,
+    path: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    slot: 12,
+  },
+])('verifies the independent Plinko payout for pocket $slot', async ({clientSeed, draw, multiplier, path, slot}) => {
+  const win = {
+    ...plinko,
+    fairness: {...plinko.fairness, client_seed: clientSeed},
+    payout: plinko.amount * multiplier,
+    profit: plinko.amount * multiplier - plinko.total_stake,
+    result: {draw, multiplier, path, slot},
+  };
+  await expect(verifyCasinoReceipt(win, hash)).resolves.toContain('Verified:');
+});
+
+it.each([
+  {field: 'draw', receipt: {...plinko, result: {...plinko.result, draw: 367}}},
+  {
+    field: 'bounce order with the same pocket',
+    receipt: {...plinko, result: {...plinko.result, path: [...plinko.result.path].reverse()}},
+  },
+  {field: 'pocket', receipt: {...plinko, result: {...plinko.result, slot: 5}}},
+  {field: 'multiplier', receipt: {...plinko, result: {...plinko.result, multiplier: 50}}},
+  {field: 'payout', receipt: {...plinko, payout: 1, profit: -9}},
+  {field: 'profit', receipt: {...plinko, profit: 0}},
+  {field: 'selection', receipt: {...plinko, selection: {type: 'black'}}},
+])('rejects a Plinko receipt with an altered $field', async ({receipt}) => {
+  await expect(verifyCasinoReceipt(receipt, hash)).rejects.toThrow();
+});
+
+it('rejects unsupported Plinko rules and substituted pre-bet commitments', async () => {
+  await expect(verifyCasinoReceipt({...plinko, rules_version: 2}, hash)).rejects.toThrow('unsupported rules version');
+  await expect(verifyCasinoReceipt(plinko, 'ff'.repeat(32))).rejects.toThrow('committed hash');
+});

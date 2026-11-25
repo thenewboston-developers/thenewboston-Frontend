@@ -20,6 +20,7 @@ import {
   PATH_LEGACY_FEED,
   PATH_MANCALA,
   PATH_NOTIFICATIONS,
+  PATH_PLINKO,
   PATH_POST_DETAIL,
   PATH_PROFILE,
   PATH_REVERSI,
@@ -40,6 +41,7 @@ import Games from 'pages/Games';
 import Hex from 'pages/Hex';
 import Mancala from 'pages/Mancala';
 import Notifications from 'pages/Notifications';
+import Plinko from 'pages/Plinko';
 import PostDetail from 'pages/PostDetail';
 import Profile from 'pages/Profile';
 import Reversi from 'pages/Reversi';
@@ -76,6 +78,7 @@ const MainArea: SFC = ({className}) => {
             </RequireAuthentication>
           }
         />
+        <Route element={<Plinko />} path={PATH_PLINKO} />
         <Route path={PATH_POST_DETAIL} element={<PostDetail />} />
         <Route path={PATH_PROFILE} element={<Profile />} />
         <Route element={<Reversi />} path={PATH_REVERSI} />
