@@ -444,3 +444,13 @@ it('marks the selected plot on the map and lets an adjacent unowned plot be purc
   await click('Purchase land');
   expect(action).toHaveBeenCalledWith('purchase_land', {plot_id: 3});
 });
+
+it('writes a lone tribe, player and plot in the singular', async () => {
+  startRecruitment();
+  state.tribes = [state.tribes[1]];
+  await render();
+  expect(container).toHaveTextContent('1 tribe');
+  expect(container).toHaveTextContent('1 player');
+  expect(container).not.toHaveTextContent('1 tribes');
+  expect(container).not.toHaveTextContent('1 players');
+});

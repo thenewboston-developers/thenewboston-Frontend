@@ -7,7 +7,7 @@ import {Tribe, TribesPanelProps} from 'types/tribes';
 import {getAuthenticationPath} from 'utils/authentication';
 
 import ItemIcon from '../art/ItemIcon';
-import {ActionForm, avatarColor, count, date, Player} from '../common';
+import {ActionForm, avatarColor, count, date, Player, plural} from '../common';
 import Emblem from '../components/Emblem';
 
 import * as S from './Styles';
@@ -303,7 +303,7 @@ const Recruitment = ({act, busy, now, state, tribe}: TribesPanelProps) => {
               </S.Eyebrow>
               <h2>{recruiting ? 'Find your people.' : 'The tribes of this season'}</h2>
             </div>
-            <S.Badge>{state.tribes.length} tribes</S.Badge>
+            <S.Badge>{plural(state.tribes.length, 'tribe')}</S.Badge>
           </S.PanelTitle>
           <S.Muted>
             Up to {maximum} players. One worker each. A whole world to build together.{' '}
@@ -345,7 +345,7 @@ const Recruitment = ({act, busy, now, state, tribe}: TribesPanelProps) => {
                     {!recruiting && (
                       <S.TribeStats>
                         <span>
-                          <MapPin size={13} /> {land} plots
+                          <MapPin size={13} /> {plural(land, 'plot')}
                         </span>
                         <span>
                           <Swords size={13} /> {count(power)} attack

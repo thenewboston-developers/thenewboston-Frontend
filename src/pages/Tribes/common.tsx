@@ -7,6 +7,8 @@ import * as S from './Styles';
 
 export const label = (value: string) => value.replace(/_/g, ' ').replace(/^./, (char) => char.toUpperCase());
 export const count = (value: number | null | undefined) => (value ?? 0).toLocaleString();
+// "1 tribe" but "2 tribes": counts are shown all over the game and a lone item reads wrong in the plural
+export const plural = (value: number, noun: string) => `${count(value)} ${noun}${value === 1 ? '' : 's'}`;
 export const date = (value: string) => new Date(value).toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'});
 export const time = (value: string) => new Date(value).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
 export const day = (value: string) => new Date(value).toLocaleDateString([], {day: 'numeric', month: 'short'});

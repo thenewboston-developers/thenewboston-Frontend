@@ -4,7 +4,7 @@ import {TribesPanelProps} from 'types/tribes';
 
 import Activity from '../Activity';
 import ItemIcon from '../art/ItemIcon';
-import {AccountField, ActionForm, count, ItemField, label, NumberField, Player, sum} from '../common';
+import {AccountField, ActionForm, count, ItemField, label, NumberField, Player, plural, sum} from '../common';
 import Emblem from '../components/Emblem';
 import Progress from '../components/Progress';
 
@@ -110,7 +110,7 @@ const Community = (props: TribesPanelProps) => {
                 </div>
                 <div>
                   <span>Territory</span>
-                  <strong>{land} plots</strong>
+                  <strong>{plural(land, 'plot')}</strong>
                 </div>
                 <div>
                   <span>Treasury</span>

@@ -13,6 +13,7 @@ import {
   label,
   memberName,
   PlotField,
+  plural,
   tribeName,
 } from '../common';
 
@@ -145,7 +146,7 @@ const Market = (props: TribesPanelProps) => {
               </S.Eyebrow>
               <h2>Every tribe has something to offer.</h2>
             </div>
-            <S.Badge>{listings.length} listings</S.Badge>
+            <S.Badge>{plural(listings.length, 'listing')}</S.Badge>
           </S.PanelTitle>
           <S.Muted>
             Trade across borders. Prices are in actual TNB. Sell orders reserve goods; buy orders reserve coins until
