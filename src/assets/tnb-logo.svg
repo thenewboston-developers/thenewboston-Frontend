@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Vector version of the existing thenewboston currency and app logo. -->
+  <defs>
+    <linearGradient id="shadow" x1="256" y1="128" x2="0" y2="384" gradientUnits="userSpaceOnUse">
+      <stop stop-opacity=".18" />
+      <stop offset="1" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <path fill="#dc0d16" d="M0 0h512v512H0z" />
+  <path fill="url(#shadow)" d="M128 84 305 256 129 428H228L144 512H0V212z" />
+  <path fill="#fff" d="M128 84h99l177 172-176 172h-99l176-172z" />
+</svg>
