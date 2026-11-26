@@ -19,4 +19,4 @@ Constraints: no words, letters, game title, logos, watermarks, coins, modern obj
 
 ## TNB branding
 
-`src/assets/tnb-logo.svg` recreates the existing TNB currency mark from `thenewboston-Backend/media/images/tnb-logo.png` as a scalable red tile with its white chevron and long shadow. Tribes uses it through the shared `ItemIcon` TNB entry so wallet links, inventory, marketplace, land prices, and guide graphics share the same branding.
+`src/assets/tnb-logo.svg` recreates the existing TNB currency mark from `thenewboston-Backend/media/images/tnb-logo.png` as a scalable red coin with its white chevron and long shadow clipped to the circular edge. This matches the circular treatment used by `CurrencyLogo` elsewhere in the app. Tribes uses it through the shared `ItemIcon` TNB entry so wallet links, inventory, marketplace, land prices, and guide graphics share the same branding.
