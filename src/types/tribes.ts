@@ -155,6 +155,7 @@ export interface TribesPanelProps {
   act: TribesAction;
   busy: boolean;
   canPlay: boolean;
+  go?: (section: string) => void;
   now: number;
   state: TribesState;
   tribe?: Tribe;

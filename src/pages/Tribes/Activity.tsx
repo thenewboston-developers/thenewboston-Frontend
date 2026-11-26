@@ -1,10 +1,11 @@
 import {useEffect, useRef, useState} from 'react';
+import {ScrollText} from 'lucide-react';
 
 import {getTribesActivity} from 'api/tribes';
 import {TribesPanelProps, TribesState} from 'types/tribes';
 import {isCancellationError} from 'utils/errors';
 
-import {date} from './common';
+import {avatarColor, date} from './common';
 import * as S from './Styles';
 
 const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
@@ -59,25 +60,40 @@ const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
       }
     }
   };
+
   return (
     <S.Card>
+      <S.Eyebrow>
+        <ScrollText size={14} /> The record
+      </S.Eyebrow>
       <h2>Tribe activity</h2>
       <S.Muted>A permanent record of your team's decisions.</S.Muted>
       {!entries.length && <S.Empty>Your tribe's story starts here.</S.Empty>}
-      {entries.map((entry) => (
-        <S.Message key={entry.id}>
-          <strong>{entry.username || 'Season'}</strong>
-          <p>{entry.text}</p>
-          <small>{date(entry.created_at)}</small>
-        </S.Message>
-      ))}
+      {!!entries.length && (
+        <S.Feed>
+          {entries.map((entry) => (
+            <S.FeedItem key={entry.id}>
+              <S.Avatar $color={entry.user_id ? avatarColor(entry.username) : '#9a6a17'} $size={26} aria-hidden>
+                {entry.user_id ? entry.username.slice(0, 1) : '★'}
+              </S.Avatar>
+              <div>
+                <p>
+                  <strong>{entry.username || 'Season'}</strong> {entry.text}
+                </p>
+                <small>{date(entry.created_at)}</small>
+              </div>
+            </S.FeedItem>
+          ))}
+        </S.Feed>
+      )}
       {error && <S.Error role="alert">{error}</S.Error>}
       {canLoad && (
-        <S.Button $secondary disabled={loading} onClick={handleLoad} style={{marginTop: 16}}>
+        <S.Button $secondary $size="small" disabled={loading} onClick={handleLoad} style={{marginTop: 14}}>
           {loading ? 'Loading activity…' : 'Load earlier activity'}
         </S.Button>
       )}
     </S.Card>
   );
 };
+
 export default Activity;

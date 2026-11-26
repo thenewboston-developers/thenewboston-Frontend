@@ -443,4 +443,7 @@ test('records Tribes routes as game pages instead of redirects or unknown paths'
   expect(analytics.getAnalyticsPath('/tribes/home?season=12')).toBe('/tribes/home');
   expect(analytics.isAnalyticsRedirectPath('/tribes')).toBe(false);
   expect(analytics.isAnalyticsRedirectPath('/tribes/home')).toBe(false);
+  expect(analytics.getAnalyticsPath('/tribes/world')).toBe('/tribes/world');
+  expect(analytics.getAnalyticsPath('/tribes/market?item=timber')).toBe('/tribes/market');
+  expect(analytics.getAnalyticsPath('/tribes/unknown')).toBe('/other');
 });

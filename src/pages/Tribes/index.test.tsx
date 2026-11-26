@@ -1,6 +1,6 @@
 import {act} from 'react';
 import {createRoot, Root} from 'react-dom/client';
-import {MemoryRouter} from 'react-router-dom';
+import {MemoryRouter, useLocation} from 'react-router-dom';
 
 import {getTribesSeasons} from 'api/tribes';
 import {TribesState} from 'types/tribes';
@@ -127,14 +127,36 @@ const action = jest.fn().mockResolvedValue(true);
 const button = (text: string) =>
   Array.from(container.querySelectorAll('button')).find((entry) => entry.textContent === text)!;
 const click = async (text: string) => act(async () => button(text).click());
-const render = async () =>
+let pathname = '';
+const LocationProbe = () => {
+  pathname = useLocation().pathname;
+  return null;
+};
+const render = async (path = '/tribes/home') =>
   act(async () =>
     root.render(
-      <MemoryRouter future={{v7_relativeSplatPath: true, v7_startTransition: true}}>
+      <MemoryRouter future={{v7_relativeSplatPath: true, v7_startTransition: true}} initialEntries={[path]}>
         <Tribes />
+        <LocationProbe />
       </MemoryRouter>,
     ),
   );
+const type = async (input: HTMLInputElement, value: string) =>
+  act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, value);
+    input.dispatchEvent(new Event('input', {bubbles: true}));
+  });
+const startRecruitment = () => {
+  state.season = {
+    ...state.season,
+    ends_at: '2026-12-04T12:00:00Z',
+    starts_at: '2026-11-27T12:00:00Z',
+    status: 'recruiting',
+  };
+  state.listings = [];
+  state.plots = [];
+  state.units = [];
+};
 const submit = async (text: string) =>
   act(async () =>
     button(text)
@@ -185,7 +207,7 @@ it('queues a worker assignment against a selected owned plot with an explicit de
   await render();
   await click('Production');
   const form = button('Queue gathering').closest('form')!;
-  (form.querySelector('[name="plot_id"]') as HTMLSelectElement).value = '1';
+  await act(async () => (form.querySelector('[name="plot_id"][value="1"]') as HTMLInputElement).click());
   await submit('Queue gathering');
   expect(action).toHaveBeenCalledWith('queue', {kind: 'gather', plot_id: 1, hours: 4, destination: 'tribe'});
 });
@@ -281,11 +303,11 @@ it('preserves the chosen payment account after buying goods', async () => {
   await render();
   await click('Marketplace');
   const form = button('Buy for 2 TNB').closest('form')!;
-  const account = form.querySelector('[name="account"]') as HTMLSelectElement;
-  account.value = 'tribe';
+  const account = form.querySelector('[name="account"][value="tribe"]') as HTMLInputElement;
+  await act(async () => account.click());
   await submit('Buy for 2 TNB');
   expect(action).toHaveBeenCalledWith('fill_listing', {listing_id: 40, quantity: 1, account: 'tribe'});
-  expect(account.value).toBe('tribe');
+  expect(account.checked).toBe(true);
 });
 
 it('prevents teammates from filling their own shared treasury listing', async () => {
@@ -337,4 +359,88 @@ it('tracks military work orders automatically without manual goods contribution'
   ).toBe(false);
   await click('Cancel project & release supplies');
   expect(action).toHaveBeenCalledWith('cancel_work_order', {work_order_id: 77});
+});
+
+it('opens a section from its address and moves the address when another section is chosen', async () => {
+  await render('/tribes/market');
+  expect(container).toHaveTextContent('Every tribe has something to offer.');
+  expect(button('Marketplace')).toHaveAttribute('aria-current', 'page');
+  await click('Inventory');
+  expect(pathname).toBe('/tribes/inventory');
+  expect(container).toHaveTextContent('Goods & supplies');
+  expect(container).not.toHaveTextContent('Every tribe has something to offer.');
+});
+
+it('falls back to the overview for an address that is not a section', async () => {
+  await render('/tribes/nowhere');
+  expect(button('Overview')).toHaveAttribute('aria-current', 'page');
+  expect(container).toHaveTextContent('Make your next hour count.');
+});
+
+it('confirms a successful action and stays quiet when the action is rejected', async () => {
+  // The confirmation follows the server's answer, which arrives after the submit handler has returned
+  const settle = async () =>
+    act(async () => {
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve, 0);
+      });
+    });
+  action.mockResolvedValue(true);
+  await render('/tribes/inventory');
+  await submit('Deposit TNB');
+  await settle();
+  expect(container.querySelector('[role="status"]')).toHaveTextContent('Deposited into the treasury.');
+  act(() => root.unmount());
+  root = createRoot(container);
+  action.mockResolvedValue(false);
+  await render('/tribes/inventory');
+  await submit('Deposit TNB');
+  await settle();
+  expect(action).toHaveBeenCalledTimes(2);
+  expect(container.querySelector('[role="status"]')).toBeNull();
+});
+
+it('shows the lobby as the overview during recruitment and explains sections that open with the season', async () => {
+  startRecruitment();
+  await render();
+  expect(container).toHaveTextContent('Find your people.');
+  expect(container).toHaveTextContent('Season starts in');
+  expect(Array.from(container.querySelectorAll('button')).some((entry) => entry.textContent === 'Rosters')).toBe(false);
+  await click('World');
+  expect(container).toHaveTextContent('A new world is being drawn');
+  await click('Inventory');
+  expect(container).toHaveTextContent('Empty shelves, for now');
+  expect(Array.from(container.querySelectorAll('button')).some((entry) => entry.textContent === 'Deposit TNB')).toBe(
+    false,
+  );
+});
+
+it('creates a tribe with the name, emblem and color chosen in the banner preview', async () => {
+  startRecruitment();
+  state.viewer = {...state.viewer!, tribe_id: null};
+  state.tribes = [state.tribes[1]];
+  await render();
+  const form = button('Create tribe').closest('form')!;
+  await type(form.querySelector('[name="name"]') as HTMLInputElement, 'River Otters');
+  await act(async () => (form.querySelector('[aria-label="Use 🦊 as the emblem"]') as HTMLButtonElement).click());
+  await act(async () => (form.querySelector('[aria-label="Use the color #2f7fb8"]') as HTMLButtonElement).click());
+  expect(form).toHaveTextContent('River Otters');
+  await submit('Create tribe');
+  expect(action).toHaveBeenCalledWith('create_tribe', {
+    color: '#2f7fb8',
+    description: '',
+    emblem: '🦊',
+    motto: '',
+    name: 'River Otters',
+  });
+});
+
+it('marks the selected plot on the map and lets an adjacent unowned plot be purchased from the treasury', async () => {
+  state.plots.push({buildings: [], id: 3, price: 40, terrain: 'forest', tribe_id: null, x: 0, y: 1});
+  await render('/tribes/world');
+  const plot = container.querySelector('[data-plot="3"]') as HTMLButtonElement;
+  await act(async () => plot.click());
+  expect(plot).toHaveAttribute('aria-pressed', 'true');
+  await click('Purchase land');
+  expect(action).toHaveBeenCalledWith('purchase_land', {plot_id: 3});
 });
