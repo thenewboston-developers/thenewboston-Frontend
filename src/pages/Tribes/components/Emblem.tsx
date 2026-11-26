@@ -1,3 +1,5 @@
+import {useState} from 'react';
+
 import * as S from '../Styles';
 
 const SHIELD = 'M24 2.5 43.5 8v17.5C43.5 38.2 35.4 47.3 24 51.5 12.6 47.3 4.5 38.2 4.5 25.5V8Z';
@@ -10,8 +12,26 @@ const readable = (color: string) => {
   return luminance > 0.62 ? '#1c2b25' : '#ffffff';
 };
 
-const Emblem = ({color, emblem, size = 40}: {color: string; emblem: string; size?: number}) => {
+// A tribe's uploaded picture framed in its color. Tribes without one keep the shield and its emoji.
+const Emblem = ({
+  color,
+  emblem,
+  image,
+  size = 40,
+}: {
+  color: string;
+  emblem: string;
+  image?: string | null;
+  size?: number;
+}) => {
+  const [broken, setBroken] = useState<string | null>(null);
   const fill = /^#[0-9a-f]{6}$/i.test(color) ? color : '#46634a';
+  if (image && image !== broken)
+    return (
+      <S.EmblemImage $color={fill} $size={size} aria-hidden>
+        <img alt="" draggable={false} onError={() => setBroken(image)} src={image} />
+      </S.EmblemImage>
+    );
   const glyphs = Array.from((emblem || '🛡️').replace(/[️‍]/g, ''));
   const scale = glyphs.length > 2 ? 0.2 + 0.4 / glyphs.length : 0.46;
   return (

@@ -5,7 +5,8 @@ import {getTribesActivity} from 'api/tribes';
 import {TribesPanelProps, TribesState} from 'types/tribes';
 import {isCancellationError} from 'utils/errors';
 
-import {avatarColor, date} from './common';
+import PlayerAvatar from './components/PlayerAvatar';
+import {date} from './common';
 import * as S from './Styles';
 
 const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
@@ -73,9 +74,13 @@ const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
         <S.Feed>
           {entries.map((entry) => (
             <S.FeedItem key={entry.id}>
-              <S.Avatar $color={entry.user_id ? avatarColor(entry.username) : '#9a6a17'} $size={26} aria-hidden>
-                {entry.user_id ? entry.username.slice(0, 1) : '★'}
-              </S.Avatar>
+              {entry.user_id ? (
+                <PlayerAvatar avatar={entry.avatar} name={entry.username} size={26} />
+              ) : (
+                <S.Avatar $color="#9a6a17" $size={26} aria-hidden>
+                  ★
+                </S.Avatar>
+              )}
               <div>
                 <p>
                   <strong>{entry.username || 'Season'}</strong> {entry.text}

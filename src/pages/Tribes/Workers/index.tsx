@@ -18,6 +18,7 @@ import {
   plotName,
   plural,
   time,
+  tribeLabel,
 } from '../common';
 import Progress from '../components/Progress';
 
@@ -417,7 +418,7 @@ const Workshop = ({act, busy, canPlay, now, state, tribe}: TribesPanelProps) => 
                   <option value="">Unassigned · choose later</option>
                   {targets.map((team) => (
                     <option key={team.id} value={team.id}>
-                      {team.emblem} {team.name}
+                      {tribeLabel(team)}
                     </option>
                   ))}
                 </select>

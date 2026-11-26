@@ -7,17 +7,19 @@ import ItemIcon from '../art/ItemIcon';
 import {
   AccountField,
   ActionForm,
-  avatarColor,
   count,
   distance,
   label,
+  memberAvatar,
   memberName,
   NumberField,
   PlotField,
   plotName,
+  tribeLabel,
   tribeName,
 } from '../common';
 import Emblem from '../components/Emblem';
+import PlayerAvatar from '../components/PlayerAvatar';
 import WorldMap from '../WorldMap';
 
 import * as S from './Styles';
@@ -64,14 +66,14 @@ const Unit = ({
               : `${count((state.catalog.defenses[unit.item] ?? 0) * unit.quantity)} DEFENSE`}
           </S.Badge>
         </div>
-        {owner && owner.id !== tribe?.id && <Emblem color={owner.color} emblem={owner.emblem} size={30} />}
+        {owner && owner.id !== tribe?.id && (
+          <Emblem color={owner.color} emblem={owner.emblem} image={owner.emblem_image} size={30} />
+        )}
       </S.UnitHead>
       <S.Row>
         <span>Controller</span>
         <S.RowMain style={{flex: 'none'}}>
-          <S.Avatar $color={avatarColor(controller)} $size={22} aria-hidden>
-            {controller.slice(0, 1)}
-          </S.Avatar>
+          <PlayerAvatar avatar={memberAvatar(state, unit.controller_id)} name={controller} size={22} />
           <strong>{controller}</strong>
         </S.RowMain>
       </S.Row>
@@ -93,7 +95,7 @@ const Unit = ({
           {unit.target_id !== undefined &&
             (target ? (
               <S.RowMain style={{flex: 'none'}}>
-                <Emblem color={target.color} emblem={target.emblem} size={22} />
+                <Emblem color={target.color} emblem={target.emblem} image={target.emblem_image} size={22} />
                 <strong>{target.name}</strong>
               </S.RowMain>
             ) : (
@@ -152,7 +154,7 @@ const Unit = ({
                     <option value="">No target</option>
                     {targets.map((team) => (
                       <option key={team.id} value={team.id}>
-                        {team.emblem} {team.name}
+                        {tribeLabel(team)}
                       </option>
                     ))}
                   </select>

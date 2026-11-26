@@ -1,7 +1,7 @@
 import {act} from 'react';
 import {createRoot, Root} from 'react-dom/client';
 
-import {getTribesSeasons, getTribesState, performTribesAction} from 'api/tribes';
+import {getTribesSeasons, getTribesState, performTribesAction, uploadTribeEmblem} from 'api/tribes';
 import {TribesState} from 'types/tribes';
 
 import {useTribes} from './useTribes';
@@ -10,6 +10,7 @@ jest.mock('api/tribes', () => ({
   getTribesSeasons: jest.fn(),
   getTribesState: jest.fn(),
   performTribesAction: jest.fn(),
+  uploadTribeEmblem: jest.fn(),
 }));
 jest.mock('axios', () => ({isAxiosError: (error: {isAxiosError?: boolean}) => !!error?.isAxiosError}));
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
@@ -17,6 +18,7 @@ jest.mock('axios', () => ({isAxiosError: (error: {isAxiosError?: boolean}) => !!
 const getState = getTribesState as jest.MockedFunction<typeof getTribesState>;
 const getSeasons = getTribesSeasons as jest.MockedFunction<typeof getTribesSeasons>;
 const postAction = performTribesAction as jest.MockedFunction<typeof performTribesAction>;
+const postEmblem = uploadTribeEmblem as jest.MockedFunction<typeof uploadTribeEmblem>;
 const requestId = '9f5a7200-4297-4f6e-98c6-714bc3e36c29';
 const snapshot = (balance: number, userId = 1) =>
   ({
@@ -204,4 +206,53 @@ test('malformed saved data is never submitted as a payment', async () => {
     await api.retry();
   });
   expect(postAction).not.toHaveBeenCalled();
+});
+
+test('an emblem upload shows the state it returns and never leaves a receipt behind', async () => {
+  await render();
+  const image = new File(['picture'], 'emblem.png', {type: 'image/png'});
+  const response = deferred<TribesState>();
+  postEmblem.mockReturnValue(response.promise);
+  let upload!: Promise<boolean>;
+  await act(async () => {
+    upload = api.uploadEmblem(image);
+  });
+  expect(api.busy).toBe(true);
+  expect(postEmblem).toHaveBeenCalledWith(1, image);
+  // A second upload and a payment both wait for the first request
+  await act(async () => {
+    expect(await api.uploadEmblem(image)).toBe(false);
+    expect(await api.act('treasury_deposit', {amount: 100})).toBe(false);
+  });
+  expect(postEmblem).toHaveBeenCalledTimes(1);
+  expect(postAction).not.toHaveBeenCalled();
+  // The follow-up read is left unanswered, so what shows is the state the upload itself returned
+  getState.mockReturnValue(deferred<TribesState>().promise);
+  await act(async () => {
+    response.resolve(snapshot(750));
+    expect(await upload).toBe(true);
+  });
+  expect(api.state?.viewer?.wallet_balance).toBe(750);
+  expect(api.busy).toBe(false);
+  expect(localStorage.getItem('tribes:pending:1')).toBeNull();
+});
+
+test('a refused emblem reports the reason and leaves the game usable', async () => {
+  await render();
+  postEmblem.mockRejectedValue({
+    isAxiosError: true,
+    response: {
+      data: {image: [{code: 'invalid', message: 'Image must be exactly 512x512 pixels. Got 64x64.'}]},
+      status: 400,
+    },
+  });
+  await act(async () => {
+    expect(await api.uploadEmblem(new File(['picture'], 'emblem.png'))).toBe(false);
+  });
+  expect(api.error).toBe('Image must be exactly 512x512 pixels. Got 64x64.');
+  expect(api.busy).toBe(false);
+  expect(api.pending).toBeNull();
+  await act(async () => {
+    expect(await api.act('treasury_deposit', {amount: 100})).toBe(true);
+  });
 });

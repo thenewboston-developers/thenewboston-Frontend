@@ -50,6 +50,7 @@ const History = ({state, tribe}: TribesPanelProps) => {
                   <Emblem
                     color={entry?.color ?? '#46634a'}
                     emblem={entry?.emblem ?? '🛡️'}
+                    image={entry?.emblem_image}
                     size={place === 1 ? 58 : 46}
                   />
                   <strong>{row.name}</strong>
@@ -92,7 +93,12 @@ const History = ({state, tribe}: TribesPanelProps) => {
                       </td>
                       <td>
                         <S.Side>
-                          <Emblem color={entry?.color ?? '#46634a'} emblem={entry?.emblem ?? '🛡️'} size={28} />
+                          <Emblem
+                            color={entry?.color ?? '#46634a'}
+                            emblem={entry?.emblem ?? '🛡️'}
+                            image={entry?.emblem_image}
+                            size={28}
+                          />
                           <strong>{row.name}</strong>
                         </S.Side>
                       </td>
@@ -181,7 +187,12 @@ const History = ({state, tribe}: TribesPanelProps) => {
               return (
                 <S.Attack key={attack.unit_id}>
                   <S.Side>
-                    <Emblem color={attacker?.color ?? '#46634a'} emblem={attacker?.emblem ?? '🛡️'} size={28} />
+                    <Emblem
+                      color={attacker?.color ?? '#46634a'}
+                      emblem={attacker?.emblem ?? '🛡️'}
+                      image={attacker?.emblem_image}
+                      size={28}
+                    />
                     <div>
                       <strong>{tribeName(state, attack.tribe_id)}</strong>
                       <small>{memberName(state, attack.controller_id)}</small>
@@ -189,7 +200,12 @@ const History = ({state, tribe}: TribesPanelProps) => {
                   </S.Side>
                   <ArrowRight size={18} />
                   <S.Side>
-                    <Emblem color={defender?.color ?? '#46634a'} emblem={defender?.emblem ?? '🛡️'} size={28} />
+                    <Emblem
+                      color={defender?.color ?? '#46634a'}
+                      emblem={defender?.emblem ?? '🛡️'}
+                      image={defender?.emblem_image}
+                      size={28}
+                    />
                     <strong>{tribeName(state, attack.target_id)}</strong>
                   </S.Side>
                   <S.Damage>

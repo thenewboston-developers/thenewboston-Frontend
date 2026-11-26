@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 
-import {getTribesSeasons, getTribesState, performTribesAction} from 'api/tribes';
+import {getTribesSeasons, getTribesState, performTribesAction, uploadTribeEmblem} from 'api/tribes';
 import {TribesActionData, TribesSeason, TribesState} from 'types/tribes';
 import {isCancellationError} from 'utils/errors';
 import {extractErrorMessage} from 'utils/forms';
@@ -167,6 +167,38 @@ export const useTribes = (userId: number | null, seasonId?: number) => {
     [pending, send, state, userId],
   );
 
+  // An emblem is a file, so it travels on its own request instead of through the receipted actions. Sending the
+  // same picture twice is harmless, which is why it needs no saved receipt.
+  const uploadEmblem = useCallback(
+    async (image: File): Promise<boolean> => {
+      if (!state || !userId || account.current !== userId || inflight.current?.generation === generation.current)
+        return false;
+      const version = generation.current;
+      const request = {generation: version, requestId: `emblem:${crypto.randomUUID()}`};
+      inflight.current = request;
+      readSequence.current += 1; // Reads begun before the upload must never overwrite its result.
+      setBusy(true);
+      setError('');
+      setReadError('');
+      try {
+        const snapshot = await uploadTribeEmblem(state.season.id, image);
+        if (version !== generation.current || account.current !== userId) return false;
+        if (snapshot.season.id === (seasonId ?? state.season.id)) setState(snapshot);
+        return true;
+      } catch (failure) {
+        if (version === generation.current && account.current === userId) setError(errorMessage(failure));
+        return false;
+      } finally {
+        if (inflight.current === request) inflight.current = null;
+        if (version === generation.current) {
+          setBusy(false);
+          refresh();
+        }
+      }
+    },
+    [refresh, seasonId, state, userId],
+  );
+
   useEffect(() => {
     account.current = userId;
     generation.current += 1;
@@ -206,5 +238,6 @@ export const useTribes = (userId: number | null, seasonId?: number) => {
     retrying: accountMatches && busy,
     seasons: accountMatches ? seasons : [],
     state: accountMatches ? state : null,
+    uploadEmblem,
   };
 };

@@ -3,6 +3,7 @@ import {FormEvent, ReactNode, useState} from 'react';
 import {Tribe, TribesAccount, TribesAction, TribesActionData, TribesPlot, TribesState} from 'types/tribes';
 
 import ItemIcon from './art/ItemIcon';
+import PlayerAvatar from './components/PlayerAvatar';
 import * as S from './Styles';
 
 export const label = (value: string) => value.replace(/_/g, ' ').replace(/^./, (char) => char.toUpperCase());
@@ -24,15 +25,15 @@ export const tribeName = (state: TribesState, id: number | null | undefined) =>
   state.tribes.find((tribe) => tribe.id === id)?.name ?? 'Unassigned';
 export const memberName = (state: TribesState, id: number) =>
   state.tribes.flatMap((tribe) => tribe.members).find((member) => member.id === id)?.username ?? `Player ${id}`;
+export const memberAvatar = (state: TribesState, id: number) =>
+  state.tribes.flatMap((tribe) => tribe.members).find((member) => member.id === id)?.avatar;
+// Plain text places such as menus cannot show a picture, so only the older emoji emblems are written out there
+export const tribeLabel = (tribe: Tribe) => (tribe.emblem_image ? tribe.name : `${tribe.emblem} ${tribe.name}`);
 export const sum = (inventory: Record<string, number> | null | undefined) =>
   Object.values(inventory ?? {}).reduce((total, value) => total + value, 0);
 // Chebyshev distance: diagonals count as one step, exactly like the server's range and adjacency rules
 export const distance = (a: {x: number; y: number}, b: {x: number; y: number}) =>
   Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
-
-const AVATAR_COLORS = ['#2c6b55', '#b8672e', '#4a7fa8', '#8a5a9c', '#b0563f', '#56803a', '#7a6a2e', '#3f7a86'];
-export const avatarColor = (name: string) =>
-  AVATAR_COLORS[Array.from(name).reduce((total, char) => total + char.charCodeAt(0), 0) % AVATAR_COLORS.length];
 
 export type ItemKind = 'building' | 'defense' | 'material' | 'resource' | 'tool' | 'unit';
 export const itemKind = (catalog: TribesState['catalog'], item: string): ItemKind => {
@@ -252,11 +253,19 @@ export const PlotField = ({
   </S.Field>
 );
 
-export const Player = ({name, note, size = 30}: {name: string; note?: ReactNode; size?: number}) => (
+export const Player = ({
+  avatar,
+  name,
+  note,
+  size = 30,
+}: {
+  avatar?: string | null;
+  name: string;
+  note?: ReactNode;
+  size?: number;
+}) => (
   <S.RowMain>
-    <S.Avatar $color={avatarColor(name)} $size={size} aria-hidden>
-      {name.slice(0, 1)}
-    </S.Avatar>
+    <PlayerAvatar avatar={avatar} name={name} size={size} />
     <div>
       <strong>{name}</strong>
       {note && <small>{note}</small>}

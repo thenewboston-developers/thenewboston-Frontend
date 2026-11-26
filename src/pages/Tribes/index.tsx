@@ -28,7 +28,7 @@ import {
 import {getTribesSeasons} from 'api/tribes';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {getSelf} from 'selectors/state';
-import {TribesAction, TribesPanelProps, TribesSeason} from 'types/tribes';
+import {TribesAction, TribesEmblemUpload, TribesPanelProps, TribesSeason} from 'types/tribes';
 import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
 import {getAuthenticationPath} from 'utils/authentication';
 
@@ -114,7 +114,7 @@ const Tribes = () => {
   const historyRequest = useRef<AbortController | null>(null);
   const navigation = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
-  const {act, busy, error, loading, now, pending, refresh, retry, retrying, seasons, state} = game;
+  const {act, busy, error, loading, now, pending, refresh, retry, retrying, seasons, state, uploadEmblem} = game;
 
   const segment = location.pathname.split('/')[2];
   const tab = SECTIONS.some((section) => section.id === segment) ? segment : 'home';
@@ -191,6 +191,15 @@ const Tribes = () => {
   }, []);
 
   const handleGo = useCallback((section: string) => navigate(`/tribes/${section}`), [navigate]);
+
+  const handleUploadEmblem = useCallback<TribesEmblemUpload>(
+    async (image) => {
+      const success = await uploadEmblem(image);
+      if (success) setToast({id: Date.now(), text: 'Your emblem is flying.'});
+      return success;
+    },
+    [uploadEmblem],
+  );
 
   const handleOlderSeasons = async () => {
     if (historyRequest.current || !allSeasons.length) return;
@@ -277,6 +286,7 @@ const Tribes = () => {
       now,
       state,
       tribe,
+      uploadEmblem: handleUploadEmblem,
     };
     const waiting = state.season.status === 'recruiting';
     switch (selected) {
@@ -356,7 +366,7 @@ const Tribes = () => {
                 )}
                 {tribe && (
                   <S.HeroTribe>
-                    <Emblem color={tribe.color} emblem={tribe.emblem} size={34} />
+                    <Emblem color={tribe.color} emblem={tribe.emblem} image={tribe.emblem_image} size={34} />
                     <span>
                       <small>Your tribe</small>
                       {tribe.name}

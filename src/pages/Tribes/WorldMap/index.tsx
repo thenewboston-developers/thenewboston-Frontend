@@ -5,6 +5,7 @@ import {
   ReactNode,
   useCallback,
   useEffect,
+  useId,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -15,7 +16,7 @@ import {LocateFixed, Maximize, Minus, Plus} from 'lucide-react';
 import {Tribe, TribesPlot, TribesState} from 'types/tribes';
 
 import ItemIcon from '../art/ItemIcon';
-import {count, distance, label, plotName} from '../common';
+import {count, distance, label, plotName, tribeLabel} from '../common';
 import {palette} from '../theme';
 
 import * as S from './Styles';
@@ -143,7 +144,7 @@ const DECOR: Record<string, ReactNode> = {
   ),
 };
 
-const Keep = ({color, emblem}: {color: string; emblem: string}) => (
+const Keep = ({clip, color, emblem, image}: {clip: string; color: string; emblem: string; image?: string | null}) => (
   <g>
     <ellipse cx="2" cy="8" fill="rgba(13, 31, 26, 0.26)" rx="30" ry="10" />
     <path d="M-24-2 0 10V-4L-24-16Z" fill="#efe3c8" />
@@ -159,9 +160,21 @@ const Keep = ({color, emblem}: {color: string; emblem: string}) => (
     <path d="M20-12V-52" stroke="#5a3a20" strokeLinecap="round" strokeWidth="2.2" />
     <path className="flag" d="M21-52q6-3.5 11 0t11 0v12q-6 3.5-11 0t-11 0Z" fill={color} />
     <circle cx="0" cy="-52" fill="#fffdf6" r="12.5" stroke={color} strokeWidth="3" />
-    <text fontSize="14" textAnchor="middle" x="0" y="-47">
-      {emblem}
-    </text>
+    {image ? (
+      <image
+        clipPath={`url(#${clip})`}
+        height="23"
+        href={image}
+        preserveAspectRatio="xMidYMid slice"
+        width="23"
+        x="-11.5"
+        y="-63.5"
+      />
+    ) : (
+      <text fontSize="14" textAnchor="middle" x="0" y="-47">
+        {emblem}
+      </text>
+    )}
   </g>
 );
 
@@ -179,11 +192,13 @@ const BUILDING_SPOTS: [number, number][] = [
 
 const Terrain = memo(
   ({
+    clip,
     geometry,
     owners,
     plots,
     size,
   }: {
+    clip: string;
     geometry: Geometry;
     owners: Map<number, Tribe>;
     plots: TribesPlot[];
@@ -193,6 +208,10 @@ const Terrain = memo(
     const ordered = [...plots].sort((a, b) => a.x + a.y - (b.x + b.y) || a.x - b.x);
     return (
       <g>
+        {/* One outline for every keep: a clip path is measured in the coordinates of the tile that uses it */}
+        <clipPath id={clip}>
+          <circle cx="0" cy="-52" r="11" />
+        </clipPath>
         {ordered.map((plot) => {
           const [x, y] = geometry.position(plot);
           const owner = plot.tribe_id === null ? undefined : owners.get(plot.tribe_id);
@@ -229,7 +248,11 @@ const Terrain = memo(
                   strokeWidth="1"
                 />
                 {owner && <path d={DIAMOND} fill={hex(owner.color)} opacity="0.3" />}
-                {home ? <Keep color={hex(owner.color)} emblem={owner.emblem} /> : DECOR[plot.terrain]}
+                {home ? (
+                  <Keep clip={clip} color={hex(owner.color)} emblem={owner.emblem} image={owner.emblem_image} />
+                ) : (
+                  DECOR[plot.terrain]
+                )}
                 {plot.buildings.slice(0, BUILDING_SPOTS.length).map((building, index) => (
                   <g
                     key={building}
@@ -259,6 +282,8 @@ const WorldMap = ({canExpand, compact, onSelect, ranges, selectedId, state, trib
   const framed = useRef<string | null>(null);
   const suppressClick = useRef(false);
   const viewport = useRef<HTMLDivElement>(null);
+  // Two maps can be on the page at once, so each names its own clip outline
+  const clip = `tribes-keep-emblem-${useId().replace(/[^\w-]/g, '')}`;
   const {plots, tribes, units} = state;
 
   const grid = useMemo(
@@ -531,7 +556,7 @@ const WorldMap = ({canExpand, compact, onSelect, ranges, selectedId, state, trib
             } ${HEADROOM + PADDING + 30 + (grid.rows * TILE_HEIGHT) / 2}Z`}
             fill="rgba(0, 0, 0, 0.3)"
           />
-          <Terrain geometry={geometry} owners={owners} plots={plots} size={grid} />
+          <Terrain clip={clip} geometry={geometry} owners={owners} plots={plots} size={grid} />
           <g fill="none" strokeLinecap="round">
             {borders.map((segment) => (
               <path d={segment.d} key={segment.key} stroke="rgba(255, 253, 246, 0.85)" strokeWidth="4.5" />
@@ -717,7 +742,7 @@ const WorldMap = ({canExpand, compact, onSelect, ranges, selectedId, state, trib
             {label(tip.terrain)} · {tip.x + 1}, {tip.y + 1}
           </strong>
           <span>
-            {tipOwner ? `${tipOwner.emblem} ${tipOwner.name}` : 'Unclaimed land'}
+            {tipOwner ? tribeLabel(tipOwner) : 'Unclaimed land'}
             {tip.buildings.length ? ` · ${tip.buildings.map(label).join(', ')}` : ''}
           </span>
           {!tipOwner && <em>{count(tip.price)} TNB</em>}
