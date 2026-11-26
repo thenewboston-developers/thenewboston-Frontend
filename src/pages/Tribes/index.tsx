@@ -37,7 +37,7 @@ import ItemIcon from './art/ItemIcon';
 import AnimatedNumber from './components/AnimatedNumber';
 import Countdown from './components/Countdown';
 import Emblem from './components/Emblem';
-import {count, date, day} from './common';
+import {date, day, plural} from './common';
 import Community from './Community';
 import Dashboard from './Dashboard';
 import Guide from './Guide';
@@ -388,7 +388,10 @@ const Tribes = () => {
                     </strong>
                     <small>
                       {state.tribes.length
-                        ? `${count(state.tribes.reduce((total, team) => total + team.members.length, 0))} players`
+                        ? plural(
+                            state.tribes.reduce((total, team) => total + team.members.length, 0),
+                            'player',
+                          )
                         : 'be the first'}
                     </small>
                   </S.HeroStat>

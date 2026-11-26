@@ -4,7 +4,7 @@ import {ArrowRight, Eye, Globe, Lock} from 'lucide-react';
 import {TribesPanelProps} from 'types/tribes';
 
 import ItemIcon from '../art/ItemIcon';
-import {count, distance, label, memberName, plotName, tribeName} from '../common';
+import {count, distance, label, memberName, plotName, plural, tribeName} from '../common';
 import Emblem from '../components/Emblem';
 import WorldMap from '../WorldMap';
 
@@ -50,8 +50,8 @@ const World = ({act, busy, canPlay, go, state, tribe}: TribesPanelProps) => {
               <h2>The world</h2>
             </div>
             <S.Actions>
-              <S.Badge $tone="dark">{state.plots.length} plots</S.Badge>
-              <S.Badge $tone="dark">{state.tribes.length} tribes</S.Badge>
+              <S.Badge $tone="dark">{plural(state.plots.length, 'plot')}</S.Badge>
+              <S.Badge $tone="dark">{plural(state.tribes.length, 'tribe')}</S.Badge>
             </S.Actions>
           </S.PanelTitle>
           <S.Muted $dark style={{margin: 0}}>
@@ -150,9 +150,7 @@ const World = ({act, busy, canPlay, go, state, tribe}: TribesPanelProps) => {
             {!!reach && (
               <S.Row>
                 <span>Weapons here reach</span>
-                <strong>
-                  {reach} plot{reach > 1 ? 's' : ''}
-                </strong>
+                <strong>{plural(reach, 'plot')}</strong>
               </S.Row>
             )}
             {!owner && (

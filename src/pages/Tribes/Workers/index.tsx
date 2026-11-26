@@ -16,6 +16,7 @@ import {
   label,
   ownedPlots,
   plotName,
+  plural,
   time,
 } from '../common';
 import Progress from '../components/Progress';
@@ -62,7 +63,7 @@ export const WorkerQueue = ({act, busy, canPlay, now, state}: TribesPanelProps) 
           <h2>Your worker</h2>
         </div>
         <S.Badge $tone={jobs.length ? 'gold' : 'green'}>
-          {jobs.length ? `${jobs.length} assignments` : 'Available'}
+          {jobs.length ? plural(jobs.length, 'assignment') : 'Available'}
         </S.Badge>
       </S.PanelTitle>
       <S.Muted>One worker. Up to 24 hours of queued work. Production continues while you are away.</S.Muted>
@@ -458,7 +459,7 @@ const Workers = (props: TribesPanelProps) => {
         <S.Card>
           <S.PanelTitle>
             <h2>Your infrastructure</h2>
-            <S.Badge $tone="neutral">{owned.length} plots</S.Badge>
+            <S.Badge $tone="neutral">{plural(owned.length, 'plot')}</S.Badge>
           </S.PanelTitle>
           {!owned.length && <S.Empty>Purchase land from the world map to develop your economy.</S.Empty>}
           {owned.map((plot) => (

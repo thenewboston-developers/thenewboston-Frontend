@@ -5,7 +5,7 @@ import {TribesPanelProps} from 'types/tribes';
 
 import Activity from '../Activity';
 import ItemIcon from '../art/ItemIcon';
-import {count, distance, label, sum, tribeName} from '../common';
+import {count, distance, label, plural, sum, tribeName} from '../common';
 import {Projects} from '../Community';
 import Emblem from '../components/Emblem';
 import {WorkerQueue} from '../Workers';
@@ -145,7 +145,7 @@ const Dashboard = (props: TribesPanelProps) => {
                     <Globe size={14} /> The world today
                   </S.Eyebrow>
                   <h2>
-                    {state.plots.length} plots, {state.tribes.length} tribes
+                    {plural(state.plots.length, 'plot')}, {plural(state.tribes.length, 'tribe')}
                   </h2>
                 </div>
                 <S.Button $size="small" $variant="accent" onClick={handleOpenWorld}>
@@ -176,7 +176,7 @@ const Dashboard = (props: TribesPanelProps) => {
               </S.Row>
               <S.Row>
                 <span>Territory</span>
-                <strong>{state.plots.filter((plot) => plot.tribe_id === tribe.id).length} plots</strong>
+                <strong>{plural(state.plots.filter((plot) => plot.tribe_id === tribe.id).length, 'plot')}</strong>
               </S.Row>
               <S.Row>
                 <span>Treasury</span>
@@ -197,7 +197,7 @@ const Dashboard = (props: TribesPanelProps) => {
                 <div>
                   <strong>{team.name}</strong>
                   <small>
-                    {team.members.length} players · {land} plots
+                    {plural(team.members.length, 'player')} · {plural(land, 'plot')}
                   </small>
                 </div>
                 <S.PowerStats>
