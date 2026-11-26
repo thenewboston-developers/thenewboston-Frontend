@@ -437,3 +437,10 @@ describe('analytics data sanitization', () => {
     expect(fileInput.matches(replay.blockSelector!)).toBe(true);
   });
 });
+
+test('records Tribes routes as game pages instead of redirects or unknown paths', () => {
+  expect(analytics.getAnalyticsPath('/tribes')).toBe('/tribes');
+  expect(analytics.getAnalyticsPath('/tribes/home?season=12')).toBe('/tribes/home');
+  expect(analytics.isAnalyticsRedirectPath('/tribes')).toBe(false);
+  expect(analytics.isAnalyticsRedirectPath('/tribes/home')).toBe(false);
+});
