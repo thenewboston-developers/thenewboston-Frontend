@@ -4,37 +4,11 @@ import {easing, fonts, palette, pop, shadows} from '../theme';
 
 export * from '../Styles';
 
-export const EmblemOption = styled.button<{$selected: boolean}>`
-  align-items: center;
-  background: ${({$selected}) => ($selected ? '#f2f8ef' : palette.white)};
-  border: 1px solid ${({$selected}) => ($selected ? palette.moss : palette.line)};
-  border-radius: 10px;
-  box-shadow: ${({$selected}) => ($selected ? `0 0 0 1px ${palette.moss}` : 'none')};
-  cursor: pointer;
-  display: inline-flex;
-  font-size: 19px;
-  height: 38px;
-  justify-content: center;
-  line-height: 1;
-  padding: 0;
-  transition:
-    border-color 0.15s ease,
-    transform 0.15s ${easing.spring};
-
-  &:hover:enabled {
-    transform: translateY(-2px) scale(1.06);
-  }
-
-  &:focus-visible {
-    box-shadow: ${shadows.focus};
-    outline: none;
-  }
-`;
-
-export const EmblemOptions = styled.div`
-  display: grid;
-  gap: 6px;
-  grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+export const EmblemUpload = styled.div`
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 `;
 
 export const Ghosts = styled.div`

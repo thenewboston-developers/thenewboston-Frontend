@@ -5,8 +5,9 @@ import {getTribesMessages} from 'api/tribes';
 import {TribesPanelProps, TribesState} from 'types/tribes';
 import {isCancellationError} from 'utils/errors';
 
-import {ActionForm, avatarColor, date, tribeName} from '../common';
+import {ActionForm, date, tribeName} from '../common';
 import Emblem from '../components/Emblem';
+import PlayerAvatar from '../components/PlayerAvatar';
 
 import * as S from './Styles';
 
@@ -105,7 +106,12 @@ const Messages = ({act, busy, now, state, tribe}: TribesPanelProps) => {
               onClick={() => setRecipient('tribe')}
               type="button"
             >
-              <Emblem color={tribe?.color ?? '#46634a'} emblem={tribe?.emblem ?? '🛡️'} size={30} />
+              <Emblem
+                color={tribe?.color ?? '#46634a'}
+                emblem={tribe?.emblem ?? '🛡️'}
+                image={tribe?.emblem_image}
+                size={30}
+              />
               <span>
                 <strong>Around the campfire</strong>
                 <small>{preview(tribe?.id, 'Private tribe chat')}</small>
@@ -120,7 +126,7 @@ const Messages = ({act, busy, now, state, tribe}: TribesPanelProps) => {
                 onClick={() => setRecipient(String(team.id))}
                 type="button"
               >
-                <Emblem color={team.color} emblem={team.emblem} size={30} />
+                <Emblem color={team.color} emblem={team.emblem} image={team.emblem_image} size={30} />
                 <span>
                   <strong>{team.name}</strong>
                   <small>{preview(team.id, 'No letters yet')}</small>
@@ -157,7 +163,7 @@ const Messages = ({act, busy, now, state, tribe}: TribesPanelProps) => {
               )}
               {!messages.length && (
                 <S.Empty style={{margin: 'auto 0'}}>
-                  {other && <Emblem color={other.color} emblem={other.emblem} size={44} />}
+                  {other && <Emblem color={other.color} emblem={other.emblem} image={other.emblem_image} size={44} />}
                   {recipient === 'tribe'
                     ? 'Say hello. Share a plan. Build something together.'
                     : 'Open a conversation. An ally may be one message away.'}
@@ -167,9 +173,7 @@ const Messages = ({act, busy, now, state, tribe}: TribesPanelProps) => {
                 const own = message.user_id === state.viewer?.id;
                 return (
                   <S.Bubble $own={own} key={message.id}>
-                    <S.Avatar $color={avatarColor(message.username)} $size={28} aria-hidden>
-                      {message.username.slice(0, 1)}
-                    </S.Avatar>
+                    <PlayerAvatar avatar={message.avatar} name={message.username} size={28} />
                     <div>
                       <header>
                         {message.username}

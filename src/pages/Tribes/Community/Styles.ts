@@ -11,6 +11,7 @@ export const Crest = styled.div<{$color: string}>`
     linear-gradient(160deg, ${palette.forest} 0%, ${palette.ink} 100%);
   color: ${palette.white};
   display: flex;
+  flex-wrap: wrap;
   gap: 18px;
   padding: 24px 22px;
 
@@ -35,6 +36,19 @@ export const Crest = styled.div<{$color: string}>`
     font-size: 14px;
     margin-top: 6px;
     overflow-wrap: anywhere;
+  }
+`;
+
+export const CrestAction = styled.div`
+  flex-shrink: 0;
+  margin-left: auto;
+  max-width: 260px;
+
+  button {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+    color: ${palette.white};
   }
 `;
 

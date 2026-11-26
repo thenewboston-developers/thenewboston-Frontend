@@ -7,15 +7,16 @@ import ItemIcon from '../art/ItemIcon';
 import {
   AccountField,
   ActionForm,
-  avatarColor,
   count,
   ItemField,
   label,
+  memberAvatar,
   memberName,
   PlotField,
   plural,
   tribeName,
 } from '../common';
+import PlayerAvatar from '../components/PlayerAvatar';
 
 import * as S from './Styles';
 
@@ -59,9 +60,11 @@ const Listing = ({listing, ...props}: TribesPanelProps & {listing: TribesListing
       <S.Seller>
         {listing.user_id ? (
           <>
-            <S.Avatar $color={avatarColor(memberName(state, listing.user_id))} $size={20} aria-hidden>
-              {memberName(state, listing.user_id).slice(0, 1)}
-            </S.Avatar>
+            <PlayerAvatar
+              avatar={memberAvatar(state, listing.user_id)}
+              name={memberName(state, listing.user_id)}
+              size={20}
+            />
             {memberName(state, listing.user_id)} · {tribeName(state, listing.tribe_id)}
           </>
         ) : (

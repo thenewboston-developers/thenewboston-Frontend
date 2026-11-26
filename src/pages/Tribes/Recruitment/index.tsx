@@ -1,14 +1,16 @@
-import {useRef, useState} from 'react';
+import {ReactNode, useEffect, useRef, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {Check, Crown, Flag, LogIn, Mail, MapPin, Send, Shield, Swords, UserPlus, Users} from 'lucide-react';
 
 import {PATH_AUTHENTICATION} from 'constants/paths';
-import {Tribe, TribesPanelProps} from 'types/tribes';
+import {Tribe, TribesAction, TribesPanelProps} from 'types/tribes';
 import {getAuthenticationPath} from 'utils/authentication';
 
 import ItemIcon from '../art/ItemIcon';
-import {ActionForm, avatarColor, count, date, Player, plural} from '../common';
+import {ActionForm, count, date, Player, plural} from '../common';
 import Emblem from '../components/Emblem';
+import EmblemPicker, {EMBLEM_SIZE, PickedEmblem} from '../components/EmblemPicker';
+import PlayerAvatar from '../components/PlayerAvatar';
 
 import * as S from './Styles';
 
@@ -26,43 +28,28 @@ const COLORS = [
   '#6f7f8f',
   '#3b4a54',
 ];
-const EMBLEMS = [
-  '🐺',
-  '🦉',
-  '🦊',
-  '🐻',
-  '🦅',
-  '🐉',
-  '🦁',
-  '🐗',
-  '🦌',
-  '🐍',
-  '🦂',
-  '🐢',
-  '⚔️',
-  '🛡️',
-  '🔥',
-  '⚡',
-  '🌲',
-  '⛰️',
-  '🌙',
-  '☀️',
-  '👑',
-  '💀',
-  '🌊',
-  '🗡️',
-];
 
 // The banner is drawn live while the founder types, so the choice of emblem and color is never a guess
-const TribeFields = ({tribe}: Pick<TribesPanelProps, 'tribe'>) => {
+const TribeFields = ({
+  disabled,
+  onPick,
+  picked,
+  saving,
+  tribe,
+}: Pick<TribesPanelProps, 'tribe'> & {
+  disabled?: boolean;
+  onPick: (picked: PickedEmblem | null) => void;
+  picked: PickedEmblem | null;
+  saving: string;
+}) => {
   const [color, setColor] = useState(tribe?.color ?? COLORS[0]);
-  const [emblem, setEmblem] = useState(tribe?.emblem ?? EMBLEMS[0]);
   const [motto, setMotto] = useState(tribe?.motto ?? '');
   const [name, setName] = useState(tribe?.name ?? '');
+  const image = picked?.preview ?? tribe?.emblem_image;
   return (
     <>
       <S.Preview $color={color} aria-hidden>
-        <Emblem color={color} emblem={emblem} size={64} />
+        <Emblem color={color} emblem={tribe?.emblem ?? '🛡️'} image={image} size={64} />
         <div>
           <small>Your banner</small>
           <strong>{name || 'Name your tribe'}</strong>
@@ -82,56 +69,43 @@ const TribeFields = ({tribe}: Pick<TribesPanelProps, 'tribe'>) => {
       </S.Field>
       <S.FieldGroup>
         Emblem
-        <S.EmblemOptions>
-          {EMBLEMS.map((option) => (
-            <S.EmblemOption
-              $selected={option === emblem}
-              aria-label={`Use ${option} as the emblem`}
-              aria-pressed={option === emblem}
-              key={option}
-              onClick={() => setEmblem(option)}
-              type="button"
-            >
-              {option}
-            </S.EmblemOption>
-          ))}
-        </S.EmblemOptions>
+        <S.EmblemUpload>
+          <EmblemPicker disabled={disabled} onPick={onPick} text={image ? 'Change image' : 'Upload image'} />
+          {picked && (
+            <S.Button $size="small" $variant="ghost" disabled={disabled} onClick={() => onPick(null)} type="button">
+              Undo
+            </S.Button>
+          )}
+        </S.EmblemUpload>
+        <S.Hint>
+          {picked
+            ? `${picked.file.name} becomes your emblem when you ${saving}.`
+            : `A square picture, exactly ${EMBLEM_SIZE} by ${EMBLEM_SIZE} pixels.`}
+        </S.Hint>
       </S.FieldGroup>
-      <S.Pair style={{gridTemplateColumns: '104px minmax(0, 1fr)'}}>
-        <S.Field>
-          Or type your own
-          <input
-            maxLength={8}
-            name="emblem"
-            onChange={(event) => setEmblem(event.target.value)}
-            required
-            value={emblem}
-          />
-        </S.Field>
-        <S.FieldGroup>
-          Tribe color
-          <S.Swatches>
-            {COLORS.map((option) => (
-              <S.Swatch
-                $color={option}
-                $selected={option === color}
-                aria-label={`Use the color ${option}`}
-                aria-pressed={option === color}
-                key={option}
-                onClick={() => setColor(option)}
-                type="button"
-              />
-            ))}
-            <input
-              aria-label="Custom tribe color"
-              name="color"
-              onChange={(event) => setColor(event.target.value)}
-              type="color"
-              value={color}
+      <S.FieldGroup>
+        Tribe color
+        <S.Swatches>
+          {COLORS.map((option) => (
+            <S.Swatch
+              $color={option}
+              $selected={option === color}
+              aria-label={`Use the color ${option}`}
+              aria-pressed={option === color}
+              key={option}
+              onClick={() => setColor(option)}
+              type="button"
             />
-          </S.Swatches>
-        </S.FieldGroup>
-      </S.Pair>
+          ))}
+          <input
+            aria-label="Custom tribe color"
+            name="color"
+            onChange={(event) => setColor(event.target.value)}
+            type="color"
+            value={color}
+          />
+        </S.Swatches>
+      </S.FieldGroup>
       <S.Field>
         Motto
         <input
@@ -155,12 +129,47 @@ const TribeFields = ({tribe}: Pick<TribesPanelProps, 'tribe'>) => {
   );
 };
 
+// The tribe's details are a receipted action and the emblem is a file, so saving sends the details first and the
+// picture straight after
+const TribeForm = ({
+  act,
+  action,
+  busy,
+  icon,
+  saving,
+  submit,
+  tribe,
+  uploadEmblem,
+}: Pick<TribesPanelProps, 'act' | 'busy' | 'tribe' | 'uploadEmblem'> & {
+  action: string;
+  icon?: ReactNode;
+  saving: string;
+  submit: string;
+}) => {
+  const [picked, setPicked] = useState<PickedEmblem | null>(null);
+
+  const handleAct: TribesAction = async (name, data) => {
+    const success = await act(name, data);
+    if (success && picked && uploadEmblem && (await uploadEmblem(picked.file))) setPicked(null);
+    return success;
+  };
+
+  useEffect(() => {
+    if (!picked) return undefined;
+    return () => URL.revokeObjectURL(picked.preview);
+  }, [picked]);
+
+  return (
+    <ActionForm act={handleAct} action={action} disabled={busy} icon={icon} resetOnSuccess={false} submit={submit}>
+      <TribeFields disabled={busy} onPick={setPicked} picked={picked} saving={saving} tribe={tribe} />
+    </ActionForm>
+  );
+};
+
 const Roster = ({maximum, team}: {maximum: number; team: Tribe}) => (
   <S.Slots aria-label={`${team.members.length} of ${maximum} members`} role="img">
     {team.members.map((member) => (
-      <S.Avatar $color={avatarColor(member.username)} $size={28} key={member.id} title={member.username}>
-        {member.username.slice(0, 1)}
-      </S.Avatar>
+      <PlayerAvatar avatar={member.avatar} key={member.id} name={member.username} size={28} title={member.username} />
     ))}
     {Array.from({length: Math.max(0, maximum - team.members.length)}, (_, index) => (
       <S.Slot key={index} />
@@ -168,7 +177,7 @@ const Roster = ({maximum, team}: {maximum: number; team: Tribe}) => (
   </S.Slots>
 );
 
-const Recruitment = ({act, busy, now, state, tribe}: TribesPanelProps) => {
+const Recruitment = ({act, busy, now, state, tribe, uploadEmblem}: TribesPanelProps) => {
   const banner = useRef<HTMLElement>(null);
   const recruiting = state.season.status === 'recruiting' && now < new Date(state.season.starts_at).getTime();
   const founder = tribe?.founder_id === state.viewer?.id;
@@ -211,7 +220,7 @@ const Recruitment = ({act, busy, now, state, tribe}: TribesPanelProps) => {
       <S.Card>
         <S.PanelTitle>
           <S.RowMain>
-            <Emblem color={tribe.color} emblem={tribe.emblem} size={38} />
+            <Emblem color={tribe.color} emblem={tribe.emblem} image={tribe.emblem_image} size={38} />
             <div>
               <S.Eyebrow style={{marginBottom: 2}}>Your roster</S.Eyebrow>
               <h2>{tribe.name}</h2>
@@ -227,6 +236,7 @@ const Recruitment = ({act, busy, now, state, tribe}: TribesPanelProps) => {
         {tribe.members.map((member) => (
           <S.Row key={member.id}>
             <Player
+              avatar={member.avatar}
               name={member.username}
               note={
                 member.id === tribe.founder_id ? (
@@ -274,7 +284,7 @@ const Recruitment = ({act, busy, now, state, tribe}: TribesPanelProps) => {
               return (
                 <S.Row key={invite.tribe_id}>
                   <S.RowMain>
-                    {team && <Emblem color={team.color} emblem={team.emblem} size={34} />}
+                    {team && <Emblem color={team.color} emblem={team.emblem} image={team.emblem_image} size={34} />}
                     <div>
                       <strong>{invite.name}</strong>
                       {team && (
@@ -335,7 +345,7 @@ const Recruitment = ({act, busy, now, state, tribe}: TribesPanelProps) => {
                 return (
                   <S.TribeCard $color={team.color} $own={team.id === tribe?.id} key={team.id}>
                     <S.TribeHead>
-                      <Emblem color={team.color} emblem={team.emblem} size={46} />
+                      <Emblem color={team.color} emblem={team.emblem} image={team.emblem_image} size={46} />
                       <div>
                         <h3>{team.name}</h3>
                         <em>{team.motto || 'A new story begins'}</em>
@@ -381,16 +391,15 @@ const Recruitment = ({act, busy, now, state, tribe}: TribesPanelProps) => {
             </S.Eyebrow>
             <h2>Raise your banner</h2>
             <S.Muted>Create a tribe, bring up to seven friends, and decide what you will become.</S.Muted>
-            <ActionForm
+            <TribeForm
               act={act}
               action="create_tribe"
-              disabled={busy}
+              busy={busy}
               icon={<Flag size={16} />}
-              resetOnSuccess={false}
+              saving="create the tribe"
               submit="Create tribe"
-            >
-              <TribeFields />
-            </ActionForm>
+              uploadEmblem={uploadEmblem}
+            />
           </S.Card>
         )}
         {!state.viewer && recruiting && (
@@ -427,7 +436,7 @@ const Recruitment = ({act, busy, now, state, tribe}: TribesPanelProps) => {
               </ActionForm>
               {(tribe.invites ?? []).map((invite) => (
                 <S.Row key={invite.id}>
-                  <Player name={invite.username} size={26} />
+                  <Player avatar={invite.avatar} name={invite.username} size={26} />
                   <S.Badge $tone="gold">Invited</S.Badge>
                 </S.Row>
               ))}
@@ -440,7 +449,7 @@ const Recruitment = ({act, busy, now, state, tribe}: TribesPanelProps) => {
               {!tribe.applications?.length && <S.Empty>No applications yet.</S.Empty>}
               {tribe.applications?.map((member) => (
                 <S.Row key={member.id}>
-                  <Player name={member.username} note="Wants to join" />
+                  <Player avatar={member.avatar} name={member.username} note="Wants to join" />
                   <S.Button
                     $size="small"
                     disabled={busy || tribe.members.length >= maximum}
@@ -456,9 +465,15 @@ const Recruitment = ({act, busy, now, state, tribe}: TribesPanelProps) => {
                 <Shield size={14} /> Identity
               </S.Eyebrow>
               <h2>Your tribe identity</h2>
-              <ActionForm act={act} action="update_tribe" disabled={busy} resetOnSuccess={false} submit="Save tribe">
-                <TribeFields tribe={tribe} />
-              </ActionForm>
+              <TribeForm
+                act={act}
+                action="update_tribe"
+                busy={busy}
+                saving="save"
+                submit="Save tribe"
+                tribe={tribe}
+                uploadEmblem={uploadEmblem}
+              />
             </S.Card>
           </>
         )}

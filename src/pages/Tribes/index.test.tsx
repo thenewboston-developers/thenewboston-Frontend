@@ -180,6 +180,7 @@ beforeEach(() => {
     retrying: false,
     seasons: [state.season],
     state,
+    uploadEmblem: jest.fn().mockResolvedValue(true),
   };
   jest.mocked(useTribes).mockImplementation(() => game);
   container = document.createElement('div');
@@ -189,7 +190,30 @@ beforeEach(() => {
 afterEach(() => {
   act(() => root.unmount());
   container.remove();
+  jest.restoreAllMocks();
 });
+
+// jsdom never loads pictures, so a chosen file "loads" with the dimensions a test gives it
+const stubPictures = (width: number, height = width) => {
+  URL.createObjectURL = jest.fn(() => 'blob:preview');
+  URL.revokeObjectURL = jest.fn();
+  jest.spyOn(window, 'Image').mockImplementation(() => {
+    const picture = {naturalHeight: height, naturalWidth: width} as HTMLImageElement;
+    Object.defineProperty(picture, 'src', {set: () => window.setTimeout(() => picture.onload?.(new Event('load')))});
+    return picture;
+  });
+};
+const choose = async (scope: Element, file: File) => {
+  const input = scope.querySelector('input[type="file"]') as HTMLInputElement;
+  Object.defineProperty(input, 'files', {configurable: true, value: [file]});
+  await act(async () => {
+    input.dispatchEvent(new Event('change', {bubbles: true}));
+    await new Promise((resolve) => {
+      window.setTimeout(resolve, 5);
+    });
+  });
+};
+const emblemFile = () => new File(['picture'], 'otters.png', {type: 'image/png'});
 
 it('uses real wallet and treasury balances and submits a deposit without a seasonal currency grant', async () => {
   await render();
@@ -415,24 +439,117 @@ it('shows the lobby as the overview during recruitment and explains sections tha
   );
 });
 
-it('creates a tribe with the name, emblem and color chosen in the banner preview', async () => {
+it('creates a tribe with the name and color chosen in the banner preview', async () => {
   startRecruitment();
   state.viewer = {...state.viewer!, tribe_id: null};
   state.tribes = [state.tribes[1]];
   await render();
   const form = button('Create tribe').closest('form')!;
   await type(form.querySelector('[name="name"]') as HTMLInputElement, 'River Otters');
-  await act(async () => (form.querySelector('[aria-label="Use 🦊 as the emblem"]') as HTMLButtonElement).click());
   await act(async () => (form.querySelector('[aria-label="Use the color #2f7fb8"]') as HTMLButtonElement).click());
   expect(form).toHaveTextContent('River Otters');
+  expect(form).toHaveTextContent('A square picture, exactly 512 by 512 pixels.');
   await submit('Create tribe');
   expect(action).toHaveBeenCalledWith('create_tribe', {
     color: '#2f7fb8',
     description: '',
-    emblem: '🦊',
     motto: '',
     name: 'River Otters',
   });
+  expect(game.uploadEmblem).not.toHaveBeenCalled();
+});
+
+it('uploads the chosen picture as the emblem once the tribe is created', async () => {
+  stubPictures(512);
+  action.mockResolvedValue(true);
+  startRecruitment();
+  state.viewer = {...state.viewer!, tribe_id: null};
+  state.tribes = [state.tribes[1]];
+  await render();
+  const form = button('Create tribe').closest('form')!;
+  await type(form.querySelector('[name="name"]') as HTMLInputElement, 'River Otters');
+  const file = emblemFile();
+  await choose(form, file);
+  expect(form.querySelector('img')).toHaveAttribute('src', 'blob:preview');
+  expect(form).toHaveTextContent('otters.png becomes your emblem when you create the tribe.');
+  expect(game.uploadEmblem).not.toHaveBeenCalled();
+  await submit('Create tribe');
+  expect(action).toHaveBeenCalledWith('create_tribe', expect.objectContaining({name: 'River Otters'}));
+  expect(game.uploadEmblem).toHaveBeenCalledWith(file);
+  expect(container).toHaveTextContent('Your emblem is flying.');
+});
+
+it('keeps the emblem back when the tribe itself could not be saved', async () => {
+  stubPictures(512);
+  action.mockResolvedValue(false);
+  startRecruitment();
+  await render();
+  const form = button('Save tribe').closest('form')!;
+  await choose(form, emblemFile());
+  await submit('Save tribe');
+  expect(action).toHaveBeenCalledWith('update_tribe', expect.objectContaining({name: 'Iron Wolves'}));
+  expect(game.uploadEmblem).not.toHaveBeenCalled();
+  expect(form).toHaveTextContent('otters.png becomes your emblem when you save.');
+  await click('Undo');
+  expect(form).toHaveTextContent('A square picture, exactly 512 by 512 pixels.');
+});
+
+it('refuses an emblem that is not 512 pixels square', async () => {
+  stubPictures(640, 480);
+  startRecruitment();
+  await render();
+  const form = button('Save tribe').closest('form')!;
+  await choose(form, emblemFile());
+  expect(form.querySelector('[role="alert"]')).toHaveTextContent(
+    'The emblem must be exactly 512 by 512 pixels. This picture is 640 by 480.',
+  );
+  expect(form).not.toHaveTextContent('otters.png');
+  await submit('Save tribe');
+  expect(game.uploadEmblem).not.toHaveBeenCalled();
+});
+
+it('lets only the founder change the emblem from the tribe page, also after the season started', async () => {
+  stubPictures(512);
+  await render('/tribes/tribe');
+  const file = emblemFile();
+  expect(container).toHaveTextContent('Upload emblem');
+  await choose(container, file);
+  expect(game.uploadEmblem).toHaveBeenCalledWith(file);
+  act(() => root.unmount());
+  root = createRoot(container);
+  state.tribes[0].founder_id = 8;
+  state.tribes[0].emblem_image = 'https://media.example/wolves.png';
+  await render('/tribes/tribe');
+  expect(container).toHaveTextContent('Iron Wolves');
+  expect(container.querySelector('input[type="file"]')).toBeNull();
+});
+
+it('shows uploaded emblems and player avatars in place of the emoji and the initial', async () => {
+  startRecruitment();
+  state.tribes[0].emblem_image = 'https://media.example/wolves.png';
+  state.tribes[0].members[0].avatar = 'https://media.example/maya.png';
+  await render();
+  const card = Array.from(container.querySelectorAll('article')).find(
+    (entry) => entry.querySelector('h3')!.textContent === 'Iron Wolves',
+  )!;
+  expect(card.querySelector('img[src="https://media.example/wolves.png"]')).not.toBeNull();
+  expect(card).not.toHaveTextContent('🐺');
+  const roster = card.querySelector('[role="img"]')!;
+  expect(roster.querySelector('[title="maya"] img')).toHaveAttribute('src', 'https://media.example/maya.png');
+  expect(roster.querySelector('[title="alex"]')).toHaveTextContent('a');
+  expect(roster.querySelector('[title="alex"] img')).toBeNull();
+  // The same picture stands beside the name in the viewer's own roster
+  expect(container.querySelectorAll('img[src="https://media.example/maya.png"]').length).toBeGreaterThan(1);
+  // A tribe without a picture keeps its shield and emoji
+  const rival = Array.from(container.querySelectorAll('article')).find(
+    (entry) => entry.querySelector('h3')!.textContent === 'Golden Owls',
+  )!;
+  expect(rival).toHaveTextContent('🦉');
+  // A picture that fails to load falls back to the initial instead of a broken image
+  await act(async () => {
+    roster.querySelector('[title="maya"] img')!.dispatchEvent(new Event('error'));
+  });
+  expect(roster.querySelector('[title="maya"]')).toHaveTextContent('m');
 });
 
 it('marks the selected plot on the map and lets an adjacent unowned plot be purchased from the treasury', async () => {

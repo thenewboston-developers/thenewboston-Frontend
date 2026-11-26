@@ -28,6 +28,15 @@ export const performTribesAction = async (payload: TribesActionData): Promise<Tr
   return response.data;
 };
 
+// The picture becomes the emblem of the tribe the signed-in player founded in that season
+export const uploadTribeEmblem = async (seasonId: number, image: File): Promise<TribesState> => {
+  const data = new FormData();
+  data.append('season_id', String(seasonId));
+  data.append('image', image);
+  const response = await axios.post(`${BASE_URL}/emblem`, data, authorizationHeaders());
+  return response.data;
+};
+
 export const getTribesActivity = async (
   seasonId: number,
   before: number,

@@ -10,11 +10,13 @@ export interface TribesSeason {
 export interface TribesMember {
   id: number;
   username: string;
+  avatar?: string | null;
 }
 export interface Tribe {
   id: number;
   name: string;
   emblem: string;
+  emblem_image?: string | null;
   color: string;
   description: string;
   motto: string;
@@ -75,6 +77,7 @@ export interface TribesMessage {
   to_tribe_id: number;
   user_id: number;
   username: string;
+  avatar?: string | null;
   text: string;
   created_at: string;
 }
@@ -132,6 +135,7 @@ export interface TribesState {
   viewer: null | {
     id: number;
     username: string;
+    avatar?: string | null;
     tribe_id: number | null;
     wallet_balance: number;
     inventory: TribesInventory;
@@ -147,10 +151,19 @@ export interface TribesState {
   listings: TribesListing[];
   messages: TribesMessage[];
   work_orders: TribesWorkOrder[];
-  activity: {id: number; tribe_id: number; user_id: number; username: string; text: string; created_at: string}[];
+  activity: {
+    id: number;
+    tribe_id: number;
+    user_id: number | null;
+    username: string;
+    avatar?: string | null;
+    text: string;
+    created_at: string;
+  }[];
   battle: null | {standings: TribesStanding[]; attacks: TribesAttack[]};
 }
 export type TribesAction = (action: string, data?: TribesActionData) => Promise<boolean>;
+export type TribesEmblemUpload = (image: File) => Promise<boolean>;
 export interface TribesPanelProps {
   act: TribesAction;
   busy: boolean;
@@ -159,4 +172,5 @@ export interface TribesPanelProps {
   now: number;
   state: TribesState;
   tribe?: Tribe;
+  uploadEmblem?: TribesEmblemUpload;
 }

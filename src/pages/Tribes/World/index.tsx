@@ -118,7 +118,7 @@ const World = ({act, busy, canPlay, go, state, tribe}: TribesPanelProps) => {
               <span>Owner</span>
               {owner ? (
                 <S.RowMain style={{flex: 'none'}}>
-                  <Emblem color={owner.color} emblem={owner.emblem} size={22} />
+                  <Emblem color={owner.color} emblem={owner.emblem} image={owner.emblem_image} size={22} />
                   <strong>{owner.name}</strong>
                 </S.RowMain>
               ) : (
@@ -192,7 +192,7 @@ const World = ({act, busy, canPlay, go, state, tribe}: TribesPanelProps) => {
               <Eye size={14} /> Public intelligence
             </S.Eyebrow>
             <S.PlotHead style={{marginBottom: 6}}>
-              <Emblem color={owner.color} emblem={owner.emblem} size={36} />
+              <Emblem color={owner.color} emblem={owner.emblem} image={owner.emblem_image} size={36} />
               <h2>{owner.name}</h2>
             </S.PlotHead>
             <S.Muted>{owner.motto || owner.description}</S.Muted>

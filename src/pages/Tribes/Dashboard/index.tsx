@@ -107,7 +107,7 @@ const Dashboard = (props: TribesPanelProps) => {
       {tribe && (
         <S.Card $dark>
           <S.Briefing>
-            <Emblem color={tribe.color} emblem={tribe.emblem} size={52} />
+            <Emblem color={tribe.color} emblem={tribe.emblem} image={tribe.emblem_image} size={52} />
             <div>
               <S.Eyebrow $light style={{marginBottom: 2}}>
                 {tribe.name}
@@ -193,7 +193,7 @@ const Dashboard = (props: TribesPanelProps) => {
             {!powers.length && <S.Empty>No tribes joined this season.</S.Empty>}
             {powers.map(({attack, defense, land, team}) => (
               <S.Power $own={team.id === tribe?.id} key={team.id}>
-                <Emblem color={team.color} emblem={team.emblem} size={30} />
+                <Emblem color={team.color} emblem={team.emblem} image={team.emblem_image} size={30} />
                 <div>
                   <strong>{team.name}</strong>
                   <small>
@@ -222,7 +222,12 @@ const Dashboard = (props: TribesPanelProps) => {
               {threats.map((threat) => (
                 <S.Row key={threat.team.id}>
                   <S.RowMain>
-                    <Emblem color={threat.team.color} emblem={threat.team.emblem} size={26} />
+                    <Emblem
+                      color={threat.team.color}
+                      emblem={threat.team.emblem}
+                      image={threat.team.emblem_image}
+                      size={26}
+                    />
                     <strong>{threat.team.name}</strong>
                   </S.RowMain>
                   <S.Badge $tone="ember">{count(threat.damage)} potential damage</S.Badge>

@@ -4,7 +4,7 @@ import {ArrowDownToLine, ArrowLeftRight, ArrowRight, ArrowUpFromLine, Send} from
 import {TribesPanelProps} from 'types/tribes';
 
 import ItemIcon from '../art/ItemIcon';
-import {ActionForm, count, ItemField, itemKind, label, NumberField} from '../common';
+import {ActionForm, count, ItemField, itemKind, label, NumberField, tribeLabel} from '../common';
 
 import * as S from './Styles';
 
@@ -134,7 +134,7 @@ const Inventory = ({act, busy, canPlay, state, tribe}: TribesPanelProps) => {
                 <select name="recipient_tribe_id" required>
                   {rivals.map((team) => (
                     <option key={team.id} value={team.id}>
-                      {team.emblem} {team.name}
+                      {tribeLabel(team)}
                     </option>
                   ))}
                 </select>
@@ -222,7 +222,7 @@ const Inventory = ({act, busy, canPlay, state, tribe}: TribesPanelProps) => {
                 <select name="recipient_tribe_id" required>
                   {rivals.map((team) => (
                     <option key={team.id} value={team.id}>
-                      {team.emblem} {team.name}
+                      {tribeLabel(team)}
                     </option>
                   ))}
                 </select>

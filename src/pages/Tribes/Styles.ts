@@ -77,8 +77,16 @@ export const Avatar = styled.span<{$color?: string; $size?: number}>`
   font-weight: 700;
   height: ${({$size = 30}) => $size}px;
   justify-content: center;
+  overflow: hidden;
   text-transform: uppercase;
   width: ${({$size = 30}) => $size}px;
+
+  img {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
 `;
 
 export const Badge = styled.span<{$tone?: Tone}>`
@@ -510,6 +518,34 @@ export const Emblem = styled.span<{$size: number}>`
     position: relative;
     white-space: nowrap;
   }
+`;
+
+export const EmblemImage = styled.span<{$color: string; $size: number}>`
+  align-items: center;
+  display: inline-flex;
+  filter: drop-shadow(0 2px 3px rgba(13, 31, 26, 0.28));
+  flex-shrink: 0;
+  height: ${({$size}) => ($size * 54) / 48}px;
+  justify-content: center;
+  width: ${({$size}) => $size}px;
+
+  img {
+    background: ${palette.white};
+    border: ${({$size}) => Math.max(2, Math.round($size / 16))}px solid ${({$color}) => $color};
+    border-radius: 22%;
+    box-sizing: border-box;
+    display: block;
+    height: ${({$size}) => $size}px;
+    object-fit: cover;
+    width: ${({$size}) => $size}px;
+  }
+`;
+
+export const EmblemPicker = styled.div`
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 export const Empty = styled.div<{$dark?: boolean}>`
