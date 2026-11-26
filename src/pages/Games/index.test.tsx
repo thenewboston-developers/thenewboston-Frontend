@@ -66,3 +66,12 @@ it('preserves free board-game cards and keeps the reward fund distinct', () => {
   expect(boards.querySelector('a[href="/hex/home"]')).not.toBeNull();
   expect(container).toHaveTextContent('Board-game reward fund');
 });
+
+it('offers Tribes as weekly multiplayer with an actual TNB economy', () => {
+  const section = container.querySelector('[aria-labelledby="tribes-game-heading"]')!;
+  const card = section.querySelector('a[href="/tribes/home"]')!;
+  expect(card).toHaveTextContent('7-day seasons');
+  expect(card).toHaveTextContent('Uses your app wallet');
+  expect(card).not.toHaveTextContent('vs. Computer');
+  expect(card).not.toHaveTextContent('Free');
+});

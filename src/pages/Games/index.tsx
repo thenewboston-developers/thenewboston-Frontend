@@ -14,6 +14,7 @@ import plinkoThumbnail from 'assets/plinko-thumbnail.webp';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
 import rouletteThumbnail from 'assets/roulette-thumbnail.webp';
 import slotsThumbnail from 'assets/slots-thumbnail.webp';
+import tribesThumbnail from 'assets/tribes-thumbnail.svg';
 import videoPokerThumbnail from 'assets/video-poker-thumbnail.webp';
 import GameFund from 'components/GameFund';
 import {SFC} from 'types';
@@ -232,6 +233,51 @@ const Games: SFC = ({className}) => (
               </S.GameDetails>
             </S.GameCard>
           ))}
+        </S.GameGrid>
+      </section>
+      <section aria-labelledby="tribes-game-heading">
+        <S.SectionHeader>
+          <div>
+            <S.SectionTitle id="tribes-game-heading">Build something together</S.SectionTitle>
+            <S.SectionDescription>A persistent world. A new story every week.</S.SectionDescription>
+          </div>
+          <S.GameCount>Weekly multiplayer · TNB economy</S.GameCount>
+        </S.SectionHeader>
+        <S.GameGrid>
+          <S.GameCard
+            {...analyticsTarget('tribes')}
+            $accent="#426b43"
+            aria-label="Tribes — explore the world"
+            onClick={() => captureAnalyticsEvent('game_selected', {game: 'tribes', source: 'games_hub'})}
+            to="/tribes/home"
+          >
+            <S.Artwork>
+              <S.Cover
+                alt="A miniature world of forests, mountains, and neighboring tribes flying their banners"
+                height={800}
+                src={tribesThumbnail}
+                width={1200}
+              />
+              <S.FeaturedBadge>A WORLD BUILT TOGETHER</S.FeaturedBadge>
+            </S.Artwork>
+            <S.GameDetails>
+              <S.Category>Weekly multiplayer strategy</S.Category>
+              <S.GameTitle>Tribes</S.GameTitle>
+              <S.Description>
+                Gather your people. Build an economy. Choose your allies. Prepare for the final battle.
+              </S.Description>
+              <S.Tags>
+                <span>Teams of up to 8</span>
+                <span>7-day seasons</span>
+              </S.Tags>
+              <S.CardFooter>
+                <S.FreeLabel>
+                  TNB economy<S.FreeNote>Uses your app wallet</S.FreeNote>
+                </S.FreeLabel>
+                <S.PlayLabel>Explore world</S.PlayLabel>
+              </S.CardFooter>
+            </S.GameDetails>
+          </S.GameCard>
         </S.GameGrid>
       </section>
       <GameFund />

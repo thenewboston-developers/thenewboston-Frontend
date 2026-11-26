@@ -30,6 +30,7 @@ export const PATH_PROFILE = `/profile/:id/${WILDCARD}`;
 export const PATH_REVERSI = `/reversi/${WILDCARD}`;
 export const PATH_ROULETTE = `/roulette/${WILDCARD}`;
 export const PATH_SLOTS = `/slots/${WILDCARD}`;
+export const PATH_TRIBES = `/tribes/${WILDCARD}`;
 export const PATH_VIDEO_POKER = `/video-poker/${WILDCARD}`;
 export const PATH_WALLETS = `/wallets/${WILDCARD}`;
 

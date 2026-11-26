@@ -89,3 +89,13 @@ When a wager is refused because another game's hand is unfinished, Slots, Roulet
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Tribes
+
+Tribes is a weekly multiplayer strategy game at `/tribes/home`, linked from Games. Players recruit teams of up to eight, purchase adjacent land, queue offline production, trade resources and military batches, coordinate shared projects, and privately target a simultaneous final battle. The interface includes public world intelligence, private tribe and diplomatic messages, immutable activity history, and archived season reports.
+
+All prices use actual TNB from app wallets. Players can deposit into and withdraw from a shared treasury. Resources reset each season; wallet TNB persists. The in-game guide explains treasury settlement, escrow refunds, and the final scoring rules.
+
+The frontend uses `/api/tribes/state`, `/api/tribes/actions`, `/api/tribes/activity`, `/api/tribes/messages`, and `/api/tribes/seasons` from the matching backend release. Action receipts are saved before dispatch and reused after uncertain network failures or reloads to prevent duplicate charges. Deploy the backend migrations and Celery season scheduler before this frontend.
+
+Run `CI=true npm test -- --watchAll=false --runInBand --testPathPattern=Tribes` for game UI, payment retry, and private history tests. Standard typecheck, lint, formatting, and build commands also apply.

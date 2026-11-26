@@ -56,6 +56,8 @@ const routes = [
   '/checkers/home',
   '/checkers/matches/:id',
   '/hex/home',
+  '/tribes',
+  '/tribes/home',
   '/hex/matches/:id',
   '/battleship/home',
   '/battleship/matches/:id',
