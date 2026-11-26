@@ -1,5 +1,7 @@
 import {ReactNode} from 'react';
 
+import tnbLogo from 'assets/tnb-logo.svg';
+
 import {art, palette} from '../theme';
 
 // Extra shades used only by the icons
@@ -540,22 +542,7 @@ const ART: Record<string, ReactNode> = {
       {log(25.5, 20)}
     </>
   ),
-  tnb: (
-    <>
-      <circle cx="24" cy="25.8" fill={palette.goldDeep} r="17.5" />
-      <circle cx="24" cy="23" fill={palette.gold} r="17.5" />
-      <circle cx="24" cy="23" fill="none" r="13.6" stroke={palette.goldBright} strokeWidth="2" />
-      <path d="M16 15.2h16v4.4h-5.7V31.5h-4.6V19.6H16z" fill={palette.goldDeep} />
-      <path
-        d="M10.5 17.5A14.5 14.5 0 0121 9"
-        fill="none"
-        opacity="0.6"
-        stroke={palette.white}
-        strokeLinecap="round"
-        strokeWidth="2"
-      />
-    </>
-  ),
+  tnb: <image height="36" href={tnbLogo} width="36" x="6" y="6" />,
   treasury: (
     <>
       {ground(20)}

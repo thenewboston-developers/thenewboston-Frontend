@@ -14,7 +14,7 @@ import plinkoThumbnail from 'assets/plinko-thumbnail.webp';
 import reversiThumbnail from 'assets/reversi-thumbnail.webp';
 import rouletteThumbnail from 'assets/roulette-thumbnail.webp';
 import slotsThumbnail from 'assets/slots-thumbnail.webp';
-import tribesThumbnail from 'assets/tribes-thumbnail.svg';
+import tribesThumbnail from 'assets/tribes-thumbnail.webp';
 import videoPokerThumbnail from 'assets/video-poker-thumbnail.webp';
 import GameFund from 'components/GameFund';
 import {SFC} from 'types';
@@ -253,10 +253,10 @@ const Games: SFC = ({className}) => (
           >
             <S.Artwork>
               <S.Cover
-                alt="A miniature world of forests, mountains, and neighboring tribes flying their banners"
-                height={800}
+                alt="A fortified timber settlement with golden banners, pine forests, and sunlit alpine mountains"
+                height={600}
                 src={tribesThumbnail}
-                width={1200}
+                width={900}
               />
               <S.FeaturedBadge>A WORLD BUILT TOGETHER</S.FeaturedBadge>
             </S.Artwork>
