@@ -1180,6 +1180,10 @@ export const NavIndicator = styled.span`
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
+
+  @media (hover: none), (pointer: coarse) {
+    display: none;
+  }
 `;
 
 export const NavItem = styled.button<{$active: boolean; $plain?: boolean}>`
@@ -1224,6 +1228,18 @@ export const NavItem = styled.button<{$active: boolean; $plain?: boolean}>`
   &:focus-visible {
     box-shadow: ${shadows.focus};
     outline: none;
+  }
+
+  /* Keep the selected background in the button's own layer on touch screens. */
+  @media (hover: none), (pointer: coarse) {
+    background: ${({$active}) =>
+      $active ? `linear-gradient(180deg, #1f5446 0%, ${palette.forest} 100%)` : 'transparent'};
+    box-shadow: ${({$active}) =>
+      $active ? 'inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 6px 14px -6px rgba(13, 31, 26, 0.6)' : 'none'};
+
+    &:focus-visible {
+      box-shadow: ${shadows.focus};
+    }
   }
 `;
 
