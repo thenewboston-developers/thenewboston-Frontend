@@ -45,7 +45,7 @@ const World = ({act, busy, canPlay, go, state, tribe}: TribesPanelProps) => {
           <S.PanelTitle>
             <div>
               <S.Eyebrow $light>
-                <Globe size={14} /> Season {state.season.id}
+                <Globe size={14} /> Tournament {state.tournament.id}
               </S.Eyebrow>
               <h2>The world</h2>
             </div>
@@ -64,7 +64,7 @@ const World = ({act, busy, canPlay, go, state, tribe}: TribesPanelProps) => {
             <S.Empty $dark>
               <ItemIcon item="forest" size={48} />
               <strong>No land to show yet</strong>
-              The world is generated when recruitment ends. Every tribe starts with comparable surroundings.
+              The world is generated when the tournament starts. Every tribe starts with comparable surroundings.
             </S.Empty>
           </S.MapFrame>
         ) : (
@@ -163,7 +163,7 @@ const World = ({act, busy, canPlay, go, state, tribe}: TribesPanelProps) => {
                   </S.RowMain>
                 </S.Row>
                 <S.Muted style={{marginTop: 12}}>
-                  Paid from your shared treasury. Land belongs to your tribe until the season ends.
+                  Paid from your shared treasury. Land belongs to your tribe until the tournament ends.
                 </S.Muted>
                 <S.Button
                   $block

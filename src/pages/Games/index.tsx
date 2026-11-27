@@ -239,9 +239,9 @@ const Games: SFC = ({className}) => (
         <S.SectionHeader>
           <div>
             <S.SectionTitle id="tribes-game-heading">Build something together</S.SectionTitle>
-            <S.SectionDescription>A persistent world. A new story every week.</S.SectionDescription>
+            <S.SectionDescription>A shared world. A new story in every tournament.</S.SectionDescription>
           </div>
-          <S.GameCount>Weekly multiplayer · TNB economy</S.GameCount>
+          <S.GameCount>Multiplayer tournaments · TNB economy</S.GameCount>
         </S.SectionHeader>
         <S.GameGrid>
           <S.GameCard
@@ -249,7 +249,7 @@ const Games: SFC = ({className}) => (
             $accent="#426b43"
             aria-label="Tribes — explore the world"
             onClick={() => captureAnalyticsEvent('game_selected', {game: 'tribes', source: 'games_hub'})}
-            to="/tribes/home"
+            to="/tribes"
           >
             <S.Artwork>
               <S.Cover
@@ -261,14 +261,14 @@ const Games: SFC = ({className}) => (
               <S.FeaturedBadge>A WORLD BUILT TOGETHER</S.FeaturedBadge>
             </S.Artwork>
             <S.GameDetails>
-              <S.Category>Weekly multiplayer strategy</S.Category>
+              <S.Category>Team strategy tournaments</S.Category>
               <S.GameTitle>Tribes</S.GameTitle>
               <S.Description>
                 Gather your people. Build an economy. Choose your allies. Prepare for the final battle.
               </S.Description>
               <S.Tags>
                 <span>Teams of up to 8</span>
-                <span>7-day seasons</span>
+                <span>Scheduled tournaments</span>
               </S.Tags>
               <S.CardFooter>
                 <S.FreeLabel>

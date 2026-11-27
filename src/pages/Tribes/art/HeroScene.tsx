@@ -3,7 +3,7 @@ import styled, {css, keyframes} from 'styled-components';
 
 import {art, palette} from '../theme';
 
-export type HeroPhase = 'recruiting' | 'active' | 'final' | 'finished';
+export type HeroPhase = 'upcoming' | 'active' | 'final' | 'finished';
 
 interface Mood {
   cloud: string;
@@ -55,7 +55,7 @@ const SKY_STOPS = [0, 0.3, 0.48, 0.62, 0.74];
 
 const MOODS: Record<HeroPhase, Mood> = {
   // Dawn: the tribes gather
-  recruiting: {
+  upcoming: {
     cloud: '#f4b98a',
     cloudOpacity: 0.62,
     cloudStyle: 'streak',
@@ -97,7 +97,7 @@ const MOODS: Record<HeroPhase, Mood> = {
     window: '#ffd27a',
     windowGlow: 0.55,
   },
-  // Golden-hour day: the season is under way
+  // Golden-hour day: the tournament is under way
   active: {
     cloud: '#ffffff',
     cloudOpacity: 0.9,

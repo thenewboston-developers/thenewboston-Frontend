@@ -299,8 +299,8 @@ const Market = (props: TribesPanelProps) => {
         <S.Banner>
           <Tag size={18} />
           <div>
-            Goods expire at the end of the season. Unfilled buy orders return their TNB escrow. Completed purchases are
-            final; spent TNB is not reset or replenished.
+            Goods expire at the end of the tournament. Unfilled buy orders return their TNB escrow. Completed purchases
+            are final; spent TNB is not reset or replenished.
           </div>
         </S.Banner>
       </S.Stack>

@@ -58,7 +58,7 @@ const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
   const [loading, setLoading] = useState(false);
   const alert = useAlert();
   const controller = useRef<AbortController | null>(null);
-  const scope = `${state.season.id}:${state.viewer?.id}:${state.viewer?.tribe_id}`;
+  const scope = `${state.tournament.id}:${state.viewer?.id}:${state.viewer?.tribe_id}`;
   const activeScope = useRef(scope);
   activeScope.current = scope;
   const older = history?.scope === scope ? history : null;
@@ -85,7 +85,7 @@ const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
     setLoading(true);
     try {
       const page = await getTribesActivity(
-        state.season.id,
+        state.tournament.id,
         older?.before ?? entries[entries.length - 1].id,
         request.signal,
       );
@@ -123,7 +123,7 @@ const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
               )}
               <div>
                 <p>
-                  <strong>{entry.username || 'Season'}</strong> {reword(entry, state)}
+                  <strong>{entry.username || 'Tournament'}</strong> {reword(entry, state)}
                 </p>
                 <small>{date(entry.created_at)}</small>
               </div>

@@ -1543,7 +1543,7 @@ export const RowMain = styled.div`
   }
 `;
 
-export const SeasonBar = styled.div`
+export const TournamentBar = styled.div`
   ${stagger};
   align-items: center;
   background: ${palette.paper};
@@ -1554,36 +1554,6 @@ export const SeasonBar = styled.div`
   flex-wrap: wrap;
   gap: 12px 20px;
   padding: 12px 16px;
-`;
-
-export const SeasonPicker = styled.label`
-  align-items: center;
-  color: ${palette.muted};
-  display: flex;
-  font-size: 12px;
-  font-weight: 650;
-  gap: 8px;
-
-  select {
-    ${controlStyle};
-    appearance: none;
-    background-image: ${CHEVRON};
-    background-position: right 10px center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    font-size: 13px;
-    min-height: 36px;
-    padding: 6px 32px 6px 10px;
-    width: auto;
-  }
-
-  @media (max-width: ${breakpoints.mini}) {
-    flex: 1 1 100%;
-
-    select {
-      width: 100%;
-    }
-  }
 `;
 
 export const Segment = styled.label`

@@ -11,9 +11,9 @@ jest.mock('api/tribes', () => ({getTribesMessages: jest.fn()}));
 let container: HTMLDivElement;
 let root: Root;
 const tribe = {id: 1, name: 'Iron Wolves', members: []} as unknown as Tribe;
-const stateFor = (userId = 7, seasonId = 1, tribeId = 1) =>
+const stateFor = (userId = 7, tournamentId = 1, tribeId = 1) =>
   ({
-    season: {id: seasonId, status: 'active', ends_at: '2026-12-01T12:00:00Z'},
+    tournament: {id: tournamentId, status: 'active', ends_at: '2026-12-01T12:00:00Z'},
     viewer: {id: userId, tribe_id: tribeId},
     tribes: [{...tribe, id: tribeId}],
     messages: Array.from({length: 200}, (_, index) => ({
@@ -70,7 +70,7 @@ it('loads and deduplicates earlier private correspondence in chronological order
   expect(container.querySelector('article')).toHaveTextContent('Earlier agreement');
 });
 
-it.each(['account', 'season', 'tribe'])('discards private correspondence when the %s changes', async (change) => {
+it.each(['account', 'tournament', 'tribe'])('discards private correspondence when the %s changes', async (change) => {
   let resolve!: (value: Awaited<ReturnType<typeof getTribesMessages>>) => void;
   jest.mocked(getTribesMessages).mockImplementation(
     () =>
@@ -81,7 +81,7 @@ it.each(['account', 'season', 'tribe'])('discards private correspondence when th
   const old = stateFor();
   await render(old);
   await load();
-  const fresh = stateFor(change === 'account' ? 8 : 7, change === 'season' ? 2 : 1, change === 'tribe' ? 2 : 1);
+  const fresh = stateFor(change === 'account' ? 8 : 7, change === 'tournament' ? 2 : 1, change === 'tribe' ? 2 : 1);
   fresh.messages = [];
   await render(fresh);
   await act(async () =>

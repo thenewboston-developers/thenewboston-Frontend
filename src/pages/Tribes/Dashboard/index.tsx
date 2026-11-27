@@ -204,7 +204,7 @@ const Dashboard = (props: TribesPanelProps) => {
             </S.Eyebrow>
             <h2>Powers of the world</h2>
             <S.Muted>Armies are public. What they are aimed at is not.</S.Muted>
-            {!powers.length && <S.Empty>No tribes joined this season.</S.Empty>}
+            {!powers.length && <S.Empty>No tribes joined this tournament.</S.Empty>}
             {powers.map(({attack, defense, land, team}) => (
               <S.Power $own={team.id === tribe?.id} key={team.id}>
                 <Emblem color={team.color} emblem={team.emblem} image={team.emblem_image} size={30} />

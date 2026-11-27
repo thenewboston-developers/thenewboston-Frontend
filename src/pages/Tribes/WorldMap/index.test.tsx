@@ -24,7 +24,7 @@ const state = {
     {buildings: [], id: 3, price: 60, terrain: 'iron_deposit', tribe_id: null, x: 0, y: 1},
     {buildings: [], id: 4, price: 50, terrain: 'coal_deposit', tribe_id: null, x: 2, y: 0},
   ],
-  season: {id: 1},
+  tournament: {id: 1},
   tribes: [tribe],
   units: [{controller_id: 7, id: 10, item: 'catapult', plot_id: 1, quantity: 2, tribe_id: 1, valid_target_ids: []}],
 } as unknown as TribesState;
