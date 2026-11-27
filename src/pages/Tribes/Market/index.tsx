@@ -24,7 +24,7 @@ const FILTERS = [
   ['all', 'All'],
   ['sell', 'For sale'],
   ['buy', 'Buy orders'],
-  ['mine', 'Mine'],
+  ['mine', 'My listings'],
 ] as const;
 
 const Listing = ({listing, ...props}: TribesPanelProps & {listing: TribesListing}) => {
@@ -113,7 +113,7 @@ const Listing = ({listing, ...props}: TribesPanelProps & {listing: TribesListing
             <AccountField
               label={listing.kind === 'sell' ? 'Pay from' : 'Supply from'}
               mode={listing.kind === 'sell' ? 'tnb' : 'goods'}
-              personalFirst
+              initial="personal"
             />
           </S.Pair>
           {military && <PlotField plots={state.plots.filter((plot) => plot.tribe_id === state.viewer?.tribe_id)} />}
@@ -176,7 +176,7 @@ const Market = (props: TribesPanelProps) => {
             <S.Field>
               Resource
               <S.IconControl>
-                <ItemIcon item={item === 'all' ? 'warehouse' : item} size={24} />
+                <ItemIcon item={item === 'all' ? 'crates' : item} size={24} />
                 <select onChange={(event) => setItem(event.target.value)} value={item}>
                   <option value="all">All resources</option>
                   {(state.catalog.market_items ?? state.catalog.trade_items).map((entry) => (
@@ -271,7 +271,7 @@ const Market = (props: TribesPanelProps) => {
             <AccountField
               label={kind === 'sell' ? 'Sell from' : 'Pay from'}
               mode={kind === 'sell' ? 'goods' : 'tnb'}
-              personalFirst
+              initial="personal"
             />
             <S.Total>
               <span>{kind === 'sell' ? 'You receive when filled' : 'Held in escrow now'}</span>

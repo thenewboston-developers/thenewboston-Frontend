@@ -64,7 +64,7 @@ export const Projects = ({act, busy, canPlay, state}: TribesPanelProps) => (
           >
             <S.InlineFields>
               <NumberField label="Quantity" max={Math.max(1, order.quantity - order.contributed)} name="quantity" />
-              <AccountField label="Contribute from" mode="goods" name="source" personalFirst />
+              <AccountField label="Contribute from" mode="goods" name="source" initial="personal" />
             </S.InlineFields>
           </ActionForm>
         )}

@@ -119,8 +119,8 @@ export const WorkerQueue = ({act, busy, canPlay, now, state}: TribesPanelProps) 
               value={working ? now - start : job.completed}
             />
             <S.Hint>
-              {count(job.completed)} / {count(job.quantity)} completed ·{' '}
-              {job.destination === 'tribe' ? 'Warehouse' : 'My pack'}
+              {count(job.completed)} / {count(job.quantity)} completed · goes to{' '}
+              {job.destination === 'tribe' ? 'the warehouse' : 'your pack'}
             </S.Hint>
           </S.Job>
         );

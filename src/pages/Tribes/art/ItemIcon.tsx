@@ -243,6 +243,14 @@ const ART: Record<string, ReactNode> = {
       <path d="M18.5 38l5-1-1.5 2.6z" fill={COAL_MID} />
     </>
   ),
+  crates: (
+    <>
+      {ground(21)}
+      {crate(4.5, 23.5, 17.5)}
+      {crate(24.5, 22, 19)}
+      {crate(13.5, 6.5, 17)}
+    </>
+  ),
   farm: (
     <>
       {ground(22)}
@@ -422,6 +430,38 @@ const ART: Record<string, ReactNode> = {
       <path d="M7.5 35.5l2.5-1 1 2.5-2.5 1z" fill={art.ore} />
     </>
   ),
+  pack: (
+    <>
+      {ground(16)}
+      <path d="M18.5 12.5V9.5c0-6.5 11-6.5 11 0v3" fill="none" stroke={art.hideDark} strokeWidth="2.8" />
+      <rect fill={art.hideDark} height="13" rx="3" width="6" x="5" y="23.5" />
+      <rect fill={art.hideDark} height="13" rx="3" width="6" x="37" y="23.5" />
+      <rect fill={art.hide} height="31" rx="9.5" width="29" x="9.5" y="10.5" />
+      <path
+        d="M29 10.5c5.2 0 9.5 4.3 9.5 9.5v12c0 5.2-4.3 9.5-9.5 9.5h-3.5c4.5-9 4.5-22 0-31z"
+        fill={art.hideDark}
+        opacity="0.32"
+      />
+      <rect fill={art.hideLight} height="9.5" rx="3" width="19" x="14.5" y="29.5" />
+      <path d="M17 32.8H31" stroke={art.hide} strokeDasharray="2 1.6" strokeLinecap="round" strokeWidth="1.1" />
+      <path
+        d="M9.5 21.5v-1.5c0-5.2 4.3-9.5 9.5-9.5h10c5.2 0 9.5 4.3 9.5 9.5v1.5c0 3-2.4 5.5-5.5 5.5h-18c-3.1 0-5.5-2.5-5.5-5.5z"
+        fill={art.woodDark}
+      />
+      <path
+        d="M13 21c1 2 2.8 3 5.2 3h11.6c2.4 0 4.2-1 5.2-3"
+        fill="none"
+        opacity="0.55"
+        stroke={art.hideLight}
+        strokeDasharray="2 1.8"
+        strokeLinecap="round"
+        strokeWidth="1.1"
+      />
+      <rect fill={art.hideDark} height="12.5" rx="1.2" width="3.6" x="22.2" y="18.5" />
+      <rect fill={palette.goldBright} height="6.4" rx="1.6" width="8" x="20" y="24.3" />
+      <rect fill={palette.goldDeep} height="2.4" rx="0.8" width="3.6" x="22.2" y="26.3" />
+    </>
+  ),
   pickaxe: (
     <>
       {ground(13, 20)}
@@ -585,9 +625,18 @@ const ART: Record<string, ReactNode> = {
   warehouse: (
     <>
       {ground(21)}
-      {crate(4.5, 23.5, 17.5)}
-      {crate(24.5, 22, 19)}
-      {crate(13.5, 6.5, 17)}
+      <rect fill={art.woodLight} height="19.5" rx="1" width="35" x="6.5" y="21.5" />
+      <path d="M12 21.5v19.5M36 21.5v19.5" opacity="0.6" stroke={art.wood} strokeWidth="1.1" />
+      <rect fill={HOLLOW} height="15" rx="1" width="18" x="15" y="26" />
+      <path d="M15 26L9.5 28.2V41H15Z" fill={art.wood} />
+      <path d="M33 26L38.5 28.2V41H33Z" fill={art.woodDark} />
+      {crate(16.8, 32.8, 8.2)}
+      {crate(25.4, 34.2, 6.8)}
+      <rect fill={art.woodDark} height="2.2" rx="1" width="21" x="13.5" y="24.5" />
+      <path d="M2.5 23.5L24 6L45.5 23.5Z" fill={ROOF} />
+      <path d="M24 6L45.5 23.5H34.5Z" fill={ROOF_DARK} />
+      <circle cx="24" cy="16.8" fill={art.cloth} r="3.3" />
+      <path d="M24 13.5v6.6M20.7 16.8h6.6" stroke={ROOF_DARK} strokeWidth="1" />
     </>
   ),
   wheat: (

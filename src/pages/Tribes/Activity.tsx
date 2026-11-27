@@ -6,8 +6,49 @@ import {TribesPanelProps, TribesState} from 'types/tribes';
 import {isCancellationError} from 'utils/errors';
 
 import PlayerAvatar from './components/PlayerAvatar';
-import {date} from './common';
+import {date, memberName, tribeName} from './common';
 import * as S from './Styles';
+
+type Entry = TribesState['activity'][number];
+
+const USING: Record<string, string> = {personal: 'their pack and wallet', tribe: 'the warehouse and treasury'};
+
+// Entries recorded before the pack and warehouse had settled names carry the internal account codes ("personal",
+// "tribe"). They are reworded as they are shown, so the record reads the same from its first line to its last.
+export const reword = (entry: Entry, state: TribesState) => {
+  const {text} = entry;
+  const transfer = text.match(/^Transferred (\d+) (\S+) to (.+) \((personal|tribe), player (\d+)\)\.$/);
+  if (transfer) {
+    const [, quantity, item, recipient, account, player] = transfer;
+    const goods = `${quantity} ${item.replace(/_/g, ' ')}`;
+    if (account === 'tribe')
+      return recipient === tribeName(state, entry.tribe_id)
+        ? `Stored ${goods} in the warehouse.`
+        : `Sent ${goods} to ${recipient}.`;
+    return Number(player) === entry.user_id
+      ? `Took ${goods} into their pack.`
+      : `Gave ${goods} to ${memberName(state, Number(player))}.`;
+  }
+  const treasury = text.match(/^treasury (deposit|withdraw): (\d+) TNB\.$/);
+  if (treasury)
+    return treasury[1] === 'deposit'
+      ? `Deposited ${treasury[2]} TNB from their wallet into the treasury.`
+      : `Withdrew ${treasury[2]} TNB from the treasury into their wallet.`;
+  return text
+    .replace(
+      /^(Listed (?:sell|buy) order #\d+: .+ TNB each) from (personal|tribe)\.$/,
+      (_, start, account) => `${start}, using ${USING[account]}.`,
+    )
+    .replace(/^(Cancelled order #\d+: .+); escrow returned to (?:personal|tribe)\.$/, '$1; escrow returned.')
+    .replace(
+      /^(Filled order #\d+ .+ TNB), (personal|tribe)\)\.$/,
+      (_, start, account) => `${start}, using ${USING[account]}).`,
+    )
+    .replace(
+      /^(Order #\d+ filled by .+ TNB) \((personal|tribe)\)\.$/,
+      (_, start, account) => `${start} (using ${account === 'tribe' ? USING.tribe : 'the owner’s pack and wallet'}).`,
+    );
+};
 
 const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
   const [error, setError] = useState('');
@@ -83,7 +124,7 @@ const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
               )}
               <div>
                 <p>
-                  <strong>{entry.username || 'Season'}</strong> {entry.text}
+                  <strong>{entry.username || 'Season'}</strong> {reword(entry, state)}
                 </p>
                 <small>{date(entry.created_at)}</small>
               </div>

@@ -391,8 +391,114 @@ it('opens a section from its address and moves the address when another section 
   expect(button('Marketplace')).toHaveAttribute('aria-current', 'page');
   await click('Inventory');
   expect(pathname).toBe('/tribes/inventory');
-  expect(container).toHaveTextContent('Goods & supplies');
+  expect(container).toHaveTextContent('Only you can use what is in here');
   expect(container).not.toHaveTextContent('Every tribe has something to offer.');
+});
+
+const good = (description: string) => container.querySelector(`[aria-label="${description}"]`) as HTMLElement;
+const pick = async (description: string) => act(async () => good(description).click());
+const radio = async (name: string, text: string) =>
+  act(async () =>
+    Array.from(container.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`))
+      .find((entry) => entry.closest('label')!.textContent === text)!
+      .click(),
+  );
+
+it('shows the pack and the warehouse as two separate stores and stores a picked good in the warehouse', async () => {
+  await render('/tribes/inventory');
+  const pack = container.querySelector('[data-store="pack"]')!;
+  const warehouse = container.querySelector('[data-store="warehouse"]')!;
+  expect(pack).toHaveTextContent('My pack');
+  expect(pack).toHaveTextContent('12 goods');
+  expect(warehouse).toHaveTextContent('Warehouse');
+  expect(warehouse).toHaveTextContent('Shared by everyone in Iron Wolves');
+  expect(warehouse).toHaveTextContent('30 goods');
+  expect(pack.contains(good('Timber: 12 in your pack'))).toBe(true);
+  expect(pack.contains(good('Lumber: none in your pack'))).toBe(true);
+  expect(warehouse.contains(good('Timber: 30 in the warehouse'))).toBe(true);
+  expect(container).not.toHaveTextContent('mine');
+  await pick('Timber: 12 in your pack');
+  expect(good('Timber: 12 in your pack')).toHaveAttribute('aria-pressed', 'true');
+  expect(pack).toHaveTextContent('12 in your pack · 30 in the warehouse');
+  await submit('Store 12 in the warehouse');
+  expect(action).toHaveBeenCalledWith('transfer_items', {
+    destination: 'tribe',
+    item: 'timber',
+    quantity: 12,
+    source: 'personal',
+  });
+});
+
+it('takes a chosen amount out of the warehouse and sends goods to another tribe or a teammate', async () => {
+  await render('/tribes/inventory');
+  await pick('Timber: 30 in the warehouse');
+  await click('Half');
+  await submit('Take 15 into my pack');
+  expect(action).toHaveBeenLastCalledWith('transfer_items', {
+    destination: 'personal',
+    item: 'timber',
+    quantity: 15,
+    source: 'tribe',
+  });
+  await radio('move-to-warehouse', 'Another tribe');
+  await submit('Send 15 to Golden Owls');
+  expect(action).toHaveBeenLastCalledWith('transfer_items', {
+    destination: 'tribe',
+    item: 'timber',
+    quantity: 15,
+    recipient_tribe_id: 2,
+    source: 'tribe',
+  });
+  await pick('Timber: 12 in your pack');
+  await radio('move-to-pack', 'A teammate');
+  await submit('Give 12 to alex');
+  expect(action).toHaveBeenLastCalledWith('transfer_items', {
+    destination: 'personal',
+    item: 'timber',
+    quantity: 12,
+    recipient_user_id: 8,
+    source: 'personal',
+  });
+});
+
+it('puts a picked good back and keeps goods in view but out of reach once the season has closed', async () => {
+  await render('/tribes/inventory');
+  await pick('Timber: 12 in your pack');
+  await act(async () => good('Put the timber back').click());
+  expect(good('Timber: 12 in your pack')).toHaveAttribute('aria-pressed', 'false');
+  act(() => root.unmount());
+  root = createRoot(container);
+  game.now = new Date(state.season.ends_at).getTime();
+  await render('/tribes/inventory');
+  expect(good('Timber: 12 in your pack').tagName).toBe('DIV');
+  expect(good('Timber: 30 in the warehouse').tagName).toBe('DIV');
+  expect(container).toHaveTextContent('Moving goods is closed for this season.');
+});
+
+it('keeps the warehouse closed to a player without a tribe', async () => {
+  state.viewer = {...state.viewer!, inventory: {}, tribe_id: null};
+  await render('/tribes/inventory');
+  expect(container).toHaveTextContent('The doors are closed');
+  expect(container.querySelector('[data-store="warehouse"] [data-slot]')).toBeNull();
+  expect(good('Timber: none in your pack')).not.toBeNull();
+});
+
+it('names the pack, warehouse, wallet and treasury the same way in every form, with the player’s own first', async () => {
+  const names = (label: string) =>
+    Array.from(container.querySelector(`[role="radiogroup"][aria-label="${label}"]`)!.querySelectorAll('label')).map(
+      (entry) => entry.textContent,
+    );
+  await render('/tribes/production');
+  expect(names('Deposit output into')).toEqual(['My pack', 'Warehouse']);
+  expect(names('Use materials from')).toEqual(['My pack', 'Warehouse']);
+  await click('Marketplace');
+  expect(names('Pay from')).toEqual(['My wallet', 'Treasury']);
+  expect(names('Sell from')).toEqual(['My pack', 'Warehouse']);
+  await click('Overview');
+  expect(container).toHaveTextContent('My packYours alone12 goods');
+  expect(container).toHaveTextContent('WarehouseShared by the tribe30 goods');
+  expect(container).toHaveTextContent('My walletYours alone500 TNB');
+  expect(container).toHaveTextContent('TreasuryShared by the tribe200 TNB');
 });
 
 it('falls back to the overview for an address that is not a section', async () => {

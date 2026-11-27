@@ -4,7 +4,7 @@ import {createRoot, Root} from 'react-dom/client';
 import {getTribesActivity} from 'api/tribes';
 import {TribesState} from 'types/tribes';
 
-import Activity from './Activity';
+import Activity, {reword} from './Activity';
 
 jest.mock('api/tribes', () => ({getTribesActivity: jest.fn()}));
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
@@ -35,6 +35,47 @@ beforeEach(() => {
 afterEach(() => {
   act(() => root.unmount());
   container.remove();
+});
+
+it('rewords records that still carry internal account codes and leaves every other record alone', () => {
+  const state = {
+    ...stateFor(),
+    tribes: [
+      {
+        id: 1,
+        members: [
+          {id: 7, username: 'maya'},
+          {id: 8, username: 'alex'},
+        ],
+        name: 'Iron Wolves',
+      },
+      {id: 2, members: [], name: 'Golden Owls'},
+    ],
+  } as unknown as TribesState;
+  const shown = (text: string) => reword({...state.activity[0], text}, state);
+  expect(shown('Transferred 30 iron_ore to Iron Wolves (tribe, player 7).')).toBe(
+    'Stored 30 iron ore in the warehouse.',
+  );
+  expect(shown('Transferred 12 timber to Iron Wolves (personal, player 7).')).toBe('Took 12 timber into their pack.');
+  expect(shown('Transferred 5 timber to Iron Wolves (personal, player 8).')).toBe('Gave 5 timber to alex.');
+  expect(shown('Transferred 9 timber to Golden Owls (tribe, player 7).')).toBe('Sent 9 timber to Golden Owls.');
+  expect(shown('treasury deposit: 600 TNB.')).toBe('Deposited 600 TNB from their wallet into the treasury.');
+  expect(shown('treasury withdraw: 40 TNB.')).toBe('Withdrew 40 TNB from the treasury into their wallet.');
+  expect(shown('Listed sell order #5: 10 timber at 3 TNB each from personal.')).toBe(
+    'Listed sell order #5: 10 timber at 3 TNB each, using their pack and wallet.',
+  );
+  expect(shown('Cancelled order #5: 3 timber at 3 TNB each; escrow returned to tribe.')).toBe(
+    'Cancelled order #5: 3 timber at 3 TNB each; escrow returned.',
+  );
+  expect(shown('Filled order #5 with Golden Owls: 4 timber at 3 TNB each (12 TNB, tribe).')).toBe(
+    'Filled order #5 with Golden Owls: 4 timber at 3 TNB each (12 TNB, using the warehouse and treasury).',
+  );
+  expect(shown('Order #5 filled by Golden Owls: 4 timber for 12 TNB (personal).')).toBe(
+    'Order #5 filled by Golden Owls: 4 timber for 12 TNB (using the owner’s pack and wallet).',
+  );
+  const current = 'Stored 12 iron ore from their pack in the warehouse.';
+  expect(shown(current)).toBe(current);
+  expect(shown('Purchased land (3, 4) for 40 TNB.')).toBe('Purchased land (3, 4) for 40 TNB.');
 });
 
 it('loads older permanent records with the oldest cursor and avoids duplicating overlapping events', async () => {

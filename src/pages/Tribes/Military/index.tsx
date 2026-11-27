@@ -182,7 +182,7 @@ const Unit = ({
                 <NumberField label="Units to sell" max={unit.quantity} name="quantity" />
                 <NumberField label="TNB per unit" name="price" />
               </S.InlineFields>
-              <AccountField label="Receive sale proceeds into" mode="tnb" personalFirst />
+              <AccountField label="Receive sale proceeds into" mode="tnb" initial="personal" />
             </ActionForm>
           </S.Disclosure>
           <S.Disclosure>
