@@ -141,7 +141,7 @@ const Inventory = ({act, busy, canPlay, state, tribe}: TribesPanelProps) => {
     setSelected((value) => (value?.place === stack.place && value.item === stack.item ? null : stack));
   };
 
-  // A good that has run out, or a season that has closed, cannot stay picked
+  // A good that has run out, or a tournament that has closed, cannot stay picked
   useEffect(() => {
     if (selected && (!selectedHeld || !canPlay)) setSelected(null);
   }, [canPlay, selected, selectedHeld]);
@@ -180,9 +180,9 @@ const Inventory = ({act, busy, canPlay, state, tribe}: TribesPanelProps) => {
   const renderHint = (place: S.Place) => {
     const empty = !sum(stock[place]);
     if (!viewer) return 'Sign in to carry goods of your own.';
-    if (!tribe) return 'Join a tribe during recruitment to carry goods next season.';
-    if (state.season.status === 'finished') return 'This season is over. These are the goods as it ended.';
-    if (!canPlay) return 'Moving goods is closed for this season.';
+    if (!tribe) return 'The organizer must assign you to a tribe before you can carry goods in this tournament.';
+    if (state.tournament.status === 'finished') return 'This tournament is over. These are the goods as it ended.';
+    if (!canPlay) return 'Moving goods is closed for this tournament.';
     if (place === 'pack') {
       if (empty) return 'Your pack is empty. Send your worker’s output here, or take goods out of the warehouse.';
       return (
@@ -248,7 +248,7 @@ const Inventory = ({act, busy, canPlay, state, tribe}: TribesPanelProps) => {
       <S.SectionLabel>
         <h2>Goods</h2>
         <p>
-          What you gather and craft this season. Your pack is yours alone, and the warehouse is shared by the whole
+          What you gather and craft this tournament. Your pack is yours alone, and the warehouse is shared by the whole
           tribe.
         </p>
       </S.SectionLabel>
@@ -336,7 +336,7 @@ const Inventory = ({act, busy, canPlay, state, tribe}: TribesPanelProps) => {
               <S.Locked>
                 <Lock size={22} />
                 <strong>The doors are closed</strong>
-                Every warehouse is private to its tribe. Join one during recruitment to share a warehouse next season.
+                Every warehouse is private to its tribe. Your organizer assigns your tribe and its shared warehouse.
               </S.Locked>
             )}
           </S.TimberBody>
@@ -345,7 +345,7 @@ const Inventory = ({act, busy, canPlay, state, tribe}: TribesPanelProps) => {
       <S.SectionLabel style={{marginTop: 10}}>
         <h2>TNB</h2>
         <p>
-          Real thenewboston coins. Your wallet stays with you between seasons, and the treasury pays for the tribe’s
+          Real thenewboston coins. Your wallet stays with you between tournaments, and the treasury pays for the tribe’s
           land and trades.
         </p>
       </S.SectionLabel>
@@ -357,7 +357,7 @@ const Inventory = ({act, busy, canPlay, state, tribe}: TribesPanelProps) => {
             </S.StoreIcon>
             <S.StoreName>
               <h2 id="tribes-wallet">My wallet</h2>
-              <p>Yours alone, in every season</p>
+              <p>Yours alone, in every tournament</p>
             </S.StoreName>
             <S.Tally>
               <strong>
@@ -425,7 +425,7 @@ const Inventory = ({act, busy, canPlay, state, tribe}: TribesPanelProps) => {
               </ActionForm>
               <S.Hint>
                 All members can spend or withdraw shared TNB. Unspent treasury is split equally among the locked roster
-                at season end.
+                at tournament end.
               </S.Hint>
             </S.Paper>
             <S.Disclosure>

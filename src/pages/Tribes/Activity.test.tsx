@@ -10,9 +10,9 @@ jest.mock('api/tribes', () => ({getTribesActivity: jest.fn()}));
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
 let container: HTMLDivElement;
 let root: Root;
-const stateFor = (userId = 7, seasonId = 1, tribeId = 1) =>
+const stateFor = (userId = 7, tournamentId = 1, tribeId = 1) =>
   ({
-    season: {id: seasonId},
+    tournament: {id: tournamentId},
     viewer: {id: userId, tribe_id: tribeId},
     activity: Array.from({length: 200}, (_, index) => ({
       id: 400 - index,
@@ -100,23 +100,26 @@ it('loads older permanent records with the oldest cursor and avoids duplicating 
   expect(container.querySelectorAll('article')).toHaveLength(401);
 });
 
-it.each(['account', 'season', 'tribe'])('discards a private history response after the %s changes', async (change) => {
-  let resolve!: (value: Awaited<ReturnType<typeof getTribesActivity>>) => void;
-  jest.mocked(getTribesActivity).mockImplementation(
-    () =>
-      new Promise((done) => {
-        resolve = done;
-      }),
-  );
-  const old = stateFor();
-  await render(old);
-  await load();
-  const fresh = stateFor(change === 'account' ? 8 : 7, change === 'season' ? 2 : 1, change === 'tribe' ? 2 : 1);
-  fresh.activity = [];
-  await render(fresh);
-  await act(async () =>
-    resolve({results: [{...old.activity[0], id: 199, text: 'Private old treasury transfer'}], next_before: null}),
-  );
-  expect(container).not.toHaveTextContent('Private old treasury transfer');
-  expect(container).not.toHaveTextContent('Action 400');
-});
+it.each(['account', 'tournament', 'tribe'])(
+  'discards a private history response after the %s changes',
+  async (change) => {
+    let resolve!: (value: Awaited<ReturnType<typeof getTribesActivity>>) => void;
+    jest.mocked(getTribesActivity).mockImplementation(
+      () =>
+        new Promise((done) => {
+          resolve = done;
+        }),
+    );
+    const old = stateFor();
+    await render(old);
+    await load();
+    const fresh = stateFor(change === 'account' ? 8 : 7, change === 'tournament' ? 2 : 1, change === 'tribe' ? 2 : 1);
+    fresh.activity = [];
+    await render(fresh);
+    await act(async () =>
+      resolve({results: [{...old.activity[0], id: 199, text: 'Private old treasury transfer'}], next_before: null}),
+    );
+    expect(container).not.toHaveTextContent('Private old treasury transfer');
+    expect(container).not.toHaveTextContent('Action 400');
+  },
+);

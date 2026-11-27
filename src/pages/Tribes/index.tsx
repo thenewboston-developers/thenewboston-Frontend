@@ -7,7 +7,6 @@ import {
   BookOpen,
   Check,
   CircleCheck,
-  Flag,
   Hammer,
   Info,
   LayoutDashboard,
@@ -27,10 +26,9 @@ import {
   X,
 } from 'lucide-react';
 
-import {getTribesSeasons} from 'api/tribes';
 import {PATH_AUTHENTICATION} from 'constants/paths';
 import {getSelf} from 'selectors/state';
-import {TribesAction, TribesEmblemUpload, TribesPanelProps, TribesSeason} from 'types/tribes';
+import {TribesAction, TribesEmblemUpload, TribesPanelProps} from 'types/tribes';
 import {analyticsArea, analyticsTarget} from 'utils/analyticsAttributes';
 import {getAuthenticationPath} from 'utils/authentication';
 
@@ -50,15 +48,16 @@ import Market from './Market';
 import Messages from './Messages';
 import Military from './Military';
 import {NoticeContext} from './notices';
-import Recruitment from './Recruitment';
+import Rosters from './Rosters';
 import * as S from './Styles';
+import Tournaments from './Tournaments';
 import {useTribes} from './useTribes';
 import Workers from './Workers';
 import World from './World';
 
 const SECTIONS: {icon: LucideIcon; id: string; text: string}[] = [
   {icon: LayoutDashboard, id: 'home', text: 'Overview'},
-  {icon: Users, id: 'recruitment', text: 'Rosters'},
+  {icon: Users, id: 'rosters', text: 'Rosters'},
   {icon: MapIcon, id: 'world', text: 'World'},
   {icon: Hammer, id: 'production', text: 'Production'},
   {icon: Package, id: 'inventory', text: 'Inventory'},
@@ -72,109 +71,89 @@ const SECTIONS: {icon: LucideIcon; id: string; text: string}[] = [
 
 // Shown for a moment after the server confirms an action, so every move gets an answer
 const CONFIRMATIONS: Record<string, string> = {
-  accept_application: 'Application accepted. Welcome them aboard.',
-  accept_invite: 'You joined the tribe.',
-  apply: 'Application sent.',
   cancel_job: 'Assignment cancelled. Unused materials came back.',
   cancel_listing: 'Listing cancelled and escrow returned.',
   cancel_work_order: 'Project cancelled and supplies released.',
   contribute_work_order: 'Supplies contributed to the project.',
   create_listing: 'Your listing is on the market.',
-  create_tribe: 'Your banner is raised.',
   create_work_order: 'Project created for the tribe.',
   deploy: 'Deployment saved.',
   fill_listing: 'Trade complete.',
-  invite: 'Invitation sent.',
-  leave: 'You left the tribe.',
   purchase_land: 'The land is yours.',
   queue: 'Your worker has new orders.',
-  remove_member: 'Member removed from the roster.',
   transfer_items: 'Goods moved.',
   transfer_tnb: 'TNB sent.',
   transfer_unit: 'Units handed over.',
   treasury_deposit: 'Deposited into the treasury.',
   treasury_withdraw: 'Withdrawn to your wallet.',
-  update_tribe: 'Tribe identity saved.',
 };
 
 const ALERT_TIME = 8000;
 const DAY = 86400000;
 // A move that takes longer than this to be answered says so, so a slow connection never looks like a dead button
 const SLOW = 900;
-// The landscape only changes with the season's phase, not with the clock
+// The landscape only changes with the tournament's phase, not with the clock
 const Scene = memo(HeroScene);
 
-const Tribes = () => {
+const TournamentGame = ({tournamentId, section}: {tournamentId: number; section?: string}) => {
   const [alerts, setAlerts] = useState<{id: number; text: string}[]>([]);
   const [dismissed, setDismissed] = useState('');
   const [edges, setEdges] = useState({left: false, right: false});
   const [indicator, setIndicator] = useState<{left: number; width: number} | null>(null);
-  const [loadingHistory, setLoadingHistory] = useState(false);
-  const [moreHistory, setMoreHistory] = useState(true);
-  const [olderSeasons, setOlderSeasons] = useState<TribesSeason[]>([]);
-  const [seasonId, setSeasonId] = useState<number | undefined>();
   const [slow, setSlow] = useState(false);
   const [toast, setToast] = useState<{id: number; text: string} | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const self = useSelector(getSelf);
-  const game = useTribes(self.id, seasonId);
+  const game = useTribes(self.id, tournamentId);
   const alertTimers = useRef<number[]>([]);
-  const historyRequest = useRef<AbortController | null>(null);
   const navigation = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const sequence = useRef(0);
-  const {act, busy, error, loading, now, pending, refresh, retry, retrying, seasons, state, unconfirmed, uploadEmblem} =
-    game;
+  const {act, busy, error, loading, now, pending, refresh, retry, retrying, state, unconfirmed, uploadEmblem} = game;
   const working = busy && !unconfirmed;
 
-  const segment = location.pathname.split('/')[2];
-  const tab = SECTIONS.some((section) => section.id === segment) ? segment : 'home';
-  const allSeasons = Array.from(
-    new Map([...seasons, ...olderSeasons].map((season) => [season.id, season])).values(),
-  ).sort((a, b) => b.id - a.id);
+  const tab = SECTIONS.some((entry) => entry.id === section) ? section! : 'home';
   const tribe = state?.tribes.find((entry) => entry.id === state.viewer?.tribe_id);
-  const status = state?.season.status;
-  const startsAt = state ? new Date(state.season.starts_at).getTime() : 0;
-  const endsAt = state ? new Date(state.season.ends_at).getTime() : 0;
+  const status = state?.tournament.status;
+  const startsAt = state ? new Date(state.tournament.starts_at).getTime() : 0;
+  const endsAt = state ? new Date(state.tournament.ends_at).getTime() : 0;
   const active = status === 'active' && now < endsAt;
-  // The lobby is the overview while tribes form, and the battle report is the overview once a season is over
+  // The lobby is the overview while tribes form, and the battle report is the overview once a tournament is over
   let selected = tab;
-  if (tab === 'home' && status === 'recruiting') selected = 'recruitment';
+  if (tab === 'home' && status === 'upcoming') selected = 'rosters';
   if (tab === 'home' && status === 'finished') selected = 'history';
   let current = tab;
-  if (status === 'recruiting' && tab === 'recruitment') current = 'home';
+  if (status === 'upcoming' && tab === 'rosters') current = 'home';
   if (status === 'finished' && tab === 'history') current = 'home';
   const sections = SECTIONS.filter(
-    (section) =>
-      !(status === 'recruiting' && section.id === 'recruitment') &&
-      !(status === 'finished' && section.id === 'history'),
+    (entry) => !(status === 'upcoming' && entry.id === 'rosters') && !(status === 'finished' && entry.id === 'history'),
   );
 
-  let phase: HeroPhase = 'recruiting';
+  let phase: HeroPhase = 'upcoming';
   if (status === 'active') phase = endsAt - now < DAY ? 'final' : 'active';
   if (status === 'finished') phase = 'finished';
   let headline = 'The world is in motion.';
-  let statusLine = 'Season in progress';
+  let statusLine = 'Tournament in progress';
   let timerLabel = 'Final battle in';
   if (tribe) headline = tribe.motto || 'Build, trade and prepare. The final battle decides everything.';
   if (status === 'active') {
-    statusLine = `Day ${Math.min(7, Math.max(1, Math.ceil((now - startsAt) / DAY)))} of 7`;
+    statusLine = `Day ${Math.min(Math.ceil((endsAt - startsAt) / DAY), Math.max(1, Math.floor((now - startsAt) / DAY) + 1))} of ${Math.ceil((endsAt - startsAt) / DAY)}`;
     if (!active) statusLine = 'The great war is being fought';
     else if (phase === 'final') statusLine = 'The great war is hours away';
   }
-  if (status === 'recruiting') {
-    headline = 'Gather your people. Build your world. One week of strategy, one battle for the history books.';
-    statusLine = 'Recruitment is open';
-    timerLabel = 'Season starts in';
+  if (status === 'upcoming') {
+    headline = 'Build your world together. Plan your strategy, then face one decisive battle.';
+    statusLine = 'Upcoming tournament';
+    timerLabel = 'Tournament starts in';
   }
   if (status === 'finished') {
     headline = 'The battle is complete. Every decision and every strike is now part of the record.';
-    statusLine = 'Season complete';
+    statusLine = 'Tournament complete';
   }
   if (!state) {
-    headline = 'Gather your people. Build your world. One week of strategy, one battle for the history books.';
-    statusLine = 'Weekly multiplayer strategy';
+    headline = 'Build your world together. Plan your strategy, then face one decisive battle.';
+    statusLine = 'Multiplayer strategy tournaments';
   }
 
   // A short-lived message about something that went wrong, raised from anywhere in the game
@@ -214,7 +193,10 @@ const Tribes = () => {
     setEdges((value) => (value.left === left && value.right === right ? value : {left, right}));
   }, []);
 
-  const handleGo = useCallback((section: string) => navigate(`/tribes/${section}`), [navigate]);
+  const handleGo = useCallback(
+    (next: string) => navigate(`/tribes/tournaments/${tournamentId}/${next}`),
+    [navigate, tournamentId],
+  );
 
   const handleRetry = async () => {
     if (await retry()) setToast({id: Date.now(), text: 'Your last action went through.'});
@@ -228,49 +210,6 @@ const Tribes = () => {
     },
     [uploadEmblem],
   );
-
-  const handleOlderSeasons = async () => {
-    if (historyRequest.current || !allSeasons.length) return;
-    const request = new AbortController();
-    historyRequest.current = request;
-    setLoadingHistory(true);
-    try {
-      const earlier = await getTribesSeasons(request.signal, allSeasons[allSeasons.length - 1].id);
-      if (!request.signal.aborted) {
-        setOlderSeasons((value) => [...value, ...earlier]);
-        setMoreHistory(earlier.length === 100);
-      }
-    } catch {
-      if (!request.signal.aborted) handleAlert('Older seasons could not be loaded. Please try again.');
-    } finally {
-      if (historyRequest.current === request) {
-        historyRequest.current = null;
-        setLoadingHistory(false);
-      }
-    }
-  };
-
-  // The banner form lives in the lobby, which may not be on screen yet when the hero button is pressed
-  const handleRaise = () => {
-    handleGo('home');
-    window.setTimeout(() => {
-      const form = document.getElementById('tribes-raise-banner');
-      form?.scrollIntoView?.({behavior: 'smooth', block: 'start'});
-      form?.querySelector<HTMLInputElement>('input[name="name"]')?.focus({preventScroll: true});
-    }, 80);
-  };
-
-  useEffect(() => {
-    historyRequest.current?.abort();
-    historyRequest.current = null;
-    setOlderSeasons([]);
-    setMoreHistory(true);
-    setLoadingHistory(false);
-    return () => {
-      historyRequest.current?.abort();
-      historyRequest.current = null;
-    };
-  }, [self.id]);
 
   useEffect(() => {
     if (!toast) return undefined;
@@ -335,10 +274,10 @@ const Tribes = () => {
       tribe,
       uploadEmblem: handleUploadEmblem,
     };
-    const waiting = state.season.status === 'recruiting';
+    const waiting = state.tournament.status === 'upcoming';
     switch (selected) {
-      case 'recruitment':
-        return <Recruitment {...props} />;
+      case 'rosters':
+        return <Rosters {...props} />;
       case 'world':
         return waiting ? <Locked {...props} section="world" /> : <World {...props} />;
       case 'production':
@@ -376,11 +315,11 @@ const Tribes = () => {
           <S.HeroScrim />
           <S.HeroBody>
             <S.HeroTop>
-              <S.HeroLink to="/games">
-                <ArrowLeft size={16} /> All games
+              <S.HeroLink to="/tribes">
+                <ArrowLeft size={16} /> All tournaments
               </S.HeroLink>
               <S.Actions>
-                <S.HeroBadge>Weekly multiplayer strategy</S.HeroBadge>
+                <S.HeroBadge>Multiplayer strategy tournaments</S.HeroBadge>
                 <S.HeroLink to="/wallets/home">
                   <ItemIcon item="tnb" size={18} /> TNB economy
                 </S.HeroLink>
@@ -389,7 +328,7 @@ const Tribes = () => {
             <S.HeroCopy>
               <S.HeroStatus>
                 {state && status !== 'finished' && <S.Live />}
-                {state ? `Season ${state.season.id}` : 'A world built together'}
+                {state ? state.tournament.title : 'Tribes tournament'}
                 <span aria-hidden>·</span>
                 {statusLine}
               </S.HeroStatus>
@@ -401,14 +340,9 @@ const Tribes = () => {
                     $size="large"
                     $variant="accent"
                     as={Link}
-                    to={getAuthenticationPath(PATH_AUTHENTICATION.SIGN_IN, '/tribes/home')}
+                    to={getAuthenticationPath(PATH_AUTHENTICATION.SIGN_IN, location.pathname)}
                   >
                     <LogIn size={18} /> Sign in to play
-                  </S.Button>
-                )}
-                {!!self.id && state && !tribe && status === 'recruiting' && (
-                  <S.Button $size="large" $variant="accent" onClick={handleRaise}>
-                    <Flag size={18} /> Raise your banner
                   </S.Button>
                 )}
                 {tribe && (
@@ -432,9 +366,9 @@ const Tribes = () => {
                 <S.HeroTimer>
                   <span>{status === 'finished' ? 'Final battle fought' : timerLabel}</span>
                   {status === 'finished' ? (
-                    <S.HeroDate>{date(state.season.ends_at)}</S.HeroDate>
+                    <S.HeroDate>{date(state.tournament.ends_at)}</S.HeroDate>
                   ) : (
-                    <Countdown now={now} target={status === 'recruiting' ? startsAt : endsAt} />
+                    <Countdown now={now} target={status === 'upcoming' ? startsAt : endsAt} />
                   )}
                 </S.HeroTimer>
                 <S.HeroStats>
@@ -449,7 +383,7 @@ const Tribes = () => {
                             state.tribes.reduce((total, team) => total + team.members.length, 0),
                             'player',
                           )
-                        : 'be the first'}
+                        : 'Rosters being prepared'}
                     </small>
                   </S.HeroStat>
                   {!!self.id && (
@@ -476,12 +410,12 @@ const Tribes = () => {
           </S.HeroBody>
         </S.Hero>
         {state && (
-          <S.SeasonBar>
-            <S.Phases aria-label="Season timeline">
+          <S.TournamentBar>
+            <S.Phases aria-label="Tournament timeline">
               {[
-                ['Recruitment', `Until ${day(state.season.starts_at)}`],
-                ['Build and trade', 'Seven days'],
-                ['The Great War', day(state.season.ends_at)],
+                ['Team setup', `Until ${day(state.tournament.starts_at)}`],
+                ['Build and trade', `${day(state.tournament.starts_at)} — ${day(state.tournament.ends_at)}`],
+                ['The Great War', day(state.tournament.ends_at)],
                 ['History', 'Results revealed'],
               ].map(([title, note], index) => (
                 <S.Phase $state={phaseState(index)} key={title}>
@@ -493,27 +427,7 @@ const Tribes = () => {
                 </S.Phase>
               ))}
             </S.Phases>
-            <S.SeasonPicker>
-              <span className="sr-only">Choose a season</span>
-              <select
-                aria-label="Choose a season"
-                onChange={(event) => setSeasonId(event.target.value ? Number(event.target.value) : undefined)}
-                value={seasonId ?? ''}
-              >
-                <option value="">Current season</option>
-                {allSeasons.map((season) => (
-                  <option key={season.id} value={season.id}>
-                    Season {season.id} · {season.status}
-                  </option>
-                ))}
-              </select>
-            </S.SeasonPicker>
-            {seasons.length >= 100 && moreHistory && (
-              <S.Button $secondary $size="small" disabled={loadingHistory} onClick={handleOlderSeasons}>
-                {loadingHistory ? 'Loading seasons…' : 'Load older seasons'}
-              </S.Button>
-            )}
-          </S.SeasonBar>
+          </S.TournamentBar>
         )}
         <S.Nav aria-label="Tribes sections">
           <S.NavScroller $fadeLeft={edges.left} $fadeRight={edges.right} onScroll={handleMeasure} ref={navigation}>
@@ -535,27 +449,25 @@ const Tribes = () => {
             ))}
           </S.NavScroller>
         </S.Nav>
-        {state?.season.status === 'finished' && (
+        {state?.tournament.status === 'finished' && (
           <S.Banner $tone="sky">
             <Info size={18} />
             <div>
-              You are viewing an archived season. Goods and territory are historical; your TNB wallet balance persists.
+              You are viewing an archived tournament. Goods and territory are historical; your TNB wallet balance
+              persists.
             </div>
           </S.Banner>
         )}
-        {state?.season.status === 'active' && !tribe && (
+        {state?.tournament.status === 'active' && !tribe && (
           <S.Banner>
             <Info size={18} />
-            <div>
-              Rosters are locked for this season. You can inspect the world and battle results, then join a tribe in the
-              next recruitment period.
-            </div>
+            <div>You are viewing this tournament as a spectator. The organizer enrolls players and assigns tribes.</div>
           </S.Banner>
         )}
-        {state?.season.status === 'active' && !active && (
+        {state?.tournament.status === 'active' && !active && (
           <S.Banner $tone="ember">
             <Swords size={18} />
-            <div>The final battle cutoff has passed. Results will appear once the season has been resolved.</div>
+            <div>The final battle cutoff has passed. Results will appear once the tournament has been resolved.</div>
           </S.Banner>
         )}
         {loading && !state && tab !== 'guide' && (
@@ -567,14 +479,14 @@ const Tribes = () => {
           </S.Loading>
         )}
         <NoticeContext.Provider value={handleAlert}>
-          <S.Panel key={`${selected}:${state?.season.id ?? 0}`} ref={panel}>
+          <S.Panel key={`${self.id}:${selected}:${state?.tournament.id ?? 0}`} ref={panel}>
             {renderPanel()}
           </S.Panel>
         </NoticeContext.Provider>
         {state && (
           <S.Meta>
             <span>
-              Season {state.season.id} · {date(state.season.starts_at)} — {date(state.season.ends_at)}
+              {state.tournament.title} · {date(state.tournament.starts_at)} — {date(state.tournament.ends_at)}
             </span>
             <span>One world. Real people. Lasting stories.</span>
           </S.Meta>
@@ -637,6 +549,17 @@ const Tribes = () => {
         )}
       </S.Notices>
     </S.Container>
+  );
+};
+
+const Tribes = () => {
+  const location = useLocation();
+  const match = /^\/tribes\/tournaments\/([1-9]\d*)(?:\/([^/]+))?\/?$/.exec(location.pathname);
+  const tournamentId = match ? Number(match[1]) : null;
+  return tournamentId && Number.isSafeInteger(tournamentId) ? (
+    <TournamentGame key={tournamentId} section={match?.[2]} tournamentId={tournamentId} />
+  ) : (
+    <Tournaments />
   );
 };
 

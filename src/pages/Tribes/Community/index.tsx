@@ -87,9 +87,9 @@ export const Projects = ({act, busy, canPlay, state}: TribesPanelProps) => (
 const Community = (props: TribesPanelProps) => {
   const {act, busy, canPlay, state, tribe, uploadEmblem} = props;
   const land = state.plots.filter((plot) => plot.tribe_id === tribe?.id).length;
-  // The founder can change the emblem until the season is over, long after the rest of the identity is locked
+  // The founder can change the emblem until the tournament is over, long after the rest of the identity is locked
   const canChangeEmblem =
-    !!tribe && !!uploadEmblem && tribe.founder_id === state.viewer?.id && state.season.status !== 'finished';
+    !!tribe && !!uploadEmblem && tribe.founder_id === state.viewer?.id && state.tournament.status !== 'finished';
 
   const handlePick = ({file, preview}: PickedEmblem) => {
     URL.revokeObjectURL(preview);
@@ -109,7 +109,7 @@ const Community = (props: TribesPanelProps) => {
             />
             <div>
               <S.Eyebrow $light>Your tribe</S.Eyebrow>
-              <h2>{tribe?.name ?? 'Find a tribe to get started'}</h2>
+              <h2>{tribe?.name ?? 'Awaiting a tribe assignment'}</h2>
               {tribe?.motto && <em>{tribe.motto}</em>}
             </div>
             {canChangeEmblem && (
@@ -150,7 +150,7 @@ const Community = (props: TribesPanelProps) => {
                   <Player avatar={member.avatar} name={member.username} />
                   <S.Badge $tone={member.id === tribe.founder_id ? 'gold' : 'neutral'}>
                     {member.id === tribe.founder_id && <Crown size={11} />}
-                    {member.id === tribe.founder_id ? 'Founder' : 'Member'}
+                    {member.id === tribe.founder_id ? 'Captain' : 'Member'}
                   </S.Badge>
                 </S.Row>
               ))}

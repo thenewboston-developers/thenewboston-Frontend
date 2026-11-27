@@ -2,7 +2,6 @@ import {act} from 'react';
 import {createRoot, Root} from 'react-dom/client';
 import {MemoryRouter, useLocation} from 'react-router-dom';
 
-import {getTribesSeasons} from 'api/tribes';
 import {TribesState} from 'types/tribes';
 
 import Tribes from './index';
@@ -11,7 +10,6 @@ import {useTribes} from './useTribes';
 jest.mock('api/tribes', () => ({
   getTribesActivity: jest.fn(),
   getTribesMessages: jest.fn(),
-  getTribesSeasons: jest.fn(),
 }));
 let mockUserId = 7;
 jest.mock('react-redux', () => ({useSelector: () => ({id: mockUserId})}));
@@ -23,7 +21,6 @@ jest.mock('./useTribes', () => ({useTribes: jest.fn()}));
 const now = new Date('2026-11-26T12:00:00Z').getTime();
 const makeState = (): TribesState => ({
   activity: [],
-  applications: [],
   battle: null,
   catalog: {
     building_capacity: 3,
@@ -44,7 +41,6 @@ const makeState = (): TribesState => ({
     unit_capacity: 100,
     units: {catapult: {damage: 80, range: 2}},
   },
-  invitations: [],
   jobs: [],
   listings: [
     {account: 'personal', id: 40, item: 'timber', kind: 'sell', price: 2, quantity: 100, tribe_id: null, user_id: null},
@@ -54,7 +50,16 @@ const makeState = (): TribesState => ({
     {id: 1, x: 0, y: 0, terrain: 'forest', tribe_id: 1, price: 40, buildings: ['workshop']},
     {id: 2, x: 1, y: 0, terrain: 'forest', tribe_id: 2, price: 40, buildings: []},
   ],
-  season: {id: 1, status: 'active', starts_at: '2026-11-25T12:00:00Z', ends_at: '2026-12-02T12:00:00Z'},
+  tournament: {
+    id: 1,
+    title: 'Autumn Cup',
+    max_players: 16,
+    player_count: 3,
+    is_participant: true,
+    status: 'active',
+    starts_at: '2026-11-25T12:00:00Z',
+    ends_at: '2026-12-02T12:00:00Z',
+  },
   server_time: '2026-11-26T12:00:00Z',
   tribes: [
     {
@@ -111,6 +116,7 @@ const makeState = (): TribesState => ({
   viewer: {
     id: 7,
     username: 'maya',
+    is_participant: true,
     tribe_id: 1,
     wallet_balance: 500,
     inventory: {timber: 12},
@@ -132,7 +138,7 @@ const LocationProbe = () => {
   pathname = useLocation().pathname;
   return null;
 };
-const render = async (path = '/tribes/home') =>
+const render = async (path = '/tribes/tournaments/1/home') =>
   act(async () =>
     root.render(
       <MemoryRouter future={{v7_relativeSplatPath: true, v7_startTransition: true}} initialEntries={[path]}>
@@ -146,12 +152,12 @@ const type = async (input: HTMLInputElement, value: string) =>
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, value);
     input.dispatchEvent(new Event('input', {bubbles: true}));
   });
-const startRecruitment = () => {
-  state.season = {
-    ...state.season,
+const startUpcoming = () => {
+  state.tournament = {
+    ...state.tournament,
     ends_at: '2026-12-04T12:00:00Z',
     starts_at: '2026-11-27T12:00:00Z',
-    status: 'recruiting',
+    status: 'upcoming',
   };
   state.listings = [];
   state.plots = [];
@@ -178,7 +184,6 @@ beforeEach(() => {
     refresh: jest.fn(),
     retry: jest.fn().mockResolvedValue(true),
     retrying: false,
-    seasons: [state.season],
     state,
     unconfirmed: false,
     uploadEmblem: jest.fn().mockResolvedValue(true),
@@ -216,7 +221,7 @@ const choose = async (scope: Element, file: File) => {
 };
 const emblemFile = () => new File(['picture'], 'otters.png', {type: 'image/png'});
 
-it('uses real wallet and treasury balances and submits a deposit without a seasonal currency grant', async () => {
+it('uses real wallet and treasury balances and submits a deposit without a tournamental currency grant', async () => {
   await render();
   await click('Inventory');
   expect(container).toHaveTextContent('500 TNB');
@@ -257,8 +262,8 @@ it('shows rival military targets as classified in public intelligence', async ()
   expect(container).toHaveTextContent('Target classified');
 });
 
-it('stops economic mutations at the cutoff even before the server marks the season finished', async () => {
-  game.now = new Date(state.season.ends_at).getTime();
+it('stops economic mutations at the cutoff even before the server marks the tournament finished', async () => {
+  game.now = new Date(state.tournament.ends_at).getTime();
   await render();
   await click('Inventory');
   expect(button('Deposit TNB')).toBeDisabled();
@@ -272,7 +277,7 @@ const field = (form: Element, name: string) => form.querySelector(`[name="${name
 
 it('keeps uncertain transactions retryable and prevents a new economic action', async () => {
   game.busy = true;
-  game.pending = {action: 'treasury_deposit', amount: 25, season_id: 1, request_id: 'pending-receipt'};
+  game.pending = {action: 'treasury_deposit', amount: 25, tournament_id: 1, request_id: 'pending-receipt'};
   game.unconfirmed = true;
   await render();
   await click('Inventory');
@@ -284,8 +289,8 @@ it('keeps uncertain transactions retryable and prevents a new economic action', 
 
 it('says nothing while a move is on its way and never puts a message into the page itself', async () => {
   game.busy = true;
-  game.pending = {action: 'transfer_items', item: 'timber', season_id: 1, request_id: 'in-flight'};
-  await render('/tribes/inventory');
+  game.pending = {action: 'transfer_items', item: 'timber', tournament_id: 1, request_id: 'in-flight'};
+  await render('/tribes/tournaments/1/inventory');
   expect(container.querySelector('[role="alert"]')).toBeNull();
   expect(container).not.toHaveTextContent('has not been confirmed');
   act(() => root.unmount());
@@ -293,7 +298,7 @@ it('says nothing while a move is on its way and never puts a message into the pa
   game.busy = false;
   game.pending = null;
   game.error = 'Not enough iron ore in your pack.';
-  await render('/tribes/inventory');
+  await render('/tribes/tournaments/1/inventory');
   const alert = container.querySelector('[role="alert"]')!;
   expect(alert).toHaveTextContent('Not enough iron ore in your pack.');
   // Messages live in the floating stack, outside the flow of the page, so they cannot push it down
@@ -327,7 +332,7 @@ it('starts a purchase with an empty quantity that can be typed, cleared and type
 });
 
 it('leaves every amount for the player to enter', async () => {
-  await render('/tribes/inventory');
+  await render('/tribes/tournaments/1/inventory');
   const deposit = button('Deposit TNB').closest('form')!;
   expect(field(deposit, 'amount').value).toBe('');
   await submit('Deposit TNB');
@@ -381,7 +386,7 @@ it('supports buying military batches with a required destination plot', async ()
 });
 
 it('reveals finished standings and personal contributions without enabling stale actions', async () => {
-  state.season.status = 'finished';
+  state.tournament.status = 'finished';
   state.battle = {
     standings: [
       {
@@ -427,26 +432,6 @@ it('prevents teammates from filling their own shared treasury listing', async ()
   expect(container).toHaveTextContent('Your tribe owns this listing');
 });
 
-it('loads older seasons and ignores a response after the account changes', async () => {
-  game.seasons = Array.from({length: 100}, (_, index) => ({...state.season, id: 200 - index}));
-  let resolve!: (value: typeof game.seasons) => void;
-  jest.mocked(getTribesSeasons).mockImplementation(
-    () =>
-      new Promise((done) => {
-        resolve = done;
-      }),
-  );
-  await render();
-  await click('Load older seasons');
-  expect(getTribesSeasons).toHaveBeenCalledWith(expect.any(AbortSignal), 101);
-  mockUserId = 8;
-  state = {...state, viewer: {...state.viewer!, id: 8}};
-  game.state = state;
-  await render();
-  await act(async () => resolve([{...state.season, id: 100}]));
-  expect(container.querySelector('option[value="100"]')).toBeNull();
-});
-
 it('tracks military work orders automatically without manual goods contribution', async () => {
   state.work_orders = [
     {
@@ -471,11 +456,11 @@ it('tracks military work orders automatically without manual goods contribution'
 });
 
 it('opens a section from its address and moves the address when another section is chosen', async () => {
-  await render('/tribes/market');
+  await render('/tribes/tournaments/1/market');
   expect(container).toHaveTextContent('Every tribe has something to offer.');
   expect(button('Marketplace')).toHaveAttribute('aria-current', 'page');
   await click('Inventory');
-  expect(pathname).toBe('/tribes/inventory');
+  expect(pathname).toBe('/tribes/tournaments/1/inventory');
   expect(container).toHaveTextContent('Only you can use what is in here');
   expect(container).not.toHaveTextContent('Every tribe has something to offer.');
 });
@@ -490,7 +475,7 @@ const radio = async (name: string, text: string) =>
   );
 
 it('shows the pack and the warehouse as two separate stores and stores a picked good in the warehouse', async () => {
-  await render('/tribes/inventory');
+  await render('/tribes/tournaments/1/inventory');
   const pack = container.querySelector('[data-store="pack"]')!;
   const warehouse = container.querySelector('[data-store="warehouse"]')!;
   expect(pack).toHaveTextContent('My pack');
@@ -515,7 +500,7 @@ it('shows the pack and the warehouse as two separate stores and stores a picked 
 });
 
 it('takes a chosen amount out of the warehouse and sends goods to another tribe or a teammate', async () => {
-  await render('/tribes/inventory');
+  await render('/tribes/tournaments/1/inventory');
   await pick('Timber: 30 in the warehouse');
   await click('Half');
   await submit('Take 15 into my pack');
@@ -546,23 +531,23 @@ it('takes a chosen amount out of the warehouse and sends goods to another tribe 
   });
 });
 
-it('puts a picked good back and keeps goods in view but out of reach once the season has closed', async () => {
-  await render('/tribes/inventory');
+it('puts a picked good back and keeps goods in view but out of reach once the tournament has closed', async () => {
+  await render('/tribes/tournaments/1/inventory');
   await pick('Timber: 12 in your pack');
   await act(async () => good('Put the timber back').click());
   expect(good('Timber: 12 in your pack')).toHaveAttribute('aria-pressed', 'false');
   act(() => root.unmount());
   root = createRoot(container);
-  game.now = new Date(state.season.ends_at).getTime();
-  await render('/tribes/inventory');
+  game.now = new Date(state.tournament.ends_at).getTime();
+  await render('/tribes/tournaments/1/inventory');
   expect(good('Timber: 12 in your pack').tagName).toBe('DIV');
   expect(good('Timber: 30 in the warehouse').tagName).toBe('DIV');
-  expect(container).toHaveTextContent('Moving goods is closed for this season.');
+  expect(container).toHaveTextContent('Moving goods is closed for this tournament.');
 });
 
 it('keeps the warehouse closed to a player without a tribe', async () => {
   state.viewer = {...state.viewer!, inventory: {}, tribe_id: null};
-  await render('/tribes/inventory');
+  await render('/tribes/tournaments/1/inventory');
   expect(container).toHaveTextContent('The doors are closed');
   expect(container.querySelector('[data-store="warehouse"] [data-slot]')).toBeNull();
   expect(good('Timber: none in your pack')).not.toBeNull();
@@ -573,7 +558,7 @@ it('names the pack, warehouse, wallet and treasury the same way in every form, w
     Array.from(container.querySelector(`[role="radiogroup"][aria-label="${label}"]`)!.querySelectorAll('label')).map(
       (entry) => entry.textContent,
     );
-  await render('/tribes/production');
+  await render('/tribes/tournaments/1/production');
   expect(names('Deposit output into')).toEqual(['My pack', 'Warehouse']);
   expect(names('Use materials from')).toEqual(['My pack', 'Warehouse']);
   await click('Marketplace');
@@ -587,7 +572,7 @@ it('names the pack, warehouse, wallet and treasury the same way in every form, w
 });
 
 it('falls back to the overview for an address that is not a section', async () => {
-  await render('/tribes/nowhere');
+  await render('/tribes/tournaments/1/nowhere');
   expect(button('Overview')).toHaveAttribute('aria-current', 'page');
   expect(container).toHaveTextContent('Make your next hour count.');
 });
@@ -604,7 +589,7 @@ it('confirms a successful action and stays quiet when the action is rejected', a
     field(button('Deposit TNB').closest('form')!, 'amount').value = '25';
   };
   action.mockResolvedValue(true);
-  await render('/tribes/inventory');
+  await render('/tribes/tournaments/1/inventory');
   enter();
   await submit('Deposit TNB');
   await settle();
@@ -613,7 +598,7 @@ it('confirms a successful action and stays quiet when the action is rejected', a
   act(() => root.unmount());
   root = createRoot(container);
   action.mockResolvedValue(false);
-  await render('/tribes/inventory');
+  await render('/tribes/tournaments/1/inventory');
   enter();
   await submit('Deposit TNB');
   await settle();
@@ -621,11 +606,11 @@ it('confirms a successful action and stays quiet when the action is rejected', a
   expect(container.querySelector('[role="status"]')).toBeNull();
 });
 
-it('shows the lobby as the overview during recruitment and explains sections that open with the season', async () => {
-  startRecruitment();
+it('shows the lobby as the overview before kickoff and explains sections that open with the tournament', async () => {
+  startUpcoming();
   await render();
-  expect(container).toHaveTextContent('Find your people.');
-  expect(container).toHaveTextContent('Season starts in');
+  expect(container).toHaveTextContent('The tribes of this tournament');
+  expect(container).toHaveTextContent('Tournament starts in');
   expect(Array.from(container.querySelectorAll('button')).some((entry) => entry.textContent === 'Rosters')).toBe(false);
   await click('World');
   expect(container).toHaveTextContent('A new world is being drawn');
@@ -636,80 +621,29 @@ it('shows the lobby as the overview during recruitment and explains sections tha
   );
 });
 
-it('creates a tribe with the name and color chosen in the banner preview', async () => {
-  startRecruitment();
-  state.viewer = {...state.viewer!, tribe_id: null};
-  state.tribes = [state.tribes[1]];
+it('shows organizer enrollment and assignment without self-service recruitment actions', async () => {
+  startUpcoming();
+  state.viewer = {...state.viewer!, tribe_id: null, is_participant: true};
   await render();
-  const form = button('Create tribe').closest('form')!;
-  await type(form.querySelector('[name="name"]') as HTMLInputElement, 'River Otters');
-  await act(async () => (form.querySelector('[aria-label="Use the color #2f7fb8"]') as HTMLButtonElement).click());
-  expect(form).toHaveTextContent('River Otters');
-  expect(form).toHaveTextContent('A square picture, exactly 512 by 512 pixels.');
-  await submit('Create tribe');
-  expect(action).toHaveBeenCalledWith('create_tribe', {
-    color: '#2f7fb8',
-    description: '',
-    motto: '',
-    name: 'River Otters',
-  });
-  expect(game.uploadEmblem).not.toHaveBeenCalled();
+  expect(container).toHaveTextContent('You are enrolled. Your organizer will assign your tribe');
+  expect(container).toHaveTextContent('The organizer enrolls players and assigns tribes');
+  expect(container.querySelector('form')).toBeNull();
+  expect(container).not.toHaveTextContent('Create tribe');
+  expect(container).not.toHaveTextContent('Apply to join');
+  expect(action).not.toHaveBeenCalled();
 });
 
-it('uploads the chosen picture as the emblem once the tribe is created', async () => {
+it('uses tournament dates instead of assuming a seven-day duration', async () => {
+  state.tournament.ends_at = '2026-11-28T12:00:00Z';
+  await render();
+  expect(container).toHaveTextContent('Day 2 of 3');
+  expect(container).not.toHaveTextContent('of 7');
+  expect(container).toHaveTextContent('Autumn Cup');
+});
+
+it('lets only the founder change the emblem from the tribe page, also after the tournament started', async () => {
   stubPictures(512);
-  action.mockResolvedValue(true);
-  startRecruitment();
-  state.viewer = {...state.viewer!, tribe_id: null};
-  state.tribes = [state.tribes[1]];
-  await render();
-  const form = button('Create tribe').closest('form')!;
-  await type(form.querySelector('[name="name"]') as HTMLInputElement, 'River Otters');
-  const file = emblemFile();
-  await choose(form, file);
-  expect(form.querySelector('img')).toHaveAttribute('src', 'blob:preview');
-  expect(form).toHaveTextContent('otters.png becomes your emblem when you create the tribe.');
-  expect(game.uploadEmblem).not.toHaveBeenCalled();
-  await submit('Create tribe');
-  expect(action).toHaveBeenCalledWith('create_tribe', expect.objectContaining({name: 'River Otters'}));
-  expect(game.uploadEmblem).toHaveBeenCalledWith(file);
-  expect(container).toHaveTextContent('Your emblem is flying.');
-});
-
-it('keeps the emblem back when the tribe itself could not be saved', async () => {
-  stubPictures(512);
-  action.mockResolvedValue(false);
-  startRecruitment();
-  await render();
-  const form = button('Save tribe').closest('form')!;
-  await choose(form, emblemFile());
-  await submit('Save tribe');
-  expect(action).toHaveBeenCalledWith('update_tribe', expect.objectContaining({name: 'Iron Wolves'}));
-  expect(game.uploadEmblem).not.toHaveBeenCalled();
-  expect(form).toHaveTextContent('otters.png becomes your emblem when you save.');
-  await click('Undo');
-  expect(form).toHaveTextContent('A square picture, exactly 512 by 512 pixels.');
-});
-
-it('refuses an emblem that is not 512 pixels square', async () => {
-  stubPictures(640, 480);
-  startRecruitment();
-  await render();
-  const form = button('Save tribe').closest('form')!;
-  await choose(form, emblemFile());
-  // The reason floats with the other messages instead of opening up room inside the form
-  expect(form.querySelector('[role="alert"]')).toBeNull();
-  expect(notices().querySelector('[role="alert"]')).toHaveTextContent(
-    'The emblem must be exactly 512 by 512 pixels. This picture is 640 by 480.',
-  );
-  expect(form).not.toHaveTextContent('otters.png');
-  await submit('Save tribe');
-  expect(game.uploadEmblem).not.toHaveBeenCalled();
-});
-
-it('lets only the founder change the emblem from the tribe page, also after the season started', async () => {
-  stubPictures(512);
-  await render('/tribes/tribe');
+  await render('/tribes/tournaments/1/tribe');
   const file = emblemFile();
   expect(container).toHaveTextContent('Upload emblem');
   await choose(container, file);
@@ -718,13 +652,13 @@ it('lets only the founder change the emblem from the tribe page, also after the 
   root = createRoot(container);
   state.tribes[0].founder_id = 8;
   state.tribes[0].emblem_image = 'https://media.example/wolves.png';
-  await render('/tribes/tribe');
+  await render('/tribes/tournaments/1/tribe');
   expect(container).toHaveTextContent('Iron Wolves');
   expect(container.querySelector('input[type="file"]')).toBeNull();
 });
 
 it('shows uploaded emblems and player avatars in place of the emoji and the initial', async () => {
-  startRecruitment();
+  startUpcoming();
   state.tribes[0].emblem_image = 'https://media.example/wolves.png';
   state.tribes[0].members[0].avatar = 'https://media.example/maya.png';
   await render();
@@ -753,7 +687,7 @@ it('shows uploaded emblems and player avatars in place of the emoji and the init
 
 it('marks the selected plot on the map and lets an adjacent unowned plot be purchased from the treasury', async () => {
   state.plots.push({buildings: [], id: 3, price: 40, terrain: 'forest', tribe_id: null, x: 0, y: 1});
-  await render('/tribes/world');
+  await render('/tribes/tournaments/1/world');
   const plot = container.querySelector('[data-plot="3"]') as HTMLButtonElement;
   await act(async () => plot.click());
   expect(plot).toHaveAttribute('aria-pressed', 'true');
@@ -762,7 +696,7 @@ it('marks the selected plot on the map and lets an adjacent unowned plot be purc
 });
 
 it('writes a lone tribe, player and plot in the singular', async () => {
-  startRecruitment();
+  startUpcoming();
   state.tribes = [state.tribes[1]];
   await render();
   expect(container).toHaveTextContent('1 tribe');

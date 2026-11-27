@@ -11,9 +11,9 @@ const CHAPTERS: {icons: string[]; text: string[]; title: string}[] = [
   {
     icons: ['worker', 'treasury'],
     text: [
-      'Create a tribe or apply to one during recruitment. A founder can invite friends and accept applications, with a maximum of eight players. Once the seven-day season starts, rosters lock and all members have equal economic permissions.',
+      'The organizer enrolls players and assigns tribes before each tournament starts. You can join multiple tournaments, with one tribe in each. Every member has equal economic permissions within their tribe.',
     ],
-    title: 'Find your people.',
+    title: 'Meet your tribe.',
   },
   {
     icons: ['timber', 'pickaxe', 'lumber'],
@@ -55,7 +55,7 @@ const CHAPTERS: {icons: string[]; text: string[]; title: string}[] = [
   {
     icons: ['tnb', 'trebuchet'],
     text: [
-      'Land, goods, buildings, and military units belong to one season. App TNB balances persist. Unspent treasury is divided equally among the locked roster, with leftover whole coins assigned by member ID. Unfilled buy orders return their escrow. Spent coins are not refunded. Rankings, battle reports, and your contributions remain in history.',
+      'Each tournament has its own land, goods, buildings, and military units. You may play in several at once. App TNB balances persist. Unspent treasury is divided equally among the locked roster, with leftover whole coins assigned by member ID. Unfilled buy orders return their escrow. Spent coins are not refunded. Rankings, battle reports, and your contributions remain in history.',
     ],
     title: 'The next story awaits.',
   },
@@ -68,10 +68,10 @@ const Guide = ({catalog}: {catalog?: TribesState['catalog']}) => (
         <S.Eyebrow $light>
           <BookOpen size={14} /> How to play
         </S.Eyebrow>
-        <h2>Seven days. One world. One battle.</h2>
+        <h2>Your tribe. Your world. One battle.</h2>
         <S.Muted $dark style={{marginBottom: 0}}>
-          Form a tribe, build an economy with real TNB, and decide in secret who your weapons will strike when the
-          season ends.
+          Build an economy with your assigned tribe using real TNB, and decide in secret who your weapons will strike
+          when the tournament ends.
         </S.Muted>
       </S.Intro>
     </S.Card>

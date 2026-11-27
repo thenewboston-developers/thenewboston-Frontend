@@ -440,10 +440,12 @@ describe('analytics data sanitization', () => {
 
 test('records Tribes routes as game pages instead of redirects or unknown paths', () => {
   expect(analytics.getAnalyticsPath('/tribes')).toBe('/tribes');
-  expect(analytics.getAnalyticsPath('/tribes/home?season=12')).toBe('/tribes/home');
+  expect(analytics.getAnalyticsPath('/tribes/tournaments/12/home?private=hidden')).toBe('/tribes/tournaments/:id/home');
   expect(analytics.isAnalyticsRedirectPath('/tribes')).toBe(false);
-  expect(analytics.isAnalyticsRedirectPath('/tribes/home')).toBe(false);
-  expect(analytics.getAnalyticsPath('/tribes/world')).toBe('/tribes/world');
-  expect(analytics.getAnalyticsPath('/tribes/market?item=timber')).toBe('/tribes/market');
+  expect(analytics.isAnalyticsRedirectPath('/tribes/tournaments/12/home')).toBe(false);
+  expect(analytics.getAnalyticsPath('/tribes/tournaments/12/world')).toBe('/tribes/tournaments/:id/world');
+  expect(analytics.getAnalyticsPath('/tribes/tournaments/12/market?item=timber')).toBe(
+    '/tribes/tournaments/:id/market',
+  );
   expect(analytics.getAnalyticsPath('/tribes/unknown')).toBe('/other');
 });

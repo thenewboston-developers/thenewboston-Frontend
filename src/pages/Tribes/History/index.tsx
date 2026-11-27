@@ -27,9 +27,9 @@ const History = ({state, tribe}: TribesPanelProps) => {
       <S.Card $dark>
         <S.Intro>
           <S.Eyebrow $light>
-            <Trophy size={14} /> Season {state.season.id} / The Great War
+            <Trophy size={14} /> Tournament {state.tournament.id} / The Great War
           </S.Eyebrow>
-          <h2>{state.battle ? 'The decisions. The damage. The history.' : 'A week of decisions. One final battle.'}</h2>
+          <h2>{state.battle ? 'The decisions. The damage. The history.' : 'Every decision. One final battle.'}</h2>
           <S.Muted $dark style={{marginBottom: 0}}>
             Final score = effective damage dealt − effective damage received. Defense absorbs incoming damage
             proportionally across attackers. Equal scores share a rank.
@@ -38,7 +38,8 @@ const History = ({state, tribe}: TribesPanelProps) => {
         {!state.battle ? (
           <S.Empty $dark style={{marginTop: 20}}>
             <ItemIcon item="catapult" size={48} />
-            The final leaderboard appears when this season ends. Select a completed season above to revisit its story.
+            The final leaderboard appears when this tournament ends. Open a finished tournament from the tournament list
+            to revisit its story.
           </S.Empty>
         ) : (
           <S.Podium>
@@ -222,10 +223,10 @@ const History = ({state, tribe}: TribesPanelProps) => {
       {state.viewer && (
         <S.Card>
           <S.Eyebrow>
-            <ScrollText size={14} /> Your season
+            <ScrollText size={14} /> Your tournament
           </S.Eyebrow>
           <h2>Your economic contribution</h2>
-          <S.Muted>Total goods produced by your worker this season.</S.Muted>
+          <S.Muted>Total goods produced by your worker this tournament.</S.Muted>
           {!Object.keys(state.viewer.production).length && (
             <S.Empty>Your completed production will be recorded here.</S.Empty>
           )}

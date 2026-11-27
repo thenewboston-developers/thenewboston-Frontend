@@ -21,7 +21,7 @@ const Messages = ({act, busy, now, state, tribe}: TribesPanelProps) => {
   const alert = useAlert();
   const controller = useRef<AbortController | null>(null);
   const thread = useRef<HTMLDivElement>(null);
-  const scope = `${state.season.id}:${state.viewer?.id}:${state.viewer?.tribe_id}`;
+  const scope = `${state.tournament.id}:${state.viewer?.id}:${state.viewer?.tribe_id}`;
   const activeScope = useRef(scope);
   activeScope.current = scope;
   const older = history?.scope === scope ? history : null;
@@ -30,7 +30,11 @@ const Messages = ({act, busy, now, state, tribe}: TribesPanelProps) => {
   ).sort((a, b) => a.id - b.id);
   const canLoad = older ? older.before !== null : state.messages.length >= 200;
   const recipientId = recipient === 'tribe' ? tribe?.id : Number(recipient);
-  const canMessage = !!tribe && state.season.status !== 'finished' && now < new Date(state.season.ends_at).getTime();
+  const finished = state.tournament.status === 'finished' || now >= new Date(state.tournament.ends_at).getTime();
+  const canMessage = !!tribe && !finished;
+  const disabledMessage = finished
+    ? 'This tournament has ended. Its correspondence is read-only.'
+    : 'The organizer must assign you to a tribe before you can take part in its conversation.';
   const between = (otherId: number | undefined) =>
     records.filter((message) =>
       otherId === tribe?.id
@@ -73,7 +77,7 @@ const Messages = ({act, busy, now, state, tribe}: TribesPanelProps) => {
     controller.current = request;
     setLoading(true);
     try {
-      const page = await getTribesMessages(state.season.id, older?.before ?? records[0].id, request.signal);
+      const page = await getTribesMessages(state.tournament.id, older?.before ?? records[0].id, request.signal);
       if (!request.signal.aborted && activeScope.current === scope)
         setHistory({scope, rows: [...records, ...page.results], before: page.next_before});
     } catch (failure) {
@@ -210,9 +214,7 @@ const Messages = ({act, busy, now, state, tribe}: TribesPanelProps) => {
                 </S.Field>
               </ActionForm>
               <S.Hint style={{marginTop: 8}}>
-                {canMessage
-                  ? 'Press Enter to send, Shift and Enter for a new line.'
-                  : 'Join a tribe during recruitment to take part in the conversation.'}
+                {canMessage ? 'Press Enter to send, Shift and Enter for a new line.' : disabledMessage}
               </S.Hint>
             </S.Composer>
           </S.ThreadPane>

@@ -1,13 +1,12 @@
 import {act} from 'react';
 import {createRoot, Root} from 'react-dom/client';
 
-import {getTribesSeasons, getTribesState, performTribesAction} from 'api/tribes';
+import {getTribesState, performTribesAction} from 'api/tribes';
 import {TribesState} from 'types/tribes';
 
 import {errorMessage, useTribes} from './useTribes';
 
 jest.mock('api/tribes', () => ({
-  getTribesSeasons: jest.fn(),
   getTribesState: jest.fn(),
   performTribesAction: jest.fn(),
 }));
@@ -16,7 +15,7 @@ jest.mock('axios', () => ({isAxiosError: (error: {isAxiosError?: boolean}) => !!
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
 const requestId = '549f17a4-6395-4de1-91d7-e8c86bb5d56a';
 const snapshot = {
-  season: {id: 1, status: 'active', starts_at: '2026-11-26T12:00:00Z', ends_at: '2026-12-03T12:00:00Z'},
+  tournament: {id: 1, status: 'active', starts_at: '2026-11-26T12:00:00Z', ends_at: '2026-12-03T12:00:00Z'},
   server_time: '2026-11-26T13:00:00Z',
   viewer: {id: 1, wallet_balance: 1000},
 } as TribesState;
@@ -26,7 +25,7 @@ let observedViewers: (number | undefined)[];
 let root: Root;
 
 const Probe = ({userId = 1}: {userId?: number | null}) => {
-  api = useTribes(userId);
+  api = useTribes(userId, 1);
   observedViewers.push(api.state?.viewer?.id);
   return null;
 };
@@ -37,7 +36,6 @@ beforeEach(() => {
   observedViewers = [];
   Object.defineProperty(window, 'crypto', {configurable: true, value: {randomUUID: () => requestId}});
   jest.mocked(getTribesState).mockResolvedValue(snapshot);
-  jest.mocked(getTribesSeasons).mockResolvedValue([]);
   jest.mocked(performTribesAction).mockResolvedValue(snapshot);
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -63,7 +61,7 @@ test('a confirmed gameplay permission rejection releases its receipt and allows 
   });
   expect(api.pending).toBeNull();
   expect(api.busy).toBe(false);
-  expect(localStorage.getItem('tribes:pending:1')).toBeNull();
+  expect(localStorage.getItem('tribes:tournaments:pending:1:1')).toBeNull();
   expect(api.error).toBe('Only the current controller can change this unit.');
   await act(async () => {
     expect(await api.act('treasury_deposit', {amount: 1})).toBe(true);
@@ -83,7 +81,7 @@ test('an unmarked authentication or proxy 403 preserves an uncertain receipt', a
   expect(api.pending?.request_id).toBe(requestId);
   expect(api.busy).toBe(true);
   expect(api.error).toBe('Sign in again.');
-  expect(localStorage.getItem('tribes:pending:1')).not.toBeNull();
+  expect(localStorage.getItem('tribes:tournaments:pending:1:1')).not.toBeNull();
 });
 
 test('a successful refresh clears a recovered read error', async () => {
@@ -128,11 +126,11 @@ test('account switches never expose the previous private state even before effec
 test.each([
   [[{code: 'invalid', message: 'Insufficient TNB in your app wallet.'}], 'Insufficient TNB in your app wallet.'],
   [
-    {detail: {code: 'permission_denied', message: 'Only the founder can edit recruitment details.'}},
-    'Only the founder can edit recruitment details.',
+    {detail: {code: 'permission_denied', message: 'Only the captain can change the tribe emblem.'}},
+    'Only the captain can change the tribe emblem.',
   ],
   [{quantity: [{code: 'invalid', message: 'Quantity must be a whole number.'}]}, 'Quantity must be a whole number.'],
-  [{detail: 'This season has ended.'}, 'This season has ended.'],
+  [{detail: 'This tournament has ended.'}, 'This tournament has ended.'],
 ])('displays the API error message from %j', (data, expected) => {
   expect(errorMessage({isAxiosError: true, response: {status: 400, data}})).toBe(expected);
 });

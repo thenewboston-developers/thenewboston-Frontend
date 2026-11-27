@@ -516,12 +516,12 @@ const WorldMap = ({canExpand, compact, onSelect, ranges, selectedId, state, trib
 
   // On a large world the whole map is too small to read, so the first view opens on the viewer's own land
   useEffect(() => {
-    const key = `${state.season.id}:${tribe?.id ?? 0}:${plots.length}`;
+    const key = `${state.tournament.id}:${tribe?.id ?? 0}:${plots.length}`;
     if (!size.width || !plots.length || framed.current === key) return;
     framed.current = key;
     if (!compact && home && TILE_WIDTH * fit < 30) focusOn(home, 60 / (TILE_WIDTH * fit));
     else setView({k: 1, x: 0, y: 0});
-  }, [compact, fit, focusOn, home, plots.length, size.width, state.season.id, tribe?.id]);
+  }, [compact, fit, focusOn, home, plots.length, size.width, state.tournament.id, tribe?.id]);
 
   useEffect(() => {
     const element = viewport.current;

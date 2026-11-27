@@ -1,9 +1,13 @@
 export type TribesAccount = 'personal' | 'tribe';
 export type TribesInventory = Record<string, number>;
 export type TribesActionData = Record<string, string | number | null>;
-export interface TribesSeason {
+export interface TribesTournament {
   id: number;
-  status: 'recruiting' | 'active' | 'finished';
+  title: string;
+  max_players: number;
+  player_count: number;
+  is_participant: boolean;
+  status: 'upcoming' | 'active' | 'finished';
   starts_at: string;
   ends_at: string;
 }
@@ -24,8 +28,6 @@ export interface Tribe {
   members: TribesMember[];
   treasury: number | null;
   inventory: TribesInventory | null;
-  applications?: TribesMember[];
-  invites?: TribesMember[];
 }
 export interface TribesPlot {
   id: number;
@@ -112,7 +114,7 @@ export interface TribesStanding {
   attacks: TribesAttack[];
 }
 export interface TribesState {
-  season: TribesSeason;
+  tournament: TribesTournament;
   server_time: string;
   catalog: {
     land: Record<string, {resource: string; price: number}>;
@@ -137,14 +139,13 @@ export interface TribesState {
     username: string;
     avatar?: string | null;
     tribe_id: number | null;
+    is_participant: boolean;
     wallet_balance: number;
     inventory: TribesInventory;
     production: TribesInventory;
     experience: TribesInventory;
   };
   tribes: Tribe[];
-  invitations: {tribe_id: number; name: string}[];
-  applications: {tribe_id: number; name: string}[];
   plots: TribesPlot[];
   jobs: TribesJob[];
   units: TribesUnit[];
