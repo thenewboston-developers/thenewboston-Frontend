@@ -4,7 +4,7 @@ import {Backpack, Minus, Plus, Send, Warehouse, X} from 'lucide-react';
 import {Tribe, TribesMember} from 'types/tribes';
 
 import ItemIcon from '../art/ItemIcon';
-import {count, ITEM_NOTES, label, tribeLabel} from '../common';
+import {count, ITEM_NOTES, label, tribeLabel, wholeNumber} from '../common';
 import PlayerAvatar from '../components/PlayerAvatar';
 
 import {PLACES} from './Shelves';
@@ -40,12 +40,13 @@ const Tray = ({
   rivals: Tribe[];
   teammates: TribesMember[];
 }) => {
-  const [amount, setAmount] = useState(held);
+  // Starts at the whole stack, the usual move, and can be cleared to type any other amount
+  const [amount, setAmount] = useState(String(held));
   const [away, setAway] = useState(false);
   const [recipient, setRecipient] = useState<number | undefined>();
   const across: S.Place = place === 'pack' ? 'warehouse' : 'pack';
   const name = label(item).toLowerCase();
-  const quantity = Math.max(1, Math.min(amount, held));
+  const quantity = Math.min(Number(amount) || 0, held);
   const rival = rivals.find((team) => team.id === recipient) ?? rivals[0];
   const teammate = teammates.find((member) => member.id === recipient) ?? teammates[0];
   const elsewhere = place === 'pack' ? !!teammate : !!rival;
@@ -55,14 +56,13 @@ const Tray = ({
   if (held > 3) picks.push(['Half', Math.floor(held / 2)]);
   if (held > 1) picks.push(['All', held]);
 
-  let submit = place === 'pack' ? `Store ${count(quantity)} in the warehouse` : `Take ${count(quantity)} into my pack`;
-  if (sending)
-    submit =
-      place === 'pack' ? `Give ${count(quantity)} to ${teammate.username}` : `Send ${count(quantity)} to ${rival.name}`;
+  const moved = quantity ? `${count(quantity)} ` : '';
+  let submit = place === 'pack' ? `Store ${moved}in the warehouse` : `Take ${moved}into my pack`;
+  if (sending) submit = place === 'pack' ? `Give ${moved}to ${teammate.username}` : `Send ${moved}to ${rival.name}`;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (busy) return;
+    if (busy || !quantity) return;
     if (!sending) onMove({item, place, quantity, to: across});
     else if (place === 'pack') onMove({item, place, quantity, recipient: teammate.id, to: 'teammate'});
     else onMove({item, place, quantity, recipient: rival.id, to: 'tribe'});
@@ -140,7 +140,12 @@ const Tray = ({
       )}
       <S.Quantity>
         <S.Stepper>
-          <button aria-label="One fewer" disabled={quantity <= 1} onClick={() => setAmount(quantity - 1)} type="button">
+          <button
+            aria-label="One fewer"
+            disabled={quantity <= 1}
+            onClick={() => setAmount(String(quantity - 1))}
+            type="button"
+          >
             <Minus size={15} />
           </button>
           <input
@@ -148,16 +153,16 @@ const Tray = ({
             inputMode="numeric"
             max={held}
             min={1}
-            onChange={(event) => setAmount(Math.min(held, Math.max(1, Math.floor(Number(event.target.value)) || 1)))}
+            onChange={(event) => setAmount(wholeNumber(event.target.value, held))}
             required
             step="1"
             type="number"
-            value={quantity}
+            value={quantity || ''}
           />
           <button
             aria-label="One more"
             disabled={quantity >= held}
-            onClick={() => setAmount(quantity + 1)}
+            onClick={() => setAmount(String(quantity + 1))}
             type="button"
           >
             <Plus size={15} />
@@ -165,7 +170,7 @@ const Tray = ({
         </S.Stepper>
         <S.QuickPicks>
           {picks.map(([text, value]) => (
-            <S.QuickPick $active={quantity === value} key={text} onClick={() => setAmount(value)} type="button">
+            <S.QuickPick $active={quantity === value} key={text} onClick={() => setAmount(String(value))} type="button">
               {text}
             </S.QuickPick>
           ))}

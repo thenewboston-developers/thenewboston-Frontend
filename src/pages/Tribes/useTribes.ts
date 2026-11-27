@@ -67,6 +67,9 @@ export const useTribes = (userId: number | null, seasonId?: number) => {
   const [readError, setReadError] = useState('');
   const [seasons, setSeasons] = useState<TribesSeason[]>([]);
   const [state, setState] = useState<TribesState | null>(null);
+  // True once an attempt at the pending action has ended without an answer (or it was left over from an earlier
+  // visit). While the first attempt is still on its way there is nothing to warn about yet.
+  const [unconfirmed, setUnconfirmed] = useState(() => !!readPending(userId));
   const account = useRef(userId);
   const accountMatches = account.current === userId;
   const generation = useRef(0);
@@ -114,6 +117,7 @@ export const useTribes = (userId: number | null, seasonId?: number) => {
         const saved = readPending(userId);
         if (saved && saved.request_id !== payload.request_id) {
           setPending(saved);
+          setUnconfirmed(true);
           setError('An earlier action still needs a receipt. Retry it before starting another action.');
           setBusy(false);
           inflight.current = null;
@@ -123,6 +127,7 @@ export const useTribes = (userId: number | null, seasonId?: number) => {
       } catch {
         setError('Your browser cannot save a transaction receipt. Enable local storage before continuing.');
         setPending(null);
+        setUnconfirmed(false);
         setBusy(false);
         inflight.current = null;
         return false;
@@ -132,6 +137,7 @@ export const useTribes = (userId: number | null, seasonId?: number) => {
         removePending(userId, payload);
         if (version !== generation.current || account.current !== userId) return false;
         setPending(null);
+        setUnconfirmed(false);
         if (snapshot.season.id === (seasonId ?? state?.season.id)) setState(snapshot);
         return true;
       } catch (failure) {
@@ -146,6 +152,7 @@ export const useTribes = (userId: number | null, seasonId?: number) => {
         if (version === generation.current && account.current === userId) {
           setError(errorMessage(failure));
           if (definitive) setPending(null);
+          setUnconfirmed(!definitive);
         }
         return false;
       } finally {
@@ -210,6 +217,7 @@ export const useTribes = (userId: number | null, seasonId?: number) => {
     setReadError('');
     setBusy(false);
     setPending(readPending(userId));
+    setUnconfirmed(!!readPending(userId));
     refresh(controller.signal);
     const timer = window.setInterval(() => {
       refresh(controller.signal);
@@ -238,6 +246,7 @@ export const useTribes = (userId: number | null, seasonId?: number) => {
     retrying: accountMatches && busy,
     seasons: accountMatches ? seasons : [],
     state: accountMatches ? state : null,
+    unconfirmed: accountMatches && unconfirmed && !!pending,
     uploadEmblem,
   };
 };

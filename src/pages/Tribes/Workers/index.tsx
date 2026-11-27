@@ -19,6 +19,7 @@ import {
   plural,
   time,
   tribeLabel,
+  wholeNumber,
 } from '../common';
 import Progress from '../components/Progress';
 
@@ -227,14 +228,16 @@ const Workshop = ({act, busy, canPlay, now, state, tribe}: TribesPanelProps) => 
   const recipes = Object.keys(state.catalog.recipes);
   const [category, setCategory] = useState<ItemKind>('material');
   const [location, setLocation] = useState('');
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState('');
   const [recipe, setRecipe] = useState(recipes.includes('lumber') ? 'lumber' : recipes[0]);
   const [source, setSource] = useState<TribesAccount>('tribe');
   const owned = ownedPlots(state, tribe);
   const definition = state.catalog.recipes[recipe];
   const building = !!state.catalog.buildings[recipe];
   const unit = state.catalog.units[recipe];
-  const amount = building ? 1 : quantity;
+  const amount = building ? 1 : Number(quantity) || 0;
+  // Until a quantity is entered the recipe is shown for a single item
+  const basis = Math.max(1, amount);
   const eligible = building
     ? owned.filter(
         (plot) => state.catalog.buildings[recipe].land.includes(plot.terrain) && !plot.buildings.includes(recipe),
@@ -253,7 +256,7 @@ const Workshop = ({act, busy, canPlay, now, state, tribe}: TribesPanelProps) => 
   const facility = definition?.facility;
   const hasFacility = !facility || owned.some((plot) => plot.buildings.includes(facility));
   const short = definition
-    ? Object.entries(definition.inputs).some(([item, needed]) => (stock[item] ?? 0) < needed * amount)
+    ? Object.entries(definition.inputs).some(([item, needed]) => (stock[item] ?? 0) < needed * basis)
     : false;
   const queueEnd = Math.max(
     now,
@@ -269,7 +272,7 @@ const Workshop = ({act, busy, canPlay, now, state, tribe}: TribesPanelProps) => 
 
   const handleRecipe = (item: string) => {
     setRecipe(item);
-    setQuantity(1);
+    setQuantity('');
     setLocation('');
   };
 
@@ -348,15 +351,15 @@ const Workshop = ({act, busy, canPlay, now, state, tribe}: TribesPanelProps) => 
             )}
           </S.Facts>
           <S.FieldGroup as="div" style={{marginTop: 12}}>
-            Ingredients{amount > 1 ? ` for ${count(amount)}` : ' per item'}
+            Ingredients{basis > 1 ? ` for ${count(basis)}` : ' per item'}
             <S.Ingredients>
               {Object.entries(definition.inputs).map(([item, needed]) => {
                 const have = stock[item] ?? 0;
                 return (
-                  <S.Ingredient $short={have < needed * amount} key={item}>
+                  <S.Ingredient $short={have < needed * basis} key={item}>
                     <ItemIcon item={item} size={26} />
                     <span>
-                      {count(needed * amount)} {label(item)}
+                      {count(needed * basis)} {label(item)}
                       <small>{count(have)} on hand</small>
                     </span>
                   </S.Ingredient>
@@ -370,6 +373,7 @@ const Workshop = ({act, busy, canPlay, now, state, tribe}: TribesPanelProps) => 
             disabled={busy || !canPlay || !eligible.length || !hasFacility}
             fixed={{item: recipe, kind: building ? 'build' : 'craft', ...(building ? {quantity: 1} : {})}}
             icon={<Hammer size={16} />}
+            onSuccess={() => setQuantity('')}
             resetOnSuccess={false}
             submit={building ? 'Queue construction' : 'Queue production'}
           >
@@ -398,9 +402,7 @@ const Workshop = ({act, busy, canPlay, now, state, tribe}: TribesPanelProps) => 
                     max={maximum}
                     min={1}
                     name="quantity"
-                    onChange={(event) =>
-                      setQuantity(Math.min(maximum, Math.max(1, Math.floor(Number(event.target.value)) || 1)))
-                    }
+                    onChange={(event) => setQuantity(wholeNumber(event.target.value, maximum))}
                     required
                     step="1"
                     type="number"
@@ -431,12 +433,15 @@ const Workshop = ({act, busy, canPlay, now, state, tribe}: TribesPanelProps) => 
             <S.Estimate $warning={!!warning}>
               {warning ? <TriangleAlert size={18} /> : <Clock size={18} />}
               <span>
-                {warning || (
-                  <>
-                    Takes <strong>{duration(seconds)}</strong> of worker time. Done around{' '}
-                    <strong>{time(new Date(finish).toISOString())}</strong>.
-                  </>
-                )}
+                {warning ||
+                  (amount ? (
+                    <>
+                      Takes <strong>{duration(seconds)}</strong> of worker time. Done around{' '}
+                      <strong>{time(new Date(finish).toISOString())}</strong>.
+                    </>
+                  ) : (
+                    'Enter a quantity to see how long it takes.'
+                  ))}
               </span>
             </S.Estimate>
           </ActionForm>

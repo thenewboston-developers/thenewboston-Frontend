@@ -11,6 +11,7 @@ import {
   Hammer,
   Info,
   LayoutDashboard,
+  LoaderCircle,
   LogIn,
   LucideIcon,
   Map as MapIcon,
@@ -23,6 +24,7 @@ import {
   Swords,
   TriangleAlert,
   Users,
+  X,
 } from 'lucide-react';
 
 import {getTribesSeasons} from 'api/tribes';
@@ -47,6 +49,7 @@ import Locked from './Locked';
 import Market from './Market';
 import Messages from './Messages';
 import Military from './Military';
+import {NoticeContext} from './notices';
 import Recruitment from './Recruitment';
 import * as S from './Styles';
 import {useTribes} from './useTribes';
@@ -94,27 +97,36 @@ const CONFIRMATIONS: Record<string, string> = {
   update_tribe: 'Tribe identity saved.',
 };
 
+const ALERT_TIME = 8000;
 const DAY = 86400000;
+// A move that takes longer than this to be answered says so, so a slow connection never looks like a dead button
+const SLOW = 900;
 // The landscape only changes with the season's phase, not with the clock
 const Scene = memo(HeroScene);
 
 const Tribes = () => {
+  const [alerts, setAlerts] = useState<{id: number; text: string}[]>([]);
+  const [dismissed, setDismissed] = useState('');
   const [edges, setEdges] = useState({left: false, right: false});
-  const [historyError, setHistoryError] = useState('');
   const [indicator, setIndicator] = useState<{left: number; width: number} | null>(null);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [moreHistory, setMoreHistory] = useState(true);
   const [olderSeasons, setOlderSeasons] = useState<TribesSeason[]>([]);
   const [seasonId, setSeasonId] = useState<number | undefined>();
+  const [slow, setSlow] = useState(false);
   const [toast, setToast] = useState<{id: number; text: string} | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const self = useSelector(getSelf);
   const game = useTribes(self.id, seasonId);
+  const alertTimers = useRef<number[]>([]);
   const historyRequest = useRef<AbortController | null>(null);
   const navigation = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
-  const {act, busy, error, loading, now, pending, refresh, retry, retrying, seasons, state, uploadEmblem} = game;
+  const sequence = useRef(0);
+  const {act, busy, error, loading, now, pending, refresh, retry, retrying, seasons, state, unconfirmed, uploadEmblem} =
+    game;
+  const working = busy && !unconfirmed;
 
   const segment = location.pathname.split('/')[2];
   const tab = SECTIONS.some((section) => section.id === segment) ? segment : 'home';
@@ -165,6 +177,18 @@ const Tribes = () => {
     statusLine = 'Weekly multiplayer strategy';
   }
 
+  // A short-lived message about something that went wrong, raised from anywhere in the game
+  const handleAlert = useCallback((text: string) => {
+    sequence.current += 1;
+    const id = sequence.current;
+    setAlerts((value) => [...value.filter((entry) => entry.text !== text), {id, text}].slice(-3));
+    const timer = window.setTimeout(() => {
+      setAlerts((value) => value.filter((entry) => entry.id !== id));
+      alertTimers.current = alertTimers.current.filter((entry) => entry !== timer);
+    }, ALERT_TIME);
+    alertTimers.current.push(timer);
+  }, []);
+
   const handleAct = useCallback<TribesAction>(
     async (action, data) => {
       const success = await act(action, data);
@@ -192,6 +216,10 @@ const Tribes = () => {
 
   const handleGo = useCallback((section: string) => navigate(`/tribes/${section}`), [navigate]);
 
+  const handleRetry = async () => {
+    if (await retry()) setToast({id: Date.now(), text: 'Your last action went through.'});
+  };
+
   const handleUploadEmblem = useCallback<TribesEmblemUpload>(
     async (image) => {
       const success = await uploadEmblem(image);
@@ -206,7 +234,6 @@ const Tribes = () => {
     const request = new AbortController();
     historyRequest.current = request;
     setLoadingHistory(true);
-    setHistoryError('');
     try {
       const earlier = await getTribesSeasons(request.signal, allSeasons[allSeasons.length - 1].id);
       if (!request.signal.aborted) {
@@ -214,7 +241,7 @@ const Tribes = () => {
         setMoreHistory(earlier.length === 100);
       }
     } catch {
-      if (!request.signal.aborted) setHistoryError('Older seasons could not be loaded. Please try again.');
+      if (!request.signal.aborted) handleAlert('Older seasons could not be loaded. Please try again.');
     } finally {
       if (historyRequest.current === request) {
         historyRequest.current = null;
@@ -239,7 +266,6 @@ const Tribes = () => {
     setOlderSeasons([]);
     setMoreHistory(true);
     setLoadingHistory(false);
-    setHistoryError('');
     return () => {
       historyRequest.current?.abort();
       historyRequest.current = null;
@@ -251,6 +277,27 @@ const Tribes = () => {
     const timer = window.setTimeout(() => setToast(null), 3400);
     return () => window.clearTimeout(timer);
   }, [toast]);
+
+  // A dismissed error may come back the next time the same thing goes wrong
+  useEffect(() => {
+    if (!error) setDismissed('');
+  }, [error]);
+
+  useEffect(() => {
+    if (!working) {
+      setSlow(false);
+      return undefined;
+    }
+    const timer = window.setTimeout(() => setSlow(true), SLOW);
+    return () => window.clearTimeout(timer);
+  }, [working]);
+
+  useEffect(
+    () => () => {
+      alertTimers.current.forEach((timer) => window.clearTimeout(timer));
+    },
+    [],
+  );
 
   // Slide the highlight under the current section and keep that section in view on narrow screens
   useLayoutEffect(() => {
@@ -468,7 +515,6 @@ const Tribes = () => {
             )}
           </S.SeasonBar>
         )}
-        {historyError && <S.Error role="alert">{historyError}</S.Error>}
         <S.Nav aria-label="Tribes sections">
           <S.NavScroller $fadeLeft={edges.left} $fadeRight={edges.right} onScroll={handleMeasure} ref={navigation}>
             {indicator && (
@@ -512,31 +558,6 @@ const Tribes = () => {
             <div>The final battle cutoff has passed. Results will appear once the season has been resolved.</div>
           </S.Banner>
         )}
-        {pending && (
-          <S.Banner $tone="ember" role="alert">
-            <TriangleAlert size={18} />
-            <div>
-              Your last action has not been confirmed. Retry it safely before making another move; the same transaction
-              receipt prevents duplicate charges.
-              <S.Actions style={{marginTop: 12}}>
-                <S.Button disabled={retrying} onClick={() => retry()}>
-                  {retrying ? 'Confirming…' : 'Retry last action'}
-                </S.Button>
-              </S.Actions>
-            </div>
-          </S.Banner>
-        )}
-        {error && (
-          <S.Error role="alert">
-            <TriangleAlert size={18} />
-            <span>{error}</span>
-            {!pending && (
-              <S.Button $secondary $size="small" onClick={() => refresh()}>
-                <RefreshCw size={14} /> Refresh
-              </S.Button>
-            )}
-          </S.Error>
-        )}
         {loading && !state && tab !== 'guide' && (
           <S.Loading role="status">
             <S.Compass aria-hidden>
@@ -545,9 +566,11 @@ const Tribes = () => {
             Opening the world…
           </S.Loading>
         )}
-        <S.Panel key={`${selected}:${state?.season.id ?? 0}`} ref={panel}>
-          {renderPanel()}
-        </S.Panel>
+        <NoticeContext.Provider value={handleAlert}>
+          <S.Panel key={`${selected}:${state?.season.id ?? 0}`} ref={panel}>
+            {renderPanel()}
+          </S.Panel>
+        </NoticeContext.Provider>
         {state && (
           <S.Meta>
             <span>
@@ -557,12 +580,62 @@ const Tribes = () => {
           </S.Meta>
         )}
       </S.Content>
-      {toast && (
-        <S.Toast key={toast.id} role="status">
-          <CircleCheck size={18} />
-          {toast.text}
-        </S.Toast>
-      )}
+      <S.Notices aria-label="Notifications" role="region">
+        {unconfirmed && (
+          <S.Notice role="alert">
+            <TriangleAlert size={18} />
+            <div>
+              {error && <strong>{error} </strong>}
+              Your last action has not been confirmed. Retry it safely before making another move; the same transaction
+              receipt prevents duplicate charges.
+            </div>
+            <S.Button $size="small" disabled={retrying} onClick={handleRetry}>
+              {retrying ? 'Confirming…' : 'Retry last action'}
+            </S.Button>
+          </S.Notice>
+        )}
+        {error && !unconfirmed && error !== dismissed && (
+          <S.Notice role="alert">
+            <TriangleAlert size={18} />
+            <div>{error}</div>
+            {!pending && (
+              <S.Button $secondary $size="small" onClick={() => refresh()}>
+                <RefreshCw size={14} /> Refresh
+              </S.Button>
+            )}
+            <S.NoticeClose aria-label="Dismiss" onClick={() => setDismissed(error)} type="button">
+              <X size={15} />
+            </S.NoticeClose>
+          </S.Notice>
+        )}
+        {alerts.map((entry) => (
+          <S.Notice key={entry.id} role="alert">
+            <TriangleAlert size={18} />
+            <div>{entry.text}</div>
+            <S.NoticeClose
+              aria-label="Dismiss"
+              onClick={() => setAlerts((value) => value.filter((other) => other.id !== entry.id))}
+              type="button"
+            >
+              <X size={15} />
+            </S.NoticeClose>
+          </S.Notice>
+        ))}
+        {slow && working && (
+          <S.Notice $quiet aria-live="polite">
+            <S.Spinner aria-hidden>
+              <LoaderCircle size={17} />
+            </S.Spinner>
+            <div>Sending your move…</div>
+          </S.Notice>
+        )}
+        {toast && (
+          <S.Toast key={toast.id} role="status">
+            <CircleCheck size={18} />
+            {toast.text}
+          </S.Toast>
+        )}
+      </S.Notices>
     </S.Container>
   );
 };

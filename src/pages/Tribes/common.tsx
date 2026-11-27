@@ -48,6 +48,13 @@ export const sum = (inventory: Record<string, number> | null | undefined) =>
 export const distance = (a: {x: number; y: number}, b: {x: number; y: number}) =>
   Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 
+// What a whole-number field holds while it is being typed in: nothing at all, or a number from 1 up to the most
+// allowed. Returning an empty string for an empty field is what lets a player clear it and type a new amount.
+export const wholeNumber = (text: string, max = 1000000000) => {
+  const value = Math.floor(Number(text));
+  return text === '' || !(value >= 1) ? '' : String(Math.min(max, value));
+};
+
 export type ItemKind = 'building' | 'defense' | 'material' | 'resource' | 'tool' | 'unit';
 export const itemKind = (catalog: TribesState['catalog'], item: string): ItemKind => {
   if (catalog.buildings[item]) return 'building';
@@ -112,6 +119,7 @@ export const ActionForm = ({
   footer,
   icon,
   inline,
+  onSuccess,
   resetOnSuccess = true,
   secondary,
   submit,
@@ -125,6 +133,7 @@ export const ActionForm = ({
   footer?: ReactNode;
   icon?: ReactNode;
   inline?: boolean;
+  onSuccess?: () => void;
   resetOnSuccess?: boolean;
   secondary?: boolean;
   submit: string;
@@ -134,6 +143,11 @@ export const ActionForm = ({
     event.preventDefault();
     if (disabled) return;
     const form = event.currentTarget;
+    // Fields start empty, so a submit that slipped past the browser's own check must not send a blank amount
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
     const data: TribesActionData = {};
     new FormData(form).forEach((value, key) => {
       if (typeof value === 'string') data[key] = value;
@@ -141,6 +155,7 @@ export const ActionForm = ({
     });
     const success = await act(action, {...(transform ? transform(data) : data), ...fixed});
     if (success && resetOnSuccess && form.isConnected) form.reset();
+    if (success) onSuccess?.();
   };
   return (
     <S.Form onSubmit={handleSubmit}>
@@ -156,22 +171,21 @@ export const ActionForm = ({
   );
 };
 
+// Starts empty: a prefilled amount has to be deleted before the wanted one can be typed
 export const NumberField = ({
   label: text,
   name,
   max = 1000000000,
   min = 1,
-  value = 1,
 }: {
   label: string;
   name: string;
   max?: number;
   min?: number;
-  value?: number;
 }) => (
   <S.Field>
     {text}
-    <input defaultValue={value} inputMode="numeric" max={max} min={min} name={name} required step="1" type="number" />
+    <input inputMode="numeric" max={max} min={min} name={name} required step="1" type="number" />
   </S.Field>
 );
 

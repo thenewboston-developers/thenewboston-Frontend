@@ -1,6 +1,7 @@
-import {ChangeEvent, useRef, useState} from 'react';
+import {ChangeEvent, useRef} from 'react';
 import {ImageUp} from 'lucide-react';
 
+import {useAlert} from '../notices';
 import * as S from '../Styles';
 
 export const EMBLEM_SIZE = 512;
@@ -43,7 +44,7 @@ const EmblemPicker = ({
   onPick: (picked: PickedEmblem) => void;
   text: string;
 }) => {
-  const [error, setError] = useState('');
+  const alert = useAlert();
   const input = useRef<HTMLInputElement>(null);
 
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -52,11 +53,9 @@ const EmblemPicker = ({
     event.target.value = '';
     if (!file) return;
     try {
-      const preview = await readEmblem(file);
-      setError('');
-      onPick({file, preview});
+      onPick({file, preview: await readEmblem(file)});
     } catch (failure) {
-      setError(failure instanceof Error ? failure.message : 'That picture could not be read.');
+      alert(failure instanceof Error ? failure.message : 'That picture could not be read.');
     }
   };
 
@@ -74,7 +73,6 @@ const EmblemPicker = ({
         ref={input}
         type="file"
       />
-      {error && <S.Error role="alert">{error}</S.Error>}
     </S.EmblemPicker>
   );
 };

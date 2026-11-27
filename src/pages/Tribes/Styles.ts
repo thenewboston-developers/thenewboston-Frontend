@@ -3,7 +3,7 @@ import styled, {css} from 'styled-components';
 
 import {breakpoints, pagePadding} from 'styles';
 
-import {easing, fadeIn, fadeUp, fonts, palette, pop, pulse, shadows, stagger, stripes} from './theme';
+import {easing, fadeIn, fadeUp, fonts, palette, pop, pulse, shadows, spin, stagger, stripes} from './theme';
 
 export type Tone = 'dark' | 'ember' | 'gold' | 'green' | 'neutral' | 'sky';
 
@@ -1264,10 +1264,100 @@ export const NavScroller = styled.div<{$fadeLeft: boolean; $fadeRight: boolean}>
   }
 `;
 
+export const Notice = styled.div<{$quiet?: boolean}>`
+  align-items: center;
+  animation: ${pop} 0.35s ${easing.spring} both;
+  background: ${({$quiet}) => ($quiet ? palette.paper : palette.emberWash)};
+  border: 1px solid ${({$quiet}) => ($quiet ? palette.line : '#f0cabf')};
+  border-radius: 14px;
+  box-shadow:
+    0 2px 6px rgba(13, 31, 26, 0.12),
+    0 20px 50px -12px rgba(13, 31, 26, 0.45);
+  color: ${palette.text};
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 13.5px;
+  font-weight: 500;
+  gap: 8px 12px;
+  line-height: 1.55;
+  max-width: 560px;
+  padding: 12px 12px 12px 14px;
+
+  > svg {
+    color: ${({$quiet}) => ($quiet ? palette.moss : palette.emberDeep)};
+    flex-shrink: 0;
+  }
+
+  > div {
+    flex: 1 1 200px;
+    min-width: 0;
+  }
+
+  strong {
+    color: ${palette.emberDeep};
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: ${fadeIn} 0.2s ease both;
+  }
+`;
+
+export const NoticeClose = styled.button`
+  align-items: center;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  color: ${palette.muted};
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 30px;
+  justify-content: center;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+  width: 30px;
+
+  &:hover {
+    background: rgba(165, 58, 36, 0.1);
+    color: ${palette.emberDeep};
+  }
+
+  &:focus-visible {
+    box-shadow: ${shadows.focus};
+    outline: none;
+  }
+`;
+
+// Everything the game says about what just happened is shown here, floating above the bottom of the screen. Nothing
+// in this stack takes up room in the page, so the page never moves when a message comes or goes.
+export const Notices = styled.div`
+  align-items: center;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  left: 50%;
+  max-width: calc(100vw - 32px);
+  pointer-events: none;
+  position: fixed;
+  translate: -50% 0;
+  width: max-content;
+  z-index: 60;
+
+  > * {
+    pointer-events: auto;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    bottom: 84px;
+  }
+`;
+
 export const Pair = styled.div`
   display: grid;
   gap: 12px;
-  grid-template-columns: 92px minmax(0, 1fr);
+  grid-template-columns: 80px minmax(0, 1fr);
 `;
 
 export const Panel = styled.div`
@@ -1571,6 +1661,11 @@ export const Segmented = styled.div<{$adaptive?: boolean; $dark?: boolean}>`
         svg {
           display: none !important;
         }
+
+        label span {
+          padding-left: 4px;
+          padding-right: 4px;
+        }
       }
     `}
 
@@ -1585,6 +1680,17 @@ export const Segmented = styled.div<{$adaptive?: boolean; $dark?: boolean}>`
         color: ${palette.white};
       }
     `}
+`;
+
+export const Spinner = styled.span`
+  animation: ${spin} 0.9s linear infinite;
+  color: ${palette.moss};
+  display: inline-flex;
+  flex-shrink: 0;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: 2.4s;
+  }
 `;
 
 export const Stack = styled.div`
@@ -1791,27 +1897,17 @@ export const Toast = styled.div`
   background: ${palette.ink};
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 14px;
-  bottom: 24px;
   box-shadow: 0 20px 50px -12px rgba(13, 31, 26, 0.6);
   color: ${palette.white};
   display: flex;
   font-size: 13.5px;
   font-weight: 600;
   gap: 10px;
-  left: 50%;
-  max-width: calc(100vw - 32px);
   padding: 12px 18px 12px 14px;
-  position: fixed;
-  translate: -50% 0;
-  z-index: 60;
 
   svg {
     color: ${palette.goldBright};
     flex-shrink: 0;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    bottom: 84px;
   }
 
   @media (prefers-reduced-motion: reduce) {
