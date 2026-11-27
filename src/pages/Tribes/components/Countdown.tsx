@@ -3,7 +3,7 @@ import * as S from '../Styles';
 const pad = (value: number) => String(value).padStart(2, '0');
 
 const Countdown = ({now, target}: {now: number; target: number}) => {
-  const total = Math.max(0, Math.floor((target - now) / 1000));
+  const total = Math.max(0, Math.ceil((target - now) / 1000));
   const parts: [string, number][] = [
     ['Days', Math.floor(total / 86400)],
     ['Hours', Math.floor((total % 86400) / 3600)],
@@ -12,7 +12,7 @@ const Countdown = ({now, target}: {now: number; target: number}) => {
   ];
   return (
     <S.Countdown
-      aria-label={`${parts[0][1]} days, ${parts[1][1]} hours and ${parts[2][1]} minutes remaining`}
+      aria-label={`${parts[0][1]} days, ${parts[1][1]} hours, ${parts[2][1]} minutes and ${parts[3][1]} seconds remaining`}
       role="timer"
     >
       {parts.map(([unit, value]) => (

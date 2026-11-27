@@ -13,7 +13,20 @@ export const plural = (value: number, noun: string) => `${count(value)} ${noun}$
 export const date = (value: string) => new Date(value).toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'});
 export const time = (value: string) => new Date(value).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
 export const day = (value: string) => new Date(value).toLocaleDateString([], {day: 'numeric', month: 'short'});
-export const duration = (seconds: number) => {
+export const duration = (seconds: number, showSeconds = false) => {
+  if (showSeconds) {
+    const total = Math.max(0, Math.ceil(seconds));
+    const days = Math.floor(total / 86400);
+    const hours = Math.floor((total % 86400) / 3600);
+    return [
+      days ? `${days}d` : '',
+      days || hours ? `${hours}h` : '',
+      `${Math.floor((total % 3600) / 60)}m`,
+      `${total % 60}s`,
+    ]
+      .filter(Boolean)
+      .join(' ');
+  }
   const minutes = Math.max(0, Math.ceil(seconds / 60));
   if (minutes < 60) return `${minutes}m`;
   const hours = Math.floor(minutes / 60);
