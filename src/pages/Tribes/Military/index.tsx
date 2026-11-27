@@ -245,7 +245,10 @@ const Military = (props: TribesPanelProps) => {
   const threat = state.units
     .filter((unit) => unit.tribe_id !== tribe?.id && unit.valid_target_ids.includes(tribe?.id ?? -1))
     .reduce((total, unit) => total + (state.catalog.units[unit.item]?.damage ?? 0) * unit.quantity, 0);
-  const idle = mine.filter((unit) => state.catalog.units[unit.item] && !unit.target_id).length;
+  const weapons = mine.filter((unit) => state.catalog.units[unit.item]);
+  const idle = weapons.filter((unit) => !unit.target_id).length;
+  let aim = weapons.length ? 'Every weapon is aimed' : 'No weapons yet';
+  if (idle) aim = 'They sit out the final battle';
   const focused = focus ? state.units.find((unit) => unit.id === focus.id) : undefined;
   const focusPlot = focused?.plot_id;
   const focusReach = focused ? (state.catalog.units[focused.item]?.range ?? 0) : 0;
@@ -312,6 +315,15 @@ const Military = (props: TribesPanelProps) => {
             </span>
             <strong>{count(threat)}</strong>
           </S.Force>
+          {tribe && (
+            <S.Force $tone={idle ? 'ember' : 'sky'} $urgent={!!idle}>
+              <span>
+                <TriangleAlert size={13} /> {idle === 1 ? 'Batch' : 'Batches'} with no target
+              </span>
+              <strong>{count(idle)}</strong>
+              <small>{aim}</small>
+            </S.Force>
+          )}
         </S.Forces>
         <S.Actions>
           {Object.entries(state.catalog.units).map(([item, spec]) => (
@@ -336,15 +348,6 @@ const Military = (props: TribesPanelProps) => {
           ))}
         </S.Actions>
       </S.Card>
-      {!!idle && canPlay && (
-        <S.Banner $tone="ember">
-          <TriangleAlert size={18} />
-          <div>
-            {idle} of your tribe's weapon {idle === 1 ? 'batch has' : 'batches have'} no target. Units without a target
-            sit out the final battle.
-          </div>
-        </S.Banner>
-      )}
       <S.Grid>
         <S.Stack>
           <S.Cards $min={300}>

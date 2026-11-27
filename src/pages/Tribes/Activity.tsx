@@ -7,6 +7,7 @@ import {isCancellationError} from 'utils/errors';
 
 import PlayerAvatar from './components/PlayerAvatar';
 import {date, memberName, tribeName} from './common';
+import {useAlert} from './notices';
 import * as S from './Styles';
 
 type Entry = TribesState['activity'][number];
@@ -51,11 +52,11 @@ export const reword = (entry: Entry, state: TribesState) => {
 };
 
 const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
-  const [error, setError] = useState('');
   const [history, setHistory] = useState<{scope: string; rows: TribesState['activity']; before: number | null} | null>(
     null,
   );
   const [loading, setLoading] = useState(false);
+  const alert = useAlert();
   const controller = useRef<AbortController | null>(null);
   const scope = `${state.season.id}:${state.viewer?.id}:${state.viewer?.tribe_id}`;
   const activeScope = useRef(scope);
@@ -71,7 +72,6 @@ const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
     controller.current = null;
     setHistory(null);
     setLoading(false);
-    setError('');
     return () => {
       controller.current?.abort();
       controller.current = null;
@@ -83,7 +83,6 @@ const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
     const request = new AbortController();
     controller.current = request;
     setLoading(true);
-    setError('');
     try {
       const page = await getTribesActivity(
         state.season.id,
@@ -94,7 +93,7 @@ const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
         setHistory({scope, rows: [...entries, ...page.results], before: page.next_before});
     } catch (failure) {
       if (!isCancellationError(failure) && activeScope.current === scope)
-        setError('Earlier activity could not be loaded. Please try again.');
+        alert('Earlier activity could not be loaded. Please try again.');
     } finally {
       if (controller.current === request) {
         controller.current = null;
@@ -132,7 +131,6 @@ const Activity = ({state}: Pick<TribesPanelProps, 'state'>) => {
           ))}
         </S.Feed>
       )}
-      {error && <S.Error role="alert">{error}</S.Error>}
       {canLoad && (
         <S.Button $secondary $size="small" disabled={loading} onClick={handleLoad} style={{marginTop: 14}}>
           {loading ? 'Loading activity…' : 'Load earlier activity'}

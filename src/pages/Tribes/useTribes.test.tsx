@@ -74,11 +74,16 @@ test('a rapid double click sends one payment request', async () => {
   });
   expect(postAction).toHaveBeenCalledTimes(1);
   expect(JSON.parse(localStorage.getItem('tribes:pending:1')!)).toMatchObject({request_id: requestId, amount: 100});
+  // An action that is still on its way is pending, but there is nothing to warn the player about yet
+  expect(api.pending?.request_id).toBe(requestId);
+  expect(api.busy).toBe(true);
+  expect(api.unconfirmed).toBe(false);
   await act(async () => {
     response.resolve(snapshot(900));
     await first;
   });
   expect(localStorage.getItem('tribes:pending:1')).toBeNull();
+  expect(api.unconfirmed).toBe(false);
 });
 
 test('a read begun before a payment cannot overwrite its completed result', async () => {
@@ -134,15 +139,28 @@ test('an interrupted payment survives remount and retries its exact receipt', as
   });
   const payload = postAction.mock.calls[0][0];
   expect(api.pending).toEqual(payload);
+  expect(api.unconfirmed).toBe(true);
   await act(async () => root.unmount());
   root = createRoot(container);
   await render();
   expect(api.busy).toBe(true);
+  expect(api.unconfirmed).toBe(true);
+  // The warning stays up while the retry is on its way, and goes once the receipt is confirmed
+  const retried = deferred<TribesState>();
+  postAction.mockReturnValueOnce(retried.promise);
+  let retry!: Promise<boolean>;
   await act(async () => {
-    await api.retry();
+    retry = api.retry();
+  });
+  expect(api.retrying).toBe(true);
+  expect(api.unconfirmed).toBe(true);
+  await act(async () => {
+    retried.resolve(snapshot(900));
+    await retry;
   });
   expect(postAction.mock.calls[1][0]).toEqual(payload);
   expect(api.pending).toBeNull();
+  expect(api.unconfirmed).toBe(false);
 });
 
 test('an authentication failure preserves an uncertain receipt for authenticated replay', async () => {
@@ -162,6 +180,7 @@ test('a definitive action rejection releases its receipt', async () => {
     await api.act('treasury_deposit', {amount: 100});
   });
   expect(api.pending).toBeNull();
+  expect(api.unconfirmed).toBe(false);
   expect(api.error).toBe('Insufficient TNB.');
   expect(localStorage.getItem('tribes:pending:1')).toBeNull();
 });

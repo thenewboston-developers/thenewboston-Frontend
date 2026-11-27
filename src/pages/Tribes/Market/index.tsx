@@ -15,6 +15,7 @@ import {
   PlotField,
   plural,
   tribeName,
+  wholeNumber,
 } from '../common';
 import PlayerAvatar from '../components/PlayerAvatar';
 
@@ -28,8 +29,10 @@ const FILTERS = [
 ] as const;
 
 const Listing = ({listing, ...props}: TribesPanelProps & {listing: TribesListing}) => {
-  const [quantity, setQuantity] = useState(1);
+  const [amount, setAmount] = useState('');
   const {act, busy, canPlay, state} = props;
+  const quantity = Number(amount) || 0;
+  const verb = listing.kind === 'sell' ? 'Buy' : 'Supply';
   const military = !!(state.catalog.units[listing.item] || state.catalog.defenses[listing.item]);
   const own = listing.user_id === state.viewer?.id;
   const sharedAccount = listing.account === 'tribe' && listing.tribe_id === state.viewer?.tribe_id;
@@ -91,9 +94,10 @@ const Listing = ({listing, ...props}: TribesPanelProps & {listing: TribesListing
           act={act}
           action="fill_listing"
           disabled={busy || !canPlay || sharedAccount}
-          fixed={{listing_id: listing.id, quantity}}
+          fixed={{listing_id: listing.id}}
+          onSuccess={() => setAmount('')}
           resetOnSuccess={false}
-          submit={`${listing.kind === 'sell' ? 'Buy' : 'Supply'} for ${count(quantity * listing.price)} TNB`}
+          submit={quantity ? `${verb} for ${count(quantity * listing.price)} TNB` : verb}
         >
           <S.Pair>
             <S.Field>
@@ -103,11 +107,11 @@ const Listing = ({listing, ...props}: TribesPanelProps & {listing: TribesListing
                 max={listing.quantity}
                 min={1}
                 name="quantity"
-                onChange={(event) => setQuantity(Math.min(listing.quantity, Math.max(1, Number(event.target.value))))}
+                onChange={(event) => setAmount(wholeNumber(event.target.value, listing.quantity))}
                 required
                 step="1"
                 type="number"
-                value={quantity}
+                value={amount}
               />
             </S.Field>
             <AccountField
@@ -127,9 +131,16 @@ const Market = (props: TribesPanelProps) => {
   const [filter, setFilter] = useState('all');
   const [item, setItem] = useState('all');
   const [kind, setKind] = useState('sell');
-  const [price, setPrice] = useState(1);
-  const [quantity, setQuantity] = useState(1);
+  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useState('');
   const {act, busy, canPlay, state} = props;
+  const total = Number(price) * Number(quantity);
+
+  const handlePlaced = () => {
+    setPrice('');
+    setQuantity('');
+  };
+
   const listings = state.listings
     .filter(
       (entry) =>
@@ -211,7 +222,13 @@ const Market = (props: TribesPanelProps) => {
             Name your price. A buy order commits the full TNB amount now. A sell order commits your goods. To sell
             military units, open your arsenal in Military.
           </S.Muted>
-          <ActionForm act={act} action="create_listing" disabled={busy || !canPlay} submit="Place listing">
+          <ActionForm
+            act={act}
+            action="create_listing"
+            disabled={busy || !canPlay}
+            onSuccess={handlePlaced}
+            submit="Place listing"
+          >
             <S.FieldGroup aria-label="Order type" role="radiogroup">
               Order type
               <S.Segmented>
@@ -246,7 +263,7 @@ const Market = (props: TribesPanelProps) => {
                   max={1000000}
                   min={1}
                   name="quantity"
-                  onChange={(event) => setQuantity(Math.max(1, Math.floor(Number(event.target.value)) || 1))}
+                  onChange={(event) => setQuantity(wholeNumber(event.target.value, 1000000))}
                   required
                   step="1"
                   type="number"
@@ -260,7 +277,7 @@ const Market = (props: TribesPanelProps) => {
                   max={1000000}
                   min={1}
                   name="price"
-                  onChange={(event) => setPrice(Math.max(1, Math.floor(Number(event.target.value)) || 1))}
+                  onChange={(event) => setPrice(wholeNumber(event.target.value, 1000000))}
                   required
                   step="1"
                   type="number"
@@ -275,7 +292,7 @@ const Market = (props: TribesPanelProps) => {
             />
             <S.Total>
               <span>{kind === 'sell' ? 'You receive when filled' : 'Held in escrow now'}</span>
-              <strong>{count(price * quantity)} TNB</strong>
+              <strong>{total ? `${count(total)} TNB` : '—'}</strong>
             </S.Total>
           </ActionForm>
         </S.Card>

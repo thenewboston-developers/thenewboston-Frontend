@@ -146,6 +146,12 @@ export const shimmer = keyframes`
   }
 `;
 
+export const spin = keyframes`
+  to {
+    rotate: 360deg;
+  }
+`;
+
 export const stripes = keyframes`
   from {
     background-position: 0 0;

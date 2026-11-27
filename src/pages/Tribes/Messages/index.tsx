@@ -8,16 +8,17 @@ import {isCancellationError} from 'utils/errors';
 import {ActionForm, date, tribeName} from '../common';
 import Emblem from '../components/Emblem';
 import PlayerAvatar from '../components/PlayerAvatar';
+import {useAlert} from '../notices';
 
 import * as S from './Styles';
 
 const Messages = ({act, busy, now, state, tribe}: TribesPanelProps) => {
-  const [error, setError] = useState('');
   const [history, setHistory] = useState<{scope: string; rows: TribesState['messages']; before: number | null} | null>(
     null,
   );
   const [loading, setLoading] = useState(false);
   const [recipient, setRecipient] = useState('tribe');
+  const alert = useAlert();
   const controller = useRef<AbortController | null>(null);
   const thread = useRef<HTMLDivElement>(null);
   const scope = `${state.season.id}:${state.viewer?.id}:${state.viewer?.tribe_id}`;
@@ -47,7 +48,6 @@ const Messages = ({act, busy, now, state, tribe}: TribesPanelProps) => {
     controller.current = null;
     setHistory(null);
     setLoading(false);
-    setError('');
     setRecipient('tribe');
     return () => {
       controller.current?.abort();
@@ -72,14 +72,13 @@ const Messages = ({act, busy, now, state, tribe}: TribesPanelProps) => {
     const request = new AbortController();
     controller.current = request;
     setLoading(true);
-    setError('');
     try {
       const page = await getTribesMessages(state.season.id, older?.before ?? records[0].id, request.signal);
       if (!request.signal.aborted && activeScope.current === scope)
         setHistory({scope, rows: [...records, ...page.results], before: page.next_before});
     } catch (failure) {
       if (!isCancellationError(failure) && activeScope.current === scope)
-        setError('Earlier messages could not be loaded. Please try again.');
+        alert('Earlier messages could not be loaded. Please try again.');
     } finally {
       if (controller.current === request) {
         controller.current = null;
@@ -144,11 +143,6 @@ const Messages = ({act, busy, now, state, tribe}: TribesPanelProps) => {
                 <Lock size={11} /> {recipient === 'tribe' ? 'Only your teammates' : 'Private correspondence'}
               </S.Badge>
             </S.ThreadHead>
-            {error && (
-              <S.Error role="alert" style={{margin: '12px 16px 0'}}>
-                {error}
-              </S.Error>
-            )}
             <S.Thread ref={thread}>
               {canLoad && (
                 <S.Button

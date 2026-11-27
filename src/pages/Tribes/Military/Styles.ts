@@ -40,11 +40,22 @@ export const Disclosure = styled.details`
   }
 `;
 
-export const Force = styled.div<{$tone: 'ember' | 'gold' | 'sky'}>`
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+export const Force = styled.div<{$tone: 'ember' | 'gold' | 'sky'; $urgent?: boolean}>`
+  background: ${({$urgent}) => ($urgent ? 'rgba(217, 87, 59, 0.16)' : 'rgba(255, 255, 255, 0.06)')};
+  border: 1px solid ${({$urgent}) => ($urgent ? 'rgba(240, 138, 112, 0.5)' : 'rgba(255, 255, 255, 0.1)')};
   border-radius: 14px;
   padding: 12px 14px;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
+
+  small {
+    color: #a9bfb1;
+    display: block;
+    font-size: 11.5px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
 
   span {
     align-items: center;

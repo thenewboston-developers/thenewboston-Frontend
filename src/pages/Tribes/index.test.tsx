@@ -180,6 +180,7 @@ beforeEach(() => {
     retrying: false,
     seasons: [state.season],
     state,
+    unconfirmed: false,
     uploadEmblem: jest.fn().mockResolvedValue(true),
   };
   jest.mocked(useTribes).mockImplementation(() => game);
@@ -266,22 +267,104 @@ it('stops economic mutations at the cutoff even before the server marks the seas
   expect(container).toHaveTextContent('The final battle cutoff has passed.');
 });
 
+const notices = () => container.querySelector('[aria-label="Notifications"]')!;
+const field = (form: Element, name: string) => form.querySelector(`[name="${name}"]`) as HTMLInputElement;
+
 it('keeps uncertain transactions retryable and prevents a new economic action', async () => {
   game.busy = true;
   game.pending = {action: 'treasury_deposit', amount: 25, season_id: 1, request_id: 'pending-receipt'};
+  game.unconfirmed = true;
   await render();
   await click('Inventory');
   expect(button('Deposit TNB')).toBeDisabled();
   await click('Retry last action');
   expect(game.retry).toHaveBeenCalledTimes(1);
-  expect(container).toHaveTextContent('same transaction receipt prevents duplicate charges');
+  expect(notices()).toHaveTextContent('same transaction receipt prevents duplicate charges');
 });
 
-it('displays an actual TNB purchase total and lets the buyer choose their account', async () => {
+it('says nothing while a move is on its way and never puts a message into the page itself', async () => {
+  game.busy = true;
+  game.pending = {action: 'transfer_items', item: 'timber', season_id: 1, request_id: 'in-flight'};
+  await render('/tribes/inventory');
+  expect(container.querySelector('[role="alert"]')).toBeNull();
+  expect(container).not.toHaveTextContent('has not been confirmed');
+  act(() => root.unmount());
+  root = createRoot(container);
+  game.busy = false;
+  game.pending = null;
+  game.error = 'Not enough iron ore in your pack.';
+  await render('/tribes/inventory');
+  const alert = container.querySelector('[role="alert"]')!;
+  expect(alert).toHaveTextContent('Not enough iron ore in your pack.');
+  // Messages live in the floating stack, outside the flow of the page, so they cannot push it down
+  expect(notices().contains(alert)).toBe(true);
+  expect(container.querySelector('[aria-label="Tribes sections"]')!.parentElement!.contains(alert)).toBe(false);
+  await act(async () => (notices().querySelector('[aria-label="Dismiss"]') as HTMLButtonElement).click());
+  expect(container.querySelector('[role="alert"]')).toBeNull();
+});
+
+it('starts a purchase with an empty quantity that can be typed, cleared and typed again', async () => {
   await render();
   await click('Marketplace');
-  await submit('Buy for 2 TNB');
-  expect(action).toHaveBeenCalledWith('fill_listing', {listing_id: 40, quantity: 1, account: 'personal'});
+  const form = button('Buy').closest('form')!;
+  const quantity = field(form, 'quantity');
+  expect(quantity.value).toBe('');
+  await submit('Buy');
+  expect(action).not.toHaveBeenCalled();
+  await type(quantity, '1');
+  expect(button('Buy for 2 TNB')).toBeTruthy();
+  await type(quantity, '');
+  expect(quantity.value).toBe('');
+  expect(button('Buy')).toBeTruthy();
+  await type(quantity, '25');
+  expect(button('Buy for 50 TNB')).toBeTruthy();
+  // No more than the listing has to offer
+  await type(quantity, '2500');
+  expect(quantity.value).toBe('100');
+  await type(quantity, '3');
+  await submit('Buy for 6 TNB');
+  expect(action).toHaveBeenCalledWith('fill_listing', {listing_id: 40, quantity: 3, account: 'personal'});
+});
+
+it('leaves every amount for the player to enter', async () => {
+  await render('/tribes/inventory');
+  const deposit = button('Deposit TNB').closest('form')!;
+  expect(field(deposit, 'amount').value).toBe('');
+  await submit('Deposit TNB');
+  expect(action).not.toHaveBeenCalled();
+  expect(field(button('Withdraw to my wallet').closest('form')!, 'amount').value).toBe('');
+  // The tray suggests the whole stack, and that suggestion can be cleared and typed over
+  await pick('Timber: 12 in your pack');
+  const amount = container.querySelector('[aria-label="How many timber to move"]') as HTMLInputElement;
+  expect(amount.value).toBe('12');
+  await type(amount, '');
+  expect(amount.value).toBe('');
+  await submit('Store in the warehouse');
+  expect(action).not.toHaveBeenCalled();
+  await type(amount, '7');
+  await submit('Store 7 in the warehouse');
+  expect(action).toHaveBeenCalledWith('transfer_items', {
+    destination: 'tribe',
+    item: 'timber',
+    quantity: 7,
+    source: 'personal',
+  });
+  await click('Production');
+  const workshop = button('Queue production').closest('form')!;
+  expect(field(workshop, 'quantity').value).toBe('');
+  expect(workshop).toHaveTextContent('Enter a quantity to see how long it takes.');
+  await type(field(workshop, 'quantity'), '10');
+  expect(workshop).toHaveTextContent('Takes 20m of worker time.');
+  await type(field(workshop, 'quantity'), '');
+  expect(field(workshop, 'quantity').value).toBe('');
+  await click('Marketplace');
+  const listing = button('Place listing').closest('form')!;
+  expect(field(listing, 'quantity').value).toBe('');
+  expect(field(listing, 'price').value).toBe('');
+  expect(listing).toHaveTextContent('You receive when filled—');
+  await type(field(listing, 'quantity'), '4');
+  await type(field(listing, 'price'), '6');
+  expect(listing).toHaveTextContent('You receive when filled24 TNB');
 });
 
 it('supports buying military batches with a required destination plot', async () => {
@@ -290,8 +373,9 @@ it('supports buying military batches with a required destination plot', async ()
   ];
   await render();
   await click('Marketplace');
-  const form = button('Buy for 12 TNB').closest('form')!;
+  const form = button('Buy').closest('form')!;
   (form.querySelector('[name="plot_id"]') as HTMLSelectElement).value = '1';
+  await type(field(form, 'quantity'), '1');
   await submit('Buy for 12 TNB');
   expect(action).toHaveBeenCalledWith('fill_listing', {listing_id: 40, quantity: 1, account: 'personal', plot_id: 1});
 });
@@ -326,9 +410,10 @@ it('reveals finished standings and personal contributions without enabling stale
 it('preserves the chosen payment account after buying goods', async () => {
   await render();
   await click('Marketplace');
-  const form = button('Buy for 2 TNB').closest('form')!;
+  const form = button('Buy').closest('form')!;
   const account = form.querySelector('[name="account"][value="tribe"]') as HTMLInputElement;
   await act(async () => account.click());
+  await type(field(form, 'quantity'), '1');
   await submit('Buy for 2 TNB');
   expect(action).toHaveBeenCalledWith('fill_listing', {listing_id: 40, quantity: 1, account: 'tribe'});
   expect(account.checked).toBe(true);
@@ -338,7 +423,7 @@ it('prevents teammates from filling their own shared treasury listing', async ()
   state.listings[0] = {...state.listings[0], user_id: 8, tribe_id: 1, account: 'tribe'};
   await render();
   await click('Marketplace');
-  expect(button('Buy for 2 TNB')).toBeDisabled();
+  expect(button('Buy')).toBeDisabled();
   expect(container).toHaveTextContent('Your tribe owns this listing');
 });
 
@@ -515,15 +600,21 @@ it('confirms a successful action and stays quiet when the action is rejected', a
         setTimeout(resolve, 0);
       });
     });
+  const enter = () => {
+    field(button('Deposit TNB').closest('form')!, 'amount').value = '25';
+  };
   action.mockResolvedValue(true);
   await render('/tribes/inventory');
+  enter();
   await submit('Deposit TNB');
   await settle();
   expect(container.querySelector('[role="status"]')).toHaveTextContent('Deposited into the treasury.');
+  expect(notices().contains(container.querySelector('[role="status"]'))).toBe(true);
   act(() => root.unmount());
   root = createRoot(container);
   action.mockResolvedValue(false);
   await render('/tribes/inventory');
+  enter();
   await submit('Deposit TNB');
   await settle();
   expect(action).toHaveBeenCalledTimes(2);
@@ -606,7 +697,9 @@ it('refuses an emblem that is not 512 pixels square', async () => {
   await render();
   const form = button('Save tribe').closest('form')!;
   await choose(form, emblemFile());
-  expect(form.querySelector('[role="alert"]')).toHaveTextContent(
+  // The reason floats with the other messages instead of opening up room inside the form
+  expect(form.querySelector('[role="alert"]')).toBeNull();
+  expect(notices().querySelector('[role="alert"]')).toHaveTextContent(
     'The emblem must be exactly 512 by 512 pixels. This picture is 640 by 480.',
   );
   expect(form).not.toHaveTextContent('otters.png');
