@@ -1554,12 +1554,25 @@ export const Segment = styled.label`
   }
 `;
 
-export const Segmented = styled.div<{$dark?: boolean}>`
+export const Segmented = styled.div<{$adaptive?: boolean; $dark?: boolean}>`
   background: ${({$dark}) => ($dark ? 'rgba(255, 255, 255, 0.1)' : '#efe9d9')};
   border-radius: 11px;
   display: flex;
   gap: 3px;
   padding: 3px;
+
+  ${({$adaptive}) =>
+    $adaptive &&
+    css`
+      container-type: inline-size;
+
+      /* The icon sets its own display inline, so hiding it needs the override */
+      @container (max-width: 214px) {
+        svg {
+          display: none !important;
+        }
+      }
+    `}
 
   ${({$dark}) =>
     $dark &&

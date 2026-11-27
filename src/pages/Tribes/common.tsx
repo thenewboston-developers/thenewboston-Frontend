@@ -175,42 +175,46 @@ export const NumberField = ({
   </S.Field>
 );
 
-const ACCOUNT_LABELS = {
-  both: {personal: 'Personal', tribe: 'Tribe'},
-  goods: {personal: 'My pack', tribe: 'Warehouse'},
-  tnb: {personal: 'My wallet', tribe: 'Treasury'},
+// The four places things are kept, named and pictured the same way everywhere: goods sit in a player's own pack or
+// the tribe's shared warehouse, and TNB sits in a player's own wallet or the tribe's shared treasury.
+export const ACCOUNTS = {
+  goods: {personal: {icon: 'pack', text: 'My pack'}, tribe: {icon: 'warehouse', text: 'Warehouse'}},
+  tnb: {personal: {icon: 'tnb', text: 'My wallet'}, tribe: {icon: 'treasury', text: 'Treasury'}},
 };
 
-// Every economic action names the account it uses: the shared tribe account or the player's own
+// Every economic action names the place it uses. The player's own is always on the left, the tribe's on the right.
 export const AccountField = ({
+  initial = 'tribe',
   label: text,
-  mode = 'both',
+  mode,
   name = 'account',
   onChange,
-  personalFirst = false,
   value,
 }: {
+  initial?: TribesAccount;
   label: string;
-  mode?: keyof typeof ACCOUNT_LABELS;
+  mode: keyof typeof ACCOUNTS;
   name?: string;
   onChange?: (account: TribesAccount) => void;
-  personalFirst?: boolean;
   value?: TribesAccount;
 }) => (
   <S.FieldGroup aria-label={text} role="radiogroup">
     {text}
-    <S.Segmented>
-      {(['tribe', 'personal'] as const).map((account) => (
+    <S.Segmented $adaptive>
+      {(['personal', 'tribe'] as const).map((account) => (
         <S.Segment key={account}>
           <input
             {...(value === undefined
-              ? {defaultChecked: account === (personalFirst ? 'personal' : 'tribe')}
+              ? {defaultChecked: account === initial}
               : {checked: value === account, onChange: () => onChange?.(account)})}
             name={name}
             type="radio"
             value={account}
           />
-          <span>{ACCOUNT_LABELS[mode][account]}</span>
+          <span>
+            <ItemIcon item={ACCOUNTS[mode][account].icon} size={18} />
+            {ACCOUNTS[mode][account].text}
+          </span>
         </S.Segment>
       ))}
     </S.Segmented>

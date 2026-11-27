@@ -73,7 +73,7 @@ const Dashboard = (props: TribesPanelProps) => {
     moves.push({
       action: 'View projects',
       detail: 'Gather the missing supplies, contribute your stock, or arrange a trade.',
-      icon: 'warehouse',
+      icon: 'crates',
       section: 'tribe',
       text: `Your tribe has ${openProjects} open project${openProjects === 1 ? '' : 's'}.`,
     });
@@ -164,23 +164,37 @@ const Dashboard = (props: TribesPanelProps) => {
         <S.Stack>
           {tribe && (
             <S.Card>
-              <S.Eyebrow>Stock check</S.Eyebrow>
-              <h2>What we hold</h2>
-              <S.Row>
-                <span>Personal supplies</span>
-                <strong>{count(sum(state.viewer?.inventory))}</strong>
-              </S.Row>
-              <S.Row>
-                <span>Tribal warehouse</span>
-                <strong>{count(sum(tribe.inventory))}</strong>
-              </S.Row>
+              <S.PanelTitle>
+                <div>
+                  <S.Eyebrow>Stock check</S.Eyebrow>
+                  <h2>What we hold</h2>
+                </div>
+                <S.Button $secondary $size="small" onClick={() => go?.('inventory')}>
+                  Open inventory <ArrowRight size={14} />
+                </S.Button>
+              </S.PanelTitle>
+              {(
+                [
+                  ['pack', 'My pack', 'Yours alone', `${count(sum(state.viewer?.inventory))} goods`],
+                  ['warehouse', 'Warehouse', 'Shared by the tribe', `${count(sum(tribe.inventory))} goods`],
+                  ['tnb', 'My wallet', 'Yours alone', `${count(state.viewer?.wallet_balance)} TNB`],
+                  ['treasury', 'Treasury', 'Shared by the tribe', `${count(tribe.treasury)} TNB`],
+                ] as const
+              ).map(([icon, name, owner, amount]) => (
+                <S.Row key={name}>
+                  <S.RowMain>
+                    <ItemIcon item={icon} size={30} />
+                    <div>
+                      <strong>{name}</strong>
+                      <small>{owner}</small>
+                    </div>
+                  </S.RowMain>
+                  <strong>{amount}</strong>
+                </S.Row>
+              ))}
               <S.Row>
                 <span>Territory</span>
                 <strong>{plural(state.plots.filter((plot) => plot.tribe_id === tribe.id).length, 'plot')}</strong>
-              </S.Row>
-              <S.Row>
-                <span>Treasury</span>
-                <strong>{count(tribe.treasury)} TNB</strong>
               </S.Row>
             </S.Card>
           )}

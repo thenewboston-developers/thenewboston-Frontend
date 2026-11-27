@@ -512,8 +512,8 @@ const Recruitment = ({act, busy, now, state, tribe, uploadEmblem}: TribesPanelPr
               </S.Step>
             </S.Steps>
             <S.Hint>
-              Gameplay uses actual TNB from your app wallet. Your coins persist between seasons; land, goods, and units
-              do not.
+              Gameplay uses actual TNB from your wallet. Your coins persist between seasons; land, goods, and units do
+              not.
             </S.Hint>
           </S.Card>
         )}

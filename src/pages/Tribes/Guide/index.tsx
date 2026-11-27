@@ -23,9 +23,9 @@ const CHAPTERS: {icons: string[]; text: string[]; title: string}[] = [
     title: 'Your worker keeps going.',
   },
   {
-    icons: ['tnb', 'warehouse'],
+    icons: ['tnb', 'treasury'],
     text: [
-      "All prices use actual TNB from your thenewboston wallet. Deposit coins in your tribe's treasury to buy land, or trade using personal or shared funds. Every member can spend or withdraw shared funds. There are no starting coin grants, wallet resets, or guaranteed tournament payouts.",
+      "All prices use actual TNB from your thenewboston wallet. Deposit coins in your tribe's treasury to buy land, or trade from your wallet or the treasury. Every member can spend or withdraw what is in the treasury. There are no starting coin grants, wallet resets, or guaranteed tournament payouts.",
       'Opening market stock is finite. Player sell orders reserve goods and buy orders reserve TNB. Cancel an unfilled order to return its escrow. Your existing wallet wealth can fund gameplay.',
     ],
     title: 'A real shared economy.',
@@ -38,9 +38,10 @@ const CHAPTERS: {icons: string[]; text: string[]; title: string}[] = [
     title: 'Land creates opportunity.',
   },
   {
-    icons: ['workshop', 'furnace'],
+    icons: ['pack', 'warehouse'],
     text: [
-      'Share supplies, create work orders, and coordinate in private tribe chat. Other tribes can exchange letters with your whole team. Alliances and promises are informal. Military production and placement are public; attack targets remain secret to your tribe.',
+      'Goods you gather and craft go into your pack, which only you can use, or into the warehouse, which every member can use. Move them between the two in Inventory, hand them to a teammate, or send them to another tribe.',
+      'Create work orders and coordinate in private tribe chat. Other tribes can exchange letters with your whole team. Alliances and promises are informal. Military production and placement are public; attack targets remain secret to your tribe.',
     ],
     title: 'Cooperation is your advantage.',
   },

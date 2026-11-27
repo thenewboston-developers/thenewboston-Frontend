@@ -8,9 +8,9 @@ import * as S from './Styles';
 
 const COPY: Record<string, {icons: string[]; points: string[]; text: string; title: string}> = {
   inventory: {
-    icons: ['warehouse', 'treasury', 'tnb'],
+    icons: ['pack', 'warehouse', 'treasury'],
     points: [
-      'A personal pack and a warehouse the whole tribe shares',
+      'A pack of your own, and a warehouse the whole tribe shares',
       'A treasury funded with real TNB from your wallet',
       'Every transfer recorded for the tribe to see',
     ],
