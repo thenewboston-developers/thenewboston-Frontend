@@ -84,7 +84,7 @@ const Locked = ({go, now, section, state, tribe}: TribesPanelProps & {section: s
           ))}
         </S.TeaserArt>
         <S.Eyebrow $light>
-          <Hourglass size={14} /> Opens in {duration((startsAt - now) / 1000)}
+          <Hourglass size={14} /> Opens in {duration((startsAt - now) / 1000, true)}
         </S.Eyebrow>
         <h2>{copy.title}</h2>
         <S.Muted $dark>{copy.text}</S.Muted>

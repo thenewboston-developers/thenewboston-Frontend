@@ -72,7 +72,7 @@ export const WorkerQueue = ({act, busy, canPlay, now, state}: TribesPanelProps) 
         <div>
           <span>Time booked</span>
           <strong>
-            {duration(booked)} of {Math.round(state.catalog.queue_seconds / 3600)}h
+            {duration(booked, true)} of {Math.round(state.catalog.queue_seconds / 3600)}h
           </strong>
         </div>
         <Progress color="#e6aa3c" label="Worker time booked" max={state.catalog.queue_seconds} value={booked} />
@@ -99,7 +99,7 @@ export const WorkerQueue = ({act, busy, canPlay, now, state}: TribesPanelProps) 
                     {label(job.kind)} · {label(job.item)}
                   </strong>
                   <small>
-                    {working ? `${duration((end - now) / 1000)} remaining` : `Starts ${time(job.start_at)}`}
+                    {working ? `${duration((end - now) / 1000, true)} remaining` : `Starts ${time(job.start_at)}`}
                   </small>
                 </div>
               </S.RowMain>
