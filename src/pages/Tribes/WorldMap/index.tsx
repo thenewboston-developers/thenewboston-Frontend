@@ -192,30 +192,22 @@ const BUILDING_SPOTS: [number, number][] = [
 
 const Terrain = memo(
   ({
-    clip,
     geometry,
     owners,
     plots,
     size,
   }: {
-    clip: string;
     geometry: Geometry;
     owners: Map<number, Tribe>;
     plots: TribesPlot[];
     size: {columns: number; rows: number};
   }) => {
     const animate = plots.length <= ANIMATED_TILE_LIMIT;
-    const ordered = [...plots].sort((a, b) => a.x + a.y - (b.x + b.y) || a.x - b.x);
     return (
       <g>
-        {/* One outline for every keep: a clip path is measured in the coordinates of the tile that uses it */}
-        <clipPath id={clip}>
-          <circle cx="0" cy="-52" r="11" />
-        </clipPath>
-        {ordered.map((plot) => {
+        {plots.map((plot) => {
           const [x, y] = geometry.position(plot);
           const owner = plot.tribe_id === null ? undefined : owners.get(plot.tribe_id);
-          const home = !!owner && plot.price === 0;
           const [ground, alternate] = GROUND[plot.terrain] ?? GROUND.wilderness;
           return (
             <g key={plot.id} transform={`translate(${x} ${y})`}>
@@ -248,6 +240,44 @@ const Terrain = memo(
                   strokeWidth="1"
                 />
                 {owner && <path d={DIAMOND} fill={hex(owner.color)} opacity="0.3" />}
+              </g>
+            </g>
+          );
+        })}
+      </g>
+    );
+  },
+);
+
+const Scenery = memo(
+  ({
+    clip,
+    geometry,
+    owners,
+    plots,
+  }: {
+    clip: string;
+    geometry: Geometry;
+    owners: Map<number, Tribe>;
+    plots: TribesPlot[];
+  }) => {
+    const animate = plots.length <= ANIMATED_TILE_LIMIT;
+    return (
+      <g>
+        {/* One outline for every keep: a clip path is measured in the coordinates of the tile that uses it */}
+        <clipPath id={clip}>
+          <circle cx="0" cy="-52" r="11" />
+        </clipPath>
+        {plots.map((plot) => {
+          const [x, y] = geometry.position(plot);
+          const owner = plot.tribe_id === null ? undefined : owners.get(plot.tribe_id);
+          const home = !!owner && plot.price === 0;
+          return (
+            <g key={plot.id} transform={`translate(${x} ${y})`}>
+              <g
+                className={animate ? 'tile' : undefined}
+                style={animate ? {animationDelay: `${(plot.x + plot.y) * 24}ms`} : undefined}
+              >
                 {home ? (
                   <Keep clip={clip} color={hex(owner.color)} emblem={owner.emblem} image={owner.emblem_image} />
                 ) : (
@@ -305,6 +335,7 @@ const WorldMap = ({canExpand, compact, onSelect, ranges, selectedId, state, trib
       width: ((grid.columns + grid.rows) * TILE_WIDTH) / 2 + PADDING * 2,
     };
   }, [grid]);
+  const orderedPlots = useMemo(() => [...plots].sort((a, b) => a.x + a.y - (b.x + b.y) || a.x - b.x), [plots]);
   const owners = useMemo(() => new Map(tribes.map((entry) => [entry.id, entry])), [tribes]);
   const lookup = useMemo(() => new Map(plots.map((plot) => [`${plot.x}:${plot.y}`, plot])), [plots]);
   const byId = useMemo(() => new Map(plots.map((plot) => [plot.id, plot])), [plots]);
@@ -556,7 +587,8 @@ const WorldMap = ({canExpand, compact, onSelect, ranges, selectedId, state, trib
             } ${HEADROOM + PADDING + 30 + (grid.rows * TILE_HEIGHT) / 2}Z`}
             fill="rgba(0, 0, 0, 0.3)"
           />
-          <Terrain clip={clip} geometry={geometry} owners={owners} plots={plots} size={grid} />
+          {/* Ground markings sit beneath all scenery, including objects on neighboring tiles. */}
+          <Terrain geometry={geometry} owners={owners} plots={orderedPlots} size={grid} />
           <g fill="none" strokeLinecap="round">
             {borders.map((segment) => (
               <path d={segment.d} key={segment.key} stroke="rgba(255, 253, 246, 0.85)" strokeWidth="4.5" />
@@ -602,6 +634,36 @@ const WorldMap = ({canExpand, compact, onSelect, ranges, selectedId, state, trib
               </g>
             );
           })}
+          {tip && tip.id !== selected?.id && (
+            <path
+              d={DIAMOND}
+              fill="rgba(255, 255, 255, 0.16)"
+              stroke="#ffffff"
+              strokeWidth="2"
+              transform={`translate(${geometry.position(tip).join(' ')})`}
+            />
+          )}
+          {selected && (
+            <g transform={`translate(${geometry.position(selected).join(' ')})`}>
+              <path
+                d={DIAMOND}
+                fill="none"
+                stroke={palette.goldBright}
+                strokeLinejoin="round"
+                strokeWidth="7"
+                opacity="0.55"
+              />
+              <path
+                className="selected"
+                d={DIAMOND}
+                fill="rgba(255, 255, 255, 0.2)"
+                stroke="#ffffff"
+                strokeLinejoin="round"
+                strokeWidth="3"
+              />
+            </g>
+          )}
+          <Scenery clip={clip} geometry={geometry} owners={owners} plots={orderedPlots} />
           {work.map((job) => {
             const [x, y] = geometry.position(job.plot!);
             return (
@@ -669,35 +731,6 @@ const WorldMap = ({canExpand, compact, onSelect, ranges, selectedId, state, trib
               </g>
             );
           })}
-          {tip && tip.id !== selected?.id && (
-            <path
-              d={DIAMOND}
-              fill="rgba(255, 255, 255, 0.16)"
-              stroke="#ffffff"
-              strokeWidth="2"
-              transform={`translate(${geometry.position(tip).join(' ')})`}
-            />
-          )}
-          {selected && (
-            <g transform={`translate(${geometry.position(selected).join(' ')})`}>
-              <path
-                d={DIAMOND}
-                fill="none"
-                stroke={palette.goldBright}
-                strokeLinejoin="round"
-                strokeWidth="7"
-                opacity="0.55"
-              />
-              <path
-                className="selected"
-                d={DIAMOND}
-                fill="rgba(255, 255, 255, 0.2)"
-                stroke="#ffffff"
-                strokeLinejoin="round"
-                strokeWidth="3"
-              />
-            </g>
-          )}
         </svg>
         <div aria-label="World map" role="group">
           {plots.map((plot) => {
