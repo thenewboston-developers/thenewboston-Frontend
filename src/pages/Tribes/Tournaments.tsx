@@ -70,8 +70,8 @@ const Tournaments = () => {
         <S.Banner $tone="sky">
           <Users size={18} />
           <div>
-            Explore any tournament. The organizer enrolls players and assigns teams; creating an account does not
-            reserve a place. You can play in multiple tournaments, with one tribe in each.
+            Explore any tournament. The organizer enrolls players and assigns teams. You can play in multiple
+            tournaments, with one tribe in each.
           </div>
         </S.Banner>
         {error && (
