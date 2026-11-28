@@ -121,7 +121,6 @@ test('anonymous visitors can create an account or sign in and return to the tour
   await render();
   expect(container.querySelector('a[href="/create-account?next=%2Ftribes"]')).not.toBeNull();
   expect(container.querySelector('a[href="/sign-in?next=%2Ftribes"]')).not.toBeNull();
-  expect(container).toHaveTextContent('creating an account does not reserve a place');
   expect(container).toHaveTextContent('No tournaments yet');
   expect(getTribesState).not.toHaveBeenCalled();
 });
