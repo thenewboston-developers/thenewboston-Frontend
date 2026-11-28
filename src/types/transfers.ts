@@ -11,4 +11,6 @@ export interface Transfer {
   timestamp: string;
 }
 
+export type TransferDirection = 'received' | 'sent';
+
 export type TransfersResponse = PaginatedResponse<Transfer>;

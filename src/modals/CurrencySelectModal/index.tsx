@@ -11,9 +11,8 @@ import {updateManager} from 'store/manager';
 import {AppDispatch, SFC, Wallet} from 'types';
 import {displayErrorToast, displayToast} from 'utils/toasts';
 
-import WalletCard from '../WalletSelectModal/WalletCard';
-
 import * as S from './Styles';
+import WalletCard from './WalletCard';
 
 export interface CurrencySelectModalProps {
   close(): void;

@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Form, Formik} from 'formik';
 
@@ -9,6 +9,7 @@ import {FormField} from 'components/FormElements';
 import Loader from 'components/Loader';
 import PostImagesInput from 'components/PostImagesInput';
 import UserLabel from 'components/UserLabel';
+import UserSearchInput from 'components/UserSearchInput';
 import {createPost} from 'dispatchers/posts';
 import {getAllUserWallets} from 'dispatchers/wallets';
 import {ToastType} from 'enums';
@@ -25,10 +26,12 @@ import * as S from './Styles';
 export interface SendModalProps {
   close(): void;
   onSuccess?(): void;
-  recipient: UserReadSerializer;
+  // Left out when the modal is opened without anyone in mind: the sender then picks the recipient inside it
+  recipient?: UserReadSerializer;
 }
 
 const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}) => {
+  const [selectedRecipient, setSelectedRecipient] = useState<UserReadSerializer | null>(recipient || null);
   const {addImages, images, removeImage, uploadImages, uploadProgress} = usePostImages();
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector(isLoadingWallets);
@@ -76,6 +79,11 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
         return;
       }
 
+      if (!selectedRecipient) {
+        displayErrorToast('Please choose who to send the coins to');
+        return;
+      }
+
       const imageIds = await uploadImages();
       if (!imageIds) return;
 
@@ -85,7 +93,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
           image_ids: imageIds,
           price_amount: values.price_amount,
           price_currency: selectedWallet.currency.id,
-          recipient: recipient.id,
+          recipient: selectedRecipient.id,
         }),
       );
       displayToast('Coins sent successfully!', ToastType.SUCCESS);
@@ -107,7 +115,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
-      content: yup.string().required('Content is required'),
+      content: yup.string().required('Message is required'),
       price_amount: yup
         .number()
         .required('Amount is required')
@@ -146,23 +154,55 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
     );
   }
 
+  const renderAvailableBalance = (walletId: number | string) => {
+    const selectedWallet = myWallets.find((wallet) => wallet.id === parseInt(walletId as any));
+    if (!selectedWallet) return null;
+
+    return (
+      <S.Hint>
+        Available: {selectedWallet.balance.toLocaleString()} {selectedWallet.currency.ticker}
+      </S.Hint>
+    );
+  };
+
+  const renderRecipient = () => {
+    if (!recipient) {
+      return (
+        <FormField>
+          <UserSearchInput
+            errors={{}}
+            label="Send to"
+            name="recipient"
+            onChange={setSelectedRecipient}
+            touched={{}}
+            value={selectedRecipient}
+          />
+        </FormField>
+      );
+    }
+
+    return (
+      <S.TransferInfo>
+        <S.UserRow>
+          <S.Label>From</S.Label>
+          <UserLabel avatar={self.avatar} description="" id={self.id!} username={self.username!} />
+        </S.UserRow>
+        <S.Arrow>↓</S.Arrow>
+        <S.UserRow>
+          <S.Label>To</S.Label>
+          <UserLabel avatar={recipient.avatar} description="" id={recipient.id} username={recipient.username} />
+        </S.UserRow>
+      </S.TransferInfo>
+    );
+  };
+
   return (
     <S.Modal className={className} close={close} header="Send Coins">
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         {({dirty, errors, isSubmitting, isValid, setFieldValue, touched, values}) => (
           <Form>
             <S.ModalBody>
-              <S.TransferInfo>
-                <S.UserRow>
-                  <S.Label>From</S.Label>
-                  <UserLabel avatar={self.avatar} description="" id={self.id!} username={self.username!} />
-                </S.UserRow>
-                <S.Arrow>↓</S.Arrow>
-                <S.UserRow>
-                  <S.Label>To</S.Label>
-                  <UserLabel avatar={recipient.avatar} description="" id={recipient.id} username={recipient.username} />
-                </S.UserRow>
-              </S.TransferInfo>
+              {renderRecipient()}
 
               <FormField>
                 <S.Select
@@ -176,11 +216,12 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
 
               <FormField>
                 <S.Input errors={errors} label="Amount" name="price_amount" touched={touched} type="number" />
+                {renderAvailableBalance(values.wallet_id)}
               </FormField>
 
               <FormField>
                 <S.TextareaContainer>
-                  <S.Textarea errors={errors} label="Content" name="content" touched={touched} />
+                  <S.Textarea errors={errors} label="Message" name="content" touched={touched} />
                   <EmojiPicker
                     displayMode="textarea"
                     field="content"
@@ -188,6 +229,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
                     value={values.content}
                   />
                 </S.TextareaContainer>
+                <S.Hint>Posted to the feed together with the coins.</S.Hint>
               </FormField>
 
               <PostImagesInput
@@ -203,7 +245,7 @@ const SendModal: SFC<SendModalProps> = ({className, close, onSuccess, recipient}
               <Button color={ButtonColor.secondary} onClick={close} text="Cancel" type={ButtonType.button} />
               <Button
                 dirty={dirty}
-                disabled={isSubmitting || !values.price_amount}
+                disabled={isSubmitting || !selectedRecipient || !values.price_amount}
                 isSubmitting={isSubmitting}
                 isValid={isValid}
                 text="Send"
