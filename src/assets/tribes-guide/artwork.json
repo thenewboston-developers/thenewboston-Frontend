@@ -1,0 +1,35 @@
+{
+  "generator": "Built-in image_gen",
+  "output": {
+    "format": "WebP",
+    "width": 960,
+    "height": 640,
+    "quality": 82
+  },
+  "assets": [
+    {
+      "file": "tribe.webp",
+      "prompt": "Use case: stylized-concept. Asset type: professional Tribes strategy game guide card illustration. Style: premium handcrafted miniature strategy-board-game diorama, isometric 3D editorial illustration, matte painted wood, stone and paper, tactile clean detail, soft studio shadows and warm light. Palette: deep forest green #17443a, sage foliage, parchment #f4efe2, restrained amber brass accents. Landscape 3:2 composition, all important subjects centered within inner 75% to remain safe when cropped to 16:9. Seamless warm pale parchment backdrop. Restrained polished adult game art with sophisticated material detail, not cute childish cartoon and not dense photorealism. NO text, lettering, symbols, logos, watermarks, borders or UI. Scene: three distinct miniature medieval village teammates around a small shared map table with blank abstract terrain shapes, a forest-green pennant and a compact settlement behind them. Convey team formation and cooperation. Village rooftops are muted forest green, natural wood and pale stone; teammates wear simple tunics in sage, ochre and green."
+    },
+    {
+      "file": "worker.webp",
+      "prompt": "Use case: stylized-concept. Asset type: professional Tribes strategy game guide card illustration. Style: premium handcrafted miniature strategy-board-game diorama, isometric 3D editorial illustration, matte painted wood, stone and paper, tactile clean detail, soft studio shadows and warm light. Palette: deep forest green #17443a, sage foliage, parchment #f4efe2, restrained amber brass accents. Landscape 3:2 composition, all important subjects centered within inner 75% to remain safe when cropped to 16:9. Seamless warm pale parchment backdrop. Restrained polished adult game art with sophisticated material detail, not cute childish cartoon and not dense photorealism. NO text, lettering, symbols, logos, watermarks, borders or UI. Scene: compact timber workshop with one miniature medieval worker, tidy stacked logs, a saw bench and a small stone forge with golden work light. Convey ongoing production and craftsmanship in a warm productive village. Frame as one coherent small workshop diorama with natural wood rafters, forest-green roof and little sage greenery."
+    },
+    {
+      "file": "economy.webp",
+      "prompt": "Use case: stylized-concept. Asset type: professional Tribes strategy game guide card illustration. Style: premium handcrafted miniature strategy-board-game diorama, isometric 3D editorial illustration, matte painted wood, stone and paper, tactile clean detail, soft studio shadows and warm light. Palette: deep forest green #17443a, sage foliage, parchment #f4efe2, restrained amber brass accents. Landscape 3:2 composition, all important subjects centered within inner 75% to remain safe when cropped to 16:9. Seamless warm pale parchment backdrop. Restrained polished adult game art with sophisticated material detail, not cute childish cartoon and not dense photorealism. NO text, lettering, symbols, logos, watermarks, borders or UI. Scene: shared wooden treasury chest filled with plain unmarked gold coins, a small medieval market stall with forest-green canvas and a small merchant balance scale. Convey trade and a shared economy. Arrange as a coherent compact market diorama, with elegant brass and wood materials and a few neatly stacked goods. Coins are plain without letters or crypto logos."
+    },
+    {
+      "file": "land.webp",
+      "prompt": "Use case: stylized-concept. Asset type: professional Tribes strategy game guide card illustration. Premium handcrafted miniature strategy-board-game diorama, isometric 3D editorial illustration, matte painted wood, stone and paper, tactile clean detail. Soft studio shadows and warm light. Deep forest green #17443a, sage foliage, pale parchment #f4efe2, restrained amber and brass accents. Landscape 3:2 framing, entire subject centered within the inner 75% so safe for 16:9 crop. Seamless warm pale parchment background. Restrained polished adult game art, not cute childish cartoon, not dense photorealism. Absolutely no text, letters, logos, watermarks, border, or UI. Subject: connected square terrain plots with forest pines, golden wheat field, rocky iron deposit, a tiny green flag and winding stream. Carefully composed miniature landscape, clear tile geometry, rich material variation."
+    },
+    {
+      "file": "cooperation.webp",
+      "prompt": "Use case: stylized-concept. Asset type: professional Tribes strategy game guide card illustration. Premium handcrafted miniature strategy-board-game diorama, isometric 3D editorial illustration, matte painted wood, stone and paper, tactile clean detail. Soft studio shadows and warm light. Deep forest green #17443a, sage foliage, pale parchment #f4efe2, restrained amber and brass accents. Landscape 3:2 framing, entire subject centered within the inner 75% so safe for 16:9 crop. Seamless warm pale parchment background. Restrained polished adult game art, not cute childish cartoon, not dense photorealism. Absolutely no text, letters, logos, watermarks, border, or UI. Subject: two miniature medieval village teammates passing a wooden supply crate beside an open communal warehouse, stacked sacks and neatly arranged resources. Human teamwork is clear, friendly practical poses, tiny figures crafted like elegant board-game pieces."
+    },
+    {
+      "file": "battle.webp",
+      "prompt": "Use case: stylized-concept. Asset type: professional Tribes strategy game guide card illustration. Premium handcrafted miniature strategy-board-game diorama, isometric 3D editorial illustration, matte painted wood, stone and paper, tactile clean detail. Soft studio shadows and warm light. Deep forest green #17443a, sage foliage, pale parchment #f4efe2, restrained amber and brass accents. Landscape 3:2 framing, entire subject centered within the inner 75% so safe for 16:9 crop. Seamless warm pale parchment background. Restrained polished adult game art, not cute childish cartoon, not dense photorealism. Absolutely no text, letters, logos, watermarks, border, or UI. Subject: miniature wooden catapult, green-bannered infantry shields and pale stone defensive wall on a tabletop terrain tile. Strategic preparation, no active violence, no blood, carefully crafted medieval siege-game pieces."
+    }
+  ]
+}

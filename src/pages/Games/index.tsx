@@ -194,47 +194,6 @@ const Games: SFC = ({className}) => (
           No downloads. Just play.
         </S.BrowserBadge>
       </S.Header>
-      <section aria-labelledby="featured-game-heading">
-        <S.SectionHeader>
-          <div>
-            <S.SectionTitle id="featured-game-heading">Find your next obsession</S.SectionTitle>
-            <S.SectionDescription>Classic games. Endless ways to outplay.</S.SectionDescription>
-          </div>
-          <S.GameCount>{games.length} games · Free to play</S.GameCount>
-        </S.SectionHeader>
-        <S.GameGrid>
-          {games.map((game) => (
-            <S.GameCard
-              {...analyticsTarget(game.target)}
-              $accent={game.accent}
-              aria-label={`${game.name} — play now`}
-              key={game.path}
-              onClick={() => captureAnalyticsEvent('game_selected', {game: game.target, source: 'games_hub'})}
-              to={`/${game.path}/home`}
-            >
-              <S.Artwork>
-                <S.Cover alt={game.imageDescription} height={800} src={game.art} width={1200} />
-                <S.FeaturedBadge>{game.badge}</S.FeaturedBadge>
-              </S.Artwork>
-              <S.GameDetails>
-                <S.Category>{game.category}</S.Category>
-                <S.GameTitle>{game.name}</S.GameTitle>
-                <S.Description>{game.description}</S.Description>
-                <S.Tags>
-                  <span>vs. Computer</span>
-                  <span>Multiplayer</span>
-                </S.Tags>
-                <S.CardFooter>
-                  <S.FreeLabel>
-                    Free<S.FreeNote>No install</S.FreeNote>
-                  </S.FreeLabel>
-                  <S.PlayLabel>Play now</S.PlayLabel>
-                </S.CardFooter>
-              </S.GameDetails>
-            </S.GameCard>
-          ))}
-        </S.GameGrid>
-      </section>
       <section aria-labelledby="tribes-game-heading">
         <S.SectionHeader>
           <div>
@@ -278,6 +237,47 @@ const Games: SFC = ({className}) => (
               </S.CardFooter>
             </S.GameDetails>
           </S.GameCard>
+        </S.GameGrid>
+      </section>
+      <section aria-labelledby="featured-game-heading">
+        <S.SectionHeader>
+          <div>
+            <S.SectionTitle id="featured-game-heading">Find your next obsession</S.SectionTitle>
+            <S.SectionDescription>Classic games. Endless ways to outplay.</S.SectionDescription>
+          </div>
+          <S.GameCount>{games.length} games · Free to play</S.GameCount>
+        </S.SectionHeader>
+        <S.GameGrid>
+          {games.map((game) => (
+            <S.GameCard
+              {...analyticsTarget(game.target)}
+              $accent={game.accent}
+              aria-label={`${game.name} — play now`}
+              key={game.path}
+              onClick={() => captureAnalyticsEvent('game_selected', {game: game.target, source: 'games_hub'})}
+              to={`/${game.path}/home`}
+            >
+              <S.Artwork>
+                <S.Cover alt={game.imageDescription} height={800} src={game.art} width={1200} />
+                <S.FeaturedBadge>{game.badge}</S.FeaturedBadge>
+              </S.Artwork>
+              <S.GameDetails>
+                <S.Category>{game.category}</S.Category>
+                <S.GameTitle>{game.name}</S.GameTitle>
+                <S.Description>{game.description}</S.Description>
+                <S.Tags>
+                  <span>vs. Computer</span>
+                  <span>Multiplayer</span>
+                </S.Tags>
+                <S.CardFooter>
+                  <S.FreeLabel>
+                    Free<S.FreeNote>No install</S.FreeNote>
+                  </S.FreeLabel>
+                  <S.PlayLabel>Play now</S.PlayLabel>
+                </S.CardFooter>
+              </S.GameDetails>
+            </S.GameCard>
+          ))}
         </S.GameGrid>
       </section>
       <GameFund />

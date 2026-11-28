@@ -67,9 +67,10 @@ it('preserves free board-game cards and keeps the reward fund distinct', () => {
   expect(container).toHaveTextContent('Board-game reward fund');
 });
 
-it('offers Tribes as scheduled tournaments with an actual TNB economy', () => {
+it('offers Tribes first as scheduled tournaments with an actual TNB economy', () => {
   const section = container.querySelector('[aria-labelledby="tribes-game-heading"]')!;
   const card = section.querySelector('a[href="/tribes"]')!;
+  expect(container.querySelector('a')).toBe(card);
   expect(card).toHaveTextContent('Scheduled tournaments');
   expect(card).toHaveTextContent('Uses your app wallet');
   expect(card).not.toHaveTextContent('vs. Computer');

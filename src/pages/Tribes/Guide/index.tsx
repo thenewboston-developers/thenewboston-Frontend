@@ -1,5 +1,11 @@
-import {ArrowRight, BookOpen, Clock} from 'lucide-react';
+import {ArrowRight, BookOpen, ChevronDown, Clock} from 'lucide-react';
 
+import battleArt from 'assets/tribes-guide/battle.webp';
+import cooperationArt from 'assets/tribes-guide/cooperation.webp';
+import economyArt from 'assets/tribes-guide/economy.webp';
+import landArt from 'assets/tribes-guide/land.webp';
+import tribeArt from 'assets/tribes-guide/tribe.webp';
+import workerArt from 'assets/tribes-guide/worker.webp';
 import {TribesState} from 'types/tribes';
 
 import ItemIcon from '../art/ItemIcon';
@@ -7,23 +13,30 @@ import {duration, itemKind, label} from '../common';
 
 import * as S from './Styles';
 
-const CHAPTERS: {icons: string[]; text: string[]; title: string}[] = [
+const CHAPTERS: {art: string; category: string; summary: string; text: string[]; title: string}[] = [
   {
-    icons: ['worker', 'treasury'],
+    art: tribeArt,
+    category: 'Your people',
+    summary: 'Start with a team. Build something together. Every member has an equal hand in your tribe’s economy.',
     text: [
       'The organizer enrolls players and assigns tribes before each tournament starts. You can join multiple tournaments, with one tribe in each. Every member has equal economic permissions within their tribe.',
     ],
     title: 'Meet your tribe.',
   },
   {
-    icons: ['timber', 'pickaxe', 'lumber'],
+    art: workerArt,
+    category: 'Gather & build',
+    summary:
+      'Queue up to 24 hours of work. Turn raw resources into the tools, buildings, and supplies your tribe needs.',
     text: [
       'Each player has one worker and can queue up to 24 hours of gathering, crafting, or construction. Gather from owned land. Refine materials, build facilities, and manufacture tools to improve production. Completed work is retained when you cancel an assignment.',
     ],
     title: 'Your worker keeps going.',
   },
   {
-    icons: ['tnb', 'treasury'],
+    art: economyArt,
+    category: 'Trade & treasury',
+    summary: 'Buy land and trade with real TNB. Your treasury is shared: every member can spend or withdraw its coins.',
     text: [
       "All prices use actual TNB from your thenewboston wallet. Deposit coins in your tribe's treasury to buy land, or trade from your wallet or the treasury. Every member can spend or withdraw what is in the treasury. There are no starting coin grants, wallet resets, or guaranteed tournament payouts.",
       'Opening market stock is finite. Player sell orders reserve goods and buy orders reserve TNB. Cancel an unfilled order to return its escrow. Your existing wallet wealth can fund gameplay.',
@@ -31,14 +44,18 @@ const CHAPTERS: {icons: string[]; text: string[]; title: string}[] = [
     title: 'A real shared economy.',
   },
   {
-    icons: ['forest', 'iron_deposit', 'plains'],
+    art: landArt,
+    category: 'Explore & expand',
+    summary: 'Grow your territory, uncover resources, and invest in the infrastructure that powers your next move.',
     text: [
       'Buy plots next to your territory, including diagonals. Different plots supply timber, iron ore, coal, wheat, hides, or stone. Infrastructure improves production. Weapons must be placed on owned land; range uses the greatest horizontal or vertical tile distance.',
     ],
     title: 'Land creates opportunity.',
   },
   {
-    icons: ['pack', 'warehouse'],
+    art: cooperationArt,
+    category: 'Better together',
+    summary: 'Share supplies, organize work, and plan in private. A coordinated tribe can make every resource count.',
     text: [
       'Goods you gather and craft go into your pack, which only you can use, or into the warehouse, which every member can use. Move them between the two in Inventory, hand them to a teammate, or send them to another tribe.',
       'Create work orders and coordinate in private tribe chat. Other tribes can exchange letters with your whole team. Alliances and promises are informal. Military production and placement are public; attack targets remain secret to your tribe.',
@@ -46,18 +63,14 @@ const CHAPTERS: {icons: string[]; text: string[]; title: string}[] = [
     title: 'Cooperation is your advantage.',
   },
   {
-    icons: ['infantry', 'catapult', 'stone_wall'],
+    art: battleArt,
+    category: 'The final moment',
+    summary:
+      'Prepare your defenses. Choose your targets. At the cutoff, every ready unit with a valid target strikes at once.',
     text: [
       "Only a unit's controller can set its target. Choose an enemy with land in range; unassigned units do not attack. At the cutoff all economic actions stop and every completed unit with a valid target attacks simultaneously. Defenses absorb incoming damage proportionally. Net effective damage decides the winner, with shared ranks for ties.",
     ],
     title: 'One simultaneous battle.',
-  },
-  {
-    icons: ['tnb', 'trebuchet'],
-    text: [
-      'Each tournament has its own land, goods, buildings, and military units. You may play in several at once. App TNB balances persist. Unspent treasury is divided equally among the locked roster, with leftover whole coins assigned by member ID. Unfilled buy orders return their escrow. Spent coins are not refunded. Rankings, battle reports, and your contributions remain in history.',
-    ],
-    title: 'The next story awaits.',
   },
 ];
 
@@ -75,33 +88,51 @@ const Guide = ({catalog}: {catalog?: TribesState['catalog']}) => (
         </S.Muted>
       </S.Intro>
     </S.Card>
-    <S.Cards $min={300}>
-      {CHAPTERS.slice(0, 6).map((chapter, index) => (
-        <S.Chapter key={chapter.title}>
+    <S.ChapterGrid aria-label="The six foundations of Tribes">
+      {CHAPTERS.map((chapter, index) => (
+        <S.Chapter aria-labelledby={`tribes-chapter-${index}`} key={chapter.title}>
           <S.ChapterArt>
-            <span>{String(index + 1).padStart(2, '0')}</span>
-            <div aria-hidden>
-              {chapter.icons.map((icon) => (
-                <span key={icon}>
-                  <ItemIcon item={icon} size={32} />
-                </span>
-              ))}
-            </div>
+            <img
+              alt=""
+              decoding="async"
+              height={640}
+              loading={index < 3 ? 'eager' : 'lazy'}
+              src={chapter.art}
+              width={960}
+            />
+            <S.ChapterNumber aria-hidden="true">{String(index + 1).padStart(2, '0')}</S.ChapterNumber>
           </S.ChapterArt>
-          <h2>{chapter.title}</h2>
-          {chapter.text.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
+          <S.ChapterBody>
+            <S.ChapterCategory>{chapter.category}</S.ChapterCategory>
+            <h3 id={`tribes-chapter-${index}`}>{chapter.title}</h3>
+            <S.ChapterSummary>{chapter.summary}</S.ChapterSummary>
+            <S.ChapterRules>
+              <summary>
+                <span>
+                  Read the rules<span className="sr-only">: {chapter.title}</span>
+                </span>
+                <ChevronDown aria-hidden="true" size={16} />
+              </summary>
+              <div>
+                {chapter.text.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+            </S.ChapterRules>
+          </S.ChapterBody>
         </S.Chapter>
       ))}
-    </S.Cards>
+    </S.ChapterGrid>
     <S.Banner $tone="gold">
       <ItemIcon item="tnb" size={36} />
       <div>
         <strong style={{display: 'block', fontSize: 15, marginBottom: 2}}>
-          Resources reset. Reputation does not. {CHAPTERS[6].title}
+          Resources reset. Reputation does not. The next story awaits.
         </strong>
-        {CHAPTERS[6].text[0]}
+        Each tournament has its own land, goods, buildings, and military units. You may play in several at once. App TNB
+        balances persist. Unspent treasury is divided equally among the locked roster, with leftover whole coins
+        assigned by member ID. Unfilled buy orders return their escrow. Spent coins are not refunded. Rankings, battle
+        reports, and your contributions remain in history.
       </div>
     </S.Banner>
     {catalog && (

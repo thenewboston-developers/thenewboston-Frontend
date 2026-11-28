@@ -166,6 +166,51 @@ test('a direct public guide link renders its rules immediately and aborts catalo
   expect(container.querySelector('table')).toBeNull();
 });
 
+test('signed-out visitors can independently expand all six rule panels even when the catalog is unavailable', async () => {
+  mockUserId = null;
+  jest.mocked(getTribesCatalog).mockRejectedValueOnce(new Error('offline'));
+  await render('/tribes/guide');
+  const chapters = Array.from(container.querySelectorAll('article'));
+  const panels = chapters.map((chapter) => chapter.querySelector('details')!);
+  expect(panels).toHaveLength(6);
+  const importantRules = [
+    ['The organizer enrolls players and assigns tribes', 'Every member has equal economic permissions'],
+    ['queue up to 24 hours', 'Completed work is retained when you cancel'],
+    [
+      'All prices use actual TNB',
+      'Every member can spend or withdraw',
+      'no starting coin grants, wallet resets, or guaranteed tournament payouts',
+      'Cancel an unfilled order to return its escrow',
+    ],
+    ['including diagonals', 'Weapons must be placed on owned land'],
+    ['your pack, which only you can use', 'warehouse, which every member can use', 'attack targets remain secret'],
+    ['unassigned units do not attack', 'all economic actions stop', 'attacks simultaneously', 'shared ranks for ties'],
+  ];
+  for (const [index, panel] of panels.entries()) {
+    const rules = panel.querySelector('div')!;
+    const summary = panel.querySelector('summary')!;
+    expect(panel.open).toBe(false);
+    expect(rules).not.toBeVisible();
+    expect(summary).toHaveAccessibleName(
+      new RegExp(`Read the rules\\s*:\\s*${chapters[index].querySelector('h3')!.textContent}`),
+    );
+    act(() => summary.click());
+    expect(panel.open).toBe(true);
+    expect(rules).toBeVisible();
+    importantRules[index].forEach((rule) => expect(rules).toHaveTextContent(rule));
+  }
+  expect(panels.every((panel) => panel.open)).toBe(true);
+  await act(async () => panels[0].querySelector('summary')!.click());
+  expect(panels[0].open).toBe(false);
+  expect(panels.slice(1).every((panel) => panel.open)).toBe(true);
+  expect(container).toHaveTextContent('App TNB balances persist');
+  expect(container).toHaveTextContent('Unspent treasury is divided equally among the locked roster');
+  expect(container).toHaveTextContent('Spent coins are not refunded');
+  expect(container.querySelector('a[href*="sign-in"]')).toBeNull();
+  expect(getTribesState).not.toHaveBeenCalled();
+  expect(getTribesTournaments).not.toHaveBeenCalled();
+});
+
 test('catalog errors keep all rules available and can be retried independently of a game', async () => {
   jest.mocked(getTribesCatalog).mockRejectedValueOnce(new Error('offline'));
   await render('/tribes/guide');
