@@ -2,6 +2,7 @@ export type TribesAccount = 'personal' | 'tribe';
 export type TribesInventory = Record<string, number>;
 export type TribesActionData = Record<string, string | number | null>;
 export interface TribesTournament {
+  cover_image?: string | null;
   id: number;
   title: string;
   max_players: number;

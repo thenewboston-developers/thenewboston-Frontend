@@ -48,6 +48,7 @@ import Market from './Market';
 import Messages from './Messages';
 import Military from './Military';
 import {NoticeContext} from './notices';
+import PublicGuide from './PublicGuide';
 import Rosters from './Rosters';
 import * as S from './Styles';
 import Tournaments from './Tournaments';
@@ -554,6 +555,7 @@ const TournamentGame = ({tournamentId, section}: {tournamentId: number; section?
 
 const Tribes = () => {
   const location = useLocation();
+  if (/^\/tribes\/guide\/?$/.test(location.pathname)) return <PublicGuide />;
   const match = /^\/tribes\/tournaments\/([1-9]\d*)(?:\/([^/]+))?\/?$/.exec(location.pathname);
   const tournamentId = match ? Number(match[1]) : null;
   return tournamentId && Number.isSafeInteger(tournamentId) ? (
