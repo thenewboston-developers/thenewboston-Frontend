@@ -2,23 +2,22 @@ import styled from 'styled-components';
 
 import UCopyContainer from 'components/CopyContainer';
 import Qr from 'components/Qr';
-import {breakpoints, colors} from 'styles';
+import {breakpoints, cardStyle, colors, eyebrowStyle, fonts} from 'styles';
 
 export const Balance = styled.div`
   color: ${colors.primary};
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  font-weight: ${fonts.weight.bold};
+  margin-top: 2px;
 `;
 
-export const Container = styled.div`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 14px;
-  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
-  padding: 24px 16px;
+export const Container = styled.section`
+  ${cardStyle};
+  padding: 20px 24px 24px;
 
   @media (max-width: ${breakpoints.mobile}) {
-    padding: 18px 10px;
+    padding: 18px 16px 20px;
   }
 `;
 
@@ -27,10 +26,11 @@ export const CopyContainer = styled(UCopyContainer)`
 `;
 
 export const DepositAccountRow = styled.div`
+  align-items: center;
   display: flex;
   gap: 10px;
   justify-content: space-between;
-  padding: 12px 0;
+  padding: 16px 0;
   width: 100%;
 `;
 
@@ -40,6 +40,14 @@ export const DepositLeft = styled.div`
 
 export const DepositSection = styled.div`
   margin-top: 24px;
+`;
+
+export const Heading = styled.h3`
+  color: ${colors.primary};
+  font-size: 18px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.02em;
+  line-height: 1.3;
 `;
 
 export const IconWrapper = styled.div`
@@ -141,48 +149,28 @@ export const RightCornerBorders = styled.div`
   }
 `;
 
-export const Text = styled.div`
+export const SubHeading = styled.p`
   color: ${colors.secondary};
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 4px 0 0;
+  max-width: 560px;
 `;
 
-export const Title = styled.div`
+export const Text = styled.div`
+  ${eyebrowStyle};
+`;
+
+export const Title = styled.h4`
   color: ${colors.primary};
   font-size: 15px;
-  font-weight: 600;
+  font-weight: ${fonts.weight.semiBold};
+  margin-bottom: 8px;
 `;
 
 export const Top = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  margin-bottom: 24px;
-`;
-
-export const InternalCurrencyMessage = styled.div`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 14px;
-  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
-  padding: 40px;
-  text-align: center;
-
-  ${Title} {
-    color: ${colors.primary};
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 16px;
-  }
-
-  ${Text} {
-    color: ${colors.secondary};
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: normal;
-    line-height: 1.5;
-    text-transform: none;
-  }
+  margin: 24px 0;
 `;

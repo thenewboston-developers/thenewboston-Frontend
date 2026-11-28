@@ -74,24 +74,15 @@ const WalletWithdraw: SFC = ({className}) => {
     });
   }, []);
 
-  if (!activeWallet) return null;
-
-  const isInternalCurrency = activeWallet.currency.domain === null;
-
-  if (isInternalCurrency) {
-    return (
-      <S.InternalCurrencyMessage className={className}>
-        <S.Title>Withdrawals Not Available</S.Title>
-        <S.Text>
-          This is an internal currency that exists only within our platform. Withdrawals to external addresses are not
-          supported.
-        </S.Text>
-      </S.InternalCurrencyMessage>
-    );
-  }
+  // Only a currency that lives on another network can be sent out to an account there
+  if (!activeWallet || activeWallet.currency.domain === null) return null;
 
   return (
-    <S.Container className={className}>
+    <S.Container aria-label={`Withdraw ${activeWallet.currency.ticker}`} className={className}>
+      <S.Heading>Withdraw {activeWallet.currency.ticker}</S.Heading>
+      <S.SubHeading>
+        Send {activeWallet.currency.ticker} from your wallet to an account on {activeWallet.currency.domain}.
+      </S.SubHeading>
       <S.Panel>
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
           {({dirty, errors, isSubmitting, isValid, touched, values}) => (
@@ -111,12 +102,12 @@ const WalletWithdraw: SFC = ({className}) => {
               <FormField>
                 <S.DetailRowContainer>
                   <S.DetailRow>
-                    <S.Label>FEE</S.Label>
+                    <S.Label>Fee</S.Label>
                     <S.Value>{CURRENCY_TRANSACTION_FEE}</S.Value>
                   </S.DetailRow>
                   <S.Line />
                   <S.DetailRow>
-                    <S.Label>TOTAL</S.Label>
+                    <S.Label>Total</S.Label>
                     <S.Value>
                       {values.amount ? (
                         <span>
@@ -146,7 +137,7 @@ const WalletWithdraw: SFC = ({className}) => {
       </S.Panel>
 
       <S.WithdrawSection>
-        <S.Title>Withdrawal History</S.Title>
+        <S.Title>Withdrawal history</S.Title>
         {renderWithdraws()}
       </S.WithdrawSection>
     </S.Container>

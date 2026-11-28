@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import {Input as UInput, LogoInput} from 'components/FormElements';
 import ULine from 'components/Line';
-import {breakpoints, colors} from 'styles';
+import {breakpoints, cardStyle, colors, eyebrowStyle, fonts, radii} from 'styles';
 
 const WITHDRAW_IMAGE_SIZE = 363;
 
@@ -12,15 +12,12 @@ export const AmountLogoInput = styled(LogoInput)`
   width: 100%;
 `;
 
-export const Container = styled.div`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 14px;
-  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
-  padding: 16px 16px 24px;
+export const Container = styled.section`
+  ${cardStyle};
+  padding: 20px 24px 24px;
 
   @media (max-width: ${breakpoints.mobile}) {
-    padding: 18px 10px;
+    padding: 18px 16px 20px;
   }
 `;
 
@@ -44,6 +41,14 @@ export const Form = styled(UForm)`
   }
 `;
 
+export const Heading = styled.h3`
+  color: ${colors.primary};
+  font-size: 18px;
+  font-weight: ${fonts.weight.bold};
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+`;
+
 export const Image = styled.img`
   height: ${WITHDRAW_IMAGE_SIZE}px;
   width: ${WITHDRAW_IMAGE_SIZE}px;
@@ -64,11 +69,7 @@ export const Input = styled(UInput)`
 `;
 
 export const Label = styled.div`
-  color: ${colors.secondary};
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  ${eyebrowStyle};
 `;
 
 export const Line = styled(ULine)`
@@ -78,26 +79,27 @@ export const Line = styled(ULine)`
 
 export const Panel = styled.div`
   background: ${colors.background};
-  border: 1px solid ${colors.border};
-  border-radius: 16px;
-  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
+  border: 1px solid ${colors.borderSubtle};
+  border-radius: ${radii.large};
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
   padding: 0 16px;
 `;
 
-export const Text = styled.div`
+export const SubHeading = styled.p`
   color: ${colors.secondary};
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 4px 0 0;
+  max-width: 560px;
 `;
 
-export const Title = styled.div`
+export const Title = styled.h4`
   color: ${colors.primary};
   font-size: 15px;
-  font-weight: 600;
+  font-weight: ${fonts.weight.semiBold};
+  margin-bottom: 8px;
 `;
 
 export const Value = styled.div`
@@ -108,29 +110,4 @@ export const Value = styled.div`
 
 export const WithdrawSection = styled.div`
   margin-top: 24px;
-`;
-
-export const InternalCurrencyMessage = styled.div`
-  background: ${colors.white};
-  border: 1px solid ${colors.border};
-  border-radius: 14px;
-  box-shadow: 0 3px 6px rgb(140 149 159 / 15%);
-  padding: 40px;
-  text-align: center;
-
-  ${Title} {
-    color: ${colors.primary};
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 16px;
-  }
-
-  ${Text} {
-    color: ${colors.secondary};
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: normal;
-    line-height: 1.5;
-    text-transform: none;
-  }
 `;

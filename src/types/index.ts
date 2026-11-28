@@ -62,7 +62,7 @@ import {Post, PostImage, PostImageDraft, PostImageUploadProgress, PostLike, Post
 import {Self} from 'types/self';
 import {AppDispatch, RootState} from 'types/store';
 import {Trade, Trades} from 'types/trades';
-import {Transfer, TransfersResponse} from 'types/transfers';
+import {Transfer, TransferDirection, TransfersResponse} from 'types/transfers';
 import {Users} from 'types/users';
 import {UserStats} from 'types/userStats';
 import {Wallet, Wallets} from 'types/wallets';
@@ -166,6 +166,7 @@ export {
   TradePriceChartData,
   Trades,
   Transfer,
+  TransferDirection,
   TransfersResponse,
   UpdatePostRequest,
   UserReadSerializer,

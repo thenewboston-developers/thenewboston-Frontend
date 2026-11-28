@@ -11,6 +11,14 @@ export const Arrow = styled.div`
   text-align: center;
 `;
 
+export const Hint = styled.div`
+  color: ${colors.secondary};
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+  margin-top: 6px;
+`;
+
 export const Input = styled(UInput)``;
 
 export const Label = styled.span`

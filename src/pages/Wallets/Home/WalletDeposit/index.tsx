@@ -31,21 +31,8 @@ const WalletDeposit: SFC = ({className}) => {
     dispatch(getWiresAction());
   }, [dispatch]);
 
-  if (!activeWallet) return null;
-
-  const isInternalCurrency = activeWallet.currency.domain === null;
-
-  if (isInternalCurrency) {
-    return (
-      <S.InternalCurrencyMessage className={className}>
-        <S.Title>Deposits Not Available</S.Title>
-        <S.Text>
-          This is an internal currency that exists only within our platform. Deposits from external sources are not
-          supported.
-        </S.Text>
-      </S.InternalCurrencyMessage>
-    );
-  }
+  // Only a currency that lives on another network has a deposit address
+  if (!activeWallet || activeWallet.currency.domain === null) return null;
 
   const handleRefreshIconClick = async () => {
     setGetBalanceRequestPending(true);
@@ -80,7 +67,7 @@ const WalletDeposit: SFC = ({className}) => {
         disabled={createDepositRequestPending}
         isSubmitting={createDepositRequestPending}
         onClick={handleTransferButtonClick}
-        text="Transfer to Main Account"
+        text="Move to wallet"
       />
     );
   };
@@ -110,7 +97,12 @@ const WalletDeposit: SFC = ({className}) => {
   };
 
   return (
-    <S.Container className={className}>
+    <S.Container aria-label={`Deposit ${activeWallet.currency.ticker}`} className={className}>
+      <S.Heading>Deposit {activeWallet.currency.ticker}</S.Heading>
+      <S.SubHeading>
+        Send {activeWallet.currency.ticker} from {activeWallet.currency.domain} to this address. It arrives in your
+        deposit account, and from there you move it into your wallet.
+      </S.SubHeading>
       <S.Top>
         <S.QrWrapper>
           <S.QR text={activeWallet.deposit_account_number || ''} width={120} />
@@ -122,7 +114,7 @@ const WalletDeposit: SFC = ({className}) => {
       <Line />
       <S.DepositAccountRow>
         <S.DepositLeft>
-          <S.Text>Deposit Account Balance:</S.Text>
+          <S.Text>Deposit account balance</S.Text>
           <S.Balance>{(activeWallet.deposit_balance || 0).toLocaleString()}</S.Balance>
         </S.DepositLeft>
         {renderIcon()}
@@ -130,7 +122,7 @@ const WalletDeposit: SFC = ({className}) => {
       </S.DepositAccountRow>
       <Line />
       <S.DepositSection>
-        <S.Title>Deposit History</S.Title>
+        <S.Title>Deposit history</S.Title>
         {renderDeposits()}
       </S.DepositSection>
     </S.Container>
