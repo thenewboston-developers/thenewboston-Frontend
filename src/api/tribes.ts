@@ -5,6 +5,11 @@ import {authorizationHeaders} from 'utils/authentication';
 
 const BASE_URL = `${process.env.REACT_APP_API_URL}/api/tribes`;
 
+export const getTribesCatalog = async (signal?: AbortSignal): Promise<TribesState['catalog']> => {
+  const response = await axios.get(`${BASE_URL}/catalog`, {signal});
+  return response.data;
+};
+
 export const getTribesTournaments = async (signal?: AbortSignal, before?: number): Promise<TribesTournament[]> => {
   const response = await axios.get(`${BASE_URL}/tournaments`, {
     ...authorizationHeaders(),

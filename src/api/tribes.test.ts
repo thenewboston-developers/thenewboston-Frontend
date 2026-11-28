@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import {
   getTribesActivity,
+  getTribesCatalog,
   getTribesMessages,
   getTribesState,
   getTribesTournaments,
@@ -16,6 +17,14 @@ beforeEach(() => {
   jest.clearAllMocks();
   jest.mocked(axios.get).mockResolvedValue({data: {}});
   jest.mocked(axios.post).mockResolvedValue({data: {}});
+});
+
+test('the public catalog needs neither authentication headers nor a tournament', async () => {
+  const {signal} = new AbortController();
+  const catalog = {land: {}, recipes: {}};
+  jest.mocked(axios.get).mockResolvedValueOnce({data: catalog});
+  expect(await getTribesCatalog(signal)).toEqual(catalog);
+  expect(axios.get).toHaveBeenCalledWith(expect.stringMatching(/\/tribes\/catalog$/), {signal});
 });
 
 test('game reads and private pagination always carry the selected tournament ID', async () => {

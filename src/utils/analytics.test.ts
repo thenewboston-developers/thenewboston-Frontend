@@ -440,6 +440,8 @@ describe('analytics data sanitization', () => {
 
 test('records Tribes routes as game pages instead of redirects or unknown paths', () => {
   expect(analytics.getAnalyticsPath('/tribes')).toBe('/tribes');
+  expect(analytics.getAnalyticsPath('/tribes/home?private=hidden')).toBe('/tribes/home');
+  expect(analytics.getAnalyticsPath('/tribes/guide?private=hidden')).toBe('/tribes/guide');
   expect(analytics.getAnalyticsPath('/tribes/tournaments/12/home?private=hidden')).toBe('/tribes/tournaments/:id/home');
   expect(analytics.isAnalyticsRedirectPath('/tribes')).toBe(false);
   expect(analytics.isAnalyticsRedirectPath('/tribes/tournaments/12/home')).toBe(false);
